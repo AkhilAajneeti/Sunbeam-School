@@ -1,0 +1,467 @@
+---
+/**
+ * §06 · ACADEMIC JOURNEY — docs/06 §06, audit 2.B1–B7
+ *
+ * Reference "Discover Our Programs" layout, adapted to the school's five
+ * stages: a feature card on the far left showing the active stage, a copy
+ * column with heading, cap icon, tagline and carousel arrows, and a scrollable
+ * rail of five stage cards with the active one highlighted.
+ *
+ * Uses the existing token scale throughout — --sb-violet, --sb-r-2/-full,
+ * --sb-shadow-card, the spacing steps and the .pill / .btn primitives from
+ * base.css. No new colours or radii were introduced.
+ *
+ * PHOTOGRAPHY: stage portraits are asset A2 Priority 4 and must show the age
+ * progression across the row. Only Senior Secondary has a defensible photo
+ * today; using a senior-school photograph to represent Nursery would misstate
+ * who the school teaches, so the rest keep labelled placeholders.
+ */
+import { stages } from '../../data/home';
+import Photo from '../ui/Photo.astro';
+import seniorPhoto from '../../assets/photos/sunbeem-students-3.jpg';
+import labPhoto from '../../assets/photos/sunbeem-students.jpg';
+
+/**
+ * Keyed by the  field on each stage in data/home.ts, so adding a
+ * photograph is a one-line data change rather than a component edit.
+ *
+ * NOTE — the four stages without a key are not a broken import or a lost path.
+ * Photo falls back to a labelled placeholder whenever  is undefined, and
+ * these stages simply have no Ballia photograph yet. See docs/08 D20.
+ */
+const photos: Record<string, { src: ImageMetadata; alt: string }> = {
+  senior: {
+    src: seniorPhoto,
+    alt: 'Senior Secondary students of Sunbeam School Ballia with a competition trophy.',
+  },
+  lab: {
+    src: labPhoto,
+    alt: 'Sunbeam School Ballia students in lab coats performing a chemistry practical on the law of conservation of mass.',
+  },
+};
+
+const ACTIVE = 3; // Secondary — the stage most parents are deciding about
+---
+
+<section class="stages" aria-labelledby="stages-heading" data-stages>
+  <div class="u-container">
+    <div class="stages__layout">
+      {/* --- Feature card: the active stage, image only --------------------- */}
+      <div class="stages__feature">
+        {stages.map((s, i) => (
+          <div class="stages__feature-slide" data-feature data-active={i === ACTIVE ? '' : undefined}>
+            <Photo
+              ratio="3 / 4"
+              tone={i % 2 === 0 ? 'ink' : 'charcoal'}
+              brief={s.imageBrief}
+              ref="A2"
+              quiet
+              src={photos[(s as any).photo ?? '']?.src}
+              alt={photos[(s as any).photo ?? '']?.alt}
+              sizes="(max-width: 1023px) 60vw, 22vw"
+            />
+            <span class="stages__feature-badge pill">{s.badge}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* --- Copy column ----------------------------------------------------- */}
+      <div class="stages__head">
+        <p class="stages__pill"><span class="pill pill--violet">Leading Our Journey</span></p>
+
+        <div class="stages__title">
+          <svg class="stages__icon" width="46" height="40" viewBox="0 0 46 40" fill="none" aria-hidden="true">
+            <path d="M23 3 44 12 23 21 2 12 23 3Z" stroke="currentColor" stroke-width="2.4"
+              stroke-linejoin="round" />
+            <path d="M10 16v10c0 3.3 5.8 6 13 6s13-2.7 13-6V16" stroke="currentColor"
+              stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M44 12v11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+          </svg>
+          <h2 class="stages__heading t-h2-sans" id="stages-heading">
+            Fourteen years, five stages, one continuous idea
+          </h2>
+        </div>
+
+        <p class="stages__tagline">
+          Thoughtfully crafted education, driven by excellence and innovation.
+        </p>
+
+        <div class="stages__nav">
+          <button class="stages__arrow stages__arrow--ghost" type="button" data-prev
+            aria-label="Previous stage">
+            <svg width="15" height="11" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+              <path d="M5 1L1 5L5 9M1 5H14" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+          </button>
+          <button class="stages__arrow stages__arrow--solid" type="button" data-next
+            aria-label="Next stage">
+            <svg width="15" height="11" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+              <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* --- Rail of five stage cards ---------------------------------------- */}
+      <ul class="stages__rail" data-rail>
+        {stages.map((s, i) => (
+          <li>
+            <article class="scard" data-card data-active={i === ACTIVE ? '' : undefined}>
+              <a class="scard__media" href={s.href} tabindex="-1" aria-hidden="true">
+                <Photo
+                  ratio="4 / 3"
+                  tone={i % 2 === 0 ? 'charcoal' : 'ink'}
+                  brief={s.imageBrief}
+                  ref="A2"
+                  quiet
+                  src={photos[(s as any).photo ?? '']?.src}
+                  alt={photos[(s as any).photo ?? '']?.alt}
+                  sizes="(max-width: 767px) 72vw, 220px"
+                />
+                <span class="scard__badge pill">{s.badge}</span>
+              </a>
+
+              <div class="scard__body">
+                <h3 class="scard__title">
+                  <a href={s.href}>{s.name}</a>
+                </h3>
+                <p class="scard__detail">{s.detail}</p>
+
+                <dl class="scard__meta">
+                  <div>
+                    <dt class="u-visually-hidden">Duration</dt>
+                    <dd>
+                      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.4" />
+                        <path d="M7 4v3.2L9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                      </svg>
+                      {s.years}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt class="u-visually-hidden">Classes</dt>
+                    <dd>
+                      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M1.6 3.2h10.8M1.6 7h10.8M1.6 10.8h7" stroke="currentColor"
+                          stroke-width="1.4" stroke-linecap="round" />
+                      </svg>
+                      {s.range}
+                    </dd>
+                  </div>
+                </dl>
+
+                <a class="scard__cta" href={s.href}>
+                  Explore
+                  <svg class="arrow" width="13" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                    <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+                  </svg>
+                </a>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stages {
+    background: linear-gradient(180deg, #f5f4fb 0%, #faf9fe 70%, var(--sb-ivory) 100%);
+    padding-block: var(--sb-section-y);
+    /* `clip` rather than `hidden`: it contains the rail's scroll extent without
+       turning the section into a scroll container, which would break the
+       sticky masthead above it. */
+    overflow-x: clip;
+  }
+
+  .stages__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    grid-template-areas:
+      'feature head'
+      'feature rail';
+    gap: var(--sb-7) var(--sb-9);
+    align-items: start;
+  }
+
+  /* --- Feature card --------------------------------------------------------- */
+
+  .stages__feature {
+    grid-area: feature;
+    position: relative;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    box-shadow: var(--sb-shadow-card);
+    background: #fff;
+  }
+
+  .stages__feature-slide {
+    position: relative;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 480ms var(--sb-ease);
+  }
+
+  .stages__feature-slide:not(:first-child) { position: absolute; inset: 0; }
+  .stages__feature-slide[data-active] { opacity: 1; visibility: visible; }
+
+  .stages__feature-badge,
+  .scard__badge {
+    position: absolute;
+    top: var(--sb-4);
+    right: var(--sb-4);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--sb-charcoal);
+    backdrop-filter: blur(6px);
+    font-size: 11px;
+    padding: 5px 12px;
+  }
+
+  /* --- Copy column ---------------------------------------------------------- */
+
+  .stages__head { grid-area: head; }
+
+  .stages__pill { margin-bottom: var(--sb-5); }
+
+  .stages__title {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sb-5);
+    margin-bottom: var(--sb-5);
+  }
+
+  .stages__icon { color: var(--sb-violet); flex-shrink: 0; margin-top: 4px; }
+
+  .stages__heading { color: var(--sb-charcoal); max-width: 22ch; }
+
+  .stages__tagline {
+    color: var(--sb-text-muted);
+    font-size: var(--sb-body-sm);
+    max-width: 42ch;
+    margin-bottom: var(--sb-6);
+  }
+
+  .stages__nav { display: flex; gap: var(--sb-4); }
+
+  .stages__arrow {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--sb-r-full);
+    transition: background-color var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease,
+      border-color var(--sb-dur-btn) ease;
+  }
+
+  .stages__arrow--ghost {
+    background: #fff;
+    border: 1px solid var(--sb-border-strong);
+    color: var(--sb-charcoal);
+  }
+  .stages__arrow--ghost:hover { border-color: var(--sb-violet); color: var(--sb-violet); }
+
+  .stages__arrow--solid {
+    background: var(--sb-violet);
+    border: 1px solid var(--sb-violet);
+    color: #fff;
+    box-shadow: 0 10px 22px -10px rgba(107, 78, 255, 0.9);
+  }
+  .stages__arrow--solid:hover { background: var(--sb-violet-dark); border-color: var(--sb-violet-dark); }
+
+  /* --- Rail ------------------------------------------------------------------ */
+
+  .stages__rail {
+    grid-area: rail;
+    /* A grid item's default min-width is auto, so it refuses to shrink below
+       its content and overflow-x never gets the chance to clip. */
+    min-width: 0;
+    max-width: 100%;
+    display: flex;
+    gap: var(--sb-5);
+    list-style: none;
+    margin: 0;
+    padding: var(--sb-2) var(--sb-2) var(--sb-6);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .stages__rail::-webkit-scrollbar { display: none; }
+  .stages__rail > li { flex: 0 0 auto; scroll-snap-align: start; }
+
+  /* --- Stage card ------------------------------------------------------------ */
+
+  .scard {
+    width: 232px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 2px solid transparent;
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+    overflow: hidden;
+    transition: box-shadow var(--sb-dur-image) var(--sb-ease),
+      transform var(--sb-dur-image) var(--sb-ease), border-color var(--sb-dur-link) ease;
+  }
+
+  .scard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+
+  .scard[data-active] {
+    border-color: var(--sb-violet);
+    box-shadow: 0 18px 40px -18px rgba(107, 78, 255, 0.55);
+  }
+
+  .scard__media { position: relative; display: block; }
+
+  .scard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-3);
+    padding: var(--sb-5);
+    flex: 1;
+  }
+
+  .scard__title {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-body);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    margin: 0;
+  }
+
+  .scard__title a:hover { color: var(--sb-violet); }
+
+  .scard__detail {
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
+    margin: 0;
+  }
+
+  .scard__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-2) var(--sb-5);
+    margin: var(--sb-2) 0 0;
+    padding-top: var(--sb-4);
+    border-top: var(--sb-hairline);
+  }
+
+  .scard__meta dd {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sb-text-muted);
+  }
+
+  .scard__meta svg { color: var(--sb-violet); flex-shrink: 0; }
+
+  .scard__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sb-3);
+    margin-top: auto;
+    padding: 9px 18px;
+    border-radius: var(--sb-r-full);
+    border: 1px solid var(--sb-border-strong);
+    background: #fff;
+    color: var(--sb-charcoal);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    transition: background-color var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease,
+      border-color var(--sb-dur-btn) ease;
+  }
+
+  .scard__cta:hover { border-color: var(--sb-violet); color: var(--sb-violet); }
+  .scard__cta .arrow { transition: transform var(--sb-dur-link) var(--sb-ease); }
+  .scard__cta:hover .arrow { transform: translateX(3px); }
+
+  /* filled CTA on the highlighted card */
+  .scard[data-active] .scard__cta {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+  }
+  .scard[data-active] .scard__cta:hover { background: var(--sb-violet-dark); }
+
+  /* --- Tablet ---------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .stages__layout {
+      grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+      gap: var(--sb-6) var(--sb-7);
+    }
+    .stages__heading { max-width: none; }
+  }
+
+  /* --- Mobile: feature above, rail scrolls ------------------------------------ */
+
+  @media (max-width: 767px) {
+    .stages__layout {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        'head'
+        'feature'
+        'rail';
+      gap: var(--sb-6);
+    }
+
+    .stages__feature { max-width: 260px; }
+    .stages__title { gap: var(--sb-4); }
+    .stages__icon { width: 34px; height: 30px; }
+    .scard { width: 236px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stages__feature-slide { transition: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-stages]');
+
+  if (root) {
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-card]'));
+    const features = Array.from(root.querySelectorAll<HTMLElement>('[data-feature]'));
+    const rail = root.querySelector<HTMLElement>('[data-rail]')!;
+    let index = cards.findIndex((c) => c.hasAttribute('data-active'));
+    if (index < 0) index = 0;
+
+    const show = (next: number) => {
+      index = (next + cards.length) % cards.length;
+
+      cards.forEach((c, i) => c.toggleAttribute('data-active', i === index));
+      features.forEach((f, i) => f.toggleAttribute('data-active', i === index));
+
+      // bring the active card into view without scrolling the page
+      const card = cards[index];
+      const target = card.offsetLeft - rail.offsetLeft - 8;
+      rail.scrollTo({
+        left: target,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
+    };
+
+    root.querySelector('[data-prev]')?.addEventListener('click', () => show(index - 1));
+    root.querySelector('[data-next]')?.addEventListener('click', () => show(index + 1));
+
+    // Clicking a card promotes it, so the feature image follows the rail.
+    cards.forEach((c, i) =>
+      c.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a')) return; // let links navigate
+        show(i);
+      })
+    );
+  }
+</script>

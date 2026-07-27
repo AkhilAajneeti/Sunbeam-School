@@ -1,0 +1,93 @@
+---
+import '../styles/tokens.css';
+import '../styles/base.css';
+import UtilityBar from '../components/navigation/UtilityBar.astro';
+import Masthead from '../components/navigation/Masthead.astro';
+import MobileNav from '../components/navigation/MobileNav.astro';
+import Footer from '../components/layout/Footer.astro';
+import { school } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {/* Finding X8 — the current site ships no meta description at all. */}
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#5C0000" />
+    <link rel="canonical" href={Astro.url.href} />
+    <link rel="icon" href="/brand/sunbeam-emblem.png" type="image/png" />
+
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/source-serif-4-latin-wght-normal.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/ibm-plex-sans-latin-wght-normal.woff2"
+      crossorigin
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={school.name} />
+  </head>
+
+  <body>
+    <a class="u-skip-link" href="#main">Skip to content</a>
+
+    <UtilityBar />
+    <Masthead />
+    <MobileNav />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Reveal-on-scroll (docs/05 § N). Content is visible by default; it is
+      // hidden only once we know motion is permitted, so a script failure or a
+      // reduced-motion preference can never leave the page blank.
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const targets = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+
+      if (targets.length && !reduced.matches && 'IntersectionObserver' in window) {
+        targets.forEach((el) => el.classList.add('is-armed'));
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              const el = entry.target as HTMLElement;
+              const delay = Number(el.dataset.revealDelay ?? 0);
+              window.setTimeout(() => {
+                el.classList.remove('is-armed');
+                el.classList.add('is-visible');
+              }, delay);
+              observer.unobserve(el);
+            });
+          },
+          { threshold: 0.15 }
+        );
+
+        targets.forEach((el) => observer.observe(el));
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,261 @@
+/* ============================================================================
+   SUNBEAM SCHOOL BALLIA — DESIGN TOKENS
+   Direct translation of docs/05-design-system.md § I.
+   Nothing here is invented. Every value traces to that document.
+   ========================================================================= */
+
+:root {
+  /* --- I1 · COLOUR ------------------------------------------------------ */
+
+  /* ==========================================================================
+     PALETTE — reference-design direction (client instruction, docs/08 D18).
+     Primary is now violet; the crest maroon is retained only as a heritage
+     tone for the logo lockup and a small number of institutional marks.
+     ========================================================================== */
+
+  --sb-violet: #6b4eff;        /* PRIMARY — CTAs, highlights, active states */
+  --sb-violet-dark: #5438e0;   /* hover / pressed                           */
+  --sb-violet-deep: #2e1b8f;   /* dark panels                               */
+  --sb-violet-wash: #efecff;   /* tints, badge grounds                      */
+  --sb-violet-ink: #150f33;    /* near-black with a violet cast             */
+
+  --sb-lime: #c6f24e;          /* SECONDARY — tags, small highlights only.
+                                  Never text on light: 1.4:1. Ground only. */
+  --sb-lime-deep: #4d6b00;     /* the readable lime, for text on lime wash  */
+  --sb-lime-wash: #f2fbd9;
+
+  /* Heritage — kept for the crest lockup and institutional marks. */
+  --sb-maroon: #8b0000;
+  --sb-maroon-dark: #5c0000;
+  --sb-maroon-deep: #3d0000;
+  --sb-maroon-wash: #f6ecea;
+  --sb-gold: #c9a227;
+  --sb-gold-bright: #ffe001;   /* LOGO REPRODUCTION ONLY. Never UI/text.    */
+  --sb-gold-wash: #fbf4e2;
+
+  /* Third accent — approved addition, see docs/08 D16.
+     The reference design carries its energy on a saturated violet. Violet is
+     not Sunbeam's and is ruled out by the brief, so the same job is done by a
+     deep teal: it sits opposite maroon on the wheel, keeps company with gold
+     the way it does on academic heraldry, and reads as science and technology
+     — exactly the drone-and-robotics story §07 is telling.
+     Strictly a punctuation colour: index numerals, counters, active states.
+     It never becomes a section ground. */
+  /* Darkened from #0F7A72: that value cleared white but landed on 4.49:1
+     against the sand band — a hair under AA. This clears every ground the
+     system uses: 6.0:1 on paper, 5.6:1 on ivory, 5.2:1 on sand. */
+  --sb-accent: #0e6f68;
+  --sb-accent-dark: #0a5a54;   /* hover / pressed                           */
+  --sb-accent-bright: #19c2b0; /* on ink panels only                        */
+  --sb-accent-wash: #e8f5f3;   /* tints, active tab ground                  */
+
+  /* Neutrals — 70% of the page. */
+  --sb-paper: #ffffff;
+  --sb-ivory: #f7f5f2;         /* default page background — reference cream */
+  --sb-sand: #efebe5;          /* alternate section band                    */
+  --sb-border: #e4e0d9;        /* hairline — default                        */
+  --sb-border-strong: #cbc5bb;
+  --sb-charcoal: #16151c;      /* primary text — charcoal, faint violet cast */
+  --sb-ink: #100e18;           /* full-bleed overlays, dark sections        */
+  --sb-text-secondary: #46434f; /*                        10.2:1 on cream   */
+  --sb-text-muted: #6b6775;    /*                         5.3:1 on cream    */
+
+  /* Semantic. */
+  --sb-notice: #1d4e89;
+  --sb-success: #2f6b4f;
+  --sb-urgent: #8a4b00;
+  --sb-focus: #1d4e89;
+
+  /* On-dark text ramps (used over ink panels and photography scrims). */
+  --sb-on-dark: #ffffff;
+  --sb-on-dark-90: rgba(255, 255, 255, 0.9);
+  --sb-on-dark-82: rgba(255, 255, 255, 0.82);
+  --sb-on-dark-78: rgba(255, 255, 255, 0.78);
+  --sb-on-dark-66: rgba(255, 255, 255, 0.66);
+  --sb-on-dark-rule: rgba(255, 255, 255, 0.16);
+
+  /* --- I9 · IMAGE TREATMENT --------------------------------------------- */
+  --sb-scrim: linear-gradient(
+    to top,
+    rgba(18, 16, 15, 0.72) 0%,
+    rgba(18, 16, 15, 0.35) 40%,
+    rgba(18, 16, 15, 0) 75%
+  );
+  --sb-scrim-flat: rgba(18, 16, 15, 0.62);
+  --sb-tint-maroon: rgba(61, 0, 0, 0.32);
+
+  /* --- I2 · TYPOGRAPHY -------------------------------------------------- */
+  /* Geometric sans for headings, clean humanist sans for body — the reference
+     pairing. The serif is retained only for the heritage crest lockup. */
+  --sb-font-display: 'Poppins', 'Plus Jakarta Sans Variable', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --sb-font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --sb-font-serif: 'Source Serif 4 Variable', Georgia, serif;
+
+  /* Scale — DESKTOP values (>=1024). Overridden per breakpoint below. */
+  --sb-display-xl: 76px;   --sb-display-xl-lh: 1.02;
+  --sb-h1: 56px;           --sb-h1-lh: 1.06;
+  --sb-h2: 40px;           --sb-h2-lh: 1.12;
+  --sb-h3: 28px;           --sb-h3-lh: 1.20;
+  --sb-h4: 21px;           --sb-h4-lh: 1.30;
+  --sb-body-lg: 19px;      --sb-body-lg-lh: 1.60;
+  --sb-body: 17px;         --sb-body-lh: 1.65;
+  --sb-body-sm: 15px;      --sb-body-sm-lh: 1.60;
+  --sb-caption: 13px;      --sb-caption-lh: 1.45;
+  --sb-label: 12px;        --sb-label-lh: 1.20;
+  --sb-stat: 64px;         --sb-stat-lh: 1.00;
+
+  /* Tracking. */
+  --sb-track-display: -0.02em;
+  --sb-track-h1: -0.015em;
+  --sb-track-h2: -0.01em;
+  --sb-track-h3: -0.005em;
+  --sb-track-caption: 0.01em;
+  --sb-track-label: 0.14em;
+
+  /* Measure. */
+  --sb-measure-prose: 68ch;
+  --sb-measure-display: 34ch;
+
+  /* --- I3 · SPACING (4px base) ------------------------------------------ */
+  --sb-2: 4px;    --sb-3: 8px;    --sb-4: 12px;   --sb-5: 16px;
+  --sb-6: 24px;   --sb-7: 32px;   --sb-8: 40px;   --sb-9: 56px;
+  --sb-10: 72px;  --sb-11: 96px;  --sb-12: 120px; --sb-13: 160px;
+
+  /* Contextual rhythm — DESKTOP. */
+  --sb-section-y: 120px;
+  --sb-section-y-major: 160px;
+  --sb-heading-gap: 24px;
+  --sb-eyebrow-gap: 16px;
+  --sb-para-gap: 24px;
+  --sb-row-gap: 56px;
+
+  /* --- I4 · GRID + LAYOUT ----------------------------------------------- */
+  --sb-max-wide: 1440px;
+  --sb-max-content: 1280px;
+  --sb-max-narrow: 880px;
+  --sb-max-prose: 680px;
+
+  --sb-cols: 12;
+  --sb-gutter: 24px;
+  --sb-margin: 48px;
+
+  /* --- I5 · RADII (deliberately minimal) --------------------------------- */
+  /* Reference shape language: generous rounding everywhere, pills on anything
+     interactive. This reverses docs/05 § I5 — see docs/08 D18. */
+  --sb-r-0: 16px;   /* was 0 — images and panels                            */
+  --sb-r-1: 999px;  /* was 2px — buttons, tags, badges: full pill           */
+  --sb-r-2: 24px;   /* cards and image containers                           */
+  --sb-r-3: 28px;   /* large feature cards                                  */
+  --sb-r-full: 999px;
+
+  /* --- I6 · BORDERS ------------------------------------------------------ */
+  --sb-hairline: 1px solid var(--sb-border);
+  --sb-rule: 1px solid var(--sb-border-strong);
+  --sb-accent-rule: 3px solid var(--sb-gold);
+  --sb-brand-rule: 2px solid var(--sb-maroon);
+
+  /* --- I7 · SHADOWS (three, total) --------------------------------------- */
+  --sb-shadow-header: 0 2px 20px -8px rgba(21, 15, 51, 0.14);
+  --sb-shadow-menu: 0 24px 48px -20px rgba(21, 15, 51, 0.24);
+  --sb-shadow-focus: 0 0 0 3px rgba(107, 78, 255, 0.4);
+  /* Reference elevation — cards now float (reverses docs/05 § I7). */
+  --sb-shadow-card: 0 8px 28px -12px rgba(21, 15, 51, 0.16);
+  --sb-shadow-card-hover: 0 18px 44px -16px rgba(21, 15, 51, 0.26);
+  --sb-shadow-badge: 0 10px 26px -8px rgba(21, 15, 51, 0.3);
+
+  /* --- N · MOTION -------------------------------------------------------- */
+  --sb-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --sb-dur-btn: 180ms;
+  --sb-dur-link: 220ms;
+  --sb-dur-menu: 200ms;
+  --sb-dur-nav: 240ms;
+  --sb-dur-reveal: 600ms;
+  --sb-dur-image: 600ms;
+  --sb-dur-fade: 900ms;   /* hero cross-fade — audit 1.3 */
+
+  /* Chrome heights. */
+  --sb-utility-h: 36px;
+  --sb-masthead-h: 96px;
+  --sb-masthead-h-condensed: 68px;
+}
+
+/* --- 1240–1279: 40px margin ------------------------------------------------ */
+@media (max-width: 1279px) {
+  :root {
+    --sb-margin: 40px;
+  }
+}
+
+/* --- TABLET TYPE + RHYTHM, from 1239 down ----------------------------------
+   docs/05 § I2 gives Desktop / Tablet / Mobile columns without fixing the
+   boundary between the first two. It is set at 1239 to match the point where
+   the desktop nav hands over to the drawer (see Masthead.astro): a 76px display
+   headline beside a hamburger reads as a broken desktop layout rather than a
+   designed tablet one. Grid columns and margins still follow the § I4 bands,
+   which change lower down at 1023.                                          */
+@media (max-width: 1239px) {
+  :root {
+    --sb-display-xl: 56px;   --sb-display-xl-lh: 1.05;
+    --sb-h1: 44px;           --sb-h1-lh: 1.08;
+    --sb-h2: 34px;           --sb-h2-lh: 1.14;
+    --sb-h3: 25px;           --sb-h3-lh: 1.22;
+    --sb-h4: 20px;           --sb-h4-lh: 1.32;
+    --sb-body-lg: 18px;
+    --sb-body: 16px;
+    --sb-stat: 52px;
+
+    --sb-section-y: 88px;
+    --sb-section-y-major: 112px;
+    --sb-heading-gap: 20px;
+    --sb-para-gap: 20px;
+    --sb-row-gap: 40px;
+  }
+}
+
+/* --- 768–1023: 8-column grid ----------------------------------------------- */
+@media (max-width: 1023px) {
+  :root {
+    --sb-cols: 8;
+    --sb-gutter: 20px;
+    --sb-margin: 32px;
+
+    --sb-masthead-h: 76px;
+  }
+}
+
+/* --- <768 MOBILE ----------------------------------------------------------- */
+@media (max-width: 767px) {
+  :root {
+    --sb-display-xl: 40px;   --sb-display-xl-lh: 1.08;
+    --sb-h1: 34px;           --sb-h1-lh: 1.12;
+    --sb-h2: 28px;           --sb-h2-lh: 1.16;
+    --sb-h3: 22px;           --sb-h3-lh: 1.25;
+    --sb-h4: 18px;           --sb-h4-lh: 1.35;
+    --sb-body-lg: 17px;
+    --sb-body: 16px;         /* never below 16 on mobile */
+    --sb-body-sm: 14px;
+    --sb-caption: 12px;
+    --sb-label: 11px;
+    --sb-stat: 40px;
+
+    --sb-section-y: 64px;
+    --sb-section-y-major: 80px;
+    --sb-heading-gap: 16px;
+    --sb-eyebrow-gap: 12px;
+    --sb-row-gap: 32px;
+
+    --sb-cols: 4;
+    --sb-gutter: 16px;
+    --sb-margin: 24px;
+
+    --sb-masthead-h: 64px;
+  }
+}
+
+@media (max-width: 479px) {
+  :root {
+    --sb-margin: 20px;
+  }
+}

@@ -1,0 +1,43 @@
+---
+/**
+ * HOMEPAGE — section order fixed by docs/04 § G1.
+ *
+ * The page is an answer sequence: each section closes one parent question and
+ * opens the next.
+ *
+ * BUILT     §01 Utility Bar · §02 Main Navigation (BaseLayout)
+ *           §03 Hero · §03b Proof Strip · §04 Quick Access
+ *           §05 Sunbeam Story · §07 Learning   (§06 Academic Journey removed for now)
+ *           §08 Campus · §09 Beyond Academics
+ * PENDING   §10 Life at Sunbeam · §11 News/Events/Notices · §12 Alumni
+ *           §13 Affiliations · §14 Achievements · §15 Admissions CTA · §16 Footer
+ *
+ * Background rhythm — no two adjacent sections share a treatment:
+ *   dark → sand → ivory → paper → ivory → ink → ivory mosaic → sand
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import ProofStrip from '../components/home/ProofStrip.astro';
+import QuickAccess from '../components/home/QuickAccess.astro';
+import Story from '../components/home/Story.astro';
+import PrincipalSpeak from '../components/home/PrincipalSpeak.astro';
+import Learning from '../components/home/Learning.astro';
+import Campus from '../components/home/Campus.astro';
+import EventsNews from '../components/home/EventsNews.astro';
+import Voices from '../components/home/Voices.astro';
+---
+
+<BaseLayout
+  title="Sunbeam School Ballia — CBSE co-educational school, Nursery to Class XII"
+  description="Sunbeam School Ballia, established 2013 at Agarsanda. A CBSE co-educational day school for Nursery to Class XII, ranked Ballia's #1 co-ed day school by Education World for six consecutive years."
+>
+  <Hero />
+  <ProofStrip />
+  <QuickAccess />
+  <Story />
+  <PrincipalSpeak />
+  <Learning />
+  <Campus />
+  <EventsNews />
+  <Voices />
+</BaseLayout>

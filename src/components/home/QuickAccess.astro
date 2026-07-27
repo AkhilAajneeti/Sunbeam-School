@@ -1,0 +1,180 @@
+---
+/**
+ * §04 · PARENT QUICK ACCESS — docs/06 §04
+ *
+ * The highest-frequency audience (D2, existing parents) gets a one-tap route to
+ * the six things they actually come for, without being routed through marketing.
+ *
+ * "No cards, no boxes, no icon circles" — a rule-separated band, and
+ * deliberately image-free: this is utility, and imagery would slow the one
+ * audience that wants speed.
+ */
+import { quickAccess } from '../../data/site';
+---
+
+<section class="quick" aria-labelledby="quick-heading">
+  <div class="u-container">
+    <div class="quick__head">
+      <h2 class="quick__eyebrow t-label" id="quick-heading">For Parents &amp; Students</h2>
+    </div>
+
+    <ul class="quick__row">
+      {quickAccess.map((item) => (
+        <li class="quick__item">
+          <a
+            class="quick__link"
+            href={item.href}
+            {...('external' in item && item.external
+              ? { target: '_blank', rel: 'noopener' }
+              : {})}
+          >
+            <span class="quick__label">{item.label}</span>
+            <span class="quick__desc t-caption">{item.desc}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .quick {
+    background: var(--sb-ivory);
+    padding-block: var(--sb-11);
+    border-bottom: var(--sb-hairline);
+  }
+
+  .quick__head {
+    margin-bottom: var(--sb-7);
+  }
+
+  .quick__eyebrow {
+    color: var(--sb-text-muted);
+    font-weight: 600;
+  }
+
+  .quick__row {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    border-top: var(--sb-hairline);
+  }
+
+  .quick__link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-2);
+    height: 100%;
+    padding: var(--sb-6) var(--sb-5) var(--sb-7) 0;
+  }
+
+  /* Dividers use one selector shape throughout — see the note in ProofStrip:
+     Astro scopes each compound, so a combinator rule silently outranks the
+     breakpoint overrides that are meant to reset it. */
+  .quick__item:nth-child(n + 2) .quick__link {
+    border-left: var(--sb-hairline);
+    padding-left: var(--sb-5);
+  }
+
+  /* 2px gold rule wipes in beneath — docs/06 §04. */
+  .quick__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 2px;
+    background: var(--sb-violet);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .quick__link:hover::after,
+  .quick__link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .quick__label {
+    font-size: var(--sb-h4);
+    font-weight: 600;
+    color: var(--sb-charcoal);
+    line-height: 1.25;
+    /* Reserve two lines across the six-column row: "Academic Calendar" wraps
+       where the others do not, and without this its descriptor drops out of
+       line with the rest of the band. */
+    min-height: 2.5em;
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .quick__link:hover .quick__label,
+  .quick__link:focus-visible .quick__label {
+    color: var(--sb-violet);
+  }
+
+  .quick__desc {
+    color: var(--sb-text-muted);
+  }
+
+  /* --- Tablet: 3 × 2 ------------------------------------------------------
+     Breaks at 1239 to match the type scale and the nav handover: six columns of
+     ~157px cannot hold "Academic Calendar" at 17px without wrapping. */
+  @media (max-width: 1239px) {
+    .quick__row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    /* reset, then re-apply per grid position (columns 2 and 3 of each row) */
+    .quick__item:nth-child(n) .quick__link {
+      border-left: 0;
+      padding: var(--sb-6) var(--sb-6) var(--sb-7) 0;
+    }
+
+    .quick__item:nth-child(3n + 2) .quick__link,
+    .quick__item:nth-child(3n + 3) .quick__link {
+      border-left: var(--sb-hairline);
+      padding-left: var(--sb-6);
+    }
+
+    .quick__item:nth-child(n + 4) .quick__link {
+      border-top: var(--sb-hairline);
+    }
+  }
+
+  /* --- Mobile: 2 × 3, 56px rows, full-width targets ----------------------- */
+  @media (max-width: 767px) {
+    .quick {
+      padding-block: var(--sb-9);
+    }
+
+    .quick__head { margin-bottom: var(--sb-6); }
+
+    .quick__row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* reset, then re-apply: right-hand column of each row */
+    .quick__item:nth-child(n) .quick__link {
+      border-left: 0;
+      min-height: 56px;
+      justify-content: center;
+      padding: var(--sb-5) var(--sb-4) var(--sb-5) 0;
+    }
+
+    .quick__item:nth-child(2n) .quick__link {
+      border-left: var(--sb-hairline);
+      padding-left: var(--sb-5);
+    }
+
+    .quick__item:nth-child(n + 3) .quick__link {
+      border-top: var(--sb-hairline);
+    }
+
+    /* Labels fit on one line at this size, so the reserved second line would
+       only add dead space. */
+    .quick__label {
+      font-size: var(--sb-body);
+      min-height: 0;
+    }
+  }
+</style>

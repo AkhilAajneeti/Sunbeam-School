@@ -1,0 +1,25 @@
+{
+  "name": "sunbeam-school-ballia",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sunbeam School Ballia — website redesign. Astro, static-first.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
+    "astro": "^5.6.1",
+    "sharp": "^0.34.1"
+  },
+  "devDependencies": {
+    "@fontsource-variable/ibm-plex-sans": "^5.2.5",
+    "@fontsource-variable/source-serif-4": "^5.2.5",
+    "playwright": "^1.62.0"
+  }
+}

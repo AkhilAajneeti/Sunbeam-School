@@ -1,0 +1,326 @@
+---
+/**
+ * C02 · MASTHEAD — docs/06 §02
+ *
+ * Crest + wordmark left, nav centre-right, Apply Online always visible.
+ * Sticky; condenses 96 → 68px on scroll.
+ *
+ * IMPLEMENTATION NOTE — desktop nav threshold is 1240px, not the 1024px implied
+ * by docs/05 § L. The audit mandates 8 top-level items (Career §6.1 and Alumni
+ * §12.1 are both required at top level); measured at 15px/600 they need ~1120px
+ * alongside the brand lockup and the Apply button. Below 1240 the drawer is the
+ * honest answer rather than a cramped, shrunken nav.
+ */
+import { mainNav } from '../../data/navigation';
+import MegaMenu from './MegaMenu.astro';
+---
+
+<header class="masthead" data-masthead>
+  <div class="masthead__inner u-container">
+    <a class="brand" href="/" aria-label="Sunbeam School Ballia — home">
+      <img
+        class="brand__emblem"
+        src="/brand/sunbeam-emblem.png"
+        alt=""
+        width="191"
+        height="150"
+        decoding="async"
+      />
+      <img
+        class="brand__wordmark"
+        src="/brand/sunbeam-wordmark.png"
+        alt="Sunbeam School Ballia"
+        width="588"
+        height="178"
+        decoding="async"
+      />
+    </a>
+
+    <nav class="mainnav" aria-label="Main">
+      <ul class="mainnav__list">
+        {mainNav.map((item) => (
+          <li class:list={['mainnav__item', item.columns && 'mainnav__item--has-mega']}>
+            <a class="mainnav__link" href={item.href}>{item.label}</a>
+            {item.columns && <MegaMenu item={item} />}
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="masthead__actions">
+      <a class="btn btn--primary masthead__apply" href="/admissions/">Apply Online</a>
+      <button
+        class="masthead__toggle"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        data-nav-toggle
+      >
+        <span class="masthead__toggle-bars" aria-hidden="true"><i></i><i></i></span>
+        <span class="masthead__toggle-text">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--sb-paper);
+    border-bottom: var(--sb-hairline);
+    transition: box-shadow var(--sb-dur-nav) ease;
+  }
+
+  .masthead.is-scrolled {
+    box-shadow: var(--sb-shadow-header);
+  }
+
+  /* Tucked away once the footer reaches the top of the viewport. A sticky header
+     will always sit on whatever lands beneath it, and at the end of the page
+     that was slicing the top off the footer's wordmark at shorter viewport
+     heights. Scrolling up brings it straight back. */
+  .masthead.is-tucked {
+    transform: translateY(-100%);
+  }
+
+  .masthead {
+    transition: box-shadow var(--sb-dur-nav) ease,
+      transform var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .masthead { transition: none; }
+  }
+
+  .masthead__inner {
+    height: var(--sb-masthead-h);
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 2vw, 40px);
+    transition: height var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  /* --- Brand ------------------------------------------------------------- */
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .brand__emblem {
+    height: 48px;
+    width: auto;
+    transition: height var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  .brand__wordmark {
+    height: 44px;
+    width: auto;
+    transition: height var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  .masthead.is-scrolled .brand__emblem { height: 38px; }
+  .masthead.is-scrolled .brand__wordmark { height: 34px; }
+
+  /* --- Main navigation --------------------------------------------------- */
+
+  .mainnav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mainnav__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 1.4vw, 26px);
+  }
+
+  /* static so the mega panel's containing block is the header, not the item */
+  .mainnav__item {
+    position: static;
+  }
+
+  .mainnav__link {
+    position: relative;
+    display: inline-block;
+    padding: 12px 2px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--sb-charcoal);
+    white-space: nowrap;
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  /* Active/hover indicator: 2px maroon rule, wipes in from the left. */
+  .mainnav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--sb-violet);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .mainnav__item:hover .mainnav__link,
+  .mainnav__item:focus-within .mainnav__link {
+    color: var(--sb-violet);
+  }
+
+  .mainnav__item:hover .mainnav__link::after,
+  .mainnav__item:focus-within .mainnav__link::after {
+    transform: scaleX(1);
+  }
+
+  /* CSS-first mega-menu reveal. */
+  .mainnav__item--has-mega:hover :global(.mega),
+  .mainnav__item--has-mega:focus-within :global(.mega) {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+      opacity var(--sb-dur-menu) ease,
+      transform var(--sb-dur-menu) var(--sb-ease);
+  }
+
+  .masthead.is-mega-suppressed :global(.mega) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  /* --- Actions ----------------------------------------------------------- */
+
+  .masthead__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-5);
+    flex-shrink: 0;
+  }
+
+  .masthead__toggle {
+    display: none;
+    align-items: center;
+    gap: var(--sb-3);
+    min-height: 48px;
+    padding: 0 var(--sb-2);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-charcoal);
+  }
+
+  .masthead__toggle-bars {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 22px;
+    height: 14px;
+  }
+
+  .masthead__toggle-bars i {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--sb-charcoal);
+  }
+
+  /* --- Below 1240: drawer takes over ------------------------------------- */
+
+  @media (max-width: 1239px) {
+    .mainnav { display: none; }
+    .masthead__toggle { display: inline-flex; }
+    .masthead__inner { justify-content: space-between; }
+  }
+
+  @media (max-width: 1023px) {
+    .brand__emblem { height: 40px; }
+    .brand__wordmark { height: 36px; }
+    .masthead.is-scrolled .brand__emblem { height: 34px; }
+    .masthead.is-scrolled .brand__wordmark { height: 30px; }
+  }
+
+  @media (max-width: 767px) {
+    .brand { gap: 10px; }
+    .brand__emblem { height: 34px; }
+    .brand__wordmark { height: 30px; }
+    .masthead.is-scrolled .brand__emblem { height: 30px; }
+    .masthead.is-scrolled .brand__wordmark { height: 26px; }
+    .masthead__apply { display: none; } /* Apply is pinned in the drawer instead */
+    .masthead__toggle-text { display: none; }
+  }
+</style>
+
+<script>
+  // Sticky condense + Escape-to-close. Everything else is CSS.
+  const masthead = document.querySelector<HTMLElement>('[data-masthead]');
+  const utility = document.querySelector<HTMLElement>('[data-utility-bar]');
+  const footer = document.querySelector<HTMLElement>('footer');
+
+  if (masthead) {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      masthead.classList.toggle('is-scrolled', y > 8);
+
+      // Tuck the header out of the way once the footer reaches it, so the
+      // footer's wordmark is never sliced in half at the end of the page.
+      if (footer) {
+        masthead.classList.toggle(
+          'is-tucked',
+          footer.getBoundingClientRect().top <= masthead.offsetHeight + 4
+        );
+      }
+
+      // Utility bar hides on scroll-down, returns on scroll-up (docs/06 §01).
+      if (utility) {
+        const goingDown = y > lastY && y > 120;
+        utility.classList.toggle('is-hidden', goingDown);
+      }
+
+      lastY = y;
+      ticking = false;
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          window.requestAnimationFrame(onScroll);
+        }
+      },
+      { passive: true }
+    );
+
+    // Escape closes an open mega-menu and returns focus to its trigger.
+    masthead.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const openItem = masthead
+        .querySelector('.mainnav__item--has-mega:focus-within');
+      if (!openItem) return;
+
+      const trigger = openItem.querySelector<HTMLAnchorElement>('.mainnav__link');
+      masthead.classList.add('is-mega-suppressed');
+      trigger?.focus();
+      // Release the suppression once focus moves on, so hover still works.
+      const release = () => {
+        masthead.classList.remove('is-mega-suppressed');
+        masthead.removeEventListener('focusout', release);
+        masthead.removeEventListener('mouseleave', release);
+      };
+      masthead.addEventListener('focusout', release);
+      masthead.addEventListener('mouseleave', release);
+    });
+  }
+</script>

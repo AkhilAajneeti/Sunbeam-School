@@ -1,0 +1,357 @@
+---
+/**
+ * §12 · STUDENT & ALUMNI VOICES — audit 13.1
+ *
+ * Three infinite marquee rows, adjacent rows travelling in opposite directions.
+ * The avatar sits on the right of every card.
+ *
+ * CONTAINMENT: the rows live inside the standard site container and each row
+ * clips at the container edge, not the viewport. That is the difference from
+ * the earlier version — no full-bleed, no negative margins, so cards are never
+ * cut off against the screen edge. Edge masks fade them in and out.
+ *
+ * Motion is CSS-only: each track holds the set twice and translates -50%, so
+ * the loop is seamless without JavaScript measuring anything.
+ *
+ * WCAG 2.2.2 — content moving for more than five seconds needs a pause
+ * mechanism, so there is a real button; hover/focus pausing alone is not
+ * sufficient. prefers-reduced-motion stops it and turns each row into a plain
+ * horizontal scroller.
+ *
+ * CONTENT: `voices.items` is empty, so cards render their empty state. Quotes
+ * attributed to named students of a real school are not ours to write — see
+ * docs/08 D19. Fill `items` in data/home.ts and every card populates.
+ */
+import { voices } from '../../data/home';
+import { showBuildNotes } from '../../data/site';
+import { Picture } from 'astro:assets';
+
+const ROWS = 3;
+const hasContent = voices.items.length > 0;
+const all: any[] = hasContent ? [...voices.items] : Array.from({ length: voices.slots });
+const perRow = Math.ceil(all.length / ROWS);
+const rows = Array.from({ length: ROWS }, (_, i) => all.slice(i * perRow, (i + 1) * perRow));
+const durations = ['58s', '72s', '64s'];
+---
+
+<section class="voices" data-voices aria-labelledby="voices-heading">
+  <div class="u-container">
+    <div class="voices__head" data-reveal>
+      <p class="voices__eyebrow pill pill--violet">{voices.eyebrow}</p>
+      <h2 class="voices__heading t-h2-sans" id="voices-heading">
+        What our students <span class="t-squiggle">say</span>
+      </h2>
+      <p class="voices__deck t-body-lg">{voices.deck}</p>
+    </div>
+
+    <div class="voices__rows">
+      {rows.map((row, r) => (
+        <div class="voices__row" data-dir={r % 2 === 1 ? 'right' : 'left'}>
+          <div class="voices__track" style={`--dur: ${durations[r]}`}>
+            {/* Rendered twice for the seamless loop; the duplicate is hidden
+                from assistive tech so nothing is announced two times over. */}
+            {[0, 1].map((copy) =>
+              row.map((item: any) => (
+                <figure class="vcard" aria-hidden={copy === 1 ? 'true' : undefined}>
+                  <div class="vcard__body">
+                    <svg class="vcard__quotemark" width="20" height="16" viewBox="0 0 18 15"
+                      fill="currentColor" aria-hidden="true">
+                      <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
+                    </svg>
+
+                    {hasContent ? (
+                      <>
+                        <blockquote class="vcard__quote">{item.quote}</blockquote>
+                        <figcaption class="vcard__person">
+                          <span class="vcard__name">{item.name}</span>
+                          <span class="vcard__sep" aria-hidden="true"></span>
+                          <span class="vcard__class">Class of {item.classOf}</span>
+                        </figcaption>
+                      </>
+                    ) : (
+                      <>
+                        <p class="vcard__quote vcard__quote--empty">
+                          Quote to be supplied by the school.
+                        </p>
+                        <figcaption class="vcard__person">
+                          <span class="vcard__name vcard__name--empty">Student name</span>
+                          <span class="vcard__sep" aria-hidden="true"></span>
+                          <span class="vcard__class">Class of 20——</span>
+                        </figcaption>
+                      </>
+                    )}
+                  </div>
+
+                  <div class="vcard__avatar">
+                    {item?.photo ? (
+                      <Picture
+                        src={item.photo}
+                        alt={`${item.name}, Sunbeam School Ballia, Class of ${item.classOf}`}
+                        formats={['avif', 'webp']}
+                        widths={[88, 176]}
+                        sizes="88px"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span class="vcard__monogram" aria-hidden="true">
+                        <svg width="18" height="15" viewBox="0 0 18 15" fill="currentColor">
+                          <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
+                        </svg>
+                      </span>
+                    )}
+                  </div>
+                </figure>
+              ))
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="voices__foot">
+      <button class="voices__pause icon-btn" type="button" data-voices-pause
+        aria-label="Pause the scrolling testimonials">
+        <svg class="voices__icon-pause" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
+          <rect x="0" y="0" width="3" height="12" fill="currentColor" />
+          <rect x="7" y="0" width="3" height="12" fill="currentColor" />
+        </svg>
+        <svg class="voices__icon-play" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
+          <path d="M0 0L10 6L0 12Z" fill="currentColor" />
+        </svg>
+      </button>
+
+      {!hasContent && showBuildNotes && (
+        <p class="voices__note">
+          <strong>Nine slots are laid out and ready.</strong> Real quotes, names,
+          class years and headshots are outstanding — asset request <strong>A4</strong>.
+        </p>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .voices {
+    background: var(--sb-ivory);
+    padding-block: var(--sb-section-y);
+  }
+
+  /* --- Header, centred ----------------------------------------------------- */
+
+  .voices__head {
+    max-width: 62ch;
+    margin-inline: auto;
+    margin-bottom: var(--sb-9);
+    text-align: center;
+  }
+
+  .voices__eyebrow { margin-bottom: var(--sb-6); }
+
+  .voices__heading {
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-heading-gap);
+  }
+
+  .voices__deck {
+    color: var(--sb-text-muted);
+    max-width: 54ch;
+    margin-inline: auto;
+  }
+
+  /* --- Rows ---------------------------------------------------------------- */
+
+  .voices__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-5);
+  }
+
+  .voices__row {
+    display: flex;
+    /* Clipping happens HERE — at the container edge, not the viewport. */
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  }
+
+  .voices__track {
+    display: flex;
+    gap: var(--sb-5);
+    width: max-content;
+    padding-right: var(--sb-5); /* keeps the seam even */
+    animation: voices-marquee var(--dur) linear infinite;
+    will-change: transform;
+  }
+
+  /* Adjacent rows travel in opposite directions. */
+  .voices__row[data-dir='right'] .voices__track { animation-direction: reverse; }
+
+  @keyframes voices-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .voices__rows:hover .voices__track,
+  .voices__rows:focus-within .voices__track,
+  .voices.is-paused .voices__track {
+    animation-play-state: paused;
+  }
+
+  /* --- Pill card, avatar always on the right -------------------------------- */
+
+  .vcard {
+    flex: 0 0 auto;
+    width: 404px;
+    display: flex;
+    /* Avatar first on every card — the markup puts the body first for reading
+       order, so the visual order is reversed here. */
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: var(--sb-5);
+    margin: 0;
+    padding: var(--sb-4) var(--sb-7) var(--sb-4) var(--sb-4);
+    background: #fff;
+    border-radius: var(--sb-r-full);
+    box-shadow: var(--sb-shadow-card);
+    transition: box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .vcard:hover { box-shadow: var(--sb-shadow-card-hover); }
+
+  .vcard__body {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-3);
+  }
+
+  .vcard__quotemark { color: var(--sb-violet); opacity: 0.28; }
+
+  .vcard__quote {
+    margin: 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--sb-text-secondary);
+  }
+
+  .vcard__quote--empty { font-style: italic; color: var(--sb-text-muted); }
+
+  .vcard__person {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-3);
+    flex-wrap: wrap;
+  }
+
+  .vcard__name {
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    color: var(--sb-charcoal);
+  }
+
+  .vcard__name--empty { color: var(--sb-text-muted); font-weight: 600; }
+
+  .vcard__sep { width: 1px; height: 12px; background: var(--sb-border-strong); }
+
+  .vcard__class { font-size: var(--sb-caption); color: var(--sb-text-muted); }
+
+  .vcard__avatar {
+    flex-shrink: 0;
+    width: 88px;
+    height: 88px;
+    border-radius: var(--sb-r-full);
+    overflow: hidden;
+    background: var(--sb-violet-wash);
+    display: grid;
+    place-items: center;
+  }
+
+  .vcard__avatar :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .vcard__monogram { color: var(--sb-violet); opacity: 0.55; }
+
+  /* --- Foot ----------------------------------------------------------------- */
+
+  .voices__foot {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-6);
+    margin-top: var(--sb-8);
+  }
+
+  .voices__pause { flex-shrink: 0; }
+  .voices__icon-play { display: none; }
+  .voices__pause[data-paused] .voices__icon-play { display: block; }
+  .voices__pause[data-paused] .voices__icon-pause { display: none; }
+
+  .voices__note {
+    margin: 0;
+    padding: var(--sb-4) var(--sb-6);
+    border-left: 3px solid var(--sb-violet);
+    background: var(--sb-violet-wash);
+    font-size: var(--sb-body-sm);
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Mobile ---------------------------------------------------------------- */
+
+  @media (max-width: 767px) {
+    /* The marquee is unreachable on a phone — overflow was hidden, so the cards
+       it scrolled past could not be swiped to. Below 768 it becomes a real
+       snap carousel: animation off, duplicates removed, one card per view. */
+    .voices__row {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .voices__row::-webkit-scrollbar { display: none; }
+
+    .voices__track { animation: none !important; transform: none !important; width: auto; }
+
+    .vcard[aria-hidden='true'] { display: none; }
+    .vcard { scroll-snap-align: center; }
+
+    .vcard {
+      width: 306px;
+      padding: var(--sb-4) var(--sb-6) var(--sb-4) var(--sb-4);
+    }
+
+    .vcard__avatar { width: 68px; height: 68px; }
+
+    .voices__foot { flex-direction: column; align-items: flex-start; gap: var(--sb-5); }
+    .voices__head { max-width: none; }
+  }
+
+  /* --- Reduced motion --------------------------------------------------------
+     No movement at all; each row becomes a normal scroller so every card is
+     still reachable. */
+  @media (prefers-reduced-motion: reduce) {
+    .voices__track { animation: none; transform: none; }
+    .voices__row { overflow-x: auto; scrollbar-width: thin; }
+    .voices__pause { display: none; }
+  }
+</style>
+
+<script>
+  const section = document.querySelector<HTMLElement>('[data-voices]');
+  const pause = document.querySelector<HTMLButtonElement>('[data-voices-pause]');
+
+  if (section && pause) {
+    pause.addEventListener('click', () => {
+      const paused = section.classList.toggle('is-paused');
+      pause.toggleAttribute('data-paused', paused);
+      pause.setAttribute(
+        'aria-label',
+        paused ? 'Resume the scrolling testimonials' : 'Pause the scrolling testimonials'
+      );
+    });
+  }
+</script>

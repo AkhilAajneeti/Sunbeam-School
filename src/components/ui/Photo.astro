@@ -1,0 +1,104 @@
+---
+/**
+ * PHOTO — renders a real photograph when one exists, and the labelled
+ * development placeholder when it does not.
+ *
+ * This is the swap path docs/07 promised: as the school delivers photography,
+ * a slot changes from `brief only` to `src + alt` and nothing else moves.
+ * Ratio, crop and position stay identical either way, so the composition that
+ * was approved on placeholders is the composition that ships.
+ */
+import { Picture } from 'astro:assets';
+import AssetPlaceholder from './AssetPlaceholder.astro';
+
+interface Props {
+  /** Imported from src/assets/photos. Omit to render the placeholder. */
+  src?: ImageMetadata;
+  /** Required whenever `src` is set. Descriptive, names the subject (docs/05 J3). */
+  alt?: string;
+  /** Shot brief — the placeholder's label, and the record of what is still owed. */
+  brief: string;
+  ratio?: string;
+  tone?: 'ink' | 'charcoal' | 'maroon' | 'sand' | 'ivory';
+  ref?: string;
+  quiet?: boolean;
+  /** object-position, to hold the focal point through an aggressive crop. */
+  position?: string;
+  /** LCP candidates only. */
+  eager?: boolean;
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  brief,
+  ratio,
+  tone = 'charcoal',
+  ref = 'A2',
+  quiet = false,
+  position = '50% 50%',
+  eager = false,
+  sizes = '100vw',
+  class: className = '',
+} = Astro.props;
+
+// `alt=""` is a deliberate, valid value — it marks an image as decorative, which
+// is correct for the inactive layers of a cross-fade stack where the active
+// image already carries the description. Only a missing alt is an error.
+if (src && alt === undefined) {
+  throw new Error(`Photo: alt is required alongside src (use alt="" if decorative). Brief: "${brief}"`);
+}
+---
+
+{
+  src ? (
+    <div
+      class:list={['photo', className]}
+      style={`--photo-position: ${position}; ${ratio ? `aspect-ratio: ${ratio};` : ''}`}
+    >
+      <Picture
+        src={src}
+        alt={alt!}
+        formats={['avif', 'webp']}
+        widths={[400, 800, 1200, 1600, 2400]}
+        sizes={sizes}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding={eager ? 'sync' : 'async'}
+        fetchpriority={eager ? 'high' : 'auto'}
+      />
+    </div>
+  ) : (
+    <AssetPlaceholder ratio={ratio} tone={tone} brief={brief} ref={ref} quiet={quiet} />
+  )
+}
+
+<style>
+  .photo {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--sb-r-0); /* photography is square-cornered — I5 */
+  }
+
+  /* <Picture> emits <picture><source…><img></picture>. `picture` is inline with
+     auto height, so a percentage height on the img has nothing to resolve
+     against and silently falls back to the intrinsic ratio — the image then
+     either overflows and gets cropped, or sits short inside its frame. Making
+     the picture element a full-size block gives the img a height to resolve to. */
+  .photo :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--photo-position);
+    display: block;
+  }
+</style>

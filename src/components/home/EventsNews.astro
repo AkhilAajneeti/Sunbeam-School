@@ -1,0 +1,380 @@
+---
+/**
+ * §11 · EVENTS & NEWS — audit §11 (and §10 for notices, still to come)
+ *
+ * Reference "Upcoming Events" filmstrip: a row of event photographs where the
+ * active one expands and carries a caption, with a scrubber beneath.
+ *
+ * Every event named here is one the school has actually published (docs/01 § 5).
+ * Where a date is not on record it says so rather than carrying an invented
+ * one — audit §11 asks for this section to stay current, and a fabricated date
+ * would be the fastest way to make it untrue.
+ */
+import { Picture } from 'astro:assets';
+import { showBuildNotes } from '../../data/site';
+import genesis from '../../assets/photos/sunbeem-4.jpg';
+import farewell from '../../assets/photos/sunbeem-3.jpg';
+import investiture from '../../assets/photos/sunbeem-5.jpg';
+import community from '../../assets/photos/sunbeem-2.jpg';
+import trophy from '../../assets/photos/sunbeem-students-3.jpg';
+
+const events = [
+  {
+    title: 'Genesis — Annual Function',
+    caption: '“Voyages of Discovery”, with a director of ISRO as chief guest',
+    when: '2024',
+    tag: 'Annual Function',
+    src: genesis,
+    alt: 'An award ceremony on stage at Sunbeam School Ballia.',
+  },
+  {
+    title: 'Investiture & ISRO Workshop',
+    caption: 'Student council office-bearers and NCC cadets take charge',
+    when: '2024',
+    tag: 'Ceremony',
+    src: investiture,
+    alt: 'Student council office-bearers and NCC cadets on stage at Sunbeam School Ballia.',
+  },
+  {
+    title: 'Farewell 2024-25',
+    caption: 'The senior school gathers to send off its outgoing batch',
+    when: '2024-25',
+    tag: 'School Life',
+    src: farewell,
+    alt: 'Students and staff at the 2024-25 farewell ceremony at Sunbeam School Ballia.',
+  },
+  {
+    title: 'Inter-school Competition',
+    caption: 'Sunbeam students return with the winners’ trophy',
+    when: 'Date to confirm',
+    tag: 'Achievement',
+    src: trophy,
+    alt: 'Sunbeam School Ballia students holding a competition trophy.',
+  },
+  {
+    title: 'Pradiptam — Alumni Meet',
+    caption: 'Former students return to the Agarsanda campus',
+    when: 'Date to confirm',
+    tag: 'Alumni',
+    src: community,
+    alt: 'Students and staff gathered at the Sunbeam School Ballia entrance.',
+  },
+];
+
+const ACTIVE = 2;
+---
+
+<section class="events" aria-labelledby="events-heading" data-events>
+  <div class="u-container">
+    <header class="events__head" data-reveal>
+      <p class="events__pill"><span class="pill pill--violet">News &amp; Events</span></p>
+      <h2 class="events__heading t-h2-sans" id="events-heading">
+        Events and <span class="t-squiggle">news</span>
+      </h2>
+      <p class="events__sub t-body-lg">
+        Assemblies, competitions, ceremonies and workshops — what has been happening
+        on the Agarsanda campus.
+      </p>
+    </header>
+
+    <ul class="events__strip" data-strip>
+      {events.map((e, i) => (
+        <li class="eframe" data-frame data-when={e.when} data-active={i === ACTIVE ? '' : undefined}>
+          <button class="eframe__btn" type="button" data-pick aria-pressed={i === ACTIVE ? 'true' : 'false'}>
+            <Picture
+              src={e.src}
+              alt={e.alt}
+              formats={['avif', 'webp']}
+              widths={[400, 800, 1200]}
+              sizes="(max-width: 767px) 70vw, 40vw"
+              loading="lazy"
+            />
+            <span class="eframe__scrim" aria-hidden="true"></span>
+            <span class="eframe__tag pill">{e.tag}</span>
+            <span class="eframe__caption">
+              <span class="eframe__title">{e.title}</span>
+              <span class="eframe__sub">{e.caption}</span>
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <div class="events__bar">
+      <button class="events__arrow events__arrow--ghost" type="button" data-eprev aria-label="Previous event">
+        <svg width="15" height="11" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M5 1L1 5L5 9M1 5H14" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </button>
+
+      <div class="events__scrub" role="group" aria-label="Choose an event">
+        {events.map((e, i) => (
+          <button class="events__dot" type="button" data-dot
+            aria-label={`Show ${e.title}`} aria-current={i === ACTIVE ? 'true' : 'false'}></button>
+        ))}
+      </div>
+
+      <p class="events__when t-tabular" aria-live="polite" data-when-out>{events[ACTIVE].when}</p>
+
+      <button class="events__arrow events__arrow--solid" type="button" data-enext aria-label="Next event">
+        <svg width="15" height="11" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </button>
+    </div>
+
+    {showBuildNotes && (
+    <p class="events__note">
+      <strong>These are real, published school events.</strong> A live news and notice
+      feed with current dates is asset request <strong>A7</strong> — audit §11 asks
+      this section to stay current, which needs a named owner and a cadence.
+    </p>
+    )}
+  </div>
+</section>
+
+<style>
+  .events {
+    background: var(--sb-ivory);
+    padding-block: var(--sb-section-y);
+    overflow-x: clip;
+  }
+
+  .events__head {
+    text-align: center;
+    max-width: 62ch;
+    margin-inline: auto;
+    margin-bottom: var(--sb-9);
+  }
+
+  .events__pill { margin-bottom: var(--sb-5); }
+  .events__heading { color: var(--sb-charcoal); margin-bottom: var(--sb-5); }
+  .events__sub { color: var(--sb-text-muted); max-width: 56ch; margin-inline: auto; }
+
+  /* --- Filmstrip: the active frame expands ---------------------------------- */
+
+  .events__strip {
+    display: flex;
+    gap: var(--sb-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: clamp(280px, 42vh, 420px);
+  }
+
+  .eframe {
+    flex: 1 1 0;
+    min-width: 0;
+    transition: flex-grow 560ms var(--sb-ease);
+  }
+
+  .eframe[data-active] { flex-grow: 3.2; }
+
+  .eframe__btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+    text-align: left;
+  }
+
+  .eframe__btn :global(picture),
+  .eframe__btn :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .eframe__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(16, 14, 24, 0.86) 0%,
+      rgba(16, 14, 24, 0.28) 46%, rgba(16, 14, 24, 0.06) 100%);
+  }
+
+  .eframe__tag {
+    position: absolute;
+    top: var(--sb-4);
+    left: var(--sb-4);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--sb-charcoal);
+    font-size: 11px;
+    padding: 5px 12px;
+    opacity: 0;
+    transition: opacity 320ms ease;
+  }
+
+  .eframe[data-active] .eframe__tag { opacity: 1; }
+
+  .eframe__caption {
+    position: absolute;
+    left: var(--sb-6);
+    right: var(--sb-6);
+    bottom: var(--sb-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-2);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 320ms ease, transform 320ms var(--sb-ease);
+  }
+
+  .eframe[data-active] .eframe__caption { opacity: 1; transform: none; }
+
+  .eframe__title {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  .eframe__sub {
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 46ch;
+  }
+
+  /* --- Scrubber ------------------------------------------------------------- */
+
+  .events__bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sb-5);
+    margin-top: var(--sb-7);
+  }
+
+  .events__scrub { display: flex; align-items: center; gap: var(--sb-3); }
+
+  .events__dot {
+    width: 30px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+  }
+
+  .events__dot::before {
+    content: '';
+    width: 30px;
+    height: 3px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-border-strong);
+    transition: background-color var(--sb-dur-link) ease;
+  }
+
+  .events__dot[aria-current='true']::before { background: var(--sb-violet); }
+  .events__dot:hover::before { background: var(--sb-violet-dark); }
+
+  .events__when {
+    margin: 0;
+    min-width: 12ch;
+    text-align: center;
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    color: var(--sb-charcoal);
+  }
+
+  .events__arrow {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--sb-r-full);
+    transition: background-color var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease,
+      border-color var(--sb-dur-btn) ease;
+  }
+
+  .events__arrow--ghost {
+    background: #fff;
+    border: 1px solid var(--sb-border-strong);
+    color: var(--sb-charcoal);
+  }
+  .events__arrow--ghost:hover { border-color: var(--sb-violet); color: var(--sb-violet); }
+
+  .events__arrow--solid {
+    background: var(--sb-violet);
+    border: 1px solid var(--sb-violet);
+    color: #fff;
+    box-shadow: 0 10px 22px -10px rgba(107, 78, 255, 0.9);
+  }
+  .events__arrow--solid:hover { background: var(--sb-violet-dark); }
+
+  .events__note {
+    margin: var(--sb-8) auto 0;
+    padding: var(--sb-4) var(--sb-6);
+    border-left: 3px solid var(--sb-violet);
+    background: var(--sb-violet-wash);
+    font-size: var(--sb-body-sm);
+    color: var(--sb-text-secondary);
+    max-width: 80ch;
+  }
+
+  /* --- Tablet & mobile -------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .events__strip { height: clamp(240px, 34vh, 340px); }
+    .eframe[data-active] { flex-grow: 4; }
+  }
+
+  @media (max-width: 767px) {
+    /* A five-across strip collapses to slivers here, so it becomes a scroller. */
+    .events__strip {
+      height: 300px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(to right, #000 88%, transparent);
+      mask-image: linear-gradient(to right, #000 88%, transparent);
+    }
+    .events__strip::-webkit-scrollbar { display: none; }
+
+    .eframe { flex: 0 0 76%; scroll-snap-align: start; }
+    .eframe[data-active] { flex-grow: 0; }
+    .eframe__tag, .eframe__caption { opacity: 1; transform: none; }
+
+    .events__bar { flex-wrap: wrap; gap: var(--sb-4); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eframe, .eframe__caption { transition: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-events]');
+
+  if (root) {
+    const frames = Array.from(root.querySelectorAll<HTMLElement>('[data-frame]'));
+    const picks = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-pick]'));
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-dot]'));
+    const when = root.querySelector<HTMLElement>('[data-when-out]');
+    // Dates live in the markup, so read them off the rendered caption order.
+    const dates = Array.from(root.querySelectorAll<HTMLElement>('[data-frame]')).map(
+      (f) => f.dataset.when ?? ''
+    );
+
+    let index = frames.findIndex((f) => f.hasAttribute('data-active'));
+    if (index < 0) index = 0;
+
+    const show = (next: number) => {
+      index = (next + frames.length) % frames.length;
+      frames.forEach((f, i) => f.toggleAttribute('data-active', i === index));
+      picks.forEach((p, i) => p.setAttribute('aria-pressed', String(i === index)));
+      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === index)));
+      if (when && dates[index]) when.textContent = dates[index];
+      frames[index].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    };
+
+    picks.forEach((p, i) => p.addEventListener('click', () => show(i)));
+    dots.forEach((d, i) => d.addEventListener('click', () => show(i)));
+    root.querySelector('[data-eprev]')?.addEventListener('click', () => show(index - 1));
+    root.querySelector('[data-enext]')?.addEventListener('click', () => show(index + 1));
+  }
+</script>

@@ -1,0 +1,211 @@
+---
+/**
+ * C03 · MEGA MENU — docs/06 §02, docs/04 F1
+ *
+ * Full-width, 1280 inner, 3–4 columns + one featured panel.
+ * Every column header is a link to a real landing page — no orphan headings,
+ * which was the primary failure of the existing site's menu.
+ *
+ * CSS-first: opens on :hover and :focus-within. JS only adds Escape-to-close.
+ */
+import type { NavItem } from '../../data/navigation';
+import AssetPlaceholder from '../ui/AssetPlaceholder.astro';
+
+interface Props {
+  item: NavItem;
+}
+const { item } = Astro.props;
+---
+
+<div class="mega" data-mega>
+  <div class="mega__inner u-container">
+    <div class="mega__cols">
+      {item.columns?.map((col) => (
+        <div class="mega__col">
+          <a class="mega__col-header t-label" href={col.href}>{col.header}</a>
+          <ul class="mega__list">
+            {col.children.map((child) => (
+              <li>
+                <a class="mega__link" href={child.href}>
+                  <span class="mega__link-label">{child.label}</span>
+                  {child.note && <span class="mega__link-note">{child.note}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    {item.feature && (
+      <a class="mega__feature" href={item.feature.href}>
+        <div class="mega__feature-media">
+          <AssetPlaceholder
+            ratio="16 / 9"
+            tone="charcoal"
+            brief={item.feature.imageBrief}
+            ref="A2"
+            quiet
+          />
+        </div>
+        <span class="mega__feature-eyebrow t-label">{item.feature.eyebrow}</span>
+        <span class="mega__feature-title t-h4">{item.feature.title}</span>
+        <span class="mega__feature-body t-caption">{item.feature.body}</span>
+        <span class="mega__feature-cta">
+          {item.feature.cta}
+          <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </span>
+      </a>
+    )}
+  </div>
+</div>
+
+<style>
+  .mega {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--sb-paper);
+    border-top: var(--sb-hairline);
+    box-shadow: var(--sb-shadow-menu);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition:
+      opacity 140ms ease,
+      transform 140ms var(--sb-ease),
+      visibility 140ms;
+    z-index: 60;
+  }
+
+  .mega__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: var(--sb-11);
+    /* Kept tight: the link columns are short (4 items), so a tall panel leaves
+       a dead field beneath them. Feature art is 16:9 for the same reason. */
+    padding-block: var(--sb-8) var(--sb-9);
+  }
+
+  .mega__cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: var(--sb-8);
+  }
+
+  .mega__col-header {
+    display: block;
+    color: var(--sb-violet);
+    padding-bottom: var(--sb-4);
+    border-bottom: var(--sb-hairline);
+    margin-bottom: var(--sb-5);
+  }
+
+  .mega__col-header:hover {
+    color: var(--sb-maroon-dark);
+    border-bottom-color: var(--sb-violet);
+  }
+
+  .mega__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-2);
+  }
+
+  .mega__link {
+    display: block;
+    padding-block: var(--sb-3);
+    color: var(--sb-text-secondary);
+    font-size: var(--sb-body-sm);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .mega__link:hover .mega__link-label,
+  .mega__link:focus-visible .mega__link-label {
+    color: var(--sb-violet);
+  }
+
+  .mega__link-label {
+    display: block;
+    color: var(--sb-charcoal);
+    font-weight: 500;
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .mega__link-note {
+    display: block;
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+    margin-top: 1px;
+  }
+
+  /* --- Featured panel --------------------------------------------------- */
+
+  .mega__feature {
+    display: flex;
+    flex-direction: column;
+    border-left: var(--sb-hairline);
+    padding-left: var(--sb-8);
+  }
+
+  .mega__feature-media {
+    margin-bottom: var(--sb-5);
+    overflow: hidden;
+  }
+
+  .mega__feature-media :global(.ph) {
+    transition: transform var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .mega__feature:hover .mega__feature-media :global(.ph) {
+    transform: scale(1.03);
+  }
+
+  .mega__feature-eyebrow {
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-3);
+  }
+
+  .mega__feature-title {
+    color: var(--sb-charcoal);
+    font-family: var(--sb-font-display);
+    font-weight: 400;
+    margin-bottom: var(--sb-3);
+  }
+
+  .mega__feature-body {
+    color: var(--sb-text-muted);
+    margin-bottom: var(--sb-5);
+  }
+
+  .mega__feature-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    margin-top: auto;
+    color: var(--sb-violet);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+  }
+
+  .mega__feature:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  .arrow {
+    transition: transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  /* Three-column menus don't need the full 4-col measure. */
+  @media (max-width: 1439px) {
+    .mega__inner {
+      gap: var(--sb-9);
+      grid-template-columns: minmax(0, 1fr) 260px;
+    }
+    .mega__cols { gap: var(--sb-7); }
+    .mega__feature { padding-left: var(--sb-7); }
+  }
+</style>

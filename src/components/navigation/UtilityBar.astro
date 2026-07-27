@@ -1,0 +1,151 @@
+---
+/**
+ * C01 · UTILITY BAR — docs/06 §01
+ *
+ * Serves existing parents and students BEFORE the marketing begins, so a
+ * returning user never scrolls a persuasion page to reach a notice.
+ * Removes eight competing links from the main navigation.
+ */
+import { school } from '../../data/site';
+import { utilityLinks } from '../../data/navigation';
+---
+
+<div class="utility" data-utility-bar>
+  <div class="utility__inner u-container">
+    <nav aria-label="Parent and student utilities">
+      <ul class="utility__links">
+        {utilityLinks.map((link) => (
+          <li class:list={[`utility__li--t${link.tier}`]}>
+            <a
+              href={link.href}
+              {...('external' in link && link.external
+                ? { target: '_blank', rel: 'noopener' }
+                : {})}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="utility__phone" href={`tel:${school.phone.admissions}`}>
+      <span class="utility__phone-label">Admissions Helpline</span>
+      <span class="utility__phone-number t-tabular">{school.phone.admissionsDisplay}</span>
+    </a>
+  </div>
+</div>
+
+<style>
+  .utility {
+    background: var(--sb-violet-ink);
+    color: rgba(255, 255, 255, 0.86);
+    font-size: var(--sb-caption);
+    line-height: 1;
+    /* Hides on scroll-down, returns on scroll-up — docs/06 §01.
+       Collapsing height (not transform) so the sticky masthead moves up with it. */
+    height: var(--sb-utility-h);
+    overflow: hidden;
+    transition: height var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  .utility.is-hidden {
+    height: 0;
+  }
+
+  .utility__inner {
+    height: var(--sb-utility-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sb-6);
+  }
+
+  .utility__links {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-6);
+  }
+
+  .utility__links a {
+    position: relative;
+    display: inline-block;
+    padding-block: var(--sb-3);
+    /* The bar sheds links by tier rather than wrapping to a second line. */
+    white-space: nowrap;
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  /* Gold underline wipes left→right — N. */
+  .utility__links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    height: 1px;
+    width: 100%;
+    background: var(--sb-lime);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .utility__links a:hover,
+  .utility__links a:focus-visible {
+    color: #fff;
+  }
+
+  .utility__links a:hover::after,
+  .utility__links a:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .utility__phone {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--sb-3);
+    white-space: nowrap;
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .utility__phone:hover {
+    color: #fff;
+  }
+
+  .utility__phone-label {
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .utility__phone-number {
+    font-weight: 600;
+    color: #fff;
+  }
+
+  /* Below the desktop nav threshold, drop tier 2. */
+  @media (max-width: 1239px) {
+    .utility__li--t2 { display: none; }
+  }
+
+  /* --- Mobile: keep only Notices · Results · Login (docs/06 §01) ---------- */
+  @media (max-width: 767px) {
+    .utility__inner {
+      gap: var(--sb-4);
+    }
+
+    .utility__links {
+      gap: var(--sb-5);
+    }
+
+    .utility__li--t3 { display: none; }
+
+    .utility__phone-label {
+      display: none;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .utility__links {
+      gap: var(--sb-4);
+    }
+  }
+</style>
