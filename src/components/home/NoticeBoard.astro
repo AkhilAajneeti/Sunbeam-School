@@ -1,0 +1,320 @@
+---
+/**
+ * §10 · NOTICE BOARD & ALUMNI — audit 1.10 (notices) and 12.2 (alumni registration)
+ *
+ * Audit 1.10 asks for a text-first notice board rather than another photo grid;
+ * audit 12.2 asks for an alumni registration route off the homepage. They share
+ * a band because each alone is a thin strip, and a thin strip between two large
+ * sections reads as an afterthought.
+ *
+ * DATES — deliberately absent. The audit's own point about a notice board is
+ * that it must be current, and a date we invented would make it untrue on the
+ * day it shipped. Each row therefore carries a category, not a timestamp, and
+ * points at the real page the school already maintains. When the school hands
+ * over a notice feed with real dates (asset request A7), swap `notices` for it
+ * and add a `date` to the row — the layout already leaves room on the right.
+ *
+ * Every destination below exists on the live site (docs/01 § 5).
+ */
+import { school } from '../../data/site';
+
+const notices = [
+  {
+    tag: 'Admissions',
+    title: 'Admissions open — Nursery to Class IX and Class XI',
+    detail: 'Apply online, or call the admissions desk on ' + school.phone.admissionsDisplay,
+    href: '/admissions/',
+  },
+  {
+    tag: 'Academics',
+    title: 'Academic calendar — terms, holidays and examination dates',
+    detail: 'The session calendar as published by the school office',
+    href: '/academics/academic-calendar/',
+  },
+  {
+    tag: 'Results',
+    title: 'Report cards and results portal',
+    detail: 'Parent login for term reports and examination results',
+    href: school.external.results,
+    external: true,
+  },
+  {
+    tag: 'Transport',
+    title: 'School transport — 22 routes across Ballia',
+    detail: 'Route list and stops · transport desk ' + school.phone.transportDisplay,
+    href: '/campus/transport/',
+  },
+  {
+    tag: 'Records',
+    title: 'Transfer Certificate download',
+    detail: 'Request and download a TC for a withdrawn student',
+    href: school.external.downloadTC,
+    external: true,
+  },
+  {
+    tag: 'Compliance',
+    title: 'Mandatory public disclosure — CBSE',
+    detail: `Affiliation ${school.affiliationNo} · School Code ${school.schoolCode}`,
+    href: '/about/mandatory-disclosure/',
+  },
+];
+---
+
+<section class="notice" aria-labelledby="notice-heading">
+  <div class="u-container">
+    <div class="notice__grid">
+      {/* --- Notice board ------------------------------------------------- */}
+      <div class="notice__board" data-reveal>
+        <header class="notice__head">
+          <div>
+            <p class="notice__pill"><span class="pill pill--violet">Notice Board</span></p>
+            <h2 class="notice__heading t-h2-sans" id="notice-heading">
+              What you need to <span class="t-squiggle">know</span>
+            </h2>
+          </div>
+          <a class="notice__all" href="/news-events/notices/">
+            All notices
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+              <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+          </a>
+        </header>
+
+        <ul class="notice__list">
+          {notices.map((n) => (
+            <li class="notice__item">
+              <a
+                class="notice__link"
+                href={n.href}
+                {...('external' in n && n.external ? { target: '_blank', rel: 'noopener' } : {})}
+              >
+                <span class="notice__tag">{n.tag}</span>
+                <span class="notice__text">
+                  <span class="notice__title">{n.title}</span>
+                  <span class="notice__detail">{n.detail}</span>
+                </span>
+                <span class="notice__go" aria-hidden="true">
+                  <svg width="13" height="10" viewBox="0 0 14 10" fill="none">
+                    <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+                  </svg>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* --- Alumni ------------------------------------------------------- */}
+      <aside class="notice__alumni" data-reveal data-reveal-delay="120"
+        aria-labelledby="alumni-heading">
+        <p class="notice__pill"><span class="pill pill--lime">Alumni</span></p>
+        <h2 class="notice__alumni-heading" id="alumni-heading">
+          Once a Sunbeamite, always a Sunbeamite
+        </h2>
+        <p class="notice__alumni-copy">
+          Thirteen batches have left the Agarsanda campus since 2013, and
+          <strong>Pradiptam</strong>, the alumni meet, brings them back to it. Register
+          and we will keep you on the list for the next one.
+        </p>
+
+       
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .notice {
+    background: var(--sb-sand);
+    padding-block: var(--sb-section-y);
+  }
+
+  .notice__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: var(--sb-8);
+    /* stretch, not start: the notice list is roughly twice the alumni card's
+       natural height, and a start-aligned card left a column of dead ground
+       beneath it. The card fills the row and centres its own content. */
+    align-items: stretch;
+  }
+
+  /* --- Board ---------------------------------------------------------------- */
+
+  .notice__board {
+    padding: var(--sb-8);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .notice__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--sb-6);
+    margin-bottom: var(--sb-7);
+  }
+
+  .notice__pill { margin-bottom: var(--sb-5); }
+  .notice__heading { color: var(--sb-charcoal); }
+
+  .notice__all {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    flex-shrink: 0;
+    padding-bottom: 4px;
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-violet);
+    border-bottom: 1px solid currentColor;
+  }
+
+  .notice__all svg { transition: transform var(--sb-dur-link) var(--sb-ease); }
+  .notice__all:hover svg { transform: translateX(3px); }
+
+  .notice__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: var(--sb-hairline);
+  }
+
+  /* Single selector shape throughout — see the note in ProofStrip on Astro's
+     scope attribute raising combinator specificity above later overrides. */
+  .notice__item { border-bottom: var(--sb-hairline); }
+
+  .notice__link {
+    display: grid;
+    grid-template-columns: 108px minmax(0, 1fr) 34px;
+    align-items: center;
+    gap: var(--sb-5);
+    padding: var(--sb-5) var(--sb-4);
+    margin-inline: calc(var(--sb-4) * -1);
+    border-radius: var(--sb-r-0);
+    transition: background-color var(--sb-dur-link) ease;
+  }
+
+  .notice__link:hover { background: var(--sb-violet-wash); }
+
+  .notice__tag {
+    justify-self: start;
+    padding: 4px 10px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet-dark);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .notice__text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .notice__title {
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--sb-charcoal);
+  }
+
+  .notice__detail {
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: var(--sb-text-muted);
+  }
+
+  .notice__go {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--sb-r-full);
+    border: 1px solid var(--sb-border-strong);
+    color: var(--sb-charcoal);
+    transition: background-color var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease,
+      color var(--sb-dur-btn) ease;
+  }
+
+  .notice__link:hover .notice__go {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+  }
+
+  /* --- Alumni --------------------------------------------------------------- */
+
+  .notice__alumni {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--sb-9) var(--sb-8);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-ink);
+    color: #fff;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .notice__alumni-heading {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h3);
+    line-height: var(--sb-h3-lh);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sb-5);
+  }
+
+  .notice__alumni-copy {
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .notice__alumni-copy strong { color: #fff; font-weight: 600; }
+
+  .notice__alumni-cta { margin-top: var(--sb-7); }
+
+  .notice__alumni-alt {
+    margin-top: var(--sb-5);
+    font-size: var(--sb-caption);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .notice__alumni-alt a {
+    color: var(--sb-lime);
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* --- Tablet ---------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .notice__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* --- Mobile ---------------------------------------------------------------- */
+
+  @media (max-width: 639px) {
+    .notice__board,
+    .notice__alumni { padding: var(--sb-6); }
+
+    .notice__head { flex-direction: column; align-items: flex-start; gap: var(--sb-5); }
+
+    /* The arrow disc goes — the whole row is the tap target — and the tag moves
+       above the title so the text keeps a full-width measure. */
+    .notice__link {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-3);
+      padding-block: var(--sb-4);
+    }
+
+    .notice__go { display: none; }
+    .notice__alumni-cta { width: 100%; text-align: center; }
+  }
+</style>

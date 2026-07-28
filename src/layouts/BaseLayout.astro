@@ -40,6 +40,15 @@ const { title, description } = Astro.props;
       href="/fonts/ibm-plex-sans-latin-wght-normal.woff2"
       crossorigin
     />
+    {/* The display face renders above the fold in the hero heading, so it is
+        preloaded rather than discovered when the CSS parses. */}
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/bricolage-grotesque-latin-wght-normal.woff2"
+      crossorigin
+    />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />

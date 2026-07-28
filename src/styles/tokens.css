@@ -13,16 +13,38 @@
      tone for the logo lockup and a small number of institutional marks.
      ========================================================================== */
 
-  --sb-violet: #6b4eff;        /* PRIMARY — CTAs, highlights, active states */
-  --sb-violet-dark: #5438e0;   /* hover / pressed                           */
-  --sb-violet-deep: #2e1b8f;   /* dark panels                               */
-  --sb-violet-wash: #efecff;   /* tints, badge grounds                      */
-  --sb-violet-ink: #150f33;    /* near-black with a violet cast             */
+  /* ==========================================================================
+     PALETTE — reference-2 orange (client decision).
+     Orange is contrast-hostile: the reference's #FF5C35 measures only 3.07:1
+     against white, so it cannot legally carry white button text or small type.
+     The primary is therefore a deepened orange that clears AA, and the bright
+     reference tone is kept for LARGE decorative use only.
+     Token names still read "violet" so the whole component tree inherits
+     without a rename sweep — the values are what matter.
+     ========================================================================== */
 
-  --sb-lime: #c6f24e;          /* SECONDARY — tags, small highlights only.
-                                  Never text on light: 1.4:1. Ground only. */
-  --sb-lime-deep: #4d6b00;     /* the readable lime, for text on lime wash  */
-  --sb-lime-wash: #f2fbd9;
+  --sb-orange-bright: #ff5c35; /* reference tone. Large/decorative + on dark. */
+  --sb-orange-tint: #ff8a63;
+
+  --sb-violet: #c93c0a;        /* PRIMARY — 5.1:1 with white text            */
+  --sb-violet-dark: #a32f06;   /* hover / pressed                            */
+  --sb-violet-deep: #7a2406;   /* dark panels                                */
+  --sb-violet-wash: #ffede6;   /* tints, badge grounds                       */
+  --sb-violet-ink: #1c0e08;    /* near-black with a warm cast                */
+
+  /* SECONDARY TEXT ON AN ORANGE GROUND.
+     --sb-violet gives pure white only 5.08:1, so there is almost no room to
+     mute it: rgba(255,255,255,0.82) — the value used on ink panels — falls to
+     3.88:1 and fails AA. Supporting lines on an orange card therefore take
+     their hierarchy from size and weight, not opacity. 4.7:1. */
+  --sb-on-violet-muted: rgba(255, 255, 255, 0.95);
+
+  /* Secondary on dark grounds: the bright reference orange reads 6.1:1 on ink. */
+  --sb-lime: #ff8a5c;
+  /* Text on --sb-lime. #7a2406 measured 4.34:1 — five hundredths short of AA
+     at body size — so this is a shade deeper than --sb-violet-deep. 4.8:1. */
+  --sb-lime-deep: #6e2005;
+  --sb-lime-wash: #fff1ea;
 
   /* Heritage — kept for the crest lockup and institutional marks. */
   --sb-maroon: #8b0000;
@@ -51,20 +73,20 @@
 
   /* Neutrals — 70% of the page. */
   --sb-paper: #ffffff;
-  --sb-ivory: #f7f5f2;         /* default page background — reference cream */
-  --sb-sand: #efebe5;          /* alternate section band                    */
+  --sb-ivory: #fbf7f4;         /* default page background — reference cream */
+  --sb-sand: #f4ece7;          /* alternate section band                    */
   --sb-border: #e4e0d9;        /* hairline — default                        */
   --sb-border-strong: #cbc5bb;
-  --sb-charcoal: #16151c;      /* primary text — charcoal, faint violet cast */
-  --sb-ink: #100e18;           /* full-bleed overlays, dark sections        */
-  --sb-text-secondary: #46434f; /*                        10.2:1 on cream   */
-  --sb-text-muted: #6b6775;    /*                         5.3:1 on cream    */
+  --sb-charcoal: #1b1512;      /* primary text — charcoal, faint violet cast */
+  --sb-ink: #16100c;           /* full-bleed overlays, dark sections        */
+  --sb-text-secondary: #4b443f; /*                        10.2:1 on cream   */
+  --sb-text-muted: #6f6862;    /*                         5.3:1 on cream    */
 
   /* Semantic. */
   --sb-notice: #1d4e89;
   --sb-success: #2f6b4f;
   --sb-urgent: #8a4b00;
-  --sb-focus: #1d4e89;
+  --sb-focus: #a32f06;
 
   /* On-dark text ramps (used over ink panels and photography scrims). */
   --sb-on-dark: #ffffff;
@@ -87,7 +109,7 @@
   /* --- I2 · TYPOGRAPHY -------------------------------------------------- */
   /* Geometric sans for headings, clean humanist sans for body — the reference
      pairing. The serif is retained only for the heritage crest lockup. */
-  --sb-font-display: 'Poppins', 'Plus Jakarta Sans Variable', -apple-system,
+  --sb-font-display: 'Bricolage Grotesque Variable', 'Plus Jakarta Sans Variable', -apple-system,
     BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --sb-font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', -apple-system,
     BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -123,8 +145,22 @@
   --sb-6: 24px;   --sb-7: 32px;   --sb-8: 40px;   --sb-9: 56px;
   --sb-10: 72px;  --sb-11: 96px;  --sb-12: 120px; --sb-13: 160px;
 
-  /* Contextual rhythm — DESKTOP. */
+  /* Contextual rhythm — DESKTOP.
+     THREE section paddings, and only three. Any section that invents its own
+     number breaks the page rhythm, and a `vh` number breaks it differently on
+     every screen height — so the two legitimate exceptions are named here
+     rather than improvised in a component.
+
+     --sb-section-y          the default. Almost every section.
+     --sb-section-y-viewport sections that must fit one screen (Campus). This is
+                             the ONLY place a vh unit is legitimate: the padding
+                             has to give way as the viewport shortens or the
+                             section stops fitting, which was the whole point of
+                             building it that way. Never use it for ordinary
+                             content sections — it makes spacing depend on screen
+                             height instead of on a deliberate scale. */
   --sb-section-y: 120px;
+  --sb-section-y-viewport: clamp(40px, 8vh, 88px);
   --sb-section-y-major: 160px;
   --sb-heading-gap: 24px;
   --sb-eyebrow-gap: 16px;
@@ -157,13 +193,13 @@
   --sb-brand-rule: 2px solid var(--sb-maroon);
 
   /* --- I7 · SHADOWS (three, total) --------------------------------------- */
-  --sb-shadow-header: 0 2px 20px -8px rgba(21, 15, 51, 0.14);
-  --sb-shadow-menu: 0 24px 48px -20px rgba(21, 15, 51, 0.24);
-  --sb-shadow-focus: 0 0 0 3px rgba(107, 78, 255, 0.4);
+  --sb-shadow-header: 0 2px 20px -8px rgba(28, 14, 8, 0.14);
+  --sb-shadow-menu: 0 24px 48px -20px rgba(28, 14, 8, 0.24);
+  --sb-shadow-focus: 0 0 0 3px rgba(201, 60, 10, 0.42);
   /* Reference elevation — cards now float (reverses docs/05 § I7). */
-  --sb-shadow-card: 0 8px 28px -12px rgba(21, 15, 51, 0.16);
-  --sb-shadow-card-hover: 0 18px 44px -16px rgba(21, 15, 51, 0.26);
-  --sb-shadow-badge: 0 10px 26px -8px rgba(21, 15, 51, 0.3);
+  --sb-shadow-card: 0 8px 28px -12px rgba(28, 14, 8, 0.16);
+  --sb-shadow-card-hover: 0 18px 44px -16px rgba(28, 14, 8, 0.26);
+  --sb-shadow-badge: 0 10px 26px -8px rgba(28, 14, 8, 0.3);
 
   /* --- N · MOTION -------------------------------------------------------- */
   --sb-ease: cubic-bezier(0.22, 1, 0.36, 1);

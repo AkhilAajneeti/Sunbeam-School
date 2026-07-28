@@ -39,10 +39,12 @@
 | 1.10 | **Principal's** message remains a separate page | MUST | CLIENT | About → Principal's Message |
 | 1.11 | Chairman, Secretary and other dignitaries' contributions **incorporated within the History section** — no separate menu links | MUST | DESIGN | About → History & Legacy. `/chairmans-message/` and `/secretarys-message/` retired from nav; content absorbed and 301-redirected |
 | 1.12 | Principal's Message page **thoroughly proofread** for grammatical and spelling errors | MUST | BOTH | Copy rewrite. **Scope note: the homepage welcome text is materially worse than the Principal's page and must also be rewritten** — see analysis §3.1 |
-| 1.13 | **Before the footer**, a section showing academic and institutional affiliations/partners as neatly displayed logos | MUST | BOTH | Home §13 Affiliations & Partners |
-| 1.14 | **Followed by** a dedicated Achievements & Recognition section | MUST | DESIGN | Home §14 — placed after §13 exactly as instructed |
+| 1.13 | **Before the footer**, a section showing academic and institutional affiliations/partners as neatly displayed logos | MUST | BOTH | **BUILT** — `Affiliations.astro`. Set as typographic plates, not logos: the mark files and permission to use them are outstanding (B1), and reproducing CBSE/Microsoft/Education World from memory is both inaccurate and a trademark problem. See docs/08 D18 |
+| 1.14 | **Followed by** a dedicated Achievements & Recognition section | MUST | DESIGN | **BUILT** — `Achievements.astro`, immediately after §13 as instructed. Every figure verified against docs/01 §5 |
 
 > **Ordering note.** The audit fixes the tail sequence as *affiliations → achievements → footer*. Our brief's suggested outline placed achievements at position 10. **We follow the audit.** To avoid burying the school's strongest proof, a compact recognition strip (Education World #1, six years) sits directly beneath the hero — a proof bar, not a duplicate section. See `04-sitemap-homepage-ia.md` §3.
+
+> **Closing CTA — design addition, not an audit line item.** The audit does not number a final admissions call to action, but §15 makes conversion the homepage's job and the page previously trailed straight from achievements into the footer. `AdmissionsCta.astro` closes it on the three routes a prospective parent actually takes: apply, call, visit. No admission dates, age criteria or fees are stated — those are outstanding under **A8** — so it routes to the admissions page rather than claiming them. See docs/08 D20.
 
 ---
 
@@ -205,7 +207,7 @@ The audit specifies **six groups (A–F) containing 48 named topics** (A 6 · B 
 
 | # | Requirement | Class | Owner | Notes |
 |---|---|---|---|---|
-| 10.1 | Notice Board **primarily displays official school notices** | MUST | BOTH | |
+| 10.1 | Notice Board **primarily displays official school notices** | MUST | BOTH | **BUILT** — `NoticeBoard.astro`, homepage. Text-first rows, no creatives. Dates deliberately omitted until the school supplies a real notice feed (A7) — see docs/08 D18 |
 | 10.2 | **Avoid using promotional creatives as notices** | MUST | CLIENT | Current board is WhatsApp-forwarded posters. This is a publishing-discipline change, not just a design change |
 | 10.3 | If creatives are required, display them as **thumbnails linked to the complete notice** | MUST | DESIGN | Notice model = title + date + category + body text, with optional thumbnail. Text is mandatory; image is optional. Structurally prevents a poster-only notice |
 
@@ -232,7 +234,7 @@ The audit specifies **six groups (A–F) containing 48 named topics** (A 6 · B 
 | # | Requirement | Class | Owner | Notes |
 |---|---|---|---|---|
 | 12.1 | Alumni menu on the **main navigation bar, beside Career** | MUST | DESIGN | Both promoted to top level, adjacent, exactly as specified |
-| 12.2 | **Alumni Registration form** to encourage former students to reconnect | MUST | BOTH | Needs a form handler and a data-retention decision from the school |
+| 12.2 | **Alumni Registration form** to encourage former students to reconnect | MUST | BOTH | **ROUTE BUILT** — alumni registration card in the homepage notice band, linking to `/alumni/register/`. The form itself still needs a handler and a data-retention decision from the school |
 
 *No alumni page exists on the current site. This section is built from zero. "Pradiptam 2.0 Alumni Meet" is the one verified alumni asset available.*
 

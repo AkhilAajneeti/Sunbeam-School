@@ -13,10 +13,15 @@
  * Motion is CSS-only: each track holds the set twice and translates -50%, so
  * the loop is seamless without JavaScript measuring anything.
  *
- * WCAG 2.2.2 — content moving for more than five seconds needs a pause
- * mechanism, so there is a real button; hover/focus pausing alone is not
- * sufficient. prefers-reduced-motion stops it and turns each row into a plain
- * horizontal scroller.
+ * WCAG 2.2.2 — KNOWN GAP, client decision. The success criterion wants a pause
+ * mechanism for content that moves for more than five seconds, and this had a
+ * real button. The client asked for it to be removed, so what remains is:
+ *   · pause on hover and on keyboard focus (`:focus-within`)
+ *   · prefers-reduced-motion stops the animation entirely and turns each row
+ *     into a plain horizontal scroller
+ * That covers pointer users, keyboard users and anyone with reduced motion set,
+ * but it is not a substitute for an always-available control. If an audit flags
+ * it, restore the button — it lived in a `.voices__foot` under the rows.
  *
  * CONTENT: `voices.items` is empty, so cards render their empty state. Quotes
  * attributed to named students of a real school are not ours to write — see
@@ -25,6 +30,40 @@
 import { voices } from '../../data/home';
 import { showBuildNotes } from '../../data/site';
 import { Picture } from 'astro:assets';
+
+/**
+ * Cloud edges. Built from overlapping circles rather than one hand-written path
+ * — circles of the same opaque fill merge into a single silhouette, so the
+ * shape stays editable (nudge a radius, get a different cloud) instead of being
+ * an unreadable string of bezier coordinates.
+ *
+ * Clustered into five masses with shallow valleys between them. An evenly
+ * spaced row of similar circles reads as a scalloped border; real cloud has a
+ * big central billow with smaller puffs shouldering it, and gaps between.
+ */
+const cloudTop = [
+  { cx: 34, cy: 44, r: 46 }, { cx: 122, cy: 38, r: 72 }, { cx: 214, cy: 42, r: 52 },
+  { cx: 272, cy: 32, r: 34 },
+  { cx: 352, cy: 38, r: 50 }, { cx: 446, cy: 34, r: 84 }, { cx: 548, cy: 36, r: 58 },
+  { cx: 604, cy: 30, r: 32 },
+  { cx: 690, cy: 38, r: 44 }, { cx: 772, cy: 40, r: 72 }, { cx: 856, cy: 38, r: 54 },
+  { cx: 908, cy: 30, r: 30 },
+  { cx: 996, cy: 38, r: 48 }, { cx: 1088, cy: 32, r: 88 }, { cx: 1188, cy: 36, r: 60 },
+  { cx: 1248, cy: 30, r: 34 },
+  { cx: 1320, cy: 38, r: 42 }, { cx: 1394, cy: 40, r: 66 }, { cx: 1448, cy: 42, r: 44 },
+];
+
+const cloudBottom = [
+  { cx: 30, cy: 40, r: 52 }, { cx: 116, cy: 34, r: 80 }, { cx: 208, cy: 38, r: 48 },
+  { cx: 262, cy: 30, r: 30 },
+  { cx: 338, cy: 40, r: 44 }, { cx: 412, cy: 38, r: 68 }, { cx: 496, cy: 34, r: 56 },
+  { cx: 560, cy: 30, r: 34 },
+  { cx: 648, cy: 36, r: 52 }, { cx: 748, cy: 32, r: 86 }, { cx: 848, cy: 36, r: 58 },
+  { cx: 906, cy: 30, r: 32 },
+  { cx: 984, cy: 40, r: 46 }, { cx: 1066, cy: 38, r: 70 }, { cx: 1152, cy: 40, r: 50 },
+  { cx: 1212, cy: 32, r: 32 },
+  { cx: 1298, cy: 36, r: 54 }, { cx: 1390, cy: 34, r: 78 }, { cx: 1452, cy: 40, r: 46 },
+];
 
 const ROWS = 3;
 const hasContent = voices.items.length > 0;
@@ -35,6 +74,24 @@ const durations = ['58s', '72s', '64s'];
 ---
 
 <section class="voices" data-voices aria-labelledby="voices-heading">
+  {/* Cloud edges. Filled with --sb-sand, the colour of the sections ABOVE and
+      BELOW — that is what makes the band melt into its neighbours instead of
+      reading as a separate slab dropped onto the page. Purely decorative, so
+      hidden from assistive tech. */}
+  <span class="voices__edge voices__edge--top" aria-hidden="true">
+    <svg viewBox="0 0 1440 130" preserveAspectRatio="none" focusable="false">
+      <rect x="0" y="0" width="1440" height="32" />
+      {cloudTop.map((c) => <circle cx={c.cx} cy={c.cy} r={c.r} />)}
+    </svg>
+  </span>
+
+  <span class="voices__edge voices__edge--bottom" aria-hidden="true">
+    <svg viewBox="0 0 1440 130" preserveAspectRatio="none" focusable="false">
+      <rect x="0" y="0" width="1440" height="32" />
+      {cloudBottom.map((c) => <circle cx={c.cx} cy={c.cy} r={c.r} />)}
+    </svg>
+  </span>
+
   <div class="u-container">
     <div class="voices__head" data-reveal>
       <p class="voices__eyebrow pill pill--violet">{voices.eyebrow}</p>
@@ -108,33 +165,63 @@ const durations = ['58s', '72s', '64s'];
       ))}
     </div>
 
-    <div class="voices__foot">
-      <button class="voices__pause icon-btn" type="button" data-voices-pause
-        aria-label="Pause the scrolling testimonials">
-        <svg class="voices__icon-pause" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
-          <rect x="0" y="0" width="3" height="12" fill="currentColor" />
-          <rect x="7" y="0" width="3" height="12" fill="currentColor" />
-        </svg>
-        <svg class="voices__icon-play" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
-          <path d="M0 0L10 6L0 12Z" fill="currentColor" />
-        </svg>
-      </button>
-
-      {!hasContent && showBuildNotes && (
-        <p class="voices__note">
-          <strong>Nine slots are laid out and ready.</strong> Real quotes, names,
-          class years and headshots are outstanding — asset request <strong>A4</strong>.
-        </p>
-      )}
-    </div>
+    {!hasContent && showBuildNotes && (
+      <p class="voices__note">
+        <strong>Nine slots are laid out and ready.</strong> Real quotes, names,
+        class years and headshots are outstanding — asset request <strong>A4</strong>.
+      </p>
+    )}
   </div>
 </section>
 
 <style>
+  /* Two very low-saturation washes — cool on the left, warm on the right —
+     over the page ground. Kept faint on purpose: the moment a tint is strong
+     enough to notice as a colour, the band stops reading as atmosphere and
+     starts reading as a coloured box.
+
+     The flat --sb-ivory is the LAST layer, so it is also the computed
+     background-color. That matters: the contrast audit resolves grounds from
+     `backgroundColor`, and a gradient-only background would resolve to
+     transparent and silently skip every text node in this section. */
   .voices {
-    background: var(--sb-ivory);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(62% 78% at 10% 38%, rgba(163, 191, 232, 0.28), transparent 68%),
+      radial-gradient(58% 74% at 90% 58%, rgba(255, 176, 148, 0.30), transparent 68%),
+      var(--sb-ivory);
     padding-block: var(--sb-section-y);
   }
+
+  /* --- Cloud edges ---------------------------------------------------------- */
+
+  .voices__edge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    /* Always shorter than the section's own padding, so the clouds sit in the
+       breathing space and never collide with the heading:
+       108px against 120px padding at desktop, 52px against 64px at mobile. */
+    height: clamp(52px, 7.5vw, 108px);
+    line-height: 0;
+    pointer-events: none;
+  }
+
+  .voices__edge svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: var(--sb-sand);
+  }
+
+  .voices__edge--top { top: 0; }
+
+  /* Mirrored rather than a second SVG — the two puff sets already differ, so
+     flipping gives a distinct silhouette without more markup. */
+  .voices__edge--bottom { bottom: 0; transform: scaleY(-1); }
 
   /* --- Header, centred ----------------------------------------------------- */
 
@@ -152,8 +239,13 @@ const durations = ['58s', '72s', '64s'];
     margin-bottom: var(--sb-heading-gap);
   }
 
+  /* One step darker than the usual deck muted grey. The blue wash puts this
+     text on a ground of roughly rgb(227,232,241) at its worst point, where
+     --sb-text-muted measured 4.46:1 at 768 — a hair under AA. Sampled from
+     rendered pixels, not from the computed background-color, which reports flat
+     ivory and cannot see a gradient at all. */
   .voices__deck {
-    color: var(--sb-text-muted);
+    color: var(--sb-text-secondary);
     max-width: 54ch;
     margin-inline: auto;
   }
@@ -191,9 +283,10 @@ const durations = ['58s', '72s', '64s'];
     to { transform: translateX(-50%); }
   }
 
+  /* Pause on hover and on keyboard focus. The explicit pause button was removed
+     at the client's request — see the WCAG note in the header comment. */
   .voices__rows:hover .voices__track,
-  .voices__rows:focus-within .voices__track,
-  .voices.is-paused .voices__track {
+  .voices__rows:focus-within .voices__track {
     animation-play-state: paused;
   }
 
@@ -276,22 +369,8 @@ const durations = ['58s', '72s', '64s'];
 
   .vcard__monogram { color: var(--sb-violet); opacity: 0.55; }
 
-  /* --- Foot ----------------------------------------------------------------- */
-
-  .voices__foot {
-    display: flex;
-    align-items: center;
-    gap: var(--sb-6);
-    margin-top: var(--sb-8);
-  }
-
-  .voices__pause { flex-shrink: 0; }
-  .voices__icon-play { display: none; }
-  .voices__pause[data-paused] .voices__icon-play { display: block; }
-  .voices__pause[data-paused] .voices__icon-pause { display: none; }
-
   .voices__note {
-    margin: 0;
+    margin: var(--sb-8) 0 0;
     padding: var(--sb-4) var(--sb-6);
     border-left: 3px solid var(--sb-violet);
     background: var(--sb-violet-wash);
@@ -302,32 +381,51 @@ const durations = ['58s', '72s', '64s'];
   /* --- Mobile ---------------------------------------------------------------- */
 
   @media (max-width: 767px) {
-    /* The marquee is unreachable on a phone — overflow was hidden, so the cards
-       it scrolled past could not be swiped to. Below 768 it becomes a real
-       snap carousel: animation off, duplicates removed, one card per view. */
+    /* A marquee cannot work on a phone, and the snap carousel that replaced it
+       was not much better: three separate horizontal scrollers stacked up, nine
+       306px cards in a 390px viewport, and the section filled the whole screen.
+       Three swipe targets to read three quotes.
+       Below 768 it becomes a plain vertical list instead — one card from each
+       row, full width, no horizontal scrolling anywhere. Three testimonials is
+       the right number for a homepage extract on a phone; the rest are on the
+       Alumni page. */
     .voices__row {
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
+      overflow: visible;
       -webkit-mask-image: none;
       mask-image: none;
     }
-    .voices__row::-webkit-scrollbar { display: none; }
 
-    .voices__track { animation: none !important; transform: none !important; width: auto; }
-
-    .vcard[aria-hidden='true'] { display: none; }
-    .vcard { scroll-snap-align: center; }
-
-    .vcard {
-      width: 306px;
-      padding: var(--sb-4) var(--sb-6) var(--sb-4) var(--sb-4);
+    .voices__track {
+      animation: none !important;
+      transform: none !important;
+      width: auto;
+      flex-direction: column;
+      gap: var(--sb-4);
+      padding-right: 0;
     }
 
-    .vcard__avatar { width: 68px; height: 68px; }
+    /* Children 2..n are the remainder of this row plus the whole duplicate set
+       the marquee needs for its seam. One selector covers both — see the note
+       in ProofStrip on why a combinator would be the wrong shape here. */
+    .vcard:nth-child(n + 2) { display: none; }
 
-    .voices__foot { flex-direction: column; align-items: flex-start; gap: var(--sb-5); }
-    .voices__head { max-width: none; }
+    .voices__rows { gap: var(--sb-4); }
+
+    .vcard {
+      width: 100%;
+      gap: var(--sb-5);
+      padding: var(--sb-5);
+      /* A full pill wastes the width a phone does not have; the text measure
+         gained about four characters a line from this alone. */
+      border-radius: var(--sb-r-2);
+    }
+
+    .vcard__body { gap: var(--sb-2); }
+    .vcard__avatar { width: 52px; height: 52px; }
+    .vcard__quotemark { width: 16px; height: 13px; }
+    .vcard__quote { font-size: 14px; line-height: 1.5; }
+
+    .voices__head { max-width: none; margin-bottom: var(--sb-7); }
   }
 
   /* --- Reduced motion --------------------------------------------------------
@@ -336,22 +434,6 @@ const durations = ['58s', '72s', '64s'];
   @media (prefers-reduced-motion: reduce) {
     .voices__track { animation: none; transform: none; }
     .voices__row { overflow-x: auto; scrollbar-width: thin; }
-    .voices__pause { display: none; }
   }
 </style>
 
-<script>
-  const section = document.querySelector<HTMLElement>('[data-voices]');
-  const pause = document.querySelector<HTMLButtonElement>('[data-voices-pause]');
-
-  if (section && pause) {
-    pause.addEventListener('click', () => {
-      const paused = section.classList.toggle('is-paused');
-      pause.toggleAttribute('data-paused', paused);
-      pause.setAttribute(
-        'aria-label',
-        paused ? 'Resume the scrolling testimonials' : 'Pause the scrolling testimonials'
-      );
-    });
-  }
-</script>

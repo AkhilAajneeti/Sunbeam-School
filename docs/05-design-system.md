@@ -372,9 +372,22 @@ Twenty-six components. Note how few are cards.
 | Footer | 4 columns → accordion, contact block always open |
 | Forms | Single column, 48px inputs, correct `inputmode` and `autocomplete` |
 | Type | Display XL 76→40, H1 56→34, body stays ≥16 |
-| Section rhythm | 120 → 64 |
+| Section rhythm | 120 → 88 → 64 |
 
 **Body must never scroll horizontally.** Wide content scrolls inside its own `overflow-x: auto` container.
+
+## Section rhythm — two tokens, and only two
+
+A section that invents its own vertical padding breaks the page's rhythm, and one that uses a `vh` unit breaks it *differently on every screen height*. There are exactly three legitimate values, all named in `tokens.css`:
+
+| Token | Desktop | Tablet | Mobile | Use |
+|---|---|---|---|---|
+| `--sb-section-y` | 120 | 88 | 64 | The default. Almost every section. |
+| `--sb-section-y-viewport` | `clamp(26px, 4.4vh, 72px)` | — | — | Sections that must fit **one screen**. Currently Campus only. |
+
+`--sb-section-y-viewport` is the only place a `vh` unit is legitimate, and only because the padding *has* to give way as the viewport shortens or the section stops fitting — which was the entire point of building it that way. Never reach for it on an ordinary content section.
+
+Full-bleed sections (Hero, Proof Strip, Learning) carry **no** vertical padding at all; they size on `min-height` and sit flush. That is why the gap above and below them is smaller, and it is deliberate.
 
 ---
 

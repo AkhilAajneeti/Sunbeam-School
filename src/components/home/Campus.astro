@@ -180,10 +180,13 @@ const slots = ['tall', 'top', 'bottom'] as const;
 <style>
   .campus {
     /* light lavender ground, so the white card lifts off it */
-    background: linear-gradient(180deg, var(--sb-violet-wash) 0%, #fbfaff 62%, var(--sb-ivory) 100%);
+    background: linear-gradient(180deg, var(--sb-violet-wash) 0%, #fffaf7 62%, var(--sb-ivory) 100%);
     /* Trimmed from the standard section rhythm so the whole card — heading,
        panel and stepper — lands inside one screen. */
-    padding-block: clamp(26px, 4.4vh, 72px);
+    /* Viewport-fit — this section must show whole on one screen (measured:
+       804px inside 900, 646px inside 760), so its padding has to give way as
+       the viewport shortens. Now a named token rather than an inline clamp. */
+    padding-block: var(--sb-section-y-viewport);
   }
 
   .campus__card {
@@ -222,7 +225,7 @@ const slots = ['tall', 'top', 'bottom'] as const;
     height: 0.2em;
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 20' preserveAspectRatio='none'%3E%3Cpath d='M4 13C96 5 214 3 300 6c86 3 190 8 296 3' stroke='%236B4EFF' stroke-width='6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 20' preserveAspectRatio='none'%3E%3Cpath d='M4 13C96 5 214 3 300 6c86 3 190 8 296 3' stroke='%23C93C0A' stroke-width='6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
   }
 
   .campus__sub {
@@ -375,8 +378,9 @@ const slots = ['tall', 'top', 'bottom'] as const;
     font-family: var(--sb-font-display);
     font-weight: 700;
     font-size: 15px;
-    color: var(--sb-violet);
-    opacity: 0.6;
+    /* darker tone + full opacity: at 0.6 on the wash circle this measured
+       4.48:1, a hair under AA */
+    color: var(--sb-violet-dark);
   }
 
   .campus__step[aria-selected='true'] .campus__thumb {
@@ -436,7 +440,7 @@ const slots = ['tall', 'top', 'bottom'] as const;
     background: var(--sb-violet);
     border: 1px solid var(--sb-violet);
     color: #fff;
-    box-shadow: 0 10px 22px -10px rgba(107, 78, 255, 0.9);
+    box-shadow: 0 10px 22px -10px rgba(201, 60, 10, 0.9);
   }
 
   .campus__arrow--solid:hover { background: var(--sb-violet-dark); border-color: var(--sb-violet-dark); }

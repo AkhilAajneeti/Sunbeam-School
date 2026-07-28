@@ -5,6 +5,18 @@
  * The audit keeps the Principal's Message as its own page (1.10). This is a
  * homepage extract that links through to it, not a replacement for it.
  *
+ * REBUILT as a full-bleed editorial band: the portrait runs to the left edge of
+ * the viewport and the full height of the section, with the message set large
+ * beside it. The previous version was a small white card in an ivory field —
+ * the head of the school got less presence than a facility tile.
+ *
+ * LAYOUT — the section itself is the grid, with gutter columns either side of a
+ * --sb-max-content-wide centre. The portrait spans [viewport edge → content
+ * midpoint]; the copy spans [midpoint → content right edge]. That keeps the
+ * copy's right edge on the same line as every other section on the page while
+ * the photograph genuinely bleeds, without any 100vw arithmetic (which would
+ * disagree with the container by the width of the scrollbar).
+ *
  * COPY — taken verbatim from the school's published Principal's Message. Audit
  * 1.12 asks that page to be "thoroughly proofread to eliminate grammatical and
  * spelling errors"; the passages used here read cleanly, unlike the homepage
@@ -14,9 +26,11 @@
  * supplied event photographs reads "Dr. Arpita Singh". Sticking with the
  * published form until the school confirms (docs/08 D15).
  */
+import { Image } from 'astro:assets';
 import { school } from '../../data/site';
 import Photo from '../ui/Photo.astro';
 import principal from '../../assets/photos/sb-principal.jpg';
+import crest from '../../assets/icons/logos/sunbeam.png';
 
 const quote =
   'At Sunbeam School Ballia, we believe that education is not merely about imparting knowledge, but about nurturing character, inspiring creativity, and preparing young minds to lead with empathy and vision.';
@@ -28,111 +42,167 @@ const paragraphs = [
 ---
 
 <section class="principal" aria-labelledby="principal-heading">
-  <div class="u-container">
-    <div class="principal__card">
-      <div class="principal__media">
-        <Photo
-          src={principal}
-          alt={`${school.principal}, Principal of Sunbeam School Ballia, at her desk.`}
-          brief="Principal portrait"
-          ratio="4 / 5"
-          position="50% 28%"
-          sizes="(max-width: 1023px) 100vw, 38vw"
-        />
+  <div class="principal__media">
+    <Photo
+      src={principal}
+      alt={`${school.principal}, Principal of Sunbeam School Ballia.`}
+      brief="Principal portrait"
+      position="50% 24%"
+      sizes="(max-width: 1023px) 100vw, 44vw"
+    />
+  </div>
+
+  <div class="principal__copy" data-reveal>
+    {/* The crest, very faint, as a watermark. Decorative only — the same mark
+        appears as a real logo in the affiliations row and in the masthead. */}
+    <Image class="principal__crest" src={crest} alt="" aria-hidden="true"
+      widths={[260, 520]} sizes="260px" loading="lazy" />
+
+    <p class="principal__pill"><span class="pill pill--violet">Principal Speak</span></p>
+
+    <h2 class="principal__heading" id="principal-heading">
+      A word from our <span class="t-squiggle">Principal</span>
+    </h2>
+
+    <blockquote class="principal__quote">
+      <svg class="principal__mark" width="34" height="26" viewBox="0 0 18 15"
+        fill="currentColor" aria-hidden="true">
+        <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
+      </svg>
+      <p>{quote}</p>
+    </blockquote>
+
+    <div class="principal__text">
+      {paragraphs.map((p) => <p>{p}</p>)}
+    </div>
+
+    <div class="principal__sign">
+      <div>
+        <p class="principal__name">{school.principal}</p>
+        <p class="principal__role">Principal, {school.name}</p>
       </div>
-
-      <div class="principal__body" data-reveal>
-        <p class="principal__pill"><span class="pill pill--violet">Principal Speak</span></p>
-
-        <h2 class="principal__heading t-h2-sans" id="principal-heading">
-          A word from our <span class="t-squiggle">Principal</span>
-        </h2>
-
-        <blockquote class="principal__quote">
-          <svg class="principal__mark" width="26" height="20" viewBox="0 0 18 15"
-            fill="currentColor" aria-hidden="true">
-            <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
-          </svg>
-          <p>{quote}</p>
-        </blockquote>
-
-        <div class="principal__text">
-          {paragraphs.map((p) => <p>{p}</p>)}
-        </div>
-
-        <div class="principal__sign">
-          <div>
-            <p class="principal__name">{school.principal}</p>
-            <p class="principal__role">Principal, {school.name}</p>
-          </div>
-          <a class="btn btn--secondary principal__cta" href="/about/principals-message/">
-            Read the full message
-          </a>
-        </div>
-      </div>
+      <a class="principal__cta" href="/about/principals-message/">
+        Read the full message
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </a>
     </div>
   </div>
 </section>
 
 <style>
   .principal {
-    background: var(--sb-ivory);
-    padding-block: clamp(48px, 6vh, 96px);
+    display: grid;
+    /* gutter · 42% of content · 58% of content · gutter.
+       The photo takes columns 1–2, the copy column 3, so the copy's right edge
+       lands exactly on the container line every other section uses. */
+    grid-template-columns:
+      minmax(var(--sb-margin), 1fr)
+      minmax(0, calc(var(--sb-max-content) * 0.42))
+      minmax(0, calc(var(--sb-max-content) * 0.58))
+      minmax(var(--sb-margin), 1fr);
+    min-height: clamp(480px, 62vh, 660px);
+    background: var(--sb-violet-ink);
+    /* Full-bleed sections carry no vertical padding — docs/05. The padding
+       lives on the copy so the photograph fills the whole band. */
+    padding-block: 0;
+    /* A defined bottom edge. Kept after Campus was moved above Learning — it
+       costs nothing against a light neighbour and still gives a clean seam if
+       the order ever puts another dark band underneath. */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .principal__card {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: clamp(28px, 4vw, 64px);
-    align-items: center;
-    background: #fff;
-    border-radius: var(--sb-r-3);
-    box-shadow: 0 30px 70px -34px rgba(21, 15, 51, 0.26);
-    overflow: hidden;
-    padding: clamp(20px, 2.4vh, 32px);
-  }
+  /* --- Portrait ------------------------------------------------------------- */
 
   .principal__media {
-    border-radius: var(--sb-r-2);
+    grid-column: 1 / 3;
+    grid-row: 1;
+    position: relative;
     overflow: hidden;
-    max-height: clamp(320px, 52vh, 560px);
   }
 
+  /* No `ratio` is passed to <Photo>, so nothing sets aspect-ratio and the frame
+     is free to take its height from the grid row — which the copy determines. */
   .principal__media :global(.photo) { height: 100%; }
 
-  .principal__body { padding-right: clamp(0px, 2vw, 32px); }
-
-  .principal__pill { margin-bottom: var(--sb-5); }
-
-  .principal__heading {
-    color: var(--sb-charcoal);
-    font-size: clamp(24px, 3.2vh, var(--sb-h2));
-    margin-bottom: var(--sb-6);
+  /* The portrait's right edge would otherwise be a hard vertical line against
+     the ink. A short gradient lets it dissolve into the ground. */
+  .principal__media::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: clamp(32px, 5%, 80px);
+    background: linear-gradient(to right, rgba(28, 14, 8, 0), var(--sb-violet-ink));
+    pointer-events: none;
   }
 
-  /* Pull quote — violet rule, mark set above rather than as a giant glyph. */
+  /* --- Copy ----------------------------------------------------------------- */
+
+  .principal__copy {
+    grid-column: 3 / 4;
+    grid-row: 1;
+    position: relative;
+    align-self: center;
+    padding: clamp(56px, 7vh, 88px) 0 clamp(56px, 7vh, 88px) clamp(32px, 4.5vw, 80px);
+    color: #fff;
+  }
+
+  .principal__crest {
+    position: absolute;
+    top: clamp(24px, 5vh, 56px);
+    right: 0;
+    width: clamp(96px, 13vw, 190px);
+    height: auto;
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .principal__pill { margin-bottom: var(--sb-6); }
+
+  .principal__heading {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 2.4vw, 34px);
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--sb-7);
+  }
+
+  /* The serif, italic, at real display size. docs/05 D9 reserves the serif for
+     the school's institutional voice — which is exactly what this is — and it
+     keeps the quote from reading as another Bricolage heading. */
   .principal__quote {
-    margin: 0 0 var(--sb-6);
-    padding-left: var(--sb-6);
+    margin: 0 0 var(--sb-7);
+    padding-left: var(--sb-7);
     border-left: 3px solid var(--sb-violet);
   }
 
-  .principal__mark { color: var(--sb-violet); opacity: 0.4; margin-bottom: var(--sb-3); }
+  .principal__mark { color: var(--sb-lime); opacity: 0.5; margin-bottom: var(--sb-4); }
 
   .principal__quote p {
-    font-size: clamp(15px, 2.1vh, var(--sb-body-lg));
-    line-height: 1.55;
-    color: var(--sb-charcoal);
-    font-weight: 500;
+    font-family: var(--sb-font-serif);
+    font-style: italic;
+    font-size: clamp(19px, 1.8vw, 26px);
+    line-height: 1.42;
+    letter-spacing: -0.01em;
+    color: #fff;
+    /* The measure belongs HERE, not on the blockquote:  resolves against
+       the element's own font-size, and on the blockquote that is the inherited
+       17px body — 23em came out at 391px and broke the quote into eight short
+       lines. On the paragraph it resolves against the display size. */
+    max-width: 21em;
   }
 
   .principal__text p {
-    font-size: clamp(13px, 1.8vh, var(--sb-body-sm));
-    line-height: 1.65;
-    color: var(--sb-text-muted);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-on-dark-78);
+    max-width: 56ch;
   }
 
-  .principal__text p + p { margin-top: var(--sb-4); }
+  .principal__text p + p { margin-top: var(--sb-5); }
 
   .principal__sign {
     display: flex;
@@ -140,9 +210,10 @@ const paragraphs = [
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--sb-5);
-    margin-top: var(--sb-7);
+    margin-top: var(--sb-8);
     padding-top: var(--sb-6);
-    border-top: var(--sb-hairline);
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    max-width: 56ch;
   }
 
   .principal__name {
@@ -150,37 +221,70 @@ const paragraphs = [
     font-weight: 700;
     font-size: var(--sb-body);
     letter-spacing: -0.02em;
-    color: var(--sb-charcoal);
+    color: #fff;
   }
 
   .principal__role {
     font-size: var(--sb-caption);
-    color: var(--sb-text-muted);
+    color: var(--sb-on-dark-66);
     margin-top: 2px;
   }
 
-  .principal__cta { flex-shrink: 0; }
+  .principal__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    flex-shrink: 0;
+    padding-bottom: 5px;
+    font-weight: 600;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-lime);
+    border-bottom: 1px solid currentColor;
+    transition: color var(--sb-dur-link) ease;
+  }
 
-  /* --- Tablet & mobile -------------------------------------------------------- */
+  .principal__cta svg { transition: transform var(--sb-dur-link) var(--sb-ease); }
+  .principal__cta:hover { color: #fff; }
+  .principal__cta:hover svg { transform: translateX(4px); }
+
+  /* --- Tablet and below: the band stacks ------------------------------------ */
 
   @media (max-width: 1023px) {
-    .principal__card {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--sb-7);
+    .principal {
+      grid-template-columns:
+        minmax(var(--sb-margin), 1fr)
+        minmax(0, var(--sb-max-content))
+        minmax(var(--sb-margin), 1fr);
+      min-height: 0;
     }
-    .principal__media { max-height: 340px; }
-    .principal__body { padding-right: 0; }
+
+    .principal__media {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      height: clamp(300px, 46vh, 460px);
+    }
+
+    /* The fade belongs on the right edge only in the side-by-side layout; here
+       the portrait meets the copy along its bottom edge instead. */
+    .principal__media::after {
+      inset: auto 0 0 0;
+      width: auto;
+      height: 96px;
+      background: linear-gradient(to bottom, rgba(28, 14, 8, 0), var(--sb-violet-ink));
+    }
+
+    .principal__copy {
+      grid-column: 2 / 3;
+      grid-row: 2;
+      padding: var(--sb-section-y) 0;
+    }
+
+    .principal__quote { max-width: none; }
+    .principal__crest { top: clamp(16px, 3vh, 32px); }
   }
 
-  @media (max-width: 767px) {
-    .principal__card { padding: var(--sb-5); border-radius: var(--sb-r-2); }
+  @media (max-width: 639px) {
     .principal__sign { flex-direction: column; align-items: flex-start; }
-    .principal__cta { width: 100%; }
-  }
-
-  /* Very short viewports: the second paragraph steps aside so the quote,
-     attribution and CTA all stay on screen. */
-  @media (max-height: 880px) {
-    .principal__text p:last-child { display: none; }
+    .principal__quote { padding-left: var(--sb-6); }
   }
 </style>

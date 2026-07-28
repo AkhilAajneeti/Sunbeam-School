@@ -126,7 +126,7 @@ The audit asks the school to review its YouTube and X profiles and, if they are 
 
 | # | Item | Reason |
 |---|---|---|
-| B1 | **Affiliation & partner logos** — CBSE, Sunbeam Group, Microsoft, Education World, Brainfeed, Good Schools Alliance, NCC. Transparent SVG or 2× PNG, **plus permission to use each mark** | Audit 1.13 |
+| B1 | **Affiliation & partner logos** — **PARTLY RECEIVED.** CBSE, Sunbeam crest, Microsoft Showcase, Brainfeed and NCC are in and live in §13. ⚠ **Still needed: the real Education World mark** — the file supplied is a generic stock "EDUCATION · GLOBAL ACADEMIC" graduation-cap logo, not Education World's identity, and it currently sits under their ranking claim. Also still needed: **written permission to use each third-party mark**, and vector/2× originals (the supplied files are 435–1254px rasters) | Audit 1.13 |
 | B2 | **Logo files** — original vector crest and wordmark, and any existing brand guideline | Currently only a 816px raster PNG is available. See C4 |
 | B3 | **Conference Room** content and photography | Audit 3.4 names it; it does not exist on the current site |
 | B4 | **Expanded Safety & Security** content | Audit 3.8 requires a dedicated page with detailed information; the current page has five bullet points |

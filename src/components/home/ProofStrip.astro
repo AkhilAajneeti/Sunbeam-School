@@ -1,161 +1,187 @@
 ---
 /**
- * §03b · RECOGNITION PROOF STRIP — docs/06 §03b
+ * §03b · HERITAGE LEDE — the band directly under the banner
  *
- * Answers "is this school actually any good?" inside the first viewport.
- * The audit fixes the full Achievements section at the page tail (1.14); this
- * thin bar honours that placement while still meeting the parent's immediate
- * question. It is a proof BAR, not a section — no heading, no cards, no images,
- * and deliberately no large numerals (that treatment belongs to §05 and §14).
+ * Built to the client's reference: an oversized serif figure on the left, a
+ * hairline-and-small-caps eyebrow, a serif heading that completes the figure as
+ * one sentence, and the crest inside a faint tinted panel at the top right.
  *
- * Every claim is verified — docs/01 § 5.
+ * WHAT MOVED — this slot used to carry the four recognition proofs. None of
+ * them left the page: the #1 ranking leads both the Story stat card and the
+ * Achievements section, CBSE and Microsoft appear in Affiliations with their
+ * actual marks, and 2,200-from-456 is in the Story checklist.
+ *
+ * ⚠ The heading here is the same sentence as §05 Story's ("Fifty years of
+ * Sunbeam. Thirteen in Ballia."). Two sections apart, that reads as a mistake.
+ * Story's heading should change — see the note in the handover.
+ *
+ * TYPE — this is the one band on the page set in the serif. docs/05 D9 reserves
+ * Source Serif for the school's institutional voice, and a fifty-year founding
+ * statement is exactly that. Everything else stays on Bricolage.
+ *
+ * COLOUR — the reference sets the eyebrow in gold. Gold on a light ground
+ * measures 2.4:1 and docs/05 § I1 rules it out as text; that rule was already
+ * broken once across five components (D17) and is not being broken again. The
+ * gold survives as the RULE, which is decoration, and the eyebrow text takes
+ * the deep orange, which also keeps the band inside the current palette.
  */
-import { proofPoints } from '../../data/site';
-
-const label =
-  'Achievements and recognition — ' +
-  proofPoints.map((p) => `${p.primary}, ${p.qualifier}`).join('. ');
+import { Image } from 'astro:assets';
+import { heritageLede } from '../../data/site';
+import crest from '../../assets/icons/logos/sunbeam.png';
 ---
 
-<section class="proof" aria-label="Recognition">
+<section class="proof" aria-labelledby="proof-heading">
+  {/* Tinted panel, flush to the top and right edges, holding the crest. In the
+      reference this is a distinct block rather than a floating watermark — it
+      gives the composition a right-hand edge to sit against. */}
+  <span class="proof__panel" aria-hidden="true">
+    <Image class="proof__crest" src={crest} alt="" widths={[420, 840]} sizes="420px"
+      loading="lazy" />
+  </span>
+
   <div class="u-container">
-    <a class="proof__strip" href="/about/achievements/" aria-label={label}>
-      {proofPoints.map((point) => (
-        <span class="proof__cell">
-          <span class="proof__primary">{point.primary}</span>
-          <span class="proof__qualifier t-caption">{point.qualifier}</span>
-        </span>
-      ))}
-      <span class="proof__more" aria-hidden="true">
-        <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none">
-          <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
-        </svg>
-      </span>
-    </a>
+    <div class="proof__lead">
+      {/* Hidden from assistive tech: it is announced as part of the heading
+          below, so exposing it here would read "50" twice. */}
+      <p class="proof__figure" aria-hidden="true">{heritageLede.figure}</p>
+
+      <div class="proof__copy">
+        <p class="proof__eyebrow">
+          <span class="proof__rule" aria-hidden="true"></span>
+          {heritageLede.eyebrow}
+        </p>
+
+        <h2 class="proof__heading" id="proof-heading">
+          <span class="u-visually-hidden">{heritageLede.figure} </span>{heritageLede.heading}
+        </h2>
+
+        <p class="proof__body">{heritageLede.body}</p>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .proof {
+    position: relative;
+    overflow: hidden;
     background: var(--sb-sand);
-    border-bottom: var(--sb-hairline);
+    padding-block: var(--sb-section-y);
   }
 
-  .proof__strip {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
-    /* stretch, not center: the qualifiers run to different line counts, and
-       top-aligned cells keep every primary line on one optical baseline. */
-    align-items: stretch;
-    min-height: 72px;
-    transition: background-color var(--sb-dur-link) ease;
-  }
-
-  .proof__strip:hover {
-    background: var(--sb-violet-wash);
-  }
-
-  /* NOTE ON SELECTOR SHAPE
-     Every divider rule below is a single compound (.proof__cell:nth-child(...)),
-     never a combinator. Astro appends its scope attribute to each compound in a
-     selector, so `.proof__cell + .proof__cell` scopes to (0,4,0) while
-     `.proof__cell:nth-child(n)` is (0,3,0) — the combinator then outranks any
-     later breakpoint override and the dividers survive into layouts that should
-     not have them. Keeping one shape keeps the cascade decided by source order. */
-
-  .proof__cell {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    padding: var(--sb-5) 0 var(--sb-5) var(--sb-6);
-  }
-
-  .proof__cell:nth-child(n + 2) {
-    border-left: var(--sb-hairline);
-  }
-
-  .proof__cell:nth-child(1) { padding-left: 0; }
-
-  .proof__primary {
-    font-size: var(--sb-body-sm);
-    font-weight: 600;
-    color: var(--sb-charcoal);
-    line-height: 1.35;
-  }
-
-  .proof__qualifier {
-    color: var(--sb-text-muted);
-  }
-
-  .proof__more {
+  /* --- Crest panel ----------------------------------------------------------
+     Top-aligned and bled off the right edge, not vertically centred: in the
+     reference it reads as a block the composition sits against, and centring it
+     left the crest floating in the middle of nothing. */
+  .proof__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: clamp(24px, 7%, 80px);
+    width: clamp(210px, 27vw, 440px);
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
-    color: var(--sb-violet);
-    opacity: 0;
-    transition: opacity var(--sb-dur-link) ease;
+    background: rgba(28, 14, 8, 0.032);
+    pointer-events: none;
   }
 
-  .proof__strip:hover .proof__more,
-  .proof__strip:focus-visible .proof__more {
-    opacity: 1;
+  .proof__crest {
+    width: 76%;
+    height: auto;
+    opacity: 0.11;
+    user-select: none;
   }
 
-  .proof__strip:hover .arrow {
-    transform: translateX(3px);
+  /* --- Lead ------------------------------------------------------------------ */
+
+  .proof__lead {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: clamp(28px, 4vw, 72px);
   }
 
-  .arrow {
-    transition: transform var(--sb-dur-link) var(--sb-ease);
+  .proof__figure {
+    font-family: var(--sb-font-serif);
+    font-weight: 600;
+    font-size: clamp(88px, 12.5vw, 184px);
+    line-height: 0.82;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
   }
 
-  @media (max-width: 1279px) {
-    .proof__cell:nth-child(n) { padding-left: var(--sb-5); }
-    .proof__cell:nth-child(1) { padding-left: 0; }
-    .proof__more { display: none; }
-    .proof__strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .proof__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    font-size: var(--sb-label);
+    font-weight: 600;
+    letter-spacing: var(--sb-track-label);
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+    margin-bottom: var(--sb-5);
   }
 
-  /* --- 2 × 2 from tablet down (docs/06 §03b) ------------------------------
-     Four across needs ~236px a cell to hold "#1 Co-Ed Day School in Ballia" in
-     two lines. At 768 that falls to 176px and the strip turns ragged, so the
-     2 × 2 arrangement starts at the tablet band rather than at 767. */
+  /* Gold as decoration only — see the colour note in the header comment. */
+  .proof__rule {
+    flex: 0 0 auto;
+    width: clamp(24px, 3vw, 44px);
+    height: 2px;
+    background: var(--sb-gold);
+  }
+
+  .proof__heading {
+    font-family: var(--sb-font-serif);
+    font-weight: 600;
+    font-size: clamp(26px, 3vw, 42px);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+    color: var(--sb-charcoal);
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+
+  .proof__body {
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+    max-width: 46ch;
+  }
+
+  /* --- Tablet ---------------------------------------------------------------- */
+
   @media (max-width: 1023px) {
-    .proof__strip {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      min-height: 0;
-      padding-block: var(--sb-2);
-    }
+    .proof__heading { max-width: none; }
+    .proof__panel { width: clamp(180px, 30vw, 300px); }
 
-    /* reset, then re-apply per grid position */
-    .proof__cell:nth-child(n) {
-      padding: var(--sb-5) 0;
-      border-left: 0;
-    }
-
-    .proof__cell:nth-child(2n) {
-      padding-left: var(--sb-5);
-      border-left: var(--sb-hairline);
-    }
-
-    .proof__cell:nth-child(n + 3) {
-      border-top: var(--sb-hairline);
-    }
+    /* The copy column is `1fr` of the container, so without this it runs on
+       underneath the panel — measured at 768, the heading crossed the panel's
+       left edge by ~200px. Reserving slightly more than the panel's own width
+       keeps the two apart at every size in the band. */
+    .proof__lead { padding-right: clamp(196px, 32vw, 320px); }
   }
 
-  /* --- Narrow phones: single column ---------------------------------------- */
-  @media (max-width: 419px) {
-    .proof__strip { grid-template-columns: minmax(0, 1fr); }
+  /* --- Mobile: the panel steps aside ---------------------------------------- */
 
-    .proof__cell:nth-child(n) {
-      padding: var(--sb-4) 0;
-      border-left: 0;
-      border-top: 0;
+  @media (max-width: 639px) {
+    /* At this width the panel would sit under the copy rather than beside it,
+       so it becomes a plain watermark in the corner instead of a block. */
+    .proof__panel {
+      inset: auto 0 0 auto;
+      width: 210px;
+      height: 210px;
+      background: none;
     }
 
-    .proof__cell:nth-child(n + 2) {
-      border-top: var(--sb-hairline);
+    .proof__crest { opacity: 0.07; }
+
+    .proof__lead {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: var(--sb-5);
     }
+
+    .proof__figure { line-height: 0.9; }
   }
 </style>

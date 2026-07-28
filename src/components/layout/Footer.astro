@@ -190,11 +190,18 @@ const socials = [
        A plain `vw` step keeps growing on wide monitors while the container stays
        capped at --sb-max-content, so past ~1460px the wordmark overflowed and
        `overflow: hidden` silently sliced the last letter off.
-       8.05 is the measured advance width of "Sunbeam Ballia" in Poppins 700 at
-       -0.045em tracking (7.89 per 1px of font-size) plus ~2% headroom. */
+       8.25 is the measured advance width of "SUNBEAM BALLIA" in Bricolage
+       Grotesque 700 at -0.045em tracking (8.083 per 1px of font-size) plus ~2%
+       headroom. RE-MEASURE THIS IF THE DISPLAY FACE CHANGES — the divisor is
+       face-specific. Poppins was 7.89, and carrying its 8.05 over to Bricolage
+       overflowed the container by 5.3px, which `overflow: hidden` then sliced
+       off the final A without any visible error.
+       Measure with a DOM Range on the element's contents, not the element's own
+       width: a block-level element is always exactly as wide as its container,
+       so measuring the block always reports "fits". */
     font-size: max(
       30px,
-      calc(min(100vw - 2 * var(--sb-margin), var(--sb-max-content)) / 8.05)
+      calc(min(100vw - 2 * var(--sb-margin), var(--sb-max-content)) / 8.25)
     );
     line-height: 1;
     letter-spacing: -0.045em;

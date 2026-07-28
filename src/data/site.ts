@@ -93,24 +93,27 @@ export const school = {
  * Recognition — homepage §03b proof strip.
  * All four verified from /about-us/ and /affiliation/.
  */
-export const proofPoints = [
-  {
-    primary: '#1 Co-Ed Day School in Ballia',
-    qualifier: 'Education World · six consecutive years, 2019-20 to 2024-25',
-  },
-  {
-    primary: 'CBSE Affiliated',
-    qualifier: `Affiliation ${school.affiliationNo} · School Code ${school.schoolCode}`,
-  },
-  {
-    primary: 'Microsoft Showcase School',
-    qualifier: '100 teachers certified as Innovative Educator Experts',
-  },
-  {
-    primary: 'Established 2013',
-    qualifier: `${school.openingStrength} students then · ${school.currentStrength} today`,
-  },
-] as const;
+/**
+ * Heritage lede — homepage §03b, the band directly under the banner.
+ *
+ * The figure completes the heading as one sentence: "50 · Years of Sunbeam."
+ * Both numbers are verified — the group was founded in Varanasi in 1972 and the
+ * Ballia campus opened at Agarsanda in 2013 (docs/01 § 5). The body is editorial
+ * phrasing of those same two facts; it makes no claim they do not.
+ *
+ * NOTE — this band previously carried the four recognition proofs. They are all
+ * still on the page: the #1 ranking leads the Story stat card and the
+ * Achievements section, CBSE and Microsoft appear in Affiliations with their
+ * marks, and the 2,200-from-456 figure is in the Story checklist.
+ */
+export const heritageLede = {
+  figure: '50',
+  eyebrow: '1972 — Today',
+  heading: 'Years of Sunbeam. Thirteen in Ballia.',
+  body:
+    'Half a century of the same conviction — that a school owes a child more than ' +
+    'a curriculum — carried from Varanasi into Agarsanda.',
+} as const;
 
 /**
  * §04 Parent Quick Access — six destinations, all existing on the live site.

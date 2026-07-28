@@ -5,31 +5,100 @@
  * The highest-frequency audience (D2, existing parents) gets a one-tap route to
  * the six things they actually come for, without being routed through marketing.
  *
- * "No cards, no boxes, no icon circles" — a rule-separated band, and
- * deliberately image-free: this is utility, and imagery would slow the one
- * audience that wants speed.
+ * Rebuilt on reference 1's card pattern: a soft pastel disc holding a line-art
+ * icon, title, one-line descriptor and a circular arrow. Replaces the earlier
+ * rule-separated band, which read as thin and gave a lot of air to very little.
+ *
+ * The icons are functional, not decorative — each names its destination, which
+ * is what makes this scannable at a glance for a returning parent.
  */
 import { quickAccess } from '../../data/site';
+
+/** Pastel disc per item, plus the icon path. Tones stay in the warm family. */
+const looks = [
+  { tone: 'peach', label: 'Admissions' },
+  { tone: 'sky', label: 'Transport' },
+  { tone: 'sun', label: 'Academic Calendar' },
+  { tone: 'mint', label: 'Notice Board' },
+  { tone: 'rose', label: 'Results' },
+  { tone: 'lilac', label: 'Contact' },
+] as const;
 ---
 
 <section class="quick" aria-labelledby="quick-heading">
   <div class="u-container">
     <div class="quick__head">
-      <h2 class="quick__eyebrow t-label" id="quick-heading">For Parents &amp; Students</h2>
+      <p class="quick__eyebrow"><span class="pill pill--violet">For Parents &amp; Students</span></p>
+      <h2 class="quick__heading t-h2-sans" id="quick-heading">
+        Everything you came <span class="t-squiggle">for</span>
+      </h2>
     </div>
 
-    <ul class="quick__row">
-      {quickAccess.map((item) => (
-        <li class="quick__item">
+    <ul class="quick__grid">
+      {quickAccess.map((item, i) => (
+        <li>
           <a
-            class="quick__link"
+            class="qcard"
             href={item.href}
             {...('external' in item && item.external
               ? { target: '_blank', rel: 'noopener' }
               : {})}
           >
-            <span class="quick__label">{item.label}</span>
-            <span class="quick__desc t-caption">{item.desc}</span>
+            <span class={`qcard__disc qcard__disc--${looks[i].tone}`} aria-hidden="true">
+              {i === 0 && (
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+                  <path d="M14 3v5h5M9 13h6M9 17h4" />
+                </svg>
+              )}
+              {i === 1 && (
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="12" rx="2" />
+                  <path d="M3 10h18M7 16v2M17 16v2" />
+                  <circle cx="7.5" cy="13" r="1" /><circle cx="16.5" cy="13" r="1" />
+                </svg>
+              )}
+              {i === 2 && (
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M3 10h18M8 3v4M16 3v4M8 14h3M8 17h6" />
+                </svg>
+              )}
+              {i === 3 && (
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="4" width="16" height="16" rx="2" />
+                  <path d="M8 3v3M16 3v3M8 11h8M8 15h5" />
+                </svg>
+              )}
+              {i === 4 && (
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 20V10M12 20V4M19 20v-7" />
+                  <path d="M3 20h18" />
+                </svg>
+              )}
+              {i === 5 && (
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
+              )}
+            </span>
+
+            <span class="qcard__body">
+              <span class="qcard__title">{item.label}</span>
+              <span class="qcard__desc">{item.desc}</span>
+              <span class="qcard__go" aria-hidden="true">
+                <svg width="13" height="10" viewBox="0 0 14 10" fill="none">
+                  <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+                </svg>
+              </span>
+            </span>
           </a>
         </li>
       ))}
@@ -40,141 +109,118 @@ import { quickAccess } from '../../data/site';
 <style>
   .quick {
     background: var(--sb-ivory);
-    padding-block: var(--sb-11);
+    padding-block: var(--sb-section-y);
     border-bottom: var(--sb-hairline);
   }
 
   .quick__head {
-    margin-bottom: var(--sb-7);
+    text-align: center;
+    margin-bottom: var(--sb-9);
   }
 
-  .quick__eyebrow {
-    color: var(--sb-text-muted);
-    font-weight: 600;
-  }
+  .quick__eyebrow { margin-bottom: var(--sb-5); }
+  .quick__heading { color: var(--sb-charcoal); }
 
-  .quick__row {
+  .quick__grid {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    border-top: var(--sb-hairline);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sb-8) var(--sb-9);
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
-  .quick__link {
-    position: relative;
+  /* --- Card ----------------------------------------------------------------- */
+
+  .qcard {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sb-6);
+    height: 100%;
+  }
+
+  .qcard__disc {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 88px;
+    height: 88px;
+    border-radius: var(--sb-r-full);
+    transition: transform var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .qcard:hover .qcard__disc { transform: scale(1.06); }
+
+  /* Soft discs, warm family. Icon strokes are the deep tone of each disc so
+     they stay legible rather than relying on the pastel alone. */
+  .qcard__disc--peach { background: #ffe6da; color: #b03d0c; }
+  .qcard__disc--sky   { background: #dfeafb; color: #1d4e89; }
+  .qcard__disc--sun   { background: #fdeecb; color: #8a5a00; }
+  .qcard__disc--mint  { background: #dcf0e4; color: #2f6b4f; }
+  .qcard__disc--rose  { background: #fde0e6; color: #a8264a; }
+  .qcard__disc--lilac { background: #e7e3f7; color: #4b3b96; }
+
+  .qcard__body {
     display: flex;
     flex-direction: column;
-    gap: var(--sb-2);
-    height: 100%;
-    padding: var(--sb-6) var(--sb-5) var(--sb-7) 0;
+    gap: var(--sb-3);
+    padding-top: var(--sb-2);
   }
 
-  /* Dividers use one selector shape throughout — see the note in ProofStrip:
-     Astro scopes each compound, so a combinator rule silently outranks the
-     breakpoint overrides that are meant to reset it. */
-  .quick__item:nth-child(n + 2) .quick__link {
-    border-left: var(--sb-hairline);
-    padding-left: var(--sb-5);
-  }
-
-  /* 2px gold rule wipes in beneath — docs/06 §04. */
-  .quick__link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -1px;
-    height: 2px;
-    background: var(--sb-violet);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--sb-dur-link) var(--sb-ease);
-  }
-
-  .quick__link:hover::after,
-  .quick__link:focus-visible::after {
-    transform: scaleX(1);
-  }
-
-  .quick__label {
+  .qcard__title {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
     font-size: var(--sb-h4);
-    font-weight: 600;
-    color: var(--sb-charcoal);
     line-height: 1.25;
-    /* Reserve two lines across the six-column row: "Academic Calendar" wraps
-       where the others do not, and without this its descriptor drops out of
-       line with the rest of the band. */
-    min-height: 2.5em;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
     transition: color var(--sb-dur-link) ease;
   }
 
-  .quick__link:hover .quick__label,
-  .quick__link:focus-visible .quick__label {
-    color: var(--sb-violet);
-  }
+  .qcard:hover .qcard__title,
+  .qcard:focus-visible .qcard__title { color: var(--sb-violet); }
 
-  .quick__desc {
+  .qcard__desc {
+    font-size: var(--sb-body-sm);
+    line-height: 1.55;
     color: var(--sb-text-muted);
   }
 
-  /* --- Tablet: 3 × 2 ------------------------------------------------------
-     Breaks at 1239 to match the type scale and the nav handover: six columns of
-     ~157px cannot hold "Academic Calendar" at 17px without wrapping. */
-  @media (max-width: 1239px) {
-    .quick__row {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    /* reset, then re-apply per grid position (columns 2 and 3 of each row) */
-    .quick__item:nth-child(n) .quick__link {
-      border-left: 0;
-      padding: var(--sb-6) var(--sb-6) var(--sb-7) 0;
-    }
-
-    .quick__item:nth-child(3n + 2) .quick__link,
-    .quick__item:nth-child(3n + 3) .quick__link {
-      border-left: var(--sb-hairline);
-      padding-left: var(--sb-6);
-    }
-
-    .quick__item:nth-child(n + 4) .quick__link {
-      border-top: var(--sb-hairline);
-    }
+  .qcard__go {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin-top: var(--sb-2);
+    border-radius: var(--sb-r-full);
+    border: 1px solid var(--sb-border-strong);
+    color: var(--sb-charcoal);
+    transition: background-color var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease,
+      border-color var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
   }
 
-  /* --- Mobile: 2 × 3, 56px rows, full-width targets ----------------------- */
-  @media (max-width: 767px) {
-    .quick {
-      padding-block: var(--sb-9);
-    }
+  .qcard:hover .qcard__go {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+    transform: translateX(3px);
+  }
 
-    .quick__head { margin-bottom: var(--sb-6); }
+  /* --- Tablet: 2 columns ------------------------------------------------------ */
 
-    .quick__row {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  @media (max-width: 1023px) {
+    .quick__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sb-8) var(--sb-7); }
+    .qcard__disc { width: 76px; height: 76px; }
+    .qcard__disc svg { width: 26px; height: 26px; }
+  }
 
-    /* reset, then re-apply: right-hand column of each row */
-    .quick__item:nth-child(n) .quick__link {
-      border-left: 0;
-      min-height: 56px;
-      justify-content: center;
-      padding: var(--sb-5) var(--sb-4) var(--sb-5) 0;
-    }
+  /* --- Mobile: single column, tighter -------------------------------------- */
 
-    .quick__item:nth-child(2n) .quick__link {
-      border-left: var(--sb-hairline);
-      padding-left: var(--sb-5);
-    }
-
-    .quick__item:nth-child(n + 3) .quick__link {
-      border-top: var(--sb-hairline);
-    }
-
-    /* Labels fit on one line at this size, so the reserved second line would
-       only add dead space. */
-    .quick__label {
-      font-size: var(--sb-body);
-      min-height: 0;
-    }
+  @media (max-width: 639px) {
+    .quick__grid { grid-template-columns: minmax(0, 1fr); gap: var(--sb-7); }
+    .qcard { gap: var(--sb-5); align-items: center; }
+    .qcard__disc { width: 64px; height: 64px; }
+    .qcard__disc svg { width: 24px; height: 24px; }
+    .qcard__go { display: none; } /* the whole card is the tap target here */
   }
 </style>
