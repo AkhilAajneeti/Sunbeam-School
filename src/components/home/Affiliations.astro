@@ -21,74 +21,168 @@
  *
  * Every affiliation named is verified from the school's own site (docs/01 § 5).
  */
-import { Image } from 'astro:assets';
-import { school } from '../../data/site';
+import { Image } from "astro:assets";
+import { school } from "../../data/site";
+import rocket from "../../assets/icons/rocketpaper.png";
+import wave from "../../assets/icons/wave.png";
 
-import cbse from '../../assets/icons/logos/cbse.png';
-import sunbeam from '../../assets/icons/logos/sunbeam.png';
-import microsoft from '../../assets/icons/logos/microsoft.png';
-import educationWorld from '../../assets/icons/logos/education-world.png';
-import brainfeed from '../../assets/icons/logos/brainfeed.png';
-import ncc from '../../assets/icons/logos/ncc.png';
+import cbse from "../../assets/icons/logos/cbse.png";
+import sunbeam from "../../assets/icons/logos/sunbeam.png";
+import microsoft from "../../assets/icons/logos/microsoft.png";
+import educationWorld from "../../assets/icons/logos/education-world.png";
+import brainfeed from "../../assets/icons/logos/brainfeed.png";
+import ncc from "../../assets/icons/logos/ncc.png";
 
 const partners = [
-  { src: cbse, name: 'Central Board of Secondary Education', note: `Affiliation ${school.affiliationNo}` },
-  { src: sunbeam, name: 'Sunbeam Group of Educational Institutions', note: 'Part of the group since 1972' },
-  { src: microsoft, name: 'Microsoft', note: 'Showcase School' },
-  { src: educationWorld, name: 'Education World', note: '#1 in Ballia, six years' },
-  { src: brainfeed, name: 'Brainfeed', note: 'School Excellence Award' },
-  { src: ncc, name: 'National Cadet Corps', note: '‘A’ & ‘B’ certificate' },
+  {
+    src: cbse,
+    name: "Central Board of Secondary Education",
+    note: `Affiliation ${school.affiliationNo}`,
+  },
+  {
+    src: sunbeam,
+    name: "Sunbeam Group of Educational Institutions",
+    note: "Part of the group since 1972",
+  },
+  { src: microsoft, name: "Microsoft", note: "Showcase School" },
+  {
+    src: educationWorld,
+    name: "Education World",
+    note: "#1 in Ballia, six years",
+  },
+  { src: brainfeed, name: "Brainfeed", note: "School Excellence Award" },
+  { src: ncc, name: "National Cadet Corps", note: "‘A’ & ‘B’ certificate" },
 ];
 ---
 
 <section class="affil" aria-labelledby="affil-heading">
+  {
+    /* Decorative. Sits in the section's own top padding, clear of the heading —
+      verified by box overlap, not by eye. */
+  }
+  <Image
+    class="affil__rocket"
+    src={rocket}
+    alt=""
+    aria-hidden="true"
+    widths={[200, 400]}
+    sizes="200px"
+    loading="lazy"
+  />
+
   <div class="u-container">
     <div class="affil__head" data-reveal>
-      <h2 class="affil__heading" id="affil-heading">
-        Affiliations &amp; recognition partners
+      <h2 class="ach__heading t-h2-sans" data-split id="ach-heading">
+        Affiliations & recognition<span class="t-squiggle"> partners</span>
       </h2>
     </div>
 
     <ul class="affil__row">
-      {partners.map((p) => (
-        <li class="affil__item">
-          <span class="affil__mark">
-            {/* widths/sizes must exceed the rendered box. With `width: auto`
+      {
+        partners.map((p) => (
+          <li class="affil__item">
+            <span class="affil__mark">
+              {/* widths/sizes must exceed the rendered box. With `width: auto`
                 the layout width follows the INTRINSIC width of whichever
                 candidate the browser picks, so `sizes="120px"` silently pinned
                 every mark to 120px wide and the CSS caps never bound. */}
-            <Image src={p.src} alt={`${p.name} logo`} widths={[180, 360]} sizes="180px"
-              loading="lazy" />
-          </span>
-          <span class="affil__note">{p.note}</span>
-        </li>
-      ))}
+              <Image
+                src={p.src}
+                alt={`${p.name} logo`}
+                widths={[180, 360]}
+                sizes="180px"
+                loading="lazy"
+              />
+            </span>
+            <span class="affil__note">{p.note}</span>
+          </li>
+        ))
+      }
     </ul>
 
     <p class="affil__legal t-tabular">
-      CBSE Affiliation No. {school.affiliationNo} · School Code {school.schoolCode}
+      CBSE Affiliation No. {school.affiliationNo} · School Code {
+        school.schoolCode
+      }
     </p>
   </div>
+    <Image
+    class="affil__wave"
+    src={wave}
+    alt=""
+    aria-hidden="true"
+    widths={[100, 200]}
+    sizes="100px"
+    loading="lazy"
+  />
 </section>
 
 <style>
   .affil {
-    /* Sand, not ivory. voices / affil / ach / adm were four consecutive ivory
-       sections, so the standard gap between them read as dead space rather than
-       rhythm — the ground never changed to mark the join. The white tiles also
-       gain contrast here.
 
-       SYMMETRIC padding. This ran 120/56 to close the gap to Achievements while
-       the two shared a ground; now that the ground changes at the join, the
-       band is its own object and unequal top and bottom read as a mistake. */
+    position: relative;
+  
+    overflow: hidden;
     background: var(--sb-sand);
     padding-block: var(--sb-section-y);
-    /* No border-top. Voices above now ends in a cloud silhouette filled with
-       this section's own sand, and a hairline drew a hard rule straight across
-       the blend. */
+   
   }
 
-  .affil__head { text-align: center; margin-bottom: var(--sb-8); }
+
+  .affil__rocket {
+    position: absolute;
+    top: 16px;
+    right: 150px;
+    width: 100px;
+    height: auto;
+    opacity: 0.8;
+    
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    animation: affil-drift 7s ease-in-out infinite;
+    will-change: transform;
+  }
+  .affil__wave {
+    position: absolute;
+    bottom: 50px;
+    left: 100px;
+    width: 22px;
+    height: auto;
+    opacity: 0.8;
+
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    animation: affil-drift 7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes affil-drift {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(-3deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .affil__rocket {
+      animation: none;
+    }
+  }
+
+  .affil > .u-container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .affil__head {
+    text-align: center;
+    margin-bottom: var(--sb-8);
+  }
 
   .affil__heading {
     font-family: var(--sb-font-sans);
@@ -126,14 +220,28 @@ const partners = [
     border: var(--sb-hairline);
     border-radius: var(--sb-r-2);
     background: #fff;
-    transition: border-color var(--sb-dur-link) ease, transform var(--sb-dur-image) var(--sb-ease),
-      box-shadow var(--sb-dur-image) var(--sb-ease);
+    transition:
+      border-color var(--sb-dur-link) ease,
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease),
+      background-color var(--sb-dur-link) ease;
   }
 
+  /* The tile lifts, warms and deepens; the mark inside grows a little more than
+     the tile does, so the logo reads as coming forward rather than the whole
+     card simply sliding. */
   .affil__item:hover {
     border-color: var(--sb-violet);
-    transform: translateY(-3px);
-    box-shadow: var(--sb-shadow-card);
+    transform: translateY(-8px);
+    box-shadow: var(--sb-shadow-card-hover);
+    background: var(--sb-violet-wash);
+  }
+
+  .affil__item:hover .affil__mark :global(img) {
+    transform: scale(1.09);
+  }
+  .affil__item:hover .affil__note {
+    color: var(--sb-violet-dark);
   }
 
   /* FIXED-HEIGHT BOX, and that is the whole trick. The marks run from 157×196
@@ -154,12 +262,14 @@ const partners = [
     width: 100%;
     height: 100%;
     object-fit: contain;
+    transition: transform var(--sb-dur-image) var(--sb-ease);
   }
 
   .affil__note {
     font-size: var(--sb-caption);
     line-height: 1.35;
     color: var(--sb-text-muted);
+    transition: color var(--sb-dur-link) ease;
   }
 
   .affil__legal {
@@ -170,13 +280,35 @@ const partners = [
   }
 
   @media (max-width: 1023px) {
-    .affil__row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .affil__row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 639px) {
+    /* The band is short here and the plane would sit directly behind the
+       heading. Smaller, and held up in the top padding. */
+    .affil__rocket {
+      width: 104px;
+      top: -4px;
+      right: -12px;
+      opacity: 0.7;
+    }
   }
 
   @media (max-width: 479px) {
-    .affil__row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sb-4); }
-    .affil__item { min-height: 168px; gap: var(--sb-5); padding: var(--sb-6) var(--sb-4); }
+    .affil__row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--sb-4);
+    }
+    .affil__item {
+      min-height: 168px;
+      gap: var(--sb-5);
+      padding: var(--sb-6) var(--sb-4);
+    }
     /* Only the box changes — the image fills it, so no image override needed. */
-    .affil__mark { height: 76px; }
+    .affil__mark {
+      height: 76px;
+    }
   }
 </style>

@@ -311,6 +311,23 @@ h2:has(.t-squiggle) { line-height: 1.3; }
   padding-inline: var(--sb-margin);
 }
 
+/* Inner-page content panel. Lifted onto the photographic banner on rounded top
+   corners — the reference's device for joining a photo header to the page, and
+   the reason PageHero carries extra bottom padding: the overlap has to eat
+   empty banner, not the title. */
+.u-page-panel {
+  position: relative;
+  /* Above the pinned banner, and opaque, so it covers the photograph as it
+     rises rather than letting it show through. */
+  z-index: 1;
+  /* Square, and flush. The rounded lift onto the banner read as a device for
+     its own sake; the panel now simply meets the banner on a straight edge and
+     the pin-and-reveal does all the work. */
+  border-radius: 0;
+  background: var(--sb-ivory);
+  padding-block: clamp(48px, 7vh, 88px) var(--sb-section-y);
+}
+
 .u-container-wide {
   width: 100%;
   max-width: calc(var(--sb-max-wide) + var(--sb-margin) * 2);

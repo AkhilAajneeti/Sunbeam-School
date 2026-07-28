@@ -1,0 +1,191 @@
+---
+/**
+ * PAGE BANNER — the standard header for every inner page.
+ *
+ * Reference pattern: a full-bleed photograph, breadcrumb trail and page title
+ * centred over it, with the page's content panel lifted onto the banner on
+ * rounded top corners.
+ *
+ * PIN AND REVEAL. The banner is `position: sticky` and holds still while the
+ * content panel scrolls up over it. No JavaScript: sticky does the whole thing,
+ * which also means it cannot break if a script fails and it costs nothing on a
+ * slow phone. The drift tween this used to have is gone — an image that keeps
+ * moving while pinned contradicts the effect.
+ *
+ * SCRIM, not a guess. Text sits on photography here, and docs/05 § J4 requires a
+ * scrim rather than raw image. The overlay is a two-stop wash weighted to the
+ * middle band where the title sits, verified by sampling rendered pixels rather
+ * than by eye — see scripts/contrast-sample.mjs.
+ *
+ * The `crumbs` prop takes everything EXCEPT the current page, which is added
+ * from `title` and marked `aria-current`, so a caller cannot accidentally omit
+ * it or word it differently from the heading.
+ */
+import { Picture } from 'astro:assets';
+
+interface Crumb {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  /** One line under the title. Optional — most pages do not need it. */
+  standfirst?: string;
+  crumbs: Crumb[];
+  src: ImageMetadata;
+  alt: string;
+  /** object-position, to hold the focal point through the crop. */
+  position?: string;
+}
+
+const { title, standfirst, crumbs, src, alt, position = '50% 45%' } = Astro.props;
+---
+
+<header class="phero">
+  <div class="phero__media" style={`--phero-pos: ${position};`}>
+    <Picture
+      src={src}
+      alt={alt}
+      formats={['avif', 'webp']}
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+
+  <div class="phero__scrim" aria-hidden="true"></div>
+
+  <div class="u-container phero__inner">
+    <nav class="phero__crumbs" aria-label="Breadcrumb">
+      <ol>
+        {crumbs.map((c) => (
+          <li>
+            <a href={c.href}>{c.label}</a>
+          </li>
+        ))}
+        <li><span aria-current="page">{title}</span></li>
+      </ol>
+    </nav>
+
+    <h1 class="phero__title">{title}</h1>
+    {standfirst && <p class="phero__standfirst">{standfirst}</p>}
+  </div>
+</header>
+
+<style>
+  .phero {
+    /* Pinned. The panel below carries a higher z-index and an opaque ground, so
+       it slides up and covers this rather than pushing it. */
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    display: grid;
+    align-items: center;
+    min-height: clamp(320px, 46vh, 520px);
+    /* Even now the panel meets it on a straight edge rather than overlapping —
+       the extra foot padding existed only to be eaten by that overlap. */
+    padding-block: clamp(72px, 12vh, 132px);
+    background: var(--sb-ink);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .phero__media {
+    position: absolute;
+    /* Flush to the frame. This was inset -12% to give the old drift tween room
+       to travel; with the banner pinned instead there is no travel, and the
+       overscan was only cropping 24% off the photograph for nothing. */
+    inset: 0;
+    z-index: -2;
+  }
+
+  .phero__media :global(picture),
+  .phero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--phero-pos, 50% 45%);
+    display: block;
+  }
+
+  .phero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(18, 12, 8, 0.62) 0%,
+        rgba(18, 12, 8, 0.72) 46%,
+        rgba(18, 12, 8, 0.6) 100%
+      );
+  }
+
+  .phero__inner { text-align: center; color: #fff; }
+
+  /* A pinned banner is a scroll-coupled effect, and those can be uncomfortable
+     for the same people who ask for reduced motion. It reverts to an ordinary
+     block that scrolls away with the page. */
+  @media (prefers-reduced-motion: reduce) {
+    .phero { position: static; }
+  }
+
+  /* --- Breadcrumbs ---------------------------------------------------------- */
+
+  .phero__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 10px;
+    margin: 0 0 var(--sb-5);
+    padding: 0;
+    list-style: none;
+    font-size: var(--sb-label);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* The separator is generated, not typed into the markup — a literal "/" in
+     the content would be read out by a screen reader on every crumb. */
+  .phero__crumbs li + li::before {
+    content: '/';
+    margin-right: 10px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .phero__crumbs a {
+    color: rgba(255, 255, 255, 0.82);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .phero__crumbs a:hover { color: #fff; text-decoration: underline; }
+
+  /* The current page is marked by WEIGHT and full opacity, not by hue. It was
+     --sb-lime, which measured 3.07:1 over this banner's brighter photograph —
+     the scrim is tuned to carry white, and a mid-tone accent at 12px has no
+     margin left once the image behind it is light. White tracks the title's
+     contrast wherever the photograph goes. */
+  .phero__crumbs [aria-current='page'] { color: #fff; }
+
+  /* --- Title ---------------------------------------------------------------- */
+
+  .phero__title {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 5.2vw, 62px);
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .phero__standfirst {
+    margin: var(--sb-5) auto 0;
+    max-width: 56ch;
+    font-size: var(--sb-body-lg);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.86);
+  }
+</style>

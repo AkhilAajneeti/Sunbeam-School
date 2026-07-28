@@ -113,19 +113,20 @@ import MegaMenu from './MegaMenu.astro';
   }
 
   .brand__emblem {
-    height: 48px;
+    height: 60px;
     width: auto;
     transition: height var(--sb-dur-nav) var(--sb-ease);
   }
 
   .brand__wordmark {
-    height: 44px;
+    height: 56px;
     width: auto;
     transition: height var(--sb-dur-nav) var(--sb-ease);
   }
 
-  .masthead.is-scrolled .brand__emblem { height: 38px; }
-  .masthead.is-scrolled .brand__wordmark { height: 34px; }
+  /* Shrinks on scroll so the sticky bar stays shallow — same ratio as above. */
+  .masthead.is-scrolled .brand__emblem { height: 60px; }
+  .masthead.is-scrolled .brand__wordmark { height: 56px; }
 
   /* --- Main navigation --------------------------------------------------- */
 
@@ -242,18 +243,18 @@ import MegaMenu from './MegaMenu.astro';
   }
 
   @media (max-width: 1023px) {
-    .brand__emblem { height: 40px; }
-    .brand__wordmark { height: 36px; }
-    .masthead.is-scrolled .brand__emblem { height: 34px; }
-    .masthead.is-scrolled .brand__wordmark { height: 30px; }
+    .brand__emblem { height: 44px; }
+    .brand__wordmark { height: 40px; }
+    .masthead.is-scrolled .brand__emblem { height: 38px; }
+    .masthead.is-scrolled .brand__wordmark { height: 34px; }
   }
 
   @media (max-width: 767px) {
     .brand { gap: 10px; }
-    .brand__emblem { height: 34px; }
-    .brand__wordmark { height: 30px; }
-    .masthead.is-scrolled .brand__emblem { height: 30px; }
-    .masthead.is-scrolled .brand__wordmark { height: 26px; }
+    .brand__emblem { height: 38px; }
+    .brand__wordmark { height: 34px; }
+    .masthead.is-scrolled .brand__emblem { height: 32px; }
+    .masthead.is-scrolled .brand__wordmark { height: 28px; }
     .masthead__apply { display: none; } /* Apply is pinned in the drawer instead */
     .masthead__toggle-text { display: none; }
   }

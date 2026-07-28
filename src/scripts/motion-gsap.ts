@@ -70,9 +70,13 @@ const splitWords = (el: HTMLElement): HTMLElement[] => {
         .filter(Boolean)
         .forEach((word) => wrap(document.createTextNode(word)));
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      // Screen-reader-only text: copied through untouched. Masking it would
-      // give it a box and could drag it back into the visual flow.
-      if ((node as HTMLElement).classList.contains('u-visually-hidden')) {
+      const el = node as HTMLElement;
+      // Passed through untouched, not wrapped:
+      //  · <br> is a chosen line break, not a word. Masking one would give it a
+      //    box and destroy the break the heading depends on.
+      //  · screen-reader-only text has no visual box to mask, and giving it one
+      //    could drag it back into the visual flow.
+      if (el.tagName === 'BR' || el.classList.contains('u-visually-hidden')) {
         out.appendChild(node.cloneNode(true));
         return;
       }
@@ -183,6 +187,11 @@ grids.forEach(([container, child]) => {
     duration: 0.6,
     ease: 'power3.out',
     stagger: 0.07,
+    // Hand the element back to CSS when the entrance finishes. Without this
+    // GSAP leaves an inline `transform` behind, which outranks the stylesheet
+    // and silently kills every :hover lift on these tiles — measured: the
+    // affiliation tiles reported an unchanged transform on hover.
+    clearProps: 'transform,opacity',
     scrollTrigger: { trigger: root, start: START, once: true },
   });
 });

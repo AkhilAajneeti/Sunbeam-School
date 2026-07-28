@@ -91,7 +91,7 @@ const slides = [
       </p>
       <p class="hero__eyebrow t-label">{school.motto}</p>
       <h1 class="hero__title t-display" data-split>
-        Where Ballia's children learn to <span class="t-squiggle t-squiggle--lime">lead</span>.
+        Where Ballia's children<br class="hero__br" />learn to <span class="t-squiggle t-squiggle--lime">lead</span>.
       </h1>
       <p class="hero__deck t-body-lg">
         A Sunbeam institution since 2013 — {school.currentStrength} students, Nursery to
@@ -180,6 +180,11 @@ const slides = [
 
   .hero__slide[data-active] { opacity: 1; }
 
+  /* Square. <Photo> carries a 16px radius for the card contexts it usually sits
+     in; a full-bleed banner is not one of those, and the rounded corners showed
+     against the stage. */
+  .hero__slide :global(.photo) { border-radius: 0; }
+
   /* Warm the photography toward the brand without tinting it into a filter.
      Kept light: a heavy maroon wash makes the whole frame read as sepia, and
      this school needs to look current, not archival. */
@@ -254,7 +259,10 @@ const slides = [
 
   /* Asymmetric: columns 1–7 of 12. Never centred. */
   .hero__copy {
-    grid-column: 1 / span 7;
+    /* Columns 1–8. .hero__meta holds 9–12, so column 8 was simply unused, and
+       the title needs it: "Where Ballia's children" is 780px at 76px against a
+       737px seven-column measure. */
+    grid-column: 1 / span 8;
   }
 
   .hero__badge {
@@ -321,9 +329,19 @@ const slides = [
 
   .hero__title {
     color: #fff;
-    max-width: 15ch;
+    /* FLUID, so the chosen break holds at every width rather than only at the
+       two where it happened to fit.
+       Line 1 is a constant 10.26em ("Where Ballia's children" at this tracking),
+       and the eight-column measure is about 0.58vw. 5.2vw keeps 10.26em inside
+       that at every size in the range — a fixed 76px did not: it needed 780px
+       against 762px at 1240, and broke into three lines there while looking
+       correct at 1200.
+       No max-width: a measure's only job here would be to stop line 1 fitting,
+       and `text-wrap: balance` is gone because balancing fights a break we
+       have already chosen. */
+    font-size: clamp(40px, 5.2vw, 76px);
+    max-width: none;
     margin-bottom: var(--sb-6);
-    text-wrap: balance;
   }
 
   .hero__deck {
@@ -425,7 +443,7 @@ const slides = [
   @media (max-width: 1023px) {
     .hero__copy { grid-column: 1 / span 6; }
     .hero__meta { grid-column: 7 / span 2; }
-    .hero__title { max-width: 16ch; }
+    .hero__title { max-width: none; }
   }
 
   /* Below ~900 the caption competes with the deck for the same optical line. */
@@ -436,6 +454,13 @@ const slides = [
   }
 
   /* --- Mobile: 4:5 crop, stacked actions, controls below copy ------------- */
+
+  /* The type size bottoms out at 40px, so below roughly 480 the first line can
+     no longer fit however wide the column is. The chosen break is dropped there
+     and the heading wraps naturally. */
+  @media (max-width: 479px) {
+    .hero__br { display: none; }
+  }
 
   @media (max-width: 767px) {
     .hero {
@@ -502,7 +527,7 @@ const slides = [
       tag: slide.dataset.captionTag ?? '',
     }));
 
-    const INTERVAL = 6000;
+    const INTERVAL = 4500;
     let index = 0;
     let timer: number | undefined;
     let userPaused = false;

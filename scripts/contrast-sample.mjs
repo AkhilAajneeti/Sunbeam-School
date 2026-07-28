@@ -36,13 +36,23 @@ let anyFail = false;
 for (const vw of widths) {
   const page = await browser.newPage({ viewport: { width: vw, height: 1000 } });
   await page.goto(url, { waitUntil: 'networkidle' });
-  // `visibility: hidden`, not `display: none`: a sticky header still occupies its
-  // place in normal flow, so removing it would shift every section and the
-  // measured boxes would no longer match the pixels. Hiding it keeps the layout
-  // identical while taking its pixels out of the capture — without this the
-  // header sat over the top of any short section scrolled into view and probes
-  // read the masthead's white and the crest's gold as "the ground".
-  await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}[data-reveal]{opacity:1!important;transform:none!important}header,[data-drawer],[data-utility]{visibility:hidden!important}' });
+  await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}[data-reveal]{opacity:1!important;transform:none!important}' });
+
+  // Hide overlays that would sit over the section and be sampled as its ground.
+  // Done in JS by COMPUTED POSITION, not by tag name: a blunt `header{...}` rule
+  // also matched PageHero, which renders a <header> — the checker hid the very
+  // element it was about to screenshot and timed out on "element is not visible".
+  // `visibility`, not `display`, so a sticky element keeps its place in normal
+  // flow and the measured boxes still line up with the pixels.
+  await page.evaluate((sel) => {
+    const target = document.querySelector(sel);
+    if (!target) return;
+    document.querySelectorAll('body *').forEach((el) => {
+      const pos = getComputedStyle(el).position;
+      if ((pos !== 'fixed' && pos !== 'sticky') || el.contains(target) || target.contains(el)) return;
+      el.style.visibility = 'hidden';
+    });
+  }, sectionSel);
   await page.evaluate(() => document.fonts.ready);
   // Centre it, so nothing pinned to the top or bottom of the viewport overlaps.
   await page.evaluate((s) => document.querySelector(s).scrollIntoView({ block: 'center' }), sectionSel);
@@ -79,7 +89,18 @@ for (const vw of widths) {
     };
 
     const all = [...sec.querySelectorAll('*')].filter(visible);
-    const textEls = all.filter(rendersText);
+    // Asset-placeholder scaffolding is excluded: it is a build-time stand-in
+    // that ships only until the photograph arrives, and its label is not
+    // content whose contrast we are shipping.
+    const textEls = all.filter((el) => rendersText(el) && !el.closest('.ph'));
+
+    // A PHOTOGRAPH is not the ground for text sitting beside it. Without this,
+    // a probe stepping 48px left of a block-level line in the copy column lands
+    // on the portrait next to it and reports a ground the text never sits on —
+    // measured as a false 4.37 on .lead__role at 1024.
+    const media = [...sec.querySelectorAll('img, picture, video, canvas')]
+      .filter(visible)
+      .map((el) => rel(el.getBoundingClientRect()));
     return {
       targets: textEls.filter((el) => !hasOwnBg(el)).map((el) => {
         const cs = getComputedStyle(el);
@@ -97,7 +118,7 @@ for (const vw of widths) {
           ...rel(el.getBoundingClientRect()),
         };
       }),
-      obstacles: textEls.map((el) => rel(el.getBoundingClientRect())),
+      obstacles: [...textEls.map((el) => rel(el.getBoundingClientRect())), ...media],
     };
   }, sectionSel);
 

@@ -137,7 +137,7 @@ export const pending = {
   A2: 'Professional campus photography — every image on this page',
   A3: 'Vision and Mission statement text; confirm primary motto/tagline',
   A4: 'Alumni video testimonials, names, batches, consent',
-  A5: 'Rewritten body copy — homepage welcome, Principal, Director',
+  A5: "Rewritten homepage welcome copy, and the FULL Principal's message proofread (audit 1.12). The Director's message has been supplied and is live",
   A7: 'News, events and notices — content plus an update cadence owner',
   A8: 'Admission eligibility, age criteria, dates, fee data',
   A9: 'Decision on YouTube and X — maintain or remove (audit 14.3)',

@@ -190,7 +190,8 @@ Everything below was extracted from the live site and may be used in design and 
 - Opened with **456 students** → now **2,200+**, Nursery to Class XII, co-educational
 - Streams: **PCM, PCB, Commerce, Humanities**
 - Principal: **Mrs. Arpita Singh**
-- Sunbeam Group Director referenced in activities: **Mrs. Amrita Burman**
+- **Director of Sunbeam School Ballia: Dr. Kunwar Arun Singh** — M.Sc. (Chemistry), Ph.D.; EdLEAP: Education Leader Program from IIM Calcutta; B.Ed. & P.G.D.C.A. Supplied by the school with his message, 2026-07. Live on `/about/directors-message/`
+- Sunbeam **Group** Director referenced in activity write-ups: Mrs. Amrita Burman — a *different* person in a *different* role. Do not use her name for the Ballia school
 - Tagline in use: **"Educating the FUTURE!"**
 - Group phrase: **"Lighting the Lamp of Knowledge"**
 - Address: Agarsanda, near Hanuman Temple, Ballia, Uttar Pradesh 277001; 2 km from Ballia Roadways Bus Stand on Garwar Road

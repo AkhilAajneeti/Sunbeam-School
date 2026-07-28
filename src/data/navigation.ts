@@ -56,7 +56,7 @@ export const utilityLinks = [
   { label: 'Academic Calendar', href: '/academics/academic-calendar/', tier: 2 },
   { label: 'Results', href: school.external.results, external: true, tier: 1 },
   { label: 'Download TC', href: school.external.downloadTC, external: true, tier: 2 },
-  { label: 'Parent Login', href: school.external.parentLogin, external: true, tier: 1 },
+  //{ label: 'Parent Login', href: school.external.parentLogin, external: true, tier: 1 },
   { label: 'Mandatory Public Disclosure', href: '/mandatory-public-disclosure/', tier: 2 },
   { label: 'Contact', href: '/contact-us/', tier: 3 },
 ] as const;
