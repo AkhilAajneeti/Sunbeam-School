@@ -95,7 +95,7 @@ const durations = ['58s', '72s', '64s'];
   <div class="u-container">
     <div class="voices__head" data-reveal>
       <p class="voices__eyebrow pill pill--violet">{voices.eyebrow}</p>
-      <h2 class="voices__heading t-h2-sans" id="voices-heading">
+      <h2 class="voices__heading t-h2-sans" data-split id="voices-heading">
         What our students <span class="t-squiggle">say</span>
       </h2>
       <p class="voices__deck t-body-lg">{voices.deck}</p>
@@ -185,6 +185,13 @@ const durations = ['58s', '72s', '64s'];
      `backgroundColor`, and a gradient-only background would resolve to
      transparent and silently skip every text node in this section. */
   .voices {
+    /* The cloud edges are absolutely positioned INSIDE the section's padding,
+       so they eat it: at 120px padding and a 108px cloud, only 12px of clear
+       space was left between the cards and the silhouette — which is what made
+       the band feel cramped top and bottom.
+       Padding is therefore section rhythm PLUS the cloud height, so the clear
+       space either side matches every other section on the page. */
+    --cloud-h: clamp(52px, 7.5vw, 108px);
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -192,7 +199,7 @@ const durations = ['58s', '72s', '64s'];
       radial-gradient(62% 78% at 10% 38%, rgba(163, 191, 232, 0.28), transparent 68%),
       radial-gradient(58% 74% at 90% 58%, rgba(255, 176, 148, 0.30), transparent 68%),
       var(--sb-ivory);
-    padding-block: var(--sb-section-y);
+    padding-block: calc(var(--sb-section-y) + var(--cloud-h));
   }
 
   /* --- Cloud edges ---------------------------------------------------------- */
@@ -205,7 +212,7 @@ const durations = ['58s', '72s', '64s'];
     /* Always shorter than the section's own padding, so the clouds sit in the
        breathing space and never collide with the heading:
        108px against 120px padding at desktop, 52px against 64px at mobile. */
-    height: clamp(52px, 7.5vw, 108px);
+    height: var(--cloud-h);
     line-height: 0;
     pointer-events: none;
   }
@@ -381,45 +388,32 @@ const durations = ['58s', '72s', '64s'];
   /* --- Mobile ---------------------------------------------------------------- */
 
   @media (max-width: 767px) {
-    /* A marquee cannot work on a phone, and the snap carousel that replaced it
-       was not much better: three separate horizontal scrollers stacked up, nine
-       306px cards in a 390px viewport, and the section filled the whole screen.
-       Three swipe targets to read three quotes.
-       Below 768 it becomes a plain vertical list instead — one card from each
-       row, full width, no horizontal scrolling anywhere. Three testimonials is
-       the right number for a homepage extract on a phone; the rest are on the
-       Alumni page. */
-    .voices__row {
-      overflow: visible;
-      -webkit-mask-image: none;
-      mask-image: none;
-    }
-
-    .voices__track {
-      animation: none !important;
-      transform: none !important;
-      width: auto;
-      flex-direction: column;
-      gap: var(--sb-4);
-      padding-right: 0;
-    }
-
-    /* Children 2..n are the remainder of this row plus the whole duplicate set
-       the marquee needs for its seam. One selector covers both — see the note
-       in ProofStrip on why a combinator would be the wrong shape here. */
-    .vcard:nth-child(n + 2) { display: none; }
-
-    .voices__rows { gap: var(--sb-4); }
-
+    /* The marquee RUNS on mobile too, opposite directions and all — an earlier
+       pass replaced it with a static list, which lost the effect the section is
+       built around. Only the card sizing changes here: at 306px wide with a
+       68px avatar the cards were bigger than the phone could carry, and the
+       text had about four characters a line to work with. */
     .vcard {
-      width: 100%;
+      width: 276px;
       gap: var(--sb-5);
       padding: var(--sb-5);
-      /* A full pill wastes the width a phone does not have; the text measure
-         gained about four characters a line from this alone. */
+      /* A full pill wastes the width a phone does not have. */
       border-radius: var(--sb-r-2);
     }
 
+    /* The name and class share a line on desktop with a rule between them. In a
+       176px text column they wrap, and the rule is left dangling at the end of
+       the name. Stack them and drop the rule — it only has a job when the two
+       sit side by side. */
+    .vcard__person {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+    }
+
+    .vcard__sep { display: none; }
+
+    .voices__rows { gap: var(--sb-4); }
     .vcard__body { gap: var(--sb-2); }
     .vcard__avatar { width: 52px; height: 52px; }
     .vcard__quotemark { width: 16px; height: 13px; }

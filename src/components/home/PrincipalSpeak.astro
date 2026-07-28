@@ -60,7 +60,7 @@ const paragraphs = [
 
     <p class="principal__pill"><span class="pill pill--violet">Principal Speak</span></p>
 
-    <h2 class="principal__heading" id="principal-heading">
+    <h2 class="principal__heading" data-split id="principal-heading">
       A word from our <span class="t-squiggle">Principal</span>
     </h2>
 
@@ -266,11 +266,18 @@ const paragraphs = [
 
     /* The fade belongs on the right edge only in the side-by-side layout; here
        the portrait meets the copy along its bottom edge instead. */
+    /* Deepened from 96px. At that height the fade finished well above the
+       photograph's edge and a hard line still showed through, so the portrait
+       and the copy read as two sections instead of one. */
     .principal__media::after {
       inset: auto 0 0 0;
       width: auto;
-      height: 96px;
-      background: linear-gradient(to bottom, rgba(28, 14, 8, 0), var(--sb-violet-ink));
+      height: clamp(150px, 40%, 280px);
+      background: linear-gradient(to bottom,
+        rgba(28, 14, 8, 0) 0%,
+        rgba(28, 14, 8, 0.5) 46%,
+        rgba(28, 14, 8, 0.88) 78%,
+        var(--sb-violet-ink) 100%);
     }
 
     .principal__copy {

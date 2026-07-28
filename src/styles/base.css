@@ -557,6 +557,29 @@ h2:has(.t-squiggle) { line-height: 1.3; }
   opacity: 1;
 }
 
+/* --- SPLIT HEADINGS --------------------------------------------------------
+   Injected by src/scripts/motion.ts. Nothing here applies until the script has
+   run, so a heading is a plain heading if the script never loads.
+
+   The mask needs vertical room or `overflow: hidden` crops the descenders off
+   every g, y and p. Padding opens that room and an equal negative margin takes
+   it back out of the layout, so line height is untouched.
+
+   `--free` is for word units that are ELEMENTS rather than text — the
+   `.t-squiggle` plate, which is rotated and has its own padding and radius.
+   Masking one would slice its corners, so those animate without a mask. */
+.sp-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+}
+
+.sp-mask--free { overflow: visible; }
+
+.sp-word { display: inline-block; }
+
 [data-reveal].is-armed {
   opacity: 0;
   transform: translateY(16px);

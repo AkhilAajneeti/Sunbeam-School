@@ -19,6 +19,24 @@ const { title, description } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* A reload must start at the top.
+
+        Browsers default `history.scrollRestoration` to "auto" and put you back
+        where you were — normally helpful, but wrong for a page built as a scroll
+        narrative: you reload and land in the middle of it with no context, and
+        every entrance animation above you has already been skipped.
+
+        This is deliberately an inline, render-blocking script in the head. It
+        has to run before the browser performs the restoration; a module script
+        or anything deferred executes too late and you would see the jump happen.
+
+        Note this does NOT force a scroll — it only stops the browser restoring
+        one. A URL with a #hash still lands on its target, which a `scrollTo(0,0)`
+        would have fought. */}
+    <script is:inline>
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    </script>
     <title>{title}</title>
     {/* Finding X8 — the current site ships no meta description at all. */}
     <meta name="description" content={description} />
@@ -69,34 +87,12 @@ const { title, description } = Astro.props;
 
     <Footer />
 
+    {/* Motion (docs/05 § N). Replaces the IntersectionObserver reveal that used
+        to live here, so nothing is ever animated by two systems at once.
+        Content is visible by default and this only hides things once it has
+        loaded and confirmed motion is permitted — see src/scripts/motion.ts. */}
     <script>
-      // Reveal-on-scroll (docs/05 § N). Content is visible by default; it is
-      // hidden only once we know motion is permitted, so a script failure or a
-      // reduced-motion preference can never leave the page blank.
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-      const targets = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
-
-      if (targets.length && !reduced.matches && 'IntersectionObserver' in window) {
-        targets.forEach((el) => el.classList.add('is-armed'));
-
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) return;
-              const el = entry.target as HTMLElement;
-              const delay = Number(el.dataset.revealDelay ?? 0);
-              window.setTimeout(() => {
-                el.classList.remove('is-armed');
-                el.classList.add('is-visible');
-              }, delay);
-              observer.unobserve(el);
-            });
-          },
-          { threshold: 0.15 }
-        );
-
-        targets.forEach((el) => observer.observe(el));
-      }
+      import '../scripts/motion';
     </script>
   </body>
 </html>

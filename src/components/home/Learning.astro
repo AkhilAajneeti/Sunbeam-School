@@ -26,7 +26,7 @@ import chemPractical from '../../assets/photos/sunbeem-students.jpg';
   <div class="learn__panel">
     <div class="learn__inner" data-reveal>
       <p class="learn__eyebrow t-label">{learning.eyebrow}</p>
-      <h2 class="learn__heading t-h2-sans" id="learn-heading">{learning.heading}</h2>
+      <h2 class="learn__heading t-h2-sans" data-split id="learn-heading">{learning.heading}</h2>
 
       <div class="learn__body">
         {learning.paragraphs.map((p) => <p>{p}</p>)}
@@ -169,6 +169,33 @@ import chemPractical from '../../assets/photos/sunbeem-students.jpg';
   @media (max-width: 1023px) {
     .learn { grid-template-columns: minmax(0, 1fr); min-height: 0; }
     .learn__media { aspect-ratio: 3 / 2; }
+
+    /* Stacked, the photograph met the dark panel on a hard horizontal line and
+       the two read as separate sections rather than one. A fade over the last
+       third of the image dissolves it into the panel's own ground, so the band
+       reads as a single object. Matches the treatment on §PrincipalSpeak, which
+       stacks the same way — the two sections should behave alike. */
+    .learn__media::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0 0;
+      /* Deep, and eased. A short linear fade compresses the whole luminance
+         drop into the last 60px and the eye still reads a line there; measured
+         at 390 it went 61 → 25 in that distance. Four stops over ~40% of the
+         image spread the same drop far enough to disappear. */
+      height: clamp(150px, 40%, 280px);
+      background: linear-gradient(to bottom,
+        rgba(22, 16, 12, 0) 0%,
+        rgba(22, 16, 12, 0.5) 46%,
+        rgba(22, 16, 12, 0.88) 78%,
+        var(--sb-ink) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Pulled up under the fade so the copy starts inside the blend rather than
+       after a visible gap. */
+    .learn__panel { padding-top: var(--sb-7); }
     .learn__panel { padding: var(--sb-9) var(--sb-margin); }
     .learn__inner { max-width: none; }
     .learn__heading { max-width: 22ch; }

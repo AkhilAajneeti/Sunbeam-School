@@ -403,6 +403,45 @@ Verified on all three special-ground sections — `.principal`, `.voices`, `.adm
 
 ---
 
+## D28 · GSAP motion — and keeping it off the critical path
+
+Client asked for GSAP scroll animation with split-text headings. Built, with the library behind two gates.
+
+**The budget problem, stated plainly.** docs/05 sets a JS budget of <40 KB gzipped and the page was shipping 1.6 KB. GSAP core + ScrollTrigger is **45.3 KB gzipped** — over budget on its own, before a line of our code. Importing from `gsap/gsap-core` with CSSPlugin registered by hand rather than the default `gsap` entry saved nothing measurable; GSAP does not tree-shake meaningfully.
+
+So the fix is not to make it smaller, it is to stop most of the cost falling on everyone:
+
+| | Before | After |
+|---|---|---|
+| Critical path | 45.3 KB | **0.7 KB** |
+| Motion chunk | — | 45.3 KB, lazy |
+
+`motion.ts` is now a ~20-line guard that dynamic-imports the real chunk only when motion is wanted. Two gates:
+
+- **prefers-reduced-motion** — these users do not get shorter animations, they never download the library. Verified: the request for `motion-gsap` is never made.
+- **Save-Data** — a parent on a metered connection in Ballia should not pay for decoration. Everything animated is an enhancement of content already on screen, so skipping the chunk costs nothing but the movement.
+
+### Nothing already on screen is ever hidden
+
+The consequence of a lazy import: the chunk lands *after* first paint, so arming an element the reader is already looking at produces visible → hidden → animate. Every entrance is therefore gated on `belowFold()` — below the fold at script time gets the animation, already in view is left exactly as it is. You cannot animate in something the reader is already reading.
+
+### Split text without a paid plugin, and without breaking the plates
+
+GSAP's SplitText is a Club plugin, and this needed no dependency anyway. `splitWords()` walks **child nodes**, not `textContent`: nine headings carry a `.t-squiggle` plate, and rebuilding innerHTML from text would have destroyed all nine. Text nodes split into words; element children pass through whole.
+
+Two details that took measurement rather than guessing:
+
+- `overflow: hidden` on the word mask **crops the descenders** off every g, y and p. The mask carries `padding-bottom: 0.18em` with an equal negative margin, so the room exists without changing line height.
+- The plate cannot be masked at all — it is rotated 1.4° with its own radius, so a mask slices its corners. Element units get `.sp-mask--free` (`overflow: visible`) and a short pixel lift instead of the 115% travel a masked word uses.
+
+### What is animated
+
+Split headings (12) · `[data-reveal]` batch reveals, replacing the IntersectionObserver so nothing is animated by two systems · the "50" counting up — and only that one, since "#1", "CBSE" and an affiliation number are identifiers, not quantities · a scrubbed parallax on the Principal portrait, desktop only, with `scale: 1.08` covering the travel so the crop never exposes an edge · staggers on the Quick Access, Affiliations and Achievements grids · an opacity drift on the admissions decorations, opacity only because they already run a CSS transform loop.
+
+**Verified at 1440 / 768 / 390 after a full scroll pass:** 52 split words and 17 reveals, **none left hidden**; 9 plates intact; no horizontal overflow; no console errors. Under reduced motion: nothing hidden, no chunk requested.
+
+---
+
 ## Placeholder inventory — what is standing in
 
 Per docs/07 placeholder policy. **No stock photography anywhere; no fabricated facts.**
@@ -421,7 +460,8 @@ Per docs/07 placeholder policy. **No stock photography anywhere; no fabricated f
 
 | Measure | Value | Target (docs/05) |
 |---|---|---|
-| JS, gzipped | **1.6 KB** | < 40 KB |
+| JS, gzipped — critical path | **0.7 KB** | < 40 KB |
+| JS, gzipped — lazy motion chunk | 45.3 KB | conditional, see D28 |
 | External `<script src>` | **0** | — |
 | CSS, gzipped | 8.8 KB | — |
 | HTML, gzipped | 12.1 KB | — |
