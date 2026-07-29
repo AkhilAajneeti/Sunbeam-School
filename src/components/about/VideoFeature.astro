@@ -1,0 +1,266 @@
+---
+/**
+ * VIDEO FEATURE — a click-to-play facade, not a YouTube embed.
+ *
+ * A bare <iframe> from YouTube pulls roughly half a megabyte of player script
+ * and sets tracking cookies on page load, whether or not anyone ever presses
+ * play. This site's entire critical-path JavaScript is 0.7 KB, and a school
+ * site should not be dropping third-party cookies on a parent who came to read
+ * about the school's history.
+ *
+ * So: a poster and a play button, and the iframe is created only on click. The
+ * cost until then is one image the site was serving anyway.
+ *
+ * The poster is one of the school's own photographs rather than the YouTube
+ * still — that video has no maxres thumbnail, only a 480x360 hqdefault, which
+ * would be visibly soft at this size.
+ *
+ * youtube-nocookie.com is used for the same privacy reason once it does load.
+ */
+import Photo from '../ui/Photo.astro';
+
+interface Props {
+  /** YouTube video id, e.g. kfCpTF0Aagk */
+  id: string;
+  title: string;
+  /** Runtime. Not drawn — it goes into the button's accessible name. */
+  duration?: string;
+  poster: ImageMetadata;
+  posterAlt: string;
+  posterPosition?: string;
+  /**
+   * Shape of the frame, held through playback too. Anything wider than 16:9
+   * pillarboxes the film rather than cropping it — see the CSS note.
+   */
+  ratio?: string;
+}
+
+const {
+  id,
+  title,
+  duration,
+  poster,
+  posterAlt,
+  posterPosition = '50% 45%',
+  ratio = '16 / 9',
+} = Astro.props;
+---
+
+<figure class="vf" data-video={id} data-title={title}>
+  <div class="vf__frame">
+    <Photo
+      src={poster}
+      alt={posterAlt}
+      brief="Video poster"
+      ratio={ratio}
+      position={posterPosition}
+      sizes="(max-width: 1023px) 100vw, 1280px"
+    />
+
+    <div class="vf__scrim" aria-hidden="true"></div>
+
+    <button class="vf__play" type="button" data-play>
+      <span class="vf__icon" aria-hidden="true">
+        <svg width="20" height="24" viewBox="0 0 22 26" fill="currentColor">
+          <path d="M21 11.27a2 2 0 0 1 0 3.46L3 25.12A2 2 0 0 1 0 23.39V2.6A2 2 0 0 1 3 .88Z" />
+        </svg>
+      </span>
+
+      {/* Nothing is drawn, but a button with no accessible name is unusable
+          with a screen reader or by voice control. */}
+      <span class="u-visually-hidden">Play {title}{duration ? `, ${duration}` : ''}</span>
+    </button>
+  </div>
+</figure>
+
+<style>
+  /* The tilt needs a vanishing point, and it has to sit on the ANCESTOR — a
+     perspective on the transformed element itself is applied after the rotation
+     and produces no depth at all. */
+  .vf {
+    margin: 0;
+    perspective: 1400px;
+  }
+
+  /* The frame may be letterboxed by the `ratio` prop — a full 16:9 poster is
+     720px tall at a 1280 container, which pushed everything under it off the
+     screen. That shape is kept through playback as well, so pressing play moves
+     nothing on the page. See the note by `.is-playing` for what that costs. */
+  .vf__frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    background: var(--sb-ink);
+    box-shadow: var(--sb-shadow-card-hover);
+    /* The script writes only two numbers; the transform itself is declared here
+       so it can never drift from what the stylesheet expects. */
+    transform: rotateX(var(--vf-rx, 0deg)) rotateY(var(--vf-ry, 0deg));
+    transition: transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: transform;
+  }
+
+  .vf__scrim {
+    position: absolute;
+    inset: 0;
+    /* Even — there is no text on the poster now, so the scrim exists only to
+       keep the white disc reading against a bright photograph. */
+    background: rgba(18, 12, 8, 0.22);
+    pointer-events: none;
+  }
+
+  /* --- Play button ----------------------------------------------------------- */
+
+  .vf__play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  /* White disc, brand triangle — the inverse of the first version, which was a
+     solid orange disc. On a photograph a white disc reads at any exposure;
+     a saturated one competes with whatever happens to be behind it. */
+  .vf__icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: clamp(58px, 5.6vw, 80px);
+    height: clamp(58px, 5.6vw, 80px);
+    padding-left: 5px; /* optical centring: the triangle's mass sits left */
+    border-radius: var(--sb-r-full);
+    background: #fff;
+    color: var(--sb-violet);
+    box-shadow: 0 16px 38px -12px rgba(18, 12, 8, 0.55);
+    transition: transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  /* A soft ring behind the disc. */
+  .vf__icon::after {
+    content: '';
+    position: absolute;
+    inset: -13px;
+    border-radius: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: transform var(--sb-dur-btn) var(--sb-ease), opacity var(--sb-dur-btn) ease;
+  }
+
+  .vf__play:hover .vf__icon,
+  .vf__play:focus-visible .vf__icon { transform: scale(1.06); }
+
+  .vf__play:hover .vf__icon::after,
+  .vf__play:focus-visible .vf__icon::after { transform: scale(1.1); opacity: 0.7; }
+
+  /* --- Playing --------------------------------------------------------------- */
+
+  .vf.is-playing .vf__play,
+  .vf.is-playing .vf__scrim { display: none; }
+
+  /* The frame KEEPS its poster shape when the player loads — no height change,
+     so nothing on the page moves when you press play.
+
+     The consequence is honest: a 16:9 film inside a 21:9 frame is pillarboxed,
+     so the player puts a black band down each side rather than cropping the
+     picture. The frame ground is already --sb-ink, so those bands read as part
+     of the frame. Nothing of the film is cut. */
+
+  .vf__frame :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vf__icon,
+    .vf__icon::after { transition: none; }
+    .vf__play:hover .vf__icon,
+    .vf__play:hover .vf__icon::after { transform: none; }
+    /* The script bails before it ever sets the variables, but the transform is
+       neutralised here too so a stale value can never leave the frame tilted. */
+    .vf__frame { transform: none; transition: none; }
+  }
+</style>
+
+<script>
+  // The iframe is built on click and never before. Nothing is requested from
+  // YouTube — no script, no cookie — until someone actually asks for the film.
+  document.querySelectorAll<HTMLElement>('[data-video]').forEach((fig) => {
+    const button = fig.querySelector<HTMLButtonElement>('[data-play]');
+    const frame = fig.querySelector<HTMLElement>('.vf__frame');
+    if (!button || !frame) return;
+
+    button.addEventListener('click', () => {
+      const id = fig.dataset.video;
+      if (!id) return;
+
+      const iframe = document.createElement('iframe');
+      iframe.src =
+        `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+      iframe.title = fig.dataset.title ?? 'Video';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+
+      frame.appendChild(iframe);
+      fig.classList.add('is-playing');
+      iframe.focus();
+
+      // Tilting a live player is disorienting, and once the iframe is there the
+      // pointer belongs to YouTube's controls, not to us.
+      frame.style.removeProperty('--vf-rx');
+      frame.style.removeProperty('--vf-ry');
+    });
+
+    /* --- Pointer tilt -------------------------------------------------------
+       The frame leans toward the cursor: hover the right edge and that edge
+       comes forward.
+
+       Two gates. `pointer: fine` keeps it off touch, where there is no hover to
+       track and a tap would leave the frame stuck at whatever angle it was last
+       given. `prefers-reduced-motion` is honoured because this is decoration.
+
+       The rect is read once on enter, not per move — reading it inside the
+       handler forces a layout on every mouse event, which is the usual reason
+       these effects feel heavy. */
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!fine.matches || still.matches) return;
+
+    // Degrees. Deliberately small: at 5.5 the frame read as a toy tilting under
+    // the cursor; at this angle it reads as the surface catching the light.
+    const MAX = 2.2;
+    let box: DOMRect | null = null;
+    let queued = 0;
+
+    frame.addEventListener('pointerenter', () => {
+      box = frame.getBoundingClientRect();
+    });
+
+    frame.addEventListener('pointermove', (event) => {
+      if (!box || fig.classList.contains('is-playing')) return;
+      if (queued) return;
+
+      queued = requestAnimationFrame(() => {
+        queued = 0;
+        if (!box) return;
+        // -1 .. 1 from the centre of the frame
+        const nx = (event.clientX - box.left) / box.width * 2 - 1;
+        const ny = (event.clientY - box.top) / box.height * 2 - 1;
+        // Negative on Y so the hovered edge lifts rather than dips away.
+        frame.style.setProperty('--vf-ry', `${(-nx * MAX).toFixed(2)}deg`);
+        frame.style.setProperty('--vf-rx', `${(ny * MAX).toFixed(2)}deg`);
+      });
+    });
+
+    frame.addEventListener('pointerleave', () => {
+      if (queued) { cancelAnimationFrame(queued); queued = 0; }
+      box = null;
+      frame.style.setProperty('--vf-rx', '0deg');
+      frame.style.setProperty('--vf-ry', '0deg');
+    });
+  });
+</script>

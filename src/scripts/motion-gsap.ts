@@ -170,6 +170,31 @@ if (portrait && window.innerWidth >= 1024) {
   );
 }
 
+/* --- Scroll-scaled video frame ----------------------------------------------
+   Starts at 80% - set in CSS - and reaches full size as it travels up the
+   viewport.
+
+   NOT belowFold-guarded, unlike every entrance above. That guard exists to stop
+   a hidden->visible flash on something already on screen; a scrub has no hidden
+   state. This frame sits just under the banner and is visible at load, so the
+   guard skipped it entirely and the scale never moved. */
+const expand = document.querySelector<HTMLElement>('[data-expand]');
+if (expand) {
+  gsap.to(
+    expand,
+    {
+      scale: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: expand,
+        start: 'top 90%',
+        end: 'top 30%',
+        scrub: 0.4,
+      },
+    }
+  );
+}
+
 /* --- Grids that read better as a stagger ------------------------------------ */
 const grids: [string, string][] = [
   ['.quick__grid', 'li'],

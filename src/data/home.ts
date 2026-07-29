@@ -41,8 +41,8 @@ export const story = {
   bentoLabel: 'A heritage school, built for what comes next',
   cta: { label: 'Read our story', href: '/about/history-legacy/' },
   links: [
-    { label: 'Our History & Legacy', href: '/about/history-legacy/' },
-    { label: 'Vision, Mission & Values', href: '/about/vision-mission/' },
+    { label: 'History and establishment of the school', href: '/about/history-legacy/' },
+    { label: 'Vision and Mission', href: '/about/vision-mission/' },
   ],
   media: {
     primary: 'Contemporary campus wide shot, 4:5 portrait — the Agarsanda campus',

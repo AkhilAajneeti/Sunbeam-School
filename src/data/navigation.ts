@@ -70,8 +70,8 @@ export const mainNav: NavItem[] = [
         header: 'The School',
         href: '/about/',
         children: [
-          { label: 'History & Legacy', href: '/about/history-legacy/', note: '1972 Varanasi · 2013 Ballia' },
-          { label: 'Vision, Mission & Values', href: '/about/vision-mission/' },
+          { label: 'History and establishment of the school', href: '/about/history-legacy/', note: '1972 Varanasi · 2013 Ballia' },
+          { label: 'Vision and Mission', href: '/about/vision-mission/' },
           { label: 'Inclusive Education', href: '/about/inclusive-education/' },
           { label: 'Golden Rules & Code of Conduct', href: '/about/code-of-conduct/' },
         ],

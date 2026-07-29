@@ -1,0 +1,1027 @@
+---
+/**
+ * ABOUT → HISTORY & LEGACY — audit 1.6, 1.8 and 1.11
+ *
+ * Audit 1.11, verbatim: the contributions of "the Chairman, Secretary and other
+ * dignitaries can be incorporated within the History section instead of creating
+ * separate menu links." So this page carries both messages, at #leadership, and
+ * docs/04 § redirects already point /chairmans-message/ and /secretarys-message/
+ * here rather than to pages of their own.
+ *
+ * COPY — every word is the school's own, from its History, Chairman's Message
+ * and Secretary's Message pages.
+ *
+ * ⚠ ONE STALE FACT, LEFT AS WRITTEN. The Chairman's message says the school has
+ * spread the Sunbeam revolution "for last 7 years". Founded 2013 plus seven puts
+ * the writing around 2020; it is 2026, so the true figure is thirteen. It is a
+ * signed message and not ours to quietly rewrite, so it is reproduced exactly.
+ * It is one word to change once the school decides — update the number, add a
+ * dateline, or ask the Chairman for a refreshed line. Audit 1.12 asks for
+ * precisely this kind of proofreading on the leadership pages.
+ *
+ * Two plain typos ARE corrected, both in the History paragraph: "is the one of
+ * the leading educational Institution" → "is one of the leading educational
+ * institutions", and the stray capitalisation on "Institution".
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/ui/PageHero.astro";
+import VideoFeature from "../../components/about/VideoFeature.astro";
+import Photo from "../../components/ui/Photo.astro";
+import { school } from "../../data/site";
+import stars from "../../assets/icons/stars.png";
+import banner from "../../assets/photos/sunbeem-1.jpg";
+import poster from "../../assets/photos/sunbeem-2.jpg";
+import chairman from "../../assets/photos/Chairman-sunbeam.jpg";
+import secretary from "../../assets/photos/secretary-sunbeam.jpeg";
+import { Image } from "astro:assets";
+
+/**
+ * The school's own History paragraph, broken in two at its natural seam — the
+ * first half is founding and growth, the second is what the school offers. Not
+ * a word is changed, added or reordered; four sentences set centred as a single
+ * block is simply a wall, and the break is a typographic decision, not an
+ * editorial one.
+ */
+const history = [
+  'Sunbeam School, Agarsanda, Ballia, founded in 2013, is one of the  leading educational institutions in Ballia district. The school began with 456 students and is now having an ample strength of 2,200+ students from Nursery to Class XII. It facilitates the students as a Co-educational Senior Secondary School for PCM, PCB, Commerce & Humanities, affiliated with CBSE, New Delhi, with the punch line — "Educating the FUTURE!" Over the years, the school has earned a reputation for academic excellence, value-based education, and the holistic development of every learner.',
+  'With a strong commitment to nurturing young minds, Sunbeam School provides a vibrant learning environment supported by experienced educators, modern teaching methodologies, and excellent infrastructure. Guided by its motto, "Duty , Devotion , Discipline," the school encourages students to excel not only in academics but also in sports, cultural activities, leadership, and life skills, empowering them to become confident, responsible, and future-ready citizens.',
+];
+
+/**
+ * The plate under the paragraph.
+ *
+ * The school's History page is the single paragraph above and nothing more, so
+ * there is no further narrative to draw on — writing one would be inventing a
+ * school's own history, which is the one thing this build never does. What IS
+ * available is fact the school already publishes elsewhere on its site, and
+ * none of these three are repeated by the timeline further down the page: that
+ * covers 1972, 2013, today's strength and the Education World run.
+ *
+ * A longer account of the founding years is asset request A3.
+ */
+const facts = [
+  { label: "Motto", value: school.motto },
+  {
+    label: "Affiliation",
+    value: `CBSE ${school.affiliationNo} · School Code ${school.schoolCode}`,
+  },
+  { label: "Campus", value: `${school.address.line1}, ${school.address.city}` },
+];
+
+/** Legacy — audit 1.8. Every figure verified in docs/01 § 5. */
+const milestones = [
+  {
+    year: "1972",
+    place: "Varanasi",
+    text: `The Sunbeam group is founded by ${school.founders}, on a conviction that the schools around them were not meeting the whole of a child's needs.`,
+  },
+  {
+    year: "2013",
+    place: "Agarsanda, Ballia",
+    text: `The Ballia campus opens with ${school.openingStrength} students, carrying that same conviction into a new district.`,
+  },
+  {
+    year: "Today",
+    place: "Nursery to Class XII",
+    text: `${school.currentStrength} students and ${school.teachingStaff} teaching staff, across ${school.streams.join(", ")} at senior secondary.`,
+  },
+  {
+    year: "Six years",
+    place: "Running",
+    text: "Ranked the #1 co-educational day school in Ballia by Education World, 2019-20 through 2024-25.",
+  },
+];
+
+const voices = [
+  {
+    name: "Mr. Sanjai Kumar Pandey",
+    role: "Chairman",
+    portrait: chairman,
+    alt: "Mr. Sanjai Kumar Pandey, Chairman of Sunbeam School Ballia.",
+    paragraphs: [
+      "Sunbeam School Ballia has effectively played a pivotal role in spreading the Sunbeam Education revolution in the district for last 7 years. I congratulate the entire team of Management, staff members, students and last but not the least the parents of the school for this success of Sunbeam Ballia.",
+      "Education is a continuous life long process which begins at the early stage of life from a school till one enters the last stage of life. The aim & objective of a school is to instill in the students the qualities of a genuine human and concerns of society. Sunbeam School Ballia fulfills these commitments to realize the welfare of not only an individual but society & country at a large. To realize this we offer many co-curricular activities which help to unfold the hidden talents of our students.",
+      "I would like to offer my sincere thanks to all the parents & well-wishers for their support & co-operation.",
+    ],
+  },
+  {
+    name: "Mr. Shriwats Singh",
+    role: "Secretary",
+    portrait: secretary,
+    alt: "Mr. Shriwats Singh, Secretary of Sunbeam School Ballia.",
+    paragraphs: [
+      "Learning is not a process limited to school & colleges only. It is indeed a never ending process and the school is the first orientation of formal education of a child. We all agree that the youth of future generation are going to face more pressure in all spheres. It is the demand of our time to prepare global students for a better world.",
+      "I am happy to share that Sunbeam School Ballia has been facilitating students for the all round progress & character building.",
+      "Wish you all the best!",
+    ],
+  },
+];
+
+const onward = [
+  {
+    label: "Director's Message",
+    href: "/about/directors-message/",
+    note: "Dr. Kunwar Arun Singh",
+  },
+  {
+    label: "Principal's Message",
+    href: "/about/principals-message/",
+    note: school.principal,
+  },
+  {
+    // Client's chosen label. Worth knowing: the supplied panels carry a Vision,
+    // a greeting and an identity story, but still no Mission statement — so
+    // this link promises something the page does not yet contain. Nothing has
+    // been invented to cover the gap; see the header of vision-mission.astro.
+    label: "Vision and Mission",
+    href: "/about/vision-mission/",
+    note: "The vision, the greeting, and the Sunbeam cipher",
+  },
+];
+---
+
+<BaseLayout
+  title="History of the school — Sunbeam School Ballia"
+  description="Sunbeam School Ballia, founded 2013 at Agarsanda and part of the Sunbeam group since 1972 — the school's history, its growth from 456 to 2,200+ students, and messages from the Chairman and Secretary."
+>
+  <PageHero
+    title="History of the school"
+    crumbs={[
+      { label: "Home", href: "/" },
+      { label: "About", href: "/about/" },
+    ]}
+    src={banner}
+    alt="The Sunbeam School Ballia campus at Agarsanda."
+    position="50% 58%"
+  />
+
+  <div class="u-page-panel">
+    {
+      /* --- The film, first --------------------------------------------------- */
+    }
+    <section class="hist-film" aria-labelledby="film-heading">
+      <div class="u-container">
+        {
+          /* No data-reveal: the scale-up IS this element's entrance, and two
+            things writing transform would fight each other. */
+        }
+        <div class="hist-film__media" data-expand>
+          <VideoFeature
+            id="kfCpTF0Aagk"
+            title="Journey of Sunbeam School"
+            duration="14:30"
+            poster={poster}
+            posterAlt="Students and staff gathered at the entrance to Sunbeam School Ballia."
+            posterPosition="50% 42%"
+            ratio="21 / 9"
+          />
+        </div>
+
+        <div class="hist-film__copy" data-reveal>
+          <Image
+            class="history-stars"
+            src={stars}
+            alt=""
+            aria-hidden="true"
+            widths={[200, 400]}
+            sizes="200px"
+            loading="lazy"
+          />
+          <p class="hist__pill">
+            <span class="pill pill--violet">Our Story</span>
+          </p>
+          <h2 class="hist-film__heading" id="film-heading" data-split>
+            The journey of <span class="t-squiggle">Sunbeam</span>
+          </h2>
+          <div class="hist-film__prose">
+            {history.map((p) => <p>{p}</p>)}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {
+      /* --- Legacy: the line from 1972 ---------------------------------------- */
+    }
+    <section class="hist-line" aria-labelledby="line-heading">
+      <div class="u-container">
+        <div class="hist-line__head" data-reveal>
+          <h2 class="hist-line__heading t-h2-sans" id="line-heading" data-split>
+            Fifty years, and thirteen in <span class="t-squiggle">Ballia</span>
+          </h2>
+        </div>
+
+        <ol class="road">
+          {
+            milestones.map((m, i) => (
+              <li
+                class:list={['road__step', i % 2 === 0 ? 'road__step--l' : 'road__step--r']}
+                data-reveal
+                data-reveal-delay={i * 110}
+              >
+                {/* aria-hidden: the <ol> already tells a screen reader this is
+                    step 3 of 4. Read aloud, the badge would say it twice. */}
+                <span class="road__badge" aria-hidden="true">
+                  <span class="road__badge-num">{String(i + 1).padStart(2, '0')}</span>
+                </span>
+
+                <h3 class="road__head">
+                  {/* Mask, moving copy, and a duplicate that rolls up behind —
+                      the same construction as the homepage cards. Both copies
+                      read from `m.year`, so they cannot drift apart. */}
+                  <span class="road__year t-tabular" data-title={m.year}>
+                    <span>{m.year}</span>
+                  </span>
+                  <span class="road__place">{m.place}</span>
+                </h3>
+
+                <p class="road__text">{m.text}</p>
+
+                {/* The connector to the NEXT step, so the last one has none.
+                    Decorative: the order is already carried by the list. */}
+                {i < milestones.length - 1 && (
+                  <svg
+                    class="road__link"
+                    viewBox="0 0 240 120"
+                    fill="none"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M4 12C110 6 168 34 196 92"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-dasharray="0.5 11"
+                    />
+                    {/* The head is a plain filled triangle, not a <marker>. Three
+                        of these are inlined per page and a marker needs an id —
+                        three copies of one id is invalid, and per-instance ids
+                        are noise for something this small. Points along the
+                        curve's end tangent, computed once. */}
+                    <path d="M201.7 103.7 189.7 95 202.3 89Z" fill="currentColor" />
+                  </svg>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    {
+      /* --- Leadership. Audit 1.11, and the target of both redirects ---------- */
+    }
+    <section
+      class="hist-voices"
+      id="leadership"
+      aria-labelledby="voices-heading"
+    >
+      <div class="u-container">
+        <div class="hist-voices__head" data-reveal>
+          <p class="hist__pill">
+            <span class="pill pill--violet">Leadership</span>
+          </p>
+          <h2
+            class="hist-voices__heading t-h2-sans"
+            id="voices-heading"
+            data-split
+          >
+            In their own <span class="t-squiggle">words</span>
+          </h2>
+        </div>
+
+        {
+          voices.map((v, i) => (
+            <article
+              class:list={['voice', i % 2 === 1 && 'voice--flip']}
+              data-reveal
+            >
+              <div class="voice__media">
+                <Photo
+                  src={v.portrait}
+                  alt={v.alt}
+                  brief={`${v.role} portrait`}
+                  ratio="4 / 5"
+                  position="50% 18%"
+                  sizes="(max-width: 899px) 260px, 360px"
+                />
+              </div>
+
+              <div class="voice__body">
+                <svg
+                  class="voice__mark"
+                  width="34"
+                  height="26"
+                  viewBox="0 0 18 15"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
+                </svg>
+
+                <div class="voice__prose">
+                  {v.paragraphs.map((p) => (
+                    <p>{p}</p>
+                  ))}
+                </div>
+
+                <div class="voice__sign">
+                  <p class="voice__name">{v.name}</p>
+                  <p class="voice__role">
+                    {v.role}, {school.name}
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    
+  </div>
+</BaseLayout>
+
+<style>
+  /* stars */
+  .history-stars {
+    position: absolute;
+    top: -18px;
+    right: clamp(-24px, -2vw, 18px);
+    width: clamp(84px, 10vw, 120px);
+    height: auto;
+    opacity: 0.28;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    transform: rotate(-8deg);
+    animation: affil-drift 7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .hist__pill {
+    margin-bottom: var(--sb-6);
+  }
+
+  /* --- Film ------------------------------------------------------------------ */
+
+  /* No top padding: .u-page-panel already opens the page with its own, and the
+     two stacked to 208px of empty ground between the banner and the heading. */
+  .hist-film {
+    padding-block: 0 var(--sb-section-y);
+  }
+
+  /* SCALE-UP ON SCROLL. The frame starts at 80% and reaches full size as it
+     travels up the viewport - motion-gsap.ts scrubs it against scroll.
+
+     The 80% START LIVES IN CSS, not in the script. This element sits just under
+     the banner and is on screen at first paint, so setting the start in JS
+     meant a visible snap from full size down to 80% the moment the motion
+     chunk arrived. In CSS it is simply how the frame is drawn.
+
+     The degraded state is therefore a slightly inset video rather than a
+     hidden one - fine if the chunk never loads, which is the test that matters.
+
+     transform, not width: width would relayout the poster every frame; a scale
+     is composited and costs nothing. */
+  .hist-film__media {
+    transform: scale(0.8);
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+
+  /* No scroll-coupled scaling for anyone who asked for less motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .hist-film__media {
+      transform: none;
+    }
+  }
+
+  /* Copy sits BELOW the film, centred on it, rather than beside it.
+     66ch, not 74: centred text is harder to track back than ranged-left, since
+     every line starts at a different place, so it wants the shorter measure. */
+  .hist-film__copy {
+    position: relative;
+    overflow: visible;
+    isolation: isolate;
+    max-width: 100%;
+    margin: clamp(40px, 6vh, 80px) auto 0;
+    text-align: center;
+  }
+
+  .hist-film__copy > :not(.history-stars) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hist-film__heading {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-6);
+  }
+
+  .hist-film__prose p {
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    text-align: justify;
+  }
+
+  .hist-film__prose p + p {
+    margin-top: var(--sb-5);
+    text-align: justify;
+  }
+
+  /* --- Fact row --------------------------------------------------------------
+     Three columns on a hairline rule, dividers BETWEEN only. The rule is drawn
+     on the row's top edge and on each item's left, so it needs no
+     :last-child exception and no trailing divider to suppress. */
+  .hist-film__facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: clamp(32px, 4.5vh, 52px) 0 0;
+    padding-top: var(--sb-7);
+    border-top: var(--sb-hairline);
+    text-align: center;
+  }
+
+  .hist-film__fact {
+    padding-inline: var(--sb-5);
+  }
+
+  /* The divider sits on the item, so the first column simply has none. */
+  .hist-film__fact + .hist-film__fact {
+    border-left: var(--sb-hairline);
+  }
+
+  .hist-film__fact dt {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-3);
+  }
+
+  .hist-film__fact dd {
+    margin: 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--sb-charcoal);
+    /* Tabular figures so the affiliation and school code numbers line up
+       against the words either side of them rather than wobbling. */
+    font-variant-numeric: tabular-nums;
+    /* These wrap at two or three words, and the greedy default broke
+       "School Code 70205" across the line, orphaning the number away from its
+       own label. Balance splits at the phrase instead. Unsupported browsers
+       just get the greedy wrap, which is what it was before. */
+    text-wrap: balance;
+  }
+
+  /* Stacked, the vertical dividers become horizontal ones — a left border on a
+     full-width row would read as a stray tick. */
+  @media (max-width: 639px) {
+    .hist-film__facts {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-5);
+    }
+
+    .hist-film__fact {
+      padding-inline: 0;
+    }
+
+    .hist-film__fact + .hist-film__fact {
+      border-left: 0;
+      border-top: var(--sb-hairline);
+      padding-top: var(--sb-5);
+    }
+  }
+
+  /* --- Timeline --------------------------------------------------------------- */
+
+  .hist-line {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  .hist-line__head {
+    margin-bottom: var(--sb-9);
+  }
+  .hist-line__heading {
+    color: var(--sb-charcoal);
+  }
+
+  /* --- The road ---------------------------------------------------------------
+     Four milestones as a zigzag path rather than four equal columns.
+
+     WHY THE ZIGZAG AND NOT THE REFERENCE'S DESCENDING LADDER: three items can
+     indent progressively and still hold a readable measure. A fourth cannot —
+     it ends so far in that its text runs to four words a line. Alternating
+     sides keeps all four the same width and still reads as a route.
+
+     An earlier version of this section used a separate rule per card, on the
+     reasoning that a continuous track implies even intervals between 1972, 2013
+     and today. A dotted ARC does not carry that: it reads as sequence, not as
+     scale, so nothing here claims the gaps are equal. */
+
+  .road {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .road__step {
+    position: relative;
+    display: grid;
+    /* badge · copy — the reference's arrangement: the number sits beside the
+       title, and the paragraph starts at the title's left edge, not the
+       badge's. */
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(16px, 1.6vw, 24px);
+    row-gap: var(--sb-4);
+    align-items: start;
+    width: min(48%, 540px);
+  }
+
+  .road__step--r { margin-left: auto; }
+
+  /* Room for the connector to live in. It is absolutely positioned, so this gap
+     is what stops it colliding with the step below. */
+  /* Deep enough to hold the connector, which is half as tall as it is wide. */
+  .road__step + .road__step { margin-top: clamp(120px, 13vh, 152px); }
+
+  /* --- Badge ------------------------------------------------------------------
+     Two shapes: a soft squircle offset behind, and the disc itself. Both are
+     pseudo-elements with EXPLICIT z-index inside an isolated context — the
+     usual `z-index: -1` trick would drop the blob behind the badge's own
+     background and, since this element paints no background of its own, behind
+     the section instead. */
+  .road__badge {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: clamp(46px, 4vw, 56px);
+    height: clamp(46px, 4vw, 56px);
+    flex-shrink: 0;
+  }
+
+  .road__badge::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    /* Offset up and left, as in the reference — a hand-placed shape rather than
+       a concentric ring. */
+    translate: -8px -8px;
+    border-radius: 42%;
+    /* NOT --sb-violet-wash. That token is #ffede6 and this band is #f4ece7 —
+       four points apart, so the blob was invisible here. A translucent tint of
+       the brand reads on sand and would still read if the band changes. */
+    background: rgba(201, 60, 10, 0.18);
+  }
+
+  .road__badge::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+  }
+
+  .road__badge-num {
+    position: relative;
+    z-index: 2;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Copy -------------------------------------------------------------------- */
+
+  .road__head {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* Optically centred against the badge: the year's cap-height sits a little
+       below the badge's midline without this. */
+    padding-top: 2px;
+  }
+
+  /* --- Year: roll-up swap ------------------------------------------------------
+     The element is the mask, its inner span is the copy that leaves, and
+     ::before is an identical copy waiting below that arrives. Same duration and
+     easing on both — 1.05s on this curve, lifted unchanged from the homepage
+     cards, because a gesture that means "this item" should feel the same
+     wherever it appears.
+
+     THE PADDING IS NOT SPACING. `Six years` has a descender, and `overflow:
+     hidden` on a line-height of 1 slices the tail off the y. The padding gives
+     the mask room for it and the equal negative margin takes that room back out
+     of the layout, so nothing below moves. Same fix as .sp-mask in base.css. */
+  .road__year {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 2.6vw, 38px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+
+  .road__year > span {
+    display: inline-block;
+    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  .road__year::before {
+    content: attr(data-title);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-transform: translateY(110%);
+    transform: translateY(110%);
+    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  /* The whole step is the trigger, not the year itself — a 38px word is a small
+     target, and sweeping the pointer down the page should turn each milestone
+     as you reach it. */
+  .road__step:hover .road__year > span {
+    -webkit-transform: translateY(-125%);
+    transform: translateY(-125%);
+  }
+
+  .road__step:hover .road__year::before {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  /* The badge answers at the same moment, so the pair reads as one response. */
+  .road__step:hover .road__badge::after { transform: scale(1.06); }
+  .road__step:hover .road__badge::before { transform: scale(1.12); }
+
+  .road__badge::before,
+  .road__badge::after {
+    transition: transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  /* Decoration, so it stops entirely. The duplicate parks BELOW the mask rather
+     than mid-travel — otherwise a hovered step could rest showing half of each
+     copy at once. */
+  @media (prefers-reduced-motion: reduce) {
+    .road__year > span,
+    .road__year::before,
+    .road__badge::before,
+    .road__badge::after { transition: none; }
+
+    .road__step:hover .road__year > span,
+    .road__step:hover .road__badge::before,
+    .road__step:hover .road__badge::after {
+      -webkit-transform: none;
+      transform: none;
+    }
+
+    .road__step:hover .road__year::before {
+      -webkit-transform: translateY(110%);
+      transform: translateY(110%);
+    }
+  }
+
+  .road__place {
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+  }
+
+  .road__text {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Connector ---------------------------------------------------------------
+     Fixed aspect, deliberately. Stretching it with preserveAspectRatio="none"
+     would smear the dots unevenly and skew the arrowhead off the curve's
+     tangent. It is decoration pointing at the next step, not a join that has to
+     touch both ends, so a fixed 2:1 shape centred in the gap is both simpler
+     and correct at every width.
+
+     Sized and placed as PERCENTAGES OF THE STEP, not in vw. The step is
+     `min(48%, 540px)`, so a vw-based arc kept its own size while the step
+     stopped growing at the cap, and the two drifted apart above 1120px. In
+     step-relative units the arc always leaves the step's right shoulder and
+     always reaches the column opposite. */
+  .road__link {
+    position: absolute;
+    top: calc(100% + 6px);
+    /* 96% + 42% = 138%: it starts at the step's edge and crosses the gutter. */
+    width: 42%;
+    height: auto;
+    color: var(--sb-violet);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Left step: the arc leaves its right shoulder and sweeps down-right. */
+  .road__step--l .road__link { left: 96%; }
+
+  /* Right step: the same arc mirrored, sweeping down-LEFT. Flipping one path is
+     what keeps the two directions in sync — a hand-drawn mirror would drift. */
+  .road__step--r .road__link { right: 96%; scale: -1 1; }
+
+  /* --- Stacked ----------------------------------------------------------------
+     Below this the zigzag has no room: two 48% columns leave a measure of about
+     30 characters. Everything goes full width and the arcs are replaced by a
+     dotted rail running down through the badges — same idea, one dimension. */
+  @media (max-width: 899px) {
+    .road__step {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .road__step + .road__step { margin-top: var(--sb-8); }
+
+    .road__link { display: none; }
+
+    /* The rail hangs from the badge's centre to the next badge. `bottom` is the
+       negative of the step gap, so the two stay tied to one number. */
+    .road__step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: calc(clamp(46px, 4vw, 56px) + 8px);
+      bottom: calc(var(--sb-8) * -1 + 8px);
+      left: calc(clamp(46px, 4vw, 56px) / 2 - 1px);
+      border-left: 3px dotted var(--sb-violet);
+      opacity: 0.45;
+    }
+  }
+
+  /* --- Leadership ------------------------------------------------------------- */
+
+  .hist-voices {
+    padding-block: var(--sb-section-y);
+  }
+  .hist-voices__head {
+    margin-bottom: var(--sb-9);
+  }
+  .hist-voices__heading {
+    color: var(--sb-charcoal);
+  }
+
+  /* TWO CARDS, ONE SPECIFICATION. Both are the same grid at the same sizes;
+     only the SIDE the portrait sits on changes.
+
+     The previous version mirrored the second card with `order: 2` alone. That
+     is the bug behind everything wrong with this section: `order` picks which
+     item goes into which cell, but it leaves the TEMPLATE untouched. The
+     columns stayed `300px 1fr`, so on the flipped card the portrait landed in
+     the 1fr column and grew to half the page while the message was squeezed
+     into 300px and read as though it were set in a smaller face. It was not —
+     it was the same type in a third of the width.
+
+     Mirroring an asymmetric grid means flipping the template AND placing both
+     items explicitly. Nothing here is left to auto-placement. */
+  .voice {
+    display: grid;
+    grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 76px);
+    align-items: center;
+  }
+
+  .voice__media { grid-column: 1; grid-row: 1; }
+  .voice__body  { grid-column: 2; grid-row: 1; }
+
+  .voice--flip { grid-template-columns: minmax(0, 1fr) minmax(0, 360px); }
+  .voice--flip .voice__media { grid-column: 2; grid-row: 1; }
+  .voice--flip .voice__body  { grid-column: 1; grid-row: 1; }
+
+  /* No dividing rule. The alternation already separates the two, and a hairline
+     between them made the pair read as rows of a table. */
+  .voice + .voice { margin-top: clamp(72px, 9vh, 120px); }
+
+  /* --- Portrait ---------------------------------------------------------------
+     The offset tint block is the same device as the timeline badges above, at a
+     larger size — it is what ties the two halves of this page together. */
+  .voice__media {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .voice__media::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    translate: -18px 18px;
+    border-radius: var(--sb-r-2);
+    background: rgba(201, 60, 10, 0.16);
+  }
+
+  /* Mirrored card, mirrored offset — otherwise the block leans out of the
+     layout on one side and into the text on the other. */
+  .voice--flip .voice__media::before { translate: 18px 18px; }
+
+  .voice__media :global(.photo) {
+    position: relative;
+    z-index: 1;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  /* --- Message ----------------------------------------------------------------- */
+
+  .voice__mark {
+    color: var(--sb-violet);
+    opacity: 0.45;
+    margin-bottom: var(--sb-5);
+  }
+
+  /* 17px rather than 15px, capped. The text column is 848px wide at 1440 —
+     left uncapped that is a 110-character line, roughly twice a readable
+     measure.
+
+     54ch, not 66ch. `ch` is the width of a ZERO, which is wider than the
+     average lowercase letter, so the box always fits more characters than the
+     number suggests: 62ch measured 75 real characters here. 54ch lands at 65,
+     which is where a long passage wants to be.
+
+     The cap sits on the BODY, not the paragraphs — capping the paragraphs
+     alone left the rule above the signature running the full column width. */
+  .voice__body {
+    max-width: 100%;
+  }
+
+  /* The loose space falls at the OUTER edge on both cards — the message always
+     hugs its own portrait rather than drifting away from it. */
+  .voice--flip .voice__body { justify-self: end; }
+
+  .voice__prose p {
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+  }
+
+  .voice__prose p + p { margin-top: var(--sb-5); }
+
+  .voice__sign {
+    margin-top: var(--sb-7);
+    padding-top: var(--sb-5);
+    border-top: var(--sb-hairline);
+  }
+
+  .voice__name {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  /* Set like the timeline's `place` line — same face, same tracking, same
+     colour. Two sections of one page should share their small type. */
+  .voice__role {
+    margin-top: 6px;
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+  }
+
+  /* --- Stacked -----------------------------------------------------------------
+     A 4:5 portrait at full width is 487px tall on a 390px screen — it would own
+     the whole first screen of the card. Capped, and the message follows it. */
+  @media (max-width: 899px) {
+    .voice,
+    .voice--flip {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-7);
+    }
+
+    .voice__media,
+    .voice--flip .voice__media { grid-column: 1; grid-row: 1; }
+    .voice__body,
+    .voice--flip .voice__body { grid-column: 1; grid-row: 2; }
+
+    /* Centred. `margin-left: 18px` was only ever there to leave room for the
+       offset tint block, which sticks out 18px to the left — auto margins give
+       it that room on both sides and centre the portrait at the same time.
+       Applies to both cards: the alternation is a desktop idea, and stacked
+       there is no left or right side for it to alternate between. */
+    .voice__media { width: min(260px, 68%); margin-inline: auto; }
+    .voice--flip .voice__media::before { translate: -18px 18px; }
+  }
+
+  /* --- Onward ----------------------------------------------------------------- */
+
+  .hist-next {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  .hist-next__row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sb-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hist-next__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-3);
+    height: 100%;
+    padding: var(--sb-7);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .hist-next__card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+
+  .hist-next__label {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .hist-next__note {
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  .hist-next__go {
+    margin-top: auto;
+    padding-top: var(--sb-5);
+    color: var(--sb-violet);
+  }
+
+  /* --- Tablet ------------------------------------------------------------------ */
+
+  @media (max-width: 1023px) {
+    .hist-line__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .hist-next__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .voice {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    /* Order is a desktop device; stacked, the portrait always leads. */
+    .voice + .voice .voice__media {
+      order: 0;
+    }
+    .voice__media {
+      max-width: 280px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .hist-line__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .voice + .voice {
+      margin-top: var(--sb-9);
+      padding-top: var(--sb-9);
+    }
+  }
+</style>

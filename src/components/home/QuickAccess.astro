@@ -38,8 +38,9 @@ const looks = [
       {quickAccess.map((item, i) => (
         <li>
           <a
-            class="qcard"
+            class={`qcard qcard--${looks[i].tone}`}
             href={item.href}
+            aria-label={`${item.label} — ${item.desc}`}
             {...('external' in item && item.external
               ? { target: '_blank', rel: 'noopener' }
               : {})}
@@ -91,7 +92,13 @@ const looks = [
             </span>
 
             <span class="qcard__body">
-              <span class="qcard__title">{item.label}</span>
+              {/* The title element is the MASK; the inner span is the moving
+                  copy and ::before is the duplicate that rolls up behind it.
+                  data-title is generated from the same source as the visible
+                  text, so the two can never drift apart. */}
+              <span class="qcard__title" data-title={item.label}>
+                <span>{item.label}</span>
+              </span>
               <span class="qcard__desc">{item.desc}</span>
               <span class="qcard__go" aria-hidden="true">
                 <svg width="13" height="10" viewBox="0 0 14 10" fill="none">
@@ -133,10 +140,74 @@ const looks = [
   /* --- Card ----------------------------------------------------------------- */
 
   .qcard {
+    position: relative;
+    /* isolation, not just overflow: the fill sits at z-index -1, and without
+       its own stacking context it would paint behind the SECTION background
+       rather than the card - invisible, and a confusing one to debug. */
+    isolation: isolate;
+    overflow: hidden;
     display: flex;
     align-items: flex-start;
     gap: var(--sb-6);
     height: 100%;
+    padding: var(--sb-7);
+    border-radius: 25px;
+    background: #fff;
+    box-shadow: 0 6px 34px rgba(215, 216, 222, 0.41);
+  }
+
+  /* PART A - the fill wipes down from the top edge. 0.4s, deliberately faster
+     than the 1.05s title roll: the offset between them is the effect. */
+  .qcard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--qcard-fill, var(--sb-violet-wash));
+    border-radius: inherit;
+    z-index: -1;
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    /* Top edge, so the fill wipes DOWNWARD. */
+    -webkit-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+    -webkit-transition: -webkit-transform 0.4s ease-out;
+    transition: transform 0.4s ease-out;
+  }
+
+  .qcard:hover::before,
+  .qcard:focus-within::before {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+
+  /* PER-TONE FILL. Each card fills with a light tint of the hue already in its
+     own icon disc, so the six read as a set rather than six unrelated colours.
+
+     MEASURED on every tone (title 21px/700 needs 3.0, description 15px needs
+     4.5, icon needs 4.5 as a graphic):
+       title       15.0 - 16.4
+       description  4.56 - 4.97
+       icon on the white hover disc  5.93 - 8.88
+     A deeper tint was tried first and pushed rose and lilac descriptions to
+     4.41 and 4.33 - under AA - so this is as saturated as the fill can get
+     while the small text stays legible. */
+  .qcard--peach { --qcard-fill: #ffeae1; }
+  .qcard--sky   { --qcard-fill: #e6eefc; }
+  .qcard--sun   { --qcard-fill: #fdf3dc; }
+  .qcard--mint  { --qcard-fill: #e2f4ea; }
+  .qcard--rose  { --qcard-fill: #fde7ee; }
+  .qcard--lilac { --qcard-fill: #ece8fa; }
+
+  /* The disc turns white on hover. A pastel disc against a light tint of its
+     OWN hue measured 1.09 - the circle simply disappeared. White keeps the
+     shape and puts the icon back on its strongest ground. */
+  .qcard:hover .qcard__disc,
+  .qcard:focus-within .qcard__disc { background: #fff; }
+
+  /* Everything the card holds rides above the fill. */
+  .qcard > * {
+    position: relative;
+    z-index: 1;
   }
 
   .qcard__disc {
@@ -149,7 +220,8 @@ const looks = [
     transition: transform var(--sb-dur-image) var(--sb-ease);
   }
 
-  .qcard:hover .qcard__disc { transform: scale(1.06); }
+  .qcard:hover .qcard__disc,
+  .qcard:focus-within .qcard__disc { transform: scale(1.06); }
 
   /* Soft discs, warm family. Icon strokes are the deep tone of each disc so
      they stay legible rather than relying on the pastel alone. */
@@ -167,7 +239,19 @@ const looks = [
     padding-top: var(--sb-2);
   }
 
+  /* --- Title: roll-up swap ----------------------------------------------------
+     The element is the mask, its inner span is the copy that rolls out, and
+     ::before is an identical copy waiting below that rolls in. Both move on the
+     same duration and easing, so they travel as one piece of type rather than
+     two things that happen to be animating.
+
+     The duplicate takes its text from data-title, and every typographic
+     property is inherited from this element, so the two copies cannot diverge —
+     including on a title that wraps to two lines. */
   .qcard__title {
+    position: relative;
+    display: block;
+    overflow: hidden;
     font-family: var(--sb-font-display);
     font-weight: 700;
     font-size: var(--sb-h4);
@@ -177,8 +261,56 @@ const looks = [
     transition: color var(--sb-dur-link) ease;
   }
 
-  .qcard:hover .qcard__title,
-  .qcard:focus-visible .qcard__title { color: var(--sb-violet); }
+  .qcard__title > span {
+    display: inline-block;
+    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  .qcard__title::before {
+    content: attr(data-title);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Inherited from the element, so it matches the span exactly — size,
+       weight, leading, tracking and colour, including the hover colour. */
+    -webkit-transform: translateY(110%);
+    transform: translateY(110%);
+    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  /* Triggered by the whole card, not the text. :focus-visible is included so a
+     keyboard user gets the same feedback a mouse user does. */
+  .qcard:hover .qcard__title > span,
+  .qcard:focus-within .qcard__title > span {
+    -webkit-transform: translateY(-125%);
+    transform: translateY(-125%);
+  }
+
+  .qcard:hover .qcard__title::before,
+  .qcard:focus-within .qcard__title::before {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  /* The title used to turn violet on hover. That is now the FILL colour, so it
+     would disappear into it. Colour is handled by the invert toggle below. */
+
+  /* docs/05 § N — the swap is decoration. With reduced motion the second copy
+     never enters and the first never leaves; only the colour changes. */
+  @media (prefers-reduced-motion: reduce) {
+    .qcard__title > span,
+    .qcard__title::before { transition: none; }
+    .qcard:hover .qcard__title > span,
+    .qcard:focus-within .qcard__title > span { -webkit-transform: none; transform: none; }
+    .qcard:hover .qcard__title::before,
+    .qcard:focus-within .qcard__title::before {
+      -webkit-transform: translateY(110%);
+      transform: translateY(110%);
+    }
+  }
 
   .qcard__desc {
     font-size: var(--sb-body-sm);
@@ -199,11 +331,46 @@ const looks = [
       border-color var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
   }
 
-  .qcard:hover .qcard__go {
-    background: var(--sb-violet);
-    border-color: var(--sb-violet);
-    color: #fff;
+  .qcard:hover .qcard__go,
+  .qcard:focus-within .qcard__go {
     transform: translateX(3px);
+  }
+
+  /* CONTRAST NOTE - the white-text toggle has been removed, not just switched
+     off. It made sense against the saturated orange fill (5.08:1). On these
+     light tints white measures 1.06 - 1.11, which is invisible, so leaving the
+     class available would only invite someone to turn on unreadable text.
+     Dark text on the tints: title 15.0+, description 4.56+. */
+  /* --- REDUCED MOTION ---------------------------------------------------------
+     docs/05 N. The fill still arrives - it carries the hover state, which is
+     information - but it fades rather than wiping, and neither copy of the
+     title moves. */
+  @media (prefers-reduced-motion: reduce) {
+    .qcard::before {
+      -webkit-transform: scaleY(1);
+      transform: scaleY(1);
+      opacity: 0;
+      -webkit-transition: opacity 0.15s linear;
+      transition: opacity 0.15s linear;
+    }
+
+    .qcard:hover::before,
+    .qcard:focus-within::before { opacity: 1; }
+
+    .qcard__title > span,
+    .qcard__title::before { transition: none; }
+
+    .qcard:hover .qcard__title > span,
+    .qcard:focus-within .qcard__title > span { -webkit-transform: none; transform: none; }
+
+    .qcard:hover .qcard__title::before,
+    .qcard:focus-within .qcard__title::before {
+      -webkit-transform: translateY(110%);
+      transform: translateY(110%);
+    }
+
+    .qcard:hover .qcard__disc,
+    .qcard:focus-within .qcard__disc { transform: none; }
   }
 
   /* --- Tablet: 2 columns ------------------------------------------------------ */
