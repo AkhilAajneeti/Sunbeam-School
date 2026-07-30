@@ -1,0 +1,471 @@
+---
+/**
+ * ACADEMICS → 04 · ASSESSMENT & SUPPORT
+ *
+ * LAYOUT: a process flow on a centre spine — six steps alternating left and
+ * right of a vertical rule, each numbered, with the rule carrying the sequence.
+ * Nothing else in this section uses a spine, and this page has no photographs at
+ * all: the subject is a cycle, and a cycle is a diagram, not a gallery.
+ *
+ * THE SPINE IS CSS, NOT SVG. An SVG path would have to be measured against the
+ * final height of six variable-length cards, which changes with the viewport and
+ * with the font. A border on the container is exact at every width for free, and
+ * cannot drift out of register with the cards it is meant to connect.
+ *
+ * The six-step cycle describes how a CBSE year is structured — taught content,
+ * internal assessment, boards at X and XII, and the support around them. It does
+ * not claim a proprietary Sunbeam method, because the school has not published
+ * one. Asset request A10.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ChapterNav from '../../components/academics/ChapterNav.astro';
+import { cycle, supports } from '../../data/academics';
+---
+
+<BaseLayout
+  title="Assessment & Support — Sunbeam School Ballia"
+  description="How an academic year runs at Sunbeam School Ballia: taught content, activities, internal assessment, CBSE board examinations at Class X and XII, and the mentoring and remedial support around them."
+>
+  {/* ══ HERO — minimal, numbers-led, no photograph ══════════════════════════ */}
+  <section class="ahero4" aria-labelledby="ahero4-title">
+    <div class="u-container">
+      <nav class="ahero4__crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/academics/">Academics</a></li>
+          <li><span aria-current="page">Assessment &amp; Support</span></li>
+        </ol>
+      </nav>
+
+      <div class="ahero4__grid">
+        <div>
+          <p class="ahero4__n t-tabular" aria-hidden="true">Chapter 04</p>
+          <h1 class="ahero4__title" id="ahero4-title" data-split>
+            How a year actually <span class="t-squiggle">runs</span>
+          </h1>
+        </div>
+
+        <p class="ahero4__stand">
+          Six steps, repeating. Content is taught, practised, assessed and fed back — and where a
+          subject needs more, the support is named rather than assumed.
+        </p>
+      </div>
+
+      {/* The step names as a single ticker line, so the whole cycle is legible
+          before the reader scrolls into it. */}
+      <ol class="ticker" aria-label="The assessment cycle">
+        {cycle.map((c, i) => (
+          <li>
+            <span class="ticker__i t-tabular" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            {c.step}
+            {i < cycle.length - 1 && <span class="ticker__arrow" aria-hidden="true">→</span>}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* ══ THE CYCLE ON A SPINE ═══════════════════════════════════════════════ */}
+  <section class="flow" id="system" aria-labelledby="flow-title">
+    <div class="u-container">
+      <h2 class="u-visually-hidden" id="flow-title">The assessment cycle</h2>
+
+      <ol class="flow__spine">
+        {cycle.map((c, i) => (
+          <li class:list={['fstep', i % 2 === 0 ? 'fstep--l' : 'fstep--r']}
+            data-reveal data-reveal-delay={(i % 2) * 90}>
+            <span class="fstep__node t-tabular" aria-hidden="true">{i + 1}</span>
+            <div class="fstep__card">
+              <h3 class="fstep__h">{c.step}</h3>
+              <p class="fstep__b">{c.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      {/* The cycle closes — it is not a funnel with an end. */}
+      <p class="flow__loop" data-reveal>
+        <span aria-hidden="true">↻</span>
+        And round again, every term.
+      </p>
+    </div>
+  </section>
+
+  {/* ══ SUPPORT ════════════════════════════════════════════════════════════ */}
+  <section class="sup2" id="support" aria-labelledby="sup2-title">
+    <div class="u-container">
+      <div class="sup2__head" data-reveal>
+        <p class="sup2__pill"><span class="pill pill--glass">Support</span></p>
+        <h2 class="sup2__title t-h2-sans" id="sup2-title" data-split>
+          Six things a parent can <span class="t-squiggle">rely on</span>
+        </h2>
+      </div>
+
+      <ul class="sup2__list">
+        {supports.map((s, i) => {
+          const Tag = s.href ? 'a' : 'div';
+          return (
+            <li class="srow" data-reveal data-reveal-delay={(i % 3) * 70}>
+              <Tag class="srow__in" {...(s.href ? { href: s.href } : {})}>
+                <span class="srow__i t-tabular" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span class="srow__t">{s.label}</span>
+                <span class="srow__b">{s.body}</span>
+                {s.href && (
+                  <span class="srow__go" aria-hidden="true">
+                    <svg width="15" height="10" viewBox="0 0 14 10" fill="none">
+                      <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                  </span>
+                )}
+              </Tag>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <ChapterNav current="assessment" />
+</BaseLayout>
+
+<style>
+  /* ══════════ HERO ════════════════════════════════════════════════════════ */
+  .ahero4 {
+    background: var(--sb-ivory);
+    padding-block: clamp(110px, 15vh, 176px) var(--sb-section-y-major);
+  }
+
+  .ahero4__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-3);
+    list-style: none;
+    margin: 0 0 var(--sb-8);
+    padding: 0;
+    font-size: var(--sb-caption);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ahero4__crumbs li + li::before {
+    content: '/';
+    margin-right: var(--sb-3);
+    color: var(--sb-text-muted);
+  }
+
+  .ahero4__crumbs a { color: var(--sb-text-secondary); }
+  .ahero4__crumbs a:hover { color: var(--sb-violet); }
+  .ahero4__crumbs [aria-current] { color: var(--sb-charcoal); font-weight: 600; }
+
+  .ahero4__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(28px, 5vw, 76px);
+    align-items: end;
+  }
+
+  .ahero4__n {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-5);
+  }
+
+  .ahero4__title {
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: clamp(34px, 5.2vw, 74px);
+    line-height: 1.05;
+    letter-spacing: -0.038em;
+    color: var(--sb-charcoal);
+  }
+
+  .ahero4__stand {
+    font-size: var(--sb-body);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Ticker ---------------------------------------------------------------
+     Wraps rather than scrolls. A marquee here would move information the reader
+     is trying to read, and there is no pause control worth adding for six
+     words. */
+  .ticker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sb-3) var(--sb-5);
+    list-style: none;
+    margin: clamp(36px, 5vh, 64px) 0 0;
+    padding-top: var(--sb-7);
+    border-top: var(--sb-hairline);
+  }
+
+  .ticker li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(16px, 1.5vw, 21px);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .ticker__i {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--sb-violet);
+  }
+
+  .ticker__arrow {
+    margin-left: var(--sb-2, 8px);
+    color: var(--sb-text-muted);
+    font-weight: 400;
+  }
+
+  /* ══════════ THE SPINE ═══════════════════════════════════════════════════ */
+  .flow {
+    background: var(--sb-sand);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  /* The rule is a border on the list, so it is exactly as tall as the six items
+     and can never fall short of the last node or overshoot the first. */
+  .flow__spine {
+    position: relative;
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 1000px;
+    border-left: 2px solid var(--sb-violet-wash);
+  }
+
+  .fstep {
+    position: relative;
+    display: flex;
+    padding-block: clamp(16px, 2.6vh, 32px);
+  }
+
+  .fstep--l { justify-content: flex-start; padding-right: 50%; }
+  .fstep--r { justify-content: flex-end; padding-left: 50%; }
+
+  /* The node rides the rule. -17px is half the node's 32px width plus the 1px
+     rule offset, so it stays centred on the line at every viewport. */
+  .fstep__node {
+    position: absolute;
+    left: -17px;
+    top: clamp(16px, 2.6vh, 32px);
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 0 0 5px var(--sb-sand);
+  }
+
+  .fstep__card {
+    position: relative;
+    padding: var(--sb-7);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+    max-width: 420px;
+    transition: transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .fstep__card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+
+  /* A short connector from the rule to the card, so the two do not float apart
+     on wide screens. */
+  .fstep__card::before {
+    content: '';
+    position: absolute;
+    top: 30px;
+    width: clamp(14px, 3vw, 42px);
+    border-top: 2px dotted var(--sb-violet-wash);
+  }
+
+  .fstep--l .fstep__card { margin-left: clamp(28px, 5vw, 64px); }
+  .fstep--l .fstep__card::before { left: calc(clamp(14px, 3vw, 42px) * -1); }
+
+  .fstep--r .fstep__card { margin-right: 0; }
+  .fstep--r .fstep__card::before { display: none; }
+
+  .fstep__h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(19px, 1.9vw, 26px);
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--sb-charcoal);
+  }
+
+  .fstep__b {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  .flow__loop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sb-4);
+    margin-top: var(--sb-8);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(17px, 1.7vw, 23px);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .flow__loop span {
+    font-size: 1.5em;
+    line-height: 1;
+    color: var(--sb-violet);
+  }
+
+  /* ══════════ SUPPORT ═════════════════════════════════════════════════════
+      Rows, not a card grid. Six equal tiles is the pattern this rebuild removes;
+      a numbered list with a hairline between each reads as a reference, which is
+      what this is. */
+  .sup2 {
+    background: var(--sb-ink);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  .sup2__head { margin-bottom: var(--sb-9); max-width: 34ch; }
+  .sup2__pill { margin-bottom: var(--sb-5); }
+  .sup2__title { color: #fff; }
+
+  .sup2__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .srow { border-bottom: 1px solid rgba(255, 255, 255, 0.16); }
+
+  .srow__in {
+    display: grid;
+    grid-template-columns: auto minmax(0, 4fr) minmax(0, 7fr) auto;
+    align-items: center;
+    gap: var(--sb-6);
+    padding: var(--sb-7) var(--sb-5);
+    margin-inline: calc(var(--sb-5) * -1);
+    transition: background-color var(--sb-dur-link) ease;
+  }
+
+  a.srow__in:hover { background: rgba(255, 255, 255, 0.06); }
+
+  .srow__i {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--sb-lime);
+  }
+
+  .srow__t {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(18px, 1.8vw, 24px);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: #fff;
+  }
+
+  .srow__b {
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .srow__go {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--sb-r-full);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    color: #fff;
+    transition: background-color var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease,
+      transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  a.srow__in:hover .srow__go {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    transform: translateX(3px);
+  }
+
+  /* ══════════ REDUCED MOTION ══════════════════════════════════════════════ */
+  @media (prefers-reduced-motion: reduce) {
+    .fstep__card,
+    .srow__in,
+    .srow__go { transition: none; }
+    .fstep__card:hover { transform: none; }
+    a.srow__in:hover .srow__go { transform: none; }
+  }
+
+  /* ══════════ TABLET ══════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .ahero4__grid { grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--sb-6); }
+
+    .srow__in {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      row-gap: var(--sb-3);
+    }
+
+    /* The description drops under the label and spans the text columns rather
+       than being squeezed into a third of the row. */
+    .srow__b { grid-column: 2 / 4; }
+  }
+
+  /* ══════════ MOBILE ══════════════════════════════════════════════════════
+      The spine goes fully left-hand: alternating sides needs two usable columns
+      and 390px does not have them. */
+  @media (max-width: 767px) {
+    .fstep--l,
+    .fstep--r {
+      justify-content: flex-start;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .fstep--l .fstep__card,
+    .fstep--r .fstep__card {
+      margin-left: clamp(28px, 8vw, 48px);
+      margin-right: 0;
+      max-width: none;
+    }
+
+    .fstep--r .fstep__card::before { display: block; }
+    .fstep--l .fstep__card::before,
+    .fstep--r .fstep__card::before { left: calc(clamp(14px, 3vw, 42px) * -1); }
+  }
+
+  @media (max-width: 639px) {
+    .ahero4 { padding-block: clamp(92px, 13vh, 130px) var(--sb-section-y); }
+    .flow,
+    .sup2 { padding-block: var(--sb-section-y); }
+
+    .srow__in { grid-template-columns: auto minmax(0, 1fr); padding-block: var(--sb-6); }
+    .srow__b { grid-column: 1 / 3; }
+    .srow__go { display: none; } /* the whole row is the tap target */
+  }
+</style>

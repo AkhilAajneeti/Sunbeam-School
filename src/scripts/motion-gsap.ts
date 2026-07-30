@@ -131,26 +131,174 @@ if (targets.length) {
   });
 }
 
-/* --- The heritage figure counts up -----------------------------------------
-   "50" only. The other figures on the page are ranks and identifiers — "#1",
-   "CBSE", an affiliation number — and counting those up would animate something
-   that is not a quantity. */
-const figure = document.querySelector<HTMLElement>('[data-count]');
-if (figure && belowFold(figure)) {
-  const target = Number(figure.dataset.count);
-  if (Number.isFinite(target)) {
-    const state = { n: 0 };
-    gsap.to(state, {
-      n: target,
-      duration: 1.4,
-      ease: 'power2.out',
-      scrollTrigger: { trigger: figure, start: 'top 80%', once: true },
-      onUpdate: () => {
-        figure.textContent = String(Math.round(state.n));
-      },
-    });
-  }
+/* --- POP ENTRANCES ----------------------------------------------------------
+   `data-reveal` fades up 26px on power3 — a calm arrival. `data-pop` is the
+   louder cousin the Academic Philosophy page asked for: it comes further up from
+   below and overshoots its rest size slightly, so a card lands rather than
+   fades. `back.out(1.5)` is what makes it a pop; the scale is what stops the
+   overshoot reading as a jump.
+
+   Same three rules as everything else in this file: content is visible until
+   this chunk arms it, nothing already on screen is touched (belowFold), and no
+   horizontal transform.
+
+   clearProps IS LOAD-BEARING HERE. A finished gsap.to leaves an inline
+   `transform` on the element, which outranks the stylesheet and silently kills
+   any `:hover` transform on the same node — the affiliation tiles lost their
+   hover lift to exactly this before (see the grid stagger below). Handing the
+   element back to CSS at the end costs nothing and keeps hover working whether
+   the attribute sits on a wrapper or on the hovered card itself.
+
+   `data-pop-delay` mirrors `data-reveal-delay`, in milliseconds. */
+const popped = gsap.utils.toArray<HTMLElement>('[data-pop]').filter(belowFold);
+if (popped.length) {
+  gsap.set(popped, { opacity: 0, y: 44, scale: 0.94 });
+  ScrollTrigger.batch(popped, {
+    start: START,
+    once: true,
+    onEnter: (batch) =>
+      gsap.to(batch, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.85,
+        ease: 'back.out(1.5)',
+        stagger: 0.08,
+        clearProps: 'transform,opacity',
+        delay: Number((batch[0] as HTMLElement).dataset.popDelay ?? 0) / 1000,
+      }),
+  });
 }
+
+/* --- PARALLAX ----------------------------------------------------------------
+   `data-parallax` drifts an element against the scroll. `data-parallax-y` is the
+   total travel in pixels, defaulting to 60; a NEGATIVE value moves it the other
+   way, which is how two layers in the same collage get different depths.
+
+   Rule 3 holds: y only, never x. A horizontal drift is the easiest way to break
+   a layout that is verified free of horizontal overflow.
+
+   DESKTOP ONLY, and that is not a performance excuse. Below 1024 these
+   compositions stack, so a layer that drifts is no longer beside the thing it was
+   offset against — it just wanders through the copy underneath it.
+
+   `invalidateOnRefresh` because the travel is computed from a live layout: without
+   it a font swap or an image finishing its decode leaves the tween scrubbing
+   against stale positions. */
+gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
+  if (window.innerWidth < 1024) return;
+  const travel = Number(el.dataset.parallaxY ?? 60);
+  gsap.fromTo(
+    el,
+    { y: travel / 2 },
+    {
+      y: -travel / 2,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+        invalidateOnRefresh: true,
+      },
+    }
+  );
+});
+
+/* --- MASK REVEAL -------------------------------------------------------------
+   `data-mask` wipes an image in from its bottom edge instead of fading it. A
+   one-shot on enter, NOT a scrub: a scrubbed clip-path means the reader can park
+   mid-scroll and sit looking at a half-drawn photograph, which reads as a broken
+   image rather than as an effect.
+
+   clip-path, not a width or height tween: clipping never reflows and never
+   changes the image's own geometry, so the crop and focal point stay exactly
+   where the composition put them.
+
+   `data-mask-from` takes `bottom` (default) or `left`. Left is still a clip, not
+   a translate — rule 3 is about moving boxes, and this moves nothing. */
+gsap.utils.toArray<HTMLElement>('[data-mask]').forEach((el) => {
+  if (!belowFold(el)) return;
+  const from = el.dataset.maskFrom === 'left' ? 'inset(0 100% 0 0)' : 'inset(100% 0 0 0)';
+  gsap.fromTo(
+    el,
+    { clipPath: from, webkitClipPath: from },
+    {
+      clipPath: 'inset(0% 0% 0% 0%)',
+      webkitClipPath: 'inset(0% 0% 0% 0%)',
+      duration: 1.1,
+      ease: 'power3.inOut',
+      // Hand it back to CSS: a leftover inline clip-path would clip any hover
+      // scale on the image inside it to the frame it finished on.
+      clearProps: 'clipPath,webkitClipPath',
+      scrollTrigger: { trigger: el, start: START, once: true },
+    }
+  );
+});
+
+/* --- HORIZONTAL RAIL PROGRESS ------------------------------------------------
+   Reports how far a NATIVELY scrolling rail has been scrolled, as a 0–1 custom
+   property the stylesheet turns into a progress bar.
+
+   THE RAIL IS NOT SCROLL-JACKED, deliberately. The obvious build for a
+   horizontal story is to pin the section and translate a track against page
+   scroll; on a trackpad that hijacks the gesture, on a phone it fights the
+   browser, and with the keyboard it is unreachable. A real `overflow-x` scroller
+   with scroll-snap gets flick, drag, shift-wheel, arrow keys and a screen
+   reader's own scrolling for free. This function only draws the indicator, so
+   with the chunk absent the rail still works exactly as well — it just loses its
+   progress bar.
+
+   Passive listener: this never calls preventDefault, and saying so lets the
+   browser keep scrolling on the compositor while it runs. */
+document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
+  /* THE PROPERTY GOES ON THE SCOPE, NOT ON THE RAIL. Custom properties inherit
+     DOWN the tree, and the indicator is a SIBLING of the scroller — it sits up in
+     the section head so it can line up with the heading. Writing the property on
+     the rail itself left the bar reading its `var(--rail-progress, 0)` fallback
+     for ever: permanently empty, and indistinguishable from "the chunk has not
+     loaded". `[data-rail-scope]` is the nearest element that contains both. */
+  const scope = rail.closest<HTMLElement>('[data-rail-scope]') ?? rail;
+  const draw = () => {
+    const max = rail.scrollWidth - rail.clientWidth;
+    scope.style.setProperty('--rail-progress', max > 0 ? String(rail.scrollLeft / max) : '1');
+  };
+  rail.addEventListener('scroll', draw, { passive: true });
+  window.addEventListener('resize', draw);
+  draw();
+});
+
+/* --- Figures count up --------------------------------------------------------
+   Only ever applied to QUANTITIES. The other figures on these pages are ranks
+   and identifiers — "#1", "CBSE", an affiliation number — and counting those up
+   would animate something that is not a quantity.
+
+   querySelectorAll, not querySelector. This was singular, which silently meant
+   that on any page with more than one figure only the FIRST one ever counted and
+   the rest sat at their static value — indistinguishable from the animation
+   simply not being wired up. One counter per page was never a rule, just an
+   accident of the homepage having exactly one.
+
+   `data-count-suffix` carries "+" or "%" so the symbol is not eaten by the
+   textContent write, and the number is grouped for the reader — a figure like
+   15000 is much harder to read mid-count without separators. */
+document.querySelectorAll<HTMLElement>('[data-count]').forEach((figure) => {
+  if (!belowFold(figure)) return;
+  const target = Number(figure.dataset.count);
+  if (!Number.isFinite(target)) return;
+
+  const suffix = figure.dataset.countSuffix ?? '';
+  const state = { n: 0 };
+  gsap.to(state, {
+    n: target,
+    duration: 1.4,
+    ease: 'power2.out',
+    scrollTrigger: { trigger: figure, start: 'top 80%', once: true },
+    onUpdate: () => {
+      figure.textContent = Math.round(state.n).toLocaleString('en-IN') + suffix;
+    },
+  });
+});
 
 /* --- Principal portrait, slow parallax --------------------------------------
    The scale covers the travel, so the crop never exposes an edge. Desktop only:

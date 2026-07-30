@@ -570,7 +570,8 @@ h2:has(.t-squiggle) { line-height: 1.3; }
 /* Content renders visible by default; JS hides it ONLY when motion is allowed,
    so a script failure or reduced-motion never leaves the page blank. */
 
-[data-reveal] {
+[data-reveal],
+[data-pop] {
   opacity: 1;
 }
 
@@ -623,7 +624,8 @@ h2:has(.t-squiggle) { line-height: 1.3; }
   }
 
   [data-reveal],
-  [data-reveal].is-armed {
+  [data-reveal].is-armed,
+  [data-pop] {
     opacity: 1 !important;
     transform: none !important;
   }

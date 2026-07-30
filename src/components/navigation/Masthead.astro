@@ -234,6 +234,36 @@ import MegaMenu from './MegaMenu.astro';
     background: var(--sb-charcoal);
   }
 
+  /* --- 1240–1359: the desktop row is wider than the page -------------------
+     THE BUG THIS FIXES IS A HORIZONTAL SCROLLBAR ON EVERY PAGE. Brand lockup
+     (279px) + eight nav links (773px) + Apply button (151px) + two gaps needs
+     ~1250px of content width. The container gives 1160 at 1240 and 1184 at 1280,
+     so the row ran 48px and 21px past the right edge — and because `body` is
+     `overflow-x: hidden` it never showed as a broken header. It showed as the
+     whole document being scrollable sideways, which on a full-bleed layout looks
+     like every band on the page stopping short of the right edge. Reported from
+     the footer, where the effect is most visible.
+
+     The row tightens rather than the breakpoint moving up: 1280 is one of the
+     commonest desktop widths and it should not be handed the mobile drawer to
+     save 21px. Both gaps come in and the brand steps down one notch, which
+     leaves 22px of slack at 1240.
+
+     ⚠ RE-MEASURE IF A NINTH NAV ITEM IS ADDED. Another link is ~95px and puts
+     this back over the edge; at that point the drawer breakpoint below has to
+     rise instead. */
+  @media (min-width: 1240px) and (max-width: 1359px) {
+    .masthead__inner { gap: var(--sb-5); }
+    .mainnav__list { gap: 12px; }
+
+    /* The .is-scrolled rules below are more specific, so both states are set
+       here or the lockup jumps back to full size the moment the page scrolls. */
+    .brand__emblem,
+    .masthead.is-scrolled .brand__emblem { height: 52px; }
+    .brand__wordmark,
+    .masthead.is-scrolled .brand__wordmark { height: 48px; }
+  }
+
   /* --- Below 1240: drawer takes over ------------------------------------- */
 
   @media (max-width: 1239px) {

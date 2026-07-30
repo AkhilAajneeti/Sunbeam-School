@@ -1,0 +1,562 @@
+---
+/**
+ * ACADEMICS — OVERVIEW (hub).
+ *
+ * This page used to be the whole section: seven stacked heading-paragraph-cards
+ * blocks on one 9,300px scroll. It is now a hub. Its ONLY job is to introduce
+ * the six chapters and get the reader into the right one — every detail lives on
+ * the chapter page that owns it, and nothing is explained twice.
+ *
+ * Three blocks, and deliberately no more:
+ *   1 · a cinematic hero on a real Sunbeam chemistry lesson
+ *   2 · the six chapters as a bento — different sizes, so the grid is a
+ *       composition rather than six identical tiles
+ *   3 · the eight published figures
+ *
+ * All content comes from src/data/academics.ts, which carries the integrity
+ * rules for the whole section.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Photo from '../../components/ui/Photo.astro';
+import CounterStrip from '../../components/academics/CounterStrip.astro';
+import { school } from '../../data/site';
+import { chapters, heroStats } from '../../data/academics';
+
+import heroPhoto from '../../assets/photos/sb-chem-lab.jpg';
+import libraryPhoto from '../../assets/photos/sb-library.jpg';
+import mathsPhoto from '../../assets/photos/sb-maths-lab.jpg';
+import bioPhoto from '../../assets/photos/sb-bio-lab.jpg';
+
+/**
+ * Which chapters carry a photograph, and how much room each takes.
+ *
+ * Keyed by slug rather than positional, so reordering `chapters` in the data
+ * cannot silently hand the library photograph to Parent Partnership.
+ *
+ * THE SPANS TILE EXACTLY. On a six-column grid, in chapter order, the widths run
+ * 2+4 · 4+2 · 2+4 — three full rows with no leftover cell. The first attempt
+ * gave Philosophy `grid-row: span 2` and left the other spans to fall where they
+ * may, which produced two problems: a plain text tile stretched over two rows had
+ * several hundred pixels of empty white in it, and the ragged widths left a hole
+ * in the middle row. Sizes still vary, so it reads as a bento rather than a
+ * uniform grid — they just add up now.
+ */
+const look: Record<string, { span: string; photo?: ImageMetadata; alt?: string }> = {
+  philosophy: { span: '' },
+  structure: {
+    span: 'wide',
+    photo: mathsPhoto,
+    alt: 'Students of Sunbeam School Ballia seated on the floor of a decorated activity room during a lesson.',
+  },
+  'teaching-learning': {
+    span: 'wide',
+    photo: libraryPhoto,
+    alt: 'Students of Sunbeam School Ballia reading and working at tables in the Nalanda Library.',
+  },
+  assessment: { span: '' },
+  'student-success': {
+    span: '',
+    photo: bioPhoto,
+    alt: 'Two students of Sunbeam School Ballia handling glassware in the biology laboratory.',
+  },
+  'parent-partnership': { span: 'wide' },
+};
+---
+
+<BaseLayout
+  title="Academics — Sunbeam School Ballia"
+  description="Academics at Sunbeam School Ballia: a CBSE curriculum from Nursery to Class XII, four senior-secondary streams, nine laboratories, a 15,000-book library and 100 Microsoft-certified teachers."
+>
+  {/* ══ HERO ═══════════════════════════════════════════════════════════════ */}
+  <section class="ahero" aria-labelledby="ahero-title">
+    <div class="ahero__media">
+      <Photo
+        src={heroPhoto}
+        alt="Students of Sunbeam School Ballia working with laboratory glassware and a burner during a chemistry lesson."
+        brief="Academics hero"
+        position="50% 40%"
+        sizes="100vw"
+      />
+    </div>
+
+    {/* Two layers, not one. A single overlay strong enough for 90px type greys
+        the whole photograph out; a bottom-weighted gradient plus a light
+        left-to-right wash keeps the picture alive where no text sits on it.
+        Verified by sampling the glyph-free bands around each line — 15.9:1 to
+        20:1 against white. */}
+    <div class="ahero__scrim" aria-hidden="true"></div>
+
+    <div class="u-container ahero__inner">
+      <nav class="ahero__crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><span aria-current="page">Academics</span></li>
+        </ol>
+      </nav>
+
+      <p class="ahero__eyebrow"><span class="pill pill--glass">Academics</span></p>
+
+      <h1 class="ahero__title" id="ahero-title" data-split>
+        Learning that goes beyond the <span class="t-squiggle">book</span>
+      </h1>
+
+      <p class="ahero__stand">
+        A CBSE curriculum from Nursery to Class XII, taught by {school.teachingStaff} staff across
+        nine laboratories — with four streams to choose between at senior secondary.
+      </p>
+
+      {/* --on-image-*, not --primary/--ghost. `btn--ghost` does not exist in
+          base.css; the on-image pair is purpose-built for a scrimmed
+          photographic ground. */}
+      <div class="ahero__cta">
+        <a class="btn btn--on-image-primary" href="#chapters">The six chapters</a>
+        <a class="btn btn--on-image-secondary" href="/academics/teaching-learning/">How we teach</a>
+      </div>
+
+      <dl class="ahero__stats">
+        {heroStats.map((s) => (
+          <div class="ahero__stat">
+            <dt class="ahero__stat-n t-tabular">
+              <span data-count={s.n} data-count-suffix={s.suffix}>
+                {s.n.toLocaleString('en-IN')}{s.suffix}
+              </span>
+            </dt>
+            <dd class="ahero__stat-l">{s.label}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  {/* ══ THE SIX CHAPTERS ═══════════════════════════════════════════════════ */}
+  <section class="hub" id="chapters" aria-labelledby="hub-title">
+    <div class="u-container">
+      <div class="hub__head" data-reveal>
+        <p class="hub__pill"><span class="pill pill--violet">Six chapters</span></p>
+        <h2 class="hub__title t-h2-sans" id="hub-title" data-split>
+          Where would you like to <span class="t-squiggle">start</span>
+        </h2>
+      </div>
+
+      <ul class="hub__grid">
+        {chapters.map((c, i) => {
+          const l = look[c.slug];
+          return (
+            <li class:list={['ch', l.span && `ch--${l.span}`, l.photo ? 'ch--photo' : 'ch--plain']}
+              data-reveal data-reveal-delay={(i % 3) * 90}>
+              <a class="ch__in" href={c.href}>
+                {l.photo && (
+                  <div class="ch__media">
+                    {/* 4:3 on the wide tiles too, because there the photograph
+                        sits BESIDE the text rather than above it — a 16:9 strip
+                        across a 4-column tile made it 470px tall and left its
+                        2-column neighbour stretching to match. */}
+                    <Photo src={l.photo} alt={l.alt} brief={c.title} ratio="4 / 3"
+                      sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 30vw" />
+                  </div>
+                )}
+
+                <div class="ch__body">
+                  <p class="ch__n t-tabular" aria-hidden="true">{c.n}</p>
+                  <h3 class="ch__t" data-title={c.title}><span>{c.title}</span></h3>
+                  <p class="ch__lede">{c.lede}</p>
+                  <p class="ch__teaser t-tabular">{c.teaser}</p>
+
+                  <span class="ch__more">
+                    Explore
+                    <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                      <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  {/* ══ THE PUBLISHED FIGURES ══════════════════════════════════════════════ */}
+  <section class="fig" aria-labelledby="fig-title">
+    <div class="u-container">
+      <div class="fig__head" data-reveal>
+        <p class="fig__pill"><span class="pill pill--glass">By the numbers</span></p>
+        <h2 class="fig__title t-h2-sans" id="fig-title" data-split>
+          Figures the school can <span class="t-squiggle">prove</span>
+        </h2>
+        <p class="fig__lede">
+          Every one of these is published by Sunbeam and checkable. Board results are not among them
+          — see <a href="/academics/student-success/">Student Success</a> for why.
+        </p>
+      </div>
+
+      <CounterStrip tone="dark" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ══════════ HERO ════════════════════════════════════════════════════════ */
+  .ahero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: clamp(560px, 84svh, 860px);
+    display: grid;
+    align-items: end;
+    background: var(--sb-ink);
+  }
+
+  .ahero__media { position: absolute; inset: 0; z-index: 0; }
+
+  .ahero__media :global(.photo) {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  .ahero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(to top, rgba(14, 9, 6, 0.94) 0%, rgba(14, 9, 6, 0.72) 34%,
+        rgba(14, 9, 6, 0.24) 66%, rgba(14, 9, 6, 0.18) 100%),
+      linear-gradient(to right, rgba(14, 9, 6, 0.45), rgba(14, 9, 6, 0.05));
+    pointer-events: none;
+  }
+
+  .ahero__inner {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(40px, 7vh, 88px) clamp(36px, 6vh, 72px);
+  }
+
+  .ahero__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-3);
+    list-style: none;
+    margin: 0 0 var(--sb-6);
+    padding: 0;
+    font-size: var(--sb-caption);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ahero__crumbs li + li::before {
+    content: '/';
+    margin-right: var(--sb-3);
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .ahero__crumbs a { color: rgba(255, 255, 255, 0.78); }
+  .ahero__crumbs a:hover { color: #fff; }
+  /* White, not --sb-lime: the accent measures about 3:1 here, under AA at this size. */
+  .ahero__crumbs [aria-current] { color: #fff; font-weight: 600; }
+
+  .ahero__eyebrow { margin-bottom: var(--sb-6); }
+
+  .ahero__title {
+    max-width: 22ch;
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: clamp(38px, 6.4vw, 92px);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    color: #fff;
+  }
+
+  .ahero__stand {
+    max-width: 54ch;
+    margin-top: var(--sb-6);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .ahero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-4);
+    margin-top: var(--sb-7);
+  }
+
+  .ahero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(24px, 4vw, 64px);
+    margin: clamp(32px, 5vh, 56px) 0 0;
+    padding-top: var(--sb-6);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .ahero__stat-n {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 3.4vw, 48px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+
+  .ahero__stat-l {
+    margin: 6px 0 0;
+    font-size: var(--sb-caption);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  /* ══════════ CHAPTER BENTO ═══════════════════════════════════════════════
+     Six tiles at three different sizes. A 3×2 grid of identical cards is the
+     pattern this rebuild exists to remove. */
+  .hub {
+    background: var(--sb-ivory);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  .hub__head { margin-bottom: var(--sb-9); max-width: 30ch; }
+  .hub__pill { margin-bottom: var(--sb-5); }
+  .hub__title { color: var(--sb-charcoal); }
+
+  /* align-items: start so a short tile keeps its natural height instead of
+     stretching to match a taller neighbour and filling the difference with
+     white. The rows are allowed to be slightly ragged; that is what a bento is. */
+  .hub__grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--sb-6);
+    align-items: start;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ch { grid-column: span 2; }
+  .ch--wide { grid-column: span 4; }
+
+  /* On the wide tiles the photograph sits beside the copy, which keeps them
+     about the same height as the 2-column tiles they share a row with. */
+  .ch--wide .ch__in { flex-direction: row; align-items: stretch; }
+  .ch--wide .ch__media { flex: 0 0 42%; }
+  .ch--wide .ch__media :global(.photo) { height: 100%; }
+  .ch--wide .ch__body { flex: 1; }
+
+  .ch__in {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: var(--sb-r-3);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .ch__in:hover {
+    transform: translateY(-7px);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+
+  /* The tint wipes down from the top — the gesture used on every card on this
+     site, so "this one is live" reads the same everywhere. */
+  .ch__in::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--sb-violet-wash);
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    -webkit-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+    -webkit-transition: -webkit-transform 0.4s ease-out;
+    transition: transform 0.4s ease-out;
+  }
+
+  .ch__in:hover::before,
+  .ch__in:focus-visible::before {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+
+  .ch__media { overflow: hidden; }
+
+  .ch__media :global(img) { transition: transform 900ms var(--sb-ease); }
+  .ch__in:hover .ch__media :global(img) { transform: scale(1.05); }
+
+  .ch__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-4);
+    padding: var(--sb-7);
+  }
+
+  .ch--plain .ch__body { flex: 1; }
+
+  .ch__n {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-caption);
+    letter-spacing: 0.08em;
+    color: var(--sb-violet);
+  }
+
+  /* Roll-up swap. Padding plus an equal negative margin so `overflow: hidden`
+     cannot slice a descender — "Academic Philosophy" has two. */
+  .ch__t {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 2vw, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--sb-charcoal);
+  }
+
+  .ch__t > span {
+    display: inline-block;
+    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  .ch__t::before {
+    content: attr(data-title);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-transform: translateY(110%);
+    transform: translateY(110%);
+    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  .ch__in:hover .ch__t > span,
+  .ch__in:focus-visible .ch__t > span {
+    -webkit-transform: translateY(-125%);
+    transform: translateY(-125%);
+  }
+
+  .ch__in:hover .ch__t::before,
+  .ch__in:focus-visible .ch__t::before {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  .ch__lede {
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+    max-width: 46ch;
+  }
+
+  .ch__teaser {
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--sb-violet-dark);
+  }
+
+  .ch__more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    margin-top: auto;
+    padding-top: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-violet);
+  }
+
+  .ch__more svg { transition: transform var(--sb-dur-link) var(--sb-ease); }
+  .ch__in:hover .ch__more svg { transform: translateX(4px); }
+
+  /* ══════════ FIGURES ═════════════════════════════════════════════════════ */
+  .fig {
+    background: var(--sb-ink);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  .fig__head { margin-bottom: var(--sb-9); max-width: 44ch; }
+  .fig__pill { margin-bottom: var(--sb-5); }
+  .fig__title { color: #fff; }
+
+  .fig__lede {
+    margin-top: var(--sb-6);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .fig__lede a {
+    color: var(--sb-lime);
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* ══════════ REDUCED MOTION ══════════════════════════════════════════════ */
+  @media (prefers-reduced-motion: reduce) {
+    .ch__in,
+    .ch__media :global(img),
+    .ch__more svg,
+    .ch__t > span,
+    .ch__t::before { transition: none; }
+
+    .ch__in:hover,
+    .ch__in:hover .ch__media :global(img),
+    .ch__in:hover .ch__more svg,
+    .ch__in:hover .ch__t > span { transform: none; }
+
+    .ch__in::before {
+      -webkit-transform: scaleY(1);
+      transform: scaleY(1);
+      opacity: 0;
+      transition: opacity 0.15s linear;
+    }
+
+    .ch__in:hover::before,
+    .ch__in:focus-visible::before { opacity: 1; }
+
+    .ch__in:hover .ch__t::before,
+    .ch__in:focus-visible .ch__t::before {
+      -webkit-transform: translateY(110%);
+      transform: translateY(110%);
+    }
+  }
+
+  /* ══════════ TABLET ══════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .hub__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .ch { grid-column: span 2; }
+    .ch--wide { grid-column: span 4; }
+  }
+
+  /* ══════════ MOBILE ══════════════════════════════════════════════════════ */
+  @media (max-width: 639px) {
+    .ahero { min-height: 0; padding-top: clamp(200px, 34svh, 300px); }
+    .ahero__stats { gap: var(--sb-6) var(--sb-7); }
+    .ahero__cta .btn { width: 100%; text-align: center; }
+
+    .hub,
+    .fig { padding-block: var(--sb-section-y); }
+
+    .hub__grid { grid-template-columns: minmax(0, 1fr); }
+    .ch,
+    .ch--wide { grid-column: span 1; }
+
+    /* Photo back on top when the tile is full width — side-by-side at 390px
+       leaves the copy about 190px of measure. */
+    .ch--wide .ch__in { flex-direction: column; }
+    .ch--wide .ch__media { flex: none; }
+  }
+</style>

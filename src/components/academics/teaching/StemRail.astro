@@ -1,0 +1,428 @@
+---
+/**
+ * TEACHING & LEARNING · CHAPTER 4 — STEM · ROBOTICS & CODING · ENRICHMENT
+ *
+ * COMPOSITION: horizontal storytelling. Six panels on a rail that runs off the
+ * right edge of the page, read by scrolling sideways.
+ *
+ * ═══ WHY THIS RAIL IS NOT SCROLL-JACKED ══════════════════════════════════════
+ *
+ * The Awwwards build of a horizontal story pins the section and translates a
+ * track against page scroll. It looks superb in a video and behaves badly in
+ * three real cases: a trackpad gesture gets hijacked mid-page, a phone fights the
+ * browser's own momentum, and a keyboard user cannot reach the content at all
+ * because there is nothing focusable to move.
+ *
+ * This is a real `overflow-x` scroller with scroll-snap. That single decision buys
+ * flick, drag, shift-wheel, arrow keys, a scrollbar, deep-linking and screen
+ * reader scrolling — none of which has to be written. GSAP only draws the progress
+ * bar (`[data-rail]` in motion-gsap.ts), so with the chunk absent the rail is
+ * still fully usable and merely loses its indicator.
+ *
+ * `tabindex="0"` with a role and a label is the accessible pattern for a scroll
+ * region: it is what makes the arrow keys work and what tells a screen reader the
+ * container is scrollable. Without it a keyboard-only reader would reach panel one
+ * and stop.
+ *
+ * ═══ AND WHY THE PANELS ARE NOT SIX CARDS ════════════════════════════════════
+ *
+ * `kind` gives each panel a different internal composition — a stated gap, a
+ * photograph, a figure over an image, a list. Six identical cards on a rail is
+ * still a card grid; it has just been turned on its side.
+ *
+ * One panel deliberately carries NO photograph. The Robotics Lab is real and we
+ * hold no image of it, so the panel says so. The stock drone shot in this
+ * repository would fit the slot and would be a lie. Photography request A2.
+ */
+import Photo from '../../ui/Photo.astro';
+import SectionHead from '../SectionHead.astro';
+import { teachingLearning } from '../../../data/academics';
+
+import compPhoto from '../../../assets/photos/sb-comp-lab-2.jpg';
+import bioPhoto from '../../../assets/photos/sb-bio-lab.jpg';
+import mathsPhoto from '../../../assets/photos/sb-maths-lab.jpg';
+import sciPhoto from '../../../assets/photos/sb-sci-lab.jpg';
+
+const { rail } = teachingLearning;
+
+/** Explicit map, not import.meta.glob — see the note in teaching-learning.astro. */
+const photos: Record<string, ImageMetadata> = {
+  'sb-comp-lab-2.jpg': compPhoto,
+  'sb-bio-lab.jpg': bioPhoto,
+  'sb-maths-lab.jpg': mathsPhoto,
+  'sb-sci-lab.jpg': sciPhoto,
+};
+---
+
+{/* data-rail-scope: the progress indicator lives in the head, which is a SIBLING
+    of the scroller, and a custom property set on the scroller would never reach
+    it. This marks the ancestor the motion chunk writes --rail-progress to. */}
+<section class="rail" id="stem" data-rail-scope aria-labelledby="rail-title">
+  <div class="u-container rail__head-wrap">
+    <SectionHead
+      eyebrow={rail.eyebrow}
+      heading={rail.heading}
+      stand={rail.stand}
+      align="start"
+      id="rail-title"
+      measure={20}
+      class="rail__head"
+    />
+
+    {/* Progress. The bar's scaleX is driven by --rail-progress, which the motion
+        chunk writes on scroll; at rest the property is unset and the fallback 0
+        keeps the track empty rather than full. */}
+    <div class="rail__meter" aria-hidden="true">
+      <span class="rail__meter-fill"></span>
+    </div>
+  </div>
+
+  {/* The track bleeds off the right edge of the container on purpose: a panel cut
+      by the viewport is the clearest possible signal that there is more to the
+      right. */}
+  <ol
+    class="rail__track"
+    data-rail
+    tabindex="0"
+    role="region"
+    aria-label="Science and enrichment rooms — scroll sideways for more"
+  >
+    {
+      rail.panels.map((p) => {
+        const img = p.photo ? photos[p.photo] : undefined;
+        /* `in`, not a non-null assertion. The panels are a discriminated union and
+           the ones with `photo: null` genuinely have no `alt` key, so `p.alt!`
+           was a type error that only stayed quiet because Astro strips types
+           before the build ever sees it. This narrows instead of overriding. */
+        const alt = 'alt' in p ? p.alt : '';
+        return (
+          <li class:list={['pan', `pan--${p.kind}`]}>
+            <p class="pan__n t-tabular" aria-hidden="true">{p.n}</p>
+
+            {p.kind === 'figure' && img ? (
+              /* Figure over image: the quantity leads and the photograph is the
+                 ground it stands on. */
+              <div class="pan__stage">
+                <Photo
+                  src={img}
+                  alt={alt}
+                  brief={p.title}
+                  ratio="4 / 3"
+                  position="50% 45%"
+                  sizes="(max-width: 767px) 82vw, 420px"
+                />
+                <span class="pan__scrim" aria-hidden="true"></span>
+                <p class="pan__fig t-tabular">
+                  {p.figure}
+                  <span class="pan__fig-l">{p.figureLabel}</span>
+                </p>
+              </div>
+            ) : img ? (
+              <div class="pan__media">
+                <Photo
+                  src={img}
+                  alt={alt}
+                  brief={p.title}
+                  ratio="16 / 10"
+                  position="50% 45%"
+                  sizes="(max-width: 767px) 82vw, 420px"
+                />
+              </div>
+            ) : null}
+
+            <div class="pan__body">
+              <h3 class="pan__h">{p.title}</h3>
+              <p class="pan__fact t-tabular">{p.fact}</p>
+              <p class="pan__b">{p.body}</p>
+
+              {p.kind === 'list' && 'items' in p && (
+                <ul class="pan__list">
+                  {p.items.map((it) => (
+                    <li>{it}</li>
+                  ))}
+                </ul>
+              )}
+
+              {/* Dashed, so it reads as deliberately unfinished rather than as
+                  another sentence of marketing. */}
+              {p.kind === 'gap' && (
+                <p class="pan__gap">
+                  No photograph of this room yet — the only image we hold is stock, and stock would
+                  misrepresent a lab that genuinely exists.
+                </p>
+              )}
+            </div>
+          </li>
+        );
+      })
+    }
+  </ol>
+</section>
+
+<style>
+  .rail {
+    position: relative;
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  .rail__head-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: end;
+    margin-bottom: clamp(32px, 5vh, 56px);
+  }
+
+  /* --- Progress ------------------------------------------------------------ */
+
+  .rail__meter {
+    position: relative;
+    height: 3px;
+    border-radius: var(--sb-r-full);
+    background: rgba(201, 60, 10, 0.16);
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .rail__meter-fill {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--sb-violet);
+    transform-origin: left;
+    /* var() fallback, not a hard 0: with the motion chunk absent the property is
+       never written and the bar stays empty, which is honest. */
+    transform: scaleX(var(--rail-progress, 0));
+    transition: transform 120ms linear;
+  }
+
+  /* --- Track ---------------------------------------------------------------
+     Padded with the container's own margin so panel one lines up with the
+     heading above it, and with a full margin of run-off at the end so the last
+     panel can snap flush instead of stopping short. */
+  .rail__track {
+    display: flex;
+    gap: clamp(16px, 1.8vw, 26px);
+    list-style: none;
+    margin: 0;
+    padding: 6px max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2)) 22px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    /* Firefox / standards. WebKit's ::-webkit-scrollbar rules below do the same
+       job where this is unsupported. */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 60, 10, 0.4) transparent;
+  }
+
+  .rail__track:focus-visible {
+    outline: 2px solid var(--sb-focus);
+    outline-offset: 4px;
+    border-radius: var(--sb-r-0);
+  }
+
+  .rail__track::-webkit-scrollbar { height: 8px; }
+  .rail__track::-webkit-scrollbar-track { background: transparent; }
+  .rail__track::-webkit-scrollbar-thumb {
+    background: rgba(201, 60, 10, 0.32);
+    border-radius: var(--sb-r-full);
+  }
+  .rail__track::-webkit-scrollbar-thumb:hover { background: rgba(201, 60, 10, 0.55); }
+
+  /* --- Panel --------------------------------------------------------------- */
+
+  .pan {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 clamp(268px, 30vw, 420px);
+    scroll-snap-align: start;
+    padding: clamp(20px, 1.9vw, 28px);
+    border: 1px solid rgba(201, 60, 10, 0.1);
+    border-radius: var(--sb-r-3);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .pan:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+
+  .pan__n {
+    margin-bottom: var(--sb-5);
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--sb-violet);
+  }
+
+  /* The stated-gap panel gets the blueprint instead of a photograph, so the empty
+     slot reads as a considered surface rather than as a missing image. */
+  .pan--gap {
+    background:
+      repeating-linear-gradient(90deg, rgba(201, 60, 10, 0.05) 0 1px, transparent 1px 20px),
+      repeating-linear-gradient(0deg, rgba(201, 60, 10, 0.05) 0 1px, transparent 1px 20px),
+      #fff;
+  }
+
+  .pan--list { background: linear-gradient(165deg, #fffaf7, #fff 60%, #fff3ed); }
+
+  .pan__media,
+  .pan__stage {
+    position: relative;
+    margin-bottom: var(--sb-6);
+    border-radius: var(--sb-r-0);
+    overflow: hidden;
+  }
+
+  .pan__media :global(img) { transition: transform 900ms var(--sb-ease); }
+  .pan:hover .pan__media :global(img) { transform: scale(1.05); }
+
+  /* --- Figure-over-image -------------------------------------------------- */
+
+  /* WEIGHTED TO THE BAND THE NUMERAL ACTUALLY OCCUPIES, and tuned against measured
+     pixels rather than by eye. Three passes to get here:
+
+       draft 1  0.9 → 0.35 at 58%       390: 3.52:1   768: not tested
+       draft 2  0.8 held to 34%         768: 2.98:1   ← FAILS AA-large (3.0)
+       this     0.9 held to 46%         768: 12:1
+
+     The 768 failure is the one worth understanding. The panel is at its narrowest
+     there — `flex-basis` bottoms out at 268px while the numeral has already
+     clamped to its 46px floor — so the type occupies a much taller FRACTION of a
+     short frame, and its cap line lands past halfway, where both earlier scrims
+     had thinned out over a laboratory's pale walls. A gradient tuned at 1440 says
+     nothing about 768; the scrim has to clear the tallest relative type, which is
+     at the smallest panel.
+     The top quarter is left comparatively open so the photograph still reads. */
+  .pan__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(14, 9, 6, 0.95) 0%,
+      rgba(14, 9, 6, 0.9) 46%,
+      rgba(14, 9, 6, 0.55) 76%,
+      rgba(14, 9, 6, 0.22) 100%
+    );
+  }
+
+  .pan__fig {
+    position: absolute;
+    left: var(--sb-6);
+    bottom: var(--sb-5);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(46px, 5vw, 72px);
+    line-height: 0.86;
+    letter-spacing: -0.05em;
+    color: #fff;
+  }
+
+  .pan__fig-l {
+    display: block;
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-sans);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  /* --- Body --------------------------------------------------------------- */
+
+  /* margin-top: auto pushes the body to the panel's foot, so the six panels'
+     headings do not line up in a row — the rail reads as a sequence of objects
+     rather than as a table with a photo column. */
+  .pan__body { margin-top: auto; }
+
+  .pan__h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(18px, 1.6vw, 23px);
+    line-height: 1.2;
+    letter-spacing: -0.024em;
+    color: var(--sb-charcoal);
+  }
+
+  .pan__fact {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--sb-violet-dark);
+  }
+
+  .pan__b {
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .pan__list {
+    margin: var(--sb-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pan__list li {
+    position: relative;
+    padding-left: var(--sb-6);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--sb-charcoal);
+  }
+
+  .pan__list li + li {
+    margin-top: var(--sb-4);
+    padding-top: var(--sb-4);
+    border-top: var(--sb-hairline);
+  }
+
+  .pan__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+  }
+
+  .pan__list li + li::before { top: calc(0.62em + var(--sb-4)); }
+
+  .pan__gap {
+    margin-top: var(--sb-6);
+    padding-top: var(--sb-5);
+    border-top: 1px dashed rgba(201, 60, 10, 0.42);
+    font-size: var(--sb-caption);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pan,
+    .pan__media :global(img),
+    .rail__meter-fill { transition: none; }
+    .pan:hover { transform: none; }
+    .pan:hover .pan__media :global(img) { transform: none; }
+  }
+
+  @media (max-width: 767px) {
+    .rail__head-wrap { grid-template-columns: minmax(0, 1fr); align-items: start; }
+    .rail__meter { margin-bottom: 0; }
+    /* Hover lift is a pointer gesture; on touch it can only be seen as a stuck
+       state after a tap. */
+    .pan:hover { transform: none; }
+  }
+</style>

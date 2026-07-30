@@ -1,0 +1,301 @@
+---
+/**
+ * TEACHING & LEARNING · CHAPTER 1 — TEACHING METHODOLOGY + COLLABORATIVE LEARNING
+ *
+ * COMPOSITION: editorial, asymmetric. The head holds the left column and stays
+ * put; the four moves of a lesson cascade down the right in a diagonal, each one
+ * indented further than the last, with an outlined numeral doing the work a card
+ * border would otherwise do. The collaborative-learning note is a rotated plate
+ * that overlaps the cascade rather than sitting under it.
+ *
+ * NOT A CARD GRID, and the diagonal is the reason: four equal boxes would say the
+ * steps are interchangeable. They are ordered, and the indent is what says so.
+ *
+ * THE NUMERALS ARE OUTLINED, not filled — `-webkit-text-stroke`. At 96px a filled
+ * numeral out-shouts the step name beside it, which is the actual content. The
+ * fallback where text-stroke is unsupported is a filled numeral at 8% opacity,
+ * declared first, so it degrades to quiet rather than to black.
+ *
+ * BLUEPRINT TEXTURE IN CSS, not the grid PNG. Two sections further down this page
+ * use that image; a third would make it the page's motif rather than an accent.
+ * Repeating gradients also stay sharp at any size and cost no request.
+ */
+import { Image } from 'astro:assets';
+import SectionHead from '../SectionHead.astro';
+import { teachingLearning } from '../../../data/academics';
+import stars from '../../../assets/icons/two-stars.png';
+
+const { method } = teachingLearning;
+---
+
+<section class="mth" id="methodology" aria-labelledby="mth-title">
+  <div class="u-container mth__frame">
+    <Image
+      class="mth__stars"
+      src={stars}
+      alt=""
+      aria-hidden="true"
+      widths={[200, 400]}
+      sizes="180px"
+      loading="lazy"
+      data-parallax
+      data-parallax-y="-90"
+    />
+
+    <div class="mth__grid">
+      <div class="mth__intro" data-reveal>
+        <SectionHead
+          eyebrow={method.eyebrow}
+          heading={method.heading}
+          stand={method.stand}
+          align="start"
+          id="mth-title"
+          measure={18}
+        />
+
+        <dl class="mth__proofs">
+          {
+            method.proofs.map((p) => (
+              <div class="mth__proof">
+                {/* One expression, not two on separate lines: JSX preserves the
+                    newline between adjacent expressions as a space, which
+                    rendered "130 +". */}
+                <dt class="mth__proof-v t-tabular">
+                  <span data-count={p.value} data-count-suffix={p.suffix}>{`${p.value}${p.suffix}`}</span>
+                </dt>
+                <dd class="mth__proof-l">{p.label}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      {/* The cascade. An <ol> because the order is the content. */}
+      <ol class="mth__steps">
+        {
+          method.steps.map((s, i) => (
+            <li class="mth__step" data-pop data-pop-delay={i * 60}>
+              <span class="mth__n" aria-hidden="true">{s.n}</span>
+              <div class="mth__body">
+                <h3 class="mth__step-h">{s.step}</h3>
+                <p class="mth__step-b">{s.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <aside class="mth__aside" data-pop>
+      <p class="mth__aside-l">{method.aside.label}</p>
+      <p class="mth__aside-b">{method.aside.body}</p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .mth {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--sb-section-y) clamp(56px, 8vh, 96px);
+    background:
+      /* Blueprint. Two line weights an octave apart, so it reads as ruled paper
+         rather than as a single flat mesh, and a wash that fades the whole thing
+         out before it reaches the copy. */
+      radial-gradient(120% 80% at 80% 0%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0) 62%),
+      repeating-linear-gradient(90deg, rgba(201, 60, 10, 0.055) 0 1px, transparent 1px 88px),
+      repeating-linear-gradient(0deg, rgba(201, 60, 10, 0.055) 0 1px, transparent 1px 88px),
+      repeating-linear-gradient(90deg, rgba(201, 60, 10, 0.032) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(0deg, rgba(201, 60, 10, 0.032) 0 1px, transparent 1px 22px),
+      var(--sb-ivory);
+  }
+
+  .mth__frame { position: relative; }
+
+  .mth__stars {
+    position: absolute;
+    z-index: 0;
+    top: clamp(-16px, -1vw, 0px);
+    right: clamp(-10px, 1vw, 24px);
+    width: clamp(96px, 11vw, 168px);
+    height: auto;
+    /* two-stars.png is a very pale cream mark; on ivory it needs a multiply to
+       register at all, and multiply keeps it a tint rather than a shape. */
+    mix-blend-mode: multiply;
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  .mth__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(32px, 5vw, 88px);
+    align-items: start;
+  }
+
+  /* The head stays with the reader while the cascade runs past it. Sticky, not
+     JS: it costs nothing and cannot break. The offset clears the masthead. */
+  .mth__intro {
+    position: sticky;
+    top: calc(var(--sb-masthead-h) + 32px);
+  }
+
+  /* --- Proofs --------------------------------------------------------------- */
+
+  .mth__proofs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+    margin: clamp(28px, 4vh, 44px) 0 0;
+    padding-top: var(--sb-6);
+    border-top: var(--sb-hairline);
+  }
+
+  .mth__proof-v {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 3.4vw, 46px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sb-violet);
+  }
+
+  .mth__proof-l {
+    margin: var(--sb-3) 0 0;
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- The cascade ----------------------------------------------------------
+     Each step steps further in than the last. The indent is a step-count
+     multiplier rather than four hand-typed values, so adding a fifth move
+     continues the diagonal instead of restarting it. */
+  /* The foot padding is what the aside plate overlaps INTO. Without it the plate's
+     negative top margin pulled it straight over the last step's final line — the
+     word "marked." was sitting under an orange panel. The plate still tucks up
+     against the cascade; it just lands on reserved space instead of on type. */
+  .mth__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 clamp(48px, 6vh, 84px);
+  }
+
+  .mth__step {
+    --indent: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(16px, 2vw, 30px);
+    align-items: start;
+    margin-left: calc(var(--indent) * clamp(12px, 2.4vw, 40px));
+    padding-block: clamp(22px, 3vh, 34px);
+    border-top: var(--sb-hairline);
+  }
+
+  .mth__step:nth-child(2) { --indent: 1; }
+  .mth__step:nth-child(3) { --indent: 2; }
+  .mth__step:nth-child(4) { --indent: 3; }
+
+  .mth__step:first-child { border-top: 0; padding-top: 0; }
+
+  /* Outlined. The filled colour is declared FIRST as the fallback for engines
+     without text-stroke, and it is a faint tint rather than the brand orange, so
+     an unsupported browser gets a quiet numeral instead of a shouting one. */
+  .mth__n {
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: clamp(38px, 5.2vw, 76px);
+    line-height: 0.82;
+    letter-spacing: -0.05em;
+    color: rgba(201, 60, 10, 0.14);
+    -webkit-text-stroke: 1.5px rgba(201, 60, 10, 0.5);
+    font-variant-numeric: tabular-nums;
+    transition: -webkit-text-stroke-color var(--sb-dur-link) ease, color var(--sb-dur-link) ease;
+  }
+
+  @supports (-webkit-text-stroke: 1px red) {
+    .mth__n { color: transparent; }
+  }
+
+  .mth__step:hover .mth__n {
+    -webkit-text-stroke-color: var(--sb-violet);
+    color: rgba(201, 60, 10, 0.1);
+  }
+
+  .mth__step-h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 2vw, 28px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+
+  .mth__step-b {
+    max-width: 46ch;
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Collaborative-learning plate ---------------------------------------
+     Overlaps the cascade's foot and leans a degree and a half off true, so it
+     reads as laid on top of the page rather than as the next row of it. */
+  .mth__aside {
+    position: relative;
+    z-index: 2;
+    width: min(560px, 100%);
+    margin: clamp(-28px, -2vw, -12px) 0 0 auto;
+    padding: clamp(24px, 2.6vw, 36px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet);
+    box-shadow: 0 26px 56px -26px rgba(122, 36, 6, 0.62);
+    transform: rotate(-1.2deg);
+  }
+
+  .mth__aside-l {
+    margin-bottom: var(--sb-4);
+    font-size: var(--sb-label);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-on-violet-muted);
+  }
+
+  .mth__aside-b {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(17px, 1.6vw, 22px);
+    line-height: 1.42;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  /* --- Reduced motion ------------------------------------------------------ */
+  @media (prefers-reduced-motion: reduce) {
+    .mth__n { transition: none; }
+  }
+
+  /* --- Tablet --------------------------------------------------------------
+     Two columns leave the cascade about 40 characters wide once the numeral and
+     the deepest indent are taken out. It goes full width and the head stops
+     being sticky — a sticky block in a single column just pins the top of the
+     section to the viewport for the length of the whole chapter. */
+  @media (max-width: 1023px) {
+    .mth__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(36px, 5vh, 56px); }
+    .mth__intro { position: static; }
+    .mth__aside { margin-inline: 0; width: 100%; }
+  }
+
+  @media (max-width: 767px) {
+    /* The diagonal is a wide-screen device. At this width the indent eats the
+       measure it was meant to dramatise. */
+    .mth__step { margin-left: 0; }
+    .mth__proofs { grid-template-columns: minmax(0, 1fr); }
+    .mth__stars { display: none; }
+    .mth__aside { transform: none; }
+  }
+</style>

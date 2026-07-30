@@ -1,0 +1,332 @@
+---
+/**
+ * ACADEMICS → 03 · TEACHING & LEARNING
+ *
+ * SIX CHAPTERS, EACH A DIFFERENT COMPOSITION. The brief for this section named
+ * fourteen topics; presented as fourteen tiles they are an inventory, and this
+ * page used to be exactly that — a nine-tile bento of the school's rooms. It has
+ * been rebuilt as an argument about how the school teaches, with the inventory
+ * kept but moved to the END, where a list belongs.
+ *
+ *   1 Method     components/academics/teaching/Method.astro    editorial cascade
+ *   2 Room       components/academics/teaching/Room.astro      sticky-scroll stage
+ *   3 HandsOn    components/academics/teaching/HandsOn.astro   overlapping collage
+ *   4 StemRail   components/academics/teaching/StemRail.astro  horizontal rail
+ *   5 Words      components/academics/teaching/Words.astro     masked figure + rail
+ *   6 LabIndex   components/academics/teaching/LabIndex.astro  blueprint index
+ *
+ * No two chapters share a layout, a ground or a device, and none of them is a
+ * card grid. Copy lives in `teachingLearning` in src/data/academics.ts.
+ *
+ * EVERY PHOTOGRAPH IS SUNBEAM BALLIA'S OWN. The repository holds stock imagery
+ * that would slot straight into these compositions — an empty Western lecture room
+ * named "Smart-classrooms.jpg", a consumer DJI product shot named
+ * "Robotics-drones.jpg" — and none of it is used. The Robotics Lab therefore
+ * appears twice without a photograph, and both times the page says why: a stock
+ * drone would be a plain lie about a room this school genuinely has. Request A2.
+ *
+ * THE HERO IS REBUILT TOO (client request: "make banner more beautiful and
+ * animated text"). The headline now comes from components/ui/HeroTitle.astro,
+ * which splits it into words on the SERVER and rises them in with CSS. That is
+ * not a stylistic preference: motion-gsap.ts refuses to animate anything above
+ * the fold, because its chunk lands after first paint and arming visible text
+ * flickers — which is exactly why every banner headline on this site has been
+ * static. CSS runs at first paint, so the problem disappears instead.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Photo from '../../components/ui/Photo.astro';
+import HeroTitle from '../../components/ui/HeroTitle.astro';
+
+import Method from '../../components/academics/teaching/Method.astro';
+import Room from '../../components/academics/teaching/Room.astro';
+import HandsOn from '../../components/academics/teaching/HandsOn.astro';
+import StemRail from '../../components/academics/teaching/StemRail.astro';
+import Words from '../../components/academics/teaching/Words.astro';
+import LabIndex from '../../components/academics/teaching/LabIndex.astro';
+
+import heroPhoto from '../../assets/photos/sb-comp-lab-2.jpg';
+---
+
+<BaseLayout
+  title="Teaching & Learning — Sunbeam School Ballia"
+  description="Nine subject laboratories, a robotics lab, two computer labs, 30+ smart classrooms with 49+ interactive panels, and the 15,000-book Nalanda Library at Sunbeam School Ballia — a Microsoft Showcase School."
+>
+  {/* ══ HERO ═══════════════════════════════════════════════════════════════
+      Four layers between the photograph and the type, each doing one job:
+      a slow settle on the image, a bottom-weighted scrim, a corner vignette and
+      a blueprint mesh that ties the banner to the chapters below it. */}
+  <section class="thero" aria-labelledby="thero-title">
+    <div class="thero__media">
+      <Photo
+        src={heroPhoto}
+        alt="Younger students of Sunbeam School Ballia working at desktop computers in the junior computer laboratory."
+        brief="Teaching and learning hero"
+        position="50% 45%"
+        sizes="100vw"
+        eager
+      />
+    </div>
+    <div class="thero__scrim" aria-hidden="true"></div>
+    <div class="thero__mesh" aria-hidden="true"></div>
+
+    <div class="u-container thero__inner">
+      <nav class="thero__crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/academics/">Academics</a></li>
+          <li><span aria-current="page">Teaching &amp; Learning</span></li>
+        </ol>
+      </nav>
+
+      {/* The rule draws itself out from the label, so the eyebrow arrives as a
+          gesture rather than as another line of text. */}
+      <p class="thero__n t-tabular" aria-hidden="true">
+        Chapter 03<span class="thero__rule"></span>
+      </p>
+
+      <HeroTitle
+        id="thero-title"
+        class="thero__title"
+        lead="Nine laboratories, and a"
+        mark="library"
+        markTone="lime"
+      />
+
+      <p class="thero__stand">
+        A Microsoft Showcase School with 100 teachers certified as Innovative Educator Experts.
+        Every figure on this page is one the school publishes.
+      </p>
+    </div>
+
+    {/* Decorative: the section below is reachable by every ordinary means, so
+        this is a hint, not a control. */}
+    <div class="thero__cue" aria-hidden="true"><span></span></div>
+  </section>
+
+  {/* ══ THE SIX CHAPTERS ═══════════════════════════════════════════════════
+      Order is an argument: how a lesson is shaped, the room it happens in, what
+      students do with their hands, where the science lives, what they read — and
+      only then the list of rooms. */}
+  <Method />
+  <Room />
+  <HandsOn />
+  <StemRail />
+  <Words />
+  <LabIndex />
+
+  {/* NO <ChapterNav />. Removed at the client's request, as on Academic
+      Philosophy. ⚠ It was this page's only route to Academic Structure, to
+      Assessment & Support and to the Academics overview, so the page is now a
+      leaf: a reader arriving from search leaves via the masthead or the footer.
+      Worth revisiting once the section is finished. */}
+</BaseLayout>
+
+<style>
+  /* ══════════ HERO ════════════════════════════════════════════════════════ */
+  .thero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: clamp(500px, 74svh, 760px);
+    display: grid;
+    align-items: end;
+    background: var(--sb-ink);
+  }
+
+  .thero__media { position: absolute; inset: 0; z-index: 0; }
+
+  .thero__media :global(.photo) {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    /* A SETTLE, NOT A LOOP. The image comes to rest from 6% over fourteen
+       seconds and then stops; an alternating Ken Burns never stops moving, which
+       on a page this long means something is drifting behind the reader for the
+       entire visit. `both` holds the start frame through any delay and the end
+       frame afterwards, so it never snaps back. */
+    animation: thero-settle 14s var(--sb-ease) both;
+    will-change: transform;
+  }
+
+  @keyframes thero-settle {
+    from { transform: scale(1.06); }
+    to { transform: scale(1); }
+  }
+
+  /* Bottom-weighted for the type, a left wash so the copy column is the darkest
+     part of the frame, and a corner vignette to stop the photograph running flat
+     to the edges. Three gradients, one job each. */
+  .thero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(to top, rgba(14, 9, 6, 0.96) 0%, rgba(14, 9, 6, 0.88) 30%,
+        rgba(14, 9, 6, 0.52) 62%, rgba(14, 9, 6, 0.24) 100%),
+      linear-gradient(to right, rgba(14, 9, 6, 0.62), rgba(14, 9, 6, 0.04) 62%),
+      radial-gradient(120% 90% at 50% 46%, rgba(14, 9, 6, 0) 38%, rgba(14, 9, 6, 0.42) 100%);
+    pointer-events: none;
+  }
+
+  /* The blueprint mesh from the chapters below, at a whisper — it is what makes
+     the banner belong to this page rather than to a stock template. Masked away
+     over the headline so it never sits behind type. */
+  .thero__mesh {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+    background-size: 72px 72px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.5) 46%, transparent 82%);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.5) 46%, transparent 82%);
+    pointer-events: none;
+  }
+
+  .thero__inner {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(40px, 7vh, 80px) clamp(56px, 8vh, 96px);
+    /* HeroTitle's type is set inside that component — a scoped rule here would
+       compile to `.thero__title[data-astro-cid-PAGE]` and never match its root.
+       Custom properties DO cross the boundary, so the two values this page wants
+       to vary are handed over here. See the header of HeroTitle.astro. */
+    --htitle-size: clamp(34px, 5.6vw, 80px);
+    --htitle-measure: 24ch;
+  }
+
+  /* --- Staged entrance -----------------------------------------------------
+     Crumbs, eyebrow and standfirst rise in around the headline, which runs its
+     own per-word stagger inside HeroTitle. All CSS, all at first paint — see the
+     header of that component for why this cannot be the GSAP path. */
+  .thero__crumbs,
+  .thero__n,
+  .thero__stand {
+    animation: thero-in 800ms var(--sb-ease) backwards;
+  }
+
+  .thero__crumbs { animation-delay: 60ms; }
+  .thero__n { animation-delay: 140ms; }
+  /* After the last word of the headline lands. */
+  .thero__stand { animation-delay: 620ms; }
+
+  @keyframes thero-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .thero__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-3);
+    list-style: none;
+    margin: 0 0 var(--sb-6);
+    padding: 0;
+    font-size: var(--sb-caption);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .thero__crumbs li + li::before {
+    content: '/';
+    margin-right: var(--sb-3);
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .thero__crumbs a {
+    color: rgba(255, 255, 255, 0.78);
+    transition: color var(--sb-dur-link) ease;
+  }
+  .thero__crumbs a:hover { color: #fff; }
+  .thero__crumbs [aria-current] { color: #fff; font-weight: 600; }
+
+  .thero__n {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-5);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-lime);
+    margin-bottom: var(--sb-6);
+  }
+
+  /* Draws itself out of the label. scaleX from a left origin, so it costs one
+     composited property rather than animating a width. */
+  .thero__rule {
+    display: block;
+    width: clamp(52px, 8vw, 132px);
+    height: 1px;
+    background: linear-gradient(to right, var(--sb-lime), rgba(255, 138, 92, 0));
+    transform-origin: left;
+    animation: thero-rule 900ms var(--sb-ease) 320ms backwards;
+  }
+
+  @keyframes thero-rule {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  .thero__stand {
+    max-width: 54ch;
+    margin-top: var(--sb-7);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  /* --- Scroll cue ----------------------------------------------------------
+     A hairline track with a light travelling down it. Bottom-right so it never
+     collides with the copy column, and decorative — the content below is
+     reachable by every ordinary means. */
+  .thero__cue {
+    position: absolute;
+    z-index: 2;
+    right: var(--sb-margin);
+    bottom: 0;
+    width: 1px;
+    height: clamp(48px, 7vh, 84px);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.22);
+    pointer-events: none;
+  }
+
+  .thero__cue span {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 42%;
+    background: linear-gradient(to bottom, rgba(255, 138, 92, 0), var(--sb-lime));
+    animation: thero-cue 2.6s var(--sb-ease) 1.4s infinite;
+  }
+
+  @keyframes thero-cue {
+    0% { transform: translateY(-100%); }
+    60%, 100% { transform: translateY(240%); }
+  }
+
+  /* --- Reduced motion ------------------------------------------------------
+     base.css collapses durations but leaves DELAYS alone, and with `backwards`
+     fill that would park each element in its hidden start frame for the length of
+     its delay and then pop it in — more motion than the animation removed, not
+     less. Everything here is switched off outright instead. */
+  @media (prefers-reduced-motion: reduce) {
+    .thero__media :global(.photo),
+    .thero__crumbs,
+    .thero__n,
+    .thero__stand,
+    .thero__rule,
+    .thero__cue span {
+      animation: none;
+    }
+    .thero__cue { display: none; }
+  }
+
+  /* ══════════ MOBILE ══════════════════════════════════════════════════════
+     Only the hero lives in this file now — every chapter below carries its own
+     responsive rules, and its own reduced-motion resets. */
+  @media (max-width: 639px) {
+    .thero { min-height: 0; padding-top: clamp(190px, 32svh, 280px); }
+  }
+</style>

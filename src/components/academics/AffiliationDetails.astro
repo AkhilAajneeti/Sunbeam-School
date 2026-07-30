@@ -1,0 +1,323 @@
+---
+/**
+ * ACADEMICS → 01 · AFFILIATION DETAILS — the dark facts bar.
+ *
+ * REFERENCE LAYOUT, followed closely: one dark rounded panel on the light band,
+ * four labelled cells divided by vertical hairlines, and an illustrated figure
+ * standing at the right-hand end, overlapping the panel's edge.
+ *
+ * WHAT CHANGED FROM THE REFERENCE:
+ *
+ * · The figure is thinkgirl.png from src/assets/icons, as asked. It is SIZED TO
+ *   THE PANEL — `height: calc(100% + …)`, width auto — rather than given a fixed
+ *   width. The reference's figure is about as tall as its panel, and a fixed
+ *   width drifts out of that relationship as soon as a cell wraps to a third
+ *   line and the panel grows.
+ *
+ * · The panel reserves right-hand padding for the figure at desktop so the
+ *   fourth cell's text cannot run under her. In the reference the two only just
+ *   miss each other; here the gap is held by the layout.
+ *
+ * · Ground and hairlines are the site's: --sb-ink on --sb-sand, dividers at
+ *   rgba(255,255,255,.16) — the same on-dark rule token the footer and the
+ *   chapter pager use.
+ *
+ * · IT CARRIES A HEADING, which the reference band does not. The reference is a
+ *   contact strip on a page that has already introduced itself; this is a
+ *   labelled section of a longer page, and four unlabelled facts on a dark slab
+ *   do not tell a parent what they are reading. The head is deliberately small.
+ *
+ * id="affiliation" — the anchor the constellation used to hold.
+ */
+import { Image } from 'astro:assets';
+import { affiliation as aff } from '../../data/academics';
+import figure from '../../assets/icons/thinkgirl.png';
+
+---
+
+<section class="aff" id="affiliation" aria-labelledby="aff-heading">
+  <div class="u-container">
+    <div class="aff__head" data-reveal>
+      <p class="aff__eyebrow">
+        <span class="pill pill--violet">
+          <span class="aff__dot" aria-hidden="true"></span>
+          {aff.eyebrow}
+        </span>
+      </p>
+      <h2 class="aff__heading" id="aff-heading" data-split>{aff.heading}</h2>
+      <p class="aff__stand">{aff.stand}</p>
+    </div>
+
+    <div class="aff__panel u-on-dark" data-pop>
+      {/* The grid floor. A CLIPPING WRAPPER, not a bare layer: the panel has to
+          stay `overflow: visible` so the figure can stand past its edges, so the
+          grid needs its own rounded box to be clipped by or it squares off the
+          panel's corners. */}
+      <span class="aff__floor" aria-hidden="true"></span>
+
+      <dl class="aff__grid">
+        {
+          aff.cells.map((c) => (
+            <div class="aff__cell">
+              <dt class="aff__label">{c.label}</dt>
+              <dd class="aff__value">
+                {c.lines.map((l) => (
+                  <span>{l}</span>
+                ))}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      {/* Decoration. aria-hidden and no alt: she illustrates the panel, she does
+          not add a fact to it. */}
+      <Image
+        class="aff__figure"
+        src={figure}
+        alt=""
+        aria-hidden="true"
+        widths={[280, 560]}
+        sizes="240px"
+        loading="lazy"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Sand, and NO TOP PADDING: the Teaching Philosophy band above closes with its
+     own 120px and its gradient ends on --sb-sand, so the two grounds meet with
+     no seam and no doubled gap. */
+  .aff {
+    background: var(--sb-sand);
+    padding-block: 0 var(--sb-section-y);
+  }
+
+  /* --- Head ----------------------------------------------------------------- */
+
+  .aff__head {
+    max-width: 62ch;
+    margin: 0 auto clamp(32px, 4vh, 56px);
+    text-align: center;
+  }
+
+  .aff__eyebrow { margin-bottom: var(--sb-5); }
+
+  .aff__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    flex-shrink: 0;
+  }
+
+  .aff__eyebrow .pill {
+    font-size: var(--sb-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .aff__heading {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 2.6vw, 38px);
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+
+  .aff__stand {
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Panel ----------------------------------------------------------------
+     overflow: visible, deliberately — the figure is meant to stand past the
+     panel's edges, which is the whole gesture in the reference. */
+  .aff__panel {
+    position: relative;
+    /* Contains the floor's blend mode. Without it, `mix-blend-mode: screen`
+       blends against whatever is behind the PANEL — the sand band — instead of
+       against the panel's own ink, and the grid washes out to nothing. */
+    isolation: isolate;
+    border-radius: var(--sb-r-3);
+    background: var(--sb-ink);
+    /* Right padding holds the figure's lane so cell four cannot run under her.
+       Tuned to the figure's widest rendering rather than guessed: she is sized
+       off the panel's height, so the lane has to clear her at the width where
+       the panel is SHORTEST — 1440, where the cells wrap to two lines. */
+    padding: clamp(30px, 3.2vw, 48px) clamp(196px, 16vw, 232px) clamp(30px, 3.2vw, 48px)
+      clamp(24px, 3vw, 52px);
+    box-shadow: 0 24px 60px -34px rgba(28, 14, 8, 0.5);
+  }
+
+  /* --- The grid floor -------------------------------------------------------
+     THREE THINGS MAKE IT BLEND rather than sit on top of the panel:
+
+     1 · mix-blend-mode: screen. The asset is pale lines on transparency, and on
+         a near-black ground `normal` paints the anti-aliased edge of every line
+         as a faint DARK fringe against the ink — the lines read as scratched
+         rather than lit. Screen keeps light and discards dark, which is the
+         physically right blend for light-on-dark and leaves no fringe.
+
+     2 · A radial mask anchored to the panel's foot. The image ends on a straight
+         top edge, and any straight edge inside a panel reads as a seam. The mask
+         dissolves it upward and at both sides, so there is no edge to see.
+
+     3 · `100% 100%`, not `cover` and not `100% auto`. This panel is about 234px
+         tall against the asset's 470, so both of those show only the image's
+         near field — three or four wide-spaced lines, which reads as a smudge
+         rather than as a floor. Fitting it to the box keeps every line from
+         horizon to foreground and only changes the apparent viewing angle: the
+         perspective survives, which is the only reason to use this asset over a
+         repeating CSS gradient. The creed panel above is 589px tall and does not
+         need this — there the natural ratio fits.
+
+     It sits BEHIND the cell copy, so the opacity is capped where the copy still
+     clears AA on the PIXELS rather than on the panel's declared colour — a DOM
+     contrast check cannot see an image over a background. Sampled with
+     scripts/contrast-sample.mjs at 1440/1024/768/390: the value spans measure
+     8.2:1 worst and the labels 17.6:1 worst, against a 4.5 requirement. Re-run it
+     if this opacity moves. */
+  .aff__floor {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .aff__floor::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('../../assets/icons/grid-bg2.png') no-repeat center / 100% 100%;
+    opacity: 0.17;
+    mix-blend-mode: screen;
+    -webkit-mask-image: radial-gradient(
+      125% 110% at 50% 100%,
+      #000 0%,
+      rgba(0, 0, 0, 0.62) 52%,
+      transparent 92%
+    );
+    mask-image: radial-gradient(
+      125% 110% at 50% 100%,
+      #000 0%,
+      rgba(0, 0, 0, 0.62) 52%,
+      transparent 92%
+    );
+  }
+
+  /* Above the floor. Without this the cells share z-index: auto with it and the
+     paint order is down to document order alone — true today, and one markup
+     reshuffle from not being. */
+  .aff__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+  }
+
+  .aff__cell { padding-inline: clamp(16px, 1.8vw, 30px); }
+
+  /* THE DIVIDERS ARE SET PER BAND, never set-then-overridden.
+     `.aff__cell + .aff__cell` scopes to `.aff__cell[data-astro-cid] +
+     .aff__cell[data-astro-cid]` — two attribute selectors — which out-specifies
+     `.aff__cell:nth-child(odd)[data-astro-cid]`. So the obvious "turn it off for
+     odd cells at tablet" override silently lost, and a stray half-height tick
+     appeared to the left of the third cell. Each layout now states its own rule
+     inside a min/max band and nothing has to beat anything. */
+
+  /* Four across: a rule before every cell but the first. */
+  @media (min-width: 1024px) {
+    .aff__cell:first-child { padding-left: 0; }
+    .aff__cell + .aff__cell { border-left: 1px solid var(--sb-on-dark-rule); }
+  }
+
+  /* Two-by-two: the rule belongs to the RIGHT-HAND cell of each row, so it can
+     never land on the left edge of a cell that opens a row. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .aff__cell:nth-child(odd) { padding-left: 0; }
+    .aff__cell:nth-child(even) { border-left: 1px solid var(--sb-on-dark-rule); }
+  }
+
+  .aff__label {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  /* Two lines, stacked. `span` rather than two <dd>s: the value is one answer
+     set on two lines, not two separate values for the same term. */
+  .aff__value {
+    display: grid;
+    gap: 2px;
+    margin: var(--sb-5) 0 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-on-dark-66);
+  }
+
+  /* Identifiers, so the figures line up rather than wobble against the words. */
+  .aff__value span { font-variant-numeric: tabular-nums; }
+
+  /* --- Figure ---------------------------------------------------------------
+     Sized to the panel, anchored to its foot, standing a little proud of both
+     the right edge and the bottom — as in the reference. */
+  .aff__figure {
+    position: absolute;
+    /* Above the floor AND above the cells — she overlaps the panel's edge, so
+       she has to be the top layer of the three. */
+    z-index: 2;
+    right: clamp(-18px, -0.9vw, -4px);
+    bottom: -16px;
+    width: auto;
+    height: calc(100% + 40px);
+    max-height: 300px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* --- Tablet ---------------------------------------------------------------
+     Four cells across a 900px panel leaves a 20-character measure, and the
+     figure's 260px lane is a quarter of the width. Two-by-two, and she goes:
+     there is nowhere for her to stand that is not on top of a cell. */
+  @media (max-width: 1023px) {
+    .aff__panel { padding-inline: clamp(24px, 3vw, 40px); }
+
+    .aff__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: clamp(26px, 3.4vw, 38px);
+    }
+
+    .aff__figure { display: none; }
+  }
+
+  /* --- Mobile ---------------------------------------------------------------
+     Stacked, a left border reads as a stray tick; the rule goes horizontal. */
+  @media (max-width: 767px) {
+    .aff__panel { border-radius: var(--sb-r-2); }
+
+    .aff__grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+
+    /* No !important needed: neither band above applies at this width, so there
+       is no vertical rule here to cancel. */
+    .aff__cell { padding-inline: 0; }
+
+    .aff__cell + .aff__cell {
+      margin-top: var(--sb-6);
+      padding-top: var(--sb-6);
+      border-top: 1px solid var(--sb-on-dark-rule);
+    }
+
+    .aff__value { margin-top: var(--sb-4); }
+  }
+</style>

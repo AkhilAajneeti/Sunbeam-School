@@ -1,0 +1,122 @@
+---
+/**
+ * SECTION HEAD — the eyebrow / heading / standfirst block every Academics
+ * section opens on.
+ *
+ * WHY THIS EXISTS. The same three elements had been written out by hand in
+ * TeachingPhilosophy and AffiliationDetails, with the pill's letter-spacing and
+ * the dot re-declared each time. A third copy was the point at which they would
+ * start to drift, and the drift would be invisible until two sections sat next to
+ * each other on the same page.
+ *
+ * TONE, NOT COLOUR PROPS. Callers pick `light` or `dark` and the component
+ * resolves both the type colour and the pill variant, because those two have to
+ * change together — a violet-wash pill on an ink panel is the exact mistake this
+ * prevents.
+ *
+ * `data-split` goes on the h2 so the heading gets the word-mask entrance the rest
+ * of the site uses. `level` exists because a section head is an <h2> on a normal
+ * page but has to be an <h3> when the section is nested inside one that already
+ * owns the <h2> — an outline with two h2s and no h3 between them is a real
+ * screen-reader problem, not a style preference.
+ */
+interface Props {
+  eyebrow: string;
+  heading: string;
+  /** One line under the heading. Optional — several sections do not need it. */
+  stand?: string;
+  /** `center` for a full-width band, `start` when the head shares a row. */
+  align?: 'center' | 'start';
+  tone?: 'light' | 'dark';
+  /** Heading level. 2 unless the section is nested. */
+  level?: 2 | 3;
+  /** Wire this to the section's aria-labelledby. */
+  id?: string;
+  /** Extra classes on the wrapper, for per-section spacing. */
+  class?: string;
+  /** Cap the heading's measure, in `ch` of the display face. */
+  measure?: number;
+}
+
+const {
+  eyebrow,
+  heading,
+  stand,
+  align = 'center',
+  tone = 'light',
+  level = 2,
+  id,
+  class: className = '',
+  measure = 24,
+} = Astro.props;
+
+const Heading = `h${level}` as 'h2' | 'h3';
+---
+
+<div
+  class:list={['shead', `shead--${align}`, `shead--${tone}`, className]}
+  style={`--shead-measure: ${measure}ch;`}
+>
+  <p class="shead__eyebrow">
+    <span class:list={['pill', tone === 'dark' ? 'pill--glass' : 'pill--violet']}>
+      <span class="shead__dot" aria-hidden="true"></span>
+      {eyebrow}
+    </span>
+  </p>
+
+  <Heading class="shead__h" id={id} data-split>{heading}</Heading>
+
+  {stand && <p class="shead__stand">{stand}</p>}
+</div>
+
+<style>
+  .shead__eyebrow { margin-bottom: var(--sb-5); }
+
+  /* The dot is the whole difference between a pill and a category tag. */
+  .shead__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--sb-r-full);
+    flex-shrink: 0;
+  }
+
+  .shead--light .shead__dot { background: var(--sb-violet); }
+  .shead--dark .shead__dot { background: var(--sb-lime); }
+
+  .shead__eyebrow .pill {
+    font-size: var(--sb-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* `.shead__h` alone loses to base.css's `h2:has(.t-squiggle)` on specificity
+     when a caller passes a heading carrying the plate, and the line-height opens
+     to 1.3 unasked. The element+class compound matches it and wins on order. */
+  h2.shead__h,
+  h3.shead__h {
+    max-width: var(--shead-measure);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 3.2vw, 46px);
+    line-height: 1.12;
+    letter-spacing: -0.034em;
+    text-wrap: balance;
+  }
+
+  .shead--light .shead__h { color: var(--sb-charcoal); }
+  .shead--dark .shead__h { color: #fff; }
+
+  .shead__stand {
+    max-width: 58ch;
+    margin-top: var(--sb-6);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+  }
+
+  .shead--light .shead__stand { color: var(--sb-text-secondary); }
+  .shead--dark .shead__stand { color: var(--sb-on-dark-78); }
+
+  .shead--center { text-align: center; }
+  .shead--center .shead__h,
+  .shead--center .shead__stand { margin-inline: auto; }
+</style>

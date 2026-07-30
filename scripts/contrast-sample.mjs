@@ -19,6 +19,26 @@
  *     not be measured against the section ground at all; their ground is the
  *     chip. Those are skipped — the DOM audit resolves them correctly.
  *
+ * ⚠ KNOWN LIMITATION — SMALL, TEXT-DENSE PLATES. The reported ground is the MODAL
+ * probe colour, which is the right call for a gradient but wrong when an element's
+ * ground box is mostly covered by its own type: on a narrow plate carrying five
+ * wrapped lines, more probes land on glyphs than on the plate, the modal bucket
+ * becomes the text colour, and the ratio collapses to ~1.0 on something perfectly
+ * legible. Measured example: the collaborative-learning plate on Teaching &
+ * Learning reported 1.06 at 390 and is really 4.72:1 — its ground is the flat
+ * token #C93C0A, verified by hiding the text and sampling the plate directly.
+ * When this checker reports ~1.0 on white-on-brand type, sample the plate before
+ * believing it.
+ *
+ * ⚠ AND IT CANNOT MEASURE TEXT SITTING ON A PHOTOGRAPH. Trap 4 below excludes
+ * media boxes as probe targets, which is right when a photograph sits BESIDE the
+ * text and wrong when the text sits ON it: every legitimate probe is rejected, the
+ * ground resolves to whatever opaque ancestor is behind the image — a white card —
+ * and the ratio collapses to 1.0. The figure-over-image panels on Teaching &
+ * Learning report exactly that and really measure 7.2–16.8:1. For those, sample
+ * the lightest pixel under the type's own box directly; that is also how the 2.98
+ * failure at 768 in that section was found, which this checker never saw.
+ *
  * Usage: node scripts/contrast-sample.mjs <url> <sectionSelector> [w1,w2,...]
  */
 import { chromium } from 'playwright';
@@ -89,10 +109,23 @@ for (const vw of widths) {
     };
 
     const all = [...sec.querySelectorAll('*')].filter(visible);
-    // Asset-placeholder scaffolding is excluded: it is a build-time stand-in
-    // that ships only until the photograph arrives, and its label is not
-    // content whose contrast we are shipping.
-    const textEls = all.filter((el) => rendersText(el) && !el.closest('.ph'));
+    // Two exclusions, both deliberate:
+    //
+    //  · Asset-placeholder scaffolding (.ph) is a build-time stand-in that ships
+    //    only until the photograph arrives, and its label is not content whose
+    //    contrast we are shipping.
+    //
+    //  · aria-hidden text is decoration, and WCAG 1.4.3 exempts it. It is also
+    //    where this checker is structurally blind: an outlined numeral drawn with
+    //    `-webkit-text-stroke` computes `color: transparent`, so compositing the
+    //    declared colour over the ground returns a ratio of exactly 1.00 and the
+    //    element fails forever no matter how legible it is. A checker that cries
+    //    wolf on decoration stops being read at all, which is the real cost.
+    //    Anything aria-hidden is redundant with content that IS measured — the
+    //    step numerals duplicate an <ol>, the section indices duplicate a heading.
+    const textEls = all.filter(
+      (el) => rendersText(el) && !el.closest('.ph') && !el.closest('[aria-hidden="true"]')
+    );
 
     // A PHOTOGRAPH is not the ground for text sitting beside it. Without this,
     // a probe stepping 48px left of a block-level line in the copy column lands
