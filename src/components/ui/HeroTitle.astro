@@ -41,11 +41,28 @@ interface Props {
   tail?: string;
   /** `lime` for the light plate used on dark photography (docs/05 § I1). */
   markTone?: 'violet' | 'lime';
+  /**
+   * Heading level. 1 for a page banner; 2 when the banner above already owns the
+   * <h1> and this is a lede introducing the page. A second <h1> on a page is a
+   * real outline problem, not a style preference — hence a prop rather than a
+   * caller wrapping this in their own heading.
+   */
+  level?: 1 | 2;
   id?: string;
   class?: string;
 }
 
-const { lead, mark, tail, markTone = 'violet', id, class: className = '' } = Astro.props;
+const {
+  lead,
+  mark,
+  tail,
+  markTone = 'violet',
+  level = 1,
+  id,
+  class: className = '',
+} = Astro.props;
+
+const Heading = `h${level}` as 'h1' | 'h2';
 
 const words = (s?: string) => (s ? s.trim().split(/\s+/).filter(Boolean) : []);
 
@@ -67,7 +84,7 @@ const units = [
 ];
 ---
 
-<h1 class:list={['htitle', className]} id={id}>
+<Heading class:list={['htitle', className]} id={id}>
   {
     units.map((u, i) => (
       <Fragment>
@@ -83,7 +100,7 @@ const units = [
       </Fragment>
     ))
   }
-</h1>
+</Heading>
 
 <style>
   /* ═══ THE COMPONENT OWNS ITS TYPE ═══════════════════════════════════════════
@@ -100,7 +117,8 @@ const units = [
      ancestor it does own (`.thero__inner`) with a perfectly normal scoped rule.
 
      Defaults suit a photographic banner, which is what every caller is so far. */
-  .htitle {
+  h1.htitle,
+  h2.htitle {
     max-width: var(--htitle-measure, 24ch);
     font-family: var(--sb-font-display);
     font-weight: 800;

@@ -251,7 +251,257 @@ gsap.utils.toArray<HTMLElement>('[data-mask]').forEach((el) => {
 
    Passive listener: this never calls preventDefault, and saying so lets the
    browser keep scrolling on the compositor while it runs. */
+/* --- PINNED HORIZONTAL RAIL --------------------------------------------------
+   The section holds still while the track travels sideways under it — the one
+   genuine piece of scroll-jacking on this site.
+
+   ONE IMPLEMENTATION, ANY NUMBER OF RAILS. Everything below is driven by
+   attributes rather than by a component's class names: `[data-rail-scope]` marks
+   the section, `[data-rail-track]` the moving element, `[data-rail-item]` each
+   card and `[data-rail-tail]` the end spacer. StemRail and JourneyCarousel are
+   two entirely different designs sharing this code, and a third would need no
+   changes here — only the same four attributes.
+   Four things keep it from being the bad version of itself:
+
+   1 · IT IS AN ENHANCEMENT, NOT THE MECHANISM. The rail is a real `overflow-x`
+       scroller in CSS and stays one until this code runs. Reduced motion and
+       Save-Data never load this chunk at all, so those readers keep the native
+       scroller rather than losing the section — which is what happens when a
+       pinned rail IS the only implementation.
+
+   2 · DESKTOP ONLY. A pinned horizontal section on a phone fights the browser's
+       own vertical gesture and is the single most complained-about pattern on the
+       mobile web. Below 1024 the native swipe rail stands.
+
+   3 · THE SCROLL DISTANCE EQUALS THE TRAVEL. `end: '+=' + distance` means one
+       pixel of page scroll moves the track one pixel, so the gesture keeps the
+       weight the reader expects. Padding it out is what makes these sections feel
+       like wading.
+
+   4 · `invalidateOnRefresh` + a function `end`, because the distance depends on a
+       clamp()-sized panel and a clamp() gap: a value measured once is wrong at
+       every other width, and wrong after a font swap at the same width.
+
+   `anticipatePin` hides the one-frame jump where a fast scroll reaches the pin
+   before ScrollTrigger has applied it. */
+if (window.innerWidth >= 1024) {
+  document.querySelectorAll<HTMLElement>('[data-rail-track]').forEach((track) => {
+    const section = track.closest<HTMLElement>('[data-rail-scope]');
+    const viewport = track.parentElement as HTMLElement | null;
+    if (!section || !viewport) return;
+
+    /* OPT OUT, PER RAIL. Not every horizontal rail wants to be pinned: a rail
+       whose whole design is three cards standing still while arrows page through
+       them is a worse thing pinned, because the reader loses the page scroll for
+       a section that had nothing to travel through. `data-rail-nopin` keeps such
+       a rail on the native scroller and out of the depth pass, while still
+       letting it use the progress writer and the button handshake below. */
+    if (section.hasAttribute('data-rail-nopin')) return;
+
+    section.classList.add('is-pinned');
+
+    /* HOW FAR THE TRACK TRAVELS — measured from the TAIL element, which is the
+       one place the end position is defined.
+
+       The track ends with a real spacer sized in CSS (see .rail__tail), so the
+       content's true right edge is that spacer's right edge. Moving the track
+       until that meets the viewport's right edge leaves the last panel fully in
+       view and framed, which is where the pin should release.
+
+       Not `track.scrollWidth`: Chrome does not include an element's right
+       padding in it, and an earlier version of this measured 555px short because
+       of that. Reading the spacer keeps CSS the single source of truth for the
+       end position, so the native rail and the pinned one cannot disagree. */
+    const distance = () => {
+      const tail = track.querySelector<HTMLElement>('[data-rail-tail]');
+      const edge = tail
+        ? tail.offsetLeft + tail.offsetWidth
+        : (() => {
+            const ps = track.querySelectorAll<HTMLElement>('[data-rail-item]');
+            const last = ps[ps.length - 1];
+            return last ? last.offsetLeft + last.offsetWidth : 0;
+          })();
+      return Math.max(0, edge - viewport.clientWidth);
+    };
+
+    // Nothing to travel — six panels can fit outright on a very wide screen.
+    if (distance() < 8) {
+      section.classList.remove('is-pinned');
+      return;
+    }
+
+    /* ── DEPTH ────────────────────────────────────────────────────────────────
+       Each card is scaled and turned by how far its centre sits from the centre
+       of the viewport: small and angled away at the right, full size and square
+       on at the middle, small and angled the other way at the left.
+
+       MEASURED FROM CACHED OFFSETS, NOT getBoundingClientRect. This runs on every
+       scrubbed frame across six cards; `getBoundingClientRect` forces a layout
+       flush each time and would turn a smooth scrub into a stutter on a mid-range
+       laptop. `offsetLeft` is read once per refresh — it cannot change while the
+       track is only being transformed — and the live position is that plus the
+       track's current x, which we already know.
+
+       It writes CUSTOM PROPERTIES rather than `transform` directly, so the
+       stylesheet keeps ownership of the whole transform expression. That is what
+       lets the CSS declare a sane default (flat, full size) for every state where
+       this never runs. */
+    let offsets: { mid: number; el: HTMLElement }[] = [];
+
+    const measure = () => {
+      // Items only — the track also holds the tail spacer, which has nothing to
+      // scale or turn.
+      offsets = [...track.querySelectorAll<HTMLElement>('[data-rail-item]')].map((el) => ({
+        el,
+        mid: el.offsetLeft + el.offsetWidth / 2,
+      }));
+    };
+
+    /* ── DRIFT ────────────────────────────────────────────────────────────────
+       What makes the rail feel alive rather than mechanical: the cards LEAN AND
+       LAG against the scroll, then settle.
+
+       Driven by scroll VELOCITY, not position. Position alone gives a rail that
+       moves but never reacts — the same picture whether you nudged it or threw
+       it. Velocity is what carries the sense of weight, and it is the difference
+       between a carousel and something with momentum.
+
+       `lag` varies per card from a fixed sequence rather than a random number, so
+       the six trail each other in a fixed wave instead of drifting as one slab —
+       and so the effect is identical on every load. Random would be untestable
+       and would flicker differently for every visitor.
+
+       IT DECAYS ON ITS OWN rAF LOOP, because ScrollTrigger's onUpdate only fires
+       while the page is actually moving: without this the cards would stop
+       mid-lean the instant the reader stopped and simply stay there. The loop
+       runs only while there is something left to settle and then stops, so an
+       idle page costs nothing. */
+    const lags = [1, 0.55, 0.85, 0.4, 0.95, 0.65];
+    let lean = 0;
+    let target = 0;
+    let raf = 0;
+
+    const applyDrift = () => {
+      offsets.forEach(({ el }, i) => {
+        const lag = lags[i % lags.length];
+        el.style.setProperty('--pan-tilt', (lean * 1.9 * lag).toFixed(3) + 'deg');
+        el.style.setProperty('--pan-lift', (lean * 13 * lag).toFixed(2) + 'px');
+      });
+    };
+
+    const settle = () => {
+      // Ease towards the target, and let the target itself fall back to rest.
+      lean += (target - lean) * 0.14;
+      target *= 0.86;
+      applyDrift();
+
+      if (Math.abs(lean) > 0.002 || Math.abs(target) > 0.002) {
+        raf = requestAnimationFrame(settle);
+      } else {
+        lean = 0;
+        target = 0;
+        applyDrift();
+        raf = 0;
+      }
+    };
+
+    /* STRENGTHS COME OFF THE SCOPE, so two very different rails can share this
+       one implementation: the STEM panels want a restrained 0.14 / 13° so six
+       cards still read as a row, while a journey carousel wants the full
+       coverflow — 0.18 / 25°, dimmed and blurred at the edges so the centre card
+       is unmistakably the active one. Defaults are the restrained set, which
+       means an existing caller that says nothing keeps exactly what it had. */
+    const num = (key: string, fallback: number) => {
+      const v = Number(section.dataset[key]);
+      return Number.isFinite(v) ? v : fallback;
+    };
+    const dScale = num('depthScale', 0.14);
+    const dTurn = num('depthTurn', 13);
+    const dDim = num('depthDim', 0);
+    const dBlur = num('depthBlur', 0);
+
+    const depth = (x: number) => {
+      const half = viewport.clientWidth / 2;
+      if (!half) return;
+      for (const { el, mid } of offsets) {
+        // -1 at the far left of the viewport, 0 dead centre, +1 at the far right.
+        const d = Math.max(-1.4, Math.min(1.4, (mid + x - half) / half));
+        const away = Math.abs(d);
+        el.style.setProperty('--pan-scale', (1 - away * dScale).toFixed(4));
+        el.style.setProperty('--pan-turn', (-d * dTurn).toFixed(2) + 'deg');
+        if (dDim) el.style.setProperty('--pan-dim', (1 - away * dDim).toFixed(3));
+        if (dBlur) el.style.setProperty('--pan-blur', (away * dBlur).toFixed(2) + 'px');
+      }
+    };
+
+    measure();
+
+    const tween = gsap.to(track, {
+      x: () => -distance(),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: () => '+=' + distance(),
+        pin: true,
+        anticipatePin: 1,
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+        onRefresh: () => {
+          measure();
+          depth(gsap.getProperty(track, 'x') as number);
+        },
+        onUpdate: (self) => {
+          section.style.setProperty('--rail-progress', String(self.progress));
+          // The buttons read these to know whether they are at an end.
+          section.dataset.railAtStart = self.progress <= 0.001 ? 'true' : 'false';
+          section.dataset.railAtEnd = self.progress >= 0.999 ? 'true' : 'false';
+          depth(gsap.getProperty(track, 'x') as number);
+
+          /* Velocity is in px/sec and routinely runs to a few thousand on a
+             flick, so it is divided down and clamped. Without the clamp a fast
+             wheel spin throws the cards to a 30° lean, which reads as a glitch
+             rather than as momentum. ±1 keeps the extremes at the ~2° and 13px
+             the multipliers above are tuned around. */
+          target = Math.max(-1, Math.min(1, self.getVelocity() / -1800));
+          if (!raf) raf = requestAnimationFrame(settle);
+        },
+      },
+    });
+
+    // The rail is usually below the fold at load, so onUpdate has not run yet and
+    // the cards would sit flat until first scroll. One pass now sets the resting
+    // shape — the right-hand cards already small before anyone arrives.
+    depth(0);
+
+    /* The prev/next buttons, when pinned, move the PAGE rather than the
+       container — the container no longer scrolls. The component dispatches a
+       cancelable `rail:step`; handling it here and calling preventDefault is what
+       tells that script its native fallback is not needed. */
+    section.addEventListener('rail:step', ((e: CustomEvent<{ dir: number }>) => {
+      const st = tween.scrollTrigger;
+      if (!st) return;
+      e.preventDefault();
+
+      const panels = track.children.length;
+      const span = st.end - st.start;
+      const stepFraction = 1 / Math.max(1, panels - 1);
+      const next = Math.min(1, Math.max(0, st.progress + e.detail.dir * stepFraction));
+
+      window.scrollTo({
+        top: st.start + span * next,
+        behavior: 'smooth',
+      });
+    }) as EventListener);
+  });
+}
+
 document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
+  /* Skip a rail the pin has taken over: it reports its own progress from the
+     ScrollTrigger, and this writer would otherwise reset the property to 0 on
+     load — the pinned block runs first, so whichever wrote last would win. */
+  if (rail.closest('.is-pinned')) return;
+
   /* THE PROPERTY GOES ON THE SCOPE, NOT ON THE RAIL. Custom properties inherit
      DOWN the tree, and the indicator is a SIBLING of the scroller — it sits up in
      the section head so it can line up with the heading. Writing the property on

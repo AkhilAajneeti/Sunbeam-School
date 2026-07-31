@@ -16,15 +16,32 @@
  */
 import { counters } from '../../data/academics';
 
+interface Counter {
+  n: number;
+  suffix: string;
+  label: string;
+}
+
 interface Props {
   /** 'dark' on ink, 'light' on ivory or sand. */
   tone?: 'dark' | 'light';
-  /** Show all eight, or the first n. */
+  /** Show all eight, or the first n. Ignored when `items` is given. */
   limit?: number;
+  /**
+   * A page-specific set, for a page whose figures are not the section's standard
+   * eight. Parent Partnership passes four that answer a parent's questions rather
+   * than an inspector's.
+   *
+   * WHATEVER IS PASSED HERE IS STILL SUBJECT TO THE RULE AT THE TOP OF
+   * data/academics.ts: quantities only, and only quantities the school publishes
+   * or that follow arithmetically from them. This prop widens where the numbers
+   * come from, not what is allowed to be a number.
+   */
+  items?: readonly Counter[];
 }
 
-const { tone = 'dark', limit } = Astro.props;
-const items = limit ? counters.slice(0, limit) : counters;
+const { tone = 'dark', limit, items: custom } = Astro.props;
+const items = custom ?? (limit ? counters.slice(0, limit) : counters);
 ---
 
 <dl class:list={['cstrip', `cstrip--${tone}`]}>

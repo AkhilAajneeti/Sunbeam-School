@@ -18,6 +18,7 @@
  */
 import Photo from '../../ui/Photo.astro';
 import SectionHead from '../SectionHead.astro';
+import AcademicGlyph from '../AcademicGlyph.astro';
 import { teachingLearning } from '../../../data/academics';
 import libraryPhoto from '../../../assets/photos/sb-library.jpg';
 
@@ -66,7 +67,10 @@ const { words } = teachingLearning;
           {
             words.entries.map((e, i) => (
               <li class="wrd__entry" data-reveal data-reveal-delay={i * 80}>
-                <h3 class="wrd__entry-h">{e.label}</h3>
+                <h3 class="wrd__entry-h">
+                  <AcademicGlyph name={e.glyph} size={22} class="wrd__glyph" />
+                  {e.label}
+                </h3>
                 <p class="wrd__entry-b">{e.body}</p>
                 {e.anchor && <p class="wrd__entry-a t-tabular">{e.anchor}</p>}
               </li>
@@ -192,6 +196,9 @@ const { words } = teachingLearning;
   }
 
   .wrd__entry-h {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
     font-family: var(--sb-font-display);
     font-weight: 700;
     font-size: clamp(18px, 1.7vw, 24px);
@@ -199,6 +206,8 @@ const { words } = teachingLearning;
     letter-spacing: -0.025em;
     color: var(--sb-charcoal);
   }
+
+  .wrd__glyph { color: var(--sb-violet); }
 
   .wrd__entry-b {
     max-width: 50ch;

@@ -1,0 +1,327 @@
+---
+/**
+ * PARENT PARTNERSHIP · THE CLOSING SECTION — THE YEAR, AS A PARENT MEETS IT
+ *
+ * Six fixed points from admission to the final report, alternating either side of
+ * a centre spine that draws itself in as the reader passes each one.
+ *
+ * ⚠ IT USED TO BE A DARK BAND, and that is what this rewrite is undoing. A single
+ * ink section at the foot of a warm ivory page did not read as a deliberate
+ * change of key — it read as a component from somewhere else. Nothing above it
+ * on this page goes dark, so it had no companion, and it arrived immediately
+ * before a dark footer, which meant the page's last two bands were both black
+ * for unrelated reasons.
+ *
+ * It now closes on the page's own material: the same bracketed centred head as
+ * Workshops and Communication, the same white cards with a numbered disc, and a
+ * ground that runs ivory to sand so the section darkens INTO the footer rather
+ * than colliding with it.
+ *
+ * ═══ THE SPINE IS STRUCTURE, NOT DECORATION ═════════════════════════════════
+ *
+ * The drawing is an IntersectionObserver here rather than in motion-gsap.ts, and
+ * the distinction is the same one the step cascade on Teaching & Learning makes:
+ * that chunk is gated behind prefers-reduced-motion and Save-Data because
+ * everything in it is decoration, while a connector line is what makes six
+ * entries read as one ordered year rather than six notices. So it ships here and
+ * always runs, and the CSS holds back the TRAVEL under reduced motion rather
+ * than the line never appearing.
+ *
+ * ONE-WAY: `unobserve` after the first crossing, so scrolling back up does not
+ * un-draw the year behind the reader. A route that erases itself is a fidget.
+ */
+import { parents } from '../../../data/academics';
+
+const { timeline } = parents;
+---
+
+<section class="ptl" id="year" aria-labelledby="ptl-title">
+  <span class="ptl__ribbon" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="ptl__head">
+      <p class="ptl__eyebrow">[{timeline.eyebrow}]</p>
+      <h2 class="ptl__h" id="ptl-title" data-split>{timeline.heading}</h2>
+      <p class="ptl__stand">{timeline.stand}</p>
+    </div>
+
+    <ol class="ptl__list" data-timeline>
+      {
+        timeline.steps.map((s, i) => (
+          <li class="ptl__step" data-timeline-step>
+            {/* Decorative — the ordered list already carries the sequence, and
+                hearing "01 Admission" for six items is the numbering read twice. */}
+            <span class="ptl__node" aria-hidden="true">
+              <span class="ptl__n t-tabular">{String(i + 1).padStart(2, '0')}</span>
+            </span>
+
+            <div class="ptl__card">
+              <h3 class="ptl__label">{s.label}</h3>
+              <p class="ptl__b">{s.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* Ivory at the top so it meets the FAQ section above without a seam, sand at
+     the foot so the page darkens gradually into the footer's ink instead of
+     stopping dead against it. */
+  .ptl {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(64px, 9vh, 108px) var(--sb-section-y-major);
+    background:
+      radial-gradient(56% 32% at 50% 0%, #fff4ee 0%, rgba(255, 244, 238, 0) 66%),
+      linear-gradient(to bottom, var(--sb-ivory) 0%, #f8f1ec 58%, var(--sb-sand) 100%);
+    --ptl-node: clamp(44px, 3.8vw, 56px);
+  }
+
+  /* The same shape-2 ribbon the communication cards carry, at section scale and
+     a tenth of the opacity — enough to tie the closing band to them, not enough
+     to be a second thing to look at. Masked rather than drawn: every opaque
+     pixel in that file is pure white and would be invisible here otherwise. */
+  .ptl__ribbon {
+    position: absolute;
+    z-index: -1;
+    inset: 0 -6% 0 auto;
+    width: 46%;
+    background: linear-gradient(
+      to left,
+      var(--sb-lime) 0%,
+      var(--sb-violet) 34%,
+      rgba(201, 60, 10, 0) 72%
+    );
+    -webkit-mask-image: url('../../../assets/icons/shape-2.png');
+    mask-image: url('../../../assets/icons/shape-2.png');
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 260% 100%;
+    mask-size: 260% 100%;
+    -webkit-mask-position: 74% 50%;
+    mask-position: 74% 50%;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  /* --- Head ---------------------------------------------------------------- */
+
+  .ptl__head { text-align: center; }
+
+  .ptl__eyebrow {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    /* --sb-violet-dark, not --sb-violet: 12px on this ground measures 4.3:1 with
+       the lighter brand tone, which is under AA. */
+    color: var(--sb-violet-dark);
+  }
+
+  h2.ptl__h {
+    max-width: 24ch;
+    margin: var(--sb-5) auto 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 3.9vw, 54px);
+    line-height: 1.06;
+    letter-spacing: -0.038em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .ptl__stand {
+    max-width: 62ch;
+    margin: clamp(18px, 2.4vh, 28px) auto 0;
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    text-wrap: pretty;
+  }
+
+  /* --- The year ------------------------------------------------------------ */
+
+  .ptl__list {
+    max-width: 1040px;
+    margin: clamp(40px, 6vh, 72px) auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* copy · node · copy. The node column is fixed width, so every segment of the
+     spine lines up however long a step's copy runs. Cards alternate sides by
+     moving between columns 1 and 3 — the empty column simply stays empty. */
+  .ptl__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    column-gap: clamp(20px, 3vw, 48px);
+    align-items: start;
+    padding-bottom: clamp(26px, 4.2vh, 50px);
+  }
+
+  .ptl__step:last-child { padding-bottom: 0; }
+
+  .ptl__node { grid-column: 2; grid-row: 1; }
+  .ptl__card { grid-column: 1; grid-row: 1; }
+  .ptl__step:nth-child(even) .ptl__card { grid-column: 3; }
+
+  /* The segment runs from under one node to the next, so the last step has no
+     tail hanging off the bottom of the list. scaleY from the top, so it draws
+     downward as the reader arrives.
+
+     `translate` and `transform` are separate properties on purpose: the centring
+     shift must survive the scale, and folding both into one `transform` would
+     mean the line shrinks towards a moving origin. */
+  .ptl__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    translate: -1px 0;
+    top: var(--ptl-node);
+    bottom: 0;
+    border-left: 2px dashed rgba(201, 60, 10, 0.3);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 760ms var(--sb-ease);
+  }
+
+  .ptl__step.is-passed::after { transform: scaleY(1); }
+
+  /* The disc is the one from the communication cards, so the two sections read
+     as the same family. Unlit until the reader reaches it. */
+  .ptl__node {
+    display: grid;
+    place-items: center;
+    width: var(--ptl-node);
+    height: var(--ptl-node);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-full);
+    background: #fff;
+    box-shadow: 0 8px 22px -14px rgba(28, 14, 8, 0.4);
+    transition:
+      background-color 420ms var(--sb-ease),
+      border-color 420ms var(--sb-ease),
+      transform 420ms var(--sb-ease);
+  }
+
+  .ptl__step.is-passed .ptl__node {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    transform: scale(1.06);
+  }
+
+  .ptl__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 19px);
+    font-weight: 700;
+    color: var(--sb-violet);
+    transition: color 420ms var(--sb-ease);
+  }
+
+  .ptl__step.is-passed .ptl__n { color: #fff; }
+
+  .ptl__card {
+    padding: clamp(18px, 1.9vw, 28px) clamp(20px, 2.1vw, 30px);
+    border: 1px solid rgba(201, 60, 10, 0.08);
+    border-radius: clamp(18px, 1.8vw, 26px);
+    background: #fff;
+    box-shadow: 0 16px 40px -30px rgba(28, 14, 8, 0.34);
+    /* Reserved rather than added on hover, so nothing reflows under the pointer. */
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease),
+      border-color var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .ptl__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 60px -30px rgba(28, 14, 8, 0.4);
+    border-color: rgba(201, 60, 10, 0.2);
+  }
+
+  h3.ptl__label {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(18px, 1.7vw, 25px);
+    line-height: 1.16;
+    letter-spacing: -0.026em;
+    color: var(--sb-charcoal);
+  }
+
+  .ptl__b {
+    max-width: 46ch;
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.68;
+    color: var(--sb-text-secondary);
+  }
+
+  /* The line still DRAWS under reduced motion — it just arrives instead of
+     growing. Removing it would take away the information that these six are one
+     sequence; only the travel is motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .ptl__step::after,
+    .ptl__node,
+    .ptl__n,
+    .ptl__card { transition: none; }
+    .ptl__step.is-passed .ptl__node { transform: none; }
+    .ptl__card:hover { transform: none; }
+  }
+
+  /* Below this the two columns are ~200px each and a card of three lines becomes
+     a card of seven. One rail down the left instead, which is the same year read
+     the same way — it just stops pretending it has room to alternate. */
+  @media (max-width: 899px) {
+    .ptl__step {
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: clamp(18px, 3vw, 28px);
+    }
+
+    .ptl__node { grid-column: 1; }
+    .ptl__card,
+    .ptl__step:nth-child(even) .ptl__card { grid-column: 2; }
+
+    .ptl__step:not(:last-child)::after {
+      left: calc(var(--ptl-node) / 2);
+    }
+
+    .ptl__ribbon { display: none; }
+  }
+
+  @media (max-width: 639px) {
+    .ptl { padding-block: var(--sb-9) var(--sb-section-y); }
+    .ptl__card:hover { transform: none; }
+  }
+</style>
+
+<script>
+  /**
+   * Lights each point of the year as the reader reaches it.
+   *
+   * The trigger is the lower third of the viewport rather than the element's own
+   * top edge: that is where a reader is actually looking, not where the box
+   * begins.
+   */
+  document.querySelectorAll<HTMLElement>('[data-timeline]').forEach((list) => {
+    const steps = [...list.querySelectorAll<HTMLElement>('[data-timeline-step]')];
+    if (!steps.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-passed');
+          io.unobserve(e.target);
+        });
+      },
+      { rootMargin: '0px 0px -32% 0px', threshold: 0 }
+    );
+
+    steps.forEach((s) => io.observe(s));
+  });
+</script>

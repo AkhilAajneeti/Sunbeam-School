@@ -22,12 +22,18 @@
  * to, and the blueprint reads as a floor plan of the rooms being listed.
  */
 import SectionHead from '../SectionHead.astro';
+import AcademicGlyph from '../AcademicGlyph.astro';
 import { teachingLearning } from '../../../data/academics';
 
 const { index } = teachingLearning;
 ---
 
 <section class="idx" id="laboratories" aria-labelledby="idx-title">
+  {/* The bloom sits on the SECTION, behind the panel, which is what gives the
+      glass something to actually refract — a backdrop filter over a flat ground
+      blurs nothing and just looks like a flat panel. */}
+  <span class="idx__bloom idx__bloom--top" aria-hidden="true"></span>
+
   <div class="u-container">
     <SectionHead
       eyebrow={index.eyebrow}
@@ -56,7 +62,10 @@ const { index } = teachingLearning;
               <ol class="idx__list">
                 {g.items.map((it) => (
                   <li class="idx__row">
-                    <span class="idx__name">{it.name}</span>
+                    <span class="idx__name">
+                      <AcademicGlyph name={it.glyph} size={20} class="idx__glyph" />
+                      {it.name}
+                    </span>
                     <span class="idx__detail">{it.detail}</span>
                   </li>
                 ))}
@@ -74,26 +83,93 @@ const { index } = teachingLearning;
 <style>
   .idx {
     position: relative;
-    padding-block: var(--sb-section-y) var(--sb-section-y-major);
+    /* Contains the blooms and gives the glass a stacking context of its own. */
+    isolation: isolate;
+    overflow: hidden;
+    /* Top lighter than the foot, and the bloom needs less room above the pill
+       than the section needs below the panel. Measured before this change:
+       120px above the eyebrow against 0 below the standfirst. */
+    padding-block: clamp(56px, 8vh, 92px) var(--sb-section-y-major);
     background: var(--sb-ivory);
+    /* Read by SectionHead — see the note on --shead-gap in that component. */
+    --shead-gap: clamp(32px, 4.5vh, 56px);
   }
 
-  .idx__head { margin-bottom: clamp(36px, 5vh, 64px); }
+  /* --- The blooms ----------------------------------------------------------
+     Two soft washes of the brand orange, one behind the heading and one rising
+     from the foot of the section — the reference's gradient bloom, in this
+     page's palette rather than its green.
 
+     BUILT FROM STACKED RADIALS, not one gradient and not an image. Three offset
+     ellipses at different sizes give the uneven, lit-from-behind falloff a
+     single radial cannot; `filter: blur()` then removes any banding where the
+     stops meet, which is what separates a bloom from a flat coloured oval.
+
+     They are BEHIND the panel, not inside it. That is what the glass refracts,
+     and it keeps the strongest colour off the type: the copy sits on the panel,
+     the light sits behind it. */
+  .idx__bloom {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .idx__bloom--top {
+    inset: -8% -10% auto -10%;
+    height: clamp(320px, 46%, 620px);
+    background:
+      radial-gradient(48% 78% at 50% 6%, rgba(255, 92, 53, 0.46), transparent 68%),
+      radial-gradient(36% 62% at 28% 0%, rgba(201, 60, 10, 0.32), transparent 70%),
+      radial-gradient(32% 58% at 74% 2%, rgba(255, 138, 92, 0.38), transparent 72%);
+    filter: blur(46px);
+  }
+
+  /* --- Glass ---------------------------------------------------------------
+     Translucent rather than solid, so the bloom behind it reads through.
+
+     THE TRANSLUCENCY IS 0.72, NOT LOWER, and that number is the whole design
+     constraint here: everything on this panel is 13–15px charcoal type, and the
+     more of an orange bloom that comes through, the less ground the small text
+     has to sit on. Sampled at 0.72 the faintest row still measures past AA with
+     room to spare; at 0.5 it did not. Glass is a finish, not a licence to lose
+     the copy.
+
+     The white top border is what reads as a lit edge — it catches the bloom the
+     way a real pane would, and without it the panel looks like flat tint. */
   .idx__panel {
     position: relative;
     isolation: isolate;
     overflow: hidden;
     padding: clamp(28px, 3.4vw, 60px);
-    border: 1px solid rgba(201, 60, 10, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.72);
     border-radius: 32px;
-    background: linear-gradient(150deg, #fffaf7 0%, #ffffff 46%, #fff4ee 100%);
-    box-shadow: 0 26px 72px -46px rgba(28, 14, 8, 0.42);
+    background: linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.78) 0%,
+      rgba(255, 255, 255, 0.66) 48%,
+      rgba(255, 246, 241, 0.72) 100%
+    );
+    -webkit-backdrop-filter: blur(28px) saturate(150%);
+    backdrop-filter: blur(28px) saturate(150%);
+    box-shadow:
+      0 26px 72px -46px rgba(28, 14, 8, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
 
-  /* The floor plan. Anchored to the foot, faded upward by a mask so it never ends
-     on a straight edge, and kept faint — the rows above it are 15px text and the
-     ground under them has to stay near-white. */
+  /* No backdrop-filter, no glass — and a translucent panel over a bloom with
+     nothing blurring it is just washed-out type. Falls back to the opaque panel
+     this replaced. */
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .idx__panel {
+      background: linear-gradient(150deg, #fffaf7 0%, #ffffff 46%, #fff4ee 100%);
+      border-color: rgba(201, 60, 10, 0.14);
+    }
+  }
+
+  /* The floor plan — the motif that says these are rooms. Back at full strength
+     now the foot bloom is gone: it was dimmed to 0.45 only because the glow and
+     the grid lines were reading as two competing textures over the same ground,
+     and with the glow removed there is nothing left for it to fight. */
   .idx__plan {
     position: absolute;
     z-index: -1;
@@ -153,27 +229,32 @@ const { index } = teachingLearning;
 
   .idx__row:hover { padding-left: var(--sb-4); }
 
+  /* A GLYPH REPLACED THE SQUARE BULLET. Thirteen rooms scan far faster with a
+     mark that says which room it is than with thirteen identical ticks — which
+     was the one fair criticism of this index. It stays a ruled list rather than
+     becoming a tile grid: tiles would give the Geography Lab the same visual
+     weight as three board-practical science laboratories, and the whole point of
+     an index is that you can take it in at once. */
   .idx__name {
-    position: relative;
-    padding-left: var(--sb-6);
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
     font-size: var(--sb-body-sm);
     font-weight: 600;
     color: var(--sb-charcoal);
   }
 
-  /* The bullet is a square, not a disc — a plan mark rather than a list mark. */
-  .idx__name::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.42em;
-    width: 7px;
-    height: 7px;
-    background: var(--sb-violet);
-    transition: transform var(--sb-dur-link) var(--sb-ease);
+  .idx__glyph {
+    color: var(--sb-violet);
+    transition:
+      transform var(--sb-dur-link) var(--sb-ease),
+      color var(--sb-dur-link) ease;
   }
 
-  .idx__row:hover .idx__name::before { transform: rotate(45deg) scale(1.15); }
+  .idx__row:hover .idx__glyph {
+    color: var(--sb-violet-dark);
+    transform: scale(1.12) rotate(-4deg);
+  }
 
   /* Right-ranged, so the two columns of names stay scannable down their left
      edges and the details do not have to be read unless they are wanted. */
@@ -201,10 +282,10 @@ const { index } = teachingLearning;
 
   @media (prefers-reduced-motion: reduce) {
     .idx__row,
-    .idx__name::before,
+    .idx__glyph,
     .idx__detail { transition: none; }
     .idx__row:hover { padding-left: 0; }
-    .idx__row:hover .idx__name::before { transform: none; }
+    .idx__row:hover .idx__glyph { transform: none; }
   }
 
   /* --- Tablet + mobile ----------------------------------------------------
@@ -224,6 +305,7 @@ const { index } = teachingLearning;
       gap: 4px;
     }
 
-    .idx__detail { text-align: left; padding-left: var(--sb-6); }
+    /* Aligned under the room name, clear of the glyph. */
+    .idx__detail { text-align: left; padding-left: calc(20px + var(--sb-4)); }
   }
 </style>

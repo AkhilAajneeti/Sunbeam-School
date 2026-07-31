@@ -2,428 +2,121 @@
 /**
  * ACADEMICS → 06 · PARENT PARTNERSHIP
  *
- * LAYOUT: a parent's journey in three phases — before joining, through the year,
- * whenever needed — each phase a full band with a sticky label on the left and
- * its channels listed on the right. The order is the order a parent actually
- * meets them, which is the one piece of structure a flat six-tile grid throws
- * away.
+ * Rebuilt from scratch. The previous page was three bands of stacked white cards
+ * listing seven channels; this one argues for the partnership first and lists the
+ * channels afterwards, which is the order a family deciding whether to trust a
+ * school actually reads in.
  *
- * Warm ground throughout and no dark section, deliberately: this is the chapter
- * about being looked after, and every other page in the section has at least one
- * ink band. The consistency here is the type and the interaction, not the
- * palette.
+ *   Banner        components/ui/PageHero.astro       shared, as History uses
+ *   01            parents/Orientation.astro          copy left, photo cluster right — FIRST
+ *   02            parents/Forum.astro                what a forum IS, and the route
+ *   03            parents/Workshops.astro            JourneyCarousel — three-up, wave foot
+ *   04            parents/Comms.astro                copy left, one frame right
+ *   05            parents/Engagement.astro           MIRRORED — frame left
+ *   06            parents/Faq.astro                  photo left, accordion right
+ *   Timeline      parents/Timeline.astro             the year, drawn in — LAST
  *
- * The phases come from `partnership` in src/data/academics.ts, grouped at build
- * time — so adding a channel to the data files it into the right band without
- * anyone editing this page.
+ * SIX TOPICS, SIX FULL SECTIONS. An earlier pass folded all six into one
+ * carousel, which compressed each to a paragraph and three chips — the client's
+ * word for it was "shortcuts", and it was right. Each now has the room its
+ * content needs, and 04 and 05 are the same component mirrored so two adjacent
+ * splits do not read as the same slide twice.
+ *
+ * ONE NEW REUSABLE COMPONENT, as briefed: JourneyCarousel, used by 03. It takes
+ * its cards as a prop and hard-codes nothing about parents. The parents/* files
+ * are page decomposition rather than abstractions — the same pattern as
+ * teaching/* on Teaching & Learning.
+ *
+ * ⚠ FOUR SECTIONS HAVE BEEN REMOVED AT THE CLIENT'S REQUEST. The page now opens
+ * straight onto Orientation and ends on the timeline:
+ *   · parents/Intro.astro        the philosophy statement and the four figures
+ *   · parents/Resources.astro    the parent-resources bento
+ *   · parents/Voice.astro        the quote panel
+ *   · parents/StayConnected.astro the closing call to action
+ * All four components are still in parents/ and all four blocks of copy are still
+ * in the `parents` data — see each file. Putting any of them back is one import
+ * and one line.
+ *
+ * TWO CONSEQUENCES WORTH KNOWING:
+ *   · The school's phone numbers and email now appear only in the site footer,
+ *     and the page no longer closes on a call to action.
+ *   · Nothing now states what the partnership IS before the page starts listing
+ *     its parts. A reader meets "Orientation" cold, under the banner.
+ *
+ * ⚠ ONE THING THE BRIEF ASKED FOR THAT IS NOT HERE: a parent testimonial with a
+ * name, a child's class and a star rating. The school supplied none of it and
+ * none of it can be invented — see the header of parents/Voice.astro, which
+ * holds the Principal's own published words instead and swaps the moment a real
+ * quote arrives WITH consent. An asset request, not an omission.
+ *
+ * ⚠ PHOTOGRAPHY. The brief asks for parents interacting with children and
+ * teachers meeting parents. The repository holds no such photograph — every image
+ * here is of students or campus. The compositions take the real thing unchanged
+ * as soon as it exists. Request A2.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ChapterNav from '../../components/academics/ChapterNav.astro';
-import { school } from '../../data/site';
-import { partnership, partnershipPhases } from '../../data/academics';
+import PageHero from '../../components/ui/PageHero.astro';
+import SectionRail from '../../components/academics/SectionRail.astro';
 
-/** Grouped once here rather than filtered three times in the markup. */
-const grouped = partnershipPhases.map((phase) => ({
-  phase,
-  items: partnership.filter((p) => p.phase === phase),
-}));
+import Orientation from '../../components/academics/parents/Orientation.astro';
+import Forum from '../../components/academics/parents/Forum.astro';
+import Workshops from '../../components/academics/parents/Workshops.astro';
+import Comms from '../../components/academics/parents/Comms.astro';
+import Engagement from '../../components/academics/parents/Engagement.astro';
+import Faq from '../../components/academics/parents/Faq.astro';
+import Timeline from '../../components/academics/parents/Timeline.astro';
+
+import { parents } from '../../data/academics';
+import banner from '../../assets/photos/sunbeem-3.jpg';
+
 ---
 
 <BaseLayout
   title="Parent Partnership — Sunbeam School Ballia"
-  description="How Sunbeam School Ballia works with parents: orientation before the session, parent–teacher meetings on the academic calendar, a report card portal, workshops and a parent forum."
+  description="How Sunbeam School Ballia works with parents: orientation before the session, a parents' forum, workshops, parent–teacher meetings on the published calendar, and a report card portal."
 >
-  {/* ══ HERO — warm, human, no photograph ══════════════════════════════════ */}
-  <section class="phero6" aria-labelledby="phero6-title">
-    <div class="u-container">
-      <nav class="phero6__crumbs" aria-label="Breadcrumb">
-        <ol>
-          <li><a href="/">Home</a></li>
-          <li><a href="/academics/">Academics</a></li>
-          <li><span aria-current="page">Parent Partnership</span></li>
-        </ol>
-      </nav>
+  <PageHero
+    title={parents.hero.title}
+    standfirst={parents.hero.stand}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+    ]}
+    src={banner}
+    alt="Students of Sunbeam School Ballia on the school campus."
+    position="50% 42%"
+  />
 
-      <p class="phero6__n t-tabular" aria-hidden="true">Chapter 06</p>
+  {/* A slim sticky index of the page's main sections. */}
+  <SectionRail
+    items={[
+      { id: 'orientation', label: 'Orientation' },
+      { id: 'forum', label: 'Parents’ forum' },
+      { id: 'workshops', label: 'Workshops' },
+      { id: 'communication', label: 'Communication' },
+      { id: 'engagement', label: 'Engagement' },
+      { id: 'faqs', label: 'FAQs' },
+    ]}
+  />
 
-      <h1 class="phero6__title" id="phero6-title" data-split>
-        The school talks to <span class="t-squiggle">parents</span>
-      </h1>
+  {/* padding-bottom: 0 — the timeline closes the page and carries its own 160px
+      foot, on a ground that fades from ivory to sand. The panel's own 120px of
+      flat ivory underneath would undo that fade and put a pale band between the
+      section and the footer. */}
+  <div class="u-page-panel pp-panel">
+    <Orientation />
+    <Forum />
+    <Workshops />
+    <Comms />
+    <Engagement />
+    <Faq />
 
-      <p class="phero6__stand">
-        Seven standing channels between the staff room and home — scheduled, published, and the same
-        for every family. Not a newsletter and a hope.
-      </p>
-
-      {/* The two numbers a parent actually needs, at the top of the page rather
-          than buried in a contact section at the bottom. */}
-      <ul class="phero6__lines">
-        <li>
-          <span class="phero6__lines-l">School office</span>
-          <a class="phero6__tel t-tabular" href={`tel:${school.phone.office}`}>
-            {school.phone.officeDisplay}
-          </a>
-        </li>
-        <li>
-          <span class="phero6__lines-l">Admissions</span>
-          <a class="phero6__tel t-tabular" href={`tel:${school.phone.admissions}`}>
-            {school.phone.admissionsDisplay}
-          </a>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  {/* ══ THE THREE PHASES ═══════════════════════════════════════════════════ */}
-  {grouped.map((g, gi) => (
-    <section class:list={['ph', gi % 2 === 1 && 'ph--alt']} aria-labelledby={`ph-${gi}`}>
-      <div class="u-container ph__grid">
-        {/* Sticky, so the phase name stays with its channels while they scroll. */}
-        <div class="ph__label">
-          <p class="ph__i t-tabular" aria-hidden="true">
-            {String(gi + 1).padStart(2, '0')}<span>/03</span>
-          </p>
-          <h2 class="ph__h" id={`ph-${gi}`}>{g.phase}</h2>
-        </div>
-
-        <ul class="ph__list">
-          {g.items.map((p, i) => {
-            const Tag = p.href ? 'a' : 'div';
-            return (
-              <li class="pch" data-reveal data-reveal-delay={i * 90}>
-                <Tag
-                  class="pch__in"
-                  {...(p.href ? { href: p.href } : {})}
-                  {...(p.href && p.external ? { target: '_blank', rel: 'noopener' } : {})}
-                >
-                  <h3 class="pch__t" data-title={p.label}><span>{p.label}</span></h3>
-                  <p class="pch__b">{p.body}</p>
-
-                  {p.href ? (
-                    <span class="pch__go">
-                      {p.external ? 'Open portal' : 'Go'}
-                      <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
-                        <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.7" />
-                      </svg>
-                    </span>
-                  ) : (
-                    /* No link because no page exists yet. Saying so is better
-                       than an anchor that goes nowhere or a dead href="#". */
-                    <span class="pch__soon">Page in preparation</span>
-                  )}
-                </Tag>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </section>
-  ))}
-
-  <ChapterNav current="parent-partnership" />
+    <Timeline />
+  </div>
 </BaseLayout>
 
 <style>
-  /* ══════════ HERO ════════════════════════════════════════════════════════ */
-  .phero6 {
-    background:
-      radial-gradient(110% 74% at 84% 0%, #ffe9d6 0%, rgba(255, 233, 214, 0) 60%),
-      linear-gradient(180deg, #fdf4ec 0%, #fbefe4 100%);
-    padding-block: clamp(110px, 15vh, 176px) var(--sb-section-y-major);
-  }
-
-  .phero6__crumbs ol {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sb-3);
-    list-style: none;
-    margin: 0 0 var(--sb-8);
-    padding: 0;
-    font-size: var(--sb-caption);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .phero6__crumbs li + li::before {
-    content: '/';
-    margin-right: var(--sb-3);
-    color: var(--sb-text-muted);
-  }
-
-  .phero6__crumbs a { color: var(--sb-text-secondary); }
-  .phero6__crumbs a:hover { color: var(--sb-violet); }
-  .phero6__crumbs [aria-current] { color: var(--sb-charcoal); font-weight: 600; }
-
-  .phero6__n {
-    font-size: var(--sb-caption);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--sb-violet);
-    margin-bottom: var(--sb-5);
-  }
-
-  .phero6__title {
-    max-width: 22ch;
-    font-family: var(--sb-font-display);
-    font-weight: 800;
-    font-size: clamp(34px, 5.2vw, 74px);
-    line-height: 1.05;
-    letter-spacing: -0.038em;
-    color: var(--sb-charcoal);
-  }
-
-  .phero6__stand {
-    max-width: 56ch;
-    margin-top: var(--sb-6);
-    font-size: var(--sb-body);
-    line-height: 1.72;
-    color: var(--sb-text-secondary);
-  }
-
-  .phero6__lines {
-    display: flex;
-    flex-wrap: wrap;
-    gap: clamp(24px, 5vw, 72px);
-    list-style: none;
-    margin: clamp(36px, 5vh, 64px) 0 0;
-    padding-top: var(--sb-7);
-    border-top: var(--sb-hairline);
-  }
-
-  .phero6__lines-l {
-    display: block;
-    font-size: var(--sb-caption);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--sb-violet-dark);
-    margin-bottom: 6px;
-  }
-
-  .phero6__tel {
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(21px, 2.4vw, 32px);
-    letter-spacing: -0.02em;
-    color: var(--sb-charcoal);
-    border-bottom: 2px solid transparent;
-    transition: border-color var(--sb-dur-link) ease, color var(--sb-dur-link) ease;
-  }
-
-  .phero6__tel:hover {
-    color: var(--sb-violet);
-    border-bottom-color: var(--sb-violet);
-  }
-
-  /* ══════════ PHASE BANDS ═════════════════════════════════════════════════ */
-  .ph {
-    background: var(--sb-ivory);
-    padding-block: clamp(56px, 9vh, 110px);
-    border-top: var(--sb-hairline);
-  }
-
-  .ph--alt { background: var(--sb-sand); }
-
-  .ph__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-    gap: clamp(28px, 5vw, 80px);
-    align-items: start;
-  }
-
-  .ph__label {
-    position: sticky;
-    top: clamp(110px, 14vh, 150px);
-  }
-
-  .ph__i {
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(28px, 3vw, 40px);
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--sb-violet);
-    margin-bottom: var(--sb-4);
-  }
-
-  .ph__i span {
-    font-size: 0.45em;
-    color: var(--sb-text-muted);
-    letter-spacing: 0;
-  }
-
-  .ph__h {
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(24px, 2.8vw, 40px);
-    line-height: 1.1;
-    letter-spacing: -0.032em;
-    color: var(--sb-charcoal);
-  }
-
-  .ph__list {
-    display: grid;
-    gap: var(--sb-5);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .pch__in {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    display: block;
-    padding: var(--sb-7);
-    border-radius: var(--sb-r-2);
-    background: #fff;
-    box-shadow: var(--sb-shadow-card);
-    transition: transform var(--sb-dur-image) var(--sb-ease),
-      box-shadow var(--sb-dur-image) var(--sb-ease);
-  }
-
-  /* The same downward wipe used on every card in this build. */
-  .pch__in::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: var(--sb-violet-wash);
-    -webkit-transform: scaleY(0);
-    transform: scaleY(0);
-    -webkit-transform-origin: 50% 0%;
-    transform-origin: 50% 0%;
-    -webkit-transition: -webkit-transform 0.4s ease-out;
-    transition: transform 0.4s ease-out;
-  }
-
-  a.pch__in:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--sb-shadow-card-hover);
-  }
-
-  a.pch__in:hover::before,
-  a.pch__in:focus-visible::before {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1);
-  }
-
-  /* Roll-up swap. Padding plus an equal negative margin, so `overflow: hidden`
-     cannot slice the descender in "Parent–teacher meetings". */
-  .pch__t {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding-bottom: 0.14em;
-    margin-bottom: calc(-0.14em + var(--sb-4));
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(19px, 1.9vw, 26px);
-    line-height: 1.24;
-    letter-spacing: -0.025em;
-    color: var(--sb-charcoal);
-  }
-
-  .pch__t > span {
-    display: inline-block;
-    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
-    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
-  }
-
-  .pch__t::before {
-    content: attr(data-title);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    -webkit-transform: translateY(110%);
-    transform: translateY(110%);
-    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
-    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
-  }
-
-  a.pch__in:hover .pch__t > span,
-  a.pch__in:focus-visible .pch__t > span {
-    -webkit-transform: translateY(-125%);
-    transform: translateY(-125%);
-  }
-
-  a.pch__in:hover .pch__t::before,
-  a.pch__in:focus-visible .pch__t::before {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-  }
-
-  .pch__b {
-    font-size: var(--sb-body-sm);
-    line-height: 1.65;
-    color: var(--sb-text-secondary);
-    max-width: 58ch;
-  }
-
-  .pch__go {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sb-3);
-    margin-top: var(--sb-6);
-    font-size: var(--sb-body-sm);
-    font-weight: 600;
-    color: var(--sb-violet);
-  }
-
-  .pch__go svg { transition: transform var(--sb-dur-link) var(--sb-ease); }
-  a.pch__in:hover .pch__go svg { transform: translateX(4px); }
-
-  .pch__soon {
-    display: inline-block;
-    margin-top: var(--sb-6);
-    padding: 5px 12px;
-    border-radius: var(--sb-r-full);
-    border: 1px dashed var(--sb-border-strong);
-    font-size: var(--sb-caption);
-    color: var(--sb-text-muted);
-  }
-
-  /* ══════════ REDUCED MOTION ══════════════════════════════════════════════ */
-  @media (prefers-reduced-motion: reduce) {
-    .pch__in,
-    .pch__t > span,
-    .pch__t::before,
-    .pch__go svg,
-    .phero6__tel { transition: none; }
-
-    a.pch__in:hover,
-    a.pch__in:hover .pch__t > span,
-    a.pch__in:hover .pch__go svg { transform: none; }
-
-    .pch__in::before {
-      -webkit-transform: scaleY(1);
-      transform: scaleY(1);
-      opacity: 0;
-      transition: opacity 0.15s linear;
-    }
-
-    a.pch__in:hover::before,
-    a.pch__in:focus-visible::before { opacity: 1; }
-
-    a.pch__in:hover .pch__t::before,
-    a.pch__in:focus-visible .pch__t::before {
-      -webkit-transform: translateY(110%);
-      transform: translateY(110%);
-    }
-  }
-
-  /* ══════════ TABLET ══════════════════════════════════════════════════════ */
-  @media (max-width: 1023px) {
-    .ph__grid { grid-template-columns: minmax(0, 1fr); }
-    .ph__label { position: static; }
-  }
-
-  /* ══════════ MOBILE ══════════════════════════════════════════════════════ */
-  @media (max-width: 639px) {
-    .phero6 { padding-block: clamp(92px, 13vh, 130px) var(--sb-section-y); }
-    .ph { padding-block: var(--sb-9); }
-    .phero6__lines { gap: var(--sb-6); }
-  }
+  /* div.pp-panel, not .pp-panel: it has to out-specify .u-page-panel in base.css,
+     which a bare scoped class only matches rather than beats. */
+  div.pp-panel { padding-bottom: 0; }
 </style>

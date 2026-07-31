@@ -1,0 +1,517 @@
+---
+/**
+ * PARENT PARTNERSHIP · 04 — SCHOOL–PARENT COMMUNICATION
+ *
+ * REBUILT TO A SUPPLIED REFERENCE: a pale sky with clouds drifting in it, a
+ * centred bracketed head, and the four channels as four numbered cards in a row.
+ * It replaces a copy-left / photograph-right split, and the swap is an argument
+ * as much as a layout — this section's whole point is that there are FOUR
+ * channels and each carries one kind of message. Four equal cards say that.
+ * A paragraph with a picture beside it says it in prose and hopes you count.
+ *
+ * ⚠ WHAT WENT WITH THE OLD LAYOUT: the courtyard photograph and the floating
+ * "Parent portal" plate that sat on its corner. The plate's content is not lost —
+ * the portal is card 04, and the button under the grid is the same link it
+ * carried. `comms.photo` and `comms.alt` in the data are now unused; they are
+ * left in place so restoring the split is a revert rather than a rewrite.
+ *
+ * ⚠ THE CARDS DO NOT CARRY THE REFERENCE'S ARROW, and that is deliberate. In the
+ * reference every card ends on a "→", which promises each one goes somewhere.
+ * Three of these four do not: circulars, attendance and homework are things the
+ * school DOES, not pages the site has. Three dead arrows would be three broken
+ * promises, so the slot holds the channel's own glyph instead — the same small
+ * mark in the same corner, without the claim. The one real destination is the
+ * parent portal, and it is a button under the grid where a reader will find it.
+ *
+ * THE CLOUDS ARE ONE IMAGE, FIVE TIMES. Different sizes, depths and drift
+ * periods off a single asset: five separate cloud files would be five more
+ * things to download for a decoration. Each sits in a wrapper that takes the
+ * scroll parallax while the <img> inside takes the float — SEPARATE ELEMENTS ON
+ * PURPOSE. GSAP's CSSPlugin normalises a CSS `rotate`/`translate` into the
+ * element's matrix, so a parallax and a keyframe animation on the SAME element
+ * fight over one transform and the result is a double-applied rotation. That bug
+ * cost an afternoon on the Teaching & Learning paintbrush; it is not repeated.
+ */
+import { Image } from 'astro:assets';
+import AcademicGlyph from '../AcademicGlyph.astro';
+import { parents } from '../../../data/academics';
+import cloud from '../../../assets/icons/clouds.png';
+
+const { comms: c } = parents;
+
+/* Position, size, drift period and delay for each cloud. A fixed table rather
+   than random values: the sky is identical on every load, which is what makes
+   it testable and stops it flickering differently for every visitor. */
+const clouds = [
+  { class: 'a', w: 132, dur: 15, delay: 0 },
+  { class: 'b', w: 108, dur: 19, delay: -4 },
+  { class: 'c', w: 150, dur: 17, delay: -8 },
+  { class: 'd', w: 96, dur: 21, delay: -2 },
+  { class: 'e', w: 118, dur: 23, delay: -11 },
+];
+---
+
+<section class="ccm" id="communication" aria-labelledby="comms-title">
+  {
+    clouds.map((cl) => (
+      <span class:list={['ccm__cloud', `ccm__cloud--${cl.class}`]} aria-hidden="true" data-parallax data-parallax-y={cl.w > 120 ? 44 : 26}>
+        <Image
+          src={cloud}
+          alt=""
+          widths={[160, 320]}
+          sizes={`${cl.w}px`}
+          loading="lazy"
+          style={`--ccm-cloud-w:${cl.w}px;--ccm-cloud-dur:${cl.dur}s;--ccm-cloud-delay:${cl.delay}s`}
+        />
+      </span>
+    ))
+  }
+
+  <div class="u-container">
+    <div class="ccm__head">
+      <p class="ccm__eyebrow">[{c.n} · {c.eyebrow}]</p>
+      <h2 class="ccm__h" id="comms-title" data-split>{c.heading}</h2>
+      <div class="ccm__stand">
+        {c.paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+
+    <ol class="ccm__grid">
+      {
+        c.channels.map((ch, i) => (
+          <li class="ccard" data-pop data-pop-delay={i * 90}>
+            {/* Two faces of one disc. Decorative throughout — the ordered list
+                already conveys the sequence to a screen reader, and hearing
+                "01 Circulars" for four items is the numbering read twice. */}
+            <span class="ccard__badge" aria-hidden="true">
+              <span class="ccard__face ccard__face--n t-tabular">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span class="ccard__face ccard__face--i">
+                <AcademicGlyph name={ch.glyph} size={26} />
+              </span>
+            </span>
+
+            <h3 class="ccard__h">{ch.label}</h3>
+            <p class="ccard__b">{ch.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="ccm__out">
+      <a
+        class="btn btn--primary"
+        href={c.cta.href}
+        {...(c.cta.external ? { target: '_blank', rel: 'noopener' } : {})}
+      >
+        {c.cta.label}
+        {c.cta.external && <span class="u-visually-hidden">(opens in a new tab)</span>}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* The band opens on ivory because the section ABOVE closes with a wave painted
+     in ivory — the wave is the top of this section arriving early, and a
+     different colour here would show the join as a line. It lands on sand
+     because Engagement below is the sand tone. */
+  .ccm {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(56px, 8vh, 96px) clamp(64px, 9vh, 108px);
+    background: linear-gradient(
+      to bottom,
+      var(--sb-ivory) 0%,
+      #fffdfb 26%,
+      #fbf4ef 68%,
+      var(--sb-sand) 100%
+    );
+  }
+
+  /* --- The sky ------------------------------------------------------------- */
+
+  .ccm__cloud {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    user-select: none;
+    will-change: transform;
+  }
+
+  .ccm__cloud img {
+    display: block;
+    width: var(--ccm-cloud-w);
+    height: auto;
+    /* Drifts sideways and settles, on `translate` rather than `transform` so it
+       can never collide with the parallax the WRAPPER is carrying. */
+    animation: ccm-drift var(--ccm-cloud-dur) ease-in-out var(--ccm-cloud-delay) infinite;
+  }
+
+  @keyframes ccm-drift {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 26px -12px; }
+  }
+
+  /* Placed off the container rather than off the viewport, so they hold the same
+     relationship to the copy at every width. Two on the left, two on the right
+     and one low, which is the reference's arrangement. */
+  .ccm__cloud--a { top: 6%; left: 3%; opacity: 0.85; }
+  .ccm__cloud--b { top: 22%; left: 8%; opacity: 0.6; }
+  .ccm__cloud--c { top: 9%; right: 4%; opacity: 0.8; }
+  .ccm__cloud--d { top: 27%; right: 9%; opacity: 0.55; }
+  .ccm__cloud--e { bottom: 8%; left: 6%; opacity: 0.42; }
+
+  /* base.css collapses durations under reduced motion but leaves delays alone,
+     so switching this off outright is what parks the clouds where they are. */
+  @media (prefers-reduced-motion: reduce) {
+    .ccm__cloud img { animation: none; }
+  }
+
+  /* --- Head ---------------------------------------------------------------- */
+
+  /* The head takes the full container and each child sets its own measure. It
+     used to be capped at 66ch, which is a fine measure for the lede and a
+     straitjacket for the heading — see the note on h2.ccm__h. */
+  .ccm__head { text-align: center; }
+
+  .ccm__eyebrow {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    /* --sb-violet-dark, not --sb-violet: 12px on this pale ground measures 4.3:1
+       with the lighter brand tone, which is under AA. */
+    color: var(--sb-violet-dark);
+  }
+
+  /* ONE LINE, and that is what `max-width: none` is doing here. The heading is a
+     child of a 66ch head block, and 66ch at the head's own 17px body size is
+     ~617px — which broke this sentence over two lines however small the type
+     got, because the cap has nothing to do with the heading's font size. It now
+     sets against the container instead.
+
+     The 4vw step is chosen so the sentence still fits on one line all the way
+     down to about 600px: measured, it needs ~21.3em, so 4vw keeps it inside the
+     container at every width where the container is wider than that. Below the
+     26px floor it wraps, which is correct — there is no readable size at which
+     forty-four characters fit across a phone. */
+  h2.ccm__h {
+    max-width: none;
+    margin-top: var(--sb-5);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 4vw, 58px);
+    line-height: 1.06;
+    letter-spacing: -0.038em;
+    color: var(--sb-charcoal);
+    text-wrap: pretty;
+  }
+
+  .ccm__stand { margin-top: clamp(18px, 2.4vh, 28px); }
+
+  /* 72ch, not 62: the lede is one sentence now and this is the measure at which
+     it sets to the three lines it was written for. */
+  .ccm__stand p {
+    max-width: 72ch;
+    margin-inline: auto;
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    text-wrap: pretty;
+  }
+
+  .ccm__stand p + p { margin-top: var(--sb-4); }
+
+  /* --- Cards --------------------------------------------------------------- */
+
+  .ccm__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 30px);
+    margin: clamp(38px, 5.6vh, 68px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ccard {
+    position: relative;
+    /* Contains the burst: it is a z-index:-1 pseudo, and without a stacking
+       context of its own it would paint behind the card's white ground and be
+       invisible. `overflow: hidden` is what keeps it inside the rounded corner. */
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: clamp(260px, 25vw, 350px);
+    padding: clamp(22px, 2.2vw, 32px);
+    border: 1px solid rgba(201, 60, 10, 0.08);
+    border-radius: clamp(20px, 2vw, 30px);
+    background: #fff;
+    box-shadow: 0 18px 44px -30px rgba(28, 14, 8, 0.34);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease),
+      border-color var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .ccard:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 66px -30px rgba(28, 14, 8, 0.42);
+    border-color: rgba(201, 60, 10, 0.2);
+  }
+
+  /* ── THE BURST ────────────────────────────────────────────────────────────
+     A warm bloom that sits under the pointer. The script at the foot of this
+     file writes --mx/--my as percentages of the card; the fallbacks below are
+     the card's centre, which is what a reader gets when the script has not run
+     or when the pointer is coarse — a static glow rather than nothing.
+
+     Only the OPACITY transitions. Transitioning the position too would make the
+     bloom chase the cursor a beat behind, which reads as lag rather than as
+     light; it is repainted on the same frame as the pointer instead. */
+  .ccard::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      clamp(140px, 16vw, 230px) circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 122, 74, 0.22) 0%,
+      rgba(255, 138, 92, 0.09) 42%,
+      rgba(255, 138, 92, 0) 72%
+    );
+    opacity: 0;
+    transition: opacity 260ms var(--sb-ease);
+    pointer-events: none;
+  }
+
+  .ccard:hover::before { opacity: 1; }
+
+  /* ── THE RIBBON ───────────────────────────────────────────────────────────
+     shape-2.png as a MASK, not as an image, and that is not a stylistic choice.
+     Measured, the file is 1429×552 RGBA in which every opaque pixel is pure
+     white and only 5.2% of pixels carry any alpha at all — a fine-line ribbon
+     on transparency. Dropped straight onto a white card it is white on white
+     and renders as nothing. Masking a gradient through it is what turns the
+     line work into something the card can actually show.
+
+     THE GRADIENT RUNS TO THE LEFT AND DIES BEFORE THE COPY. It is `to left` and
+     transparent by 76%, so the ribbon is only ever inked over the card's right
+     third and fades out entirely before it reaches the column the title and body
+     set in. A flourish behind body copy is how a decoration becomes a contrast
+     failure, and this way there is nothing there to fail.
+
+     THE CROP IS DONE IN CSS rather than by cutting a second asset. The ink sits
+     in x 956–1310 of the 1429 wide canvas, so the left two thirds of the file
+     are empty; `mask-position: 80%` slides that emptiness off to the left and
+     anchors the ribbon to the card's bottom-right, bleeding a few pixels past
+     the edge.
+
+     THE SIZE IS DEFORMED ON PURPOSE — 202% × 118% rather than `auto`. The ink's
+     own aspect is 0.64 and the slot it has to fill is the card's right half,
+     which is 0.37. Keeping the artwork's proportions means choosing between a
+     ribbon that spans the card's height and one that stays out of the copy; it
+     cannot do both. Squeezing it horizontally does both, and on an abstract line
+     ribbon the deformation reads as a taller, finer version of the same drawing
+     rather than as a distortion.
+
+     0.18, NOT 0.5. The first pass was set at half opacity and the ribbon
+     crossed the body copy as visible orange line work — decoration competing
+     with the thing it decorates. At 0.18 the lines shift the local ground by
+     under two percent, which is why the card copy still measures 9.6:1. */
+  .ccard::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      to left,
+      var(--sb-lime) 0%,
+      var(--sb-violet) 30%,
+      rgba(201, 60, 10, 0) 62%
+    );
+    -webkit-mask-image: url('../../../assets/icons/shape-2.png');
+    mask-image: url('../../../assets/icons/shape-2.png');
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 202% 118%;
+    mask-size: 202% 118%;
+    -webkit-mask-position: 80% 100%;
+    mask-position: 80% 100%;
+    opacity: 0.18;
+    transition:
+      opacity var(--sb-dur-image) var(--sb-ease),
+      transform var(--sb-dur-image) var(--sb-ease);
+    pointer-events: none;
+  }
+
+  /* The ribbon leans in as the card lifts. Scaled from its own bottom-right so
+     it grows out of the corner it is anchored to rather than drifting across
+     the card. */
+  .ccard:hover::after {
+    opacity: 0.34;
+    transform: scale(1.07) rotate(-2deg);
+    transform-origin: 100% 100%;
+  }
+
+  /* ── THE DISC, WHICH FLIPS ────────────────────────────────────────────────
+     The numeral on the front, the channel's own glyph on the back. Perspective
+     is declared on the transform itself rather than on the card, so the card
+     does not become a 3D context for everything else inside it. */
+  .ccard__badge {
+    position: relative;
+    width: clamp(52px, 4.4vw, 64px);
+    aspect-ratio: 1;
+    transform-style: preserve-3d;
+    transform: perspective(700px) rotateY(0deg);
+    transition: transform 620ms var(--sb-ease);
+  }
+
+  .ccard:hover .ccard__badge { transform: perspective(700px) rotateY(180deg); }
+
+  .ccard__face {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: var(--sb-r-full);
+    /* Without this both faces paint at once and the disc reads as a smear. */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .ccard__face--n {
+    border: 1px solid var(--sb-border);
+    background: #fff;
+    font-family: var(--sb-font-display);
+    font-size: clamp(19px, 1.7vw, 25px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--sb-violet);
+  }
+
+  .ccard__face--i {
+    transform: rotateY(180deg);
+    border: 1px solid var(--sb-violet);
+    background: var(--sb-violet);
+    color: #fff;
+  }
+
+  /* NO two-line reserve here, unlike the workshop cards. Every label is one or
+     two words and sets on one line at every width the grid uses, so reserving a
+     second would only open a permanent gap under four one-line headings. The
+     cards still end level regardless — the mark below is pushed down by
+     `margin-top: auto`, not by the copy above it. */
+  h3.ccard__h {
+    margin-top: clamp(20px, 2.4vw, 32px);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(19px, 1.62vw, 25px);
+    line-height: 1.16;
+    letter-spacing: -0.026em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .ccard__b {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.68;
+    color: var(--sb-text-secondary);
+  }
+
+  .ccm__out {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(30px, 4.4vh, 50px);
+  }
+
+  /* The flip still HAPPENS under reduced motion, it just stops being animated —
+     an instant swap between two states is a state change, not motion, and
+     removing it outright would hide the icon from the readers most likely to
+     want a second cue for what a channel is. The lift and the bloom are pure
+     decoration and do go. */
+  @media (prefers-reduced-motion: reduce) {
+    .ccard,
+    .ccard__badge,
+    .ccard::before,
+    .ccard::after { transition: none; }
+    .ccard:hover { transform: none; }
+    .ccard:hover::before { opacity: 0; }
+    /* The ribbon still brightens — a change of opacity is not motion — but it
+       stops moving. */
+    .ccard:hover::after { transform: none; }
+  }
+
+  /* THE FULL SKY NEEDS A GUTTER TO SIT IN, and below 1200 there isn't one. The
+     heading is centred at a 66ch measure and the container margin is only 24–40px
+     there, so the four upper clouds land on the words rather than beside them —
+     measured at 768, where "going on" sat on top of one. Only the low cloud
+     survives; it lives in the empty band under the button, which is clear at
+     every width. */
+  @media (max-width: 1199px) {
+    .ccm__cloud--a,
+    .ccm__cloud--b,
+    .ccm__cloud--c,
+    .ccm__cloud--d { display: none; }
+  }
+
+  @media (max-width: 1023px) {
+    .ccm__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 639px) {
+    .ccm { padding-block: var(--sb-9); }
+    .ccm__grid { grid-template-columns: minmax(0, 1fr); }
+    .ccard { min-height: 0; }
+    /* Hover lift is a pointer gesture; on touch it only reads as a stuck state
+       after a tap. */
+    .ccard:hover { transform: none; }
+    .ccm__cloud img { width: calc(var(--ccm-cloud-w) * 0.66); }
+  }
+</style>
+
+<script>
+  /**
+   * The burst follows the pointer.
+   *
+   * ONLY WHERE THERE IS A POINTER TO FOLLOW. On a touch screen `:hover` sticks
+   * after a tap and there is no pointermove to track, so the card would keep a
+   * bloom frozen wherever the finger last landed. The media query gate means
+   * those readers get the CSS fallback — the bloom centred, and only while the
+   * card is actually hovered — rather than a stuck highlight.
+   *
+   * WRITES PERCENTAGES, NOT PIXELS, so the value survives a resize without this
+   * having to listen for one.
+   *
+   * `getBoundingClientRect` on every pointermove is a layout read per frame,
+   * which is the thing to avoid on a scrubbed animation — here it is fine and
+   * deliberately not cached: the card MOVES on hover (it lifts 6px), so a rect
+   * measured once on enter would be six pixels wrong for the whole interaction.
+   */
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('.ccard').forEach((card) => {
+      card.addEventListener(
+        'pointermove',
+        (e) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+          card.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+        },
+        { passive: true }
+      );
+
+      // Back to centre on the way out, so the next hover starts from the card's
+      // middle rather than from wherever the pointer happened to leave.
+      card.addEventListener('pointerleave', () => {
+        card.style.removeProperty('--mx');
+        card.style.removeProperty('--my');
+      });
+    });
+  }
+</script>

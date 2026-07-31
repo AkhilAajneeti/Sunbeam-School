@@ -70,6 +70,24 @@ const Heading = `h${level}` as 'h2' | 'h3';
 </div>
 
 <style>
+  /* ═══ THE GAP BELOW THE HEAD IS A CUSTOM PROPERTY ═══════════════════════════
+     A caller CANNOT set this with an ordinary scoped rule. Astro passes the
+     `class` string down but not its scoping attribute, so a section writing
+     `.room__head { margin-bottom: … }` in its own <style> compiles to
+     `.room__head[data-astro-cid-ROOM]` and matches nothing — the element here
+     carries THIS component's cid.
+
+     That is not hypothetical. Both Room and LabIndex had exactly that rule, and
+     both silently rendered with ZERO space between the heading and the content
+     below it while keeping 120–160px of section padding above — measured, which
+     is how it was found. It reads as a section whose top is enormous and whose
+     bottom is missing, and no amount of adjusting the padding fixes it.
+
+     Custom properties DO cross the boundary, so a caller sets `--shead-gap` on
+     any ancestor it owns. Default 0: several callers follow the head with an
+     element that carries its own top margin, and two margins would stack. */
+  .shead { margin-bottom: var(--shead-gap, 0); }
+
   .shead__eyebrow { margin-bottom: var(--sb-5); }
 
   /* The dot is the whole difference between a pill and a category tag. */

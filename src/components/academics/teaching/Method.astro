@@ -23,25 +23,13 @@
 import { Image } from 'astro:assets';
 import SectionHead from '../SectionHead.astro';
 import { teachingLearning } from '../../../data/academics';
-import stars from '../../../assets/icons/two-stars.png';
+import brush from '../../../assets/icons/paintbrush.png';
 
 const { method } = teachingLearning;
 ---
 
 <section class="mth" id="methodology" aria-labelledby="mth-title">
   <div class="u-container mth__frame">
-    <Image
-      class="mth__stars"
-      src={stars}
-      alt=""
-      aria-hidden="true"
-      widths={[200, 400]}
-      sizes="180px"
-      loading="lazy"
-      data-parallax
-      data-parallax-y="-90"
-    />
-
     <div class="mth__grid">
       <div class="mth__intro" data-reveal>
         <SectionHead
@@ -70,11 +58,13 @@ const { method } = teachingLearning;
         </dl>
       </div>
 
-      {/* The cascade. An <ol> because the order is the content. */}
-      <ol class="mth__steps">
+      {/* The cascade. An <ol> because the order is the content.
+          data-step-track drives the connector: the line draws itself down the
+          numerals as the reader scrolls, and each step lights as it is passed. */}
+      <ol class="mth__steps" data-step-track>
         {
           method.steps.map((s, i) => (
-            <li class="mth__step" data-pop data-pop-delay={i * 60}>
+            <li class="mth__step" data-pop data-pop-delay={i * 60} data-step>
               <span class="mth__n" aria-hidden="true">{s.n}</span>
               <div class="mth__body">
                 <h3 class="mth__step-h">{s.step}</h3>
@@ -87,6 +77,26 @@ const { method } = teachingLearning;
     </div>
 
     <aside class="mth__aside" data-pop>
+      {/* The brush belongs to THIS plate, not to the section. Inside the aside so
+          it inherits the plate's own 1.2° lean and travels with it — anchored to
+          the corner it appears to have painted, rather than floating somewhere
+          above the whole chapter.
+
+          TWO ELEMENTS: the wrapper positions, the image inside animates. Keeping
+          the motion off the positioned element means a transform written here
+          later — an entrance, a parallax — cannot collide with the painting
+          keyframes. Decorative throughout, so aria-hidden. */}
+      <span class="mth__brush" aria-hidden="true">
+        <Image
+          class="mth__brush-img"
+          src={brush}
+          alt=""
+          widths={[160, 320]}
+          sizes="130px"
+          loading="lazy"
+        />
+      </span>
+
       <p class="mth__aside-l">{method.aside.label}</p>
       <p class="mth__aside-b">{method.aside.body}</p>
     </aside>
@@ -112,18 +122,78 @@ const { method } = teachingLearning;
 
   .mth__frame { position: relative; }
 
-  .mth__stars {
+  /* --- The brush -----------------------------------------------------------
+     It paints. The handle swings back and forth around the BRISTLES rather than
+     around the image's centre — `transform-origin` at 28%/76% is roughly where
+     the ferrule sits — which is the whole difference between a brush working and
+     a picture rocking.
+
+     THE MOTION IS ON THE IMAGE, THE POSITION ON ITS WRAPPER — worth keeping even
+     though nothing writes a transform here today. An earlier version carried a
+     scroll parallax as well and put both on one node, animating the individual
+     `rotate`/`translate` properties on the reasoning that those compose with
+     `transform` rather than replacing it, so GSAP could still own `transform`.
+
+     That is not how it behaves. GSAP's CSSPlugin normalises whatever transform
+     state it finds when it initialises, INCLUDING the individual properties, and
+     bakes it into the matrix it writes. Measured: the inline style came out as
+     `translate3d(…) rotate(-5.99896deg)` — a snapshot of wherever the keyframes
+     happened to be at that instant, then applied for ever on top of an animation
+     still running. The brush was double-rotated and drifting. The split costs one
+     element and makes the collision impossible to reintroduce.
+
+     No blend mode, unlike the pale two-stars mark this replaced: that needed a
+     multiply to register on ivory at all. This is full-colour art on a saturated
+     plate, and multiply would only dirty it. */
+  /* Anchored to the PLATE's top-right corner, hanging past both edges so the
+     bristles sit on the paint and the handle runs off into the page — the plate
+     reads as something the brush has just laid down.
+
+     THE CORNER IS THE ONE PLACE IT FITS. The label sits top-left and the body
+     fills the rest, so the top-right is the only region of this plate with no
+     type in it. Checked against the text's own extent rather than its block box:
+     an earlier position over the cascade passed a box test and still had the
+     first step's opening line running under the bristles. */
+  .mth__brush {
     position: absolute;
-    z-index: 0;
-    top: clamp(-16px, -1vw, 0px);
-    right: clamp(-10px, 1vw, 24px);
-    width: clamp(96px, 11vw, 168px);
-    height: auto;
-    /* two-stars.png is a very pale cream mark; on ivory it needs a multiply to
-       register at all, and multiply keeps it a tint rather than a shape. */
-    mix-blend-mode: multiply;
-    opacity: 0.9;
+    z-index: 1;
+    top: clamp(-46px, -3.2vw, -26px);
+    right: clamp(-34px, -2vw, -14px);
+    width: clamp(78px, 7.4vw, 108px);
     pointer-events: none;
+    user-select: none;
+  }
+
+  .mth__brush-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Around the BRISTLES, not the image's centre — that is the difference
+       between a brush working and a picture rocking. */
+    transform-origin: 28% 76%;
+    animation: mth-brush 5.5s ease-in-out infinite;
+  }
+
+  @keyframes mth-brush {
+    0%,
+    100% {
+      rotate: -6deg;
+      translate: 0 0;
+    }
+    50% {
+      rotate: 5deg;
+      translate: -7px 9px;
+    }
+  }
+
+  /* base.css already collapses every animation to 0.01ms under reduced motion,
+     which lands the brush on its 100% frame — a static, slightly tilted brush.
+     Stated explicitly so the resting angle is a decision rather than a leftover. */
+  @media (prefers-reduced-motion: reduce) {
+    .mth__brush-img {
+      animation: none;
+      rotate: -6deg;
+    }
   }
 
   .mth__grid {
@@ -185,6 +255,7 @@ const { method } = teachingLearning;
 
   .mth__step {
     --indent: 0;
+    position: relative;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     column-gap: clamp(16px, 2vw, 30px);
@@ -192,6 +263,37 @@ const { method } = teachingLearning;
     margin-left: calc(var(--indent) * clamp(12px, 2.4vw, 40px));
     padding-block: clamp(22px, 3vh, 34px);
     border-top: var(--sb-hairline);
+  }
+
+  /* --- The connector -------------------------------------------------------
+     A dashed line from each numeral to the next, so the four moves read as one
+     route rather than four entries. It is drawn per STEP rather than as one line
+     down the list, because the cascade indents: a single straight rail would
+     leave the lower numerals further and further away from it.
+
+     scaleY from the top, so it draws downward. The step below is offset by the
+     indent, so the line leans — `--indent` is the same variable that sets the
+     margin, which keeps the two in step if the indent ever changes. */
+  .mth__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(clamp(19px, 2.6vw, 38px));
+    top: calc(clamp(22px, 3vh, 34px) + 0.62em);
+    bottom: calc(clamp(22px, 3vh, 34px) * -1 - 0.2em);
+    border-left: 2px dashed rgba(201, 60, 10, 0.32);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 700ms var(--sb-ease);
+  }
+
+  /* `.is-passed` is set by the observer below as each step reaches the middle of
+     the screen. Without the script the line simply never draws — the steps are
+     numbered and ordered in the markup, so nothing is lost but the flourish. */
+  .mth__step.is-passed::after { transform: scaleY(1); }
+
+  .mth__step.is-passed .mth__n {
+    -webkit-text-stroke-color: var(--sb-violet);
+    color: rgba(201, 60, 10, 0.12);
   }
 
   .mth__step:nth-child(2) { --indent: 1; }
@@ -234,7 +336,10 @@ const { method } = teachingLearning;
   }
 
   .mth__step-b {
-    max-width: 46ch;
+    /* 40ch, not 46. The brush sits in this column's top-right corner and at 46
+       the first step's opening line ran under its bristles — measured, and
+       visible in the render as "a problem, a" crossing the paint. */
+    max-width: 40ch;
     margin-top: var(--sb-4);
     font-size: var(--sb-body-sm);
     line-height: 1.72;
@@ -274,9 +379,13 @@ const { method } = teachingLearning;
     color: #fff;
   }
 
-  /* --- Reduced motion ------------------------------------------------------ */
+  /* --- Reduced motion ------------------------------------------------------
+     The connector still DRAWS — it just arrives instead of growing. Removing it
+     entirely would take away information the sighted reader uses to see the four
+     moves as one sequence; only the travel goes. */
   @media (prefers-reduced-motion: reduce) {
-    .mth__n { transition: none; }
+    .mth__n,
+    .mth__step::after { transition: none; }
   }
 
   /* --- Tablet --------------------------------------------------------------
@@ -291,11 +400,51 @@ const { method } = teachingLearning;
   }
 
   @media (max-width: 767px) {
+    /* The plate is full width and the corner is tight; the brush would hang off
+       the screen edge rather than off the plate. */
+    .mth__brush { display: none; }
     /* The diagonal is a wide-screen device. At this width the indent eats the
        measure it was meant to dramatise. */
     .mth__step { margin-left: 0; }
     .mth__proofs { grid-template-columns: minmax(0, 1fr); }
-    .mth__stars { display: none; }
+
     .mth__aside { transform: none; }
   }
 </style>
+
+<script>
+  /**
+   * Lights each step of the cascade as the reader reaches it, and draws the
+   * connector down to the next one.
+   *
+   * NOT IN motion-gsap.ts. That chunk is gated behind prefers-reduced-motion and
+   * Save-Data because everything in it is decoration; the connector is closer to
+   * structure — it is what makes four numbered blocks read as one ordered route.
+   * So it ships here and always runs, and the CSS above holds the travel back
+   * under reduced motion rather than the line never appearing at all.
+   *
+   * ONE-WAY. `unobserve` after the first crossing, so scrolling back up does not
+   * un-draw the line behind the reader — a route that erases itself is a fidget,
+   * not a narrative.
+   */
+  const track = document.querySelector<HTMLElement>('[data-step-track]');
+
+  if (track) {
+    const steps = [...track.querySelectorAll<HTMLElement>('[data-step]')];
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-passed');
+          io.unobserve(e.target);
+        });
+      },
+      // Fires as the step's top passes the lower third of the viewport, which is
+      // where a reader is actually looking rather than where the element starts.
+      { rootMargin: '0px 0px -34% 0px', threshold: 0 }
+    );
+
+    steps.forEach((s) => io.observe(s));
+  }
+</script>

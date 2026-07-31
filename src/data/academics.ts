@@ -579,9 +579,9 @@ export const teachingLearning = {
     ],
     /** Verified rooms and programmes that make the above possible here. */
     anchors: [
-      { label: 'Nine subject laboratories', detail: 'Physics · Chemistry · Biology · Mathematics · Language · two computer labs · inquiry rooms' },
-      { label: 'KIDS entrepreneurship', detail: 'The school’s own programme, taken in Class VII' },
-      { label: 'Inquiry rooms', detail: 'Srijan · Model United Nations · Geography · Active Learning' },
+      { glyph: 'chemistry', label: 'Nine subject laboratories', detail: 'Physics · Chemistry · Biology · Mathematics · Language · two computer labs · inquiry rooms' },
+      { glyph: 'rocket', label: 'KIDS entrepreneurship', detail: 'The school’s own programme, taken in Class VII' },
+      { glyph: 'inquiry', label: 'Inquiry rooms', detail: 'Srijan · Model United Nations · Geography · Active Learning' },
     ],
     pull: 'A project cannot be completed by remembering.',
   },
@@ -688,14 +688,14 @@ export const teachingLearning = {
     /** Three entries on a vertical rail. */
     entries: [
       {
-        label: 'Library programme',
+        glyph: 'library', label: 'Library programme',
         body:
           'The Nalanda Library holds more than fifteen thousand books alongside twenty-five ' +
           'periodicals, in a reading room rather than a store cupboard.',
         anchor: '15,000+ books · 25 periodicals',
       },
       {
-        label: 'Reading programme',
+        glyph: 'reading', label: 'Reading programme',
         body:
           'Reading is treated as a taught skill with a room and a stock behind it, not as homework ' +
           'that happens somewhere else. Periodicals matter here: they are how a reader finds a ' +
@@ -703,7 +703,7 @@ export const teachingLearning = {
         anchor: null,
       },
       {
-        label: 'Language development',
+        glyph: 'language', label: 'Language development',
         body:
           'The school runs a language laboratory as one of its nine subject labs — language ' +
           'practised aloud and recorded, which is the part a textbook cannot do.',
@@ -723,24 +723,24 @@ export const teachingLearning = {
       {
         label: 'Nine subject laboratories',
         items: [
-          { name: 'Physics', detail: 'Board practicals, Classes IX–XII' },
-          { name: 'Chemistry', detail: 'Board practicals, Classes IX–XII' },
-          { name: 'Biology', detail: 'Board practicals, Classes IX–XII' },
-          { name: 'Mathematics', detail: 'Mathematics as a practical subject' },
-          { name: 'Language', detail: 'Spoken language, recorded and reviewed' },
-          { name: 'Computer — junior', detail: '40+ machines' },
-          { name: 'Computer — senior', detail: '40+ machines' },
-          { name: 'Robotics', detail: 'Drone · 3-D printer · telescope · embedded systems' },
-          { name: 'General science', detail: 'Middle-school practical work' },
+          { glyph: 'physics', name: 'Physics', detail: 'Board practicals, Classes IX–XII' },
+          { glyph: 'chemistry', name: 'Chemistry', detail: 'Board practicals, Classes IX–XII' },
+          { glyph: 'biology', name: 'Biology', detail: 'Board practicals, Classes IX–XII' },
+          { glyph: 'mathematics', name: 'Mathematics', detail: 'Mathematics as a practical subject' },
+          { glyph: 'language', name: 'Language', detail: 'Spoken language, recorded and reviewed' },
+          { glyph: 'computing', name: 'Computer — junior', detail: '40+ machines' },
+          { glyph: 'computing', name: 'Computer — senior', detail: '40+ machines' },
+          { glyph: 'robotics', name: 'Robotics', detail: 'Drone · 3-D printer · telescope · embedded systems' },
+          { glyph: 'science', name: 'General science', detail: 'Middle-school practical work' },
         ],
       },
       {
         label: 'Four inquiry rooms · academic clubs',
         items: [
-          { name: 'Srijan Lab', detail: 'Making and design' },
-          { name: 'Model United Nations Lab', detail: 'Debate, position papers, committee' },
-          { name: 'Geography Lab', detail: 'Maps, instruments, fieldwork' },
-          { name: 'Active Learning Lab', detail: 'Work with no single right answer' },
+          { glyph: 'making', name: 'Srijan Lab', detail: 'Making and design' },
+          { glyph: 'debate', name: 'Model United Nations Lab', detail: 'Debate, position papers, committee' },
+          { glyph: 'geography', name: 'Geography Lab', detail: 'Maps, instruments, fieldwork' },
+          { glyph: 'inquiry', name: 'Active Learning Lab', detail: 'Work with no single right answer' },
         ],
       },
     ],
@@ -854,3 +854,488 @@ export const partnership = [
 ] as const;
 
 export const partnershipPhases = ['Before joining', 'Through the year', 'Whenever needed'] as const;
+
+/* ═══ 06 · PARENT PARTNERSHIP — the redesigned page ══════════════════════════
+   ⚠ PROVENANCE, and it is different from everything above this line.
+   Every other block in this file is drawn from what the school PUBLISHES, and
+   rule 4 at the top forbids asserting a practice the school has not described.
+   The content below comes from a written client brief instead — the school
+   telling us directly what it runs. That is a legitimate source and a stronger
+   one than the website, but it is NOT the published site, so:
+
+     · a future editor should not "correct" these against sunbeamballia.edu.in
+       and find them missing;
+     · anything here that later contradicts the site is the site being stale,
+       not this file being wrong;
+     · the two things the brief asked for but supplied no content for — parent
+       testimonials and the partnership figures — are NOT invented here. See
+       `voice` below and the note in components/academics/parents/Stats.
+
+   Verified facts still come from `school` and are marked where they appear. */
+export const parents = {
+  hero: {
+    title: 'Parent Partnership',
+    stand: 'Together we shape every child’s future.',
+  },
+
+  intro: {
+    eyebrow: 'The partnership',
+    headingLead: 'Every successful student has',
+    headingMark: 'two classrooms',
+    headingTail: '. Home. School.',
+    paragraphs: [
+      'A child spends roughly a third of a weekday in one of them and the rest in the other, and ' +
+        'the two only add up when they are talking to each other. Education at Sunbeam is strongest ' +
+        'when parents and teachers work together — which means the connection between home and ' +
+        'school has to be scheduled and published rather than left to chance.',
+      'What follows is every standing channel between the staff room and your kitchen table, in the ' +
+        'order a family meets them. Each one is open to every family, on the same calendar, whether ' +
+        'or not you know to ask.',
+    ],
+  },
+
+  /* ── 01 · ORIENTATION ─────────────────────────────────────────────────────
+     Copy left, a cluster of photographs right. */
+  orientation: {
+    n: '01',
+    eyebrow: 'Parent orientation',
+    heading: 'You meet the school before your child does',
+    paragraphs: [
+      'Orientation runs before the session begins, not in the first week of it. The difference ' +
+        'matters: a family that arrives already knowing the timetable, the staff and the way the ' +
+        'year is organised spends September settling a child in rather than working the school out.',
+      'It is a working session rather than a welcome speech. You walk the building your child will ' +
+        'use, meet the people who will teach them, and leave with the handbook and the dates in ' +
+        'your hand.',
+    ],
+    points: [
+      {
+        label: 'A walk through the campus',
+        body:
+          'The classrooms, the laboratories, the library and the grounds — including the parts a ' +
+          'prospectus photograph never shows you, like where a Class II child eats lunch.',
+      },
+      {
+        label: 'The teachers, in person',
+        body:
+          'You meet the class teacher and the subject staff before term, so the first name you hear ' +
+          'at home in October is one you can already put a face to.',
+      },
+      {
+        label: 'How the school runs',
+        body:
+          'Timings, uniform, attendance, homework, the transport routes and what to do on a day ' +
+          'your child is unwell. The ordinary logistics, answered once.',
+      },
+      {
+        label: 'The student handbook',
+        body:
+          'The written record of all of it, so nothing depends on what you remembered from a ' +
+          'session in a hall.',
+      },
+    ],
+    cta: { label: 'Orientation details', href: '/admissions/orientation/' },
+    photos: ['sunbeem-2.jpg', 'sunbeem-1.jpg', 'sunbeem-students-2.jpg'],
+  },
+
+  /* ── 02 · PARENTS' FORUM ──────────────────────────────────────────────────
+     The section that needed defining before it could be designed. A parents'
+     forum is NOT a parent–teacher meeting, and the whole value of the section is
+     making that distinction plainly. */
+  forum: {
+    n: '02',
+    eyebrow: 'Parents’ forum',
+    heading: 'The meeting that is about the school, not about your child',
+    lede:
+      'A parent–teacher meeting answers one question: how is my child doing? The forum answers a ' +
+      'different one — how is the school doing? — and it is the only channel where parents raise ' +
+      'things collectively and get an answer on the record.',
+    /** The distinction, side by side. This is the section's real content. */
+    compare: [
+      {
+        key: 'ptm',
+        label: 'Parent–teacher meeting',
+        points: ['About one child', 'With that child’s teachers', 'On the academic calendar', 'Private'],
+      },
+      {
+        key: 'forum',
+        label: 'Parents’ forum',
+        points: ['About the school', 'With the school’s leadership', 'A standing channel', 'On the record'],
+      },
+    ],
+    /** How a raised item actually travels. */
+    steps: [
+      {
+        n: '01',
+        label: 'Raise it',
+        body: 'Any parent can put an item forward — in the meeting, or in writing beforehand if it is easier.',
+      },
+      {
+        n: '02',
+        label: 'Heard together',
+        body: 'It is discussed with other parents present, which is what separates a shared concern from a one-off.',
+      },
+      {
+        n: '03',
+        label: 'Answered',
+        body: 'The school responds to the room rather than to one family, so every parent hears the same answer.',
+      },
+      {
+        n: '04',
+        label: 'Carried forward',
+        body: 'What was agreed comes back to the next session, so an item cannot quietly disappear.',
+      },
+    ],
+    /** What actually gets raised — concrete, not "your feedback matters". */
+    topics: [
+      'Homework load and timing',
+      'Transport routes and timings',
+      'Examination and assessment schedules',
+      'Canteen, uniform and daily logistics',
+      'Safety on campus and on the buses',
+      'Communication that is not reaching home',
+    ],
+  },
+
+  /* ── 03 · WORKSHOPS & WEBINARS ────────────────────────────────────────────
+     The slider. Six sessions as cards. */
+  workshops: {
+    n: '03',
+    eyebrow: 'Workshops & webinars',
+    heading: 'Sessions for the parts nobody hands you a manual for',
+    stand:
+      'Raising a school-age child now involves decisions no previous generation had to make. These ' +
+      'are the sessions the school runs for parents rather than for students.',
+    cards: [
+      {
+        n: '01',
+        title: 'Digital safety at home',
+        format: 'Webinar · evening',
+        body:
+          'What your child actually does online, what the risks look like at each age, and the ' +
+          'settings that make a real difference rather than the ones that only feel like control.',
+        chips: ['Screen time', 'Privacy', 'Online contact', 'Device rules'],
+        photo: 'sb-comp-lab-2.jpg',
+        alt: 'Younger students of Sunbeam School Ballia working at desktop computers in the junior computer laboratory.',
+      },
+      {
+        n: '02',
+        title: 'Choosing a stream',
+        format: 'In person · Classes IX–X',
+        body:
+          'PCM, PCB, Commerce or Humanities is the first decision with consequences, and it is ' +
+          'usually made on rumour. What each stream actually leads to, discussed before the choice.',
+        chips: ['PCM', 'PCB', 'Commerce', 'Humanities'],
+        photo: 'sb-phy-lab.jpg',
+        alt: 'Students of Sunbeam School Ballia working at benches in the physics laboratory.',
+      },
+      {
+        n: '03',
+        title: 'Supporting learning at home',
+        format: 'In person · all classes',
+        body:
+          'How to help without doing it for them — what useful homework support looks like, and the ' +
+          'point at which help becomes interference.',
+        chips: ['Homework', 'Reading', 'Routines', 'Revision'],
+        photo: 'sb-library.jpg',
+        alt: 'Students of Sunbeam School Ballia reading and working at tables in the Nalanda Library.',
+      },
+      {
+        n: '04',
+        title: 'The exam years',
+        format: 'In person · Classes X & XII',
+        body:
+          'What a board year asks of a family, how the school prepares for it, and how to keep the ' +
+          'pressure on the work rather than on the child.',
+        chips: ['Board exams', 'Timetables', 'Stress', 'Sleep'],
+        photo: 'sb-maths-lab.jpg',
+        alt: 'Students of Sunbeam School Ballia seated on the floor of a decorated activity room during a lesson.',
+      },
+      {
+        n: '05',
+        title: 'What we teach, and why',
+        format: 'In person · all classes',
+        body:
+          'The CBSE scheme explained by the people teaching it — what changes between the middle ' +
+          'school and the senior school, and why the syllabus looks the way it does.',
+        chips: ['CBSE scheme', 'PRECEPT syllabus', 'Assessment'],
+        photo: 'sb-bio-lab.jpg',
+        alt: 'Two students of Sunbeam School Ballia handling glassware in the biology laboratory.',
+      },
+      {
+        n: '06',
+        title: 'Growing up, and wellbeing',
+        format: 'Webinar · evening',
+        body:
+          'Adolescence, friendships and the conversations that are easier to have early. Run for ' +
+          'parents so the school and home are not saying different things.',
+        chips: ['Adolescence', 'Friendships', 'Confidence', 'Talking'],
+        photo: 'sunbeem-students-3.jpg',
+        alt: 'Students of Sunbeam School Ballia seated together during a school session.',
+      },
+    ],
+  },
+
+  /* ── 04 · COMMUNICATION ───────────────────────────────────────────────────
+     Copy left, image right. */
+  comms: {
+    n: '04',
+    eyebrow: 'School–parent communication',
+    heading: 'You should never have to ask what is going on',
+    /* ONE LEDE, THREE LINES, at the client's request. It replaced two paragraphs
+       — the second opened 'So each kind of message has one channel, and the same
+       one every time. If you know where a thing lives, you stop having to chase
+       it.' Nothing was claimed there that is not claimed here; the cut is length,
+       not substance. Kept as an ARRAY so the section can go back to the Split
+       layout without a shape change. */
+    paragraphs: [
+      'Most of what a school tells a family is small and frequent — a date change, an absence, a ' +
+        'term report — and it goes wrong the moment it rides on a note in a bag. So each kind of ' +
+        'message has one channel, and the same one every time.',
+    ],
+    channels: [
+      {
+        label: 'Circulars',
+        body: 'Anything that affects the whole school or a whole class — dates, closures, events, changes.',
+        glyph: 'language',
+      },
+      {
+        label: 'Attendance',
+        body: 'Recorded daily. A pattern is raised with home early rather than at the end of a term.',
+        glyph: 'reading',
+      },
+      {
+        label: 'Homework',
+        body: 'Set to a published pattern, so the week is predictable at home rather than a surprise each evening.',
+        glyph: 'making',
+      },
+      {
+        label: 'Parent portal',
+        body: 'Term reports and results, through your own login — the record in one place, at any hour.',
+        glyph: 'computing',
+        external: true,
+      },
+    ],
+    cta: { label: 'Open the parent portal', href: school.external.results, external: true },
+    photo: 'sunbeem-students-2.jpg',
+    alt: 'A student of Sunbeam School Ballia reading in the school courtyard while classmates talk behind her.',
+  },
+
+  /* ── 05 · ENGAGEMENT ──────────────────────────────────────────────────────
+     Image left, copy right — the mirror of 04. */
+  engagement: {
+    n: '05',
+    eyebrow: 'Parent engagement',
+    heading: 'The best days here are the ones you are in the building for',
+    paragraphs: [
+      'A school year has a handful of days that a child remembers for decades, and almost all of ' +
+        'them are days when the hall is full. Parents are not an audience at those — the events run ' +
+        'better when families are part of putting them on.',
+      'Coming to watch is genuinely welcome. Taking part is better, and there is more to do than ' +
+        'most families realise.',
+    ],
+    ways: [
+      {
+        label: 'Sports day',
+        body: 'The whole school on the field, houses competing, and parents both watching and helping run it.',
+      },
+      {
+        label: 'Annual function',
+        body: 'The year’s big stage event — months of rehearsal, and a full hall on the night.',
+      },
+      {
+        label: 'Exhibitions',
+        body: 'Science, art and project work put up for an audience. Students explain their own work to visitors.',
+      },
+      {
+        label: 'Volunteering',
+        body: 'Parents who can give time — a skill, a morning, a trade — are the reason several of these run at all.',
+      },
+    ],
+    photo: 'sunbeem-5.jpg',
+    alt: 'Student council office-bearers and NCC cadets of Sunbeam School Ballia on stage with members of staff.',
+  },
+
+  /* ── 06 · FAQ ─────────────────────────────────────────────────────────────
+     Image left, accordion right.
+
+     ⚠ ANSWERS POINT, THEY DO NOT QUOTE. Fees, age criteria and route lists are
+     not published on the school's site in a form we can restate, and inventing a
+     figure a parent might plan around is the one unforgivable error on a page
+     like this. Each answer therefore says what is true and sends the reader to
+     the desk or the page that holds the number. */
+  faq: {
+    n: '06',
+    eyebrow: 'Frequently asked',
+    heading: 'The questions the admissions desk hears most',
+    stand:
+      'Answered once and published, so no family has to ring to find out something another family ' +
+      'already asked.',
+    items: [
+      {
+        q: 'How do we apply, and when?',
+        a:
+          'Applications for Nursery to Class IX and for Class XI are made through the school’s ' +
+          'online form. The admissions desk confirms the dates for a given session — they are the ' +
+          'people to ask rather than a forwarded message.',
+        cta: { label: 'Apply online', href: school.external.applyNurseryToIX, external: true },
+      },
+      {
+        q: 'What does it cost?',
+        a:
+          'The fee structure is set per class and per session, and the school publishes it rather ' +
+          'than quoting it case by case. Ask admissions for the current schedule for your child’s ' +
+          'class — that way you get the figure that applies to you, not a general one.',
+        cta: { label: 'Fee structure', href: '/admissions/fee-structure/' },
+      },
+      {
+        q: 'Is there transport to our area?',
+        a:
+          'The school runs bus routes across Ballia. Whether one passes your area, and where the ' +
+          'nearest stop is, is a route-by-route answer — the transport in-charge holds the current ' +
+          'list.',
+        cta: { label: 'Transport and routes', href: '/campus/transport/' },
+      },
+      {
+        q: 'How is my child kept safe?',
+        a:
+          'Safety covers the campus, the buses and the school day between them. The measures in ' +
+          'place are set out in full rather than summarised here, because a parent asking this ' +
+          'question deserves the detail.',
+        cta: { label: 'Safety and security', href: '/campus/safety-security/' },
+      },
+      {
+        q: 'What is the school’s board and affiliation?',
+        a:
+          'Sunbeam School Ballia is affiliated to the Central Board of Secondary Education, Delhi, ' +
+          'as a co-educational senior secondary school — CBSE affiliation number ' +
+          school.affiliationNo + ', school code ' + school.schoolCode + '.',
+        cta: { label: 'Academic philosophy', href: '/academics/philosophy/#affiliation' },
+      },
+      {
+        q: 'When are parent–teacher meetings held?',
+        a:
+          'They are on the academic calendar before the session starts, so the dates are known in ' +
+          'advance rather than announced a week out. The calendar carries terms, holidays and ' +
+          'examination dates alongside them.',
+        cta: { label: 'Academic calendar', href: '/academics/academic-calendar/' },
+      },
+    ],
+    photo: 'sunbeem-3.jpg',
+    alt: 'Students of Sunbeam School Ballia on the school campus.',
+  },
+
+  timeline: {
+    eyebrow: 'Through the year',
+    heading: 'What the year looks like from your side of it',
+    stand:
+      'Six fixed points between admission and the final report. Each one is on the calendar before ' +
+      'the session starts.',
+    steps: [
+      { label: 'Admission', body: 'The application, the paperwork, and the first conversation with the school.' },
+      { label: 'Orientation', body: 'Before teaching begins — the campus, the staff, and how the year will run.' },
+      { label: 'Teacher meeting', body: 'The first parent–teacher meeting, on the published academic calendar.' },
+      { label: 'Monthly updates', body: 'Circulars, attendance and homework through the standing channels.' },
+      { label: 'Workshops', body: 'Sessions for parents alongside the teaching year.' },
+      { label: 'Annual review', body: 'Term reports and results through the parent portal, and the year read back.' },
+    ],
+  },
+
+  resources: {
+    eyebrow: 'Parent resources',
+    heading: 'Everything in one place',
+    items: [
+      {
+        key: 'portal',
+        label: 'Parent Portal',
+        body: 'Term reports, results and the record of the year, through your own login.',
+        href: school.external.results,
+        external: true,
+        glyph: 'computing',
+        span: 'wide',
+      },
+      {
+        key: 'faqs',
+        label: 'Admissions FAQs',
+        body: 'Admissions, fees, transport and safety — the most-asked questions, answered.',
+        href: '/admissions/faqs/',
+        external: false,
+        glyph: 'inquiry',
+        span: '',
+      },
+      {
+        key: 'calendar',
+        label: 'Academic Calendar',
+        body: 'Terms, holidays, examination dates and every parent–teacher meeting.',
+        href: '/academics/academic-calendar/',
+        external: false,
+        glyph: 'reading',
+        span: '',
+      },
+      {
+        key: 'notices',
+        label: 'Notice Board',
+        body: 'Official school notices, as the school issues them.',
+        href: '/news-events/notices/',
+        external: false,
+        glyph: 'language',
+        span: '',
+      },
+      {
+        key: 'transport',
+        label: 'Transport',
+        body: 'Routes across Ballia, and the person to call about them.',
+        href: '/campus/transport/',
+        external: false,
+        glyph: 'geography',
+        span: '',
+      },
+      {
+        key: 'contact',
+        label: 'Talk to the school',
+        body: 'Office ' + school.phone.officeDisplay + ' · admissions ' + school.phone.admissionsDisplay,
+        href: '/contact-us/',
+        external: false,
+        glyph: 'debate',
+        span: 'wide',
+      },
+    ],
+  },
+
+  /**
+   * ⚠ THE TESTIMONIAL SLOT, AND WHY IT HOLDS THE PRINCIPAL RATHER THAN A PARENT.
+   *
+   * The brief asked for a parent testimonial with a photograph, a name, a
+   * student's class and a star rating. The school supplied none of those, and
+   * every one of them is a claim about a real, identifiable family: a name and a
+   * quote invented here would be a fabricated endorsement, and a star rating
+   * invented here would be a fabricated review.
+   *
+   * What the school HAS published, signed, is its Principal's own words — so the
+   * slot carries those. Same register, nothing invented. It swaps the moment a
+   * real parent quote arrives WITH consent: quote, name, class, photograph and
+   * permission to publish.
+   */
+  voice: {
+    eyebrow: 'From the school',
+    quote:
+      'As Principal, my role is to ensure that every child feels valued, safe, and inspired to ' +
+      'achieve their full potential.',
+    name: school.principal,
+    role: 'Principal, ' + school.name,
+    href: '/about/principals-message/',
+  },
+
+  cta: {
+    heading: 'Let’s stay connected',
+    stand:
+      'Admissions, the school office, or a walk around the campus — whichever is most useful, ' +
+      'here is how to reach us.',
+    lines: [
+      { label: 'Admissions', value: school.phone.admissionsDisplay, href: 'tel:' + school.phone.admissions },
+      { label: 'School office', value: school.phone.officeDisplay, href: 'tel:' + school.phone.office },
+      { label: 'Email', value: school.email, href: 'mailto:' + school.email },
+      { label: 'Visit the campus', value: school.address.line1 + ', ' + school.address.city, href: '/contact-us/' },
+    ],
+  },
+} as const;

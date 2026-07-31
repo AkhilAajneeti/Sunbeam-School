@@ -1,0 +1,74 @@
+---
+/**
+ * PARENT PARTNERSHIP · 03 — WORKSHOPS & WEBINARS
+ *
+ * The slider, and the reason JourneyCarousel exists. Six sessions as cards on a
+ * three-up rail, built to the carousel the client supplied as a reference.
+ *
+ * This component is a thin adapter, not a design — it resolves the photographs
+ * and hands the cards over. Everything visual and every interaction lives in
+ * JourneyCarousel, which is what makes that component genuinely reusable rather
+ * than reusable in principle. It is also what made the redesign a change to one
+ * file: nothing here moved when the coverflow became this.
+ *
+ * ⚠ "SEE ALL WORKSHOPS" POINTS AT THE HOMEPAGE, ON PURPOSE AND TEMPORARILY. The
+ * rail carries six sessions and the button is the way to the rest, but the site
+ * has no workshops route yet, so it goes to `/` rather than to a 404. The school
+ * DOES publish one at sunbeamballia.edu.in/workshops/ — 13 sessions, all of them
+ * TEACHER training rather than parent sessions, so it is not a drop-in
+ * destination for this section either. Change the one `href` below the moment a
+ * route exists. GREP FOR THIS BEFORE LAUNCH.
+ *
+ * ⚠ EACH CARD'S `body` IS NO LONGER SHOWN. The reference card is meta, title,
+ * rule and three facts — there is no paragraph slot in it. The six descriptions
+ * are still passed and still in the data, and the header of JourneyCarousel says
+ * what putting them back would take.
+ *
+ * Photographs are resolved HERE rather than in the data file: astro:assets has to
+ * see each import at build time to emit the AVIF/WebP variants, and a filename
+ * string in a .ts file is invisible to it.
+ */
+import JourneyCarousel from '../JourneyCarousel.astro';
+import { parents } from '../../../data/academics';
+
+import compPhoto from '../../../assets/photos/sb-comp-lab-2.jpg';
+import phyPhoto from '../../../assets/photos/sb-phy-lab.jpg';
+import libraryPhoto from '../../../assets/photos/sb-library.jpg';
+import mathsPhoto from '../../../assets/photos/sb-maths-lab.jpg';
+import bioPhoto from '../../../assets/photos/sb-bio-lab.jpg';
+import sessionPhoto from '../../../assets/photos/sunbeem-students-3.jpg';
+
+const photos: Record<string, ImageMetadata> = {
+  'sb-comp-lab-2.jpg': compPhoto,
+  'sb-phy-lab.jpg': phyPhoto,
+  'sb-library.jpg': libraryPhoto,
+  'sb-maths-lab.jpg': mathsPhoto,
+  'sb-bio-lab.jpg': bioPhoto,
+  'sunbeem-students-3.jpg': sessionPhoto,
+};
+
+const { workshops: w } = parents;
+
+/* The wave that closes the section is painted in the ground of the section
+   BELOW — Comms, which runs on the ivory tone — so it reads as that band rising
+   into this one rather than as a shape floating on this one. */
+const cards = w.cards.map((c) => ({
+  ...c,
+  image: c.photo ? photos[c.photo] : undefined,
+  /* The format line is the card's fact strip — when it runs and who it is for. */
+  fact: c.format,
+}));
+---
+
+<JourneyCarousel
+  anchor="workshops"
+  id="workshops-title"
+  n={w.n}
+  eyebrow={w.eyebrow}
+  heading={w.heading}
+  stand={w.stand}
+  items={cards}
+  railLabel="Workshops and webinars for parents — scroll sideways for more"
+  cta={{ label: 'See all workshops', href: '/' }}
+  waveInto="var(--sb-ivory)"
+/>

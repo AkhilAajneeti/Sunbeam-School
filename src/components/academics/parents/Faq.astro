@@ -1,0 +1,308 @@
+---
+/**
+ * PARENT PARTNERSHIP · 06 — FREQUENTLY ASKED
+ *
+ * The reference's "Have Any Question?" composition: a photograph on the left, the
+ * questions as an accordion on the right.
+ *
+ * ═══ <details>, NOT A SCRIPTED ACCORDION ════════════════════════════════════
+ *
+ * It is keyboard-operable, screen-reader announced, findable by the browser's own
+ * in-page search, and works with JavaScript off — all for free. The only part
+ * that would have needed script is the open/close animation, and
+ * `grid-template-rows: 0fr → 1fr` does that in CSS by animating a height the
+ * browser computes, so nothing has to measure the panel.
+ *
+ * THE FIRST ONE IS OPEN. An accordion where every row is shut looks like a list
+ * of headings and gives a reader nothing to judge the section by; one open answer
+ * shows the shape of the rest.
+ */
+import Photo from '../../ui/Photo.astro';
+import { parents } from '../../../data/academics';
+import photo from '../../../assets/photos/sunbeem-3.jpg';
+
+const { faq } = parents;
+---
+
+<section class="pfa" id="faqs" aria-labelledby="faq-title">
+  <div class="u-container">
+    <div class="pfa__grid">
+      {/* --- Media --- */}
+      <div class="pfa__media">
+        <div class="pfa__frame" data-mask>
+          <Photo
+            src={photo}
+            alt={faq.alt}
+            brief="Frequently asked"
+            ratio="4 / 5"
+            position="50% 42%"
+            sizes="(max-width: 1023px) 90vw, 40vw"
+          />
+        </div>
+
+        <p class="pfa__plate">
+          <span class="pfa__plate-n t-tabular">{faq.items.length}</span>
+          <span class="pfa__plate-l">questions the admissions desk hears most</span>
+        </p>
+      </div>
+
+      {/* --- Questions --- */}
+      <div class="pfa__copy">
+        <p class="pfa__eyebrow">
+          <span class="pfa__n t-tabular" aria-hidden="true">{faq.n}</span>
+          <span class="pill pill--violet">{faq.eyebrow}</span>
+        </p>
+
+        <h2 class="pfa__h" id="faq-title" data-split>{faq.heading}</h2>
+        <p class="pfa__stand">{faq.stand}</p>
+
+        <div class="pfa__list">
+          {
+            faq.items.map((it, i) => (
+              <details class="pfa__item" open={i === 0} name="parent-faq">
+                <summary class="pfa__q">
+                  <span class="pfa__q-t">{it.q}</span>
+                  <span class="pfa__sign" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                </summary>
+
+                <div class="pfa__a">
+                  <div>
+                    <p>{it.a}</p>
+                    {it.cta && (
+                      <a
+                        class="pfa__cta link-tertiary"
+                        href={it.cta.href}
+                        {...(it.cta.external ? { target: '_blank', rel: 'noopener' } : {})}
+                      >
+                        {it.cta.label}
+                        <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                          <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
+                        </svg>
+                        {it.cta.external && <span class="u-visually-hidden">(opens in a new tab)</span>}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pfa {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(64px, 9vh, 108px);
+    background:
+      radial-gradient(60% 44% at 8% 4%, #fff3ec 0%, rgba(255, 243, 236, 0) 62%),
+      var(--sb-ivory);
+  }
+
+  .pfa__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+
+  /* --- Media --------------------------------------------------------------- */
+
+  .pfa__media { position: relative; }
+
+  .pfa__frame {
+    border-radius: var(--sb-r-3);
+    overflow: hidden;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .pfa__frame :global(.photo) { height: 100%; }
+
+  .pfa__plate {
+    position: absolute;
+    z-index: 2;
+    right: clamp(-24px, -1.6vw, -10px);
+    bottom: clamp(22px, 4vh, 48px);
+    width: min(230px, 76%);
+    padding: clamp(16px, 1.8vw, 24px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet);
+    box-shadow: 0 24px 52px -22px rgba(122, 36, 6, 0.66);
+    transform: rotate(1.6deg);
+  }
+
+  .pfa__plate-n {
+    display: block;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 3.4vw, 48px);
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+    color: #fff;
+  }
+
+  .pfa__plate-l {
+    display: block;
+    margin-top: var(--sb-3);
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: var(--sb-on-violet-muted);
+  }
+
+  /* --- Copy ---------------------------------------------------------------- */
+
+  .pfa__eyebrow { display: flex; align-items: center; gap: var(--sb-4); margin-bottom: var(--sb-5); }
+
+  .pfa__n {
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--sb-violet-dark);
+  }
+
+  .pfa__eyebrow .pill {
+    font-size: var(--sb-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h2.pfa__h {
+    max-width: 20ch;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(27px, 3.2vw, 44px);
+    line-height: 1.12;
+    letter-spacing: -0.034em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .pfa__stand {
+    max-width: 52ch;
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Accordion ----------------------------------------------------------- */
+
+  .pfa__list { margin-top: clamp(26px, 3.6vh, 40px); }
+
+  .pfa__item {
+    border-top: var(--sb-hairline);
+    transition: border-color var(--sb-dur-link) ease;
+  }
+
+  .pfa__item:last-child { border-bottom: var(--sb-hairline); }
+  .pfa__item[open] { border-top-color: var(--sb-violet); }
+
+  .pfa__q {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sb-5);
+    padding-block: clamp(16px, 2vh, 22px);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .pfa__q::-webkit-details-marker { display: none; }
+
+  .pfa__q:focus-visible {
+    outline: 2px solid var(--sb-focus);
+    outline-offset: 3px;
+    border-radius: var(--sb-r-0);
+  }
+
+  .pfa__q-t {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(16px, 1.5vw, 21px);
+    line-height: 1.32;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .pfa__item[open] .pfa__q-t,
+  .pfa__q:hover .pfa__q-t { color: var(--sb-violet-dark); }
+
+  .pfa__sign {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 1px solid var(--sb-border-strong);
+    border-radius: var(--sb-r-full);
+    color: var(--sb-violet);
+    transition:
+      transform var(--sb-dur-link) var(--sb-ease),
+      background-color var(--sb-dur-link) ease,
+      border-color var(--sb-dur-link) ease,
+      color var(--sb-dur-link) ease;
+  }
+
+  .pfa__item[open] .pfa__sign {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+    transform: rotate(45deg);
+  }
+
+  /* 0fr → 1fr animates a height the browser computes, so no script has to measure
+     the panel. The inner div carries the clip — without a child to clip, the rows
+     trick shows the answer mid-collapse. */
+  .pfa__a {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.42s var(--sb-ease);
+  }
+
+  .pfa__a > * { overflow: hidden; }
+  .pfa__item[open] .pfa__a { grid-template-rows: 1fr; }
+
+  .pfa__a p {
+    max-width: 56ch;
+    padding-bottom: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    line-height: 1.74;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --sb-violet-dark, not the primary: 15px on this warm ground measured under
+     AA with --sb-violet on the sibling journey cards. */
+  .pfa__cta {
+    margin-bottom: var(--sb-6);
+    color: var(--sb-violet-dark);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pfa__item,
+    .pfa__q-t,
+    .pfa__sign,
+    .pfa__a { transition: none; }
+    .pfa__item[open] .pfa__sign { transform: none; }
+  }
+
+  @media (max-width: 1023px) {
+    .pfa__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(32px, 5vh, 48px); }
+    /* Stacked, the questions lead — they are what the section is for. */
+    .pfa__media { grid-row: 2; max-width: 520px; }
+    .pfa__copy { grid-row: 1; }
+  }
+
+  @media (max-width: 639px) {
+    .pfa { padding-block: var(--sb-9); }
+    .pfa__plate { position: static; width: 100%; margin-top: var(--sb-5); transform: none; }
+  }
+</style>

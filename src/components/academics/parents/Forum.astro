@@ -1,0 +1,397 @@
+---
+/**
+ * PARENT PARTNERSHIP · 02 — THE PARENTS' FORUM
+ *
+ * ═══ WHAT IT IS, WHICH HAD TO BE SETTLED BEFORE IT COULD BE DESIGNED ════════
+ *
+ * A parents' forum is a standing consultative channel between the parent body and
+ * the school's leadership. It is routinely confused with the parent–teacher
+ * meeting, and the two do opposite jobs: a PTM is private, about one child, and
+ * held with that child's teachers. A forum is collective, about the school
+ * itself, and held with the people who can change how the school runs.
+ *
+ * That distinction IS the content of this section. A parent who understands it
+ * uses the right channel and gets an answer; a parent who does not raises a
+ * school-wide issue at a five-minute PTM slot and leaves frustrated. So the
+ * section leads with the comparison rather than burying it under a paragraph
+ * about valuing feedback.
+ *
+ * COMPOSITION: a two-card comparison, then the route an item actually travels as
+ * four numbered steps, then the topics that genuinely come up. Nothing here is a
+ * card grid — the comparison is two contrasted panels, the route is a connected
+ * sequence, and the topics are a plain ruled list.
+ */
+import SectionHead from '../SectionHead.astro';
+import { parents } from '../../../data/academics';
+
+const { forum: f } = parents;
+---
+
+<section class="pfo" id="forum" aria-labelledby="forum-title">
+  <div class="u-container">
+    <div class="pfo__head">
+      <p class="pfo__eyebrow">
+        <span class="pfo__n t-tabular" aria-hidden="true">{f.n}</span>
+        <span class="pill pill--violet">{f.eyebrow}</span>
+      </p>
+
+      <h2 class="pfo__h" id="forum-title" data-split>{f.heading}</h2>
+      <p class="pfo__lede">{f.lede}</p>
+    </div>
+
+    {/* --- The distinction, side by side --- */}
+    <div class="pfo__compare">
+      {
+        f.compare.map((c) => (
+          <div class:list={['pfo__card', c.key === 'forum' && 'pfo__card--on']} data-pop>
+            <p class="pfo__card-l">{c.label}</p>
+            <ul class="pfo__card-list">
+              {c.points.map((pt) => (
+                <li>{pt}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+
+      {/* Decorative: the comparison is already carried by the two labels. */}
+      <span class="pfo__vs" aria-hidden="true">vs</span>
+    </div>
+
+    {/* --- How an item travels --- */}
+    <div class="pfo__route">
+      <h3 class="pfo__sub">What happens when you raise something</h3>
+
+      <ol class="pfo__steps" data-forum-steps>
+        {
+          f.steps.map((s) => (
+            <li class="pfo__step" data-forum-step>
+              <span class="pfo__step-n t-tabular" aria-hidden="true">{s.n}</span>
+              <h4 class="pfo__step-h">{s.label}</h4>
+              <p class="pfo__step-b">{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    {/* --- What actually gets raised --- */}
+    <div class="pfo__topics">
+      <h3 class="pfo__sub">What comes up</h3>
+      <ul class="pfo__topic-list">
+        {f.topics.map((t) => <li>{t}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pfo {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(64px, 9vh, 108px);
+    background:
+      radial-gradient(60% 40% at 50% 0%, #fff3ec 0%, rgba(255, 243, 236, 0) 64%),
+      var(--sb-sand);
+  }
+
+  .pfo__head { max-width: 60ch; margin: 0 auto clamp(36px, 5vh, 60px); text-align: center; }
+
+  .pfo__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sb-4);
+    margin-bottom: var(--sb-5);
+  }
+
+  .pfo__n {
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--sb-violet-dark);
+  }
+
+  .pfo__eyebrow .pill {
+    font-size: var(--sb-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h2.pfo__h {
+    max-width: 20ch;
+    margin-inline: auto;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(27px, 3.2vw, 46px);
+    line-height: 1.12;
+    letter-spacing: -0.034em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .pfo__lede {
+    max-width: 58ch;
+    margin: var(--sb-6) auto 0;
+    font-size: var(--sb-body);
+    line-height: 1.74;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Comparison ----------------------------------------------------------
+     Two panels and a mark between them. The forum panel is the filled one: this
+     is the section about the forum, and giving both equal weight would leave a
+     reader unsure which one they are being told about. */
+  .pfo__compare {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2.4vw, 40px);
+    max-width: 880px;
+    margin-inline: auto;
+  }
+
+  .pfo__card {
+    padding: clamp(22px, 2.6vw, 36px);
+    border: 1px solid rgba(201, 60, 10, 0.14);
+    border-radius: var(--sb-r-3);
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+
+  .pfo__card--on {
+    border-color: transparent;
+    background: var(--sb-violet);
+    box-shadow: 0 24px 56px -26px rgba(122, 36, 6, 0.62);
+  }
+
+  .pfo__card-l {
+    margin-bottom: var(--sb-5);
+    padding-bottom: var(--sb-4);
+    border-bottom: var(--sb-hairline);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(17px, 1.7vw, 22px);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .pfo__card--on .pfo__card-l {
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+  }
+
+  .pfo__card-list { display: grid; gap: var(--sb-4); margin: 0; padding: 0; list-style: none; }
+
+  .pfo__card-list li {
+    position: relative;
+    padding-left: var(--sb-6);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --sb-on-violet-muted, not an opacity ramp — the primary leaves white almost
+     no room to be muted and still clear AA. */
+  .pfo__card--on .pfo__card-list li { color: var(--sb-on-violet-muted); }
+
+  .pfo__card-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 7px;
+    height: 7px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+  }
+
+  .pfo__card--on .pfo__card-list li::before { background: var(--sb-lime); }
+
+  .pfo__vs {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: clamp(38px, 4vw, 52px);
+    height: clamp(38px, 4vw, 52px);
+    border-radius: var(--sb-r-full);
+    background: var(--sb-ivory);
+    border: 1px solid rgba(201, 60, 10, 0.18);
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sb-violet-dark);
+    transform: translate(-50%, -50%);
+  }
+
+  /* --- The route ----------------------------------------------------------- */
+
+  .pfo__route { margin-top: clamp(48px, 7vh, 88px); }
+
+  .pfo__sub {
+    margin-bottom: clamp(24px, 3.4vh, 36px);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 2vw, 28px);
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+    text-align: center;
+  }
+
+  .pfo__steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 2.2vw, 32px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* The connector runs from each step to the next, so the last has no tail. It
+     draws itself as the reader arrives — set by the observer below. */
+  .pfo__step {
+    position: relative;
+    padding-top: clamp(46px, 4.6vw, 62px);
+  }
+
+  .pfo__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: clamp(46px, 4.6vw, 62px);
+    right: calc(clamp(16px, 2.2vw, 32px) * -1);
+    top: clamp(21px, 2.1vw, 28px);
+    border-top: 2px dashed rgba(201, 60, 10, 0.34);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 620ms var(--sb-ease);
+  }
+
+  .pfo__step.is-passed::after { transform: scaleX(1); }
+
+  .pfo__step-n {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: clamp(42px, 4.2vw, 56px);
+    height: clamp(42px, 4.2vw, 56px);
+    border: 1px solid rgba(201, 60, 10, 0.28);
+    border-radius: var(--sb-r-full);
+    background: var(--sb-ivory);
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    color: var(--sb-violet-dark);
+    transition: background-color 420ms var(--sb-ease), color 420ms var(--sb-ease);
+  }
+
+  .pfo__step.is-passed .pfo__step-n {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+  }
+
+  .pfo__step-h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .pfo__step-b {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-body-sm);
+    line-height: 1.62;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Topics -------------------------------------------------------------- */
+
+  .pfo__topics { margin-top: clamp(48px, 7vh, 88px); }
+
+  .pfo__topic-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 clamp(24px, 3.4vw, 52px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pfo__topic-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    padding-block: clamp(13px, 1.6vh, 18px);
+    border-top: var(--sb-hairline);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-charcoal);
+  }
+
+  /* A plan mark rather than a list mark, matching the laboratory index. */
+  .pfo__topic-list li::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: var(--sb-violet);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pfo__step::after,
+    .pfo__step-n { transition: none; }
+  }
+
+  @media (max-width: 1023px) {
+    .pfo__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(28px, 4vh, 40px); }
+    /* The connector is a single-row device; wrapped to two rows it would point
+       from the end of one row into the start of the next. */
+    .pfo__step::after { display: none; }
+    .pfo__topic-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 639px) {
+    .pfo { padding-block: var(--sb-9); }
+    .pfo__compare { grid-template-columns: minmax(0, 1fr); gap: var(--sb-5); }
+    .pfo__vs { display: none; }
+    .pfo__steps { grid-template-columns: minmax(0, 1fr); }
+    .pfo__topic-list { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+
+<script>
+  /**
+   * Draws the route as the reader reaches it. Not in motion-gsap.ts for the same
+   * reason the step cascade on Teaching & Learning is not: that chunk is gated
+   * behind reduced-motion and Save-Data because everything in it is decoration,
+   * and a connector between four ordered steps is closer to structure. The CSS
+   * above holds the TRAVEL back under reduced motion instead.
+   */
+  document.querySelectorAll<HTMLElement>('[data-forum-steps]').forEach((list) => {
+    const steps = [...list.querySelectorAll<HTMLElement>('[data-forum-step]')];
+    if (!steps.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-passed');
+          io.unobserve(e.target);
+        });
+      },
+      { rootMargin: '0px 0px -25% 0px', threshold: 0 }
+    );
+
+    steps.forEach((s, i) => setTimeout(() => io.observe(s), i * 90));
+  });
+</script>

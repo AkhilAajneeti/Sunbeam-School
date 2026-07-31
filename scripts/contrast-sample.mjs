@@ -39,6 +39,31 @@
  * the lightest pixel under the type's own box directly; that is also how the 2.98
  * failure at 768 in that section was found, which this checker never saw.
  *
+ * ⚠ IT USED TO SAMPLE MID-ANIMATION, which is fixed below — but read the next
+ * paragraph before trusting the result, because fixing it made a false FAIL
+ * CONSISTENT rather than making it go away.
+ *
+ * The old 500ms settle caught `data-split` headings while their words were still
+ * rising: a word at partial opacity reads as background, which can mask a real
+ * failure as easily as it can invent one. The settle now awaits the section's
+ * finite Web Animations and then waits again for the GSAP tweens that
+ * getAnimations() cannot see.
+ *
+ * ⚠ WHAT THAT EXPOSED — BIG DISPLAY HEADINGS ARE LIMITATION 1 ALL OVER AGAIN.
+ * Once a large heading is reliably fully painted, its word boxes are so densely
+ * filled with glyphs that more probes land on type than on ground, the modal
+ * bucket becomes the text colour, and the ratio collapses to 1.00. The
+ * communication heading on Parent Partnership reports exactly that at 1440 and
+ * is really 17.5:1 — verified by hiding `.ccm__h`, screenshotting the section
+ * with its gradient and clouds untouched, and reading every pixel in the
+ * heading's box: modal ground 254,251,249, worst pixel anywhere in the box
+ * 236,230,228 where a cloud passes behind it at 1200, which is still 14.6:1.
+ *
+ * So: THIS CHECKER CANNOT CLEAR A 40px+ DISPLAY HEADING. Sample its box directly,
+ * with the type hidden, as above. What it IS reliable for is body copy, captions,
+ * labels and eyebrows on gradient grounds, which is what it was written for and
+ * where every real failure on this site has been found.
+ *
  * Usage: node scripts/contrast-sample.mjs <url> <sectionSelector> [w1,w2,...]
  */
 import { chromium } from 'playwright';
@@ -76,7 +101,30 @@ for (const vw of widths) {
   await page.evaluate(() => document.fonts.ready);
   // Centre it, so nothing pinned to the top or bottom of the viewport overlaps.
   await page.evaluate((s) => document.querySelector(s).scrollIntoView({ block: 'center' }), sectionSel);
-  await page.waitForTimeout(500);
+
+  /* SETTLE BEFORE SAMPLING, or the checker measures a half-played entrance.
+     The old 500ms was not enough for a `data-split` heading: its words rise on a
+     stagger that is still running at 400ms and only lands at ~900. A word caught
+     mid-reveal is background-on-background, the ratio comes back as exactly 1.00,
+     and the section reports FAIL on type that measures 17:1 once it has arrived.
+     It was INTERMITTENT, which is the worst version of that bug — three runs of
+     the same unchanged page gave PASS, FAIL, FAIL.
+
+     Two mechanisms, because there are two kinds of animation on these pages.
+     Finite Web Animations are awaited properly; the infinite ones — drifting
+     clouds, floating kites — are filtered out or this would hang for ever. GSAP
+     tweens are not Web Animations and are invisible to getAnimations(), so the
+     fixed wait behind it is what covers those. */
+  await page.evaluate(async (s) => {
+    const root = document.querySelector(s);
+    const running = document.getAnimations().filter((a) => {
+      const target = a.effect?.target;
+      if (!target || !root.contains(target)) return false;
+      return a.effect?.getComputedTiming?.().iterations !== Infinity;
+    });
+    await Promise.all(running.map((a) => a.finished.catch(() => {})));
+  }, sectionSel);
+  await page.waitForTimeout(1200);
 
   const shot = await page.locator(sectionSel).screenshot();
   const { data, info } = await sharp(shot).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
