@@ -64,6 +64,20 @@
  * labels and eyebrows on gradient grounds, which is what it was written for and
  * where every real failure on this site has been found.
  *
+ * ⚠ AND IT MISREADS TWO ITEMS SHARING A FLEX ROW. The probes step 12, 20, 32 and
+ * 48px out from a target's box; where two spans sit in one `justify-content:
+ * space-between` row — a label on the left, a value on the right — the 12px step
+ * from the label lands on the VALUE and reports the value's colour as the
+ * label's ground. The "Focus / 01/05" row on Academic Structure reports 1.26:1
+ * that way; measured directly with the type hidden, the worst pixel under any
+ * text in that section is 6.04:1 on the page's own ivory.
+ *
+ * SO: A RATIO NEAR 1.0 IS ALMOST NEVER A CONTRAST FAILURE. It is the probe
+ * finding a graphic, a sibling or a glyph. Every real failure this tool has
+ * caught on this site has come back between 2.9 and 4.5. When it reports ~1,
+ * hide the text, screenshot, and read the pixels under the box directly before
+ * changing anything.
+ *
  * Usage: node scripts/contrast-sample.mjs <url> <sectionSelector> [w1,w2,...]
  */
 import { chromium } from 'playwright';
@@ -140,6 +154,30 @@ for (const vw of widths) {
     const secR = sec.getBoundingClientRect();
     const rel = (r) => ({ x: r.left - secR.left, y: r.top - secR.top, w: r.width, h: r.height });
 
+    /* ⚠ THE TEXT COLOUR IS PAINTED AND READ BACK, NOT PARSED FROM A STRING, and
+       that is a bug fix rather than a flourish. `getComputedStyle().color` on a
+       `color-mix()` returns "color(srgb 0.716 0.829 0.858)" — three floats in
+       0–1. The regex downstream reads those AS 0–255, so a pale cyan eyebrow was
+       measured as near-black and reported at 1.21:1 against a dark band it
+       genuinely clears at 8.8:1. That false failure cost time three separate
+       times before it was traced, and it would fire on every `color-mix()` on
+       the site.
+
+       Painting one pixel and reading it back is the only parse that cannot be
+       fooled: the canvas hands back true 0–255 bytes whatever notation the
+       colour was written in — hex, rgb(), color(srgb …), oklch(), a keyword. The
+       alpha is preserved in the returned rgba() string, which the compositing
+       step below still needs. */
+    const _cv = document.createElement('canvas');
+    const _ctx = _cv.getContext('2d', { willReadFrequently: true });
+    const resolveColour = (css) => {
+      _ctx.clearRect(0, 0, 1, 1);
+      _ctx.fillStyle = css;
+      _ctx.fillRect(0, 0, 1, 1);
+      const d = _ctx.getImageData(0, 0, 1, 1).data;
+      return `rgba(${d[0]}, ${d[1]}, ${d[2]}, ${(d[3] / 255).toFixed(4)})`;
+    };
+
     const visible = (el) => {
       const cs = getComputedStyle(el);
       if (cs.visibility === 'hidden' || cs.display === 'none') return false;
@@ -194,7 +232,7 @@ for (const vw of widths) {
         while (g && g !== sec && !hasOwnBg(g)) g = g.parentElement;
         return {
           sel: (el.className.toString().split(' ')[0] || el.tagName).slice(0, 22),
-          color: cs.color, size: parseFloat(cs.fontSize), weight: parseInt(cs.fontWeight),
+          color: resolveColour(cs.color), size: parseFloat(cs.fontSize), weight: parseInt(cs.fontWeight),
           ground: rel((g || sec).getBoundingClientRect()),
           ...rel(el.getBoundingClientRect()),
         };

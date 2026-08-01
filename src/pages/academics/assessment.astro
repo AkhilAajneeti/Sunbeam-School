@@ -2,15 +2,22 @@
 /**
  * ACADEMICS → 04 · ASSESSMENT & SUPPORT
  *
- * LAYOUT: a process flow on a centre spine — six steps alternating left and
- * right of a vertical rule, each numbered, with the rule carrying the sequence.
- * Nothing else in this section uses a spine, and this page has no photographs at
- * all: the subject is a cycle, and a cycle is a diagram, not a gallery.
+ * LAYOUT: the six steps on components/academics/JourneyRoad.astro — the same
+ * zigzag path, badges and dotted arcs the History & Legacy page uses. This page
+ * has no photographs at all: the subject is a cycle, and a cycle is a diagram,
+ * not a gallery.
  *
- * THE SPINE IS CSS, NOT SVG. An SVG path would have to be measured against the
- * final height of six variable-length cards, which changes with the viewport and
- * with the font. A border on the container is exact at every width for free, and
- * cannot drift out of register with the cards it is meant to connect.
+ * ⚠ IT WAS HALF A DESIGN BEFORE. The steps alternated left and right of a
+ * vertical rule, but the rule sat at the far LEFT rather than between them — so
+ * the left-hand steps had a short connector stub and the right-hand ones had no
+ * visible connection to the sequence at all, across a gutter of empty page. Half
+ * of every row was blank. The zigzag is the shape that arrangement was reaching
+ * for, and it already existed a page away.
+ *
+ * THE ROAD IS SHARED, not copied. Extracting it is also the fix for a real
+ * problem: this site had grown three unrelated sequence treatments, and the
+ * connector on one of them was a 40×2px hairline while this was sitting in
+ * about/history-legacy.astro as page-local CSS.
  *
  * The six-step cycle describes how a CBSE year is structured — taught content,
  * internal assessment, boards at X and XII, and the support around them. It does
@@ -19,6 +26,7 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ChapterNav from '../../components/academics/ChapterNav.astro';
+import JourneyRoad from '../../components/academics/JourneyRoad.astro';
 import { cycle, supports } from '../../data/academics';
 ---
 
@@ -65,29 +73,16 @@ import { cycle, supports } from '../../data/academics';
     </div>
   </section>
 
-  {/* ══ THE CYCLE ON A SPINE ═══════════════════════════════════════════════ */}
+  {/* ══ THE CYCLE, AS A JOURNEY ═══════════════════════════════════════════ */}
   <section class="flow" id="system" aria-labelledby="flow-title">
     <div class="u-container">
       <h2 class="u-visually-hidden" id="flow-title">The assessment cycle</h2>
 
-      <ol class="flow__spine">
-        {cycle.map((c, i) => (
-          <li class:list={['fstep', i % 2 === 0 ? 'fstep--l' : 'fstep--r']}
-            data-reveal data-reveal-delay={(i % 2) * 90}>
-            <span class="fstep__node t-tabular" aria-hidden="true">{i + 1}</span>
-            <div class="fstep__card">
-              <h3 class="fstep__h">{c.step}</h3>
-              <p class="fstep__b">{c.body}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-
-      {/* The cycle closes — it is not a funnel with an end. */}
-      <p class="flow__loop" data-reveal>
-        <span aria-hidden="true">↻</span>
-        And round again, every term.
-      </p>
+      <JourneyRoad
+        items={cycle.map((c) => ({ title: c.step, body: c.body }))}
+        label="The assessment cycle, six steps"
+        loop="And round again, every term."
+      />
     </div>
   </section>
 
@@ -233,111 +228,8 @@ import { cycle, supports } from '../../data/academics';
     padding-block: var(--sb-section-y-major);
   }
 
-  /* The rule is a border on the list, so it is exactly as tall as the six items
-     and can never fall short of the last node or overshoot the first. */
-  .flow__spine {
-    position: relative;
-    list-style: none;
-    margin: 0 auto;
-    padding: 0;
-    max-width: 1000px;
-    border-left: 2px solid var(--sb-violet-wash);
-  }
-
-  .fstep {
-    position: relative;
-    display: flex;
-    padding-block: clamp(16px, 2.6vh, 32px);
-  }
-
-  .fstep--l { justify-content: flex-start; padding-right: 50%; }
-  .fstep--r { justify-content: flex-end; padding-left: 50%; }
-
-  /* The node rides the rule. -17px is half the node's 32px width plus the 1px
-     rule offset, so it stays centred on the line at every viewport. */
-  .fstep__node {
-    position: absolute;
-    left: -17px;
-    top: clamp(16px, 2.6vh, 32px);
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--sb-r-full);
-    background: var(--sb-violet);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-    box-shadow: 0 0 0 5px var(--sb-sand);
-  }
-
-  .fstep__card {
-    position: relative;
-    padding: var(--sb-7);
-    border-radius: var(--sb-r-2);
-    background: #fff;
-    box-shadow: var(--sb-shadow-card);
-    max-width: 420px;
-    transition: transform var(--sb-dur-image) var(--sb-ease),
-      box-shadow var(--sb-dur-image) var(--sb-ease);
-  }
-
-  .fstep__card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--sb-shadow-card-hover);
-  }
-
-  /* A short connector from the rule to the card, so the two do not float apart
-     on wide screens. */
-  .fstep__card::before {
-    content: '';
-    position: absolute;
-    top: 30px;
-    width: clamp(14px, 3vw, 42px);
-    border-top: 2px dotted var(--sb-violet-wash);
-  }
-
-  .fstep--l .fstep__card { margin-left: clamp(28px, 5vw, 64px); }
-  .fstep--l .fstep__card::before { left: calc(clamp(14px, 3vw, 42px) * -1); }
-
-  .fstep--r .fstep__card { margin-right: 0; }
-  .fstep--r .fstep__card::before { display: none; }
-
-  .fstep__h {
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(19px, 1.9vw, 26px);
-    line-height: 1.18;
-    letter-spacing: -0.025em;
-    color: var(--sb-charcoal);
-  }
-
-  .fstep__b {
-    margin-top: var(--sb-4);
-    font-size: var(--sb-body-sm);
-    line-height: 1.65;
-    color: var(--sb-text-secondary);
-  }
-
-  .flow__loop {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--sb-4);
-    margin-top: var(--sb-8);
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(17px, 1.7vw, 23px);
-    letter-spacing: -0.02em;
-    color: var(--sb-charcoal);
-  }
-
-  .flow__loop span {
-    font-size: 1.5em;
-    line-height: 1;
-    color: var(--sb-violet);
-  }
+  /* The road itself lives in components/academics/JourneyRoad.astro — badges,
+     arcs, the title roll and the stacked fallback all travel with it. */
 
   /* ══════════ SUPPORT ═════════════════════════════════════════════════════
       Rows, not a card grid. Six equal tiles is the pattern this rebuild removes;
@@ -415,10 +307,8 @@ import { cycle, supports } from '../../data/academics';
 
   /* ══════════ REDUCED MOTION ══════════════════════════════════════════════ */
   @media (prefers-reduced-motion: reduce) {
-    .fstep__card,
     .srow__in,
     .srow__go { transition: none; }
-    .fstep__card:hover { transform: none; }
     a.srow__in:hover .srow__go { transform: none; }
   }
 
@@ -440,23 +330,6 @@ import { cycle, supports } from '../../data/academics';
       The spine goes fully left-hand: alternating sides needs two usable columns
       and 390px does not have them. */
   @media (max-width: 767px) {
-    .fstep--l,
-    .fstep--r {
-      justify-content: flex-start;
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    .fstep--l .fstep__card,
-    .fstep--r .fstep__card {
-      margin-left: clamp(28px, 8vw, 48px);
-      margin-right: 0;
-      max-width: none;
-    }
-
-    .fstep--r .fstep__card::before { display: block; }
-    .fstep--l .fstep__card::before,
-    .fstep--r .fstep__card::before { left: calc(clamp(14px, 3vw, 42px) * -1); }
   }
 
   @media (max-width: 639px) {

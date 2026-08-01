@@ -333,11 +333,29 @@ export const affiliation = {
    `tone` drives a per-stage accent. Class bands are the CBSE structure the
    school operates within; the school publishes its own range as Nursery to
    Class XII. NO AGES — see rule 3 at the top of this file. */
+/* ═══ 02 · ACADEMIC STRUCTURE ═══════════════════════════════════════════════
+   The `accent` key names a cool palette declared on the Academic Structure page
+   itself. The five run green → violet in stage order, which is deliberate: the
+   spectrum itself carries the progression, so the row reads as a journey even
+   before the connector between the nodes is noticed
+   rather than in tokens.css. The client asked that page for teal/blue/indigo/
+   violet washes instead of the site's warm orange, and confining the palette to
+   the one page that uses it means the departure is visible in one file and
+   revertible in one file.
+
+   NO AGES anywhere. The school's age criteria live in a Drive-hosted prospectus
+   and are not ours to estimate. Asset request A8.
+
+   THE STAGE NAMES ARE THE CLIENT'S, given in the brief: Pre-Primary, Primary,
+   Middle School, Secondary, Senior Secondary. Two of them used to read 'Early
+   Years' and 'Middle'. This array is imported by the structure page and nothing
+   else — the homepage journey runs off data/home.ts — so the rename is local. */
 export const stages = [
   {
-    key: 'early',
-    tone: '#c8281f',
-    stage: 'Early Years',
+    key: 'pre-primary',
+    accent: 'teal',
+    glyph: 'making',
+    stage: 'Pre-Primary',
     classes: 'Nursery · LKG · UKG',
     body:
       'The first years on campus, in rooms and grounds built for them — a kids park, a toy ' +
@@ -347,7 +365,8 @@ export const stages = [
   },
   {
     key: 'primary',
-    tone: '#e8a800',
+    accent: 'cyan',
+    glyph: 'reading',
     stage: 'Primary',
     classes: 'Classes I – V',
     body:
@@ -358,8 +377,9 @@ export const stages = [
   },
   {
     key: 'middle',
-    tone: '#2f6b4f',
-    stage: 'Middle',
+    accent: 'blue',
+    glyph: 'science',
+    stage: 'Middle School',
     classes: 'Classes VI – VIII',
     body:
       'Specialist teaching begins and the laboratories open up. Class VII takes the school’s KIDS ' +
@@ -369,7 +389,8 @@ export const stages = [
   },
   {
     key: 'secondary',
-    tone: '#17529b',
+    accent: 'indigo',
+    glyph: 'inquiry',
     stage: 'Secondary',
     classes: 'Classes IX – X',
     body:
@@ -380,7 +401,8 @@ export const stages = [
   },
   {
     key: 'senior',
-    tone: '#c93c0a',
+    accent: 'violet',
+    glyph: 'rocket',
     stage: 'Senior Secondary',
     classes: 'Classes XI – XII',
     body:
@@ -389,6 +411,85 @@ export const stages = [
     milestone: 'CBSE Class XII board examination',
   },
 ] as const;
+
+/* ═══ 02b · STREAMS AND SUBJECT COMBINATIONS ═══════════════════════════════
+   ⚠ READ THIS BEFORE THE PAGE GOES LIVE. The four STREAM NAMES are verified —
+   they come from school.streams in data/site.ts and the school publishes them.
+   Everything below that divides into three confidence levels, and the page
+   carries a footnote saying so:
+
+   1 · DEFINITIONAL, and safe. PCM is Physics, Chemistry and Mathematics; PCB is
+       Physics, Chemistry and Biology. The names ARE the subject lists. English
+       is compulsory in CBSE Classes XI–XII, so it belongs in every core.
+
+   2 · STANDARD, and near-certain. Accountancy, Business Studies and Economics
+       are the CBSE commerce core almost everywhere it is taught. Still worth a
+       nod from the school.
+
+   3 · NOT VERIFIED, and flagged as such by the client in the brief: every
+       ELECTIVE list, and the Humanities core. Humanities composition varies more
+       between schools than any other stream — one school's History/PolSci/Geog
+       is another's Psychology/Sociology/Economics — so what is written here is a
+       plausible shape, not this school's timetable.
+
+   The client's instruction was explicit: "replace with the school's actual
+   confirmed offerings before publishing". `unverified: true` marks each list
+   the page must not be published with. GREP FOR IT.
+
+   ⚠ `body` IS ONE SENTENCE ON PURPOSE. These were two sentences each until
+   the streams became full-bleed photograph cards: on a card where the image IS
+   the design, five lines of copy means a scrim covering two thirds of the
+   picture, and what shipped first was a black card with a photo strip along
+   the top. The brief asked for "a short description of career direction" and
+   this is that. Nothing was cut that the subject line above it did not
+   already say. */
+export const streamDetail = [
+  {
+    name: 'PCM',
+    accent: 'blue',
+    glyph: 'physics',
+    full: 'Physics · Chemistry · Mathematics',
+    body: 'Engineering and the physical sciences, with Mathematics to board level.',
+    core: ['Physics', 'Chemistry', 'Mathematics', 'English'],
+    electives: ['Computer Science', 'Physical Education', 'Informatics Practices'],
+    unverified: true,
+  },
+  {
+    name: 'PCB',
+    accent: 'teal',
+    glyph: 'biology',
+    full: 'Physics · Chemistry · Biology',
+    body: 'Medicine and the life sciences, with the practical hours in the biology laboratory.',
+    core: ['Physics', 'Chemistry', 'Biology', 'English'],
+    electives: ['Mathematics', 'Psychology', 'Physical Education'],
+    unverified: true,
+  },
+  {
+    name: 'Commerce',
+    accent: 'indigo',
+    glyph: 'commerce',
+    full: 'Accountancy · Business Studies · Economics',
+    body: 'Business, finance and management — how money, firms and markets actually work.',
+    core: ['Accountancy', 'Business Studies', 'Economics', 'English'],
+    electives: ['Mathematics', 'Informatics Practices', 'Entrepreneurship'],
+    unverified: true,
+  },
+  {
+    name: 'Humanities',
+    accent: 'violet',
+    glyph: 'language',
+    full: 'History · Political Science · Geography',
+    body: 'Law, civil services, design, media and the social sciences.',
+    core: ['History', 'Political Science', 'Geography', 'English'],
+    electives: ['Psychology', 'Sociology', 'Economics'],
+    unverified: true,
+  },
+] as const;
+
+/** Shown under the subject-combination cards. Wording agreed with the client. */
+export const combinationsFootnote =
+  'Final elective availability depends on section strength and timetable feasibility each ' +
+  'academic year.';
 
 /* ═══ 03 · TEACHING & LEARNING ══════════════════════════════════════════════
    `photo` is a filename in src/assets/photos, or null.

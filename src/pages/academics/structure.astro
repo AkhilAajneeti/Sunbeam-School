@@ -2,555 +2,144 @@
 /**
  * ACADEMICS → 02 · ACADEMIC STRUCTURE
  *
- * LAYOUT: a horizontal journey. Five stage panels on a scroll-snap rail that the
- * reader drags or arrow-keys through, with a progress rail underneath. Nothing
- * else in this section scrolls sideways, and nothing on this page is a card
- * grid — the sequence IS the design, and stacking five equal boxes vertically
- * would throw away the one thing that makes fourteen years legible.
+ * Rebuilt to the client's brief. The previous page opened on a bespoke split
+ * hero and put the five stages on a horizontal scroll-snap rail; this one uses
+ * the shared banner every other inner page uses and lays the stages out as a
+ * connected row, which is what the brief asked for and what a reader comparing
+ * five stages actually wants — five things side by side, not five things one
+ * flick apart.
  *
- * WHY A RAIL AND NOT A CSS-SCROLL-DRIVEN PINNED TRACK: a pinned horizontal
- * section hijacks the page scroll, which breaks find-in-page, breaks the
- * keyboard, and on a trackpad feels like the page has jammed. A plain
- * overflow-x rail with scroll-snap is natively keyboard-scrollable, respects
- * reduced motion for free, and degrades to a normal stack when it has to.
+ *   Banner        components/ui/PageHero.astro         shared, as Philosophy uses
+ *   01            structure/Intro.astro                the overview, and three facts
+ *   02            structure/Stages.astro               five cards, chevron-joined
+ *   03            structure/Streams.astro              the choice at the end of X
+ *   04            structure/Combinations.astro         core + electives per stream
  *
- * NO AGES anywhere on this page — the school's age criteria live in a
- * Drive-hosted prospectus and are not ours to estimate. Asset request A8.
+ * ═══ THIS PAGE RUNS A COOL PALETTE, AND ONLY THIS PAGE ══════════════════════
+ *
+ * The client asked for teal / blue / cyan / indigo / violet washes here instead
+ * of the site's warm orange, with orange reserved for CTA buttons. The tokens
+ * are therefore declared BELOW, on the page's panel, rather than added to
+ * tokens.css — a custom property set on an ancestor inherits into every child
+ * component whatever Astro's style scoping does, so the four structure/*
+ * components read `--as-*` without importing anything.
+ *
+ * That containment is the point. The departure is visible in one file, revertible
+ * in one file, and cannot leak into the other six Academics pages by accident.
+ *
+ * ⚠ IT IS STILL A DEPARTURE. Every other page on this site is warm, and a reader
+ * moving from Academic Philosophy to Academic Structure crosses a colour
+ * boundary. That is a deliberate instruction being followed, not an oversight —
+ * but if the section is ever audited for consistency, this is the page that will
+ * come up, and this comment is why.
+ *
+ * ⚠ THE ELECTIVE SUBJECT LISTS ARE PLACEHOLDERS. See the header of
+ * structure/Combinations.astro and `streamDetail` in data/academics.ts. The page
+ * renders a visible notice for as long as they stay unconfirmed.
+ *
+ * ⚠ NO <ChapterNav />. The client asked the chapter pager off this page, as they
+ * did on Academic Philosophy. It was the only link from here to Teaching &
+ * Learning and back to the Academics overview, so this page is now a LEAF: a
+ * reader arriving from search leaves via the masthead or the footer. Two of the
+ * six Academics pages are now dead ends.
+ *
+ * ⚠ NO AGES. The school's age criteria live in a Drive-hosted prospectus and are
+ * not ours to estimate, so every stage is identified by its class band. Asset
+ * request A8.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ChapterNav from '../../components/academics/ChapterNav.astro';
-import { school } from '../../data/site';
-import { stages } from '../../data/academics';
+import PageHero from '../../components/ui/PageHero.astro';
+
+import Intro from '../../components/academics/structure/Intro.astro';
+import Stages from '../../components/academics/structure/Stages.astro';
+import Streams from '../../components/academics/structure/Streams.astro';
+import Combinations from '../../components/academics/structure/Combinations.astro';
+
+import banner from '../../assets/photos/sunbeem-students-4.jpg';
 ---
 
 <BaseLayout
   title="Academic Structure — Sunbeam School Ballia"
-  description="The academic structure at Sunbeam School Ballia: Early Years through Senior Secondary, Nursery to Class XII, with four CBSE streams — PCM, PCB, Commerce and Humanities."
+  description="The academic structure at Sunbeam School Ballia: Pre-Primary through Senior Secondary, Nursery to Class XII, with four CBSE streams — PCM, PCB, Commerce and Humanities."
 >
-  {/* ══ HERO — split, with the five stages as a ladder ═════════════════════ */}
-  <section class="shero" aria-labelledby="shero-title">
-    <div class="shero__grid">
-      <div class="shero__copy">
-        <nav class="shero__crumbs" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="/">Home</a></li>
-            <li><a href="/academics/">Academics</a></li>
-            <li><span aria-current="page">Academic Structure</span></li>
-          </ol>
-        </nav>
+  <PageHero
+    title="Academic Structure"
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+    ]}
+    src={banner}
+    alt="Students of Sunbeam School Ballia together on the school campus."
+    position="50% 40%"
+  />
 
-        <p class="shero__n t-tabular" aria-hidden="true">Chapter 02</p>
-
-        <h1 class="shero__title" id="shero-title" data-split>
-          Fourteen years, one <span class="t-squiggle">journey</span>
-        </h1>
-
-        <p class="shero__stand">
-          From a first morning in Nursery to a Class XII board examination — five stages, each with
-          its own shape, taught to the CBSE curriculum throughout.
-        </p>
-
-        <dl class="shero__facts">
-          <div>
-            <dt>Range</dt>
-            <dd>{school.classRange}</dd>
-          </div>
-          <div>
-            <dt>Board</dt>
-            <dd>{school.board} · {school.affiliationNo}</dd>
-          </div>
-          <div>
-            <dt>Streams at XI–XII</dt>
-            <dd>{school.streams.join(' · ')}</dd>
-          </div>
-        </dl>
-      </div>
-
-      {/* The ladder previews the rail below. Each rung is an in-page link, so it
-          doubles as a table of contents for the journey. */}
-      <ol class="ladder" aria-label="The five stages">
-        {stages.map((s, i) => (
-          <li class="ladder__rung" style={`--tone: ${s.tone};`} data-reveal data-reveal-delay={i * 90}>
-            <a href={`#${s.key}`}>
-              <span class="ladder__dot" aria-hidden="true"></span>
-              <span class="ladder__stage">{s.stage}</span>
-              <span class="ladder__classes t-tabular">{s.classes}</span>
-            </a>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  {/* ══ THE JOURNEY ════════════════════════════════════════════════════════ */}
-  <section class="jr" aria-labelledby="jr-title">
-    <div class="u-container jr__head">
-      <h2 class="jr__title t-h2-sans" id="jr-title" data-split>
-        The <span class="t-squiggle">stages</span>
-      </h2>
-      <p class="jr__hint">
-        <span aria-hidden="true">→</span>
-        Scroll sideways, or use the arrow keys, to move through the journey.
-      </p>
-    </div>
-
-    {/* tabindex="0" + role/aria-label: a scrollable region needs to be focusable
-        for a keyboard user to scroll it at all. Without the tab stop the rail is
-        mouse-only, which is the commonest way a horizontal section becomes
-        inaccessible. */}
-    <div class="jr__rail" tabindex="0" role="region" aria-label="The five stages, scroll horizontally">
-      <ol class="jr__track">
-        {stages.map((s, i) => (
-          <li class="stg" id={s.key} style={`--tone: ${s.tone};`}>
-            <p class="stg__n t-tabular" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}<span>/{String(stages.length).padStart(2, '0')}</span>
-            </p>
-
-            <p class="stg__classes t-tabular">{s.classes}</p>
-            <h3 class="stg__h">{s.stage}</h3>
-            <p class="stg__b">{s.body}</p>
-
-            <ul class="stg__focus">
-              {s.focus.map((f) => <li>{f}</li>)}
-            </ul>
-
-            <p class="stg__ms">
-              <span class="stg__ms-l">Milestone</span>
-              {s.milestone}
-            </p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  {/* ══ STREAMS ════════════════════════════════════════════════════════════ */}
-  <section class="str" id="streams" aria-labelledby="str-title">
-    <div class="u-container">
-      <div class="str__head" data-reveal>
-        <p class="str__pill"><span class="pill pill--glass">The last choice</span></p>
-        <h2 class="str__title t-h2-sans" id="str-title" data-split>
-          Four streams at senior <span class="t-squiggle">secondary</span>
-        </h2>
-        <p class="str__lede">
-          Chosen at the end of Class X and taught to board level. The school publishes these four and
-          no others.
-        </p>
-      </div>
-
-      <ol class="str__grid">
-        {school.streams.map((s, i) => (
-          <li class="str__item" data-reveal data-reveal-delay={i * 80}>
-            <span class="str__i t-tabular" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <span class="str__name">{s}</span>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <ChapterNav current="structure" />
+  <div class="u-page-panel as-panel">
+    <Intro />
+    <Stages />
+    <Streams />
+    <Combinations />
+  </div>
 </BaseLayout>
 
 <style>
-  /* ══════════ HERO ════════════════════════════════════════════════════════ */
-  .shero {
-    background: var(--sb-ivory);
-    padding-block: clamp(110px, 15vh, 176px) var(--sb-section-y-major);
-  }
+  /* div.as-panel, not .as-panel: it has to out-specify .u-page-panel in base.css,
+     which a bare scoped class only matches rather than beats.
 
-  .shero__grid {
-    display: grid;
-    /* gutter · copy · ladder · gutter — the ladder gets a real column rather
-       than floating in the copy's margin. */
-    grid-template-columns:
-      minmax(var(--sb-margin), 1fr)
-      minmax(0, calc(var(--sb-max-content) * 0.56))
-      minmax(0, calc(var(--sb-max-content) * 0.38))
-      minmax(var(--sb-margin), 1fr);
-    column-gap: calc(var(--sb-max-content) * 0.06);
-    align-items: start;
-  }
+     padding-block: 0 — the four sections carry their own vertical rhythm and the
+     panel's default 88/120 would add a band of empty ivory at each end. */
+  div.as-panel {
+    padding-block: 0;
+    background: var(--as-ground);
 
-  .shero__copy { grid-column: 2; }
+    /* ── THE COOL PALETTE ────────────────────────────────────────────────────
+       Five accents and their washes, plus ink, body text, ground and the two
+       shadows the cards share.
 
-  .shero__crumbs ol {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sb-3);
-    list-style: none;
-    margin: 0 0 var(--sb-8);
-    padding: 0;
-    font-size: var(--sb-caption);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
+       ⚠ THE HUES WERE RE-SPACED AFTER MEASURING THEM. The first set ran
+       violet/blue/teal/cyan/indigo and was, in practice, one colour: pairwise
+       RGB distance bottomed out at 27 (teal vs cyan) and three more pairs sat
+       under 55. Anything under about 40 reads as the same colour. The brief
+       asked for "a distinct accent colour" per stage and it was distinct only
+       in the stylesheet.
 
-  .shero__crumbs li + li::before {
-    content: '/';
-    margin-right: var(--sb-3);
-    color: var(--sb-text-muted);
-  }
+       These five span 150°–290° of hue instead of huddling in the blues, and
+       the closest pair is now 64 apart. They are ordered green → violet so the
+       five stages read as a progression through the spectrum rather than as
+       five unrelated categories.
 
-  .shero__crumbs a { color: var(--sb-text-secondary); }
-  .shero__crumbs a:hover { color: var(--sb-violet); }
-  .shero__crumbs [aria-current] { color: var(--sb-charcoal); font-weight: 600; }
+       ⚠ AND THE WASH CANNOT CARRY IT. A wash is the accent mixed toward white,
+       so the distance between two washes is roughly the mix percentage times
+       the distance between their accents — at 8% those same five are 5 apart,
+       and at 20% they would still be 13. No tint strength fixes this. The
+       differentiation therefore lives in SATURATED marks: the filled node on
+       the timeline, the class pill's type, the milestone label. The washes stay
+       light because their only job is to be a legible ground for accent text.
 
-  .shero__n {
-    font-size: var(--sb-caption);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--sb-violet);
-    margin-bottom: var(--sb-5);
-  }
+       Every value measured against white; all five clear AA as small text.
 
-  .shero__title {
-    font-family: var(--sb-font-display);
-    font-weight: 800;
-    font-size: clamp(34px, 5vw, 70px);
-    line-height: 1.06;
-    letter-spacing: -0.038em;
-    color: var(--sb-charcoal);
-  }
+           teal   #0a6d3a  6.6:1      indigo #4340bb  7.8:1
+           cyan   #056579  6.6:1      violet #8226c0  7.0:1
+           blue   #1259c4  6.4:1 */
+    --as-teal: #0a6d3a;
+    --as-teal-wash: #e8f2eb;
+    --as-cyan: #056579;
+    --as-cyan-wash: #e6eff2;
+    --as-blue: #1259c4;
+    --as-blue-wash: #e8eefa;
+    --as-indigo: #4340bb;
+    --as-indigo-wash: #ebebf8;
+    --as-violet: #8226c0;
+    --as-violet-wash: #f3e9f9;
 
-  .shero__stand {
-    max-width: 52ch;
-    margin-top: var(--sb-6);
-    font-size: var(--sb-body);
-    line-height: 1.72;
-    color: var(--sb-text-secondary);
-  }
+    /* Ink and body copy carry a faint cool cast so type on this page belongs to
+       its own palette, without going anywhere near the low-contrast grey-blue
+       that a "cool theme" usually degenerates into. Measured on white: 16.4:1
+       and 8.9:1. */
+    --as-ink: #16182a;
+    --as-text: #4a4f63;
+    --as-ground: var(--sb-ivory);
 
-  .shero__facts {
-    display: grid;
-    gap: var(--sb-5);
-    margin: var(--sb-8) 0 0;
-    padding-top: var(--sb-7);
-    border-top: var(--sb-hairline);
-  }
-
-  .shero__facts dt {
-    font-size: var(--sb-caption);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--sb-violet-dark);
-  }
-
-  .shero__facts dd {
-    margin: 4px 0 0;
-    font-size: var(--sb-body-sm);
-    font-weight: 600;
-    color: var(--sb-charcoal);
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* --- The ladder ------------------------------------------------------------ */
-  .ladder {
-    grid-column: 3;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    /* The rail is drawn on the list, so it runs the full height without needing
-       a pseudo-element per rung. */
-    border-left: 2px solid var(--sb-border);
-  }
-
-  .ladder__rung a {
-    position: relative;
-    display: grid;
-    gap: 2px;
-    padding: var(--sb-5) var(--sb-5) var(--sb-5) var(--sb-7);
-    transition: background-color var(--sb-dur-link) ease;
-  }
-
-  .ladder__rung a:hover { background: rgba(201, 60, 10, 0.05); }
-
-  /* The dot sits ON the rail — left is negative half its width plus half the
-     rail, so it stays centred whatever the padding becomes. */
-  .ladder__dot {
-    position: absolute;
-    left: -7px;
-    top: calc(var(--sb-5) + 6px);
-    width: 12px;
-    height: 12px;
-    border-radius: var(--sb-r-full);
-    background: var(--tone);
-    box-shadow: 0 0 0 4px var(--sb-ivory);
-  }
-
-  .ladder__stage {
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(17px, 1.6vw, 22px);
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    color: var(--sb-charcoal);
-  }
-
-  .ladder__classes {
-    font-size: var(--sb-caption);
-    letter-spacing: 0.05em;
-    color: var(--sb-text-muted);
-  }
-
-  /* ══════════ THE JOURNEY RAIL ════════════════════════════════════════════ */
-  .jr {
-    background: var(--sb-sand);
-    padding-block: var(--sb-section-y-major);
-  }
-
-  .jr__head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--sb-6);
-    margin-bottom: var(--sb-8);
-  }
-
-  .jr__title { color: var(--sb-charcoal); }
-
-  .jr__hint {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sb-3);
-    font-size: var(--sb-caption);
-    color: var(--sb-text-muted);
-  }
-
-  .jr__hint span { color: var(--sb-violet); font-weight: 700; }
-
-  /* The rail bleeds to the viewport edge on the right so a panel is always
-     visibly cut off — that half-panel is what tells the reader there is more.
-     Left padding matches the container so panel one lines up with the heading. */
-  .jr__rail {
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-    padding-block: var(--sb-4) var(--sb-7);
-    scrollbar-width: thin;
-    /* SCROLL-PADDING, not just the track's padding.
-       `scroll-snap-align: start` snaps a panel to the SNAPPORT, which defaults to
-       this element's border box — so on load the browser snapped panel one flush
-       to x=0 and silently cancelled the 80px inset on the track. The heading
-       above sat at 80 and the first panel at 0. Insetting the snapport by the
-       same amount makes the snap land where the padding intends. */
-    scroll-padding-inline: max(var(--sb-margin), calc((100vw - var(--sb-max-content)) / 2));
-  }
-
-  .jr__rail:focus-visible {
-    outline: 3px solid var(--sb-focus);
-    outline-offset: 4px;
-  }
-
-  .jr__track {
-    display: flex;
-    gap: var(--sb-6);
-    list-style: none;
-    margin: 0;
-    padding-inline: max(var(--sb-margin), calc((100vw - var(--sb-max-content)) / 2));
-  }
-
-  .stg {
-    flex: 0 0 auto;
-    width: min(380px, 78vw);
-    scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sb-4);
-    padding: var(--sb-7);
-    border-radius: var(--sb-r-3);
-    background: #fff;
-    box-shadow: var(--sb-shadow-card);
-    /* The stage's own colour, as a top edge. Cheaper than five backgrounds and
-       it keeps every panel's text on white, so contrast is identical across the
-       five whatever tone they carry. */
-    border-top: 5px solid var(--tone);
-    transition: transform var(--sb-dur-image) var(--sb-ease),
-      box-shadow var(--sb-dur-image) var(--sb-ease);
-  }
-
-  .stg:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--sb-shadow-card-hover);
-  }
-
-  .stg__n {
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--tone);
-  }
-
-  .stg__n span {
-    font-size: 15px;
-    color: var(--sb-text-muted);
-    letter-spacing: 0;
-  }
-
-  .stg__classes {
-    font-size: var(--sb-caption);
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--sb-text-muted);
-  }
-
-  .stg__h {
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(21px, 2vw, 28px);
-    line-height: 1.16;
-    letter-spacing: -0.025em;
-    color: var(--sb-charcoal);
-  }
-
-  .stg__b {
-    font-size: var(--sb-body-sm);
-    line-height: 1.65;
-    color: var(--sb-text-secondary);
-  }
-
-  .stg__focus {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    list-style: none;
-    margin: var(--sb-3) 0 0;
-    padding: 0;
-  }
-
-  .stg__focus li {
-    padding: 5px 11px;
-    border-radius: var(--sb-r-full);
-    background: var(--sb-sand);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--sb-charcoal);
-  }
-
-  .stg__ms {
-    margin-top: auto;
-    padding-top: var(--sb-6);
-    border-top: var(--sb-hairline);
-    font-size: var(--sb-body-sm);
-    font-weight: 600;
-    line-height: 1.5;
-    color: var(--sb-charcoal);
-  }
-
-  .stg__ms-l {
-    display: block;
-    margin-bottom: 4px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--tone);
-  }
-
-  /* ══════════ STREAMS ═════════════════════════════════════════════════════ */
-  .str {
-    background: var(--sb-ink);
-    padding-block: var(--sb-section-y-major);
-  }
-
-  .str__head { margin-bottom: var(--sb-9); max-width: 42ch; }
-  .str__pill { margin-bottom: var(--sb-5); }
-  .str__title { color: #fff; }
-
-  .str__lede {
-    margin-top: var(--sb-6);
-    font-size: var(--sb-body);
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.82);
-  }
-
-  .str__grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--sb-5);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .str__item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sb-6);
-    padding: var(--sb-7);
-    border-radius: var(--sb-r-2);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    transition: border-color var(--sb-dur-link) ease, background-color var(--sb-dur-link) ease;
-  }
-
-  .str__item:hover {
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  .str__i {
-    font-size: var(--sb-caption);
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--sb-lime);
-  }
-
-  .str__name {
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(22px, 2.4vw, 34px);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: #fff;
-  }
-
-  /* ══════════ REDUCED MOTION ══════════════════════════════════════════════
-     scroll-snap stays — it is not motion, it is where scrolling stops. Only the
-     lift comes off. */
-  @media (prefers-reduced-motion: reduce) {
-    .stg,
-    .ladder__rung a { transition: none; }
-    .stg:hover { transform: none; }
-    .jr__rail { scroll-behavior: auto; }
-  }
-
-  /* ══════════ TABLET ══════════════════════════════════════════════════════ */
-  @media (max-width: 1023px) {
-    .shero__grid {
-      grid-template-columns:
-        minmax(var(--sb-margin), 1fr)
-        minmax(0, var(--sb-max-content))
-        minmax(var(--sb-margin), 1fr);
-      row-gap: var(--sb-9);
-    }
-
-    .shero__copy { grid-column: 2; }
-    .ladder { grid-column: 2; }
-
-    .shero__facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-    .str__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-
-  /* ══════════ MOBILE ══════════════════════════════════════════════════════ */
-  @media (max-width: 639px) {
-    .shero { padding-block: clamp(92px, 13vh, 130px) var(--sb-section-y); }
-    .jr,
-    .str { padding-block: var(--sb-section-y); }
-
-    .shero__facts { grid-template-columns: minmax(0, 1fr); }
-
-    /* The rail still scrolls sideways here — on a touch screen that is the most
-       natural gesture there is, and it keeps the sequence intact. */
-    .stg { width: 84vw; }
-
-    .str__grid { grid-template-columns: minmax(0, 1fr); }
+    --as-shadow: 0 14px 40px -26px rgba(22, 24, 42, 0.34);
+    --as-shadow-hover: 0 28px 64px -28px rgba(22, 24, 42, 0.4);
   }
 </style>

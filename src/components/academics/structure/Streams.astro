@@ -1,0 +1,368 @@
+---
+/**
+ * ACADEMIC STRUCTURE · 03 — THE FOUR STREAMS
+ *
+ * Four upright photograph cards on a dark band, staggered so that neighbours sit
+ * at different heights. The picture is the card; the copy is two lines and an
+ * arrow at its foot.
+ *
+ * ⚠ THIS IS THE THIRD PASS, AND THE FIRST TWO ARE WORTH RECORDING because the
+ * mistakes were measurable rather than matters of taste. Pass one put the
+ * photographs behind the whole band. Pass two put them in the cards but kept
+ * everything else, and sampling the rendered card showed why it did not look
+ * like the reference:
+ *
+ *   · HALF THE CARD WAS WASH. Sampling the centre column top to bottom, 7 of 14
+ *     probes came back under 0.14 luminance — a black card with a photograph
+ *     along the top, where the reference is a photograph with a shadow at its
+ *     foot. Cause: three blocks of copy needed protecting, not one.
+ *   · THE PHOTOGRAPHS WERE DULL. `saturate(0.72)` at rest measured 0.31 mean
+ *     saturation. The reference's cards are vivid; that is most of why they
+ *     read as photographs rather than as tiles.
+ *   · THE BAND WAS LIGHT, so nothing popped off it.
+ *
+ * So: the band is dark, the photographs run at full colour, and the card carries
+ * the stream's name and its subject line — two lines, as the reference has — and
+ * nothing else. The wash now only has to protect the bottom third.
+ *
+ * THE CAREER LINE MOVED to the matching card in Subject Combinations below. It
+ * had no room on a card that has to stay a photograph, and it is more use beside
+ * the subject lists, where a reader is deciding rather than browsing.
+ *
+ * THE ARROW GOES SOMEWHERE. It links to `#comb-pcm`, `#comb-pcb` and so on —
+ * the matching card in the section below. That is the difference between the
+ * reference's arrow, which is a decoration on a template, and this one.
+ *
+ * ⚠ COMMERCE HAS NO ROOM PHOTOGRAPH. PCM gets the physics laboratory, PCB the
+ * biology laboratory and Humanities the Nalanda Library — all rooms those
+ * subjects are genuinely taught in. The school has no commerce-specific room in
+ * the repository, so that card takes a general shot of students in session; a
+ * physics bench behind the word "Commerce" would be a small lie told in
+ * pictures. Photography request A2.
+ *
+ * ⚠ THE CARDS ARE UPRIGHT, AND A TILT WAS REMOVED TO GET THERE. The brief for
+ * this pass said the cards were "a little bit turned"; they are not. Looking at
+ * the reference again, every card in it sits square — what reads as a turn is
+ * the vertical STAGGER between neighbours plus the large corner radius. Rotating
+ * them was reading a description of one effect as a description of another, and
+ * it produced a row that looked knocked askew rather than dealt out.
+ *
+ * The stagger is what survives, because that part IS in the reference: cards one
+ * and three sit lower than two and four.
+ */
+import { Picture } from 'astro:assets';
+import { streamDetail } from '../../../data/academics';
+
+import pcmShot from '../../../assets/photos/sb-phy-lab.jpg';
+import pcbShot from '../../../assets/photos/sb-bio-lab.jpg';
+import commerceShot from '../../../assets/photos/sunbeem-students-3.jpg';
+import humanitiesShot from '../../../assets/photos/sb-library.jpg';
+
+/* Paired here rather than in the data file: astro:assets has to see each import
+   at build time to emit the AVIF/WebP variants, and a filename string in a .ts
+   file is invisible to it. */
+const shots = [
+  { src: pcmShot, alt: 'Students of Sunbeam School Ballia working at benches in the physics laboratory.' },
+  { src: pcbShot, alt: 'Two students of Sunbeam School Ballia handling glassware in the biology laboratory.' },
+  { src: commerceShot, alt: 'Students of Sunbeam School Ballia seated together during a school session.' },
+  { src: humanitiesShot, alt: 'Students of Sunbeam School Ballia reading at tables in the Nalanda Library.' },
+];
+---
+
+<section class="asstr" id="streams" aria-labelledby="asstr-title">
+  <span class="asstr__blob asstr__blob--a" aria-hidden="true"></span>
+  <span class="asstr__blob asstr__blob--b" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="asstr__head">
+      <p class="asstr__eyebrow">Streams offered</p>
+      <h2 class="asstr__h" id="asstr-title" data-split>Four streams at senior secondary</h2>
+      <p class="asstr__lede">
+        Chosen at the end of Class X and taught to board level. The school publishes these four and
+        no others.
+      </p>
+    </div>
+
+    <ol class="asstr__cards">
+      {
+        streamDetail.map((s, i) => (
+          <li class="asstr__cell" data-pop data-pop-delay={i * 80}>
+            {/* The whole card is the link, not the arrow inside it — a 320px
+                target beats a 40px one, and it means the hover state and the hit
+                area are the same object. */}
+            <a class="asr" href={`#comb-${s.name.toLowerCase()}`}>
+              <div class="asr__media">
+                <Picture
+                  src={shots[i].src}
+                  alt={shots[i].alt}
+                  formats={['avif', 'webp']}
+                  widths={[420, 760, 1000]}
+                  sizes="(max-width: 719px) 88vw, (max-width: 1080px) 44vw, 320px"
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="asr__body">
+                <h3 class="asr__h">{s.name}</h3>
+                <p class="asr__full">{s.full}</p>
+
+                <span class="asr__go" aria-hidden="true">
+                  <svg width="15" height="10" viewBox="0 0 14 10" fill="none">
+                    <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.6" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* ══ A DARK BAND, AND THE ONLY ONE ON THIS PAGE ═══════════════════════════
+     Photograph cards need something to sit against; on the ivory ground they
+     read as tiles pinned to paper. The ink is --as-ink deepened rather than
+     black, so the band belongs to this page's cool palette instead of arriving
+     from somewhere else. */
+  .asstr {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(60px, 9vh, 108px);
+    background: linear-gradient(165deg, #191c31 0%, #141628 46%, #0e1020 100%);
+  }
+
+  .asstr__blob {
+    position: absolute;
+    z-index: -1;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+  }
+
+  .asstr__blob--a {
+    top: -20%;
+    right: -6%;
+    width: 44%;
+    background: radial-gradient(circle at 50% 50%, rgba(23, 132, 160, 0.34), transparent 68%);
+  }
+
+  .asstr__blob--b {
+    bottom: -24%;
+    left: -8%;
+    width: 40%;
+    background: radial-gradient(circle at 50% 50%, rgba(109, 82, 232, 0.3), transparent 68%);
+  }
+
+  /* --- Head, on dark -------------------------------------------------------
+     The page's accents are chosen against white and go muddy on ink, so the
+     eyebrow takes a lightened mix rather than the token itself. */
+  .asstr__head { text-align: center; }
+
+  .asstr__eyebrow {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--as-cyan) 30%, #fff);
+  }
+
+  h2.asstr__h {
+    max-width: 22ch;
+    margin: var(--sb-5) auto 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(27px, 3.6vw, 48px);
+    line-height: 1.06;
+    letter-spacing: -0.036em;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .asstr__lede {
+    max-width: 58ch;
+    margin: clamp(16px, 2.2vh, 24px) auto 0;
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.76);
+    text-wrap: pretty;
+  }
+
+  /* --- The staggered row ---------------------------------------------------
+     The vertical padding is headroom for the cards' shadows, which the section's
+     own overflow clip would otherwise cut flat along the top and bottom edges. */
+  .asstr__cards {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 1.7vw, 28px);
+    align-items: start;
+    margin: clamp(38px, 5.4vh, 72px) 0 0;
+    padding: 16px 0;
+    list-style: none;
+  }
+
+  .asstr__cell:nth-child(odd) { margin-top: clamp(20px, 3.4vw, 58px); }
+
+  /* --- Card ---------------------------------------------------------------- */
+
+  .asr {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    aspect-ratio: 3 / 4;
+    border-radius: clamp(20px, 2vw, 30px);
+    background: #0e1020;
+    box-shadow: 0 26px 60px -28px rgba(0, 0, 0, 0.72);
+    transition:
+      translate 620ms var(--sb-ease),
+      box-shadow 620ms var(--sb-ease);
+  }
+
+  .asr:hover {
+    translate: 0 -10px;
+    box-shadow: 0 40px 84px -30px rgba(0, 0, 0, 0.8);
+  }
+
+  .asr:focus-visible {
+    outline: 2px solid var(--sb-focus);
+    outline-offset: 4px;
+  }
+
+  .asr__media {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+  }
+
+  .asr__media :global(picture),
+  .asr__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* FULL COLOUR AT REST. The previous pass held these at saturate(0.72) and
+       measured 0.31 mean saturation — the cards read as grey tiles. The picture
+       is the design; dulling it is dulling the design. */
+    transition: scale 900ms var(--sb-ease);
+  }
+
+  .asr:hover .asr__media :global(img) { scale: 1.07; }
+
+  /* ══ THE WASH IS ANCHORED TO THE COPY, NOT TO THE CARD ═══════════════════
+     A percentage gradient over the whole frame was measured failing outright —
+     2.24:1 on a title at 1440, and 1.16:1 at 390 where the card turns landscape
+     and the same stops land on a near-white patch of the library. A gradient
+     positioned against the FRAME cannot protect type positioned against the
+     CONTENT.
+
+     So it belongs to the text block. Whatever shape the card takes, the copy
+     sits on at least 76% ink — white at 7.9:1 even against a pure-white pixel —
+     and the ::before feathers that upward so it reads as light falling off. Two
+     lines of copy instead of four is what keeps that block to the bottom third
+     and leaves the rest of the card a photograph. */
+  .asr__body {
+    position: relative;
+    padding: clamp(20px, 2vw, 28px);
+    background: linear-gradient(
+      to top,
+      rgba(6, 7, 16, 0.95) 0%,
+      rgba(6, 7, 16, 0.88) 60%,
+      rgba(6, 7, 16, 0.76) 100%
+    );
+  }
+
+  .asr__body::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: clamp(66px, 8vw, 112px);
+    background: linear-gradient(
+      to top,
+      rgba(6, 7, 16, 0.76) 0%,
+      rgba(6, 7, 16, 0.3) 48%,
+      rgba(6, 7, 16, 0) 100%
+    );
+    pointer-events: none;
+  }
+
+  h3.asr__h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(23px, 2.1vw, 31px);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+
+  .asr__full {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.82);
+    transition: translate 520ms var(--sb-ease);
+  }
+
+  /* The reference's circular arrow. Outlined at rest, filled on hover — the one
+     place on this card where an accent would be lost, so it goes white. */
+  .asr__go {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-top: clamp(16px, 1.8vw, 22px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--sb-r-full);
+    color: #fff;
+    transition:
+      background-color 520ms var(--sb-ease),
+      border-color 520ms var(--sb-ease),
+      color 520ms var(--sb-ease),
+      translate 520ms var(--sb-ease) 60ms;
+  }
+
+  .asr:hover .asr__full { translate: 0 -4px; }
+
+  .asr:hover .asr__go {
+    background: #fff;
+    border-color: #fff;
+    color: #12142a;
+    translate: 6px -4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .asr,
+    .asr__media :global(img),
+    .asr__full,
+    .asr__go { transition: none; }
+    .asr:hover { translate: none; }
+    .asr:hover .asr__media :global(img) { scale: 1; }
+    .asr:hover .asr__full { translate: none; }
+    .asr:hover .asr__go { translate: none; }
+  }
+
+  /* Two by two, and the stagger becomes a zigzag between the rows instead of
+     across one. */
+  @media (max-width: 1080px) {
+    .asstr__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .asstr__cell:nth-child(odd) { margin-top: 0; }
+    .asstr__cell:nth-child(2n) { margin-top: clamp(22px, 4vw, 48px); }
+  }
+
+  @media (max-width: 719px) {
+    .asstr { padding-block: var(--sb-9); }
+    .asstr__cards { grid-template-columns: minmax(0, 1fr); gap: var(--sb-6); }
+    .asstr__cell:nth-child(2n) { margin-top: 0; }
+    .asr { aspect-ratio: 4 / 3; }
+    .asr:hover { translate: none; }
+  }
+</style>
