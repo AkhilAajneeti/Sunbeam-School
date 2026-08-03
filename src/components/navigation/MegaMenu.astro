@@ -2,9 +2,10 @@
 /**
  * C03 · MEGA MENU — docs/06 §02, docs/04 F1
  *
- * Full-width, 1280 inner, 3–4 columns + one featured panel.
- * Every column header is a link to a real landing page — no orphan headings,
- * which was the primary failure of the existing site's menu.
+ * Full-width, 1280 inner, columns of links + one featured panel.
+ * The columns carry no headings — every row is a link, so the menu can never
+ * show a label that goes nowhere, which was the primary failure of the
+ * existing site's menu. Each group's landing page leads its own column.
  *
  * CSS-first: opens on :hover and :focus-within. JS only adds Escape-to-close.
  */
@@ -22,9 +23,8 @@ const { item } = Astro.props;
     <div class="mega__cols">
       {item.columns?.map((col) => (
         <div class="mega__col">
-          <a class="mega__col-header t-label" href={col.href}>{col.header}</a>
           <ul class="mega__list">
-            {col.children.map((child) => (
+            {col.map((child) => (
               <li>
                 <a class="mega__link" href={child.href}>
                   <span class="mega__link-label">{child.label}</span>
@@ -90,23 +90,15 @@ const { item } = Astro.props;
     padding-block: var(--sb-8) var(--sb-9);
   }
 
+  /* Fixed-width tracks rather than 1fr: menus carry 2–6 groups, and equal
+     fractions would stretch a two-group menu across the full measure while
+     squeezing a six-group one. auto-fill packs as many 240px columns as fit and
+     wraps the rest onto a second row — Academics (six groups) lands as 3 × 2. */
   .mega__cols {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, 240px);
     gap: var(--sb-8);
-  }
-
-  .mega__col-header {
-    display: block;
-    color: var(--sb-violet);
-    padding-bottom: var(--sb-4);
-    border-bottom: var(--sb-hairline);
-    margin-bottom: var(--sb-5);
-  }
-
-  .mega__col-header:hover {
-    color: var(--sb-maroon-dark);
-    border-bottom-color: var(--sb-violet);
+    align-content: start;
   }
 
   .mega__list {

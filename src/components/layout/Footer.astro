@@ -17,17 +17,26 @@
 import { school } from '../../data/site';
 import { footerUtility } from '../../data/navigation';
 
+/**
+ * Footer columns are the audit's four content sections, with every heading and
+ * link named exactly as the audit names it — §1 About Us, §2 Academics (A–F),
+ * §3 Campus Tour, §4 Beyond Academics. §7 Transport, §8 School Planner &
+ * Academic Calendar and §5 School Activities fold into the section each belongs
+ * to. The remaining sections — §6 Career, §9 Uniform Catalogue, §10 Notices,
+ * §11 Latest News & Events, §12 Alumni — sit in the utility row below, since
+ * the navigation bar tops out at eight items (see Masthead.astro).
+ */
 const columns = [
   {
-    heading: 'About',
+    heading: 'About Us',
     href: '/about/',
     links: [
       { label: 'History and establishment of the school', href: '/about/history-legacy/' },
       { label: 'Vision and Mission', href: '/about/vision-mission/' },
-      { label: "Principal's Message", href: '/about/principals-message/' },
+      { label: 'Legacy of the institution', href: '/about/history-legacy/#legacy' },
       { label: "Director's Message", href: '/about/directors-message/' },
-      { label: 'Faculty', href: '/about/faculty/' },
-      { label: 'Affiliation & Recognitions', href: '/about/affiliation/' },
+      { label: "Principal's Message", href: '/about/principals-message/' },
+      // { label: 'Achievements & Recognition', href: '/about/achievements/' },
     ],
   },
   {
@@ -36,34 +45,35 @@ const columns = [
     links: [
       { label: 'Academic Philosophy', href: '/academics/philosophy/' },
       { label: 'Academic Structure', href: '/academics/structure/' },
-      { label: 'Board Results', href: '/academics/board-results/' },
-      { label: 'Academic Calendar', href: '/academics/academic-calendar/' },
-      { label: 'Syllabus (PRECEPT)', href: '/academics/resources/syllabus/' },
-      { label: 'FAQs', href: '/academics/parent-partnership/#faqs' },
+      { label: 'Teaching & Learning', href: '/academics/teaching-learning/' },
+      { label: 'Assessment Pattern', href: '/academics/assessment/' },
+      { label: 'Career Development & Student Success', href: '/academics/student-success/' },
+      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+      { label: 'School Planner & Academic Calendar', href: '/academics/academic-calendar/' },
     ],
   },
   {
-    heading: 'Admissions',
-    href: '/admissions/',
-    links: [
-      { label: 'Admission Procedure', href: '/admissions/procedure/' },
-      { label: 'Fee Structure', href: '/admissions/fee-structure/' },
-      { label: 'Prospectus', href: '/admissions/prospectus/' },
-      { label: 'Uniform Catalogue', href: '/admissions/uniform-catalogue/' },
-      { label: 'Apply Online', href: school.external.applyNurseryToIX },
-      { label: 'Book a Campus Visit', href: '/admissions/campus-visit/' },
-    ],
-  },
-  {
-    heading: 'Campus & Beyond',
+    heading: 'Campus Tour',
     href: '/campus/',
     links: [
-      { label: 'Campus Tour', href: '/campus/' },
-      { label: 'Transport & Bus Routes', href: '/campus/transport/' },
+      { label: 'Shooting Range', href: '/campus/shooting-range/' },
+      { label: 'Auditorium', href: '/campus/auditorium/' },
+      { label: 'Conference Room', href: '/campus/conference-room/' },
+      { label: 'Science Laboratories', href: '/campus/laboratories/' },
+      { label: 'Library', href: '/campus/library/' },
+      { label: 'Sports Facilities', href: '/campus/sports-facilities/' },
       { label: 'Safety & Security', href: '/campus/safety-security/' },
-      { label: 'Sports at Sunbeam', href: '/beyond-academics/sports/' },
-      { label: 'Beyond Academics', href: '/beyond-academics/' },
-      { label: 'Galleries', href: '/news-events/galleries/' },
+      { label: 'Transport', href: '/campus/transport/' },
+    ],
+  },
+  {
+    heading: 'Beyond Academics',
+    href: '/beyond-academics/',
+    links: [
+      { label: 'Sports & Games', href: '/beyond-academics/sports/' },
+      { label: 'Achievements', href: '/beyond-academics/achievements/' },
+      { label: 'Excursions & Educational Tours', href: '/beyond-academics/excursions/' },
+      { label: 'School Activities', href: '/beyond-academics/school-activities/' },
     ],
   },
 ];
@@ -128,13 +138,13 @@ const socials = [
       </nav>
     </div>
 
-    <nav class="foot__utility" aria-label="Footer utilities">
+    <!-- <nav class="foot__utility" aria-label="Footer utilities">
       <ul>
         {footerUtility.map((l) => (
           <li><a href={l.href}>{l.label}</a></li>
         ))}
       </ul>
-    </nav>
+    </nav> -->
 
     <div class="foot__base">
       <p class="foot__legal">

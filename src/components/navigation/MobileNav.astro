@@ -57,9 +57,8 @@ import { school } from '../../data/site';
                 <div class="drawer__sub" hidden>
                   {item.columns.map((col) => (
                     <div class="drawer__group">
-                      <a class="drawer__group-head t-label" href={col.href}>{col.header}</a>
                       <ul>
-                        {col.children.map((child) => (
+                        {col.map((child) => (
                           <li>
                             <a class="drawer__sub-link" href={child.href}>{child.label}</a>
                           </li>
@@ -215,12 +214,11 @@ import { school } from '../../data/site';
 
   .drawer__sub[hidden] { display: none; }
 
-  .drawer__group + .drawer__group { margin-top: var(--sb-6); }
-
-  .drawer__group-head {
-    display: block;
-    color: var(--sb-violet);
-    margin-bottom: var(--sb-3);
+  /* Groups are unlabelled, so a rule rather than a heading keeps them apart. */
+  .drawer__group + .drawer__group {
+    margin-top: var(--sb-5);
+    padding-top: var(--sb-5);
+    border-top: var(--sb-hairline);
   }
 
   .drawer__sub-link {
@@ -372,8 +370,9 @@ import { school } from '../../data/site';
       });
     });
 
-    // Close if the viewport grows into the desktop nav.
-    window.matchMedia('(min-width: 1240px)').addEventListener('change', (event) => {
+    // Close if the viewport grows into the desktop nav. Must track the
+    // Masthead's 1360 threshold, or the drawer is left open behind it.
+    window.matchMedia('(min-width: 1360px)').addEventListener('change', (event) => {
       if (event.matches && !drawer.hidden) close();
     });
   }

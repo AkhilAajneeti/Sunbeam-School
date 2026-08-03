@@ -4,8 +4,11 @@
  * 8 main items. Career and Alumni sit adjacent at top level because the client
  * audit requires it verbatim (§6.1 and §12.1).
  *
- * Every mega-menu column header is itself a link to a real landing page —
- * no orphan headings, which was the primary failure of the current menu.
+ * Menu contents are scoped to the sections the audit names; anything it does not
+ * list has been dropped from the menus rather than left as unowned surface.
+ *
+ * Columns carry no headings — every entry is a link, so a menu cannot present a
+ * label that goes nowhere. Each group's landing page leads its own column.
  */
 import { school } from './site';
 
@@ -15,18 +18,14 @@ export interface NavChild {
   note?: string;
 }
 
-export interface NavColumn {
-  /** Column header — always a real page, never a dead label. */
-  header: string;
-  href: string;
-  children: NavChild[];
-}
-
 export interface NavItem {
   label: string;
   href: string;
-  /** Items without columns are direct links — shallow by design. */
-  columns?: NavColumn[];
+  /**
+   * Mega-menu link groups — one array per column, all links, no headings.
+   * Items without columns are direct links, shallow by design.
+   */
+  columns?: NavChild[][];
   /** Contextual CTA shown in the mega-menu's featured panel. */
   feature?: {
     eyebrow: string;
@@ -40,62 +39,44 @@ export interface NavItem {
 }
 
 /**
- * Utility bar links.
+ * Utility bar links — what a returning parent or student actually comes back
+ * for, so they never scroll a persuasion page to reach it.
+ *
+ * Kept deliberately short. Academic Calendar now sits in the Academics menu and
+ * the footer, Download TC and Parent Login are dormant external systems, and
+ * Mandatory Public Disclosure keeps its permanent footer slot for regulatory
+ * findability — none of them earn a place in a bar this size.
  *
  * `tier` controls how the bar sheds links as it narrows, rather than letting
  * them wrap into a second line:
- *   1 — always visible (Notices · Results · Parent Login)
- *   2 — hidden below 1240px
- *   3 — hidden below 768px
- * Everything dropped here is still reachable from the drawer's Quick Links and
- * from the footer, so nothing becomes unreachable — Mandatory Public Disclosure
- * in particular keeps a permanent footer slot for regulatory findability.
+ *   1 — always visible
+ *   2 — hidden below 768px
+ * Everything dropped is still reachable from the drawer's Quick Links and the
+ * footer, so nothing becomes unreachable.
  */
 export const utilityLinks = [
   { label: 'Notices', href: '/news-events/notices/', tier: 1 },
-  { label: 'Academic Calendar', href: '/academics/academic-calendar/', tier: 2 },
   { label: 'Results', href: school.external.results, external: true, tier: 1 },
-  { label: 'Download TC', href: school.external.downloadTC, external: true, tier: 2 },
-  //{ label: 'Parent Login', href: school.external.parentLogin, external: true, tier: 1 },
-  { label: 'Mandatory Public Disclosure', href: '/mandatory-public-disclosure/', tier: 2 },
-  { label: 'Contact', href: '/contact-us/', tier: 3 },
+  { label: 'Contact', href: '/contact-us/', tier: 2 },
 ] as const;
 
 export const mainNav: NavItem[] = [
   {
-    label: 'About',
+    label: 'About Us',
     href: '/about/',
+    // Audit §1, verbatim. The Chairman, Secretary and other dignitaries are
+    // carried inside the History section rather than given their own links.
     columns: [
-      {
-        header: 'The School',
-        href: '/about/',
-        children: [
-          { label: 'History and establishment of the school', href: '/about/history-legacy/', note: '1972 Varanasi · 2013 Ballia' },
-          { label: 'Vision and Mission', href: '/about/vision-mission/' },
-          { label: 'Inclusive Education', href: '/about/inclusive-education/' },
-          { label: 'Golden Rules & Code of Conduct', href: '/about/code-of-conduct/' },
-        ],
-      },
-      {
-        header: 'Leadership',
-        href: '/about/management/',
-        children: [
-          { label: "Director's Message", href: '/about/directors-message/' },
-          { label: "Principal's Message", href: '/about/principals-message/' },
-          { label: 'Management & Leadership', href: '/about/management/' },
-          { label: 'Faculty', href: '/about/faculty/' },
-        ],
-      },
-      {
-        header: 'Standing',
-        href: '/about/achievements/',
-        children: [
-          { label: 'Achievements & Recognition', href: '/about/achievements/' },
-          { label: 'Affiliation & Recognitions', href: '/about/affiliation/' },
-          { label: 'Policies & Committees', href: '/about/policies/' },
-          { label: 'Mandatory Public Disclosure', href: '/mandatory-public-disclosure/' },
-        ],
-      },
+      [
+        { label: 'History and establishment of the school', href: '/about/history-legacy/' },
+        { label: 'Vision and Mission', href: '/about/vision-mission/' },
+        { label: 'Legacy of the institution', href: '/about/history-legacy/#legacy' },
+      ],
+      [
+        { label: "Director's Message", href: '/about/directors-message/' },
+        { label: "Principal's Message", href: '/about/principals-message/' },
+        // { label: 'Achievements & Recognition', href: '/about/achievements/' },
+      ],
     ],
     feature: {
       eyebrow: 'Since 1972',
@@ -109,47 +90,22 @@ export const mainNav: NavItem[] = [
   {
     label: 'Academics',
     href: '/academics/',
+    // Audit §2 headings A–F only. The bullets beneath each one are page content,
+    // not menu entries — carrying all 49 of them turned the panel into a wall.
+    // §8's calendar and planner join them, being §-level items in their own right.
     columns: [
-      {
-        header: 'Philosophy & Structure',
-        href: '/academics/philosophy/',
-        children: [
-          { label: 'Academic Philosophy', href: '/academics/philosophy/' },
-          { label: 'Academic Structure', href: '/academics/structure/' },
-          { label: 'Streams & Subject Combinations', href: '/academics/structure/streams/' },
-          { label: 'Curriculum', href: '/academics/philosophy/#curriculum' },
-        ],
-      },
-      {
-        header: 'Teaching & Learning',
-        href: '/academics/teaching-learning/',
-        children: [
-          { label: 'Teaching Methodology', href: '/academics/teaching-learning/#methodology' },
-          { label: 'STEM, Robotics & Coding', href: '/academics/teaching-learning/#stem' },
-          { label: 'AI & Digital Literacy', href: '/academics/teaching-learning/#ai-digital' },
-          { label: 'Laboratories & Library', href: '/academics/teaching-learning/#laboratories' },
-        ],
-      },
-      {
-        header: 'Assessment & Support',
-        href: '/academics/assessment/',
-        children: [
-          { label: 'Assessment System', href: '/academics/assessment/#system' },
-          { label: 'Academic Calendar', href: '/academics/academic-calendar/' },
-          { label: 'Exam Schedule', href: '/academics/exam-schedule/' },
-          { label: 'Syllabus (PRECEPT)', href: '/academics/resources/syllabus/' },
-        ],
-      },
-      {
-        header: 'Student Success',
-        href: '/academics/student-success/',
-        children: [
-          { label: 'Board Results', href: '/academics/board-results/' },
-          { label: 'Career Guidance & University Counselling', href: '/academics/student-success/#career' },
-          { label: 'Olympiads & Scholarships', href: '/academics/student-success/#olympiads' },
-          { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
-        ],
-      },
+      [
+        { label: 'Academic Philosophy', href: '/academics/philosophy/' },
+        { label: 'Academic Structure', href: '/academics/structure/' },
+        { label: 'Teaching & Learning', href: '/academics/teaching-learning/' },
+        { label: 'Assessment Pattern', href: '/academics/assessment/' },
+      ],
+      [
+        { label: 'Career Development & Student Success', href: '/academics/student-success/' },
+        { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+        // §8, kept as the single item the audit names it.
+        { label: 'School Planner & Academic Calendar', href: '/academics/academic-calendar/' },
+      ],
     ],
     feature: {
       eyebrow: 'Teaching & Learning',
@@ -164,36 +120,26 @@ export const mainNav: NavItem[] = [
     label: 'Admissions',
     href: '/admissions/',
     columns: [
-      {
-        header: 'Applying',
-        href: '/admissions/',
-        children: [
-          { label: 'Admission Procedure', href: '/admissions/procedure/' },
-          { label: 'Eligibility & Age Criteria', href: '/admissions/eligibility/' },
-          { label: 'Admission Notice & Key Dates', href: '/admissions/notice/' },
-          { label: 'Prospectus', href: '/admissions/prospectus/' },
-        ],
-      },
-      {
-        header: 'Before You Apply',
-        href: '/admissions/fee-structure/',
-        children: [
-          { label: 'Fee Structure', href: '/admissions/fee-structure/' },
-          { label: 'Uniform Catalogue', href: '/admissions/uniform-catalogue/' },
-          { label: 'Orientation', href: '/admissions/orientation/' },
-          { label: 'Admission FAQs', href: '/admissions/faqs/' },
-        ],
-      },
-      {
-        header: 'Get in Touch',
-        href: '/admissions/enquire/',
-        children: [
-          { label: 'Book a Campus Visit', href: '/admissions/campus-visit/' },
-          { label: 'Enquire', href: '/admissions/enquire/' },
-          { label: 'Apply — Nursery to IX', href: school.external.applyNurseryToIX },
-          { label: 'Apply — Class XI', href: school.external.applyClassXI },
-        ],
-      },
+      [
+        { label: 'Admissions', href: '/admissions/' },
+        { label: 'Admission Procedure', href: '/admissions/procedure/' },
+        { label: 'Eligibility & Age Criteria', href: '/admissions/eligibility/' },
+        { label: 'Admission Notice & Key Dates', href: '/admissions/notice/' },
+        { label: 'Prospectus', href: '/admissions/prospectus/' },
+      ],
+      [
+        { label: 'Fee Structure', href: '/admissions/fee-structure/' },
+        // Audit §9 — presentation fix, but the link keeps its home here.
+        { label: 'Uniform Catalogue', href: '/admissions/uniform-catalogue/' },
+        { label: 'Orientation', href: '/admissions/orientation/' },
+        { label: 'Admission FAQs', href: '/admissions/faqs/' },
+      ],
+      [
+        { label: 'Book a Campus Visit', href: '/admissions/campus-visit/' },
+        { label: 'Enquire', href: '/admissions/enquire/' },
+        { label: 'Apply — Nursery to IX', href: school.external.applyNurseryToIX },
+        { label: 'Apply — Class XI', href: school.external.applyClassXI },
+      ],
     ],
     feature: {
       eyebrow: 'Admissions',
@@ -205,39 +151,26 @@ export const mainNav: NavItem[] = [
     },
   },
   {
-    label: 'Campus',
+    label: 'Campus Tour',
     href: '/campus/',
+    // Audit §3's facility list verbatim, with Facilities and Infrastructure
+    // merged into the tour rather than kept as separate menu sections. §7 adds
+    // Transport, named exactly as the audit names it.
     columns: [
-      {
-        header: 'Campus Tour',
-        href: '/campus/',
-        children: [
-          { label: 'Shooting Range', href: '/campus/shooting-range/' },
-          { label: 'Auditorium — Sankalp & Naman Hall', href: '/campus/auditorium/' },
-          { label: 'Conference Room', href: '/campus/conference-room/' },
-          { label: 'Nalanda Library', href: '/campus/library/', note: '15,000+ books' },
-        ],
-      },
-      {
-        header: 'Learning Spaces',
-        href: '/campus/laboratories/',
-        children: [
-          { label: 'Science Laboratories', href: '/campus/laboratories/' },
-          { label: 'Smart Classrooms', href: '/campus/classrooms/', note: '30+ rooms, 49+ panels' },
-          { label: 'Arts, Music & Dance', href: '/campus/arts/' },
-          { label: 'Early Years Spaces', href: '/campus/early-years/' },
-        ],
-      },
-      {
-        header: 'Care & Access',
-        href: '/campus/safety-security/',
-        children: [
-          { label: 'Safety & Security', href: '/campus/safety-security/' },
-          { label: 'Transport & Bus Routes', href: '/campus/transport/', note: '22 routes' },
-          { label: 'Sports Facilities & Grounds', href: '/campus/sports-facilities/' },
-          { label: 'Infirmary & Health', href: '/campus/infirmary/' },
-        ],
-      },
+      [
+        { label: 'Shooting Range', href: '/campus/shooting-range/' },
+        { label: 'Auditorium', href: '/campus/auditorium/' },
+        { label: 'Conference Room', href: '/campus/conference-room/' },
+      ],
+      [
+        { label: 'Science Laboratories', href: '/campus/laboratories/' },
+        { label: 'Library', href: '/campus/library/' },
+        { label: 'Sports Facilities', href: '/campus/sports-facilities/' },
+      ],
+      [
+        { label: 'Safety & Security', href: '/campus/safety-security/' },
+        { label: 'Transport', href: '/campus/transport/' },
+      ],
     ],
     feature: {
       eyebrow: 'The Campus',
@@ -251,37 +184,17 @@ export const mainNav: NavItem[] = [
   {
     label: 'Beyond Academics',
     href: '/beyond-academics/',
+    // Audit §4 headings only — facilities, games, participation, inter-house and
+    // coaching are bullets under "Sports & Games", so they live on that page.
+    // Achievements stay a separate entry because §4 asks for them shown apart.
+    // §5 keeps School Activities here.
     columns: [
-      {
-        header: 'Sport',
-        href: '/beyond-academics/sports/',
-        children: [
-          { label: 'Sports at Sunbeam', href: '/beyond-academics/sports/' },
-          { label: 'Inter-House Competitions', href: '/beyond-academics/houses/' },
-          { label: 'Sports Achievements', href: '/beyond-academics/sports-achievements/' },
-          { label: 'NCC & Scouts', href: '/beyond-academics/ncc/' },
-        ],
-      },
-      {
-        header: 'Culture & Service',
-        href: '/beyond-academics/arts/',
-        children: [
-          { label: 'Performing & Visual Arts', href: '/beyond-academics/arts/' },
-          { label: 'Clubs & Societies', href: '/beyond-academics/clubs/' },
-          { label: 'Student Council & Leadership', href: '/beyond-academics/student-council/' },
-          { label: 'Community Service', href: '/beyond-academics/community-service/' },
-        ],
-      },
-      {
-        header: 'Beyond the Gate',
-        href: '/beyond-academics/excursions/',
-        children: [
-          { label: 'Excursions & Educational Tours', href: '/beyond-academics/excursions/' },
-          { label: 'School Activities', href: '/beyond-academics/school-activities/' },
-          { label: 'Workshops', href: '/beyond-academics/workshops/' },
-          { label: 'Publications', href: '/beyond-academics/publications/' },
-        ],
-      },
+      [
+        { label: 'Sports & Games', href: '/beyond-academics/sports/' },
+        { label: 'Achievements', href: '/beyond-academics/achievements/' },
+        { label: 'Excursions & Educational Tours', href: '/beyond-academics/excursions/' },
+      ],
+
     ],
     feature: {
       eyebrow: 'Beyond Academics',
@@ -294,19 +207,67 @@ export const mainNav: NavItem[] = [
       imageBrief: 'Sports participation mid-game, 3:2 — not a podium shot',
     },
   },
-  { label: 'News & Events', href: '/news-events/' },
-  { label: 'Alumni', href: '/alumni/' },
+  {
+    label: 'Latest News & Events',
+    href: '/news-events/',
+    // Audit §10 nests Notices here. §11's list (achievements, events,
+    // competitions, workshops, celebrations, announcements) says what the page
+    // must keep current — it is the section's content, not eight menu rows.
+    columns: [
+      [
+        { label: 'Latest News & Events', href: '/news-events/' },
+        { label: 'Notices', href: '/news-events/notices/' },
+      ],
+    ],
+    feature: {
+      eyebrow: 'Notice Board',
+      title: 'Official notices, in one place',
+      body: 'Circulars and announcements as they are issued.',
+      href: '/news-events/notices/',
+      cta: 'Read notices',
+      imageBrief: 'Notice board or assembly announcement, 3:2 — documentary, not staged',
+    },
+  },
+  {
+    label: 'Alumni',
+    href: '/alumni/',
+    // Audit §12.2 — "Include an Alumni Registration form to encourage former
+    // students to reconnect with the school."
+    columns: [
+      [
+        { label: 'Alumni', href: '/alumni/' },
+        { label: 'Alumni Registration', href: '/alumni/registration/' },
+      ],
+    ],
+    feature: {
+      eyebrow: 'Alumni',
+      title: 'Tell us where you are now',
+      body: 'Register to reconnect with the school and with your year group.',
+      href: '/alumni/registration/',
+      cta: 'Register',
+      imageBrief: 'Alumni gathering or returning student on campus, 3:2 — candid',
+    },
+  },
   { label: 'Career', href: '/career/' },
 ];
 
-/** Footer utility row — docs/06 §16 row 2. */
+/**
+ * Footer utility row — docs/06 §16 row 2. Also the safety net for what the top
+ * bar sheds: Mandatory Public Disclosure is CBSE-required and must stay
+ * findable regardless of how short the utility bar gets.
+ */
 export const footerUtility = [
+  { label: 'Admissions', href: '/admissions/' },
+  { label: 'Uniform Catalogue', href: '/admissions/uniform-catalogue/' },
   { label: 'Notices', href: '/news-events/notices/' },
-  { label: 'News & Events', href: '/news-events/' },
+  { label: 'Latest News & Events', href: '/news-events/' },
   { label: 'Alumni', href: '/alumni/' },
+  { label: 'Alumni Registration', href: '/alumni/registration/' },
   { label: 'Career', href: '/career/' },
   { label: 'Results', href: school.external.results },
+  { label: 'Download TC', href: school.external.downloadTC },
   { label: 'Mandatory Public Disclosure', href: '/mandatory-public-disclosure/' },
+  { label: 'Contact', href: '/contact-us/' },
   { label: 'Privacy', href: '/privacy/' },
   { label: 'Accessibility', href: '/accessibility/' },
 ] as const;

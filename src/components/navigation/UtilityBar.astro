@@ -121,12 +121,9 @@ import { utilityLinks } from '../../data/navigation';
     color: #fff;
   }
 
-  /* Below the desktop nav threshold, drop tier 2. */
-  @media (max-width: 1239px) {
-    .utility__li--t2 { display: none; }
-  }
-
-  /* --- Mobile: keep only Notices · Results · Login (docs/06 §01) ---------- */
+  /* --- Mobile: keep only Notices · Results (docs/06 §01) ------------------
+     The bar is three links now, so nothing needs shedding until the phone
+     number and the links genuinely compete — which is 767, not 1239. */
   @media (max-width: 767px) {
     .utility__inner {
       gap: var(--sb-4);
@@ -136,7 +133,7 @@ import { utilityLinks } from '../../data/navigation';
       gap: var(--sb-5);
     }
 
-    .utility__li--t3 { display: none; }
+    .utility__li--t2 { display: none; }
 
     .utility__phone-label {
       display: none;

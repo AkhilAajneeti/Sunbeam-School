@@ -5,11 +5,13 @@
  * Crest + wordmark left, nav centre-right, Apply Online always visible.
  * Sticky; condenses 96 → 68px on scroll.
  *
- * IMPLEMENTATION NOTE — desktop nav threshold is 1240px, not the 1024px implied
+ * IMPLEMENTATION NOTE — desktop nav threshold is 1360px, not the 1024px implied
  * by docs/05 § L. The audit mandates 8 top-level items (Career §6.1 and Alumni
- * §12.1 are both required at top level); measured at 15px/600 they need ~1120px
- * alongside the brand lockup and the Apply button. Below 1240 the drawer is the
- * honest answer rather than a cramped, shrunken nav.
+ * §12.1 are both required at top level) and names them verbatim, which is what
+ * sets the width: "Latest News & Events" (§11) is 159px on its own and "Campus
+ * Tour" (§3) 92px. Measured in Chromium the eight links need 814px beside the
+ * brand lockup and the Apply button, and the container caps at 1280px. Below
+ * 1360 the drawer is the honest answer rather than a cramped, shrunken nav.
  */
 import { mainNav } from '../../data/navigation';
 import MegaMenu from './MegaMenu.astro';
@@ -99,7 +101,10 @@ import MegaMenu from './MegaMenu.astro';
     height: var(--sb-masthead-h);
     display: flex;
     align-items: center;
-    gap: clamp(20px, 2vw, 40px);
+    /* Capped, not clamp(20px, 2vw, 40px): the container stops growing at 1280
+       but vw does not, so the old gap widened on big screens while the space it
+       had to fit into stayed fixed — 1920 overflowed harder than 1440 did. */
+    gap: clamp(16px, 1.6vw, 24px);
     transition: height var(--sb-dur-nav) var(--sb-ease);
   }
 
@@ -112,21 +117,23 @@ import MegaMenu from './MegaMenu.astro';
     flex-shrink: 0;
   }
 
+  /* 52/48 rather than 60/56: the doc's verbatim labels cost the nav ~120px over
+     the short ones, and the lockup is where that comes back from. 279 → 242px. */
   .brand__emblem {
-    height: 60px;
+    height: 52px;
     width: auto;
     transition: height var(--sb-dur-nav) var(--sb-ease);
   }
 
   .brand__wordmark {
-    height: 56px;
+    height: 48px;
     width: auto;
     transition: height var(--sb-dur-nav) var(--sb-ease);
   }
 
   /* Shrinks on scroll so the sticky bar stays shallow — same ratio as above. */
-  .masthead.is-scrolled .brand__emblem { height: 60px; }
-  .masthead.is-scrolled .brand__wordmark { height: 56px; }
+  .masthead.is-scrolled .brand__emblem { height: 52px; }
+  .masthead.is-scrolled .brand__wordmark { height: 48px; }
 
   /* --- Main navigation --------------------------------------------------- */
 
@@ -139,7 +146,7 @@ import MegaMenu from './MegaMenu.astro';
   .mainnav__list {
     display: flex;
     align-items: center;
-    gap: clamp(14px, 1.4vw, 26px);
+    gap: clamp(10px, 0.9vw, 16px);
   }
 
   /* static so the mega panel's containing block is the header, not the item */
@@ -151,7 +158,7 @@ import MegaMenu from './MegaMenu.astro';
     position: relative;
     display: inline-block;
     padding: 12px 2px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--sb-charcoal);
     white-space: nowrap;
@@ -234,39 +241,24 @@ import MegaMenu from './MegaMenu.astro';
     background: var(--sb-charcoal);
   }
 
-  /* --- 1240–1359: the desktop row is wider than the page -------------------
-     THE BUG THIS FIXES IS A HORIZONTAL SCROLLBAR ON EVERY PAGE. Brand lockup
-     (279px) + eight nav links (773px) + Apply button (151px) + two gaps needs
-     ~1250px of content width. The container gives 1160 at 1240 and 1184 at 1280,
-     so the row ran 48px and 21px past the right edge — and because `body` is
-     `overflow-x: hidden` it never showed as a broken header. It showed as the
-     whole document being scrollable sideways, which on a full-bleed layout looks
-     like every band on the page stopping short of the right edge. Reported from
-     the footer, where the effect is most visible.
+  /* --- Below 1360: drawer takes over --------------------------------------
+     THE BUG THIS PREVENTS IS A HORIZONTAL SCROLLBAR ON EVERY PAGE. Because
+     `body` is `overflow-x: hidden` an over-wide header never shows as a broken
+     header — it shows as the whole document scrolling sideways, which on a
+     full-bleed layout looks like every band stopping short of the right edge.
 
-     The row tightens rather than the breakpoint moving up: 1280 is one of the
-     commonest desktop widths and it should not be handed the mobile drawer to
-     save 21px. Both gaps come in and the brand steps down one notch, which
-     leaves 22px of slack at 1240.
+     The previous 1240 threshold held only while the nav used short labels. The
+     audit's verbatim names cost ~120px, so the row no longer fits at 1240 (735px
+     of room against 799px of links) and tightening gaps alone cannot close it.
+     1240–1359 therefore gets the drawer, which is honest, rather than a nav
+     squeezed past legibility.
 
-     ⚠ RE-MEASURE IF A NINTH NAV ITEM IS ADDED. Another link is ~95px and puts
-     this back over the edge; at that point the drawer breakpoint below has to
-     rise instead. */
-  @media (min-width: 1240px) and (max-width: 1359px) {
-    .masthead__inner { gap: var(--sb-5); }
-    .mainnav__list { gap: 12px; }
+     Measured slack in Chromium against the 1280px container cap: 39px at 1360,
+     48px at 1440, 25px at 1920 (the floor — gaps are still the widest there).
+     ⚠ RE-MEASURE IF A NINTH ITEM OR A LONGER LABEL IS ADDED. 25px is half the
+     narrowest link on the bar, so there is room for no more. */
 
-    /* The .is-scrolled rules below are more specific, so both states are set
-       here or the lockup jumps back to full size the moment the page scrolls. */
-    .brand__emblem,
-    .masthead.is-scrolled .brand__emblem { height: 52px; }
-    .brand__wordmark,
-    .masthead.is-scrolled .brand__wordmark { height: 48px; }
-  }
-
-  /* --- Below 1240: drawer takes over ------------------------------------- */
-
-  @media (max-width: 1239px) {
+  @media (max-width: 1359px) {
     .mainnav { display: none; }
     .masthead__toggle { display: inline-flex; }
     .masthead__inner { justify-content: space-between; }
