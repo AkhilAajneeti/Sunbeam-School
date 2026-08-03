@@ -14,8 +14,8 @@
  * (asset request A9), and shipping a link to a dormant channel is exactly what
  * the audit warns against. They can be restored in one line in site.ts.
  */
-import { school } from '../../data/site';
-import { footerUtility } from '../../data/navigation';
+import { school } from "../../data/site";
+import { footerUtility } from "../../data/navigation";
 
 /**
  * Footer columns are the audit's four content sections, with every heading and
@@ -28,113 +28,160 @@ import { footerUtility } from '../../data/navigation';
  */
 const columns = [
   {
-    heading: 'About Us',
-    href: '/about/',
+    heading: "About Us",
+    href: "/about/",
     links: [
-      { label: 'History and establishment of the school', href: '/about/history-legacy/' },
-      { label: 'Vision and Mission', href: '/about/vision-mission/' },
-      { label: 'Legacy of the institution', href: '/about/history-legacy/#legacy' },
-      { label: "Director's Message", href: '/about/directors-message/' },
-      { label: "Principal's Message", href: '/about/principals-message/' },
+      {
+        label: "History and establishment of the school",
+        href: "/about/history-legacy/",
+      },
+      { label: "Vision and Mission", href: "/about/vision-mission/" },
+      {
+        label: "Legacy of the institution",
+        href: "/about/history-legacy/#legacy",
+      },
+      { label: "Director's Message", href: "/about/directors-message/" },
+      { label: "Principal's Message", href: "/about/principals-message/" },
       // { label: 'Achievements & Recognition', href: '/about/achievements/' },
     ],
   },
   {
-    heading: 'Academics',
-    href: '/academics/',
+    heading: "Academics",
+    href: "/academics/",
     links: [
-      { label: 'Academic Philosophy', href: '/academics/philosophy/' },
-      { label: 'Academic Structure', href: '/academics/structure/' },
-      { label: 'Teaching & Learning', href: '/academics/teaching-learning/' },
-      { label: 'Assessment Pattern', href: '/academics/assessment/' },
-      { label: 'Career Development & Student Success', href: '/academics/student-success/' },
-      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
-      { label: 'School Planner & Academic Calendar', href: '/academics/academic-calendar/' },
+      { label: "Academic Philosophy", href: "/academics/philosophy/" },
+      { label: "Academic Structure", href: "/academics/structure/" },
+      { label: "Teaching & Learning", href: "/academics/teaching-learning/" },
+      { label: "Assessment Pattern", href: "/academics/assessment/" },
+      {
+        label: "Career Development & Student Success",
+        href: "/academics/student-success/",
+      },
+      { label: "Parent Partnership", href: "/academics/parent-partnership/" },
+      {
+        label: "School Planner & Academic Calendar",
+        href: "/academics/academic-calendar/",
+      },
+    ],
+  },
+  /* Restored to make the fourth column. It is also what puts Campus Tour,
+     Safety & Security, Facilities & Infrastructure and Transport back within
+     reach of the footer — with it commented out, twelve navigation destinations
+     had no footer route at all. Trimmed to the six that have or will have a
+     page, so the column matches the other three in length rather than running
+     twice as long. */
+  {
+    heading: "Campus Tour",
+    href: "/campus/",
+    links: [
+      { label: "Campus Tour", href: "/campus/" },
+      {
+        label: "Facilities & Infrastructure",
+        href: "/campus/facilities-infrastructure/",
+      },
+      { label: "Safety & Security", href: "/campus/safety-security/" },
+      { label: "Sports Facilities", href: "/campus/sports-facilities/" },
+      { label: "Library", href: "/campus/library/" },
+      { label: "Transport", href: "/campus/transport/" },
     ],
   },
   {
-    heading: 'Campus Tour',
-    href: '/campus/',
+    heading: "Other Links",
+    href: "#",
     links: [
-      { label: 'Shooting Range', href: '/campus/shooting-range/' },
-      { label: 'Auditorium', href: '/campus/auditorium/' },
-      { label: 'Conference Room', href: '/campus/conference-room/' },
-      { label: 'Science Laboratories', href: '/campus/laboratories/' },
-      { label: 'Library', href: '/campus/library/' },
-      { label: 'Sports Facilities', href: '/campus/sports-facilities/' },
-      { label: 'Safety & Security', href: '/campus/safety-security/' },
-      { label: 'Transport', href: '/campus/transport/' },
-    ],
-  },
-  {
-    heading: 'Beyond Academics',
-    href: '/beyond-academics/',
-    links: [
-      { label: 'Sports & Games', href: '/beyond-academics/sports/' },
-      { label: 'Achievements', href: '/beyond-academics/achievements/' },
-      { label: 'Excursions & Educational Tours', href: '/beyond-academics/excursions/' },
-      { label: 'School Activities', href: '/beyond-academics/school-activities/' },
+      {
+        label: "School Planner & Academic Calendar",
+        href: "/academics/academic-calendar/",
+      },
+      /* §9 Uniform Catalogue, replacing Achievements at the client's request. */
+      {
+        label: "Uniform Catalogue",
+        href: "/admissions/uniform-catalogue/",
+      },
     ],
   },
 ];
 
 const socials = [
   {
-    name: 'Facebook',
+    name: "Facebook",
     href: school.social.facebook,
-    path: 'M15 8h-2a1 1 0 0 0-1 1v2h3l-.4 3H12v7H9v-7H7v-3h2V9a4 4 0 0 1 4-4h2v3Z',
+    path: "M15 8h-2a1 1 0 0 0-1 1v2h3l-.4 3H12v7H9v-7H7v-3h2V9a4 4 0 0 1 4-4h2v3Z",
   },
   {
-    name: 'Instagram',
+    name: "Instagram",
     href: school.social.instagram,
-    path: 'M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Zm0 5.6a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4ZM16 4H8a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4Zm2.8 12a2.8 2.8 0 0 1-2.8 2.8H8A2.8 2.8 0 0 1 5.2 16V8A2.8 2.8 0 0 1 8 5.2h8A2.8 2.8 0 0 1 18.8 8v8Zm-2-8.6a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0Z',
+    path: "M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Zm0 5.6a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4ZM16 4H8a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4Zm2.8 12a2.8 2.8 0 0 1-2.8 2.8H8A2.8 2.8 0 0 1 5.2 16V8A2.8 2.8 0 0 1 8 5.2h8A2.8 2.8 0 0 1 18.8 8v8Zm-2-8.6a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0Z",
   },
   {
-    name: 'LinkedIn',
+    name: "LinkedIn",
     href: school.social.linkedin,
-    path: 'M6.94 5.5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.2 9h3.5v11H3.2V9Zm5.8 0h3.35v1.5h.05A3.67 3.67 0 0 1 15.7 8.7c3.5 0 4.15 2.3 4.15 5.3V20h-3.5v-5.3c0-1.27-.02-2.9-1.77-2.9-1.78 0-2.05 1.38-2.05 2.8V20H9V9Z',
+    path: "M6.94 5.5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.2 9h3.5v11H3.2V9Zm5.8 0h3.35v1.5h.05A3.67 3.67 0 0 1 15.7 8.7c3.5 0 4.15 2.3 4.15 5.3V20h-3.5v-5.3c0-1.27-.02-2.9-1.77-2.9-1.78 0-2.05 1.38-2.05 2.8V20H9V9Z",
   },
 ] as const;
 ---
 
 <footer class="foot">
   <div class="u-container">
-    {/* Smoky wordmark — gradient clipped to the glyphs so the letters dissolve
+    {
+      /* Smoky wordmark — gradient clipped to the glyphs so the letters dissolve
         downward into the ground rather than sitting on it. Decorative: the
-        school's name is already in the crest alt text and the base bar. */}
+        school's name is already in the crest alt text and the base bar. */
+    }
     <div class="foot__wordmark" aria-hidden="true">{school.shortName}</div>
 
     <div class="foot__main">
       <div class="foot__brand">
-        <img class="foot__crest" src="/brand/sunbeam-emblem.png" alt="" width="191" height="150" />
+        <img
+          class="foot__crest"
+          src="/brand/sunbeam-emblem.png"
+          alt=""
+          width="191"
+          height="150"
+        />
         <p class="foot__tagline">
-          A CBSE co-educational day school at Agarsanda, Ballia — Nursery to Class XII,
-          part of the Sunbeam group since 1972.
+          A CBSE co-educational day school at Agarsanda, Ballia — Nursery to
+          Class XII, part of the Sunbeam group since 1972.
         </p>
 
         <address class="foot__address">
           <span>{school.address.line1}</span>
-          <span>{school.address.city}, {school.address.state} {school.address.pin}</span>
+          <span
+            >{school.address.city}, {school.address.state}
+            {school.address.pin}</span
+          >
         </address>
 
         <div class="foot__contact">
-          <a href={`tel:${school.phone.admissions}`} class="t-tabular">{school.phone.admissionsDisplay}</a>
-          <a href={`tel:${school.phone.office}`} class="t-tabular">{school.phone.officeDisplay}</a>
-          <a href={`mailto:${school.email}`} class="foot__email">{school.email}</a>
+          <a href={`tel:${school.phone.admissions}`} class="t-tabular"
+            >{school.phone.admissionsDisplay}</a
+          >
+          <a href={`tel:${school.phone.office}`} class="t-tabular"
+            >{school.phone.officeDisplay}</a
+          >
+          <a href={`mailto:${school.email}`} class="foot__email"
+            >{school.email}</a
+          >
         </div>
       </div>
 
       <nav class="foot__cols" aria-label="Footer">
-        {columns.map((col) => (
-          <div class="foot__col">
-            <a class="foot__col-head" href={col.href}>{col.heading}</a>
-            <ul>
-              {col.links.map((l) => (
-                <li><a href={l.href}>{l.label}</a></li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {
+          columns.map((col) => (
+            <div class="foot__col">
+              <a class="foot__col-head" href={col.href}>
+                {col.heading}
+              </a>
+              <ul>
+                {col.links.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
       </nav>
     </div>
 
@@ -148,31 +195,43 @@ const socials = [
 
     <div class="foot__base">
       <p class="foot__legal">
-        <span>© {new Date().getFullYear()} {school.name}. All rights reserved.</span>
+        <span
+          >© {new Date().getFullYear()}
+          {school.name}. All rights reserved.</span
+        >
         <span class="foot__affil t-tabular">
-          CBSE Affiliation No. {school.affiliationNo} · School Code {school.schoolCode}
+          CBSE Affiliation No. {school.affiliationNo} · School Code {
+            school.schoolCode
+          }
         </span>
       </p>
 
       <ul class="foot__social">
-        {socials.map((s) => (
-          <li>
-            <a
-              class="foot__social-btn"
-              href={s.href}
-              target="_blank"
-              rel="noopener"
-              aria-label={`${school.shortName} on ${s.name}`}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d={s.path} />
-              </svg>
-            </a>
-          </li>
-        ))}
+        {
+          socials.map((s) => (
+            <li>
+              <a
+                class="foot__social-btn"
+                href={s.href}
+                target="_blank"
+                rel="noopener"
+                aria-label={`${school.shortName} on ${s.name}`}
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d={s.path} />
+                </svg>
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
-
   </div>
 </footer>
 
@@ -290,14 +349,26 @@ const socials = [
     transition: color var(--sb-dur-link) ease;
   }
 
-  .foot__contact a:hover { color: var(--sb-lime); }
+  .foot__contact a:hover {
+    color: var(--sb-lime);
+  }
 
-  .foot__email { font-weight: 400 !important; word-break: break-all; }
+  .foot__email {
+    font-weight: 400 !important;
+    word-break: break-all;
+  }
 
+  /* FOUR EXPLICIT TRACKS. The previous `auto-fit, minmax(0, 260px)` sized tracks
+     to a 260px cap, and the column area is only ~868px wide — so it fitted three
+     and wrapped the fourth underneath. Naming four tracks divides the space that
+     exists instead of asking for space there isn't, and `minmax(0, 1fr)` lets a
+     long label wrap inside its column rather than forcing the track wider.
+     ⚠ IF A COLUMN IS ADDED OR REMOVED, CHANGE THIS NUMBER — a hard count is what
+     stops three columns stretching across a four-column measure. */
   .foot__cols {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--sb-8);
+    gap: var(--sb-8) var(--sb-7);
   }
 
   .foot__cols ul {
@@ -319,14 +390,18 @@ const socials = [
     letter-spacing: -0.01em;
   }
 
-  .foot__col-head:hover { color: var(--sb-lime); }
+  .foot__col-head:hover {
+    color: var(--sb-lime);
+  }
 
   .foot__cols li a {
     color: rgba(255, 255, 255, 0.66);
     transition: color var(--sb-dur-link) ease;
   }
 
-  .foot__cols li a:hover { color: #fff; }
+  .foot__cols li a:hover {
+    color: #fff;
+  }
 
   /* --- Utility row ---------------------------------------------------------- */
 
@@ -350,7 +425,9 @@ const socials = [
     transition: color var(--sb-dur-link) ease;
   }
 
-  .foot__utility a:hover { color: var(--sb-lime); }
+  .foot__utility a:hover {
+    color: var(--sb-lime);
+  }
 
   /* --- Base bar ------------------------------------------------------------- */
 
@@ -372,7 +449,9 @@ const socials = [
     color: rgba(255, 255, 255, 0.55);
   }
 
-  .foot__affil { color: rgba(255, 255, 255, 0.72); }
+  .foot__affil {
+    color: rgba(255, 255, 255, 0.72);
+  }
 
   /* Audit 14.1 — small, monochrome at rest. */
   .foot__social {
@@ -392,7 +471,9 @@ const socials = [
     border-radius: var(--sb-r-full);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: rgba(255, 255, 255, 0.66);
-    transition: background-color var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease,
+    transition:
+      background-color var(--sb-dur-btn) ease,
+      color var(--sb-dur-btn) ease,
       border-color var(--sb-dur-btn) ease;
   }
 
@@ -419,7 +500,9 @@ const socials = [
   /* --- Mobile ---------------------------------------------------------------- */
 
   @media (max-width: 767px) {
-    .foot { padding-block: var(--sb-9) var(--sb-7); }
+    .foot {
+      padding-block: var(--sb-9) var(--sb-7);
+    }
 
     /* Two lines rather than a hairline-thin single line on a phone. */
     /* Font size still comes from the container formula above — it already
@@ -436,10 +519,15 @@ const socials = [
       gap: var(--sb-6);
     }
 
-    .foot__legal { gap: var(--sb-2); }
+    .foot__legal {
+      gap: var(--sb-2);
+    }
   }
 
   @media (max-width: 479px) {
-    .foot__cols { grid-template-columns: minmax(0, 1fr); gap: var(--sb-7); }
+    .foot__cols {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-7);
+    }
   }
 </style>

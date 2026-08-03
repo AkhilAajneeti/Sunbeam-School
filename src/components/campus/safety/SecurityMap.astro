@@ -1,0 +1,321 @@
+---
+/**
+ * §2 · CAMPUS SECURITY PLAN — an interactive schematic with hotspots.
+ *
+ * A DRAWING, NOT A PHOTOGRAPH, AND THAT IS DELIBERATE. The brief asked for a
+ * campus illustration with hotspots. The school has supplied no site plan and no
+ * aerial photograph of Agarsanda (request A2), and the two aerial-looking images
+ * in the repository are not this campus at all — `sunbeem-students-4.jpg` is a
+ * hill-country campus with palm groves, which Ballia is not. A schematic claims
+ * only adjacency, so it can be honest where a fabricated aerial could not.
+ *
+ * INTERACTION. Hotspots are real <button>s in a <ul>, so the plan is operable
+ * by keyboard and reachable by a screen reader in the same order it reads
+ * visually. Hover and focus both preview; click pins. The detail panel is
+ * `aria-live="polite"` so a pinned change is announced without stealing focus.
+ * Nothing here is hover-only — that was the failure mode this pattern usually
+ * ships with, and it makes the whole section unusable on a phone.
+ */
+import { mapPoints } from '../../../data/campus';
+import { showBuildNotes } from '../../../data/site';
+import SectionHead from '../../academics/SectionHead.astro';
+import SafetyIcon from './SafetyIcon.astro';
+
+const icons: Record<string, string> = {
+  gate: 'gate',
+  security: 'shield',
+  cctv: 'camera',
+  fire: 'flame',
+  medical: 'cross',
+  buses: 'route',
+  grounds: 'walk',
+};
+---
+
+<section class="cmap" aria-labelledby="cmap-title">
+  <div class="u-container">
+    <SectionHead
+      id="cmap-title"
+      eyebrow="Where things are"
+      heading="The campus, point by point"
+      stand="A schematic — it shows what sits where, not what the buildings look like."
+      measure={20}
+    />
+
+    <div class="cmap__grid">
+      {/* --- The plan ---------------------------------------------------- */}
+      <div class="cmap__plan" data-cmap>
+        <svg class="cmap__art" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <pattern id="cmapGrid" width="5" height="5" patternUnits="userSpaceOnUse">
+              <path d="M5 0V5H0" fill="none" stroke="currentColor" stroke-width="0.15" opacity="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100" height="100" fill="url(#cmapGrid)" class="cmap__gridfill" />
+
+          {/* open ground, top */}
+          <rect x="14" y="8" width="72" height="24" rx="1.5" class="cmap__ground" />
+          {/* main teaching block, an L around the ground */}
+          <rect x="14" y="34" width="72" height="17" rx="1.5" class="cmap__block" />
+          <rect x="14" y="34" width="16" height="34" rx="1.5" class="cmap__block" />
+          <rect x="70" y="34" width="16" height="34" rx="1.5" class="cmap__block" />
+          {/* forecourt + drive */}
+          <rect x="32" y="55" width="36" height="26" rx="1.5" class="cmap__court" />
+          <rect x="46" y="81" width="8" height="13" class="cmap__drive" />
+          {/* bus bay */}
+          <rect x="70" y="70" width="16" height="12" rx="1.5" class="cmap__bay" />
+          {/* boundary */}
+          <rect x="8" y="4" width="84" height="90" rx="2" class="cmap__wall" />
+        </svg>
+
+        <ul class="cmap__points">
+          {mapPoints.map((pt, i) => (
+            <li class="cmap__point" style={`--x:${pt.x}%; --y:${pt.y}%;`}>
+              <button
+                type="button"
+                class:list={['cmap__dot', !pt.verified && 'cmap__dot--pending']}
+                data-cmap-btn={pt.id}
+                aria-pressed={i === 0 ? 'true' : 'false'}
+              >
+                <SafetyIcon name={icons[pt.id] ?? 'shield'} size={17} />
+                <span class="cmap__tip">{pt.label}</span>
+                <span class="u-visually-hidden">{pt.label}. {pt.body}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* --- The readout -------------------------------------------------- */}
+      <div class="cmap__detail" aria-live="polite">
+        {mapPoints.map((pt, i) => (
+          <article class="cmap__card" data-cmap-card={pt.id} hidden={i !== 0}>
+            <span class="cmap__card-icon"><SafetyIcon name={icons[pt.id] ?? 'shield'} size={26} /></span>
+            <h3 class="cmap__card-h">
+              {pt.label}
+              {!pt.verified && showBuildNotes && <span class="cmap__chip">to confirm</span>}
+            </h3>
+            <p class="cmap__card-body">{pt.body}</p>
+          </article>
+        ))}
+        <p class="cmap__hint">Select a point on the plan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cmap {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  .cmap__grid {
+    margin-top: var(--sb-10);
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: var(--sb-9);
+    align-items: start;
+  }
+
+  /* --- Plan ---------------------------------------------------------------- */
+
+  .cmap__plan {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--sb-paper);
+    border: var(--sb-hairline);
+    overflow: hidden;
+  }
+
+  .cmap__art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cmap__gridfill { color: var(--sb-sand); }
+  .cmap__ground { fill: #eef3ea; stroke: #d9e3d2; stroke-width: 0.3; }
+  .cmap__block { fill: var(--sb-violet-wash); stroke: var(--sb-violet); stroke-width: 0.3; }
+  .cmap__court { fill: #faf6f3; stroke: var(--sb-sand); stroke-width: 0.3; }
+  .cmap__drive { fill: var(--sb-sand); }
+  .cmap__bay { fill: #fdf0e8; stroke: var(--sb-lime); stroke-width: 0.3; }
+  .cmap__wall { fill: none; stroke: var(--sb-charcoal); stroke-width: 0.4; stroke-dasharray: 2 1.4; opacity: 0.35; }
+
+  .cmap__points { list-style: none; margin: 0; padding: 0; }
+
+  .cmap__point {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    transform: translate(-50%, -50%);
+  }
+
+  .cmap__dot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--sb-paper);
+    border: 2px solid var(--sb-violet);
+    color: var(--sb-violet);
+    box-shadow: 0 2px 10px rgba(28, 14, 8, 0.14);
+    cursor: pointer;
+    transition:
+      transform var(--sb-dur-link) var(--sb-ease),
+      background var(--sb-dur-link) ease,
+      color var(--sb-dur-link) ease;
+  }
+
+  .cmap__dot--pending {
+    border-color: var(--sb-text-muted);
+    color: var(--sb-text-muted);
+    border-style: dashed;
+  }
+
+  /* The halo is a pseudo-element so it can pulse without moving the button and
+     without adding a second box to the layout. */
+  .cmap__dot::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid var(--sb-violet);
+    opacity: 0;
+    transition: opacity var(--sb-dur-link) ease;
+  }
+
+  .cmap__dot:hover,
+  .cmap__dot:focus-visible,
+  .cmap__dot[aria-pressed='true'] {
+    background: var(--sb-violet);
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  .cmap__dot[aria-pressed='true']::after { opacity: 1; }
+
+  .cmap__tip {
+    position: absolute;
+    bottom: calc(100% + 9px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 9px;
+    border-radius: 3px;
+    background: var(--sb-charcoal);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--sb-dur-link) ease;
+  }
+
+  .cmap__dot:hover .cmap__tip,
+  .cmap__dot:focus-visible .cmap__tip { opacity: 1; }
+
+  /* --- Readout ------------------------------------------------------------- */
+
+  .cmap__detail {
+    position: relative;
+    background: var(--sb-paper);
+    border: var(--sb-hairline);
+    border-left: 3px solid var(--sb-violet);
+    padding: var(--sb-7);
+    min-height: 220px;
+  }
+
+  .cmap__card[hidden] { display: none; }
+
+  .cmap__card-icon { color: var(--sb-violet); margin-bottom: var(--sb-5); display: block; }
+
+  .cmap__card-h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .cmap__chip {
+    display: inline-block;
+    margin-left: var(--sb-3);
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--sb-lime-wash);
+    color: var(--sb-lime-deep);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: 3px;
+  }
+
+  .cmap__card-body {
+    margin-top: var(--sb-4);
+    color: var(--sb-text-secondary);
+    line-height: 1.65;
+  }
+
+  .cmap__hint {
+    margin-top: var(--sb-6);
+    padding-top: var(--sb-5);
+    border-top: var(--sb-hairline);
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  /* --- Narrow -------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .cmap__grid { grid-template-columns: minmax(0, 1fr); }
+    .cmap__plan { aspect-ratio: 1 / 1; }
+  }
+
+  @media (max-width: 600px) {
+    .cmap__dot { width: 32px; height: 32px; }
+    .cmap__detail { padding: var(--sb-6); }
+  }
+</style>
+
+<script>
+  /* Hover and focus preview; click pins. Pointer-hover only previews on devices
+     that actually hover, so a tap on a phone does not fire both preview and pin
+     against each other. */
+  const root = document.querySelector<HTMLElement>('[data-cmap]');
+  const detail = document.querySelector<HTMLElement>('.cmap__detail');
+
+  if (root && detail) {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-cmap-btn]')];
+    const cards = [...detail.querySelectorAll<HTMLElement>('[data-cmap-card]')];
+    const canHover = window.matchMedia('(hover: hover)').matches;
+    let pinned = buttons[0]?.dataset.cmapBtn ?? '';
+
+    const show = (id: string) => {
+      cards.forEach((c) => { c.hidden = c.dataset.cmapCard !== id; });
+    };
+
+    const pin = (id: string) => {
+      pinned = id;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cmapBtn === id)));
+      show(id);
+    };
+
+    buttons.forEach((btn) => {
+      const id = btn.dataset.cmapBtn!;
+      btn.addEventListener('click', () => pin(id));
+      // Focus must pin, not merely preview: a keyboard user who tabs away would
+      // otherwise lose the panel they just arrived at.
+      btn.addEventListener('focus', () => pin(id));
+      if (canHover) {
+        btn.addEventListener('mouseenter', () => show(id));
+        btn.addEventListener('mouseleave', () => show(pinned));
+      }
+    });
+  }
+</script>

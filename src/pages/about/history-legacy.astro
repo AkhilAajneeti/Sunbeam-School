@@ -476,6 +476,114 @@ const onward = [
      one. Its defaults ARE this page’s original values, so the output here is
      byte-identical; a caller on another palette passes its own accent. */
 
+  /* --- LEADERSHIP · "In their own words" ------------------------------------
+     REBUILT. The base rules for this section had been deleted from the
+     stylesheet while its two media queries were left behind — `.voice` and
+     `.voice__media` existed ONLY inside `@media (max-width: 899px)` and
+     `(max-width: 639px)`. Ten of the section's twelve classes had no CSS at all.
+
+     The visible symptom was the portraits rendering enormous: with no
+     `display: grid` on `.voice`, `.voice__media` fell back to a full-width
+     block, and Photo's `ratio="4 / 5"` then made it two thousand pixels tall.
+     The prose, which should sit beside it, was pushed underneath.
+
+     The two surviving media queries are the contract this block is written to
+     satisfy — they override `grid-template-columns`, reset `order` to 0 and cap
+     the portrait at 280px, so the base has to establish a grid, set an order on
+     the flipped portrait, and leave the portrait width to the column. */
+
+  .hist-voices {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .hist-voices__head {
+    margin-bottom: var(--sb-10);
+  }
+
+  .hist-voices__heading {
+    margin-top: var(--sb-4);
+    color: var(--sb-charcoal);
+  }
+
+  .voice {
+    display: grid;
+    /* 360px matches the `sizes` the Photo is given, so the browser is not
+       fetching a candidate wider than the slot it lands in. */
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+  }
+
+  /* The second portrait sits on the right, and that needs BOTH halves of this:
+     `order` alone moved the media into the second grid cell, which is the 1fr
+     track — so the flipped portrait came out 862px wide and the prose was
+     squeezed into the 360px column. The track list has to be mirrored too.
+
+     The swap is keyed to `.voice--flip` ONLY, never `.voice + .voice`. The
+     899px query stacks the row with a plain `.voice` selector, and `.voice +
+     .voice` would out-specify it and keep two columns on a phone. */
+  .voice--flip {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+
+  .voice--flip .voice__media,
+  .voice + .voice .voice__media {
+    order: 2;
+  }
+
+  .voice + .voice {
+    margin-top: var(--sb-10);
+    padding-top: var(--sb-10);
+    border-top: var(--sb-hairline);
+  }
+
+  .voice__media {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(28, 14, 8, 0.08), 0 22px 44px rgba(28, 14, 8, 0.12);
+  }
+
+  .voice__mark {
+    display: block;
+    color: var(--sb-violet);
+    opacity: 0.85;
+    margin-bottom: var(--sb-5);
+  }
+
+  .voice__prose p {
+    color: var(--sb-text-secondary);
+    line-height: 1.75;
+    max-width: 62ch;
+  }
+
+  .voice__prose p + p {
+    margin-top: var(--sb-5);
+  }
+
+  /* The rule is the width of the name, not the column — a full-width hairline
+     under a two-word signature reads as a section break rather than a sign-off. */
+  .voice__sign {
+    display: inline-block;
+    margin-top: var(--sb-7);
+    padding-top: var(--sb-5);
+    border-top: 2px solid var(--sb-violet);
+  }
+
+  .voice__name {
+    font-family: var(--sb-font-display);
+    font-size: clamp(18px, 1.6vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .voice__role {
+    margin-top: 2px;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-text-muted);
+  }
+
   @media (max-width: 1023px) {
     .hist-line__list {
       grid-template-columns: repeat(2, minmax(0, 1fr));

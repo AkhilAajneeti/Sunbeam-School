@@ -1,0 +1,294 @@
+---
+/**
+ * §4 · FEATURE SHOWCASE — four facilities that earn a full row.
+ *
+ * Alternating image side, and a different collage shape per row, so four rows do
+ * not read as four copies of one template.
+ *
+ * TWO OF THE FOUR HAVE NO PHOTOGRAPH. The Robotics Lab and the Smart Classrooms
+ * are the school's two strongest infrastructure claims and neither is
+ * photographed anywhere in this repository. They keep their rows and render the
+ * shot brief, because the alternative — borrowing `Robotics-drones.jpg`, which
+ * is a consumer DJI product shot, or `Smart-classrooms.jpg`, an empty Western
+ * lecture theatre — would be a plain lie about rooms the school genuinely has.
+ * The highlights beside them are all published facts, so the row still argues
+ * its case without the picture.
+ */
+import { Picture } from 'astro:assets';
+import { facilities } from '../../../data/campusTour';
+import SectionHead from '../../academics/SectionHead.astro';
+import AssetPlaceholder from '../../ui/AssetPlaceholder.astro';
+import FacIcon from './FacIcon.astro';
+
+const byId = new Map(facilities.map((f) => [f.id, f]));
+
+interface Row {
+  key: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  highlights: { icon: string; text: string }[];
+  /** Facility folder to draw frames from, when one exists. */
+  source?: string;
+  brief?: string;
+}
+
+const rows: Row[] = [
+  {
+    key: 'robotics',
+    eyebrow: 'Science & Innovation',
+    title: 'Robotics Lab',
+    body:
+      'A drone, a 3-D printer, a telescope and embedded system design kits, in one room. ' +
+      'Very few schools in the district can put a student in front of all four, and it is ' +
+      'the facility that most clearly separates this campus from its neighbours.',
+    highlights: [
+      { icon: 'robot', text: 'Drone and embedded systems' },
+      { icon: 'spark', text: '3-D printer' },
+      { icon: 'globe', text: 'Telescope for astronomy' },
+      { icon: 'badge', text: 'Feeds the Inspire Award MANAK entries' },
+    ],
+    brief: 'Robotics lab in use, 4:3 — students at the kits with the drone and 3-D printer visible. NOT a stock drone photograph',
+  },
+  {
+    key: 'library',
+    eyebrow: 'Library & Creative Spaces',
+    title: 'Nalanda Library',
+    body:
+      'Fifteen thousand books, twenty-five periodicals, and shelving that runs from mythology ' +
+      'to a Ballia literature collection of its own. Round tables at the centre for group ' +
+      'reading, long tables along the wall for the ones who want quiet, and a toy library ' +
+      'next door for the children who cannot read yet.',
+    highlights: [
+      { icon: 'book', text: '15,000+ books' },
+      { icon: 'speech', text: '25 periodicals, magazines and journals' },
+      { icon: 'globe', text: 'Ballia literature collection' },
+      { icon: 'toy', text: 'Toy library for the early years' },
+    ],
+    source: 'library',
+  },
+  {
+    key: 'smart',
+    eyebrow: 'Learning Environment',
+    title: 'Smart Classrooms',
+    body:
+      'Thirty-plus digitally equipped rooms and forty-nine interactive flat panels — enough ' +
+      'that the technology is in ordinary lessons rather than wheeled in when visitors come. ' +
+      'A hundred of the teaching staff are certified Microsoft Innovative Educator Experts.',
+    highlights: [
+      { icon: 'panel', text: '30+ smart classrooms' },
+      { icon: 'spark', text: '49+ interactive flat panels' },
+      { icon: 'badge', text: 'Microsoft Showcase School' },
+      { icon: 'teacher', text: '100 certified MIE Experts' },
+    ],
+    brief: 'A Sunbeam Ballia smart classroom mid-lesson, 4:3 — panel in use, children at their desks',
+  },
+  {
+    key: 'sport',
+    eyebrow: 'Sports & Student Life',
+    title: 'Sports Facilities',
+    body:
+      'Fifteen sports across indoor and outdoor, the JOSH ground for assembly and athletics, ' +
+      'courts for basketball and volleyball, and a shooting range almost no district school ' +
+      'can offer. Every child plays; the achievements follow from that, not the other way round.',
+    highlights: [
+      { icon: 'ball', text: '8 outdoor sports' },
+      { icon: 'indoor', text: '7 indoor sports' },
+      { icon: 'target', text: 'Shooting range' },
+      { icon: 'field', text: 'JOSH ground and courts' },
+    ],
+    source: 'josh',
+  },
+];
+
+const resolved = rows.map((r) => ({ ...r, fac: r.source ? byId.get(r.source) : undefined }));
+---
+
+<section class="shw" aria-labelledby="shw-title">
+  <div class="u-container">
+    <SectionHead
+      id="shw-title"
+      eyebrow="Worth a closer look"
+      heading="Four facilities that make the case"
+      measure={20}
+    />
+  </div>
+
+  {resolved.map((r, i) => (
+    <article class:list={['shw__row', i % 2 === 1 && 'shw__row--flip']}>
+      <div class="u-container shw__inner">
+        <div class="shw__media">
+          <div class="shw__lead" data-parallax data-parallax-y="-18">
+            {r.fac && r.fac.images.length ? (
+              <Picture
+                src={r.fac.images[0]}
+                alt={`${r.fac.alt} — main view`}
+                formats={['webp']}
+                widths={[600, 1000, 1400]}
+                sizes="(max-width: 1000px) 92vw, 48vw"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <AssetPlaceholder ratio="4 / 3" tone="charcoal" brief={r.brief!} ref="A2" />
+            )}
+          </div>
+
+          {r.fac && r.fac.images.length > 2 && (
+            <div class="shw__strip">
+              {r.fac.images.slice(1, 4).map((src, k) => (
+                <div class="shw__thumb" data-reveal data-reveal-delay={k * 80}>
+                  <Picture
+                    src={src}
+                    alt={`${r.fac!.alt} — detail ${k + 1}`}
+                    formats={['webp']}
+                    widths={[240, 480]}
+                    sizes="160px"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div class="shw__body">
+          <p class="shw__eyebrow t-label">{r.eyebrow}</p>
+          <h3 class="shw__h" data-reveal>{r.title}</h3>
+          <p class="shw__copy" data-reveal data-reveal-delay="60">{r.body}</p>
+
+          <ul class="shw__highs">
+            {r.highlights.map((h, k) => (
+              <li data-reveal data-reveal-delay={120 + k * 60}>
+                <span class="shw__hi"><FacIcon name={h.icon} size={18} /></span>
+                {h.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </article>
+  ))}
+</section>
+
+<style>
+  .shw {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+    overflow: hidden; /* contains the parallax drift */
+  }
+
+  .shw__row { margin-top: var(--sb-11); }
+
+  .shw__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 84px);
+    align-items: center;
+  }
+
+  .shw__row--flip .shw__media { order: 2; }
+
+  .shw__lead {
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--sb-sand);
+  }
+
+  .shw__lead :global(picture) { display: block; width: 100%; height: 100%; }
+
+  .shw__lead :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 700ms var(--sb-ease);
+  }
+
+  .shw__lead:hover :global(img) { transform: scale(1.05); }
+
+  .shw__strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sb-4);
+    margin-top: var(--sb-4);
+  }
+
+  .shw__thumb {
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--sb-sand);
+  }
+
+  .shw__thumb :global(picture) { display: block; width: 100%; height: 100%; }
+
+  .shw__thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 600ms var(--sb-ease);
+  }
+
+  .shw__thumb:hover :global(img) { transform: scale(1.07); }
+
+  .shw__eyebrow { color: var(--sb-violet); }
+
+  .shw__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--sb-charcoal);
+  }
+
+  .shw__copy {
+    margin-top: var(--sb-5);
+    max-width: 52ch;
+    line-height: 1.68;
+    color: var(--sb-text-secondary);
+  }
+
+  .shw__highs {
+    list-style: none;
+    margin: var(--sb-7) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-5);
+  }
+
+  .shw__highs li {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-charcoal);
+  }
+
+  .shw__hi {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+
+  @media (max-width: 1000px) {
+    .shw__inner { grid-template-columns: minmax(0, 1fr); gap: var(--sb-8); }
+    .shw__row--flip .shw__media { order: 0; }
+    .shw__row { margin-top: var(--sb-10); }
+  }
+
+  @media (max-width: 560px) {
+    .shw__highs { grid-template-columns: minmax(0, 1fr); gap: var(--sb-4); }
+  }
+</style>

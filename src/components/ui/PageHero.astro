@@ -71,6 +71,10 @@ const { title, standfirst, crumbs, src, alt, position = '50% 45%' } = Astro.prop
 
     <h1 class="phero__title">{title}</h1>
     {standfirst && <p class="phero__standfirst">{standfirst}</p>}
+
+    {/* Optional tail — a CTA, a scroll cue. Additive: pages that pass no
+        children render exactly as they did before this slot existed. */}
+    <slot />
   </div>
 </header>
 

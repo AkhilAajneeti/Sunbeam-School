@@ -1,203 +1,235 @@
 ---
 /**
- * C03 · MEGA MENU — docs/06 §02, docs/04 F1
+ * C03 · NAV DROPDOWN — docs/06 §02
  *
- * Full-width, 1280 inner, columns of links + one featured panel.
- * The columns carry no headings — every row is a link, so the menu can never
- * show a label that goes nowhere, which was the primary failure of the
- * existing site's menu. Each group's landing page leads its own column.
+ * REPLACES THE FULL-WIDTH MEGA PANEL. The old build spanned the whole viewport
+ * with 3–4 link columns and a 280px featured image beside them. That shape was
+ * right when a menu carried sixteen links; it is wrong now that the largest
+ * carries six and the smallest carries two — a full-bleed panel opening to show
+ * two links reads as a rendering fault, and it blacked out the page behind it
+ * every time a pointer crossed the bar.
  *
- * CSS-first: opens on :hover and :focus-within. JS only adds Escape-to-close.
+ * So this is a card, sized to its own content and anchored under its trigger.
+ * Every menu on the bar fits between 2 and 6 rows, which is exactly the range a
+ * dropdown handles better than a mega panel.
+ *
+ * THE ROOT CLASS IS STILL `.mega`, deliberately. Masthead.astro owns the
+ * hover/focus reveal and the `is-mega-suppressed` Escape handler, and both
+ * target that class; keeping it means the redesign is contained to this file
+ * rather than spread across two.
+ *
+ * COLUMNS ARE FLATTENED. The data still groups links into columns because the
+ * mobile drawer renders those groups, so the shape is not changed at source —
+ * this component simply reads them as one list.
+ *
+ * THE FEATURE PANEL IS NOW A FOOTER ROW. `feature.imageBrief` is no longer
+ * rendered — a 16:9 photograph is what made the old panel enormous — but the
+ * eyebrow and CTA still ship, so no data is orphaned and the menu keeps its one
+ * contextual destination.
  */
 import type { NavItem } from '../../data/navigation';
-import AssetPlaceholder from '../ui/AssetPlaceholder.astro';
 
 interface Props {
   item: NavItem;
 }
 const { item } = Astro.props;
+
+/** One list, in column order. */
+const links = (item.columns ?? []).flat();
 ---
 
 <div class="mega" data-mega>
-  <div class="mega__inner u-container">
-    <div class="mega__cols">
-      {item.columns?.map((col) => (
-        <div class="mega__col">
-          <ul class="mega__list">
-            {col.map((child) => (
-              <li>
-                <a class="mega__link" href={child.href}>
-                  <span class="mega__link-label">{child.label}</span>
-                  {child.note && <span class="mega__link-note">{child.note}</span>}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
+  <span class="mega__tip" aria-hidden="true"></span>
 
-    {item.feature && (
-      <a class="mega__feature" href={item.feature.href}>
-        <div class="mega__feature-media">
-          <AssetPlaceholder
-            ratio="16 / 9"
-            tone="charcoal"
-            brief={item.feature.imageBrief}
-            ref="A2"
-            quiet
-          />
-        </div>
-        <span class="mega__feature-eyebrow t-label">{item.feature.eyebrow}</span>
-        <span class="mega__feature-title t-h4">{item.feature.title}</span>
-        <span class="mega__feature-body t-caption">{item.feature.body}</span>
-        <span class="mega__feature-cta">
-          {item.feature.cta}
-          <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
-            <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
+  <ul class="mega__list">
+    {links.map((child) => (
+      <li>
+        <a class="mega__link" href={child.href}>
+          <span class="mega__label">{child.label}</span>
+          {child.note && <span class="mega__note">{child.note}</span>}
+          <svg class="mega__chev" width="13" height="9" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
           </svg>
-        </span>
-      </a>
-    )}
-  </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  {item.feature && (
+    <a class="mega__foot" href={item.feature.href}>
+      <span class="mega__foot-eyebrow t-label">{item.feature.eyebrow}</span>
+      <span class="mega__foot-cta">
+        {item.feature.cta}
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </span>
+    </a>
+  )}
 </div>
 
 <style>
+  /* --- The card ------------------------------------------------------------
+     Anchored to the nav ITEM, which Masthead sets to position:relative for this
+     — the old panel was anchored to the header because it spanned it. */
   .mega {
     position: absolute;
-    top: 100%;
+    top: calc(100% - 4px);
     left: 0;
-    width: 100%;
+    z-index: 60;
+    /* Sized to content, then bounded. min-width stops a two-link menu becoming
+       a sliver; max-width stops "History and establishment of the school"
+       stretching the card into another mega panel. */
+    width: max-content;
+    min-width: 244px;
+    max-width: 320px;
+    padding: var(--sb-4);
     background: var(--sb-paper);
-    border-top: var(--sb-hairline);
-    box-shadow: var(--sb-shadow-menu);
+    border: var(--sb-hairline);
+    border-radius: 16px;
+    box-shadow:
+      0 2px 6px rgba(28, 14, 8, 0.06),
+      0 18px 44px -12px rgba(28, 14, 8, 0.24);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(8px);
+    transform: translateY(6px);
     transition:
       opacity 140ms ease,
       transform 140ms var(--sb-ease),
       visibility 140ms;
-    z-index: 60;
   }
 
-  .mega__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 280px;
-    gap: var(--sb-11);
-    /* Kept tight: the link columns are short (4 items), so a tall panel leaves
-       a dead field beneath them. Feature art is 16:9 for the same reason. */
-    padding-block: var(--sb-8) var(--sb-9);
+  /* The accent rule across the top, clipped to the card's radius. */
+  .mega::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(90deg, var(--sb-violet), var(--sb-lime));
   }
 
-  /* Fixed-width tracks rather than 1fr: menus carry 2–6 groups, and equal
-     fractions would stretch a two-group menu across the full measure while
-     squeezing a six-group one. auto-fill packs as many 240px columns as fit and
-     wraps the rest onto a second row — Academics (six groups) lands as 3 × 2. */
-  .mega__cols {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 240px);
-    gap: var(--sb-8);
-    align-content: start;
+  /* A small notch pointing back at the trigger, so the card reads as belonging
+     to the item above it rather than floating. Rotated square, not a border
+     triangle — a triangle cannot carry the card's own border. */
+  .mega__tip {
+    position: absolute;
+    top: -5px;
+    left: 30px;
+    width: 10px;
+    height: 10px;
+    rotate: 45deg;
+    background: var(--sb-violet);
+    border-radius: 2px;
   }
+
+  /* --- Rows ---------------------------------------------------------------- */
 
   .mega__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sb-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   .mega__link {
+    position: relative;
     display: block;
-    padding-block: var(--sb-3);
-    color: var(--sb-text-secondary);
-    font-size: var(--sb-body-sm);
-    transition: color var(--sb-dur-link) ease;
-  }
-
-  .mega__link:hover .mega__link-label,
-  .mega__link:focus-visible .mega__link-label {
-    color: var(--sb-violet);
-  }
-
-  .mega__link-label {
-    display: block;
+    padding: 10px 34px 10px 12px;
+    border-radius: 10px;
     color: var(--sb-charcoal);
-    font-weight: 500;
-    transition: color var(--sb-dur-link) ease;
+    transition: background var(--sb-dur-link) ease, color var(--sb-dur-link) ease;
   }
 
-  .mega__link-note {
+  .mega__link:hover,
+  .mega__link:focus-visible {
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+
+  .mega__label {
     display: block;
-    font-size: var(--sb-caption);
-    color: var(--sb-text-muted);
-    margin-top: 1px;
-  }
-
-  /* --- Featured panel --------------------------------------------------- */
-
-  .mega__feature {
-    display: flex;
-    flex-direction: column;
-    border-left: var(--sb-hairline);
-    padding-left: var(--sb-8);
-  }
-
-  .mega__feature-media {
-    margin-bottom: var(--sb-5);
-    overflow: hidden;
-  }
-
-  .mega__feature-media :global(.ph) {
-    transition: transform var(--sb-dur-image) var(--sb-ease);
-  }
-
-  .mega__feature:hover .mega__feature-media :global(.ph) {
-    transform: scale(1.03);
-  }
-
-  .mega__feature-eyebrow {
-    color: var(--sb-violet);
-    margin-bottom: var(--sb-3);
-  }
-
-  .mega__feature-title {
-    color: var(--sb-charcoal);
-    font-family: var(--sb-font-display);
-    font-weight: 400;
-    margin-bottom: var(--sb-3);
-  }
-
-  .mega__feature-body {
-    color: var(--sb-text-muted);
-    margin-bottom: var(--sb-5);
-  }
-
-  .mega__feature-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sb-3);
-    margin-top: auto;
-    color: var(--sb-violet);
     font-size: var(--sb-body-sm);
     font-weight: 600;
+    line-height: 1.35;
   }
 
-  .mega__feature:hover .arrow {
-    transform: translateX(4px);
+  .mega__note {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--sb-caption);
+    font-weight: 500;
+    color: var(--sb-text-muted);
   }
 
-  .arrow {
-    transition: transform var(--sb-dur-link) var(--sb-ease);
+  /* Parked off the row and slides in on hover, so the resting state is a clean
+     list rather than a column of arrows. */
+  .mega__chev {
+    position: absolute;
+    top: 13px;
+    right: 12px;
+    color: var(--sb-violet);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity var(--sb-dur-link) ease, transform var(--sb-dur-link) var(--sb-ease);
   }
 
-  /* Three-column menus don't need the full 4-col measure. */
-  @media (max-width: 1439px) {
-    .mega__inner {
-      gap: var(--sb-9);
-      grid-template-columns: minmax(0, 1fr) 260px;
-    }
-    .mega__cols { gap: var(--sb-7); }
-    .mega__feature { padding-left: var(--sb-7); }
+  .mega__link:hover .mega__chev,
+  .mega__link:focus-visible .mega__chev {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* --- Footer CTA ---------------------------------------------------------- */
+
+  .mega__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sb-4);
+    margin-top: var(--sb-3);
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--sb-sand);
+    transition: background var(--sb-dur-link) ease;
+  }
+
+  .mega__foot:hover { background: var(--sb-violet-wash); }
+
+  .mega__foot-eyebrow { color: var(--sb-text-muted); }
+
+  .mega__foot-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    font-size: var(--sb-body-sm);
+    font-weight: 650;
+    color: var(--sb-violet);
+  }
+
+  .mega__foot-cta svg { transition: transform var(--sb-dur-link) var(--sb-ease); }
+  .mega__foot:hover .mega__foot-cta svg { transform: translateX(3px); }
+
+  /* --- Edge guard ----------------------------------------------------------
+     The last items on the bar sit close to the container's right edge, and a
+     left-anchored card would hang off it. Those flip to right-aligned, and the
+     notch moves with them. `:global` because the item is Masthead's element,
+     not this component's. */
+  /* The WHOLE selector goes inside :global(), not just the ancestor. Written as
+     `:global(.mainnav__item:nth-last-child(-n+3)) .mega` the compiler dropped
+     the ancestor entirely and emitted a bare `.mega { left:auto; right:0 }` —
+     which right-aligned every dropdown on the bar, including the first. */
+  :global(.mainnav__item:nth-last-child(-n + 3) .mega) {
+    left: auto;
+    right: 0;
+  }
+
+  :global(.mainnav__item:nth-last-child(-n + 3) .mega__tip) {
+    left: auto;
+    right: 30px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mega { transition: opacity 140ms ease, visibility 140ms; transform: none; }
   }
 </style>

@@ -1,0 +1,214 @@
+---
+/**
+ * §4 · TRANSPORT SAFETY — the fleet band.
+ *
+ * The brief asked for "a premium bus image" with feature cards over it. There is
+ * no photograph of a Sunbeam Ballia bus in the repository, and the one aerial
+ * that shows a bus park is a different school in hill country. So the band is
+ * built as a dark composed panel with the figures carrying it, and the photo
+ * slot renders its brief — the composition is finished and swaps to a real
+ * photograph the day one arrives, with nothing else moving.
+ *
+ * THE THREE FIGURES ARE THE ARGUMENT. 29 buses, 22 routes, GPS and governors on
+ * every one of them — all published. They lead, and the unconfirmed items follow
+ * behind them rather than being mixed in as equals.
+ */
+import { transportFeatures } from '../../../data/campus';
+import { school, showBuildNotes } from '../../../data/site';
+import SectionHead from '../../academics/SectionHead.astro';
+import Photo from '../../ui/Photo.astro';
+import SafetyIcon from './SafetyIcon.astro';
+
+const icons: Record<string, string> = {
+  'GPS Tracking': 'gps',
+  'Speed Governor': 'speed',
+  '22 Routes': 'route',
+  'Verified Drivers': 'badge',
+  'Lady Attendant': 'person',
+  'Parent Communication': 'message',
+};
+
+const figures = [
+  { value: '29+', label: 'Buses in the fleet' },
+  { value: '22', label: 'Routes across Ballia' },
+  { value: '100%', label: 'GPS and speed-governed' },
+];
+---
+
+<section class="tsf" aria-labelledby="tsf-title">
+  <div class="u-container">
+    <SectionHead
+      id="tsf-title"
+      eyebrow="Getting there and back"
+      heading="The journey is part of the school day"
+      stand="Twenty-two routes across Ballia, and a fleet that is tracked and speed-limited on every one of them."
+      tone="dark"
+      measure={20}
+    />
+
+    <div class="tsf__figures">
+      {figures.map((f, i) => (
+        <div class="tsf__figure" data-reveal data-reveal-delay={i * 80}>
+          <p class="tsf__figure-v t-tabular">{f.value}</p>
+          <p class="tsf__figure-l">{f.label}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="tsf__panel">
+      <div class="tsf__media" data-reveal>
+        <Photo
+          brief="A Sunbeam Ballia bus at the boarding bay, 16:10 — school livery visible, children boarding with an attendant"
+          ratio="16 / 10"
+          tone="ink"
+          ref="A2"
+        />
+      </div>
+
+      <ul class="tsf__cards">
+        {transportFeatures.map((f, i) => (
+          <li
+            class:list={['tsf__card', !f.verified && 'tsf__card--pending']}
+            data-reveal
+            data-reveal-delay={i * 60}
+          >
+            <span class="tsf__card-icon"><SafetyIcon name={icons[f.label] ?? 'shield'} size={22} /></span>
+            <p class="tsf__card-label">
+              {f.label}
+              {!f.verified && showBuildNotes && <span class="tsf__chip">to confirm</span>}
+            </p>
+            <p class="tsf__card-body">{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <p class="tsf__contact">
+      Transport in-charge · {school.phone.transportIncharge} ·
+      <a href={`tel:${school.phone.transport}`} class="t-tabular">{school.phone.transportDisplay}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .tsf {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-violet-ink);
+    color: rgba(255, 255, 255, 0.76);
+  }
+
+  /* --- Figures ------------------------------------------------------------- */
+
+  .tsf__figures {
+    margin-top: var(--sb-9);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sb-7);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    padding-block: var(--sb-7);
+  }
+
+  .tsf__figure { text-align: center; }
+
+  .tsf__figure-v {
+    font-family: var(--sb-font-display);
+    font-size: clamp(38px, 5vw, 60px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sb-lime);
+  }
+
+  .tsf__figure-l {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-body-sm);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* --- Panel --------------------------------------------------------------- */
+
+  .tsf__panel {
+    margin-top: var(--sb-9);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--sb-9);
+    align-items: start;
+  }
+
+  .tsf__cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-5);
+  }
+
+  .tsf__card {
+    padding: var(--sb-6) var(--sb-5);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 2px solid var(--sb-lime);
+    transition: background var(--sb-dur-link) ease, transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .tsf__card:hover { background: rgba(255, 255, 255, 0.09); transform: translateY(-2px); }
+
+  .tsf__card--pending {
+    border-top-color: rgba(255, 255, 255, 0.22);
+    background: transparent;
+  }
+
+  .tsf__card-icon { color: var(--sb-lime); margin-bottom: var(--sb-4); }
+  .tsf__card--pending .tsf__card-icon { color: rgba(255, 255, 255, 0.42); }
+
+  .tsf__card-label {
+    font-weight: 650;
+    font-size: var(--sb-body-sm);
+    color: #fff;
+  }
+
+  .tsf__chip {
+    display: inline-block;
+    margin-left: var(--sb-2);
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: 2px;
+  }
+
+  .tsf__card-body {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-caption);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.66);
+  }
+
+  .tsf__contact {
+    margin-top: var(--sb-8);
+    padding-top: var(--sb-6);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    font-size: var(--sb-body-sm);
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .tsf__contact a { color: var(--sb-lime); }
+  .tsf__contact a:hover { color: #fff; text-decoration: underline; }
+
+  /* --- Narrow -------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .tsf__panel { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .tsf__figures { grid-template-columns: minmax(0, 1fr); gap: var(--sb-6); }
+    .tsf__cards { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

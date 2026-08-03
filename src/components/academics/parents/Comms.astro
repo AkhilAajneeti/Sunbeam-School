@@ -34,6 +34,7 @@
  */
 import { Image } from 'astro:assets';
 import AcademicGlyph from '../AcademicGlyph.astro';
+import BurstCard from '../../ui/BurstCard.astro';
 import { parents } from '../../../data/academics';
 import cloud from '../../../assets/icons/clouds.png';
 
@@ -76,25 +77,19 @@ const clouds = [
       </div>
     </div>
 
+    {/* The card chrome — flipping disc, pointer bloom, corner ribbon — moved to
+        ui/BurstCard.astro when the Facilities KPI band asked for the same
+        treatment. Two copies of a 3-D flip and a masked ribbon would have
+        drifted, and the drift would only show with both pages open side by
+        side. Only the content is local now. */}
     <ol class="ccm__grid">
       {
         c.channels.map((ch, i) => (
-          <li class="ccard" data-pop data-pop-delay={i * 90}>
-            {/* Two faces of one disc. Decorative throughout — the ordered list
-                already conveys the sequence to a screen reader, and hearing
-                "01 Circulars" for four items is the numbering read twice. */}
-            <span class="ccard__badge" aria-hidden="true">
-              <span class="ccard__face ccard__face--n t-tabular">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span class="ccard__face ccard__face--i">
-                <AcademicGlyph name={ch.glyph} size={26} />
-              </span>
-            </span>
-
+          <BurstCard index={i + 1} class="ccard" data-pop data-pop-delay={i * 90}>
+            <AcademicGlyph slot="icon" name={ch.glyph} size={26} />
             <h3 class="ccard__h">{ch.label}</h3>
             <p class="ccard__b">{ch.body}</p>
-          </li>
+          </BurstCard>
         ))
       }
     </ol>
@@ -236,171 +231,9 @@ const clouds = [
     list-style: none;
   }
 
-  .ccard {
-    position: relative;
-    /* Contains the burst: it is a z-index:-1 pseudo, and without a stacking
-       context of its own it would paint behind the card's white ground and be
-       invisible. `overflow: hidden` is what keeps it inside the rounded corner. */
-    isolation: isolate;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    min-height: clamp(260px, 25vw, 350px);
-    padding: clamp(22px, 2.2vw, 32px);
-    border: 1px solid rgba(201, 60, 10, 0.08);
-    border-radius: clamp(20px, 2vw, 30px);
-    background: #fff;
-    box-shadow: 0 18px 44px -30px rgba(28, 14, 8, 0.34);
-    transition:
-      transform var(--sb-dur-image) var(--sb-ease),
-      box-shadow var(--sb-dur-image) var(--sb-ease),
-      border-color var(--sb-dur-image) var(--sb-ease);
-  }
-
-  .ccard:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 30px 66px -30px rgba(28, 14, 8, 0.42);
-    border-color: rgba(201, 60, 10, 0.2);
-  }
-
-  /* ── THE BURST ────────────────────────────────────────────────────────────
-     A warm bloom that sits under the pointer. The script at the foot of this
-     file writes --mx/--my as percentages of the card; the fallbacks below are
-     the card's centre, which is what a reader gets when the script has not run
-     or when the pointer is coarse — a static glow rather than nothing.
-
-     Only the OPACITY transitions. Transitioning the position too would make the
-     bloom chase the cursor a beat behind, which reads as lag rather than as
-     light; it is repainted on the same frame as the pointer instead. */
-  .ccard::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-      clamp(140px, 16vw, 230px) circle at var(--mx, 50%) var(--my, 50%),
-      rgba(255, 122, 74, 0.22) 0%,
-      rgba(255, 138, 92, 0.09) 42%,
-      rgba(255, 138, 92, 0) 72%
-    );
-    opacity: 0;
-    transition: opacity 260ms var(--sb-ease);
-    pointer-events: none;
-  }
-
-  .ccard:hover::before { opacity: 1; }
-
-  /* ── THE RIBBON ───────────────────────────────────────────────────────────
-     shape-2.png as a MASK, not as an image, and that is not a stylistic choice.
-     Measured, the file is 1429×552 RGBA in which every opaque pixel is pure
-     white and only 5.2% of pixels carry any alpha at all — a fine-line ribbon
-     on transparency. Dropped straight onto a white card it is white on white
-     and renders as nothing. Masking a gradient through it is what turns the
-     line work into something the card can actually show.
-
-     THE GRADIENT RUNS TO THE LEFT AND DIES BEFORE THE COPY. It is `to left` and
-     transparent by 76%, so the ribbon is only ever inked over the card's right
-     third and fades out entirely before it reaches the column the title and body
-     set in. A flourish behind body copy is how a decoration becomes a contrast
-     failure, and this way there is nothing there to fail.
-
-     THE CROP IS DONE IN CSS rather than by cutting a second asset. The ink sits
-     in x 956–1310 of the 1429 wide canvas, so the left two thirds of the file
-     are empty; `mask-position: 80%` slides that emptiness off to the left and
-     anchors the ribbon to the card's bottom-right, bleeding a few pixels past
-     the edge.
-
-     THE SIZE IS DEFORMED ON PURPOSE — 202% × 118% rather than `auto`. The ink's
-     own aspect is 0.64 and the slot it has to fill is the card's right half,
-     which is 0.37. Keeping the artwork's proportions means choosing between a
-     ribbon that spans the card's height and one that stays out of the copy; it
-     cannot do both. Squeezing it horizontally does both, and on an abstract line
-     ribbon the deformation reads as a taller, finer version of the same drawing
-     rather than as a distortion.
-
-     0.18, NOT 0.5. The first pass was set at half opacity and the ribbon
-     crossed the body copy as visible orange line work — decoration competing
-     with the thing it decorates. At 0.18 the lines shift the local ground by
-     under two percent, which is why the card copy still measures 9.6:1. */
-  .ccard::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(
-      to left,
-      var(--sb-lime) 0%,
-      var(--sb-violet) 30%,
-      rgba(201, 60, 10, 0) 62%
-    );
-    -webkit-mask-image: url('../../../assets/icons/shape-2.png');
-    mask-image: url('../../../assets/icons/shape-2.png');
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 202% 118%;
-    mask-size: 202% 118%;
-    -webkit-mask-position: 80% 100%;
-    mask-position: 80% 100%;
-    opacity: 0.18;
-    transition:
-      opacity var(--sb-dur-image) var(--sb-ease),
-      transform var(--sb-dur-image) var(--sb-ease);
-    pointer-events: none;
-  }
-
-  /* The ribbon leans in as the card lifts. Scaled from its own bottom-right so
-     it grows out of the corner it is anchored to rather than drifting across
-     the card. */
-  .ccard:hover::after {
-    opacity: 0.34;
-    transform: scale(1.07) rotate(-2deg);
-    transform-origin: 100% 100%;
-  }
-
-  /* ── THE DISC, WHICH FLIPS ────────────────────────────────────────────────
-     The numeral on the front, the channel's own glyph on the back. Perspective
-     is declared on the transform itself rather than on the card, so the card
-     does not become a 3D context for everything else inside it. */
-  .ccard__badge {
-    position: relative;
-    width: clamp(52px, 4.4vw, 64px);
-    aspect-ratio: 1;
-    transform-style: preserve-3d;
-    transform: perspective(700px) rotateY(0deg);
-    transition: transform 620ms var(--sb-ease);
-  }
-
-  .ccard:hover .ccard__badge { transform: perspective(700px) rotateY(180deg); }
-
-  .ccard__face {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    border-radius: var(--sb-r-full);
-    /* Without this both faces paint at once and the disc reads as a smear. */
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-  }
-
-  .ccard__face--n {
-    border: 1px solid var(--sb-border);
-    background: #fff;
-    font-family: var(--sb-font-display);
-    font-size: clamp(19px, 1.7vw, 25px);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--sb-violet);
-  }
-
-  .ccard__face--i {
-    transform: rotateY(180deg);
-    border: 1px solid var(--sb-violet);
-    background: var(--sb-violet);
-    color: #fff;
-  }
+  /* The card chrome — ground, border, radius, lift, burst, ribbon and the
+     flipping disc — now lives in ui/BurstCard.astro. Only the copy set inside
+     the card is styled here. */
 
   /* NO two-line reserve here, unlike the workshop cards. Every label is one or
      two words and sets on one line at every width the grid uses, so reserving a
@@ -475,43 +308,3 @@ const clouds = [
     .ccm__cloud img { width: calc(var(--ccm-cloud-w) * 0.66); }
   }
 </style>
-
-<script>
-  /**
-   * The burst follows the pointer.
-   *
-   * ONLY WHERE THERE IS A POINTER TO FOLLOW. On a touch screen `:hover` sticks
-   * after a tap and there is no pointermove to track, so the card would keep a
-   * bloom frozen wherever the finger last landed. The media query gate means
-   * those readers get the CSS fallback — the bloom centred, and only while the
-   * card is actually hovered — rather than a stuck highlight.
-   *
-   * WRITES PERCENTAGES, NOT PIXELS, so the value survives a resize without this
-   * having to listen for one.
-   *
-   * `getBoundingClientRect` on every pointermove is a layout read per frame,
-   * which is the thing to avoid on a scrubbed animation — here it is fine and
-   * deliberately not cached: the card MOVES on hover (it lifts 6px), so a rect
-   * measured once on enter would be six pixels wrong for the whole interaction.
-   */
-  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    document.querySelectorAll<HTMLElement>('.ccard').forEach((card) => {
-      card.addEventListener(
-        'pointermove',
-        (e) => {
-          const r = card.getBoundingClientRect();
-          card.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
-          card.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
-        },
-        { passive: true }
-      );
-
-      // Back to centre on the way out, so the next hover starts from the card's
-      // middle rather than from wherever the pointer happened to leave.
-      card.addEventListener('pointerleave', () => {
-        card.style.removeProperty('--mx');
-        card.style.removeProperty('--my');
-      });
-    });
-  }
-</script>

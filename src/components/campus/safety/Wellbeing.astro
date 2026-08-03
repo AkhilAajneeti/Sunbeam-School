@@ -1,0 +1,144 @@
+---
+/**
+ * §5 · STUDENT WELLBEING — the warm band.
+ *
+ * Deliberately the softest section on the page: a wash ground rather than white,
+ * rounded icon plates rather than square-cornered tiles, and copy written to a
+ * parent rather than to an inspector. Everything either side of it is about
+ * equipment and procedure; this one is about a person noticing a child.
+ *
+ * Only the junior-class attendants are published. The other three cards are the
+ * brief's, not the school's, and say so.
+ */
+import { wellbeingCards } from '../../../data/campus';
+import { showBuildNotes } from '../../../data/site';
+import SectionHead from '../../academics/SectionHead.astro';
+import SafetyIcon from './SafetyIcon.astro';
+
+const icons: Record<string, string> = {
+  'Junior assistance': 'hand',
+  'Medical support': 'cross',
+  Counselling: 'heart',
+  Hygiene: 'droplet',
+};
+---
+
+<section class="wlb" aria-labelledby="wlb-title">
+  <div class="u-container">
+    <SectionHead
+      id="wlb-title"
+      eyebrow="Looking after the child"
+      heading="Someone notices"
+      stand="Equipment keeps a building safe. People are what keep a child feeling safe in it."
+      measure={16}
+    />
+
+    <ul class="wlb__cards">
+      {wellbeingCards.map((c, i) => (
+        <li
+          class:list={['wlb__card', !c.verified && 'wlb__card--pending']}
+          data-reveal
+          data-reveal-delay={i * 80}
+        >
+          <span class="wlb__plate"><SafetyIcon name={icons[c.label] ?? 'heart'} size={26} /></span>
+          <h3 class="wlb__h">
+            {c.label}
+            {!c.verified && showBuildNotes && <span class="wlb__chip">to confirm</span>}
+          </h3>
+          <p class="wlb__body">{c.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .wlb {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-violet-wash);
+  }
+
+  .wlb__cards {
+    list-style: none;
+    margin: var(--sb-10) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sb-7);
+  }
+
+  .wlb__card {
+    padding: var(--sb-7) var(--sb-6) var(--sb-8);
+    background: var(--sb-paper);
+    /* The one rounded family on the page — this section is the warm one. */
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(28, 14, 8, 0.05), 0 10px 26px rgba(28, 14, 8, 0.05);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .wlb__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px rgba(28, 14, 8, 0.06), 0 16px 34px rgba(28, 14, 8, 0.09);
+  }
+
+  .wlb__card--pending {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+  }
+
+  .wlb__card--pending:hover { transform: none; box-shadow: inset 0 0 0 1px var(--sb-border); }
+
+  .wlb__plate {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-6);
+  }
+
+  .wlb__card--pending .wlb__plate {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    color: var(--sb-text-muted);
+  }
+
+  .wlb__h {
+    font-family: var(--sb-font-display);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .wlb__chip {
+    display: inline-block;
+    margin-left: var(--sb-2);
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--sb-lime-wash);
+    color: var(--sb-lime-deep);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: 3px;
+  }
+
+  .wlb__body {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (max-width: 1023px) {
+    .wlb__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 560px) {
+    .wlb__cards { grid-template-columns: minmax(0, 1fr); gap: var(--sb-6); }
+  }
+</style>

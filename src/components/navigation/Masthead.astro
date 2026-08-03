@@ -2,16 +2,22 @@
 /**
  * C02 · MASTHEAD — docs/06 §02
  *
- * Crest + wordmark left, nav centre-right, Apply Online always visible.
- * Sticky; condenses 96 → 68px on scroll.
+ * Crest + wordmark left, Apply Online right, and the navigation on its own
+ * full-width row beneath. Sticky; condenses 96 → 68px on scroll.
  *
- * IMPLEMENTATION NOTE — desktop nav threshold is 1360px, not the 1024px implied
- * by docs/05 § L. The audit mandates 8 top-level items (Career §6.1 and Alumni
- * §12.1 are both required at top level) and names them verbatim, which is what
- * sets the width: "Latest News & Events" (§11) is 159px on its own and "Campus
- * Tour" (§3) 92px. Measured in Chromium the eight links need 814px beside the
- * brand lockup and the Apply button, and the container caps at 1280px. Below
- * 1360 the drawer is the honest answer rather than a cramped, shrunken nav.
+ * IMPLEMENTATION NOTE — TWO ROWS, and the desktop threshold is 1280px.
+ *
+ * The client requires all eleven audit sections on the main menu. Named
+ * verbatim they measure 1117px of link text at 14px — "School Planner &
+ * Academic Calendar" (§8) is 253px on its own, "Latest News & Events" (§11)
+ * 148px — and the container caps at 1280px. Beside the brand lockup (242px) and
+ * the Apply button (151px) a single row leaves roughly 810px, so eleven items
+ * cannot share a line with the brand at any type size worth reading. Giving the
+ * nav its own row hands it the full container and is what makes eleven possible.
+ *
+ * Measured slack in Chromium, one row at every width: 81px at 1280, 95px at
+ * 1360, 52px at 1440 and above (the floor — the container stops growing while
+ * the gap clamp does not). Below 1280 the drawer takes over.
  */
 import { mainNav } from '../../data/navigation';
 import MegaMenu from './MegaMenu.astro';
@@ -64,6 +70,7 @@ import MegaMenu from './MegaMenu.astro';
       </button>
     </div>
   </div>
+
 </header>
 
 <style>
@@ -101,10 +108,11 @@ import MegaMenu from './MegaMenu.astro';
     height: var(--sb-masthead-h);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     /* Capped, not clamp(20px, 2vw, 40px): the container stops growing at 1280
        but vw does not, so the old gap widened on big screens while the space it
        had to fit into stayed fixed — 1920 overflowed harder than 1440 did. */
-    gap: clamp(16px, 1.6vw, 24px);
+    gap: clamp(12px, 1.1vw, 16px);
     transition: height var(--sb-dur-nav) var(--sb-ease);
   }
 
@@ -140,25 +148,37 @@ import MegaMenu from './MegaMenu.astro';
   .mainnav {
     flex: 1;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   .mainnav__list {
     display: flex;
     align-items: center;
-    gap: clamp(10px, 0.9vw, 16px);
+    justify-content: center;
+    /* Wraps rather than overflows: if a longer label is ever added the row drops
+       to a second line instead of pushing a horizontal scrollbar onto every
+       page — `body` is overflow-x:hidden, so that bug shows up as the whole
+       document sliding sideways, not as a broken header. */
+    flex-wrap: wrap;
+    gap: 0 clamp(9px, 0.95vw, 13px);
   }
 
-  /* static so the mega panel's containing block is the header, not the item */
+  /* relative, NOT static. The old full-width mega panel was anchored to the
+     header so it could span it; the dropdown that replaced it is sized to its
+     own content and has to hang off its own trigger, so the item is now the
+     containing block. */
   .mainnav__item {
-    position: static;
+    position: relative;
   }
 
   .mainnav__link {
     position: relative;
     display: inline-block;
-    padding: 12px 2px;
-    font-size: 14px;
+    padding: 11px 2px;
+    /* Fluid, and the cap is set by measurement rather than taste: the nine
+       labels plus the Apply button and the brand lockup need every pixel the
+       1280px container has. At 13.5px the row wrapped at 1280, 1600 and 1920. */
+    font-size: clamp(12px, 0.92vw, 13px);
     font-weight: 600;
     color: var(--sb-charcoal);
     white-space: nowrap;
@@ -247,21 +267,30 @@ import MegaMenu from './MegaMenu.astro';
      header — it shows as the whole document scrolling sideways, which on a
      full-bleed layout looks like every band stopping short of the right edge.
 
-     The previous 1240 threshold held only while the nav used short labels. The
-     audit's verbatim names cost ~120px, so the row no longer fits at 1240 (735px
-     of room against 799px of links) and tightening gaps alone cannot close it.
-     1240–1359 therefore gets the drawer, which is honest, rather than a nav
-     squeezed past legibility.
+     Moving the nav onto its own row bought back everything the brand lockup and
+     the Apply button used to take, which is what makes eleven items possible at
+     all. The threshold is set from the measured width of the eleven links; see
+     the figures recorded in the header comment above. Below it the drawer takes
+     over, which is honest, rather than a nav squeezed past legibility.
 
-     Measured slack in Chromium against the 1280px container cap: 39px at 1360,
-     48px at 1440, 25px at 1920 (the floor — gaps are still the widest there).
-     ⚠ RE-MEASURE IF A NINTH ITEM OR A LONGER LABEL IS ADDED. 25px is half the
-     narrowest link on the bar, so there is room for no more. */
+     ⚠ RE-MEASURE IF A TWELFTH ITEM OR A LONGER LABEL IS ADDED. The list wraps
+     rather than overflowing, so the failure mode is a second row appearing, not
+     a sideways-scrolling page. */
 
-  @media (max-width: 1359px) {
+  @media (max-width: 1279px) {
     .mainnav { display: none; }
     .masthead__toggle { display: inline-flex; }
-    .masthead__inner { justify-content: space-between; }
+  }
+
+  /* 1280–1439 is where the row is tightest: the container is still growing but
+     has not reached its 1280 cap, so the nav has less room than it does at 1440
+     while carrying exactly the same labels. The lockup steps down one notch
+     there rather than the type shrinking further. */
+  @media (max-width: 1439px) {
+    .brand__emblem,
+    .masthead.is-scrolled .brand__emblem { height: 44px; }
+    .brand__wordmark,
+    .masthead.is-scrolled .brand__wordmark { height: 40px; }
   }
 
   @media (max-width: 1023px) {

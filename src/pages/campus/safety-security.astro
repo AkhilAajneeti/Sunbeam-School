@@ -1,0 +1,99 @@
+---
+/**
+ * CAMPUS → SAFETY & SECURITY  ·  audit §3 ("Present the Safety & Security
+ * section as a dedicated page or expandable link with detailed information")
+ * and docs/03 finding 3.8 ("Only 5 points; needs expansion").
+ *
+ * SIX BANDS, EACH A DIFFERENT GROUND AND A DIFFERENT DEVICE. The page the client
+ * has today is a stack of coloured text boxes; the fix is not nicer boxes, it is
+ * that no two sections are built the same way:
+ *
+ *   1 SafetyTimeline   ivory   · a drawn spine, three groups
+ *   2 SecurityMap      sand    · interactive schematic with hotspots
+ *   3 Emergency        ivory   · 5:7 split, then a four-step flow
+ *   4 TransportSafety  ink     · figures band + dark feature panel
+ *   5 Wellbeing        wash    · the warm one — rounded plates, soft shadow
+ *   6 Surveillance     ink     · a stage, with a sweeping camera cone
+ *
+ * THE HERO IS PageHero, the shared banner every inner page uses, as asked.
+ *
+ * ⚠ HONESTY IS THE WHOLE DESIGN HERE. The school publishes exactly five safety
+ * facts. The brief asked for roughly thirty. Every claim the school has NOT
+ * published is marked `verified: false` in src/data/campus.ts, renders one step
+ * back visually, and carries a "to confirm" chip whenever showBuildNotes is on.
+ * The emergency flow carries a plain-English note saying it is standard practice
+ * awaiting the school's confirmation. On a page a parent reads to decide whether
+ * their child is safe, an unverified claim presented as fact is the one mistake
+ * that cannot be walked back — so nothing here does it.
+ *
+ * ⚠ IMAGERY. Only the campus establishing shot is used, and it is verified
+ * Ballia. Two files in src/assets/photos are NOT this school —
+ * `sunbeem-students-4.jpg` is a hill-country campus with palm groves and
+ * `sunbeem-students-2.jpg` carries a Sunbeam VARANASI crest over a Bhagwanpur
+ * hostel — so neither appears. The fire-equipment and bus slots render their
+ * briefs instead of a stand-in (request A2).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import SectionRail from '../../components/academics/SectionRail.astro';
+
+import SafetyTimeline from '../../components/campus/safety/SafetyTimeline.astro';
+import SecurityMap from '../../components/campus/safety/SecurityMap.astro';
+import Emergency from '../../components/campus/safety/Emergency.astro';
+import TransportSafety from '../../components/campus/safety/TransportSafety.astro';
+import Wellbeing from '../../components/campus/safety/Wellbeing.astro';
+import Surveillance from '../../components/campus/safety/Surveillance.astro';
+
+import heroPhoto from '../../assets/photos/sunbeem-1.jpg';
+---
+
+<BaseLayout
+  title="Safety & Security — Sunbeam School Ballia"
+  description="Safety at Sunbeam School Ballia: 24×7 security guards, full CCTV coverage, a 15,000-litre fire hose reel, extinguishers in every corridor, attendants in junior classes, and a GPS-tracked, speed-governed bus fleet across 22 routes."
+>
+  <PageHero
+    title="Safety & Security"
+    standfirst="Guards on duty every hour of the year, cameras across the campus, and a fleet that is tracked on every one of its twenty-two routes."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Campus Tour', href: '/campus/' },
+    ]}
+    src={heroPhoto}
+    alt="The Sunbeam School Ballia campus at Agarsanda — the four-storey teaching block seen across the school ground."
+    position="50% 62%"
+  />
+
+  <SectionRail
+    items={[
+      { id: 'watch', label: 'What is in place' },
+      { id: 'plan', label: 'Campus plan' },
+      { id: 'emergency', label: 'Emergencies' },
+      { id: 'transport', label: 'Transport' },
+      { id: 'wellbeing', label: 'Wellbeing' },
+      { id: 'surveillance', label: 'Surveillance' },
+    ]}
+  />
+
+  {/* padding-bottom: 0 — Surveillance closes on its own ink ground, and the
+      panel's default foot padding would only add an ivory band beneath it. */}
+  <div class="u-page-panel sfy-panel">
+    <SafetyTimeline />
+    <div id="plan"><SecurityMap /></div>
+    <div id="emergency"><Emergency /></div>
+    <div id="transport"><TransportSafety /></div>
+    <div id="wellbeing"><Wellbeing /></div>
+    <div id="surveillance"><Surveillance /></div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* padding-block: 0 — SafetyTimeline already opens on --sb-section-y, so the
+     panel's own top padding was only doubling it, and Surveillance closes on
+     its own ink ground. `div.` to out-specify .u-page-panel in base.css. */
+  div.sfy-panel { padding-block: 0; }
+
+  /* The rail anchors sit on wrappers rather than on the sections themselves, so
+     they need the same scroll offset the rail assumes — otherwise a jump lands
+     with the section's heading under the sticky masthead. */
+  .sfy-panel > div[id] { scroll-margin-top: calc(var(--sb-masthead-h) + 24px); }
+</style>
