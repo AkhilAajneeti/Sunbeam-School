@@ -1,235 +1,372 @@
 ---
 /**
- * C03 · NAV DROPDOWN — docs/06 §02
+ * C03 · MULTI-LEVEL MENU — minimal, two levels, Apple/Linear register.
  *
- * REPLACES THE FULL-WIDTH MEGA PANEL. The old build spanned the whole viewport
- * with 3–4 link columns and a 280px featured image beside them. That shape was
- * right when a menu carried sixteen links; it is wrong now that the largest
- * carries six and the smallest carries two — a full-bleed panel opening to show
- * two links reads as a rendering fault, and it blacked out the page behind it
- * every time a pointer crossed the bar.
+ * REPLACES THE GLASS MEGA PANEL. Cards with icons, descriptions and a preview
+ * image made a 920px panel out of a menu whose largest branch is six links. This
+ * is a list: one column of parents, and a second card that opens beside the
+ * parent being pointed at.
  *
- * So this is a card, sized to its own content and anchored under its trigger.
- * Every menu on the bar fits between 2 and 6 rows, which is exactly the range a
- * dropdown handles better than a mega panel.
+ * REVEAL IS PURE CSS, AND THAT IS AN ACCESSIBILITY DECISION, NOT A PERFORMANCE
+ * ONE. Each submenu is a real <ul> nested inside its parent's <li>, shown on
+ * `:hover` and `:focus-within`. Because the submenu follows its parent in the
+ * DOM, Tab walks parent → its children → next parent with no key handling at
+ * all, and `visibility: hidden` keeps closed submenus out of the tab order.
+ * A JS implementation would have to rebuild that behaviour and would break the
+ * moment the script failed.
  *
- * THE ROOT CLASS IS STILL `.mega`, deliberately. Masthead.astro owns the
- * hover/focus reveal and the `is-mega-suppressed` Escape handler, and both
- * target that class; keeping it means the redesign is contained to this file
- * rather than spread across two.
+ * THE ARROW IS DRAWN ONLY WHERE A SUBMENU EXISTS. Seven of the twenty-one links
+ * have verified in-page sections; the rest are plain rows. An arrow on a row
+ * that opens nothing is the single most common lie in a menu like this.
  *
- * COLUMNS ARE FLATTENED. The data still groups links into columns because the
- * mobile drawer renders those groups, so the shape is not changed at source —
- * this component simply reads them as one list.
- *
- * THE FEATURE PANEL IS NOW A FOOTER ROW. `feature.imageBrief` is no longer
- * rendered — a 16:9 photograph is what made the old panel enormous — but the
- * eyebrow and CTA still ship, so no data is orphaned and the menu keeps its one
- * contextual destination.
+ * THE PANEL SIZES ITSELF. A branch with no children renders one column and the
+ * card shrinks to it — no empty second pane held open for symmetry.
  */
 import type { NavItem } from '../../data/navigation';
+/* Stroke set shared with the facilities pages. It is a general set living in a
+   specific folder — worth moving to components/ui/ next time a third caller
+   reaches for it. */
+import FacIcon from '../campus/facilities/FacIcon.astro';
 
 interface Props {
   item: NavItem;
 }
 const { item } = Astro.props;
 
-/** One list, in column order. */
 const links = (item.columns ?? []).flat();
 ---
 
 <div class="mega" data-mega>
-  <span class="mega__tip" aria-hidden="true"></span>
+  <ul class="mnu">
+    {links.map((child, i) => {
+      const kids = child.children ?? [];
+      return (
+        <li class:list={['mnu__item', kids.length && 'mnu__item--parent']} style={`--i:${i}`}>
+          <a class="mnu__link" href={child.href}>
+            {/* Decorative — the label beside it already names the destination,
+                so announcing the glyph would be the same word twice. */}
+            <span class="mnu__plate" aria-hidden="true">
+              <FacIcon name={child.icon ?? 'dot'} size={17} />
+            </span>
 
-  <ul class="mega__list">
-    {links.map((child) => (
-      <li>
-        <a class="mega__link" href={child.href}>
-          <span class="mega__label">{child.label}</span>
-          {child.note && <span class="mega__note">{child.note}</span>}
-          <svg class="mega__chev" width="13" height="9" viewBox="0 0 14 10" fill="none" aria-hidden="true">
-            <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
-          </svg>
-        </a>
-      </li>
-    ))}
+            <span class="mnu__label">{child.label}</span>
+            {child.note && <span class="mnu__note">{child.note}</span>}
+
+            {/* Only the expand chevron, and only where a submenu exists. No
+                hover arrow: the icon plate already marks the active row, and a
+                second mark for the same state is what makes a menu busy. */}
+            {kids.length > 0 && (
+              <svg class="mnu__chev" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M4.5 2.5L8 6l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            )}
+          </a>
+
+          {kids.length > 0 && (
+            <ul class="mnu__sub">
+              {kids.map((k, j) => (
+                <li style={`--j:${j}`}>
+                  <a class="mnu__sublink" href={k.href}>{k.label}</a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      );
+    })}
   </ul>
-
-  {item.feature && (
-    <a class="mega__foot" href={item.feature.href}>
-      <span class="mega__foot-eyebrow t-label">{item.feature.eyebrow}</span>
-      <span class="mega__foot-cta">
-        {item.feature.cta}
-        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
-          <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
-        </svg>
-      </span>
-    </a>
-  )}
 </div>
 
 <style>
-  /* --- The card ------------------------------------------------------------
-     Anchored to the nav ITEM, which Masthead sets to position:relative for this
-     — the old panel was anchored to the header because it spanned it. */
+  /* --- The panel ----------------------------------------------------------- */
+
   .mega {
     position: absolute;
-    top: calc(100% - 4px);
+    top: calc(100% + 10px);
     left: 0;
     z-index: 60;
-    /* Sized to content, then bounded. min-width stops a two-link menu becoming
-       a sliver; max-width stops "History and establishment of the school"
-       stretching the card into another mega panel. */
     width: max-content;
-    min-width: 244px;
-    max-width: 320px;
-    padding: var(--sb-4);
-    background: var(--sb-paper);
-    border: var(--sb-hairline);
-    border-radius: 16px;
+    /* Wider than the text-only version: the plate and the go-arrow take ~52px
+       before a label starts, and "Career Development & Student Success" needs
+       room to break over two lines without the card feeling cramped. */
+    min-width: 268px;
+    max-width: 336px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    backdrop-filter: blur(22px) saturate(160%);
+    /* The white hairline you added, kept — but paired with a darker outer ring.
+       White alone reads as a highlight rather than an edge once the card sits on
+       a pale ground, which is why it looked slightly unfinished on the hero. */
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 18px;
+    /* Four layers. The outer ring gives the card a defined edge on any ground,
+       the inset lip catches light along the top, then a tight contact shadow and
+       a wide soft one for lift. A single blurred shadow is what makes a dropdown
+       look dated — depth comes from the stack, not from more blur. */
     box-shadow:
-      0 2px 6px rgba(28, 14, 8, 0.06),
-      0 18px 44px -12px rgba(28, 14, 8, 0.24);
+      0 0 0 1px rgba(28, 14, 8, 0.06),
+      0 1px 0 rgba(255, 255, 255, 0.95) inset,
+      0 2px 8px rgba(28, 14, 8, 0.05),
+      0 24px 56px -18px rgba(28, 14, 8, 0.32);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(6px);
+    /* The card itself barely moves — 4px and a whisker of scale. The MOVEMENT
+       the eye reads belongs to the rows inside it, and two competing travels
+       would fight each other. */
+    transform: translateY(4px) scale(0.99);
+    transform-origin: top left;
     transition:
-      opacity 140ms ease,
-      transform 140ms var(--sb-ease),
-      visibility 140ms;
+      opacity 180ms ease,
+      transform 260ms var(--sb-ease),
+      visibility 180ms;
   }
 
-  /* The accent rule across the top, clipped to the card's radius. */
-  .mega::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 3px;
-    border-radius: 16px 16px 0 0;
-    background: linear-gradient(90deg, var(--sb-violet), var(--sb-lime));
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .mega { background: var(--sb-paper); }
   }
 
-  /* A small notch pointing back at the trigger, so the card reads as belonging
-     to the item above it rather than floating. Rotated square, not a border
-     triangle — a triangle cannot carry the card's own border. */
-  .mega__tip {
-    position: absolute;
-    top: -5px;
-    left: 30px;
-    width: 10px;
-    height: 10px;
-    rotate: 45deg;
-    background: var(--sb-violet);
-    border-radius: 2px;
-  }
-
-  /* --- Rows ---------------------------------------------------------------- */
-
-  .mega__list {
+  .mnu {
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .mega__link {
+  /* --- THE LADDER ----------------------------------------------------------
+     Rows do not appear with the card. Each one floats up into place after the
+     one above it, so the menu assembles rung by rung instead of arriving whole.
+
+     `--i` is written on the <li> in the markup, and the delay is derived from
+     it: 48ms apart, after a 90ms beat that lets the card land first. Six rows
+     therefore finish in ~330ms, which is quick enough that a pointer travelling
+     down the list never overtakes the animation.
+
+     Rows travel 14px and the card travels 4px, deliberately — the eye should
+     read the RUNGS as the thing that moves.
+
+     CLOSING IS INSTANT AND UNSTAGGERED. A menu that dismisses rung by rung
+     feels reluctant to let go, and reversing a stagger on exit is the single
+     most common way this effect is got wrong. */
+  .mnu__item {
+    position: static;
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 140ms ease,
+      transform 140ms var(--sb-ease);
+  }
+
+  :global(.mainnav__item--has-mega:hover) .mnu__item,
+  :global(.mainnav__item--has-mega:focus-within) .mnu__item {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 320ms ease,
+      /* A gentle overshoot — the rung settles rather than stopping dead. */
+      transform 460ms cubic-bezier(0.22, 1.12, 0.36, 1);
+    transition-delay: calc(var(--i, 0) * 48ms + 90ms);
+  }
+
+  /* --- Level one ----------------------------------------------------------- */
+
+  .mnu__link {
     position: relative;
-    display: block;
-    padding: 10px 34px 10px 12px;
-    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 12px 9px 9px;
+    border-radius: 12px;
     color: var(--sb-charcoal);
-    transition: background var(--sb-dur-link) ease, color var(--sb-dur-link) ease;
+    transition: background 220ms ease, color 220ms ease;
   }
 
-  .mega__link:hover,
-  .mega__link:focus-visible {
+  /* The hover ground is a pseudo-element rather than `background`, so it can
+     fade independently of the row's own colour change and carry its own hairline
+     without adding a border that would shift the text by a pixel. */
+  .mnu__link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, var(--sb-violet-wash), rgba(255, 237, 230, 0.55));
+    box-shadow: inset 0 0 0 1px rgba(201, 60, 10, 0.1);
+    opacity: 0;
+    transition: opacity 220ms ease;
+  }
+
+  .mnu__item:hover > .mnu__link::before,
+  .mnu__item:focus-within > .mnu__link::before { opacity: 1; }
+
+  .mnu__link > * { position: relative; }
+
+  /* --- Icon plate ----------------------------------------------------------
+     The plate is what replaced the left rail. A rail and an icon both mark the
+     same state, and two markers for one thing is where a menu starts to look
+     busy — so the plate carries it alone, inverting to solid on hover. */
+  .mnu__plate {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 9px;
     background: var(--sb-violet-wash);
+    box-shadow: inset 0 0 0 1px rgba(201, 60, 10, 0.08);
     color: var(--sb-violet);
+    transition:
+      background 220ms ease,
+      color 220ms ease,
+      transform 380ms var(--sb-ease),
+      box-shadow 220ms ease;
   }
 
-  .mega__label {
-    display: block;
+  .mnu__item:hover > .mnu__link .mnu__plate,
+  .mnu__item:focus-within > .mnu__link .mnu__plate {
+    background: var(--sb-violet);
+    color: #fff;
+    box-shadow: 0 4px 10px -3px rgba(201, 60, 10, 0.5);
+    transform: scale(1.06) rotate(-5deg);
+  }
+
+
+  .mnu__label {
+    flex: 1;
+    min-width: 0;
     font-size: var(--sb-body-sm);
     font-weight: 600;
     line-height: 1.35;
   }
 
-  .mega__note {
-    display: block;
-    margin-top: 2px;
+  .mnu__note {
     font-size: var(--sb-caption);
-    font-weight: 500;
     color: var(--sb-text-muted);
   }
 
-  /* Parked off the row and slides in on hover, so the resting state is a clean
-     list rather than a column of arrows. */
-  .mega__chev {
-    position: absolute;
-    top: 13px;
-    right: 12px;
-    color: var(--sb-violet);
-    opacity: 0;
-    transform: translateX(-4px);
-    transition: opacity var(--sb-dur-link) ease, transform var(--sb-dur-link) var(--sb-ease);
+  .mnu__chev {
+    flex-shrink: 0;
+    color: var(--sb-text-muted);
+    transition: transform 220ms var(--sb-ease), color 160ms ease;
   }
 
-  .mega__link:hover .mega__chev,
-  .mega__link:focus-visible .mega__chev {
+  .mnu__item:hover > .mnu__link,
+  .mnu__item:focus-within > .mnu__link {
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+
+  .mnu__item:hover > .mnu__link .mnu__chev,
+  .mnu__item:focus-within > .mnu__link .mnu__chev {
+    color: var(--sb-violet);
+    transform: translateX(2px);
+  }
+
+  /* --- Level two ------------------------------------------------------------
+     Its own card, opening beside the panel. `left: 100%` off the panel, not off
+     the row, so it always aligns to the card's top edge. */
+  .mnu__sub {
+    position: absolute;
+    top: -1px;
+    left: calc(100% + 8px);
+    width: max-content;
+    min-width: 210px;
+    max-width: 280px;
+    padding: 6px;
+    list-style: none;
+    margin: 0;
+    background: var(--sb-paper);
+    border: var(--sb-hairline);
+    border-radius: 14px;
+    box-shadow:
+      0 1px 2px rgba(28, 14, 8, 0.05),
+      0 12px 32px -10px rgba(28, 14, 8, 0.26);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-6px);
+    transition:
+      opacity 160ms ease,
+      transform 220ms var(--sb-ease),
+      visibility 160ms;
+  }
+
+  .mnu__item--parent:hover > .mnu__sub,
+  .mnu__item--parent:focus-within > .mnu__sub {
     opacity: 1;
+    visibility: visible;
     transform: none;
   }
 
-  /* --- Footer CTA ---------------------------------------------------------- */
-
-  .mega__foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--sb-4);
-    margin-top: var(--sb-3);
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: var(--sb-sand);
-    transition: background var(--sb-dur-link) ease;
+  /* STAGGER. Rows arrive one after another off `--j`. The delay is on the OPEN
+     state only — a staggered close reads as the menu being slow to let go. */
+  .mnu__sub li {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 200ms ease, transform 260ms var(--sb-ease);
   }
 
-  .mega__foot:hover { background: var(--sb-violet-wash); }
+  .mnu__item--parent:hover > .mnu__sub li,
+  .mnu__item--parent:focus-within > .mnu__sub li {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(var(--j, 0) * 26ms + 40ms);
+  }
 
-  .mega__foot-eyebrow { color: var(--sb-text-muted); }
-
-  .mega__foot-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
+  .mnu__sublink {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 8px;
     font-size: var(--sb-body-sm);
-    font-weight: 650;
-    color: var(--sb-violet);
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--sb-text-secondary);
+    transition: background 160ms ease, color 160ms ease;
   }
 
-  .mega__foot-cta svg { transition: transform var(--sb-dur-link) var(--sb-ease); }
-  .mega__foot:hover .mega__foot-cta svg { transform: translateX(3px); }
+  .mnu__sublink:hover,
+  .mnu__sublink:focus-visible {
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+    font-weight: 600;
+  }
 
   /* --- Edge guard ----------------------------------------------------------
-     The last items on the bar sit close to the container's right edge, and a
-     left-anchored card would hang off it. Those flip to right-aligned, and the
-     notch moves with them. `:global` because the item is Masthead's element,
-     not this component's. */
-  /* The WHOLE selector goes inside :global(), not just the ancestor. Written as
-     `:global(.mainnav__item:nth-last-child(-n+3)) .mega` the compiler dropped
-     the ancestor entirely and emitted a bare `.mega { left:auto; right:0 }` —
-     which right-aligned every dropdown on the bar, including the first. */
-  :global(.mainnav__item:nth-last-child(-n + 3) .mega) {
+     The last items sit near the container's right edge. Their panel flips to
+     right-aligned and their submenus open to the LEFT, or both would leave the
+     viewport. Written with the whole selector inside :global() — with only the
+     ancestor wrapped, the compiler drops it and the rule hits every menu. */
+  :global(.mainnav__item:nth-last-child(-n + 4) .mega) {
     left: auto;
     right: 0;
   }
 
-  :global(.mainnav__item:nth-last-child(-n + 3) .mega__tip) {
+  :global(.mainnav__item:nth-last-child(-n + 4) .mnu__sub) {
     left: auto;
-    right: 30px;
+    right: calc(100% + 8px);
+    transform: translateX(6px);
   }
 
+  :global(.mainnav__item:nth-last-child(-n + 4) .mnu__item--parent:hover > .mnu__sub),
+  :global(.mainnav__item:nth-last-child(-n + 4) .mnu__item--parent:focus-within > .mnu__sub) {
+    transform: none;
+  }
+
+  /* The ladder is the whole effect, so under reduced motion it does not play at
+     a shorter duration — it does not play. Rows are set visible outright rather
+     than left at opacity 0 waiting on a transition that no longer runs, which
+     is how this pattern usually ends up as an empty card for these readers. */
   @media (prefers-reduced-motion: reduce) {
-    .mega { transition: opacity 140ms ease, visibility 140ms; transform: none; }
+    .mega,
+    .mnu__item,
+    .mnu__link,
+    .mnu__link::before,
+    .mnu__plate,
+    .mnu__sub,
+    .mnu__sub li,
+    .mnu__chev {
+      transition-duration: 1ms !important;
+      transition-delay: 0ms !important;
+      transform: none !important;
+    }
+
+    .mnu__item { opacity: 1 !important; }
   }
 </style>

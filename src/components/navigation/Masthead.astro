@@ -163,10 +163,9 @@ import MegaMenu from './MegaMenu.astro';
     gap: 0 clamp(9px, 0.95vw, 13px);
   }
 
-  /* relative, NOT static. The old full-width mega panel was anchored to the
-     header so it could span it; the dropdown that replaced it is sized to its
-     own content and has to hang off its own trigger, so the item is now the
-     containing block. */
+  /* relative — the multi-level panel is narrow and hangs off its own trigger,
+     so the item is the containing block. (The 920px glass panel that briefly
+     lived here had to centre on the nav instead; this one does not.) */
   .mainnav__item {
     position: relative;
   }
@@ -220,6 +219,19 @@ import MegaMenu from './MegaMenu.astro';
       transform var(--sb-dur-menu) var(--sb-ease);
   }
 
+  /* ONE PANEL AT A TIME. Hover and focus both open a menu, so a keyboard user
+     who has tabbed into one and then moves the pointer over another had two
+     open together. That was survivable when each panel hung off its own item —
+     they sat side by side. Now every panel is centred on the nav, so two open
+     panels stack directly on top of each other and the menu reads as corrupt.
+     Whenever the pointer is over the bar, hover wins and any focus-held panel
+     that is not also hovered is suppressed. */
+  .mainnav:hover .mainnav__item--has-mega:not(:hover) :global(.mega) {
+    opacity: 0;
+    visibility: hidden;
+    transition-delay: 0ms;
+  }
+
   .masthead.is-mega-suppressed :global(.mega) {
     opacity: 0 !important;
     visibility: hidden !important;
@@ -259,6 +271,37 @@ import MegaMenu from './MegaMenu.astro';
     height: 2px;
     width: 100%;
     background: var(--sb-charcoal);
+    border-radius: 2px;
+    transition: transform 320ms var(--sb-ease);
+  }
+
+  /* --- Hamburger → cross ---------------------------------------------------
+     The maths, so the X is actually centred rather than approximately so: two
+     2px bars with a 5px gap occupy 9px inside a 14px box, so their centres sit
+     at 3.5px and 10.5px while the box centre is 7px. Each bar therefore travels
+     exactly 3.5px inward before rotating, and the two strokes cross dead centre.
+
+     Driven off `aria-expanded`, not a class — the attribute has to be correct
+     for assistive tech anyway, so keying the visual to it means the two can
+     never disagree. */
+  .masthead__toggle[aria-expanded='true'] .masthead__toggle-bars i:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+
+  .masthead__toggle[aria-expanded='true'] .masthead__toggle-bars i:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  /* ABOVE THE DRAWER WHILE IT IS OPEN. The drawer sits at z-index 100 and this
+     header at 50, so the toggle was behind the scrim and unclickable — a
+     hamburger that morphs into a cross is pointless if the cross cannot be
+     pressed. Raised only while open, so the resting stack is unchanged. */
+  .masthead.is-nav-open {
+    z-index: 120;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .masthead__toggle-bars i { transition: none; }
   }
 
   /* --- Below 1360: drawer takes over --------------------------------------

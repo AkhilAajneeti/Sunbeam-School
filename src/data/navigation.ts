@@ -16,10 +16,42 @@
  */
 import { school } from "./site";
 
+/* Preview art for the mega menu's right-hand panel. Imported explicitly rather
+   than globbed: there are ten of them, each chosen for a specific destination,
+   and a glob would make it impossible to see at a glance which link shows what.
+   All are the school's own photography. */
+import imgCampus from "../assets/photos/sunbeem-1.jpg";
+import imgChairman from "../assets/photos/Chairman-sunbeam.jpg";
+import imgDirector from "../assets/photos/directorImage.jpeg";
+import imgPrincipal from "../assets/photos/sb-principal.jpg";
+import imgLibrary from "../assets/library/DSC_1224 copy.jpg";
+import imgChem from "../assets/chem lab/DSC_1262 copy.jpg";
+import imgComputer from "../assets/computer lab/DSC_1204 copy.jpg";
+import imgJosh from "../assets/JOSH GROUND/DSC_1283 copy.jpg";
+import imgBasket from "../assets/basket ball/DSC_1212 copy.jpg";
+import imgActivity from "../assets/activity learning lab/DSC_1215 copy.jpg";
+
 export interface NavChild {
   label: string;
   href: string;
   note?: string;
+  /**
+   * Mega-menu card fields. All optional — a link with none of them still
+   * renders, it simply shows as a plain card, so adding a destination never
+   * requires filling in three extra properties first.
+   */
+  icon?: string;
+  /** One line on the card. Says what the page is FOR, never restates the title. */
+  desc?: string;
+  /** Art for the preview panel when this card is hovered. */
+  img?: ImageMetadata;
+  /**
+   * Second level. Every href below points at a section that VERIFIABLY exists —
+   * each one was read off the built HTML rather than assumed, because a submenu
+   * of dead anchors is worse than no submenu at all. A link with no real
+   * sections gets no children, and therefore no expand arrow.
+   */
+  children?: NavChild[];
 }
 
 export interface NavItem {
@@ -75,16 +107,40 @@ export const mainNav: NavItem[] = [
         {
           label: "History and establishment of the school",
           href: "/about/history-legacy/",
+          icon: "school",
+          desc: "From Varanasi in 1972 to Agarsanda in 2013.",
+          img: imgCampus,
         },
-        { label: "Vision and Mission", href: "/about/vision-mission/" },
+        {
+          label: "Vision and Mission",
+          href: "/about/vision-mission/",
+          icon: "compass",
+          desc: "What the school is for, in its own words.",
+          img: imgCampus,
+        },
         {
           label: "Legacy of the institution",
-          href: "/about/history-legacy/#legacy",
+          href: "/about/history-legacy/#leadership",
+          icon: "badge",
+          desc: "The Chairman, Secretary and dignitaries behind it.",
+          img: imgChairman,
         },
       ],
       [
-        { label: "Director's Message", href: "/about/directors-message/" },
-        { label: "Principal's Message", href: "/about/principals-message/" },
+        {
+          label: "Director's Message",
+          href: "/about/directors-message/",
+          icon: "teacher",
+          desc: "Dr. Kunwar Arun Singh on the year ahead.",
+          img: imgDirector,
+        },
+        {
+          label: "Principal's Message",
+          href: "/about/principals-message/",
+          icon: "students",
+          desc: "Mrs. Arpita Singh on daily school life.",
+          img: imgPrincipal,
+        },
         // { label: 'Achievements & Recognition', href: '/about/achievements/' },
       ],
     ],
@@ -106,19 +162,51 @@ export const mainNav: NavItem[] = [
     // §8's calendar and planner join them, being §-level items in their own right.
     columns: [
       [
-        { label: "Academic Philosophy", href: "/academics/philosophy/" },
-        { label: "Academic Structure", href: "/academics/structure/" },
-        { label: "Teaching & Learning", href: "/academics/teaching-learning/" },
-        { label: "Assessment Pattern", href: "/academics/assessment/" },
+        {
+          label: "Academic Philosophy",
+          href: "/academics/philosophy/",
+          icon: "bulb",
+          desc: "Teaching philosophy, curriculum and affiliation.",
+          img: imgActivity,
+        },
+        {
+          label: "Academic Structure",
+          href: "/academics/structure/",
+          icon: "school",
+          desc: "Pre-primary to senior secondary, and the streams.",
+          img: imgCampus,
+        },
+        {
+          label: "Teaching & Learning",
+          href: "/academics/teaching-learning/",
+          icon: "panel",
+          desc: "Smart classrooms, STEM, robotics and the labs.",
+          img: imgComputer,
+        },
+        {
+          label: "Assessment Pattern",
+          href: "/academics/assessment/",
+          icon: "badge",
+          desc: "Assessment, homework, PTMs and remedial support.",
+          img: imgChem,
+        },
       ],
       [
         {
           label: "Career Development & Student Success",
           href: "/academics/student-success/",
+          icon: "cap",
+          desc: "Counselling, board results, olympiads, scholarships.",
+          img: imgPrincipal,
         },
-        { label: "Parent Partnership", href: "/academics/parent-partnership/" },
+        {
+          label: "Parent Partnership",
+          href: "/academics/parent-partnership/",
+          icon: "heart",
+          desc: "Orientation, forum, workshops and communication.",
+          img: imgCampus,
+        },
         // §8, kept as the single item the audit names it.
-        
       ],
     ],
     feature: {
@@ -139,11 +227,26 @@ export const mainNav: NavItem[] = [
     // Transport, named exactly as the audit names it.
     columns: [
       [
-        { label: "Campus Tour", href: "/campus/" },
-        { label: "Safety & Security", href: "/campus/safety-security/" },
+        {
+          label: "Campus Tour",
+          href: "/campus/",
+          icon: "field",
+          desc: "Sixty-eight photographs, room by room.",
+          img: imgCampus,
+        },
+        {
+          label: "Safety & Security",
+          href: "/campus/safety-security/",
+          icon: "shield",
+          desc: "Guards, CCTV, fire equipment and transport.",
+          img: imgCampus,
+        },
         {
           label: "Facilities & Infrastructure",
           href: "/campus/facilities-infrastructure/",
+          icon: "flask",
+          desc: "Forty-seven facilities across six groups.",
+          img: imgLibrary,
         },
       ],
     ],
@@ -166,11 +269,26 @@ export const mainNav: NavItem[] = [
     // §5 keeps School Activities here.
     columns: [
       [
-        { label: "Sports & Games", href: "/beyond-academics/sports/" },
-        { label: "Achievements", href: "/beyond-academics/achievements/" },
+        {
+          label: "Sports & Games",
+          href: "/beyond-academics/sports/",
+          icon: "ball",
+          desc: "Fifteen sports, indoor and outdoor.",
+          img: imgBasket,
+        },
+        {
+          label: "Achievements",
+          href: "/beyond-academics/achievements/",
+          icon: "target",
+          desc: "District, state and national honours.",
+          img: imgJosh,
+        },
         {
           label: "Excursions & Educational Tours",
           href: "/beyond-academics/excursions/",
+          icon: "globe",
+          desc: "Trips, expeditions and field visits.",
+          img: imgJosh,
         },
       ],
     ],
@@ -197,7 +315,7 @@ export const mainNav: NavItem[] = [
   { label: "Transport", href: "/campus/transport/" },
   // §8 · School Planner & Academic Calendar. Also kept inside the Academics
   // menu, because §8 asks for it to sit under Academics as well.
- 
+
   {
     label: "News & Events",
     href: "/news-events/",
@@ -206,8 +324,20 @@ export const mainNav: NavItem[] = [
     // must keep current — it is the section's content, not eight menu rows.
     columns: [
       [
-        { label: "News & Events", href: "/news-events/" },
-        { label: "Notices", href: "/news-events/notices/" },
+        {
+          label: "News & Events",
+          href: "/news-events/",
+          icon: "spark",
+          desc: "Recent achievements, events and celebrations.",
+          img: imgCampus,
+        },
+        {
+          label: "Notices",
+          href: "/news-events/notices/",
+          icon: "log",
+          desc: "Official circulars as they are issued.",
+          img: imgCampus,
+        },
       ],
     ],
     feature: {
@@ -227,8 +357,20 @@ export const mainNav: NavItem[] = [
     // students to reconnect with the school."
     columns: [
       [
-        { label: "Alumni", href: "/alumni/" },
-        { label: "Alumni Registration", href: "/alumni/registration/" },
+        {
+          label: "Alumni",
+          href: "/alumni/",
+          icon: "students",
+          desc: "Where Sunbeam Ballia students are now.",
+          img: imgCampus,
+        },
+        {
+          label: "Alumni Registration",
+          href: "/alumni/registration/",
+          icon: "badge",
+          desc: "Reconnect with the school and your year group.",
+          img: imgLibrary,
+        },
       ],
     ],
     feature: {
@@ -251,11 +393,29 @@ export const mainNav: NavItem[] = [
 export const footerUtility = [
   { label: "Admissions", href: "/admissions/" },
   { label: "Uniform Catalogue", href: "/admissions/uniform-catalogue/" },
-  { label: "Notices", href: "/news-events/notices/" },
+  {
+    label: "Notices",
+    href: "/news-events/notices/",
+    icon: "log",
+    desc: "Official circulars as they are issued.",
+    img: imgCampus,
+  },
   { label: "Latest News & Events", href: "/news-events/" },
-  { label: "Alumni", href: "/alumni/" },
-  { label: "Alumni Registration", href: "/alumni/registration/" },
-  { label: "Career", href: "/career/" },
+  {
+    label: "Alumni",
+    href: "/alumni/",
+    icon: "students",
+    desc: "Where Sunbeam Ballia students are now.",
+    img: imgCampus,
+  },
+  {
+    label: "Alumni Registration",
+    href: "/alumni/registration/",
+    icon: "badge",
+    desc: "Reconnect with the school and your year group.",
+    img: imgLibrary,
+  },
+    { label: "Career", href: "/career/" },
   // { label: "Results", href: school.external.results },
   // { label: "Download TC", href: school.external.downloadTC },
   {

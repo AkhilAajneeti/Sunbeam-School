@@ -107,5 +107,18 @@ import FacIcon from './FacIcon.astro';
 
   @media (max-width: 1100px) { .kpi__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 800px) { .kpi__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 460px) { .kpi__grid { grid-template-columns: minmax(0, 1fr); } }
+
+  /* STAYS TWO-UP ON PHONES. It used to drop to one column below 460, which
+     turned eight figures into eight full-width cards and roughly 2,400px of
+     scrolling before the page proper began. Two-up halves that. The card's
+     minimum height comes down to match the narrower measure, and the figure
+     steps down a size so "15,000+" cannot overflow a ~160px card. */
+  @media (max-width: 560px) {
+    .kpi__grid { gap: 10px; }
+    .kpi__grid :global(.bcard) { --bcard-min: 186px; padding: 16px 14px; }
+    .kpi__n { margin-top: 14px; font-size: clamp(24px, 7vw, 30px); }
+    h3.kpi__label { font-size: 14px; }
+    .kpi__note { font-size: 11px; padding-top: 10px; }
+    .kpi__grid :global(.bcard__badge) { width: 40px; }
+  }
 </style>

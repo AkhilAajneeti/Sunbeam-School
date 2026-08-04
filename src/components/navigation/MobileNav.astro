@@ -10,6 +10,9 @@
  */
 import { mainNav, utilityLinks } from '../../data/navigation';
 import { school } from '../../data/site';
+/* Same stroke set the desktop menu uses, so a link carries the same glyph in
+   both places — the drawer is the same navigation, not a second one. */
+import FacIcon from '../campus/facilities/FacIcon.astro';
 ---
 
 <div class="drawer" id="mobile-nav" data-drawer hidden>
@@ -54,18 +57,23 @@ import { school } from '../../data/site';
                     </svg>
                   </button>
                 </div>
+                {/* FLATTENED, like the desktop menu. The columns are a
+                    desktop layout device; rendered as separate groups here they
+                    put a rule and a gap in the middle of one list, which read
+                    as two unrelated sets. */}
                 <div class="drawer__sub" hidden>
-                  {item.columns.map((col) => (
-                    <div class="drawer__group">
-                      <ul>
-                        {col.map((child) => (
-                          <li>
-                            <a class="drawer__sub-link" href={child.href}>{child.label}</a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+                  <ul>
+                    {item.columns.flat().map((child) => (
+                      <li>
+                        <a class="drawer__sub-link" href={child.href}>
+                          <span class="drawer__plate" aria-hidden="true">
+                            <FacIcon name={child.icon ?? 'dot'} size={16} />
+                          </span>
+                          <span>{child.label}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </>
             ) : (
@@ -133,21 +141,40 @@ import { school } from '../../data/site';
 
   .drawer.is-open .drawer__scrim { opacity: 1; }
 
+  /* Starts below the masthead, whose real height the script measures on open —
+     the header stays visible and in charge, and the panel slides in underneath
+     it rather than burying it. `--drawer-top` falls back to the token so the
+     panel is still positioned correctly if the script never runs. */
   .drawer__panel {
     position: absolute;
-    inset-block: 0;
+    inset-block: var(--drawer-top, var(--sb-masthead-h)) 0;
     right: 0;
     width: min(460px, 100%);
     background: var(--sb-ivory);
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
-    transition: transform 260ms var(--sb-ease);
+    /* THE CURVED LEADING EDGE. Closed, the panel's left side is a deep ellipse;
+       open, it is flat. Because border-radius is animatable, the curve relaxes
+       as the panel travels, which reads as the sheet being pulled in and
+       settling rather than a rectangle sliding. The two-value syntax
+       (`46% / 50%`) makes the curve an ellipse the full height of the panel —
+       a single value would round the corners instead of bowing the edge.
+       Slightly slower than the slide so the shape is still easing when the
+       movement stops. */
+    border-radius: 46% 0 0 46% / 50% 0 0 50%;
+    transition:
+      transform 420ms var(--sb-ease),
+      border-radius 520ms var(--sb-ease);
     overflow-y: auto;
     overscroll-behavior: contain;
+    box-shadow: -18px 0 48px -24px rgba(28, 14, 8, 0.45);
   }
 
-  .drawer.is-open .drawer__panel { transform: translateX(0); }
+  .drawer.is-open .drawer__panel {
+    transform: translateX(0);
+    border-radius: 0;
+  }
 
   .drawer__head {
     display: flex;
@@ -194,39 +221,83 @@ import { school } from '../../data/site';
 
   .drawer__row-link:hover { color: var(--sb-violet); }
 
+  /* No dividing rule against the label: the chevron is a control, and a border
+     between it and the link it belongs to reads as two separate rows. */
   .drawer__expand {
     width: 56px;
     display: grid;
     place-items: center;
     color: var(--sb-text-muted);
-    border-left: var(--sb-hairline);
   }
+
+  .drawer__expand svg {
+    padding: 7px;
+    box-sizing: content-box;
+    border-radius: 50%;
+    background: var(--sb-sand);
+    transition: background 180ms ease, transform var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  .drawer__expand[aria-expanded='true'] svg { background: var(--sb-violet-wash); }
 
   .drawer__expand svg { transition: transform var(--sb-dur-nav) var(--sb-ease); }
   .drawer__expand[aria-expanded='true'] svg { transform: rotate(180deg); }
   .drawer__expand[aria-expanded='true'] { color: var(--sb-violet); }
 
+  /* Inset rather than full-bleed, so the open branch reads as a panel nested
+     inside its parent row instead of another slab of the same list. */
   .drawer__sub {
-    padding: var(--sb-6) var(--sb-6) var(--sb-7);
+    margin: 0 var(--sb-5) var(--sb-4);
+    padding: 8px;
     background: var(--sb-sand);
-    border-bottom: var(--sb-hairline);
+    border-radius: 14px;
   }
 
   .drawer__sub[hidden] { display: none; }
 
-  /* Groups are unlabelled, so a rule rather than a heading keeps them apart. */
-  .drawer__group + .drawer__group {
-    margin-top: var(--sb-5);
-    padding-top: var(--sb-5);
-    border-top: var(--sb-hairline);
-  }
+  /* `.drawer__group` and its separating rule are gone with the flattened
+     markup — one list needs no divider through its middle. */
 
   .drawer__sub-link {
     display: flex;
     align-items: center;
-    min-height: 44px;
+    gap: 11px;
+    min-height: 48px;
+    padding: 6px 10px;
+    border-radius: 10px;
     color: var(--sb-text-secondary);
     font-size: var(--sb-body-sm);
+    font-weight: 500;
+    line-height: 1.35;
+    transition: background 180ms ease, color 180ms ease;
+  }
+
+  .drawer__sub-link:hover,
+  .drawer__sub-link:focus-visible {
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+
+  /* The same plate the desktop menu uses, one size down — it is the mark that
+     makes a row scannable at arm's length, which matters more on a phone than
+     it does on a pointer device. */
+  .drawer__plate {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px rgba(201, 60, 10, 0.12);
+    color: var(--sb-violet);
+    transition: background 180ms ease, color 180ms ease;
+  }
+
+  .drawer__sub-link:hover .drawer__plate,
+  .drawer__sub-link:focus-visible .drawer__plate {
+    background: var(--sb-violet);
+    color: #fff;
   }
 
   .drawer__sub-link:hover { color: var(--sb-violet); }
@@ -286,8 +357,14 @@ import { school } from '../../data/site';
 
   .drawer__phone strong { color: var(--sb-violet); font-size: var(--sb-body-sm); }
 
+  /* The masthead now sits above the drawer and carries the crest and the
+     cross, so the panel's own header would be the same two things twice. */
+  .drawer__head { display: none; }
+
   @media (prefers-reduced-motion: reduce) {
-    .drawer__panel { transition: none; }
+    /* No slide and no curve — the panel is simply there. Snapping the radius to
+       0 as well matters: without it the sheet would sit permanently bowed. */
+    .drawer__panel { transition: none; border-radius: 0; }
   }
 </style>
 
@@ -306,12 +383,28 @@ import { school } from '../../data/site';
         )
       ).filter((el) => el.offsetParent !== null);
 
+    const masthead = document.querySelector<HTMLElement>('[data-masthead]');
+
     const open = () => {
       lastFocused = document.activeElement as HTMLElement;
       drawer.hidden = false;
+      /* BOTTOM, not height — the utility bar sits above the masthead when the
+         page is unscrolled, so the header's box starts at ~30px and its height
+         (65) is 30px short of where it actually ends. Using height tucked the
+         panel under the header and clipped its first row. `bottom` is correct
+         in every state: with the utility bar showing, without it, and when the
+         masthead has condensed on scroll. */
+      if (masthead) {
+        const bottom = Math.max(0, Math.round(masthead.getBoundingClientRect().bottom));
+        drawer.style.setProperty('--drawer-top', `${bottom}px`);
+      }
+      masthead?.classList.add('is-nav-open');
       // next frame so the transition runs from the translated state
       requestAnimationFrame(() => drawer.classList.add('is-open'));
       toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Close menu');
+      const label = toggle.querySelector('.masthead__toggle-text');
+      if (label) label.textContent = 'Close';
       document.body.style.overflow = 'hidden';
       focusables()[0]?.focus();
     };
@@ -319,20 +412,32 @@ import { school } from '../../data/site';
     const close = () => {
       drawer.classList.remove('is-open');
       toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+      const label = toggle.querySelector('.masthead__toggle-text');
+      if (label) label.textContent = 'Menu';
       document.body.style.overflow = '';
       const done = () => {
         drawer.hidden = true;
+        // Dropped only once the panel has left, or the header would fall back
+        // under the drawer mid-animation and the cross would blink out.
+        masthead?.classList.remove('is-nav-open');
         panel.removeEventListener('transitionend', done);
       };
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         drawer.hidden = true;
+        masthead?.classList.remove('is-nav-open');
       } else {
         panel.addEventListener('transitionend', done);
       }
       lastFocused?.focus();
     };
 
-    toggle.addEventListener('click', open);
+    /* A real toggle now. The button morphs into a cross and stays reachable
+       above the drawer, so pressing it again has to close — a cross that only
+       opens is the thing users tap twice and then give up on. */
+    toggle.addEventListener('click', () =>
+      toggle.getAttribute('aria-expanded') === 'true' ? close() : open()
+    );
     drawer.querySelectorAll('[data-drawer-close]').forEach((el) =>
       el.addEventListener('click', close)
     );
