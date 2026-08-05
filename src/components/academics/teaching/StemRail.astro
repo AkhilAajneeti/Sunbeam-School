@@ -26,13 +26,22 @@
  *
  * ═══ AND WHY THE PANELS ARE NOT SIX CARDS ════════════════════════════════════
  *
- * `kind` gives each panel a different internal composition — a stated gap, a
- * photograph, a figure over an image, a list. Six identical cards on a rail is
+ * `kind` gives each panel a different internal composition — a photograph, a
+ * list, or a stated gap where no image exists. Six identical cards on a rail is
  * still a card grid; it has just been turned on its side.
  *
- * One panel deliberately carries NO photograph. The Robotics Lab is real and we
- * hold no image of it, so the panel says so. The stock drone shot in this
- * repository would fit the slot and would be a lie. Photography request A2.
+ * ⚠ THE ROBOTICS LAB NOW HAS A PHOTOGRAPH, and photography request A2 is closed
+ * for this panel. It carried `kind: 'gap'` and a rendered notice saying no image
+ * existed, because the only robotics picture in the repository was stock. The
+ * school has since supplied assets/extra-img/robotics.jpg — one of its own
+ * builds, sensors and wiring visible — so the panel is an ordinary photo panel.
+ *
+ * ⚠ `kind: 'figure'` NO LONGER EXISTS. Two panels used to set a 56–88px white
+ * numeral over their photograph; the client asked for it removed, so those are
+ * photo panels now and `figure`/`figureLabel` are gone from the data. If a
+ * numeral is ever wanted back, note that these panels already carry an "03"
+ * index in the same corner — that collision is what made the big figure read as
+ * two competing numbers.
  */
 import Photo from '../../ui/Photo.astro';
 import SectionHead from '../SectionHead.astro';
@@ -42,6 +51,7 @@ import compPhoto from '../../../assets/photos/sb-comp-lab-2.jpg';
 import bioPhoto from '../../../assets/photos/sb-bio-lab.jpg';
 import mathsPhoto from '../../../assets/photos/sb-maths-lab.jpg';
 import sciPhoto from '../../../assets/photos/sb-sci-lab.jpg';
+import roboticsPhoto from '../../../assets/extra-img/robotics.jpg';
 
 const { rail } = teachingLearning;
 
@@ -51,6 +61,7 @@ const photos: Record<string, ImageMetadata> = {
   'sb-bio-lab.jpg': bioPhoto,
   'sb-maths-lab.jpg': mathsPhoto,
   'sb-sci-lab.jpg': sciPhoto,
+  'robotics.jpg': roboticsPhoto,
 };
 ---
 
@@ -146,10 +157,13 @@ const photos: Record<string, ImageMetadata> = {
 
               <p class="pan__n t-tabular" aria-hidden="true">{p.n}</p>
 
-              {/* The big quantity, where the panel leads on one. */}
-              {p.kind === 'figure' && 'figure' in p && (
-                <p class="pan__fig t-tabular" aria-hidden="true">{p.figure}</p>
-              )}
+              {/* ⚠ THE BIG WHITE QUANTITY IS GONE, at the client's request. It
+                  set a 56–88px numeral over the photograph — "3" on the science
+                  rooms, "12" on the laboratory total — and on a panel that
+                  already carries an "03" index in the same corner it read as two
+                  numbers competing rather than one figure leading. The counts
+                  themselves are unaffected: they are stated in the copy and on
+                  the counter strip. */}
 
               <div class="pan__body">
                 <h3 class="pan__h">{p.title}</h3>
@@ -479,18 +493,8 @@ const photos: Record<string, ImageMetadata> = {
     color: var(--sb-lime);
   }
 
-  .pan__fig {
-    position: absolute;
-    z-index: 2;
-    top: clamp(44px, 5vw, 68px);
-    left: clamp(20px, 1.9vw, 28px);
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(56px, 6vw, 88px);
-    line-height: 0.86;
-    letter-spacing: -0.05em;
-    color: rgba(255, 255, 255, 0.9);
-  }
+  /* `.pan__fig` was the big white numeral over the photograph. Removed with its
+     markup — see the note there. */
 
   .pan__body {
     position: absolute;

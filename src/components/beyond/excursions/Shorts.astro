@@ -1,0 +1,187 @@
+---
+/**
+ * §2 · SHORTER VISITS — the compact tier.
+ *
+ * WHY THESE ARE NOT WITH THE TRIPS. Each has two photographs, a poster, or
+ * nothing. Given the same panel as a six-photograph conference, four of the five
+ * would look half-built — and padding them out to match would mean writing
+ * paragraphs the school never published. A smaller card is the honest answer,
+ * and it gives the page its third weight.
+ *
+ * THREE MEDIA STATES IN ONE CARD, AND THEY ARE NOT INTERCHANGEABLE:
+ *
+ *   shots  real photographs — a pair, cropped to a common ratio
+ *   art    THE SCHOOL'S OWN POSTER — a designed collage with its own headline
+ *          and caption bar, shown WHOLE on a mat. `object-fit` never applies:
+ *          cropping a poster cuts off its own headline, and on these the
+ *          headline IS the caption
+ *   none   no imagery exists, and the card is simply type
+ *
+ * ⚠ THE TEXT-ONLY CARD IS DELIBERATE. World Non-Violence Day has no usable
+ * photography: the live page's gallery there is a generic WordPress set —
+ * children dancing, wooden blocks, the library — reused across three unrelated
+ * Hindi sections. I downloaded them, looked at them, and threw them away. One
+ * card without a picture beats five with the wrong ones.
+ */
+import { Picture } from 'astro:assets';
+import { shorts, photo } from '../../../data/excursions';
+import SectionHead from '../../academics/SectionHead.astro';
+---
+
+<section class="shrt" id="shorter" aria-labelledby="shrt-title">
+  <div class="u-container">
+    <SectionHead
+      id="shrt-title"
+      eyebrow="A day, or a morning"
+      heading="Shorter visits"
+      stand="Five more the school has published — a monuments festival, a university laboratory, a regional meet, a dawn procession and a day out across the town."
+      align="start"
+      measure={18}
+    />
+
+    <ul class="shrt__grid">
+      {shorts.map((s, i) => (
+        <li class:list={['shrt__card', !s.shots && !s.art && 'shrt__card--type']} id={s.id} data-reveal data-reveal-delay={i * 70}>
+          {s.shots && (
+            <div class="shrt__pair">
+              {s.shots.map((f, fi) => (
+                <figure class="shrt__frame">
+                  <Picture
+                    src={photo[f]}
+                    alt={fi === 0 ? s.alt ?? '' : ''}
+                    formats={['webp']}
+                    widths={[300, 600]}
+                    sizes="(max-width: 700px) 44vw, 16vw"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+              ))}
+            </div>
+          )}
+
+          {s.art && (
+            <figure class="shrt__poster">
+              <Picture
+                src={s.art}
+                alt={s.alt ?? ''}
+                formats={['webp']}
+                widths={[320, 640, 960]}
+                sizes="(max-width: 700px) 84vw, 30vw"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          )}
+
+          <div class="shrt__body">
+            <p class="shrt__place">{s.place}</p>
+            <h3 class="shrt__h">{s.title}</h3>
+            <p class="shrt__who">{s.who}</p>
+            <p class="shrt__b">{s.body}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .shrt {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  .shrt__grid {
+    list-style: none;
+    margin: var(--sb-10) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.4vw, 22px);
+    align-items: start;
+  }
+
+  .shrt__card {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(16px, 1.5vw, 22px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .shrt__card:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 0 1px transparent, 0 2px 6px rgba(28, 14, 8, 0.05), 0 20px 40px rgba(28, 14, 8, 0.1);
+  }
+
+  /* The card with no imagery. A violet rule stands in for the picture so it has
+     a top edge like the others rather than starting abruptly on text. */
+  .shrt__card--type { border-top: 3px solid var(--sb-violet); }
+
+  .shrt__pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .shrt__frame,
+  .shrt__poster { margin: 0; border-radius: 10px; overflow: hidden; background: var(--sb-sand); }
+
+  .shrt__frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  /* THE POSTER IS NEVER CROPPED — no aspect-ratio, no object-fit. `height: auto`
+     is still required, because Astro's <Picture> emits width/height attributes
+     and base.css resets max-width without it. */
+  .shrt__poster :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .shrt__body { padding: var(--sb-5) var(--sb-2) var(--sb-2); }
+
+  .shrt__place {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .shrt__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: 19px;
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .shrt__who {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    color: var(--sb-text-muted);
+  }
+
+  .shrt__b {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (max-width: 1023px) { .shrt__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 620px) { .shrt__grid { grid-template-columns: minmax(0, 1fr); } }
+</style>

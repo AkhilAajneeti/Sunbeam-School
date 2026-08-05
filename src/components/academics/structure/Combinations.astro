@@ -103,7 +103,7 @@ const anyUnverified = streamDetail.some((s) => s.unverified);
             </span>
 
             <h3 class="cmb__h">{s.name}</h3>
-            <p class="cmb__full">{s.full}</p>
+            {/* <p class="cmb__full">{s.full}</p> */}
             <p class="cmb__b">{s.body}</p>
 
             <div class="cmb__sets">
@@ -116,14 +116,30 @@ const anyUnverified = streamDetail.some((s) => s.unverified);
                 </ul>
               </div>
 
+              {/* THE SCHOOL'S OWN TWO CATEGORIES. It distinguishes subjects
+                  chosen alongside the core from subjects carried on top of it;
+                  collapsing them back into one "electives" list would lose a
+                  distinction it drew itself. */}
               <div class="cmb__set">
                 <p class="cmb__l">
-                  Elective options
+                  Optional subjects
                   {s.unverified && <span class="cmb__stamp">To be confirmed</span>}
                 </p>
                 <ul class="cmb__chips">
-                  {s.electives.map((e) => (
+                  {s.optional.map((e) => (
                     <li class="cmb__chip">{e}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="cmb__set cmb__set--wide">
+                <p class="cmb__l">
+                  Additional subjects
+                  {s.unverified && <span class="cmb__stamp">To be confirmed</span>}
+                </p>
+                <ul class="cmb__chips">
+                  {s.additional.map((e) => (
+                    <li class="cmb__chip cmb__chip--add">{e}</li>
                   ))}
                 </ul>
               </div>
@@ -384,6 +400,14 @@ const anyUnverified = streamDetail.some((s) => s.unverified);
     padding-top: clamp(22px, 2.6vw, 34px);
   }
 
+  /* ⚠ THE THIRD GROUP SPANS BOTH COLUMNS rather than starting a second row of
+     two. There are now three sets — core, optional, additional — and on a
+     two-column bed the third would sit in a half-width column with an empty
+     half beside it. Additional is also the longest list of the three (six
+     subjects), so it is the one that most needs the full width to avoid
+     chipping down into a narrow stack. */
+  .cmb__set--wide { grid-column: 1 / -1; }
+
   .cmb__l {
     display: flex;
     flex-wrap: wrap;
@@ -432,6 +456,17 @@ const anyUnverified = streamDetail.some((s) => s.unverified);
   .cmb__chip--core {
     background: var(--acc);
     color: #fff;
+  }
+
+  /* THREE WEIGHTS FOR THREE CATEGORIES: core is filled, optional is solid white,
+     additional is outlined. The ladder runs from "everyone takes this" down to
+     "you may carry this on top", which is the order a family reads them in — and
+     it keeps eleven chips per card legible as three groups rather than one
+     speckled mass. */
+  .cmb__chip--add {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 34%, transparent);
+    color: var(--as-ink);
   }
 
   /* --- The closing line ---------------------------------------------------- */

@@ -132,6 +132,14 @@ export interface MapPoint {
   x: number;
   y: number;
   verified: boolean;
+  /**
+   * campusTour facility id whose photograph illustrates this point. Set ONLY
+   * where the folder genuinely shows that place — five of the seven safety
+   * points (guards, CCTV, fire equipment, the infirmary, the bus bay) are
+   * unphotographed anywhere in the repository, and a near-enough room behind a
+   * map pin would be read as that place.
+   */
+  photo?: string;
 }
 
 export const mapPoints: MapPoint[] = [
@@ -142,6 +150,7 @@ export const mapPoints: MapPoint[] = [
     x: 50,
     y: 88,
     verified: true,
+    photo: 'campus',
   },
   {
     id: 'security',
@@ -190,6 +199,7 @@ export const mapPoints: MapPoint[] = [
     x: 50,
     y: 20,
     verified: true,
+    photo: 'josh',
   },
 ];
 

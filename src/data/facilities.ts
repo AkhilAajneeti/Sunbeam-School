@@ -56,11 +56,11 @@ export interface Group {
  * numbers other than teaching, which the school does not give a count for.
  */
 export const kpis = [
-  { count: 2200, suffix: '+', label: 'Students', icon: 'students', note: 'Nursery to Class XII, from 456 in 2013' },
+  { count: 2700, suffix: '+', label: 'Students', icon: 'students', note: 'Nursery to Class XII, from 456 in 2013' },
   { count: 130, suffix: '+', label: 'Teaching staff', icon: 'teacher', note: '100 are Microsoft Innovative Educator Experts' },
-  { count: 30, suffix: '+', label: 'Smart classrooms', icon: 'panel', note: 'With 49+ interactive flat panels' },
-  { count: 10, suffix: '', label: 'Laboratories', icon: 'flask', note: 'Science, computing, language and innovation' },
-  { count: 15000, suffix: '+', label: 'Library books', icon: 'book', note: 'Plus 25 periodicals, magazines and journals' },
+  { count: 75, suffix: '+', label: 'Smart classrooms', icon: 'panel', note: 'With 49+ interactive flat panels' },
+  { count: 12, suffix: '', label: 'Laboratories', icon: 'flask', note: 'Science, computing, language and innovation' },
+  { count: 17574, suffix: '', label: 'Library books', icon: 'book', note: 'Plus 25 periodicals, magazines and journals' },
   { count: 29, suffix: '+', label: 'Buses', icon: 'bus', note: 'GPS-tracked and speed-governed, 22 routes' },
   { count: 80, suffix: '+', label: 'Computers', icon: 'desktop', note: '40+ junior, 40+ senior' },
   { count: 49, suffix: '+', label: 'Interactive panels', icon: 'spark', note: 'A Microsoft Showcase School' },
@@ -75,7 +75,7 @@ export const groups: Group[] = [
     stand: 'Thirty-plus classrooms wired for teaching, and the rooms that are not classrooms at all.',
     items: [
       { label: 'Nursery to Class XII', body: 'One campus carries a child from their first day to their board year.', icon: 'school', photo: 'campus' },
-      { label: 'Smart Classrooms', body: '30+ digitally equipped rooms, used in ordinary lessons rather than for demonstrations.', icon: 'panel' },
+      { label: 'Smart Classrooms', body: '75+ digitally equipped rooms, used in ordinary lessons rather than for demonstrations.', icon: 'panel' },
       { label: 'Interactive Flat Panels', body: '49+ IFP screens — the teaching surface a Microsoft Showcase School is expected to have.', icon: 'spark' },
       { label: 'Open Air Classroom', body: 'A teaching space outdoors, for the lessons that are better held in the open.', icon: 'tree', unlisted: true },
       { label: 'Elevator', body: 'Lift access to the upper floors, so no child is stranded by a staircase.', icon: 'lift' },
@@ -117,7 +117,7 @@ export const groups: Group[] = [
     title: 'Library & Creative Spaces',
     stand: 'Fifteen thousand books for the seniors, and a toy library for the ones who cannot read yet.',
     items: [
-      { label: 'Nalanda Library', body: '15,000+ books, 25 periodicals, magazines and journals, with a Ballia literature collection.', icon: 'book', photo: 'library' },
+      { label: 'Nalanda Library', body: '17,574 books, 25 periodicals, magazines and journals, with a Ballia literature collection.', icon: 'book', photo: 'library' },
       { label: 'Toy Library', body: 'Borrowable toys for the early years — a first lending system, at four years old.', icon: 'toy' },
       { label: 'Art Room', body: 'A dedicated room for drawing, painting and craft.', icon: 'brush' },
       { label: 'Dance Room', body: 'Sprung floor space for rehearsal and the annual function.', icon: 'dance' },
@@ -183,7 +183,7 @@ export const progression = [
   { label: 'Arrival', body: 'A tracked bus from one of 22 routes, through a supervised gate.', icon: 'bus' },
   { label: 'Smart Classroom', body: 'The first lesson of the day on an interactive panel.', icon: 'panel' },
   { label: 'Laboratory', body: 'Practical period — one of ten labs, depending on the year.', icon: 'flask' },
-  { label: 'Library', body: 'A free period among 15,000 books, or the reading programme.', icon: 'book' },
+  { label: 'Library', body: 'A free period among 17,574 books, or the reading programme.', icon: 'book' },
   { label: 'Sports', body: 'Games on the JOSH ground, the courts, or the shooting range.', icon: 'ball' },
   { label: 'Innovation', body: 'Robotics, Srijan or the Active Learning Lab after the timetable.', icon: 'robot' },
   { label: 'Leadership', body: 'MUN committee, student council, or the KIDS venture in Class 7.', icon: 'gavel' },

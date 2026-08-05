@@ -1,0 +1,105 @@
+---
+/**
+ * CLOUD EDGE — the billowed section boundary.
+ *
+ * WHY THIS IS A COMPONENT NOW. The device was written inline in Voices (home
+ * page) and again in Coaching (sports page), and Excursions makes three. Three
+ * copies of nineteen hand-tuned circle coordinates is the point at which they
+ * drift apart, and the drift is invisible until two of them sit on one screen.
+ *
+ * OVERLAPPING CIRCLES, NOT A PATH. Circles of one opaque fill merge into a
+ * single silhouette, so the shape stays editable — nudge a radius, get a
+ * different cloud — instead of being an unreadable string of bezier
+ * coordinates. They are clustered into masses with shallow valleys between: an
+ * evenly spaced row of similar circles reads as a scalloped border, while real
+ * cloud has a big central billow with smaller puffs shouldering it.
+ *
+ * ⚠ FILL IT WITH THE COLOUR OF THE SECTION IT IS BILLOWING FROM, not the one it
+ * sits in. The cloud's job is to make the neighbouring band appear to spill
+ * over the boundary; filled with its own section's colour it becomes a
+ * cloud-shaped hole. Caller passes `fill` as a CSS colour or var().
+ *
+ * ⚠ AND THE COLOURS MUST ACTUALLY DIFFER. Sand on ivory is six RGB units and
+ * rendered as an invisible scallop on the sports page — the section under it had
+ * to move to paper before the silhouette read at all. Check the two grounds
+ * before assuming this is working.
+ *
+ * The parent must be `position: relative` (and, if the cloud is to sit under
+ * content, `isolation: isolate` — NOT `overflow: hidden`, which would break any
+ * `position: sticky` descendant).
+ */
+interface Props {
+  /** Colour of the section this cloud is billowing FROM. */
+  fill: string;
+  /** Which edge it sits on. */
+  side?: 'top' | 'bottom';
+  /** Two puff sets, so a top and bottom edge on one section differ. */
+  variant?: 1 | 2;
+  class?: string;
+}
+
+const { fill, side = 'top', variant = 1, class: cls } = Astro.props;
+
+const setA = [
+  { cx: 28, cy: 42, r: 48 }, { cx: 118, cy: 36, r: 74 }, { cx: 212, cy: 40, r: 50 },
+  { cx: 268, cy: 30, r: 32 },
+  { cx: 346, cy: 40, r: 46 }, { cx: 436, cy: 32, r: 86 }, { cx: 536, cy: 38, r: 56 },
+  { cx: 596, cy: 30, r: 32 },
+  { cx: 682, cy: 38, r: 46 }, { cx: 768, cy: 36, r: 74 }, { cx: 852, cy: 40, r: 52 },
+  { cx: 910, cy: 30, r: 30 },
+  { cx: 990, cy: 38, r: 50 }, { cx: 1082, cy: 30, r: 88 }, { cx: 1184, cy: 36, r: 58 },
+  { cx: 1244, cy: 30, r: 34 },
+  { cx: 1322, cy: 40, r: 44 }, { cx: 1398, cy: 36, r: 70 }, { cx: 1452, cy: 42, r: 46 },
+];
+
+const setB = [
+  { cx: 30, cy: 40, r: 52 }, { cx: 116, cy: 34, r: 80 }, { cx: 208, cy: 38, r: 48 },
+  { cx: 262, cy: 30, r: 30 },
+  { cx: 338, cy: 40, r: 44 }, { cx: 412, cy: 38, r: 68 }, { cx: 496, cy: 34, r: 56 },
+  { cx: 560, cy: 30, r: 34 },
+  { cx: 648, cy: 36, r: 52 }, { cx: 748, cy: 32, r: 86 }, { cx: 848, cy: 36, r: 58 },
+  { cx: 906, cy: 30, r: 32 },
+  { cx: 984, cy: 40, r: 46 }, { cx: 1066, cy: 38, r: 70 }, { cx: 1152, cy: 40, r: 50 },
+  { cx: 1212, cy: 32, r: 32 },
+  { cx: 1298, cy: 36, r: 54 }, { cx: 1390, cy: 34, r: 78 }, { cx: 1452, cy: 40, r: 46 },
+];
+
+const puffs = variant === 2 ? setB : setA;
+---
+
+{/* Decorative, so hidden from assistive tech. */}
+<span class:list={['cedge', `cedge--${side}`, cls]} style={`--cloud-fill: ${fill};`} aria-hidden="true">
+  <svg viewBox="0 0 1440 130" preserveAspectRatio="none" focusable="false">
+    {/* The slab the puffs sit on — without it the circles read as a row of
+        bubbles rather than as the underside of a cloud bank. */}
+    <rect x="0" y="0" width="1440" height="32" />
+    {puffs.map((c) => <circle cx={c.cx} cy={c.cy} r={c.r} />)}
+  </svg>
+</span>
+
+<style>
+  .cedge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    /* Always shorter than the section's own padding, so the cloud sits in the
+       breathing space and never collides with a heading. */
+    height: var(--cloud-h, clamp(52px, 7vw, 104px));
+    line-height: 0;
+    pointer-events: none;
+  }
+
+  .cedge svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: var(--cloud-fill);
+  }
+
+  .cedge--top { top: 0; }
+
+  /* Flipped rather than a second coordinate set — the puffs hang downward from
+     the section below instead of upward from the one above. */
+  .cedge--bottom { bottom: 0; transform: scaleY(-1); }
+</style>

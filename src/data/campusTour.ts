@@ -43,6 +43,24 @@ const folder = (name: string): ImageMetadata[] =>
     .sort()
     .map((p) => files[p].default);
 
+/**
+ * The same, restricted to files whose name starts with `prefix`.
+ *
+ * ⚠ WHY THIS EXISTS. `computer lab/` holds two different rooms shot years apart:
+ * five `DSC_*` frames of an EMPTY lab with every machine under a dust sheet, and
+ * eleven `it-*` frames of the senior lab full of students working. Plain
+ * `folder()` sorts by filename, so `DSC_` sorts before `it-` and the covered,
+ * empty room became the lead image everywhere the computer labs appear.
+ *
+ * A dust-sheeted room is a photograph of a facility not being used, which is the
+ * opposite of what these pages are for.
+ */
+const folderStarting = (name: string, prefix: string): ImageMetadata[] =>
+  Object.keys(files)
+    .filter((p) => p.startsWith(`../assets/${name}/`) && (p.split('/').pop() ?? '').startsWith(prefix))
+    .sort()
+    .map((p) => files[p].default);
+
 const single = (path: string): ImageMetadata | undefined => files[`../assets/${path}`]?.default;
 
 export interface Facility {
@@ -100,8 +118,11 @@ export const facilities: Facility[] = [
     id: 'computer',
     name: 'Computer Laboratories',
     blurb: 'Two labs of networked desktops — one for the juniors, one for board-year practicals.',
-    images: folder('computer lab'),
-    alt: 'A computer laboratory at Sunbeam School Ballia',
+    /* `it-*` only: the school supplied eleven new frames of the senior lab in
+       use, and they replace five older shots of the room empty with its machines
+       under dust sheets. See the note on folderStarting(). */
+    images: folderStarting('computer lab', 'it-'),
+    alt: 'Senior students at work in the computer laboratory at Sunbeam School Ballia',
   },
   {
     id: 'activity',
@@ -204,9 +225,9 @@ export const allFrames = shot.flatMap((f) =>
  */
 export const overviewStats = [
   { count: 11, suffix: '', label: 'Facilities photographed', note: 'Across the Agarsanda campus' },
-  { count: 15000, suffix: '+', label: 'Books in the library', note: 'Nalanda Library' },
-  { count: 30, suffix: '+', label: 'Smart classrooms', note: '49+ interactive panels' },
-  { count: 9, suffix: '', label: 'Subject laboratories', note: 'Science, computing and activity' },
+  { count: 17574, suffix: '', label: 'Books in the library', note: 'Nalanda Library' },
+  { count: 75, suffix: '+', label: 'Smart classrooms', note: '49+ interactive panels' },
+  { count: 12, suffix: '', label: 'Subject laboratories', note: 'Science, computing and activity' },
 ] as const;
 
 /** §7 — a day, in the order a student actually meets the campus. */

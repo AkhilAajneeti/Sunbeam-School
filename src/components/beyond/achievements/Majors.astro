@@ -1,0 +1,286 @@
+---
+/**
+ * §1 · MAJOR ACHIEVEMENTS — first on the page, at display size.
+ *
+ * The client's clause is precise: "major achievements displayed first using
+ * high-resolution photographs". Three qualify, and they qualify for the same
+ * reason — they are the three the SCHOOL ITSELF produced an award graphic for.
+ * That is the school's own editorial decision about what matters most, already
+ * made, and it is also the only place high-resolution imagery exists.
+ *
+ * ⚠ THE ARTWORK IS SHOWN WHOLE, NEVER CROPPED. All three are designed posters —
+ * portrait or square, each with its own headline, crest and framed photograph
+ * inside it. An earlier build used one of them as a full-bleed card background
+ * under a dark ramp, which cropped its headline away and dimmed its crest: a
+ * designed graphic used as wallpaper. `object-fit` never applies here; the frame
+ * takes the poster's own proportion and the copy sits beside it.
+ *
+ * THE LEAD RUNS WIDE AND THE OTHER TWO SHARE THE ROW BENEATH, so "first" is
+ * visible as well as true — three equal cards would say these three rank
+ * equally, and the first is the school's only international placing.
+ *
+ * ⚠ ALL THREE CARDS ARE HORIZONTAL, AND THAT IS A CORRECTION. The two secondary
+ * cards were built stacked — poster above, copy below — which let each poster
+ * fill the full column width. Measured at 1440: the lead came to 409px tall and
+ * the two beneath it to 1088px each. The cards meant to be SECONDARY were nearly
+ * three times the height of the card meant to lead, which inverts the whole
+ * point of the layout, and two 670px-tall posters is what "very big" looks like.
+ *
+ * They are now the same object as the lead at a smaller size: poster left at a
+ * capped width, copy right. The hierarchy is carried by scale — poster width,
+ * heading size and how much detail each card shows — rather than by orientation,
+ * so the three read as one family with a clear first among them.
+ */
+import { Picture } from 'astro:assets';
+import { majors } from '../../../data/achievements';
+import SectionHead from '../../academics/SectionHead.astro';
+---
+
+<section class="maj" id="major" aria-labelledby="maj-title">
+  <div class="u-container">
+    <SectionHead
+      id="maj-title"
+      eyebrow="First, and at full size"
+      heading="Major achievements"
+      stand="An international robotics placing, a national innovation ranking and a cluster championship — the three the school has published award graphics for."
+      align="start"
+      tone="dark"
+      measure={18}
+    />
+
+    <div class="maj__grid">
+      {majors.map((m, i) => (
+        <article class:list={['maj__card', i === 0 && 'maj__card--lead']} id={m.id} data-reveal data-reveal-delay={i * 90}>
+          {/* The poster, framed on a mat. The mat is what stops a graphic with
+              its own white ground from floating on the ink. */}
+          <figure class="maj__frame">
+            <Picture
+              src={m.art}
+              alt={m.alt}
+              formats={['webp']}
+              widths={[420, 840, 1400]}
+              sizes="(max-width: 900px) 84vw, (max-width: 1200px) 40vw, 28vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </figure>
+
+          <div class="maj__body">
+            <p class="maj__kicker t-label">{m.kicker}</p>
+            <h3 class="maj__h">{m.title}</h3>
+            <p class="maj__detail">{m.detail}</p>
+
+            {/* Read straight off the artwork — the card's receipt, not a
+                restatement of the paragraph above it. */}
+            <ul class="maj__facts">
+              {m.facts.map((f) => (
+                <li><span class="maj__tick" aria-hidden="true"></span>{f}</li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .maj {
+    position: relative;
+    isolation: isolate;
+    /* CLIPS THE BLOOM BELOW. It is `min(1200px, 118%)` wide, centred with a
+       translate, so on any viewport under ~1200 it hangs past both edges — 88px
+       at 1024, 35px at 390, measured. A pseudo-element never appears in a DOM
+       scan for overflowing boxes, so this shows up only as a page that scrolls
+       sideways with nothing visibly out of place.
+
+       Safe here, unlike on the inter-house deck: `overflow` on an ancestor
+       breaks `position: sticky` inside it, and nothing in this section is
+       sticky. */
+    overflow: hidden;
+    padding-block: var(--sb-section-y);
+    background: var(--sb-violet-ink);
+    color: var(--sb-on-dark-78);
+  }
+
+  /* A single wide bloom behind the lead card, so the ink is not a flat slab. */
+  .maj::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: 26%;
+    width: min(1200px, 118%);
+    aspect-ratio: 2 / 1;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(201, 60, 10, 0.22), transparent 68%);
+    pointer-events: none;
+  }
+
+  .maj__grid {
+    margin-top: var(--sb-10);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 1.6vw, 26px);
+  }
+
+  /* HORIZONTAL BY DEFAULT — see the note in the header on why. The poster's
+     width is capped by the frame's flex basis, which is what stops it driving
+     the card's height. */
+  .maj__card {
+    display: flex;
+    align-items: center;
+    gap: clamp(18px, 2vw, 30px);
+    padding: clamp(20px, 2vw, 30px);
+    border-radius: var(--sb-r-3);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.11);
+    transition: box-shadow var(--sb-dur-link) ease, transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .maj__card .maj__frame { flex: 0 0 clamp(112px, 12vw, 158px); }
+  .maj__card .maj__body { flex: 1 1 auto; min-width: 0; }
+
+  .maj__card:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.26);
+  }
+
+  /* The lead spans the row and turns side-on, so the poster and the copy sit
+     together at the size the clause is really asking for. */
+  .maj__card--lead {
+    grid-column: span 2;
+    gap: clamp(28px, 3.6vw, 64px);
+    padding: clamp(24px, 2.6vw, 44px);
+    background:
+      radial-gradient(90% 120% at 10% 50%, rgba(201, 60, 10, 0.18), transparent 62%),
+      rgba(255, 255, 255, 0.05);
+  }
+
+  /* Twice the poster width of the two beneath it. Scale is what carries the
+     hierarchy now that all three share an orientation. */
+  .maj__card--lead .maj__frame { flex: 0 0 clamp(210px, 24vw, 320px); }
+
+  .maj__frame {
+    margin: 0;
+    padding: clamp(8px, 0.8vw, 14px);
+    border-radius: var(--sb-r-2);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14), 0 22px 44px rgba(0, 0, 0, 0.4);
+  }
+
+  .maj__frame :global(picture) { display: block; }
+
+  /* `height: auto` IS LOAD-BEARING. Astro's <Picture> emits real width/height
+     attributes, which are presentational hints mapping to the CSS width and
+     height properties — and base.css resets `max-width` WITHOUT `height: auto`.
+     Without this the width collapses to the column while the specified height
+     stays at the source's, and the poster renders thousands of pixels tall. */
+  .maj__frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    transition: transform 700ms var(--sb-ease);
+  }
+
+  .maj__card:hover .maj__frame :global(img) { transform: scale(1.02); }
+
+  .maj__kicker { color: var(--sb-lime); }
+
+  /* SECONDARY SIZE IS THE BASE, and the lead steps up from it. Written this way
+     round because the two secondaries are the pair that has to stay compact —
+     if the base grows, they grow, and the card that must not dominate does. */
+  .maj__h {
+    margin-top: var(--sb-3);
+    max-width: 24ch;
+    font-family: var(--sb-font-display);
+    font-size: clamp(19px, 1.7vw, 24px);
+    font-weight: 700;
+    line-height: 1.14;
+    letter-spacing: -0.026em;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .maj__card--lead .maj__h {
+    margin-top: var(--sb-4);
+    max-width: 20ch;
+    font-size: clamp(24px, 2.4vw, 38px);
+    line-height: 1.08;
+    letter-spacing: -0.032em;
+  }
+
+  .maj__detail {
+    margin-top: var(--sb-4);
+    max-width: 46ch;
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .maj__card--lead .maj__detail {
+    margin-top: var(--sb-5);
+    max-width: 52ch;
+    font-size: var(--sb-body);
+    line-height: 1.62;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  /* Stacked on the secondaries — two or three short facts in a narrow column
+     wrap badly across a row, and a wrapped inline list reads as broken rather
+     than as designed. The lead has the width to run them across. */
+  .maj__facts {
+    list-style: none;
+    margin: var(--sb-5) 0 0;
+    padding-top: var(--sb-5);
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    display: grid;
+    gap: 6px;
+  }
+
+  .maj__card--lead .maj__facts {
+    margin-top: var(--sb-6);
+    padding-top: var(--sb-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-3) var(--sb-6);
+  }
+
+  .maj__facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .maj__tick {
+    width: 5px;
+    height: 5px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--sb-lime);
+  }
+
+  @media (max-width: 900px) {
+    /* One column. The lead keeps its row — at full width there is plenty of
+       room for a 210px poster beside the copy. */
+    .maj__grid { grid-template-columns: minmax(0, 1fr); }
+    .maj__card--lead { grid-column: span 1; }
+  }
+
+  @media (max-width: 560px) {
+    /* Below this the copy column falls under ~180px beside even the small
+       poster, and the headings start breaking mid-word. Everything stacks, and
+       the posters cap at a size that does not run a card off the screen. */
+    .maj__card { flex-direction: column; align-items: stretch; }
+    .maj__card .maj__frame,
+    .maj__card--lead .maj__frame {
+      flex: 0 0 auto;
+      align-self: flex-start;
+      width: min(200px, 56vw);
+    }
+  }
+</style>

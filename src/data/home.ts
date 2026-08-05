@@ -19,7 +19,7 @@ export const story = {
   paragraphs: [
     "Sunbeam began in Varanasi in 1972, founded by Dr. Amrit Lal 'Ishrat' Madhok and his wife on a conviction that the schools around them were not meeting the whole of a child's needs.",
     'The Ballia campus opened at Agarsanda in 2013 with 456 students, carrying the same conviction into a new district.',
-    'Today more than 2,200 students study here, from Nursery to Class XII, across Science, Commerce and Humanities.',
+    'Today more than 2,700 students study here, from Nursery to Class XII, across Science, Commerce and Humanities.',
   ],
   quote: 'Lighting the Lamp of Knowledge',
   quoteAttribution: 'The founding phrase of the Sunbeam group',
@@ -27,8 +27,8 @@ export const story = {
   /** Checklist — all verified, docs/01 § 5. */
   checks: [
     'Founded in Varanasi in 1972 · Ballia campus since 2013',
-    '2,200+ students across Science, Commerce and Humanities',
-    'Nine laboratories, a 15,000-book library and a shooting range',
+    '2,700+ students across Science, Commerce and Humanities',
+    'Twelve laboratories, a 17,574-book library and a shooting range',
   ],
 
   /** The single strongest verified proof, given the violet card. */
@@ -134,7 +134,7 @@ export const learning = {
       detail: 'A Microsoft Showcase School, with 100 teachers certified as Microsoft Innovative Educator Experts.',
     },
     {
-      title: 'Nine laboratories',
+      title: 'Twelve laboratories',
       detail: 'Physics, Chemistry, Biology, Mathematics, Language, Geography, Srijan, Model UN and Computing.',
     },
     {
@@ -143,7 +143,7 @@ export const learning = {
     },
     {
       title: 'Smart classrooms',
-      detail: '30+ digitally smart classrooms and 49+ interactive flat panels.',
+      detail: '75+ digitally smart classrooms and 49+ interactive flat panels.',
     },
   ],
   link: { label: 'Our academic philosophy', href: '/academics/philosophy/' },
@@ -162,9 +162,9 @@ export const learning = {
 export const facilities = [
   {
     name: 'Academic Blocks',
-    qualifier: '30+ smart classrooms · 49+ interactive panels',
+    qualifier: '75+ smart classrooms · 49+ interactive panels',
     detail:
-      'Four floors at Agarsanda housing 30+ digitally smart classrooms and 49+ interactive flat panels, with the prayer grounds and playground alongside.',
+      'Four floors at Agarsanda housing 75+ digitally smart classrooms and 49+ interactive flat panels, with the prayer grounds and playground alongside.',
     href: '/campus/classrooms/',
     // sunbeem-1 — verified photograph of the campus exterior.
     photo: 'campus',
@@ -180,9 +180,9 @@ export const facilities = [
   },
   {
     name: 'Nalanda Library',
-    qualifier: '15,000+ books · 25 periodicals',
+    qualifier: '17,574 books · 25 periodicals',
     detail:
-      'More than 15,000 books, 25 periodicals, magazines and journals — with a separate toy library for the youngest classes.',
+      'A collection of 17,574 books, plus 25 periodicals, magazines and journals — with a separate toy library for the youngest classes.',
     href: '/campus/library/',
     photo: 'library',
     brief: 'Nalanda Library showing real stack depth, readers at tables. 3:2',
@@ -219,7 +219,9 @@ export const facilities = [
     qualifier: 'Fifteen games, indoor and outdoor',
     detail:
       'Grounds and courts for hockey, football, basketball, kho-kho, volleyball, kabaddi, cricket and skating, with indoor provision for chess, table tennis, carrom, yoga, taekwondo and karate.',
-    href: '/campus/sports-facilities/',
+    href: '/beyond-academics/sports/',
+    // The ground, the court and the junior park are all photographed now.
+    photo: 'sports',
     brief: 'Outdoor grounds in use — a game in progress. 3:2',
   },
 ] as const;

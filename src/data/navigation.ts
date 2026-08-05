@@ -147,7 +147,7 @@ export const mainNav: NavItem[] = [
     feature: {
       eyebrow: "Since 1972",
       title: "Fifty years of Sunbeam. Thirteen in Ballia.",
-      body: "From 456 students in 2013 to more than 2,200 today.",
+      body: "From 456 students in 2013 to more than 2,700 today.",
       href: "/about/history-legacy/",
       cta: "Our history",
       imageBrief:
@@ -252,7 +252,7 @@ export const mainNav: NavItem[] = [
     ],
     feature: {
       eyebrow: "The Campus",
-      title: "A shooting range, and 15,000 books",
+      title: "A shooting range, and 17,574 books",
       body: "Facilities most district schools simply do not have.",
       href: "/campus/",
       cta: "Take the tour",
@@ -262,7 +262,12 @@ export const mainNav: NavItem[] = [
   },
   {
     label: "Beyond Academics",
-    href: "/beyond-academics/",
+    /* POINTS AT THE SPORTS PAGE, NOT AT A SECTION INDEX, because there is no
+       section index: `/beyond-academics/` is a 404 and clicking the top-level
+       item took the reader nowhere. Sports & Games is the only page built under
+       this branch, so it is where the parent leads until an index exists.
+       Restore this to "/beyond-academics/" the moment that page is built. */
+    href: "/beyond-academics/sports/",
     // Audit §4 headings only — facilities, games, participation, inter-house and
     // coaching are bullets under "Sports & Games", so they live on that page.
     // Achievements stay a separate entry because §4 asks for them shown apart.

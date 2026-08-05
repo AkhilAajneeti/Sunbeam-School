@@ -1,0 +1,506 @@
+---
+/**
+ * §4 · INTER-HOUSE COMPETITIONS — the stacking ticket deck.
+ *
+ * ═══ THIS IS THE SAME BUILD AS "A CLOSER LOOK AT EACH STAGE" ════════════════
+ *
+ * The client asked for this section to use the deck from
+ * components/academics/structure/Stages.astro, so it is the same mechanism, not
+ * a lookalike: four rows down a list, each `position: sticky` at an offset
+ * computed from its own index, so scrolling collects them into a pile instead of
+ * carrying them off the top of the screen.
+ *
+ * The card is the same ticket. A stub torn off down a dashed perforation
+ * carrying the glyph, the level and the position in the run; a main half with
+ * the title and the copy; an itemised half with three focus lines on dotted
+ * leaders and a milestone under a doubled rule. Read Stages.astro before
+ * changing anything here — its header records why five columns became five rows,
+ * why the stack is sticky rather than GSAP, and why `overflow` must never be set
+ * on this section or on any ancestor of it.
+ *
+ * ⚠ WHAT IS DIFFERENT, AND WHY:
+ *
+ * · THE ACCENTS ARE SITE TOKENS, NOT `--as-*`. That palette is declared on the
+ *   academics structure page and does not exist here. Four site accents stand in
+ *   — teal, violet, maroon, deep — and they run in ladder order so the strip of
+ *   colour left visible at the top of each buried card shows the climb.
+ *
+ * · THE FOUR PHOTOGRAPHS ARE GONE. This section used to carry a photograph per
+ *   rung. The ticket card is a three-column stub/copy/itemised layout with no
+ *   image slot, and bolting one on would have made it a different card. The
+ *   photographs would need the old layout back.
+ *
+ * ⚠ NOTHING ABOUT THE HOUSES IS INVENTED. The school publishes no house names,
+ * no house count and no fixture list (docs/08 §29). Rung one therefore states
+ * the client's own claim and puts the gap in its milestone line, where the other
+ * three rungs put a published record.
+ */
+import { ladder } from '../../../data/sports';
+import { showBuildNotes } from '../../../data/site';
+import SectionHead from '../../academics/SectionHead.astro';
+import SportIcon from './SportIcon.astro';
+
+/* Resolved here rather than in the data: the data names an accent, the component
+   owns which token pair that is. */
+const accents: Record<string, string> = {
+  teal: '--sb-accent',
+  violet: '--sb-violet',
+  maroon: '--sb-maroon',
+  deep: '--sb-violet-deep',
+};
+
+const washes: Record<string, string> = {
+  teal: '--sb-accent-wash',
+  violet: '--sb-violet-wash',
+  maroon: '--sb-maroon-wash',
+  deep: '--sb-lime-wash',
+};
+
+/**
+ * A SEPARATE INK FOR TYPE ON THE WASH, and it exists for one card. The stub sets
+ * its label and numeral in the accent on the accent's own wash, and violet
+ * (#c93c0a on #ffede6) computes to 4.48:1 — under AA by two hundredths, which no
+ * one would catch by eye. The dark step is 6.24:1. Every other accent passes as
+ * itself, so only violet differs; the map exists so the next accent added has an
+ * obvious place to declare its own.
+ */
+const inks: Record<string, string> = {
+  teal: '--sb-accent',
+  violet: '--sb-violet-dark',
+  maroon: '--sb-maroon',
+  deep: '--sb-violet-deep',
+};
+---
+
+<section
+  class="lad"
+  id="houses"
+  aria-labelledby="lad-title"
+  style={`--stack-n: ${ladder.length - 1};`}
+>
+  <span class="lad__dots" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <SectionHead
+      id="lad-title"
+      eyebrow="House against house, and beyond"
+      heading="Inter-house competitions"
+      stand="From a house fixture to a national league. Inter-house competition is where nearly every child starts — these are the rungs above it, and what the school has taken off each one."
+      align="start"
+      measure={18}
+    />
+
+    <ol class="lad__list">
+      {ladder.map((r, i) => (
+        <li
+          class="rung"
+          style={`--acc: var(${accents[r.accent]}); --acc-wash: var(${washes[r.accent]}); --acc-ink: var(${inks[r.accent]}); --i: ${i};`}
+        >
+          <article class="rung__panel">
+            {/* The stub — the ticket's counterfoil, torn off down the dashed
+                perforation. Tinted in the rung's own wash, so the left third
+                carries its colour rather than sitting empty. */}
+            <div class="rung__stub">
+              <span class="rung__node" aria-hidden="true">
+                <SportIcon name={r.glyph} size={22} />
+              </span>
+              <span class="rung__step t-tabular">{r.step}</span>
+
+              {/* Decorative: the ordered list already carries the sequence. It
+                  earns its place once the cards stack, because a reader looking
+                  at the top of the deck can no longer count what is under it. */}
+              <span class="rung__n t-tabular" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}<i>/{String(ladder.length).padStart(2, '0')}</i>
+              </span>
+            </div>
+
+            <div class="rung__main">
+              <h3 class="rung__h">
+                {r.title}
+                {r.pending && showBuildNotes && <span class="rung__chip">detail to confirm</span>}
+              </h3>
+              <p class="rung__b">{r.body}</p>
+            </div>
+
+            {/* The itemised half. Dotted leaders are what make three entries of
+                different lengths read as one ruled column rather than as three
+                loose labels. */}
+            <div class="rung__side">
+              <p class="rung__l">On the record</p>
+              <ul class="rung__items">
+                {r.items.map((it) => (
+                  <li class="rung__item">
+                    <span class="rung__nm">{it}</span>
+                    <span class="rung__lead" aria-hidden="true" />
+                    <span class="rung__mk" aria-hidden="true" />
+                  </li>
+                ))}
+              </ul>
+
+              <p class="rung__ms">
+                <span class="rung__ms-l">{r.pending ? 'Awaiting the school' : 'And also'}</span>
+                <span class="rung__ms-v">{r.milestone}</span>
+              </p>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* ⚠ NO `overflow: hidden` ON THIS SECTION, EVER — the same warning Stages
+     carries. `overflow` on ANY ancestor makes that ancestor the sticky scroll
+     container, and a non-scrolling box is one a sticky child can never travel
+     within: every card silently stops pinning. It is also not needed here, since
+     the dot layer is `position: absolute; inset: 0` against this relatively
+     positioned box and already cannot paint outside it. */
+  .lad {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+    --node: clamp(48px, 4vw, 60px);
+
+    /* ── THE STACK ──────────────────────────────────────────────────────────
+       Where the first card rests, and how far each one after it sits below the
+       last. The step leaves a strip of every buried card visible rather than
+       burying them outright — and because that strip is painted in the rung's
+       accent, the pile shows the climb. */
+    --card-h: 300px;
+    --stack-step: clamp(18px, 1.8vw, 27px);
+
+    /* The pile rests in the MIDDLE of the screen, not under the masthead.
+       CSS cannot measure the card, so --card-h approximates it per breakpoint;
+       being a few pixels out shifts the deck by half that, which is invisible.
+       The max() is a floor: on a short window the centred value drops under the
+       sticky masthead and the top card would pin behind it. */
+    --stack-top: max(
+      calc(var(--sb-masthead-h-condensed) + clamp(10px, 1.4vh, 18px)),
+      calc((100svh - var(--card-h) - var(--stack-n) * var(--stack-step)) / 2)
+    );
+  }
+
+  /* The client's dot artwork, bled in from the left and painted THROUGH as a
+     mask rather than laid on as an image — the file is light on transparency and
+     would be invisible on sand. Two mask layers composited with `intersect`: the
+     artwork supplies the dot shapes, the gradient supplies the bleed. */
+  .lad__dots {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--sb-ink);
+    opacity: 0.14;
+    -webkit-mask-image:
+      url('../../../assets/icons/dot-bg.png'),
+      linear-gradient(to right, #000 0%, #000 10%, transparent 64%);
+    mask-image:
+      url('../../../assets/icons/dot-bg.png'),
+      linear-gradient(to right, #000 0%, #000 10%, transparent 64%);
+    /* ONE COPY, NOT TILED — the artwork thins from top to bottom, so repeating
+       it bands at every seam. */
+    -webkit-mask-size: auto 1200px, 100% 100%;
+    mask-size: auto 1200px, 100% 100%;
+    -webkit-mask-position: left top, left top;
+    mask-position: left top, left top;
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    pointer-events: none;
+  }
+
+  .lad__list {
+    max-width: 1080px;
+    margin: clamp(38px, 5.4vh, 64px) auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ══ THE ROWS STACK, AND IT IS `position: sticky` DOING IT ═════════════════
+     No JavaScript: sticky is the browser's own implementation of exactly this,
+     it runs on the compositor, it cannot desynchronise from the scroll position,
+     and with a blocked script the section is still a perfectly good list. The
+     offset is computed from --i, so the pile keeps its order whatever the step
+     resolves to and the stack is one declaration rather than four. */
+  .rung {
+    position: sticky;
+    top: calc(var(--stack-top) + var(--i) * var(--stack-step));
+    padding-bottom: clamp(30px, 6vh, 84px);
+  }
+
+  .rung:last-child { padding-bottom: 0; }
+
+  /* --- The panel ------------------------------------------------------------
+     stub · copy · itemised. The third column is what stops a full-width row from
+     setting one very long line — the copy keeps a measure it can be read at, and
+     the width left over carries the records.
+
+     `overflow: hidden` clips the stub's tint to the rounded corners and is safe:
+     the sticky element is the ROW above this, and overflow on a descendant does
+     not affect it. */
+  .rung__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: clamp(122px, 13vw, 176px) minmax(0, 1.16fr) minmax(0, 0.84fr);
+    --pad-y: clamp(22px, 2.3vw, 32px);
+    --pad-x: clamp(20px, 2.1vw, 30px);
+    /* OPAQUE, not glass. A translucent card in a stack shows the card beneath it
+       through its own body copy. */
+    background: #fff;
+    border: 1px solid color-mix(in srgb, var(--acc) 16%, transparent);
+    border-radius: clamp(18px, 1.7vw, 26px);
+    /* THE INSET RULE IS WHY THE PILE IS LEGIBLE. Once cards stack, all a reader
+       sees of the ones underneath is a ~27px strip, and a strip of white card is
+       a hairline rather than a card. Painting the top edge in the rung's accent
+       turns the pile into a visible run of teal → violet → maroon → deep. Inset
+       shadow rather than border-top: a border would change the box's height and
+       shift every card in the stack. */
+    box-shadow:
+      inset 0 3px 0 0 var(--acc),
+      0 18px 44px -24px rgba(28, 14, 8, 0.32);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease),
+      border-color var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .rung__panel:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 3px 0 0 var(--acc),
+      0 30px 66px -26px rgba(28, 14, 8, 0.4);
+    border-color: color-mix(in srgb, var(--acc) 34%, transparent);
+  }
+
+  /* ══ THE STUB ══════════════════════════════════════════════════════════════
+     The dashed border IS the perforation — a real one, not an image, so it lands
+     on the pixel grid at every width and never blurs.
+
+     ⚠ THE TINT IS THE WASH, NOT THE ACCENT. A saturated stub would need white
+     type on four different hues; the wash keeps the accent's own colour legible
+     on top of it. */
+  .rung__stub {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(12px, 1.4vw, 18px);
+    padding: var(--pad-y) var(--pad-x);
+    background: var(--acc-wash);
+    border-right: 2px dashed color-mix(in srgb, var(--acc) 34%, transparent);
+  }
+
+  .rung__node {
+    display: grid;
+    place-items: center;
+    width: var(--node);
+    height: var(--node);
+    flex-shrink: 0;
+    border-radius: var(--sb-r-full);
+    background: var(--acc);
+    color: #fff;
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--acc) 12%, transparent);
+  }
+
+  /* --acc-ink, not --acc: type on the wash needs the darker step for one of the
+     four accents — see the note on `inks` above. */
+  .rung__step {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    color: var(--acc-ink);
+  }
+
+  /* Pushed to the stub's foot, where a ticket prints its serial. */
+  .rung__n {
+    margin-top: auto;
+    flex-shrink: 0;
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--acc-ink);
+  }
+
+  .rung__n i { font-style: normal; opacity: 0.45; }
+
+  /* --- The two paper halves ------------------------------------------------- */
+
+  .rung__main { padding: var(--pad-y) clamp(24px, 2.6vw, 40px) var(--pad-y) clamp(24px, 2.6vw, 38px); }
+
+  h3.rung__h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(21px, 2vw, 29px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .rung__chip {
+    display: inline-block;
+    margin-left: var(--sb-3);
+    padding: 1px 7px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-lime-wash);
+    color: var(--sb-lime-deep);
+    font-family: var(--sb-font-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    vertical-align: 4px;
+  }
+
+  /* 58ch lands the body at 45–60 characters a line at every width this layout
+     runs at — the measure the Stages rebuild was for. */
+  .rung__b {
+    max-width: 58ch;
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Itemised column ------------------------------------------------------ */
+
+  .rung__side {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 1.6vw, 20px);
+    padding: var(--pad-y) clamp(24px, 2.6vw, 34px) var(--pad-y) 0;
+  }
+
+  .rung__l {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .rung__items {
+    margin: clamp(10px, 1.2vw, 14px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rung__item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding-block: 4px;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--sb-charcoal);
+  }
+
+  .rung__nm { flex-shrink: 0; }
+
+  /* THE LEADER — a flexible dotted rule between the item and its mark. */
+  .rung__lead {
+    flex: 1;
+    min-width: 10px;
+    border-bottom: 1px dotted var(--sb-border-strong);
+    translate: 0 -3px;
+  }
+
+  .rung__mk {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--acc);
+    border-radius: var(--sb-r-full);
+  }
+
+  /* The total row. `margin-top: auto` pins it to the panel's foot, so four cards
+     of unequal copy still land their milestones on the same line — and the
+     doubled dashed rule is the one a receipt puts above its total.
+
+     The gap above the label is 18–24px rather than 12–16, and the extra is not
+     taste: at the tighter value the label's line box grazed the dashed rule,
+     which put border pixels inside the type's own box and made every contrast
+     probe that landed there report a ratio the type does not really have. */
+  .rung__ms {
+    margin-top: auto;
+    padding-top: clamp(18px, 2vw, 24px);
+    border-top: 2px dashed var(--sb-border-strong);
+  }
+
+  .rung__ms-l {
+    display: block;
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--acc);
+  }
+
+  .rung__ms-v {
+    display: block;
+    margin-top: 4px;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--sb-charcoal);
+  }
+
+  /* THE STACK GOES ENTIRELY under reduced motion. Cards sliding over one another
+     as the page moves is precisely the large-area motion the preference asks to
+     be spared; unstacked they are a plain readable list, which is complete on
+     its own. */
+  @media (prefers-reduced-motion: reduce) {
+    .rung {
+      position: static;
+      padding-bottom: clamp(22px, 3vh, 40px);
+    }
+    .rung__panel { transition: none; }
+    .rung__panel:hover { transform: none; }
+  }
+
+  /* Below this the itemised column is under 220px and the records start
+     wrapping. The panel goes to one column and the stub becomes a strip across
+     the top, with the perforation turning with it. */
+  @media (max-width: 899px) {
+    .lad { --card-h: 360px; }
+
+    .rung__panel { grid-template-columns: minmax(0, 1fr); }
+
+    .rung__stub {
+      flex-direction: row;
+      align-items: center;
+      gap: clamp(12px, 2.4vw, 20px);
+      border-right: 0;
+      border-bottom: 2px dashed color-mix(in srgb, var(--acc) 34%, transparent);
+    }
+
+    .rung__n { margin-top: 0; margin-left: auto; }
+
+    .rung__main { padding: var(--pad-y) var(--pad-x) 0; }
+    .rung__side { padding: clamp(16px, 2vw, 22px) var(--pad-x) var(--pad-y); }
+    .rung__ms { margin-top: 0; }
+  }
+
+  @media (max-width: 639px) {
+    .lad { --node: 44px; }
+
+    /* ⚠ NO STACK ON A PHONE. The cards run past 400px at this width, so a pile
+       of four needs more than half the screen before a single step is added, and
+       the card being read ends up half visible. They flow as a plain list, which
+       is what they do under reduced motion too. */
+    .rung {
+      position: static;
+      padding-bottom: clamp(20px, 3vh, 32px);
+    }
+    .rung__panel:hover { transform: none; }
+    /* The numeral would sit on the step label at this width. */
+    .rung__n { display: none; }
+  }
+</style>

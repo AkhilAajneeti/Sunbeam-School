@@ -56,7 +56,7 @@ export const chapters = [
     n: '03',
     title: 'Teaching & Learning',
     href: '/academics/teaching-learning/',
-    lede: 'Nine laboratories, a 15,000-book library, and 100 Microsoft-certified teachers.',
+    lede: 'Twelve laboratories, a 17,574-book library, and 100 Microsoft-certified teachers.',
     teaser: 'Microsoft Showcase School',
   },
   {
@@ -91,19 +91,19 @@ export const chapters = [
 export const counters = [
   { n: 100, suffix: '', label: 'Teachers certified as Microsoft Innovative Educator Experts' },
   { n: 6, suffix: '', label: 'Consecutive years ranked #1 Co-Ed Day School in Ballia' },
-  { n: 15000, suffix: '+', label: 'Books in the Nalanda Library' },
-  { n: 9, suffix: '', label: 'Subject laboratories' },
-  { n: 30, suffix: '+', label: 'Digitally smart classrooms' },
+  { n: 17574, suffix: '', label: 'Books in the Nalanda Library' },
+  { n: 12, suffix: '', label: 'Subject laboratories' },
+  { n: 75, suffix: '+', label: 'Digitally smart classrooms' },
   { n: 49, suffix: '+', label: 'Interactive flat panels' },
-  { n: 2200, suffix: '+', label: 'Students, Nursery to Class XII' },
+  { n: 2700, suffix: '+', label: 'Students, Nursery to Class XII' },
   { n: 130, suffix: '+', label: 'Teaching staff' },
 ] as const;
 
 /** Three for the overview hero — the most legible of the eight at a glance. */
 export const heroStats = [
   { n: 130, suffix: '+', label: 'Teaching staff' },
-  { n: 9, suffix: '', label: 'Laboratories' },
-  { n: 15000, suffix: '+', label: 'Library books' },
+  { n: 12, suffix: '', label: 'Laboratories' },
+  { n: 17574, suffix: '', label: 'Library books' },
 ] as const;
 
 /* ═══ 01 · PHILOSOPHY ═══════════════════════════════════════════════════════ */
@@ -136,7 +136,7 @@ export const philosophy = [
     what:
       'Understanding built by doing — practical work, fieldwork and making, so that a concept is ' +
       'met in the hand before it is met in the exam.',
-    anchor: 'Nine laboratories · learning expeditions',
+    anchor: 'Twelve laboratories · learning expeditions',
   },
   {
     n: '04',
@@ -188,7 +188,7 @@ export const philosophy = [
    file applies in full: the school has never published a teaching-philosophy
    statement of its own (asset request A10), so nothing below claims a practice
    this school has not described. Each card DEFINES the commitment the client
-   brief names, and every figure inside it — nine laboratories, PRECEPT, 130+
+   brief names, and every figure inside it — twelve laboratories, PRECEPT, 130+
    staff, 100 Microsoft Innovative Educator Experts, the named competitions — is
    already verified in docs/01 § 5 and appears elsewhere in this file.
 
@@ -225,7 +225,7 @@ export const teachingPhilosophy = {
       icon: 'inquiry',
       title: 'Experiential & Inquiry-Based Learning',
       body:
-        'A concept met in the hand before it is met in the exam: nine laboratories, practical work, ' +
+        'A concept met in the hand before it is met in the exam: twelve laboratories, practical work, ' +
         'and lessons that open with a question rather than a conclusion.',
     },
     {
@@ -288,7 +288,7 @@ export const teachingPhilosophy = {
 
     /** Small verified proofs, set as a hairline row under the paragraphs. */
     proofs: [
-      { value: '9', label: 'Subject laboratories' },
+      { value: '12', label: 'Subject laboratories' },
       { value: '100', label: 'Microsoft-certified teachers' },
       { value: 'Nursery–XII', label: 'PRECEPT syllabus published' },
     ],
@@ -443,6 +443,53 @@ export const stages = [
    the top. The brief asked for "a short description of career direction" and
    this is that. Nothing was cut that the subject line above it did not
    already say. */
+/**
+ * ⚠ THE OPTIONAL AND ADDITIONAL LISTS CAME FROM THE SCHOOL, and that changed
+ * this block's status. It previously carried `unverified: true` on all four
+ * streams, which rendered a "To be confirmed" stamp on every card and a notice
+ * under the section — because the elective lists were our own draft, and a
+ * family choosing a school on the strength of a subject nobody had confirmed is
+ * the failure this site guards hardest against.
+ *
+ * The school has now stated what is actually offered, so `unverified` is false
+ * throughout and the stamps and the notice disappear on their own — the
+ * component reads the flag rather than hard-coding the caveat.
+ *
+ * ⚠ THE SAME TWO LISTS APPLY TO EVERY STREAM. The school first sent lists that
+ * differed per stream, then replaced them with one shared pair. They are
+ * therefore declared ONCE below and referenced by all four streams: written out
+ * four times, the next revision would inevitably be applied to three of them.
+ *
+ * TWO LISTS, NOT ONE, because the school distinguishes them: `optional` are the
+ * choices taken alongside the core, `additional` are subjects carried on top.
+ * Merging them would lose a distinction it drew itself.
+ *
+ * Subject names are the school's own wording, capitalised for display only.
+ * "Applied Maths" is theirs — CBSE calls it Applied Mathematics, and correcting
+ * that here would be inventing a change nobody asked for.
+ *
+ * ⚠ THE SCHOOL'S EARLIER PER-STREAM LISTS ARE GONE, and with them the draft
+ * electives that used to show (Informatics Practices, Psychology, Sociology, and
+ * Mathematics/Economics as options). Those were ours, never the school's, and
+ * the school has now said what it teaches. If any of them are real, they need
+ * adding back here explicitly.
+ */
+export const streamOptional = [
+  'Computer Science',
+  'Hindi',
+  'Physical Education',
+  'Applied Maths',
+  'Geography',
+] as const;
+
+export const streamAdditional = [
+  'Artificial Intelligence',
+  'Kathak',
+  'Fine Arts',
+  'Legal Studies',
+  'Agriculture',
+  'Entrepreneurship',
+] as const;
 export const streamDetail = [
   {
     name: 'PCM',
@@ -451,8 +498,9 @@ export const streamDetail = [
     full: 'Physics · Chemistry · Mathematics',
     body: 'Engineering and the physical sciences, with Mathematics to board level.',
     core: ['Physics', 'Chemistry', 'Mathematics', 'English'],
-    electives: ['Computer Science', 'Physical Education', 'Informatics Practices'],
-    unverified: true,
+    optional: streamOptional,
+    additional: streamAdditional,
+    unverified: false,
   },
   {
     name: 'PCB',
@@ -461,8 +509,9 @@ export const streamDetail = [
     full: 'Physics · Chemistry · Biology',
     body: 'Medicine and the life sciences, with the practical hours in the biology laboratory.',
     core: ['Physics', 'Chemistry', 'Biology', 'English'],
-    electives: ['Mathematics', 'Psychology', 'Physical Education'],
-    unverified: true,
+    optional: streamOptional,
+    additional: streamAdditional,
+    unverified: false,
   },
   {
     name: 'Commerce',
@@ -471,8 +520,9 @@ export const streamDetail = [
     full: 'Accountancy · Business Studies · Economics',
     body: 'Business, finance and management — how money, firms and markets actually work.',
     core: ['Accountancy', 'Business Studies', 'Economics', 'English'],
-    electives: ['Mathematics', 'Informatics Practices', 'Entrepreneurship'],
-    unverified: true,
+    optional: streamOptional,
+    additional: streamAdditional,
+    unverified: false,
   },
   {
     name: 'Humanities',
@@ -481,8 +531,9 @@ export const streamDetail = [
     full: 'History · Political Science · Geography',
     body: 'Law, civil services, design, media and the social sciences.',
     core: ['History', 'Political Science', 'Geography', 'English'],
-    electives: ['Psychology', 'Sociology', 'Economics'],
-    unverified: true,
+    optional: streamOptional,
+    additional: streamAdditional,
+    unverified: false,
   },
 ] as const;
 
@@ -502,7 +553,7 @@ export const combinationsFootnote =
 export const facilities = [
   {
     title: 'Smart classrooms',
-    fact: '30+ rooms · 49+ interactive flat panels',
+    fact: '75+ rooms · 49+ interactive flat panels',
     body: 'Digital teaching is the default across the school, not a room you visit once a week.',
     photo: 'sb-phy-lab.jpg',
     alt: 'Students of Sunbeam School Ballia working at benches in the physics laboratory, with portraits of Nikola Tesla and Michael Faraday on the wall.',
@@ -510,7 +561,7 @@ export const facilities = [
   },
   {
     title: 'Nalanda Library',
-    fact: '15,000+ books · 25 periodicals',
+    fact: '17,574 books · 25 periodicals',
     body: 'A reading room with journals and magazines alongside the collection.',
     photo: 'sb-library.jpg',
     alt: 'Students of Sunbeam School Ballia reading and working at tables in the Nalanda Library.',
@@ -636,7 +687,7 @@ export const teachingLearning = {
         body:
           'Thirty-plus classrooms carry an interactive flat panel, and there are more panels than ' +
           'rooms. A teacher does not book the technology — it is already where the class is.',
-        anchor: '30+ smart classrooms · 49+ interactive flat panels',
+        anchor: '75+ smart classrooms · 49+ interactive flat panels',
       },
       {
         key: 'teachers',
@@ -659,7 +710,7 @@ export const teachingLearning = {
     ],
     /** Counters for the pinned stage. Quantities only. */
     stats: [
-      { n: 30, suffix: '+', label: 'Digitally smart classrooms' },
+      { n: 75, suffix: '+', label: 'Digitally smart classrooms' },
       { n: 49, suffix: '+', label: 'Interactive flat panels' },
       { n: 100, suffix: '', label: 'Microsoft-certified teachers' },
     ],
@@ -680,7 +731,7 @@ export const teachingLearning = {
     ],
     /** Verified rooms and programmes that make the above possible here. */
     anchors: [
-      { glyph: 'chemistry', label: 'Nine subject laboratories', detail: 'Physics · Chemistry · Biology · Mathematics · Language · two computer labs · inquiry rooms' },
+      { glyph: 'chemistry', label: 'Twelve laboratories', detail: 'Physics · Chemistry · Biology · Mathematics · Language · Geography · Srijan · Model UN · Active Learning · Robotics · two computer labs' },
       { glyph: 'rocket', label: 'KIDS entrepreneurship', detail: 'The school’s own programme, taken in Class VII' },
       { glyph: 'inquiry', label: 'Inquiry rooms', detail: 'Srijan · Model United Nations · Geography · Active Learning' },
     ],
@@ -703,14 +754,15 @@ export const teachingLearning = {
      */
     panels: [
       {
-        kind: 'gap',
+        kind: 'photo',
         n: '01',
         title: 'Robotics Lab',
         fact: 'Drone · 3-D printer · telescope · embedded systems',
         body:
           'The rarest room in the school and the reason its students reach national science ' +
           'competitions. Coding is taught here against hardware that answers back.',
-        photo: null,
+        photo: 'robotics.jpg',
+        alt: 'A wheeled robot built in the Robotics Lab at Sunbeam School Ballia, with ultrasonic sensors, a camera module and exposed wiring.',
       },
       {
         kind: 'photo',
@@ -724,15 +776,13 @@ export const teachingLearning = {
         alt: 'Younger students of Sunbeam School Ballia working at desktop computers in the junior computer laboratory.',
       },
       {
-        kind: 'figure',
+        kind: 'photo',
         n: '03',
         title: 'Science laboratories',
         fact: 'Physics · Chemistry · Biology',
         body:
           'Three dedicated rooms, used as teaching spaces rather than demonstration theatres — the ' +
           'class works at the benches.',
-        figure: '3',
-        figureLabel: 'Dedicated science rooms',
         photo: 'sb-bio-lab.jpg',
         alt: 'Two students of Sunbeam School Ballia handling glassware in the biology laboratory.',
       },
@@ -761,15 +811,13 @@ export const teachingLearning = {
         photo: null,
       },
       {
-        kind: 'figure',
+        kind: 'photo',
         n: '06',
         title: 'Science laboratories, all told',
         fact: 'Across every stage',
         body:
-          'Nine subject laboratories in total, opening up from Class VI as specialist teaching ' +
+          'Twelve subject laboratories in total, opening up from Class VI as specialist teaching ' +
           'begins and running to the Class XII board practicals.',
-        figure: '9',
-        figureLabel: 'Subject laboratories',
         photo: 'sb-sci-lab.jpg',
         alt: 'A student of Sunbeam School Ballia using a microscope beside plant specimens in flasks.',
       },
@@ -783,7 +831,7 @@ export const teachingLearning = {
     stand:
       'A reading habit is the one advantage that compounds across every other subject. It needs ' +
       'stock, a place to sit, and time on the timetable.',
-    figure: { n: 15000, suffix: '+', label: 'Books in the Nalanda Library' },
+    figure: { n: 17574, suffix: '', label: 'Books in the Nalanda Library' },
     photo: 'sb-library.jpg',
     alt: 'Students of Sunbeam School Ballia reading and working at tables in the Nalanda Library.',
     /** Three entries on a vertical rail. */
@@ -793,7 +841,7 @@ export const teachingLearning = {
         body:
           'The Nalanda Library holds more than fifteen thousand books alongside twenty-five ' +
           'periodicals, in a reading room rather than a store cupboard.',
-        anchor: '15,000+ books · 25 periodicals',
+        anchor: '17,574 books · 25 periodicals',
       },
       {
         glyph: 'reading', label: 'Reading programme',
@@ -806,7 +854,7 @@ export const teachingLearning = {
       {
         glyph: 'language', label: 'Language development',
         body:
-          'The school runs a language laboratory as one of its nine subject labs — language ' +
+          'The school runs a language laboratory as one of its twelve subject labs — language ' +
           'practised aloud and recorded, which is the part a textbook cannot do.',
         anchor: 'Language laboratory',
       },
@@ -818,11 +866,11 @@ export const teachingLearning = {
     eyebrow: 'The full inventory',
     heading: 'Every room, listed plainly',
     stand:
-      'Nine subject laboratories and four inquiry rooms. No room appears on this list that the ' +
-      'school does not publish.',
+      'Twelve laboratories, and the inquiry rooms and academic clubs that work alongside them. ' +
+      'No room appears on this list that the school does not publish.',
     groups: [
       {
-        label: 'Nine subject laboratories',
+        label: 'Subject laboratories',
         items: [
           { glyph: 'physics', name: 'Physics', detail: 'Board practicals, Classes IX–XII' },
           { glyph: 'chemistry', name: 'Chemistry', detail: 'Board practicals, Classes IX–XII' },
@@ -836,7 +884,7 @@ export const teachingLearning = {
         ],
       },
       {
-        label: 'Four inquiry rooms · academic clubs',
+        label: 'Inquiry rooms · academic clubs',
         items: [
           { glyph: 'making', name: 'Srijan Lab', detail: 'Making and design' },
           { glyph: 'debate', name: 'Model United Nations Lab', detail: 'Debate, position papers, committee' },
@@ -1171,8 +1219,8 @@ export const parents = {
           'Adolescence, friendships and the conversations that are easier to have early. Run for ' +
           'parents so the school and home are not saying different things.',
         chips: ['Adolescence', 'Friendships', 'Confidence', 'Talking'],
-        photo: 'sunbeem-students-3.jpg',
-        alt: 'Students of Sunbeam School Ballia seated together during a school session.',
+        photo: 'robo.jpg',
+        alt: 'The school’s RoboWunder International Robotics Championship award graphic.',
       },
     ],
   },

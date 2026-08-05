@@ -16,10 +16,26 @@
  * Nothing here is hover-only — that was the failure mode this pattern usually
  * ships with, and it makes the whole section unusable on a phone.
  */
+import { Picture } from 'astro:assets';
 import { mapPoints } from '../../../data/campus';
+import { facilities } from '../../../data/campusTour';
 import { showBuildNotes } from '../../../data/site';
 import SectionHead from '../../academics/SectionHead.astro';
 import SafetyIcon from './SafetyIcon.astro';
+
+/**
+ * Pin → photograph, drawn from the same folders the gallery uses.
+ *
+ * ⚠ TWO OF SEVEN. The gate and the playground can be shown truthfully; the
+ * guard post, the cameras, the fire equipment, the infirmary and the bus bay are
+ * unphotographed anywhere in this repository. Those pins say "photograph
+ * pending" rather than borrowing a near-enough room — on a map, a picture beside
+ * a pin IS a claim about that place.
+ */
+const byId = new Map(facilities.map((f) => [f.id, f]));
+const shots: Record<string, ImageMetadata | undefined> = Object.fromEntries(
+  mapPoints.map((pt) => [pt.photo ?? '', pt.photo ? byId.get(pt.photo)?.images[0] : undefined])
+);
 
 const icons: Record<string, string> = {
   gate: 'gate',
@@ -45,6 +61,28 @@ const icons: Record<string, string> = {
     <div class="cmap__grid">
       {/* --- The plan ---------------------------------------------------- */}
       <div class="cmap__plan" data-cmap>
+        {/* Map chrome. The compass and scale bar are what make a drawing read as
+            a map — but note the scale is DELIBERATELY unlabelled in metres: the
+            geometry here is adjacency, not survey, so putting "50 m" on it would
+            claim an accuracy this plan does not have. */}
+        <div class="cmap__chrome" aria-hidden="true">
+          <span class="cmap__compass">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+              <circle cx="13" cy="13" r="12" stroke="currentColor" stroke-width="1" opacity="0.35" />
+              <path d="M13 4l3 9-3-2-3 2 3-9Z" fill="currentColor" />
+              <text x="13" y="24" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor">N</text>
+            </svg>
+          </span>
+          <span class="cmap__scale"><i></i><em>approx.</em></span>
+        </div>
+
+        <div class="cmap__zoom">
+          <button type="button" data-cmap-zoom="in" aria-label="Zoom in">+</button>
+          <button type="button" data-cmap-zoom="out" aria-label="Zoom out">−</button>
+          <button type="button" data-cmap-zoom="reset" aria-label="Reset the view">⤾</button>
+        </div>
+
+        <div class="cmap__stage" data-cmap-stage>
         <svg class="cmap__art" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <pattern id="cmapGrid" width="5" height="5" patternUnits="userSpaceOnUse">
@@ -84,12 +122,29 @@ const icons: Record<string, string> = {
             </li>
           ))}
         </ul>
+        </div>
       </div>
 
       {/* --- The readout -------------------------------------------------- */}
       <div class="cmap__detail" aria-live="polite">
         {mapPoints.map((pt, i) => (
           <article class="cmap__card" data-cmap-card={pt.id} hidden={i !== 0}>
+            {shots[pt.photo ?? ''] ? (
+              <span class="cmap__shot">
+                <Picture
+                  src={shots[pt.photo!]!}
+                  alt={`${pt.label} — Sunbeam School Ballia`}
+                  formats={['webp']}
+                  widths={[400, 800]}
+                  sizes="320px"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            ) : (
+              <span class="cmap__noshot">Photograph pending</span>
+            )}
+
             <span class="cmap__card-icon"><SafetyIcon name={icons[pt.id] ?? 'shield'} size={26} /></span>
             <h3 class="cmap__card-h">
               {pt.label}
@@ -142,6 +197,85 @@ const icons: Record<string, string> = {
   .cmap__drive { fill: var(--sb-sand); }
   .cmap__bay { fill: #fdf0e8; stroke: var(--sb-lime); stroke-width: 0.3; }
   .cmap__wall { fill: none; stroke: var(--sb-charcoal); stroke-width: 0.4; stroke-dasharray: 2 1.4; opacity: 0.35; }
+
+  /* --- Map chrome ----------------------------------------------------------
+     The stage carries the pan/zoom transform; the chrome sits OUTSIDE it so the
+     compass, scale and buttons stay put and stay the same size while the plan
+     moves under them — which is exactly how a real map behaves. */
+  .cmap__stage {
+    position: absolute;
+    inset: 0;
+    transform-origin: 0 0;
+    transition: transform 220ms var(--sb-ease);
+    cursor: grab;
+  }
+
+  .cmap__stage.is-dragging { cursor: grabbing; transition: none; }
+
+  .cmap__chrome {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+    z-index: 3;
+    display: flex;
+    align-items: flex-end;
+    gap: var(--sb-5);
+    color: var(--sb-text-secondary);
+    pointer-events: none;
+  }
+
+  .cmap__compass { display: block; color: var(--sb-violet); }
+
+  .cmap__scale { display: block; }
+
+  .cmap__scale i {
+    display: block;
+    width: 68px;
+    height: 6px;
+    border: 1px solid currentColor;
+    border-top: 0;
+    opacity: 0.55;
+  }
+
+  /* "approx.", never a distance. The plan's geometry is adjacency, not survey —
+     printing "50 m" would claim an accuracy nobody has measured. */
+  .cmap__scale em {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    font-style: normal;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .cmap__zoom {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cmap__zoom button {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--sb-paper);
+    border: var(--sb-hairline);
+    color: var(--sb-charcoal);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.12);
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  .cmap__zoom button:hover { background: var(--sb-violet); color: #fff; }
 
   .cmap__points { list-style: none; margin: 0; padding: 0; }
 
@@ -232,7 +366,38 @@ const icons: Record<string, string> = {
 
   .cmap__card[hidden] { display: none; }
 
-  .cmap__card-icon { color: var(--sb-violet); margin-bottom: var(--sb-5); display: block; }
+  /* The photograph leads the readout — a pin that opens a picture of the place
+     is the difference between a diagram and wayfinding. */
+  .cmap__shot,
+  .cmap__noshot {
+    display: block;
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: var(--sb-5);
+    background: var(--sb-sand);
+  }
+
+  .cmap__shot :global(picture),
+  .cmap__shot :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .cmap__noshot {
+    display: grid;
+    place-items: center;
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+
+  .cmap__card-icon { color: var(--sb-violet); margin-bottom: var(--sb-4); display: block; }
 
   .cmap__card-h {
     font-family: var(--sb-font-display);
@@ -291,6 +456,92 @@ const icons: Record<string, string> = {
   const detail = document.querySelector<HTMLElement>('.cmap__detail');
 
   if (root && detail) {
+    /* --- Pan and zoom -----------------------------------------------------
+       Applied to the STAGE, so the compass, scale bar and zoom buttons stay
+       put and stay the same size while the plan moves under them — which is
+       how a real map behaves.
+
+       Zoom is clamped to 1–3: below 1 the plan would float inside its own
+       frame, and past 3 a schematic has no more detail to reveal. Panning is
+       clamped too — a map you can fling into empty space is the commonest
+       fault in a hand-rolled one. */
+    const stage = root.querySelector<HTMLElement>('[data-cmap-stage]');
+    if (stage) {
+      let z = 1;
+      let x = 0;
+      let y = 0;
+
+      const apply = () => {
+        const r = root.getBoundingClientRect();
+        const maxX = r.width * (z - 1);
+        const maxY = r.height * (z - 1);
+        x = Math.min(0, Math.max(-maxX, x));
+        y = Math.min(0, Math.max(-maxY, y));
+        stage.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + z + ')';
+      };
+
+      /* Zoom about the CENTRE of the frame, not the origin — anchoring at the
+         top-left walks the plan off toward one corner as it grows. */
+      const zoomTo = (next: number) => {
+        const r = root.getBoundingClientRect();
+        const cx = r.width / 2;
+        const cy = r.height / 2;
+        const k = next / z;
+        x = cx - (cx - x) * k;
+        y = cy - (cy - y) * k;
+        z = next;
+        apply();
+      };
+
+      root.querySelectorAll<HTMLButtonElement>('[data-cmap-zoom]').forEach((btn) =>
+        btn.addEventListener('click', () => {
+          const m = btn.dataset.cmapZoom;
+          if (m === 'reset') { z = 1; x = 0; y = 0; apply(); return; }
+          zoomTo(Math.min(3, Math.max(1, z + (m === 'in' ? 0.5 : -0.5))));
+        })
+      );
+
+      /* At rest the wheel belongs to the PAGE — hijacking it would trap a
+         reader scrolling past the section. It only zooms once zoomed in, or
+         when zooming in from rest. */
+      root.addEventListener('wheel', (e) => {
+        if (z === 1 && e.deltaY > 0) return;
+        e.preventDefault();
+        zoomTo(Math.min(3, Math.max(1, z - Math.sign(e.deltaY) * 0.25)));
+      }, { passive: false });
+
+      let down = false;
+      let sx = 0;
+      let sy = 0;
+      let ox = 0;
+      let oy = 0;
+
+      stage.addEventListener('pointerdown', (e) => {
+        // Never start a drag on a pin, or selecting a point becomes a fight.
+        if (z === 1 || (e.target as HTMLElement).closest('[data-cmap-btn]')) return;
+        down = true;
+        sx = e.clientX; sy = e.clientY; ox = x; oy = y;
+        stage.classList.add('is-dragging');
+        stage.setPointerCapture(e.pointerId);
+      });
+
+      stage.addEventListener('pointermove', (e) => {
+        if (!down) return;
+        x = ox + (e.clientX - sx);
+        y = oy + (e.clientY - sy);
+        apply();
+      });
+
+      const release = (e: PointerEvent) => {
+        if (!down) return;
+        down = false;
+        stage.classList.remove('is-dragging');
+        try { stage.releasePointerCapture(e.pointerId); } catch {}
+      };
+      stage.addEventListener('pointerup', release);
+      stage.addEventListener('pointercancel', release);
+    }
+
     const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-cmap-btn]')];
     const cards = [...detail.querySelectorAll<HTMLElement>('[data-cmap-card]')];
     const canHover = window.matchMedia('(hover: hover)').matches;

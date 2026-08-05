@@ -25,32 +25,45 @@
  * one. Asset request A10.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
 import ChapterNav from '../../components/academics/ChapterNav.astro';
 import JourneyRoad from '../../components/academics/JourneyRoad.astro';
 import { cycle, supports } from '../../data/academics';
+
+/* Students at the bench during a practical — assessment is a thing that happens
+   in a room, not an abstraction. */
+import banner from '../../assets/photos/sunbeem-students.jpg';
 ---
 
 <BaseLayout
   title="Assessment & Support — Sunbeam School Ballia"
   description="How an academic year runs at Sunbeam School Ballia: taught content, activities, internal assessment, CBSE board examinations at Class X and XII, and the mentoring and remedial support around them."
 >
+  <PageHero
+    title="Assessment & Support"
+    standfirst="Six steps, repeating — content taught, practised, assessed and fed back, with the support named rather than assumed."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+    ]}
+    src={banner}
+    alt="Students of Sunbeam School Ballia working at the bench during a science practical."
+    position="50% 42%"
+  />
+
+  {/* ⚠ THE PANEL IS REQUIRED, NOT DECORATION. PageHero is position: sticky and
+      is covered by this panel as the page scrolls; without it the banner hangs
+      under the footer. */}
+  <div class="u-page-panel as4-panel">
   {/* ══ HERO — minimal, numbers-led, no photograph ══════════════════════════ */}
   <section class="ahero4" aria-labelledby="ahero4-title">
     <div class="u-container">
-      <nav class="ahero4__crumbs" aria-label="Breadcrumb">
-        <ol>
-          <li><a href="/">Home</a></li>
-          <li><a href="/academics/">Academics</a></li>
-          <li><span aria-current="page">Assessment &amp; Support</span></li>
-        </ol>
-      </nav>
-
       <div class="ahero4__grid">
         <div>
           <p class="ahero4__n t-tabular" aria-hidden="true">Chapter 04</p>
-          <h1 class="ahero4__title" id="ahero4-title" data-split>
+          <h2 class="ahero4__title" id="ahero4-title" data-split>
             How a year actually <span class="t-squiggle">runs</span>
-          </h1>
+          </h2>
         </div>
 
         <p class="ahero4__stand">
@@ -119,6 +132,8 @@ import { cycle, supports } from '../../data/academics';
       </ul>
     </div>
   </section>
+
+  </div>
 
   <ChapterNav current="assessment" />
 </BaseLayout>

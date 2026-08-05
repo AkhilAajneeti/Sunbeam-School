@@ -1,0 +1,126 @@
+---
+/**
+ * §2 · NEARER HOME — the local learning expeditions.
+ *
+ * TEN DESTINATIONS, ONE LINE EACH, AND NO CARDS. The school publishes the
+ * destination and almost nothing else for these, so a card grid would be ten
+ * boxes of whitespace with a place name floating in each. A ruled list with a
+ * category mark reads as what it is — a register of where the school takes
+ * children — and it lets ten entries sit in the space four cards would need.
+ *
+ * THE KIND MARK IS THE ONLY DECORATION, and it does real work: civic, heritage,
+ * nature and industry sort ten otherwise-similar entries into a shape the eye
+ * can scan.
+ *
+ * ⚠ THE NOTES ARE SHORT ON PURPOSE. Each is one line about what the place IS,
+ * not what the children learned there — the school publishes no account of any
+ * of these visits, and writing one paragraph per destination would mean writing
+ * ten small fictions.
+ */
+import { expeditions } from '../../../data/excursions';
+import SectionHead from '../../academics/SectionHead.astro';
+
+const kinds: Record<string, { label: string; tint: string; ink: string }> = {
+  civic: { label: 'Civic', tint: 'var(--sb-accent-wash)', ink: 'var(--sb-accent)' },
+  heritage: { label: 'Heritage', tint: 'var(--sb-violet-wash)', ink: 'var(--sb-violet-dark)' },
+  nature: { label: 'Nature', tint: 'var(--sb-lime-wash)', ink: 'var(--sb-lime-deep)' },
+  industry: { label: 'Industry', tint: 'var(--sb-gold-wash)', ink: 'var(--sb-maroon)' },
+};
+---
+
+<section class="exp" id="nearby" aria-labelledby="exp-title">
+  <div class="u-container">
+    <SectionHead
+      id="exp-title"
+      eyebrow="Within an afternoon of school"
+      heading="Learning expeditions"
+      stand="A dairy, a court, a post office, a fort and a forest park — the places a class can reach and be back by the last bell."
+      measure={20}
+    />
+
+    <ul class="exp__list">
+      {expeditions.map((e, i) => {
+        const k = kinds[e.kind];
+        return (
+          <li class="exp__row" style={`--tint:${k.tint}; --ink:${k.ink};`} data-reveal data-reveal-delay={i * 45}>
+            <span class="exp__kind">{k.label}</span>
+            <span class="exp__name">{e.name}</span>
+            <span class="exp__rule" aria-hidden="true"></span>
+            <span class="exp__note">{e.note}</span>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .exp {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .exp__list {
+    list-style: none;
+    margin: var(--sb-10) 0 0;
+    padding: 0;
+  }
+
+  .exp__row {
+    display: grid;
+    grid-template-columns: 104px minmax(0, auto) minmax(24px, 1fr) minmax(0, 42%);
+    align-items: baseline;
+    gap: var(--sb-5);
+    padding-block: clamp(16px, 1.6vw, 22px);
+    border-bottom: var(--sb-hairline);
+    transition: padding-left 280ms var(--sb-ease);
+  }
+
+  .exp__row:hover { padding-left: 10px; }
+
+  .exp__kind {
+    justify-self: start;
+    padding: 4px 12px;
+    border-radius: var(--sb-r-full);
+    background: var(--tint);
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .exp__name {
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.5vw, 21px);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  /* The leader. A flexible dotted rule is what makes ten entries of very
+     different lengths read as one ruled column rather than as ten loose labels. */
+  .exp__rule {
+    align-self: center;
+    height: 0;
+    border-bottom: 1px dotted var(--sb-border-strong);
+  }
+
+  .exp__note {
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (max-width: 860px) {
+    /* The leader has nothing to span once the note wraps under the name, and a
+       dotted rule across a stacked row reads as a mistake. */
+    .exp__row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-3);
+      align-items: start;
+    }
+    .exp__rule { display: none; }
+    .exp__note { max-width: 52ch; }
+  }
+</style>

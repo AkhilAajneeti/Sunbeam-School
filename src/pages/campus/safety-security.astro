@@ -10,10 +10,9 @@
  *
  *   1 SafetyTimeline   ivory   · a drawn spine, three groups
  *   2 SecurityMap      sand    · interactive schematic with hotspots
- *   3 Emergency        ivory   · 5:7 split, then a four-step flow
- *   4 TransportSafety  ink     · figures band + dark feature panel
- *   5 Wellbeing        wash    · the warm one — rounded plates, soft shadow
- *   6 Surveillance     ink     · a stage, with a sweeping camera cone
+ *   3 TransportSafety  ink     · figures band + hover-linked feature panel
+ *   4 Wellbeing        wash    · the warm one — rounded plates, soft shadow
+ *   5 Surveillance     ink     · a stage, with a sweeping camera cone
  *
  * THE HERO IS PageHero, the shared banner every inner page uses, as asked.
  *
@@ -21,10 +20,14 @@
  * facts. The brief asked for roughly thirty. Every claim the school has NOT
  * published is marked `verified: false` in src/data/campus.ts, renders one step
  * back visually, and carries a "to confirm" chip whenever showBuildNotes is on.
- * The emergency flow carries a plain-English note saying it is standard practice
- * awaiting the school's confirmation. On a page a parent reads to decide whether
- * their child is safe, an unverified claim presented as fact is the one mistake
- * that cannot be walked back — so nothing here does it.
+ * On a page a parent reads to decide whether their child is safe, an unverified
+ * claim presented as fact is the one mistake that cannot be walked back — so
+ * nothing here does it.
+ *
+ * The Emergency band — the 5:7 split and its four-step response flow — was
+ * removed at the client's request. Its component is still in
+ * components/campus/safety/ if it returns. Note that it carried the page's only
+ * mention of evacuation routes, drills and first aid.
  *
  * ⚠ IMAGERY. Only the campus establishing shot is used, and it is verified
  * Ballia. Two files in src/assets/photos are NOT this school —
@@ -39,7 +42,6 @@ import SectionRail from '../../components/academics/SectionRail.astro';
 
 import SafetyTimeline from '../../components/campus/safety/SafetyTimeline.astro';
 import SecurityMap from '../../components/campus/safety/SecurityMap.astro';
-import Emergency from '../../components/campus/safety/Emergency.astro';
 import TransportSafety from '../../components/campus/safety/TransportSafety.astro';
 import Wellbeing from '../../components/campus/safety/Wellbeing.astro';
 import Surveillance from '../../components/campus/safety/Surveillance.astro';
@@ -67,7 +69,6 @@ import heroPhoto from '../../assets/photos/sunbeem-1.jpg';
     items={[
       { id: 'watch', label: 'What is in place' },
       { id: 'plan', label: 'Campus plan' },
-      { id: 'emergency', label: 'Emergencies' },
       { id: 'transport', label: 'Transport' },
       { id: 'wellbeing', label: 'Wellbeing' },
       { id: 'surveillance', label: 'Surveillance' },
@@ -79,7 +80,6 @@ import heroPhoto from '../../assets/photos/sunbeem-1.jpg';
   <div class="u-page-panel sfy-panel">
     <SafetyTimeline />
     <div id="plan"><SecurityMap /></div>
-    <div id="emergency"><Emergency /></div>
     <div id="transport"><TransportSafety /></div>
     <div id="wellbeing"><Wellbeing /></div>
     <div id="surveillance"><Surveillance /></div>

@@ -1,0 +1,379 @@
+---
+/**
+ * §6 · THE RECORD — the live page's structure, in this site's styling.
+ *
+ * ═══ WHAT THE CLIENT ASKED FOR ══════════════════════════════════════════════
+ *
+ * Their own Sports & Games page, rebuilt: a block per achievement — heading, the
+ * account, and that achievement's own photographs — repeated down the page. They
+ * chose "same structure, our styling", so the shape is theirs and the type,
+ * colour, spacing and carousel are the site's.
+ *
+ * WHAT THE ORIGINAL GETS RIGHT and this keeps: every achievement carries its own
+ * pictures. That is the only thing a reader is really here for.
+ *
+ * WHAT IT GETS WRONG and this fixes:
+ *   · the photographs are 150×150 thumbnails — of a medal ceremony, which at
+ *     that size communicates nothing (docs/01 §109 objects to exactly this).
+ *     Here they are 300–420px in a scrollable gallery;
+ *   · podiums are buried in running prose. Where the school published placings
+ *     they are set as a result list, because that is how a result is read;
+ *   · every block looks identical with no indication of level. A kicker line
+ *     now says district / state / national / hosted before the heading.
+ *
+ * ═══ THE GALLERY ═══════════════════════════════════════════════════════════
+ *
+ * A real `overflow-x` scroller with scroll-snap — flick, trackpad, shift-wheel,
+ * arrow keys, a scrollbar and screen-reader scrolling all work with no
+ * JavaScript. The arrows are the only scripted part and ship `hidden`, so with
+ * the script blocked there are no dead controls and the rail still works.
+ *
+ * ⚠ ONE SCRIPT, MANY RAILS. There are fourteen galleries on this page. The
+ * script therefore binds PER RAIL inside a loop over `[data-rec-rail]` — an
+ * earlier component on this site used `document.querySelector` for a single rail
+ * and copying that pattern here would wire up block one and silently leave the
+ * other thirteen inert.
+ */
+import { Picture } from 'astro:assets';
+import { record, shot } from '../../../data/sportsRecord';
+import SectionHead from '../../academics/SectionHead.astro';
+---
+
+<section class="rec" id="record" aria-labelledby="rec-title">
+  <div class="u-container">
+    <SectionHead
+      id="rec-title"
+      eyebrow="And then the results"
+      heading="The record"
+      stand="Fourteen years of it — the leagues the school hosts, the camps it runs, and what its teams have brought back."
+      align="start"
+      measure={18}
+    />
+  </div>
+
+  {record.map((r, i) => (
+    <article class="rblk" id={r.id}>
+      <div class="u-container rblk__head">
+        <p class="rblk__kicker t-label">{r.kicker}</p>
+        <h3 class="rblk__h">{r.title}</h3>
+
+        <div class="rblk__prose">
+          <p class="rblk__b">{r.body}</p>
+          {r.more && <p class="rblk__b rblk__b--more">{r.more}</p>}
+        </div>
+
+        {/* Placings as a list, not as a sentence. Three podiums of three sit in
+            three columns; a single results list takes one. */}
+        {r.podiums && (
+          <div class:list={['rblk__podiums', r.podiums.length === 1 && 'rblk__podiums--single']}>
+            {r.podiums.map((p) => (
+              <div class="rblk__podium">
+                <p class="rblk__event">{p.event}</p>
+                <ol class="rblk__places">
+                  {p.places.map((pl) => <li>{pl}</li>)}
+                </ol>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* The gallery bleeds off the right edge: a row cut by the viewport is the
+          clearest signal that there is more of it. */}
+      <div class="rblk__rail-wrap">
+        <div
+          class="rblk__rail"
+          data-rec-rail
+          tabindex="0"
+          role="region"
+          aria-label={`Photographs — ${r.title}. Scroll sideways for more.`}
+        >
+          <ul class="rblk__track">
+            {r.shots.map((s, si) => (
+              <li class="rblk__frame">
+                <Picture
+                  src={shot[s]}
+                  alt={si === 0 ? r.alt : ''}
+                  formats={['webp']}
+                  widths={[420, 840]}
+                  sizes="(max-width: 700px) 78vw, 380px"
+                  loading={i < 2 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </li>
+            ))}
+            {/* A real element: Chrome omits a flex container's end padding from
+                scrollWidth, so the last frame could never reach the margin. */}
+            <li class="rblk__tail" aria-hidden="true"></li>
+          </ul>
+        </div>
+
+        {r.shots.length > 2 && (
+          <div class="rblk__btns" data-rec-btns hidden>
+            <button class="rblk__btn" type="button" data-rec-prev aria-label={`Previous photographs from ${r.title}`}>
+              <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <path d="M5 1L1 5l4 4M1 5h13" stroke="currentColor" stroke-width="1.6" />
+              </svg>
+            </button>
+            <button class="rblk__btn" type="button" data-rec-next aria-label={`More photographs from ${r.title}`}>
+              <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.6" />
+              </svg>
+            </button>
+          </div>
+        )}
+      </div>
+    </article>
+  ))}
+</section>
+
+<style>
+  .rec {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .rblk {
+    padding-top: clamp(40px, 6vh, 76px);
+  }
+
+  /* A hairline between blocks — fourteen of them need a boundary, and a rule is
+     quieter than fourteen boxes. */
+  .rblk + .rblk .rblk__head::before {
+    content: '';
+    display: block;
+    height: 1px;
+    margin-bottom: clamp(32px, 5vh, 60px);
+    background: var(--sb-border);
+  }
+
+  .rblk__kicker { color: var(--sb-violet); }
+
+  .rblk__h {
+    margin-top: var(--sb-4);
+    max-width: 22ch;
+    font-family: var(--sb-font-display);
+    font-size: clamp(23px, 2.6vw, 38px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.033em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .rblk__prose { margin-top: var(--sb-5); }
+
+  .rblk__b {
+    max-width: 62ch;
+    font-size: clamp(16px, 1.25vw, 19px);
+    line-height: 1.68;
+    color: var(--sb-text-secondary);
+  }
+
+  .rblk__b--more { margin-top: var(--sb-4); }
+
+  /* --- Placings ------------------------------------------------------------- */
+
+  .rblk__podiums {
+    margin-top: var(--sb-7);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 26px);
+    max-width: 900px;
+  }
+
+  .rblk__podiums--single { grid-template-columns: minmax(0, 1fr); max-width: 420px; }
+
+  .rblk__podium {
+    padding: var(--sb-5) var(--sb-6);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+  }
+
+  .rblk__event {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .rblk__places {
+    list-style: none;
+    margin: var(--sb-4) 0 0;
+    padding: 0;
+  }
+
+  .rblk__places li {
+    padding-block: 5px;
+    font-size: var(--sb-body-sm);
+    line-height: 1.45;
+    color: var(--sb-charcoal);
+  }
+
+  .rblk__places li + li { border-top: var(--sb-hairline); }
+
+  /* The school's own team is the point of the list. */
+  .rblk__places li:first-child { font-weight: 650; }
+
+  /* --- The gallery ---------------------------------------------------------- */
+
+  .rblk__rail-wrap {
+    position: relative;
+    margin-top: clamp(22px, 3vh, 36px);
+  }
+
+  .rblk__rail {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    /* Must match the track's left padding, or frame one can only satisfy its own
+       snap by resting part-scrolled — which leaves the rail loading at an offset
+       and "previous" enabled before anyone has scrolled. */
+    scroll-padding-inline: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
+    scrollbar-width: none;
+  }
+
+  .rblk__rail::-webkit-scrollbar { display: none; }
+
+  .rblk__rail:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: -3px; }
+
+  .rblk__track {
+    display: flex;
+    gap: clamp(10px, 1vw, 15px);
+    list-style: none;
+    margin: 0;
+    /* Lines frame one up with the paragraph above it. */
+    padding-left: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
+    padding-right: 0;
+  }
+
+  .rblk__frame {
+    flex: 0 0 clamp(230px, 27vw, 380px);
+    scroll-snap-align: start;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--sb-sand);
+  }
+
+  /* `height: auto` with an aspect-ratio, NOT the source's height. Astro's
+     <Picture> emits width/height attributes — presentational hints that map to
+     the CSS width and height properties — and base.css resets `max-width`
+     WITHOUT `height: auto`, so without this every frame renders at its source
+     height and the row runs to thousands of pixels. */
+  .rblk__frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform 700ms var(--sb-ease);
+  }
+
+  .rblk__frame:hover :global(img) { transform: scale(1.05); }
+
+  .rblk__tail {
+    flex: 0 0 calc(
+      max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2)) - clamp(10px, 1vw, 15px)
+    );
+  }
+
+  .rblk__btns {
+    position: absolute;
+    right: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
+    top: calc(-1 * clamp(22px, 3vh, 36px) - 44px);
+    display: flex;
+    gap: var(--sb-3);
+  }
+
+  /* `display: flex` would beat the `hidden` attribute's UA rule, which is a
+     classic way to ship a control that cannot work. */
+  .rblk__btns[hidden] { display: none; }
+
+  .rblk__btn {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--sb-border-strong);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-charcoal);
+    cursor: pointer;
+    transition: background var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  .rblk__btn:hover:not(:disabled) {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .rblk__btn:disabled { opacity: 0.32; cursor: default; }
+
+  @media (max-width: 900px) {
+    .rblk__podiums { grid-template-columns: minmax(0, 1fr); max-width: 460px; }
+    /* The arrows would sit on the heading at this width, and the rail drags
+       perfectly well with a finger. */
+    .rblk__btns { display: none; }
+  }
+
+  @media (max-width: 700px) {
+    .rblk__frame { flex: 0 0 78vw; }
+  }
+</style>
+
+<script>
+  /**
+   * The galleries' arrow buttons.
+   *
+   * ⚠ BOUND PER RAIL, IN A LOOP. There are fourteen galleries on this page.
+   * `document.querySelector('[data-rec-rail]')` would wire up the first and
+   * leave thirteen sets of arrows inert — and they would look enabled, because
+   * the `hidden` attribute is removed per group.
+   *
+   * Everything here is an enhancement: the rails underneath are real overflow
+   * scrollers with scroll-snap, so flick, trackpad, shift-wheel, arrow keys and
+   * screen-reader scrolling already work without any of this.
+   */
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-rec-rail]').forEach((rail) => {
+    const btns = rail.parentElement?.querySelector<HTMLElement>('[data-rec-btns]');
+    if (!btns) return;
+
+    const prev = btns.querySelector<HTMLButtonElement>('[data-rec-prev]')!;
+    const next = btns.querySelector<HTMLButtonElement>('[data-rec-next]')!;
+    btns.hidden = false;
+
+    /* A step is ONE FRAME, measured from the DOM. The frame basis and the gap
+       are both clamp()s, so any number hard-coded here would be wrong at most
+       viewport widths. */
+    const frames = () => rail.querySelectorAll<HTMLElement>('.rblk__frame');
+    const pitch = () => {
+      const f = frames();
+      if (f.length < 2) return rail.clientWidth * 0.8;
+      return f[1].getBoundingClientRect().left - f[0].getBoundingClientRect().left;
+    };
+
+    /* Disabled at the ends rather than silently doing nothing. The 2px slack
+       absorbs fractional scroll positions, which otherwise leave "next" enabled
+       for ever at the right-hand end on non-integer device pixel ratios. */
+    const sync = () => {
+      const max = rail.scrollWidth - rail.clientWidth;
+      prev.disabled = rail.scrollLeft <= 2;
+      next.disabled = rail.scrollLeft >= max - 2;
+    };
+
+    const step = (dir: number) =>
+      rail.scrollBy({ left: dir * pitch(), behavior: reduced.matches ? 'auto' : 'smooth' });
+
+    prev.addEventListener('click', () => step(-1));
+    next.addEventListener('click', () => step(1));
+    rail.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  });
+</script>

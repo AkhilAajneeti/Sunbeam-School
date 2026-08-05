@@ -38,7 +38,7 @@ export const school = {
   founders: "Dr. Amrit Lal 'Ishrat' Madhok and his wife",
 
   openingStrength: 456,
-  currentStrength: '2,200+',
+  currentStrength: '2,700+',
   teachingStaff: '130+',
 
   board: 'CBSE',
@@ -104,7 +104,7 @@ export const school = {
  * NOTE — this band previously carried the four recognition proofs. They are all
  * still on the page: the #1 ranking leads the Story stat card and the
  * Achievements section, CBSE and Microsoft appear in Affiliations with their
- * marks, and the 2,200-from-456 figure is in the Story checklist.
+ * marks, and the 2,700-from-456 figure is in the Story checklist.
  */
 export const heritageLede = {
   figure: '50',

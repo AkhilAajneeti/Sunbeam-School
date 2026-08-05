@@ -18,6 +18,7 @@ import { school, showBuildNotes } from '../../../data/site';
 import SectionHead from '../../academics/SectionHead.astro';
 import Photo from '../../ui/Photo.astro';
 import SafetyIcon from './SafetyIcon.astro';
+import campus from '../../../assets/photos/sunbeem-1.jpg';
 
 const icons: Record<string, string> = {
   'GPS Tracking': 'gps',
@@ -26,6 +27,29 @@ const icons: Record<string, string> = {
   'Verified Drivers': 'badge',
   'Lady Attendant': 'person',
   'Parent Communication': 'message',
+};
+
+/**
+ * ONE FRAME PER CARD, and only where a real one exists.
+ *
+ * ⚠ THE HONEST STATE OF THIS: the repository holds no photograph of a school
+ * bus, a GPS unit, a driver or an attendant. Of the six cards, exactly one can
+ * be illustrated truthfully — "22 Routes", by the campus the routes run to. The
+ * other five carry their OWN shot brief rather than a shared one, so hovering
+ * still changes the panel and each hover states precisely which photograph is
+ * missing. The mechanism is finished; the moment transport photography arrives
+ * each card becomes one line in `shots` below.
+ */
+const shots: Record<string, ImageMetadata | undefined> = {
+  '22 Routes': campus,
+};
+
+const briefs: Record<string, string> = {
+  'GPS Tracking': 'The GPS unit in a bus cab, 16:10 — screen live, route showing',
+  'Speed Governor': 'The speed governor fitted in a bus, 16:10 — close, with the seal visible',
+  'Verified Drivers': 'A Sunbeam Ballia driver at the wheel, 16:10 — in uniform, bus livery visible',
+  'Lady Attendant': 'The attendant helping younger children board, 16:10 — at the bay, morning light',
+  'Parent Communication': 'A parent reading a route notice on a phone, 16:10 — or the notice board in use',
 };
 
 const figures = [
@@ -56,19 +80,31 @@ const figures = [
     </div>
 
     <div class="tsf__panel">
-      <div class="tsf__media" data-reveal>
-        <Photo
-          brief="A Sunbeam Ballia bus at the boarding bay, 16:10 — school livery visible, children boarding with an attendant"
-          ratio="16 / 10"
-          tone="ink"
-          ref="A2"
-        />
+      {/* One frame per card, stacked and cross-faded — hovering a feature
+          brings its own frame forward. Panes are stacked rather than swapped so
+          the box never collapses between two states and the panel height stays
+          put while the picture changes. */}
+      <div class="tsf__media" data-reveal data-tsf-media>
+        {transportFeatures.map((f, i) => (
+          <figure class="tsf__pane" data-tsf-pane={i} data-on={i === 0 ? '' : undefined}>
+            <Photo
+              src={shots[f.label]}
+              alt={shots[f.label] ? `${f.label} — Sunbeam School Ballia` : undefined}
+              brief={briefs[f.label] ?? 'A Sunbeam Ballia bus at the boarding bay, 16:10'}
+              ratio="16 / 10"
+              tone="ink"
+              ref="A2"
+            />
+          </figure>
+        ))}
       </div>
 
       <ul class="tsf__cards">
         {transportFeatures.map((f, i) => (
           <li
             class:list={['tsf__card', !f.verified && 'tsf__card--pending']}
+            data-tsf-card={i}
+            tabindex="0"
             data-reveal
             data-reveal-delay={i * 60}
           >
@@ -136,6 +172,30 @@ const figures = [
     align-items: start;
   }
 
+  /* --- The swapping panel --------------------------------------------------
+     Panes are absolutely stacked inside a ratio-locked box, so the panel holds
+     one height no matter which frame is showing. The first pane is in normal
+     flow — it is what gives the box its height in the first place, so the
+     layout is correct before any script runs and if none ever does. */
+  .tsf__media {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .tsf__pane {
+    margin: 0;
+    opacity: 0;
+    transform: scale(1.015);
+    transition: opacity 420ms ease, transform 620ms var(--sb-ease);
+  }
+
+  .tsf__pane:not(:first-child) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .tsf__pane[data-on] { opacity: 1; transform: none; }
+
   .tsf__cards {
     list-style: none;
     margin: 0;
@@ -143,6 +203,22 @@ const figures = [
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--sb-5);
+  }
+
+  /* The active card is marked, so it is obvious WHICH card the panel is
+     showing — without it the picture changes and nothing says why. */
+  .tsf__card[data-on] {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.26);
+  }
+
+  .tsf__card:focus-visible {
+    outline: 2px solid var(--sb-lime);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tsf__pane { transition: none; transform: none; }
   }
 
   .tsf__card {
@@ -203,6 +279,7 @@ const figures = [
 
   /* --- Narrow -------------------------------------------------------------- */
 
+
   @media (max-width: 1023px) {
     .tsf__panel { grid-template-columns: minmax(0, 1fr); }
   }
@@ -212,3 +289,46 @@ const figures = [
     .tsf__cards { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
+
+<script>
+  /**
+   * The panel follows the pointer across the feature cards.
+   *
+   * Hover AND focus, so tabbing through the six cards drives the picture too —
+   * they carry `tabindex="0"` for exactly that reason. Pointer-hover is gated on
+   * a device that actually hovers: on a touch screen `:hover` sticks after a tap
+   * and the panel would freeze on whichever card was last touched.
+   *
+   * Leaving the group returns to the first card rather than holding the last —
+   * the section should look the same each time it is scrolled back to.
+   */
+  document.querySelectorAll<HTMLElement>('[data-tsf-media]').forEach((media) => {
+    const section = media.closest('section');
+    if (!section) return;
+
+    const cards = [...section.querySelectorAll<HTMLElement>('[data-tsf-card]')];
+    const panes = [...media.querySelectorAll<HTMLElement>('[data-tsf-pane]')];
+    if (!cards.length || !panes.length) return;
+
+    const canHover = window.matchMedia('(hover: hover)').matches;
+
+    const show = (i: number) => {
+      panes.forEach((p, k) => (k === i ? p.setAttribute('data-on', '') : p.removeAttribute('data-on')));
+      cards.forEach((c, k) => (k === i ? c.setAttribute('data-on', '') : c.removeAttribute('data-on')));
+    };
+
+    show(0);
+
+    cards.forEach((card, i) => {
+      if (canHover) card.addEventListener('mouseenter', () => show(i));
+      card.addEventListener('focus', () => show(i));
+      // Tap on touch: the only way to reach a frame without a hover state.
+      card.addEventListener('click', () => show(i));
+    });
+
+    if (canHover) {
+      const list = cards[0].parentElement;
+      list?.addEventListener('mouseleave', () => show(0));
+    }
+  });
+</script>

@@ -1,0 +1,67 @@
+---
+/**
+ * BEYOND ACADEMICS → EXCURSIONS & EDUCATIONAL TOURS.
+ *
+ * ⚠ THE PAGE IS CURRENTLY THE BANNER AND NOTHING ELSE, at the client's
+ * instruction: "remove all the sections from this page keep heading banner".
+ *
+ * ═══ NOTHING HAS BEEN DELETED — IT IS ALL STILL HERE ════════════════════════
+ *
+ * The sections were removed from this page only. Every component, every line of
+ * copy and all 27 photographs remain in the repository, so putting any of it
+ * back is uncommenting an import and a tag:
+ *
+ *   components/beyond/excursions/RouteMap.astro     the five states, plotted
+ *                                                   from real coordinates
+ *   components/beyond/excursions/Trips.astro        seven trips — kicker,
+ *                                                   heading, account, gallery
+ *   components/beyond/excursions/Shorts.astro       four compact visits
+ *   components/beyond/excursions/Expeditions.astro  seven local destinations
+ *   data/excursions.ts                              all the content
+ *   assets/excursions/                              27 photographs, pulled from
+ *                                                   the school's live site
+ *
+ * The SectionRail went with them: it navigates between section ids, and with no
+ * sections left it would have rendered a rail pointing at nothing.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+
+/* Students outside a building on a visit — the closest thing in the library to
+   a photograph of this page's subject. */
+import heroPhoto from '../../assets/photos/sunbeem-students-2.jpg';
+---
+
+<BaseLayout
+  title="Excursions & Educational Tours — Sunbeam School Ballia"
+  description="Excursions and educational tours at Sunbeam School Ballia."
+>
+  <PageHero
+    title="Excursions & Educational Tours"
+    standfirst="A dairy, a district court and a forest park within an afternoon of school — and a conference floor in Odisha for those who go furthest."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Beyond Academics', href: '/beyond-academics/sports/' },
+    ]}
+    src={heroPhoto}
+    alt="Sunbeam School Ballia students outside a building during a visit"
+    position="50% 38%"
+  />
+
+  {/* ⚠ THE EMPTY PANEL STAYS, and it is not leftover markup. PageHero is
+      `position: sticky` and relies on the page panel scrolling up over it —
+      remove the panel and the banner has nothing to be covered by, so it hangs
+      under the footer as the page scrolls. The panel keeps the mechanism intact
+      and holds the page open to a sensible height until sections return. */}
+  <div class="u-page-panel exc-panel"></div>
+</BaseLayout>
+
+<style>
+  /* Sections normally supply this page's height. With none, the panel needs a
+     minimum of its own so the banner has something to scroll under and the
+     footer does not sit directly beneath the hero. */
+  div.exc-panel {
+    padding-block: 0;
+    min-height: 42vh;
+  }
+</style>

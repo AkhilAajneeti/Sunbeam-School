@@ -30,12 +30,33 @@ import bioPhoto from '../../assets/photos/sb-bio-lab.jpg';
 import compPhoto from '../../assets/photos/sb-comp-lab-2.jpg';
 import mathsPhoto from '../../assets/photos/sb-maths-lab.jpg';
 
+/* The academic blocks from the inside. The exterior shot alone left two of this
+   panel's three frames as placeholders, and these are the same building — a
+   corridor and a stairwell in the block the panel is about, not a borrowed
+   picture of somewhere else. */
+import corridorPhoto from '../../assets/corridor and stairs/DSC_1211 copy.jpg';
+import stairsPhoto from '../../assets/corridor and stairs/DSC_1240 copy.jpg';
+
+/* Sports had NO photograph at all on this panel and three placeholders, which
+   was true when this component was written and is not any more — the ground,
+   court and junior park are all photographed. */
+import joshPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
+import courtPhoto from '../../assets/basket ball/DSC_1280 copy.jpg';
+import parkPhoto from '../../assets/play ground/DSC_1248 copy.jpg';
+
 type Shot = { src: ImageMetadata; alt: string };
 
 /** Real photography, keyed to the facility it actually shows. */
 const gallery: Record<string, Shot[]> = {
   campus: [
     { src: campusPhoto, alt: 'The Sunbeam School Ballia academic blocks at Agarsanda, seen across the school lawn.' },
+    { src: corridorPhoto, alt: 'A corridor inside the academic block at Sunbeam School Ballia.' },
+    { src: stairsPhoto, alt: 'A noticeboard-lined corridor in the academic block at Sunbeam School Ballia.' },
+  ],
+  sports: [
+    { src: joshPhoto, alt: 'The JOSH ground at Sunbeam School Ballia, seen through the school gateway arch.' },
+    { src: courtPhoto, alt: 'The basketball court at Sunbeam School Ballia.' },
+    { src: parkPhoto, alt: 'The junior playground at Sunbeam School Ballia.' },
   ],
   lab: [
     { src: labPhoto, alt: 'Sunbeam School Ballia students performing a chemistry practical in the science laboratory.' },
@@ -67,7 +88,7 @@ const slots = ['tall', 'top', 'bottom'] as const;
         <p class="campus__eyebrow"><span class="pill pill--violet">The Campus</span></p>
         <h2 class="campus__heading t-h2-sans" data-split id="campus-heading">Explore our campus life</h2>
         <p class="campus__sub t-body-lg">
-          Nine laboratories, a fifteen-thousand-book library and a shooting range, on one
+          Twelve laboratories, a fifteen-thousand-book library and a shooting range, on one
           campus at Agarsanda. Step through the places a Sunbeam day actually happens in.
         </p>
       </header>
@@ -507,6 +528,9 @@ const slots = ['tall', 'top', 'bottom'] as const;
     const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-tab]'));
     const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
     const counter = root.querySelector<HTMLElement>('[data-counter]');
+    /* The stepper's own horizontal scroller — the ONLY thing show() is allowed
+       to scroll. See the warning in show(). */
+    const strip = root.querySelector<HTMLElement>('[role="tablist"]');
     let index = 0;
 
     const show = (next: number) => {
@@ -528,12 +552,64 @@ const slots = ['tall', 'top', 'bottom'] as const;
       });
 
       if (counter) counter.textContent = String(index + 1).padStart(2, '0');
-      tabs[index]?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+
+      /* ⚠ KEEP THE ACTIVE THUMBNAIL IN THE STRIP — AND ONLY THE STRIP.
+         This was `tabs[index].scrollIntoView({ block: 'nearest', inline:
+         'nearest' })`, which was fine for as long as `show()` only ran from a
+         click: the section was already on screen, so "nearest" resolved to a
+         few pixels of horizontal nudge inside the strip.
+
+         The 4-second timer broke that. scrollIntoView walks EVERY scrollable
+         ancestor including the document, so once the reader had scrolled past
+         this section, each tick dragged the whole page back up to it. Measured
+         from the foot of the home page: parked at 11046, hauled to 4497 —
+         6549px against the reader, across 74 scroll events, every four seconds.
+         That is both the "vibrating" and the "jumps to the top".
+
+         Scrolling the strip by hand touches nothing else on the page. */
+      const t = tabs[index];
+      if (strip && t && strip.scrollWidth > strip.clientWidth + 1) {
+        strip.scrollTo({
+          left: Math.max(0, t.offsetLeft - (strip.clientWidth - t.offsetWidth) / 2),
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        });
+      }
     };
 
-    tabs.forEach((tab, i) => tab.addEventListener('click', () => show(i)));
-    root.querySelector('[data-prev]')?.addEventListener('click', () => show(index - 1));
-    root.querySelector('[data-next]')?.addEventListener('click', () => show(index + 1));
+    /* ── AUTO-ADVANCE, EVERY 4 SECONDS ───────────────────────────────────────
+       WITH FOUR GATES, because a carousel that moves while someone is reading
+       it is worse than one that never moves at all:
+
+         · prefers-reduced-motion — it never starts;
+         · any deliberate interaction (a tab, an arrow, a keypress) STOPS IT FOR
+           GOOD. Resuming after a pause fights the reader, who moved it there on
+           purpose;
+         · pointer over the card, or keyboard focus inside it — paused while
+           they are there, since that is someone reading rather than passing;
+         · the tab being in the background — an interval that keeps firing on a
+           hidden tab burns battery and returns to a slide nobody chose. */
+    const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timer = 0;
+    let stopped = REDUCED.matches;
+
+    const tick = () => { if (!stopped) show(index + 1); };
+    const play = () => { if (!stopped && !timer) timer = window.setInterval(tick, 4000); };
+    const pause = () => { if (timer) { clearInterval(timer); timer = 0; } };
+    const stop = () => { stopped = true; pause(); };
+
+    root.addEventListener('pointerenter', pause);
+    root.addEventListener('pointerleave', play);
+    root.addEventListener('focusin', pause);
+    root.addEventListener('focusout', (e) => {
+      // Only resume once focus has actually left the card, not on every hop
+      // between two controls inside it.
+      if (!root.contains(e.relatedTarget as Node)) play();
+    });
+    document.addEventListener('visibilitychange', () => (document.hidden ? pause() : play()));
+
+    tabs.forEach((tab, i) => tab.addEventListener('click', () => { stop(); show(i); }));
+    root.querySelector('[data-prev]')?.addEventListener('click', () => { stop(); show(index - 1); });
+    root.querySelector('[data-next]')?.addEventListener('click', () => { stop(); show(index + 1); });
 
     root.querySelector('[role="tablist"]')?.addEventListener('keydown', (event) => {
       const e = event as KeyboardEvent;
@@ -545,10 +621,12 @@ const slots = ['tall', 'top', 'bottom'] as const;
       };
       if (!(e.key in map)) return;
       e.preventDefault();
+      stop();
       show(map[e.key]);
       tabs[index].focus();
     });
 
     show(0);
+    play();
   }
 </script>
