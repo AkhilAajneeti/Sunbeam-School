@@ -442,12 +442,331 @@ Split headings (12) · `[data-reveal]` batch reveals, replacing the Intersection
 
 ---
 
+## D29 · Achievements on a phone — three faults, and the one that caused two of them
+
+Client reported the page as poorly designed on mobile. Measured at 390 rather than eyeballed, and the three faults turned out to share a root.
+
+| | Was | Now |
+|---|---|---|
+| Dead ink right of each poster | **102 / 110 / 110 px** | 0 |
+| Poster rendered widths | 184 / 184 / 184 px | **286 / 286 / 286 px** |
+| Card heights | 621 / 574 / 586 | 786 / 738 / 721 |
+| `.maj` section height | 2,222px | 2,654px |
+| `.rec` section height | 1,676px | 1,381px |
+
+**The root cause was one declaration.** `.maj__frame { align-self: flex-start; width: min(200px, 56vw) }` inside a stacked flex column. A capped width plus a start-aligned cross axis leaves the remainder of the column bare — a third of every card, three cards running. It also capped the poster at 184px, and these are **designed posters carrying their own headline, crest and inset photograph**: at 184px none of that is readable, so the clause the section exists to satisfy — "major achievements displayed first using **high-resolution photographs**" — was not actually being met on the device most parents use.
+
+**Rule worth carrying:** a media element with a capped width inside a stacked flex column will produce dead space unless something takes the remainder. Either let it fill the column, or give the column a second thing to hold.
+
+### D30b · Centred was wrong, and the client was right about why
+
+*"Left right design is better because current design looks not good."*
+
+The first pass read *"heading and content at center"* literally and centred everything, including four-paragraph accounts — seven centred lines on a phone. docs/05 § I2 had flagged the risk in advance ("never centre a paragraph longer than two lines") and it was raised at the time as a known cost, which is not the same as being right to ship it. Centred prose with a photograph parked underneath also gives every band the same tall single column, so eleven of them read as one long scroll rather than as eleven places.
+
+The band is now the client's own reference arrangement: an index numeral, copy in one column, photographs in the other, **sides swapping every section**. Three things improve at once — each band roughly halves in height, the body gets a column narrow enough to read down, and the alternation gives the page a rhythm no amount of vertical spacing could.
+
+| At 1440 | Centred | Split |
+|---|---|---|
+| Page height | 13,986px | **10,291px** |
+
+**The alternation is applied to all eleven sections, not the two named.** Two split bands among nine centred ones reads as a mistake rather than a pattern. Say so if only those two were wanted.
+
+**Copy is left-aligned inside its column** — centring it there would reintroduce the exact fault being fixed, in a column half the width.
+
+**The sides swap by grid placement, not `order`.** `grid-column` on both children leaves the DOM order alone — copy first, always — so reading order and tab order are identical whichever side the photographs land on. `order` would have desynchronised them on every second section.
+
+Two sections have no photographs (the Hindi ones, whose live galleries are the recycled generic set). They take a `--solo` variant: one centred column at 74ch rather than a half-empty split.
+
+**Learning expeditions removed** at the client's request. `Expeditions.astro` and the `expeditions` data are untouched in the repo, so restoring it is one import and one tag.
+
+### D30c · "Sections look simple" — a stage, not a row of small slides
+
+Correct diagnosis from the client, and the cause was measurable: each photograph rendered at **~300px** in the media column. Three small pictures in a row is a thumbnail grid, and thumbnail grids are the specific thing the audit objects to on the live site.
+
+The client supplied a wireframe — copy one side; a large stage image the other with a thumbnail rail beneath it — which is exactly the arrangement the homepage Campus browser already uses (D16). **So the mechanism is reused rather than reinvented:** thumbnails are tabs, stage frames are tabpanels, and the keyboard contract is one the site already ships.
+
+| At 1440 | Before | After |
+|---|---|---|
+| Photograph size | 300 × 200 | **648 × 432** — 4.7× the area |
+| Page height | 10,291px | 10,656px (**+365px**) |
+
+**The stage stays inside its column rather than spanning the container.** A container-width image cannot have text beside it, so it would have undone the left/right arrangement in the same breath as improving the photography — and it put the page back over 15,000px. Discussed with the client before building; if a genuinely full-bleed moment is wanted later, it should be spent on **one** section rather than eight.
+
+**The cross-fade removes the reason the old carousel had to ping-pong.** Nothing scrolls, so returning from the last frame to the first is seamless rather than a hard jump backwards. The `dir` reversal and its comment are gone with it.
+
+**3:2, not the wireframe's ~16:9.** These originals are 4:3 and 3:2; a 16:9 stage crops a third off the top and bottom of every group photograph on this page, which is where the faces are.
+
+**Inactive frames carry `inert`, not `hidden`.** They still have to be laid out and painted for the cross-fade, but a keyboard user must not be able to tab into an invisible one. 21 of 29 frames inert at rest, verified.
+
+⚠ **Cadence, flagged not silently changed.** `STEP_MS` is 2000 because that is what was asked for. The site's own hero cross-fades at **6s** (docs/05 § N), and a 648px stage changing every 2s is a far bigger event than the 300px slide the number was chosen for. One constant, one line, if it reads as too fast.
+
+**Behaviour verified end to end**, not inferred from the code:
+
+| | |
+|---|---|
+| Autoplay | 0 → 1 → 2 at 2s; an off-screen gallery stayed at 0 |
+| Reduced motion | timer never created; index unchanged after 5s |
+| Hover | paused |
+| Thumbnail click | stopped permanently — the WCAG 2.2.2 mechanism |
+| Keyboard | ArrowRight → 1, End → 2, Home → 0; **one tab stop** in the rail; focus follows selection |
+
+### Learning expeditions — built, then removed again
+
+⚠ **THIS SECTION IS NOT ON THE PAGE.** It was removed at the client's instruction, then re-added in the redesigned form described below after that option was chosen in a clarifying question, then removed again when the client repeated the original instruction. **The page is the live page's eleven sections and nothing else.**
+
+Nothing was deleted: `Expeditions.astro` and the `expeditions` array both remain, so restoring it is one import and one tag. The four glyphs added to `FacIcon` stay too — they are additive names, used by nothing else, and available if the section ever returns.
+
+**The lesson, and it is mine.** The removal instruction was already on record. When a later request was ambiguous, I offered restoring a section the client had explicitly cut as one of the options — and an option list is a form of suggestion. A clarifying question should not re-open a decision the client has already made; the options should have been about *where else* the icon treatment could go.
+
+What was built, for whoever restores it:
+
+### The redesign, if it is ever wanted back
+
+Removed earlier at the client's request, then asked back redesigned: *"add icons, on hover icons animate and background colour animate."* The data and component had never been deleted, so this was a re-presentation.
+
+**Icons come from `FacIcon`** — the site's existing stroke set — rather than a fourth icon system invented for seven items. Each depicts the **place**, not the category: a gavel for the court, a shikhara for Bhrigu, waves for Karo Dham. An icon that merely restates its own adjacent label is the decorative-icon pattern docs/05 § H5 rules out.
+
+**Four glyphs were added, at the client's suggestion, where the set had no honest match.** The nearest existing ones read badly at the 26px this grid draws them: a *message bubble* for a POST OFFICE, a *seedling* for a DAIRY, and `tree` / `prayer` — a circle on a stem and a plain dome — which resolve to a lollipop and a candle at that size. `mail`, `milk`, `forest` and `temple` are drawn to the file's own contract: 24 grid, 1.5 stroke, Feather-weight geometry, inheriting `currentColor` so they work on ink panels, sand bands and white tiles alike.
+
+⚠ **Added, never substituted.** `tree`, `prayer`, `speech` and `sprout` are each in use on Campus and Achievements — redrawing them to suit this page would have silently changed three other pages. Checked before writing, and verified after: every one of the seven cards renders its own path count (2–6), so nothing fell through to the single-path `dot` fallback a typo would produce, and both dependent pages still render unchanged.
+
+**The background is a sweep, not a fade.** A `::before` on `scaleY` anchored to the card's bottom edge, rather than a `background-color` transition. Transitioning a colour is a crossfade and reads as a light going on; a wipe reads as a deliberate change of state — and it composites on the GPU instead of repainting the card. Everything animated here is `transform` or `opacity`, per docs/05 § N, so seven cards hovering in sequence cost no reflow.
+
+**Four colours, one rule set.** Each card carries its category's `--tint` and `--ink` as custom properties, so the sweep, the plate fill, the name and the label all key off two values. No new colour enters the system.
+
+**Every hover-state pair was computed, not assumed** — the pixel checker only ever sees the rest state, so the hover palette needed doing by hand:
+
+| | |
+|---|---|
+| Category name/label on its tint | 5.38 – 10.16 : 1 |
+| Body note on each tint | 8.42 – 8.71 : 1 |
+| White glyph on each filled plate | 6.01 – 11.22 : 1 |
+
+Worst pair **5.38:1**, all AA.
+
+⚠ **The cards are not links, and that is not an oversight.** The school publishes no page for any of these seven places, and inventing destinations is the one thing this project does not do. A hover state on a non-interactive card does carry a mild implication of clickability; it is here because it was asked for, the cursor stays `default`, and nothing else suggests an action. If pages ever exist, each card becomes an `<a>` and the styling is unchanged. `:focus-within` is wired alongside `:hover` so the states already work for a keyboard user on that day.
+
+**Four across at ≥1024**, so seven items land 4 + 3. Three across would give 3 + 3 + 1 and strand a single card on its own row.
+
+**Verified:** 7 cards, 7 icons, 0 left hidden after a scroll pass, 4 / 2 / 1 columns at 1440 / 768 / 390, no horizontal overflow, ground still alternates against the last band, no console errors, pixel-sampled contrast PASS at all three widths.
+
+### Long accounts run on under the full section
+
+Client: *"in some cases the content is a lot — fill the section, then put the rest of the paragraphs at the bottom of the section."*
+
+The problem is measurable. The media column is a fixed height — a 3:2 stage plus the thumbnail rail, ~540px at 1440. A two-paragraph account sits comfortably beside it; **IMUN's twelve paragraphs ran ~600px past it**, leaving half a section of dead ivory.
+
+The body now splits: enough beside the photographs to balance them, the remainder as a **full-width run-on beneath both columns, set in columns like the foot of a printed page** — 3 at ≥1024, 2 at ≥768, 1 below. **Nothing is hidden, truncated or reordered.** Verified: IMUN still renders 12 paragraphs and SAIMUN 9 at every width, matching the data exactly.
+
+| At 1440 | Copy | Media | Difference |
+|---|---|---|---|
+| IMUN | 554px | 540px | **14px** |
+| SAIMUN | 488px | 540px | −51px |
+
+⚠ **The split is automatic, not hand-tuned per section.** A budget somebody sets for each new trip is a curator, and this page exists specifically so it needs none. The budget is a **character count** because that is what predicts height: ~500 characters is about eight lines at this measure. On today's content it splits IMUN (4 above, 8 below) and SAIMUN (2 above, 7 below) and nothing else — exactly the two sections that looked unbalanced. The first paragraph is always kept beside the photographs however long it runs, or a single 700-character opening would leave the copy column holding nothing but a heading.
+
+**The run-on sits between the copy and the media in the DOM, deliberately.** On a phone the grid is one column and items stack in source order, giving **copy → rest of copy → photographs** — a single continuous account, uninterrupted. Putting it after the media and fixing the sequence with `order` would leave the visual order disagreeing with what a screen reader reads. Verified: visual order is `copy, tail, media` at 390 and `copy, media, tail` at 768 where the two-column layout takes over.
+
+`break-inside: avoid` on each paragraph, so a two-line item never strands one line at the top of the next column — which reads as a rendering fault rather than as a column.
+
+**Each run-on paragraph carries a feather bullet, and the hover treatment built for the expedition cards moved here** at the client's request: the ground sweeps up on `scaleY`, the quill lifts and turns, both recolour. Same mechanism, same reasoning — a colour crossfade reads as a light going on, a wipe reads as a change of state, and it composites rather than repaints.
+
+⚠ **"Like feather" meant a 🪶, not Feather Icons.** The first build read it as the icon library and shipped an arrow. Feather's set happens to contain a `feather` glyph, so the client's actual request and the site's line-work convention turn out to be the same drawing.
+
+⚠ **Drawn, not the emoji character**, for three reasons that all bite here:
+- an emoji is a **colour** glyph and cannot inherit `currentColor`, so the hover recolour — half of the effect that was asked for — simply would not happen;
+- it renders as a different drawing on Windows, Android, iOS and Linux, so no two visitors would see the same page;
+- at 16px beside 17px text it sits on the font's own baseline metrics and cannot be optically aligned the way a sized SVG can.
+
+The motion changed with the glyph. An arrow travels on the x-axis; a quill **lifts and turns**, rotating about its nib (`transform-origin: 30% 75%`) so the tip swings while the shaft stays anchored. The 4px slide that suited an arrow reads as a glitch on a feather. Size went 16 → 18px: the feather carries three strokes and a diagonal, and at 16px the quill line closed up against the vane.
+
+#### The two image-less sections hold their column with a labelled placeholder
+
+Client: *"9 and 10 have no images — add the same image from 8 for now so it looks correct, we'll update the images after."*
+
+The layout complaint is right: those two were falling back to the `--solo` variant, so they read as a different kind of section from their ten neighbours. **They now hold the media column at the stage's exact size** — measured 648 × 432 at 1440 and 350 × 233 at 390, identical to SAIMUN's stage — and `--solo` is no longer used anywhere on the page.
+
+⚠ **What they hold is a labelled placeholder, not SAIMUN's photographs.** Duplicating section 8's images would put a Model United Nations floor in Bhubaneswar under a Jayaprakash Narayan commemoration and a cleanliness drive in Ballia. A visitor reads a photograph as a picture *of* the thing it sits beneath — the borrow would be a factual claim, not a layout stand-in, and "we'll update later" is exactly how it ships. docs/07's placeholder policy is explicit: *placeholders are deliberately obvious and are never filled with substitutes.*
+
+The placeholder does the same job better: same frame, same radius, same shadow, same height in the row — and it names the shot the school owes, so the gap stays visible until it is closed rather than looking finished and being wrong. Each carries `role="img"` and an `aria-label` announcing it as photography not yet supplied.
+
+Swapping either for a real `<Picture>` is a one-line change the day the shot arrives — set `shots` instead of `needs` in `data/excursions.ts`.
+
+#### Paragraphs that finish each other's sentences stay together
+
+Reported by the client against SAIMUN. The school published **one sentence as four paragraphs**:
+
+> "…Shashank Singh and Diya Singh who went to represent UNESCO & DISEC AT SAIMUN 2023 have grabbed" / "# Special Mention" / "# High Recommendations" / "in their committees."
+
+In a three-column run-on those landed in different columns, so the sentence broke mid-clause — and "in their committees." got a feather of its own, which made it read as a standalone point.
+
+⚠ **The test is the shape of the text, not its meaning.** A paragraph continues into the next when it does not end in sentence-final punctuation. That is a typographic fact about the string, not an interpretation of what it says, so it needs no per-section tuning and cannot be *wrong about content*. `:` counts as final — it closes an introducing clause, and treating it as open would swallow IMUN's five challenge lines into the sentence that introduces them.
+
+**It fails safe.** Over-grouping merely keeps two paragraphs in one column, which is harmless; under-grouping is the defect being fixed. On today's content it groups SAIMUN's four-paragraph sentence and joins IMUN's "Participants:" line to the one after it — the latter unnecessary and invisible.
+
+**One feather per group, not per paragraph.** The bullet now marks a complete thought, which is what it looked like it was marking all along. The school's own paragraph breaks survive as separate `<p>` elements at a tighter internal rhythm, so a continued sentence reads as one thought while the gap between points still reads as a separation.
+
+**Verified with an assertion, not by eye:** every `<p>` inside a point shares an x-coordinate at 390 / 768 / 1440 — **0 groups straddle a column** — and paragraph counts are unchanged at 12 for IMUN and 9 for SAIMUN.
+
+⚠ **Still `<p>`, not `<li>`.** These are the school's own paragraphs; marking them as a list would assert a structure the source does not have. The bullet is `aria-hidden`, so a screen reader hears the prose exactly as published.
+
+⚠ **One glyph for every line, deliberately.** A different icon per paragraph would mean reading meaning out of each one — inference, and it would need redoing for every future trip. An arrow is a marker, not a claim. Travel is also the only motion an arrow *should* have; the tilt-and-scale used on the expedition cards would read as a twitch here.
+
+Contrast on the hover state, computed by hand since the pixel checker only sees the rest state: text **15.92:1**, bullet **6.24:1**. At rest the bullet runs 4.35–5.08:1 across the three grounds — decorative and `aria-hidden`, so not required to clear anything, recorded because it is close to the line.
+
+**Verified:** 15 bullets across the two run-on sections at 390 / 768 / 1440, IMUN still 12 paragraphs and SAIMUN 9, no horizontal overflow, no console errors, pixel-sampled contrast PASS.
+
+### The thumbnail rail — centred, swipeable, and two bugs with one cause
+
+Client: *"the three image cards are not at center — make them centred, and if cards are more than four they should also swipe."*
+
+`justify-content: safe center` does both. **The `safe` keyword is doing real work:** plain `center` in a scroll container overflows equally in both directions, and the overflow on the left is unreachable — there is no negative scroll position — so the first thumbnail of a long rail could never be scrolled back to. `safe` falls back to flex-start the moment the content stops fitting. The plain `center` above it is the fallback for engines that do not know the keyword.
+
+⚠ **`minmax(0, …)` on the grid tracks is load-bearing, and its absence looked like two unrelated bugs.** A bare `fr` track is `minmax(auto, fr)`, so it can never be narrower than its content's **min-content** — and the min-content of a `flex-wrap: nowrap` rail is the sum of every thumbnail. Measured on SAIMUN at 1440: six thumbnails plus gaps are 760px, so the media column swelled from its 690px share to **761px**, stole 71px from the copy column, and — because the track had grown to fit — the rail never overflowed and therefore **never swiped**. One cause, two symptoms.
+
+⚠ **The flip has to swap the track sizes, not just the placements.** Moving the media into column 1 while column 1 stays the `47fr` track hands the *narrower* half to the photographs on every second section — the exact inverse of the 47/53 decision, applied to five of the eight galleries. It surfaced as a **4px** overflow on the four-thumbnail rails at 768: they fit in 53% and do not fit in 47%, so those sections read as "swipeable" by a hairline while their unflipped neighbours sat centred. Now `mediaWidths` reports **a single value (648px) across all eight galleries** at 1440 — the check that would have caught it immediately.
+
+**The rail follows the selection without touching the page.** `scrollIntoView` walks up and scrolls every scrollable ancestor, so on a rail below the fold it yanks the *page* to the gallery once every two seconds while the reader is elsewhere. `keepVisible` adjusts `scrollLeft` on the one element instead, and keyboard focus uses `focus({ preventScroll: true })`. Verified: End key → rail 0 → 113, last thumbnail fully inside, page `scrollY` **unchanged**.
+
+⚠ **A measurement trap worth recording, because it cost two false alarms.** Both a "2000px page jump" and a "rail does not follow" turned out to be the *test*:
+- `scrollIntoView` resolves a position at call time; GSAP then splits nine headings into inline-block words, those headings re-wrap, and scroll anchoring corrects — which reads as the page jumping. `scrollTo` an absolute offset, and settle ~2.5s before taking a baseline. Verified with `scrollTo`: no page on the site moves.
+- Playwright's `page.focus()` and `page.click()` auto-scroll the target into view before acting, so they move the page even when the component does not. Drive the component through `evaluate` when the thing being measured *is* scroll position.
+
+**Verified after the change:** 11 bands, 8 galleries, 5 alternating, 2 solo, 0 expeditions sections, 59 images all loading, 0 clamped text nodes, 0 horizontal overflow and no two adjacent bands sharing a ground at 390 / 768 / 1440, media columns identical at 648px across all galleries, every rail centred except the six-photograph SAIMUN which swipes at all three widths, no console errors, pixel-sampled contrast PASS, build clean at 18 pages.
+
+---
+
+**Verified after the split-layout change:** 11 bands, 5 alternating, 2 solo, 0 expeditions sections, 0 clamped text nodes, 0 horizontal overflow and no two adjacent bands sharing a ground at 390 / 768 / 1440, no console errors, pixel-sampled contrast PASS, build clean at 18 pages.
+
+---
+
+### The layout — one shape for all three, on client instruction
+
+The card becomes a **grid** at ≤560, with `.maj__body { display: contents }` so its children place themselves directly: poster at full card width, then kicker, heading, paragraph, facts.
+
+An interim pass ran the two secondaries as thumbnail-beside-heading, which held the height hierarchy at 786 : 388 / 404. **The client asked for all three to take the same shape as the lead,** which is the right call for a second reason: it puts every poster at 286px rather than 101px, and all three are the school's own award graphics — the clause asks for high-resolution photographs, and a poster too small to read its own headline does not satisfy it.
+
+**Hierarchy therefore falls to scale, not shape** — the lead keeps a 27px heading against 19px and its warm radial ground, the same 1.4 : 1 ratio the desktop layout already uses with a shared orientation. Card heights are now 786 / 738 / 721.
+
+**The cost is length, and it is the client's to weigh:** `.maj` runs 2,654px at 390 against 1,987px for the interim version and 2,222px originally. Three full-size posters cannot be shorter than one.
+
+One follow-on correction found by looking rather than reasoning: **the lead's facts had wrapped ragged** — measured 140/70, then 150/113 — into an accidental two-column while the secondaries stacked cleanly. The messiest treatment was on the most important card. All three stack now.
+
+### The posters were sized in `vw`, which is the wrong axis
+
+Reported next on desktop: the two secondary posters still read as thumbnails. They did — 135px inside a 570px card at 1440.
+
+The cause is that both frames were sized in **viewport** units (`clamp(112px, 12vw, 158px)`, lead `clamp(210px, 24vw, 320px)`) while the cards are sized by the **grid**. A poster tracking the window inside a card tracking the container will only line up by luck, and above 1300 the `vw` term hit its cap and stopped growing at all while the card kept widening.
+
+Both are now a **percentage flex-basis**, which resolves against the card's own content box, with px bounds for the tablet band:
+
+```
+.maj__card .maj__frame       { flex: 0 0 clamp(140px, 36%, 240px); }
+.maj__card--lead .maj__frame { flex: 0 0 clamp(240px, 44%, 400px); }
+```
+
+| Rendered image width | 768 | 1024 | 1280 | 1440 |
+|---|---|---|---|---|
+| Lead — was | 224 | 269 | 337 | 297 |
+| Lead — now | **273** | **376** | **380** | **377** |
+| Secondary — was | 96 | 123 | 135 | 135 |
+| Secondary — now | **223** | **136** | **171** | **182** |
+
+⚠ **The lead's share has to exceed the secondaries', not merely sit on a wider card.** The first attempt gave the lead 32% against the secondaries' 36%, reasoning that its card spans both columns. That holds only above 900, where it does; from 900 down the grid is one column, every card is the same width, and the lead's poster became **the smallest of the three — 224px against 223px at 768**, hierarchy silently gone. Caught by measuring every breakpoint rather than the two the change was aimed at.
+
+**`sizes` is now per card.** One shared hint (`28vw` above 1200) over-declared the secondaries by roughly double and pulled the 840w variant for an image rendering at 182px — waste on exactly the connections D13 sizes the image pipeline around. Lead and secondaries carry separate hints whose breakpoints track the grid: ≤560 one column, ≤900 one column, above that two-up.
+
+### Recognition — the stack was the fault, not the card
+
+Six near-identical portrait boxes in one column is the template pattern docs/05 § H5 rules out. Two columns is not the fix at this width: "Brainfeed School Excellence Award" in a 123px cell breaks to four lines and the body falls to a 14-character measure.
+
+So the cards stay one per row and **turn landscape** — icon in a left rail, text beside it. Card heights 237/215/160/160/182/215 → 201/179/104/149/126/157. **The card ground, radius and border are kept deliberately**: they are the reference language the client chose in D16, and nothing was wrong with the card itself.
+
+It also gives the icon a job. Floating above a short title with nothing beneath it, a trophy beside "Education World — #1" was the decorative-icon-restating-its-heading pattern § H5 forbids; anchoring a row, it earns its place.
+
+**The Full Record section was left alone.** A rule-separated list of eleven entries is already the right answer on a phone.
+
+### Verified
+
+- **The two wrapper divs (`.maj__head`, `.rec__text`) changed no desktop spacing, and that was checked rather than assumed.** Wrappers are exactly where margin collapse bites, so 768 and 1440 were measured against the stashed original before the poster resizing went in: card heights, section heights and total page height identical to the pixel.
+- No horizontal overflow at 390 / 430 / 768 / 1024 / 1280 / 1440; every poster loads after a full scroll pass; no console errors.
+- **Pixel-sampled contrast** (D25's rule — the lead card sits on a radial gradient and the copy moved across it): `.maj` 6.5–18.8:1 at 390 / 430 / 768 / 1440, `.rec` 4.5–18.1:1, all PASS. The 4.5 is `.rec__fig` at 22px/700, which is large text and needs 3:1.
+
+⚠ **A capture trap worth recording.** `elementHandle.screenshot()` times out with *"element is not stable"* on any section GSAP is still animating. Capture with `reducedMotion: 'reduce'` — D28 means the library is then never fetched, so the page settles — and scroll the full page first, or `loading="lazy"` posters photograph as empty grey boxes and you will diagnose a bug that does not exist.
+
+---
+
+## D30 · Excursions rebuilt to the live page — and two bugs that only a screenshot found
+
+Client instruction, with the live page supplied as the reference: *"exact same as it and same content, just enhance its beauty — heading and content at center, images in a carousel with auto scroll within 2sec, use animation text split, content remains same not cuts."*
+
+The page had been stripped to its banner at an earlier instruction. Nothing had been deleted, so this was a re-presentation: seven trips, four short visits, seven local expeditions and 27 photographs were all still in `data/excursions.ts` and `assets/excursions/`.
+
+**One repeated unit, `Band.astro`** — centred eyebrow, split-animated heading, the account in full, then that trip's photographs on a carousel. Eleven bands, grounds cycling ivory → sand → paper so no two adjacent share a treatment. Kept from the previous build: a page made of one rich repeated unit needs no curator, so trip forty lands looking exactly like trip one.
+
+**"Content not cut" is enforced by absence** — there is no `line-clamp`, no `text-overflow` and no character budget anywhere in the component. Verified rather than asserted: every `.band__body`, `.band__h` and `.band__outcome` measured at 390 / 768 / 1440, none clipped.
+
+### The carousel, and the three gates on it
+
+2,000ms, as asked. The gates matter more than the interval:
+
+| Gate | Why |
+|---|---|
+| **IntersectionObserver** | docs/05 § N budgets **one animated element per viewport**. Eleven carousels stepping at once breaks that on every count, and on the mid-range Android over 4G docs/03 § D1 describes. Only the band on screen runs. |
+| **prefers-reduced-motion** | The timer is never created — the page is *still*, not merely slower. |
+| **Hover / focus / touch** | Hover and focus pause; using a control or dragging the rail stops it permanently for that band. |
+
+Measured: `scrollLeft` 0 → 433 → 867 on the in-view band at 2s intervals, while an off-screen band stayed at 0; under reduced motion nothing moved at all; on hover, unchanged after 3s.
+
+⚠ **On WCAG 2.2.2.** The arrows and dots are the pause mechanism — first use halts the timer for good. That is deliberately not a dedicated always-visible pause button, which was removed from the Voices marquee at the client's request (D23). If an audit asks for one it belongs beside the dots.
+
+**It ping-pongs rather than wrapping.** A true infinite loop needs cloned slides, which duplicates every alt text into the accessibility tree; an instant jump back to the start is a hard cut every few seconds on rails of two to six photographs. Reversing is the only one of the three that stays smooth without lying to a screen reader.
+
+### Two bugs a measurement pass would not have caught
+
+**The dots were in the DOM, sized, and painted nothing.** They were built with `document.createElement`, so they carried no `data-astro-*` scope attribute — and the scoped rule `.band__dots button` compiles with that attribute appended, so it could never match them. The count check said 27 dots and passed; the screenshot showed a gap between the arrows. They are authored in the template now. **Rule, and it is the third of this family after D8 and D11: in a scoped stylesheet, markup the component did not author is markup the component cannot style.**
+
+**The posters rendered as blank white boxes** — and the network tab was clean, `complete: true`, `naturalWidth` 3603. They were raw `<img src={meta.src}>`, which ships the **3603 × 3603 original** to be decoded into a 500px box: exactly the waste D13 sizes the whole image pipeline to avoid. Through `<Picture>` they resolve to 520 × 520. Verified on `astro preview`, not dev — the dev `_image` endpoint was still transforming when the first check ran and reported `complete: false`, which is D24's lesson arriving from a new direction.
+
+### Content parity — corrected after the client checked it
+
+The first pass got this wrong in two ways, both reported by the client, and both worth recording because the mistake is an easy one to repeat.
+
+**A section had been dropped.** The Kho-Kho final against M.B.C.I.C at Prayagraj was left off on the reasoning that a match result is not an excursion and already lives in `achievements.ts § sportRecord`. The reasoning is defensible; taking the decision was not. It is on the school's excursions page, so it belongs on ours. Restored, with its two photographs pulled from the live page to `assets/excursions/khokho-{1,2}.jpg` — located by parsing the rendered HTML heading-by-heading rather than guessing at filenames.
+
+**The headings had been rewritten.** "OUR STUDENTS AT JAIPUR HERITAGE FESTIVAL 2023" had become "Jaipur Heritage Festival", and every account had been rewritten with it. The instruction was *"same content as it"* and it meant exactly that. All eleven headings and all eleven accounts are now **verbatim**, fetched from the live page rather than transcribed from a screenshot, and **verified by diffing the rendered `.band__h` text against the live page's own HTML: 11/11 exact.** The order is the live page's too, not the furthest-reach-first sequence that had been imposed.
+
+The typos are part of "verbatim" and are marked in the data so nobody helpfully corrects them: `object.Our` with no space, `College,Ballia`, `class IX has visited`, `BHU , VARANASI`, `deligates`.
+
+⚠ **One departure from verbatim, and it is a factual one rather than a taste one.** The last three sections — the two Hindi ones and the BHU visit — each carry the **identical paragraph and the identical six images** on the live site, a generic WordPress set of children dancing, wooden blocks and the library. The text is reproduced because it is the page's content. **The gallery is not**, because those photographs are not of a Jayaprakash Narayan commemoration, not of a Swachhata Abhiyan and not of Banaras Hindu University; attaching them would state something untrue about what they show. BHU carries the school's own real poster instead; the two Hindi sections run as text until real photographs exist.
+
+### Devanagari needed two fixes, and one of them was invisible until rendered
+
+`line-height: 1.08` is a Latin display setting. Devanagari carries matras above the line and conjuncts below it, and at that leading the marks of one line **collided with the line above** — visible at 1440 on both Hindi headings. `h2.band__h:lang(hi)` now runs 1.45 leading with tracking back to normal, since negative tracking pulls conjunct clusters into each other.
+
+The second would have shipped unseen: **`.sp-mask` in base.css is `overflow: hidden` with `padding-bottom: 0.18em`** — headroom for Latin *descenders* and nothing above the line. Split-animating a Devanagari word slices its vowel marks off. Rather than add top headroom to every heading on the site to fix two here, Hindi headings opt out of `data-split` and reveal with the rest of the band.
+
+Both headings also now carry `lang="hi"`, which docs/05 § M required anyway and which nothing on the site had yet needed.
+
+`Trips.astro` and `Shorts.astro` were deleted — `Band.astro` supersedes both, they were imported by no page, and they read `body` as a string where it is now an array of paragraphs.
+
+### Two things flagged rather than silently overridden
+
+- **Centred prose.** docs/05 § I2 says never centre a paragraph longer than two lines; several accounts run to four, and seven at 390. The client asked for centred, so centred it is — mitigated by holding the body to 62ch rather than 68. A one-line change reverts the body (not the heading) to left-aligned if it reads badly on a phone.
+- **Alt text is per trip, not per photograph.** The data carries one description per trip because that is all that was ever written. Photographs are numbered — "… — photograph 2 of 4" — so a screen-reader user can tell four images of one visit apart instead of hearing one sentence four times. Generated suffixes are not what § J3 asks for; per-image descriptions are owed with the photography request.
+
+**Verified:** 11 bands, **11/11 headings byte-identical to the live page**, 9 split-animated headings (2 Hindi deliberately opted out), 8 carousels, 29 dots all painting, 30 images all loading, 0 truncated text nodes, 0 horizontal overflow at 390 / 768 / 1440, no two adjacent bands sharing a ground, no console errors, pixel-sampled contrast PASS on every ground including both Hindi sections, build clean at 18 pages.
+
+---
+
 ## Placeholder inventory — what is standing in
 
 Per docs/07 placeholder policy. **No stock photography anywhere; no fabricated facts.**
 
 | Location | Placeholder | Asset request |
 |---|---|---|
+| Excursions §09 Jayaprakash, §10 Swachhata Abhiyan | 3:2 tonal field at the stage's exact size, carrying the shot brief | A2 — see D30c |
 | Hero, 3 slides | Tonal fields at the intended luminance, with the shot brief shown in the caption slot | A2 Priority 1 |
 | Mega-menu feature × 5 | 16:9 tonal field, brief in `aria-label` | A2 |
 | Logo | Raster PNG from the live site, frame algorithmically removed | B2 — vector originals |

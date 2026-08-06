@@ -64,6 +64,40 @@ const paths: Record<string, string[]> = {
   school: ['M3 20V10l9-6 9 6v10', 'M3 20h18', 'M9.5 20v-6h5v6', 'M12 8.5v.1'],
   tree: ['M12 21v-5', 'M12 16a6 6 0 0 0 6-6 6 6 0 0 0-12 0 6 6 0 0 0 6 6Z', 'M8.5 21h7'],
   cap: ['m2.5 8.5 9.5-4 9.5 4-9.5 4-9.5-4Z', 'M6.5 10.5V16c0 1.7 2.5 3 5.5 3s5.5-1.3 5.5-3v-5.5', 'M21.5 8.5V14'],
+  /* ── ADDED FOR THE EXCURSIONS GRID ──────────────────────────────────────────
+     Four places had no honest match in the set above, and the nearest ones read
+     badly at the 26px this grid draws them: a message bubble for a POST OFFICE,
+     a seedling for a DAIRY, and `tree`/`prayer` — a circle on a stem and a plain
+     dome — which resolve to a lollipop and a candle at that size.
+
+     ⚠ ADDED, NOT SUBSTITUTED. `tree`, `prayer`, `speech` and `sprout` are each
+     in use on Campus and Achievements, so redrawing them to suit this page
+     would silently change three other pages. New names only.
+
+     Drawn to the same contract as the rest of the file — 24 grid, 1.5 stroke,
+     Feather-weight geometry — so they inherit `currentColor` and sit on the ink
+     panels, the sand bands and the white tiles without a second asset. */
+
+  /** Envelope. A post office is post, not conversation. */
+  mail: ['M3 5.5h18v13H3z', 'm3 6.6 9 6.2 9-6.2'],
+
+  /** Milk carton, gabled top and a band — legible at 26px where a bottle is not. */
+  milk: ['M9 3h6v2.5l2.2 3.3V21H6.8V8.8L9 5.5V3Z', 'M6.8 12.4h10.4'],
+
+  /** Shikhara, lintel, two pillars, plinth and a doorway. The silhouette does
+      the work; the doorway is what stops it reading as a bell. */
+  temple: [
+    'M12 2.8c2.4 2.8 3.8 5.6 3.8 8.4H8.2C8.2 8.4 9.6 5.6 12 2.8Z',
+    'M6.8 11.2h10.4',
+    'M8.3 11.2V19',
+    'M15.7 11.2V19',
+    'M5.5 19h13',
+    'M10.8 19v-3.4h2.4V19',
+  ],
+
+  /** A conifer, which reads as woodland instantly where a lone canopy does not. */
+  forest: ['M12 3 7.4 10.5h9.2L12 3Z', 'M12 8.2 6 16.5h12L12 8.2Z', 'M12 16.5V20', 'M9.6 20h4.8'],
+
   dot: ['M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'],
 };
 

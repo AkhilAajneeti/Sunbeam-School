@@ -17,7 +17,9 @@
  *     that size communicates nothing (docs/01 §109 objects to exactly this).
  *     Here they are 300–420px in a scrollable gallery;
  *   · podiums are buried in running prose. Where the school published placings
- *     they are set as a result list, because that is how a result is read;
+ *     they are set as a result list — but in §7 Results rather than here, so
+ *     every one of these fourteen blocks is the same object. See the note in
+ *     the markup below;
  *   · every block looks identical with no indication of level. A kicker line
  *     now says district / state / national / hosted before the heading.
  *
@@ -62,20 +64,25 @@ import SectionHead from '../../academics/SectionHead.astro';
           {r.more && <p class="rblk__b rblk__b--more">{r.more}</p>}
         </div>
 
-        {/* Placings as a list, not as a sentence. Three podiums of three sit in
-            three columns; a single results list takes one. */}
-        {r.podiums && (
-          <div class:list={['rblk__podiums', r.podiums.length === 1 && 'rblk__podiums--single']}>
-            {r.podiums.map((p) => (
-              <div class="rblk__podium">
-                <p class="rblk__event">{p.event}</p>
-                <ol class="rblk__places">
-                  {p.places.map((pl) => <li>{pl}</li>)}
-                </ol>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* ⚠ NO PLACINGS HERE ANY MORE — they are all in §7 Results, and this
+            is a structural decision rather than a tidy-up.
+
+            Only 2 of these 14 blocks ever had `podiums`, and the two were not
+            the same kind of thing. District Handball's three rows are all the
+            school's own. ASMITA'S NINE ROWS ARE A TOURNAMENT SCOREBOARD — the
+            school HOSTED that league, so the published results list every
+            competitor, and only two of the nine name Sunbeam at all. The Volleyball
+            podium names no Sunbeam side whatsoever.
+
+            Rendered inside a record block, that read as the school's own honours
+            when most of it is other schools', and it put ~250px of small tabular
+            type between the heading and the photographs — the evidence audit 4.8
+            actually asks for. It also put three cards in a row on the one page
+            that has them nowhere else (docs/05 § H5).
+
+            Moved wholesale, the results become what they are: the scoreboard of
+            competitions the school ran or entered. Naming rivals is correct
+            there, and every block on this page is now the same object. */}
       </div>
 
       {/* The gallery bleeds off the right edge: a row cut by the viewport is the
@@ -109,13 +116,15 @@ import SectionHead from '../../academics/SectionHead.astro';
         </div>
 
         {r.shots.length > 2 && (
+          /* Sat above the rail as a pair in the top-right corner; now one on
+             each edge, vertically centred on the cards, per the reference. */
           <div class="rblk__btns" data-rec-btns hidden>
-            <button class="rblk__btn" type="button" data-rec-prev aria-label={`Previous photographs from ${r.title}`}>
+            <button class="rblk__btn rblk__btn--prev" type="button" data-rec-prev aria-label={`Previous photographs from ${r.title}`}>
               <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
                 <path d="M5 1L1 5l4 4M1 5h13" stroke="currentColor" stroke-width="1.6" />
               </svg>
             </button>
-            <button class="rblk__btn" type="button" data-rec-next aria-label={`More photographs from ${r.title}`}>
+            <button class="rblk__btn rblk__btn--next" type="button" data-rec-next aria-label={`More photographs from ${r.title}`}>
               <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
                 <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.6" />
               </svg>
@@ -147,11 +156,18 @@ import SectionHead from '../../academics/SectionHead.astro';
     background: var(--sb-border);
   }
 
+  /* CENTRED HEAD — client instruction, matching the supplied reference: eyebrow,
+     heading and the account stacked on the centre line, then the cards beneath.
+     `margin-inline: auto` on the measures rather than a wrapper, so the hairline
+     above still spans the full container. */
+  .rblk__head { text-align: center; }
+
   .rblk__kicker { color: var(--sb-violet); }
 
   .rblk__h {
     margin-top: var(--sb-4);
     max-width: 22ch;
+    margin-inline: auto;
     font-family: var(--sb-font-display);
     font-size: clamp(23px, 2.6vw, 38px);
     font-weight: 700;
@@ -163,8 +179,12 @@ import SectionHead from '../../academics/SectionHead.astro';
 
   .rblk__prose { margin-top: var(--sb-5); }
 
+  /* 58ch, not 62 — a centred paragraph is read from a ragged left edge, so the
+     eye has to find the start of every line. A shorter measure is what makes
+     that survivable; docs/05 § I2 warns against centring prose at all. */
   .rblk__b {
-    max-width: 62ch;
+    max-width: 58ch;
+    margin-inline: auto;
     font-size: clamp(16px, 1.25vw, 19px);
     line-height: 1.68;
     color: var(--sb-text-secondary);
@@ -172,56 +192,20 @@ import SectionHead from '../../academics/SectionHead.astro';
 
   .rblk__b--more { margin-top: var(--sb-4); }
 
-  /* --- Placings ------------------------------------------------------------- */
-
-  .rblk__podiums {
-    margin-top: var(--sb-7);
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(14px, 1.6vw, 26px);
-    max-width: 900px;
-  }
-
-  .rblk__podiums--single { grid-template-columns: minmax(0, 1fr); max-width: 420px; }
-
-  .rblk__podium {
-    padding: var(--sb-5) var(--sb-6);
-    border-radius: var(--sb-r-2);
-    background: var(--sb-paper);
-    box-shadow: inset 0 0 0 1px var(--sb-border);
-  }
-
-  .rblk__event {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--sb-violet);
-  }
-
-  .rblk__places {
-    list-style: none;
-    margin: var(--sb-4) 0 0;
-    padding: 0;
-  }
-
-  .rblk__places li {
-    padding-block: 5px;
-    font-size: var(--sb-body-sm);
-    line-height: 1.45;
-    color: var(--sb-charcoal);
-  }
-
-  .rblk__places li + li { border-top: var(--sb-hairline); }
-
-  /* The school's own team is the point of the list. */
-  .rblk__places li:first-child { font-weight: 650; }
-
   /* --- The gallery ---------------------------------------------------------- */
 
+  /* One place the rail's arithmetic is defined, so the card width, the track's
+     padding and the arrows' offsets all resolve from the same two numbers.
+     --rblk-gutter is the distance from the viewport edge to the container's
+     content edge; --rblk-w is the container's own width. */
   .rblk__rail-wrap {
     position: relative;
-    margin-top: clamp(22px, 3vh, 36px);
+    margin-top: clamp(26px, 3.4vh, 44px);
+
+    --rblk-per: 1.15;
+    --rblk-gap: clamp(10px, 1vw, 20px);
+    --rblk-gutter: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
+    --rblk-w: min(100vw - 2 * var(--sb-margin), var(--sb-max-content));
   }
 
   .rblk__rail {
@@ -231,28 +215,53 @@ import SectionHead from '../../academics/SectionHead.astro';
     /* Must match the track's left padding, or frame one can only satisfy its own
        snap by resting part-scrolled — which leaves the rail loading at an offset
        and "previous" enabled before anyone has scrolled. */
-    scroll-padding-inline: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
+    scroll-padding-inline: var(--rblk-gutter);
     scrollbar-width: none;
+
+    /* THE EDGE FADE from the reference — the cards do not stop, they dissolve.
+       3% at each end, which at 1440 is 43px and therefore lands INSIDE the 80px
+       gutter: card one is never dimmed at rest, only the neighbours peeking past
+       the container edge are. A wider fade would grey the first card's edge and
+       read as a rendering fault. */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 3%, #000 97%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 3%, #000 97%, transparent 100%);
   }
 
   .rblk__rail::-webkit-scrollbar { display: none; }
 
   .rblk__rail:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: -3px; }
 
+  /* ⚠ NO GUTTER PADDING — the row runs edge to edge.
+     It used to start at the container line, which left an 80px white margin on
+     the left while cards ran off the right: a row that had been cut, not a
+     slider. In the reference the cards are clipped at BOTH edges, which is what
+     says there is more of them in both directions. The loop in the script keeps
+     a card under each edge at all times.
+
+     `safe center` centres the few rails that hold only one or two photographs
+     and cannot overflow. Plain `center` would overflow such a rail equally in
+     both directions and the left half would be unreachable — there is no
+     negative scroll position — so `safe` falls back to flex-start the moment
+     the content stops fitting. */
   .rblk__track {
     display: flex;
-    gap: clamp(10px, 1vw, 15px);
+    gap: var(--rblk-gap);
     list-style: none;
     margin: 0;
-    /* Lines frame one up with the paragraph above it. */
-    padding-left: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
-    padding-right: 0;
+    padding-inline: 0;
+    justify-content: center;
+    justify-content: safe center;
   }
 
+  /* Exactly --rblk-per cards across the CONTAINER, so three fill the 1280 line
+     and the fourth peeks into the gutter — which is what makes it read as a
+     slider rather than a row that happens to be cut off. */
   .rblk__frame {
-    flex: 0 0 clamp(230px, 27vw, 380px);
+    flex: 0 0 calc(
+      (var(--rblk-w) - (var(--rblk-per) - 1) * var(--rblk-gap)) / var(--rblk-per)
+    );
     scroll-snap-align: start;
-    border-radius: 14px;
+    border-radius: var(--sb-r-2);
     overflow: hidden;
     background: var(--sb-sand);
   }
@@ -273,55 +282,78 @@ import SectionHead from '../../academics/SectionHead.astro';
 
   .rblk__frame:hover :global(img) { transform: scale(1.05); }
 
-  .rblk__tail {
-    flex: 0 0 calc(
-      max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2)) - clamp(10px, 1vw, 15px)
-    );
-  }
+  /* Zero now the track runs edge to edge — the element stays because a looping
+     rail measures one set's width from the cards themselves and a stray spacer
+     inside the loop would shift every wrap by its width. */
+  .rblk__tail { flex: 0 0 0; }
 
-  .rblk__btns {
-    position: absolute;
-    right: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
-    top: calc(-1 * clamp(22px, 3vh, 36px) - 44px);
-    display: flex;
-    gap: var(--sb-3);
-  }
+  /* The arrows are no longer a pair in a corner — one sits on each edge,
+     vertically centred on the cards, as the reference has them. `contents` so
+     each button positions against .rblk__rail-wrap rather than against a
+     wrapper that would have to span the rail itself. */
+  .rblk__btns { display: contents; }
 
-  /* `display: flex` would beat the `hidden` attribute's UA rule, which is a
+  /* `display: contents` would beat the `hidden` attribute's UA rule, which is a
      classic way to ship a control that cannot work. */
   .rblk__btns[hidden] { display: none; }
 
   .rblk__btn {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    translate: 0 -50%;
     display: grid;
     place-items: center;
-    width: 38px;
-    height: 38px;
+    width: 46px;
+    height: 46px;
     border: 1px solid var(--sb-border-strong);
     border-radius: 50%;
     background: var(--sb-paper);
     color: var(--sb-charcoal);
     cursor: pointer;
-    transition: background var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
+    box-shadow: 0 10px 26px -14px rgba(28, 14, 8, 0.5);
+    transition: background var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease,
+      transform var(--sb-dur-btn) var(--sb-ease), opacity var(--sb-dur-btn) ease;
   }
+
+  /* Near the viewport edge, sitting ON the clipped card — the reference's own
+     placement. They were on the container line, which is now inside the row
+     rather than beside it. */
+  .rblk__btn--prev { left: clamp(10px, 2.2vw, 38px); }
+  .rblk__btn--next { right: clamp(10px, 2.2vw, 38px); }
 
   .rblk__btn:hover:not(:disabled) {
     background: var(--sb-violet);
     border-color: var(--sb-violet);
     color: #fff;
-    transform: translateY(-2px);
+    transform: scale(1.06);
   }
 
-  .rblk__btn:disabled { opacity: 0.32; cursor: default; }
+  /* Faded rather than removed: a control that vanishes at the end of a rail
+     moves the other one, and a row of arrows that jumps is worse than one that
+     dims. */
+  .rblk__btn:disabled { opacity: 0.3; cursor: default; }
+
+  @media (min-width: 700px) {
+    .rblk__rail-wrap { --rblk-per: 2.2; }
+  }
+
+  @media (min-width: 1024px) {
+    /* Three across the container, the fourth peeking — the reference's count. */
+    .rblk__rail-wrap { --rblk-per: 3; }
+  }
 
   @media (max-width: 900px) {
-    .rblk__podiums { grid-template-columns: minmax(0, 1fr); max-width: 460px; }
-    /* The arrows would sit on the heading at this width, and the rail drags
-       perfectly well with a finger. */
+    /* The gutter is too narrow to hold a 46px button without it landing on the
+       card's subject, and the rail drags perfectly well with a finger. */
     .rblk__btns { display: none; }
   }
 
-  @media (max-width: 700px) {
-    .rblk__frame { flex: 0 0 78vw; }
+  @media (prefers-reduced-motion: reduce) {
+    .rblk__frame :global(img),
+    .rblk__btn { transition: none; }
+    .rblk__frame:hover :global(img) { transform: none; }
+    .rblk__btn:hover:not(:disabled) { transform: none; }
   }
 </style>
 
@@ -358,10 +390,72 @@ import SectionHead from '../../academics/SectionHead.astro';
       return f[1].getBoundingClientRect().left - f[0].getBoundingClientRect().left;
     };
 
+    /* ═══ THE LOOP — what puts a card under BOTH edges ══════════════════════
+     *
+     * The reference clips a card at each side, and a finite rail cannot: at
+     * scrollLeft 0 there is nothing to the left of card one, so the row reads as
+     * cut rather than continuing.
+     *
+     * So the set is duplicated once and the rail parks inside the seam. Because
+     * the two sets are identical, subtracting one set's width is invisible —
+     * the pixels under every point on screen are unchanged.
+     *
+     * ⚠ THE CLONES ARE `aria-hidden` WITH EMPTY ALT. A screen reader must hear
+     * eight photographs, not sixteen. This is the cost that stopped me looping
+     * the excursions gallery, where the frames are tabbable panels; here the
+     * clones are inert images, so it is payable.
+     *
+     * ⚠ ONLY WHERE IT MAKES SENSE. Several blocks hold one, two or three
+     * photographs and cannot overflow — `sgfi-handball` has a single frame.
+     * Duplicating those would invent a scroll where none exists, so they stay
+     * finite and `safe center` centres them.
+     */
+    const track = rail.querySelector<HTMLElement>('.rblk__track')!;
+    const tail = track.querySelector<HTMLElement>('.rblk__tail');
+    const originals = [...track.querySelectorAll<HTMLElement>('.rblk__frame')];
+    let setW = 0;
+    let loop = false;
+
+    const measure = () => {
+      if (!loop) return;
+      setW = originals.reduce((w, f) => w + f.getBoundingClientRect().width, 0)
+        + originals.length * (parseFloat(getComputedStyle(track).columnGap) || 0);
+    };
+
+    /* Overflow is decided BEFORE cloning, or every rail looks like it overflows. */
+    if (rail.scrollWidth > rail.clientWidth + 4 && originals.length > 2) {
+      loop = true;
+      tail?.remove();
+      originals.forEach((f) => {
+        const c = f.cloneNode(true) as HTMLElement;
+        c.setAttribute('aria-hidden', 'true');
+        c.querySelectorAll('img').forEach((i) => i.setAttribute('alt', ''));
+        track.append(c);
+      });
+      measure();
+      /* Park a third of a card in from the seam, so a clipped card sits under
+         the left edge from the first frame the reader sees. */
+      rail.scrollLeft = setW - (originals[0]?.getBoundingClientRect().width ?? 0) / 3;
+    }
+
+    /** Keeps the rail inside the seam. Called between animations, never during
+     *  one — assigning scrollLeft mid-smooth-scroll cancels it and stutters. */
+    const wrap = () => {
+      if (!loop || !setW) return;
+      if (rail.scrollLeft > setW * 1.5) rail.scrollLeft -= setW;
+      else if (rail.scrollLeft < setW * 0.5) rail.scrollLeft += setW;
+    };
+
     /* Disabled at the ends rather than silently doing nothing. The 2px slack
        absorbs fractional scroll positions, which otherwise leave "next" enabled
-       for ever at the right-hand end on non-integer device pixel ratios. */
+       for ever at the right-hand end on non-integer device pixel ratios.
+       A looping rail has no ends, so both stay live. */
     const sync = () => {
+      if (loop) {
+        prev.disabled = false;
+        next.disabled = false;
+        return;
+      }
       const max = rail.scrollWidth - rail.clientWidth;
       prev.disabled = rail.scrollLeft <= 2;
       next.disabled = rail.scrollLeft >= max - 2;
@@ -370,10 +464,125 @@ import SectionHead from '../../academics/SectionHead.astro';
     const step = (dir: number) =>
       rail.scrollBy({ left: dir * pitch(), behavior: reduced.matches ? 'auto' : 'smooth' });
 
-    prev.addEventListener('click', () => step(-1));
-    next.addEventListener('click', () => step(1));
+    /* ═══ AUTO-SCROLL — client instruction ═══════════════════════════════════
+     *
+     * Three gates, each for a different reason:
+     *
+     * 1 · ONLY WHEN ON SCREEN. There are FOURTEEN rails on this page. docs/05
+     *     § N budgets one animated element per viewport, and fourteen timers
+     *     stepping at once would break that on every count — visually, and on
+     *     the mid-range Android over 4G docs/03 § D1 describes. An
+     *     IntersectionObserver runs only the rail in view.
+     * 2 · NOT UNDER REDUCED MOTION. The timer is never created, so the page is
+     *     still rather than merely slower.
+     * 3 · NOT WHILE THE READER IS THERE. Hover and focus pause; using an arrow,
+     *     dragging or wheeling the rail STOPS it for good on that gallery.
+     *
+     * ⚠ ON WCAG 2.2.2. The arrows are the pause mechanism — first use halts the
+     * timer permanently — with hover, focus and reduced motion each covering a
+     * different reader on top. Deliberately not a dedicated always-visible pause
+     * button, which was removed from the Voices marquee at the client's request
+     * (docs/08 D23).
+     *
+     * IT PING-PONGS rather than jumping home. Returning from the far end of a
+     * scroller to zero is either a long backwards sweep or a hard cut; reversing
+     * is the only option that stays smooth on rails this short.
+     */
+    const STEP_MS = 2000;
+    let dir = 1;
+    let timer: number | undefined;
+    let onScreen = false;
+    let held = false;
+    let stopped = false;
+
+    /* A looping rail only ever travels forward — the ping-pong existed solely
+       because a finite rail has to come back from its end. */
+    const tick = () => {
+      if (loop) {
+        wrap();
+        step(1);
+        return;
+      }
+      const max = rail.scrollWidth - rail.clientWidth;
+      if (rail.scrollLeft >= max - 2) dir = -1;
+      else if (rail.scrollLeft <= 2) dir = 1;
+      step(dir);
+    };
+
+    const run = () => {
+      if (timer || stopped || held || !onScreen || reduced.matches) return;
+      timer = window.setInterval(tick, STEP_MS);
+    };
+
+    const halt = () => {
+      window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    /** Permanent, for this rail: the reader has taken control. */
+    const stop = () => {
+      stopped = true;
+      halt();
+    };
+
+    const hold = (on: boolean) => {
+      held = on;
+      on ? halt() : run();
+    };
+
+    const wrap = rail.parentElement!;
+    wrap.addEventListener('pointerenter', () => hold(true));
+    wrap.addEventListener('pointerleave', () => hold(false));
+    wrap.addEventListener('focusin', () => hold(true));
+    wrap.addEventListener('focusout', () => hold(false));
+    rail.addEventListener('pointerdown', stop);
+    rail.addEventListener('wheel', stop, { passive: true });
+
+    new IntersectionObserver(
+      ([e]) => {
+        onScreen = e.isIntersecting;
+        onScreen ? run() : halt();
+      },
+      { threshold: 0.3 },
+    ).observe(wrap);
+
+    reduced.addEventListener('change', () => (reduced.matches ? halt() : run()));
+
+    prev.addEventListener('click', () => {
+      stop();
+      wrap();
+      step(-1);
+    });
+    next.addEventListener('click', () => {
+      stop();
+      wrap();
+      step(1);
+    });
+
     rail.addEventListener('scroll', sync, { passive: true });
-    window.addEventListener('resize', sync);
+
+    /* A drag or a flick can carry the rail out of the seam, and that settles
+       long after the last scroll event. `scrollend` fires exactly once when it
+       does; where it is unsupported a short idle timer stands in. Wrapping on
+       every scroll event instead would cancel an in-flight smooth scroll. */
+    if ('onscrollend' in window) {
+      rail.addEventListener('scrollend', wrap);
+    } else {
+      let idle: number | undefined;
+      rail.addEventListener(
+        'scroll',
+        () => {
+          window.clearTimeout(idle);
+          idle = window.setTimeout(wrap, 140);
+        },
+        { passive: true },
+      );
+    }
+
+    window.addEventListener('resize', () => {
+      measure();
+      sync();
+    });
     sync();
   });
 </script>

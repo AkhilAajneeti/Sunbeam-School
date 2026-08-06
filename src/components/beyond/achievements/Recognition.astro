@@ -32,9 +32,14 @@ import SportIcon from '../sports/SportIcon.astro';
       {credentials.map((c, i) => (
         <li class="rec__card" data-reveal data-reveal-delay={i * 70}>
           <span class="rec__icon" aria-hidden="true"><SportIcon name={c.icon} size={26} /></span>
-          {c.figure && <p class="rec__fig t-tabular">{c.figure}</p>}
-          <h3 class="rec__h">{c.title}</h3>
-          <p class="rec__b">{c.body}</p>
+          {/* Wrapped so the card can turn side-on at phone widths — the icon
+              takes a left rail and the text keeps a column of its own. On
+              desktop this is an inert block and changes no spacing. */}
+          <div class="rec__text">
+            {c.figure && <p class="rec__fig t-tabular">{c.figure}</p>}
+            <h3 class="rec__h">{c.title}</h3>
+            <p class="rec__b">{c.body}</p>
+          </div>
         </li>
       ))}
     </ul>
@@ -110,5 +115,38 @@ import SportIcon from '../sports/SportIcon.astro';
   }
 
   @media (max-width: 1023px) { .rec__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 620px) { .rec__grid { grid-template-columns: minmax(0, 1fr); } }
+
+  @media (max-width: 620px) {
+    /* ═══ PHONE — the cards turn side-on rather than stacking portrait ═══
+       One column of six portrait boxes measured 1,676px and read as a template:
+       six near-identical objects with nothing to tell them apart at a glance.
+
+       Two columns is not the answer at this width — "Brainfeed School
+       Excellence Award" in a 123px cell breaks to four lines and the body copy
+       falls to a 14-character measure. So the cards stay one per row and turn
+       landscape instead: the icon takes a left rail and the text a column
+       beside it. That roughly halves each card's height, and it finally gives
+       the icon a job — anchoring the row — instead of floating it above a
+       short title with nothing beneath.
+
+       The card ground, radius and border are kept. They are the reference
+       language the client chose (docs/08 D16); the stack was the fault, not
+       the card. */
+    .rec__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-4);
+      margin-top: var(--sb-8);
+    }
+
+    .rec__card {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--sb-5);
+      padding: var(--sb-6);
+    }
+
+    .rec__icon { flex: 0 0 44px; margin-bottom: 0; }
+    .rec__text { flex: 1 1 auto; min-width: 0; }
+    .rec__fig { font-size: 22px; }
+  }
 </style>

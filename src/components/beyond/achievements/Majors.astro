@@ -54,20 +54,39 @@ import SectionHead from '../../academics/SectionHead.astro';
           {/* The poster, framed on a mat. The mat is what stops a graphic with
               its own white ground from floating on the ink. */}
           <figure class="maj__frame">
+            {/* SIZES IS PER CARD, because the lead and the secondaries are no
+                longer the same width. One shared hint over-declared the two
+                small posters by roughly double and pulled the 840w variant for
+                an image rendering at 182px — waste on the 4G connections
+                docs/08 D13 sizes the whole image pipeline around.
+                Breakpoints track the layout: ≤560 every card is one column and
+                the poster is full width; ≤900 the grid is one column so a
+                secondary card still spans the container; above that the
+                secondaries sit two-up and the lead spans the row. */}
             <Picture
               src={m.art}
               alt={m.alt}
               formats={['webp']}
               widths={[420, 840, 1400]}
-              sizes="(max-width: 900px) 84vw, (max-width: 1200px) 40vw, 28vw"
+              sizes={
+                i === 0
+                  ? '(max-width: 560px) 86vw, (max-width: 900px) 40vw, 30vw'
+                  : '(max-width: 560px) 86vw, (max-width: 900px) 34vw, 18vw'
+              }
               loading={i === 0 ? 'eager' : 'lazy'}
               decoding="async"
             />
           </figure>
 
           <div class="maj__body">
-            <p class="maj__kicker t-label">{m.kicker}</p>
-            <h3 class="maj__h">{m.title}</h3>
+            {/* Kicker and heading are wrapped so that on mobile they can sit
+                BESIDE the thumbnail while the paragraph below runs the full card
+                width — see the phone block at the foot of this stylesheet. On
+                desktop the wrapper is an inert block and changes no spacing. */}
+            <div class="maj__head">
+              <p class="maj__kicker t-label">{m.kicker}</p>
+              <h3 class="maj__h">{m.title}</h3>
+            </div>
             <p class="maj__detail">{m.detail}</p>
 
             {/* Read straight off the artwork — the card's receipt, not a
@@ -138,7 +157,14 @@ import SectionHead from '../../academics/SectionHead.astro';
     transition: box-shadow var(--sb-dur-link) ease, transform var(--sb-dur-link) var(--sb-ease);
   }
 
-  .maj__card .maj__frame { flex: 0 0 clamp(112px, 12vw, 158px); }
+  /* A SHARE OF THE CARD, NOT OF THE VIEWPORT. These were sized in `vw`, which
+     meant the poster tracked the window while the card tracked the grid — at
+     1440 that left a 135px image inside a 570px card, a thumbnail of a graphic
+     that carries its own headline and crest. A percentage flex-basis resolves
+     against the card's own content box, so the poster now grows with whatever
+     it sits in. The px bounds keep it usable in the tablet band, where the
+     two-column grid makes the card narrow. */
+  .maj__card .maj__frame { flex: 0 0 clamp(140px, 36%, 240px); }
   .maj__card .maj__body { flex: 1 1 auto; min-width: 0; }
 
   .maj__card:hover {
@@ -157,9 +183,18 @@ import SectionHead from '../../academics/SectionHead.astro';
       rgba(255, 255, 255, 0.05);
   }
 
-  /* Twice the poster width of the two beneath it. Scale is what carries the
-     hierarchy now that all three share an orientation. */
-  .maj__card--lead .maj__frame { flex: 0 0 clamp(210px, 24vw, 320px); }
+  /* Scale is what carries the hierarchy now that all three share an
+     orientation, so the lead grows with the secondaries rather than being left
+     behind by them.
+
+     ⚠ THE PERCENTAGE MUST EXCEED THE SECONDARIES' 36%, not merely rely on the
+     lead's card being wider. Above 900 it spans both columns, so a smaller
+     share of a bigger card still won; from 900 down the grid is one column,
+     every card is the same width, and 32% made the lead's poster the SMALLEST
+     of the three — measured 224px against 223px at 768, hierarchy gone. It is
+     a larger share of an equal-or-wider card at every width now. The 400px cap
+     is what stops it running away on desktop. */
+  .maj__card--lead .maj__frame { flex: 0 0 clamp(240px, 44%, 400px); }
 
   .maj__frame {
     margin: 0;
@@ -272,15 +307,60 @@ import SectionHead from '../../academics/SectionHead.astro';
   }
 
   @media (max-width: 560px) {
-    /* Below this the copy column falls under ~180px beside even the small
-       poster, and the headings start breaking mid-word. Everything stacks, and
-       the posters cap at a size that does not run a card off the screen. */
-    .maj__card { flex-direction: column; align-items: stretch; }
-    .maj__card .maj__frame,
-    .maj__card--lead .maj__frame {
-      flex: 0 0 auto;
-      align-self: flex-start;
-      width: min(200px, 56vw);
+    /* ═══ PHONE — a different arrangement, not the desktop card narrowed ═══
+       Three faults were measured at 390 and all three are fixed here.
+
+       1 · DEAD SPACE. The previous rule capped every poster at 200px and pinned
+           it left inside a 310px column, leaving 102–110px of bare ink beside
+           it on all three cards. A poster is now the width of whatever column
+           it is given, so there is none.
+       2 · THE HIERARCHY HAD GONE. Lead 621px against secondaries at 574 and
+           586 — a 6% difference, on a section whose eyebrow says "first, and at
+           full size". Scale now separates them instead.
+       3 · THE LEAD'S FACTS WRAPPED RAGGED (140/70, then 150/113) into an
+           accidental two-column while the secondaries stacked cleanly. Both
+           stack now.
+
+       ⚠ ALL THREE CARDS TAKE THE SAME SHAPE — client instruction. An interim
+       pass ran the two secondaries as thumbnail-beside-heading to keep them
+       compact; that held the hierarchy but made them a different object from
+       the lead. One arrangement now: poster at full card width, copy beneath.
+       Hierarchy falls to heading scale and the lead's warm ground — which is
+       how the desktop layout already carries it, the orientation there being
+       shared too. It also means all three posters render large enough to read,
+       which the clause's "high-resolution photographs" is better served by.
+
+       Grid rather than flex so `display: contents` can lift .maj__body's
+       children onto the card's own grid. .maj__head is load-bearing: without it
+       the kicker and heading become separate grid items and take the full row
+       gap between them. */
+    /* 72px between a section head and its first card is a desktop measure. */
+    .maj__grid { margin-top: var(--sb-8); }
+
+    .maj__card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      gap: var(--sb-5);
+      padding: var(--sb-6);
     }
+
+    .maj__body { display: contents; }
+
+    /* Gaps do the spacing here; the desktop margins would double it. */
+    .maj__card .maj__detail,
+    .maj__card--lead .maj__detail { margin-top: 0; }
+
+    .maj__card .maj__facts,
+    .maj__card--lead .maj__facts {
+      margin-top: 0;
+      padding-top: var(--sb-5);
+      display: grid;
+      gap: 8px;
+    }
+
+    /* The lead still leads, on scale rather than on shape — the same 1.4 : 1
+       heading ratio the desktop layout uses, plus its warm radial ground. */
+    .maj__card--lead .maj__h { font-size: 27px; }
   }
 </style>

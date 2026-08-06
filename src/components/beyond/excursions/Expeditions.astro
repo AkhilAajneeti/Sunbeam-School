@@ -1,25 +1,54 @@
 ---
 /**
- * §2 · NEARER HOME — the local learning expeditions.
+ * NEARER HOME — the local learning expeditions, as a hovering icon grid.
  *
- * TEN DESTINATIONS, ONE LINE EACH, AND NO CARDS. The school publishes the
- * destination and almost nothing else for these, so a card grid would be ten
- * boxes of whitespace with a place name floating in each. A ruled list with a
- * category mark reads as what it is — a register of where the school takes
- * children — and it lets ten entries sit in the space four cards would need.
+ * ═══ WHAT THIS SECTION IS ══════════════════════════════════════════════════
  *
- * THE KIND MARK IS THE ONLY DECORATION, and it does real work: civic, heritage,
- * nature and industry sort ten otherwise-similar entries into a shape the eye
- * can scan.
+ * The seven places named inside the live page's closing paragraph — Parag
+ * Dairy, the court, the post office, Van Bihar, Basantpur, Bhrigu Temple and
+ * Karo Dham — pulled out of a run-on sentence into a readable register.
  *
- * ⚠ THE NOTES ARE SHORT ON PURPOSE. Each is one line about what the place IS,
- * not what the children learned there — the school publishes no account of any
- * of these visits, and writing one paragraph per destination would mean writing
- * ten small fictions.
+ * ⚠ THE NOTES ARE ONE LINE EACH ON PURPOSE. The school publishes the
+ * destination and nothing else for any of these, so each note says what the
+ * place IS, not what the children learned there. Writing a paragraph per
+ * destination would mean writing seven small fictions.
+ *
+ * ═══ THE HOVER — CLIENT INSTRUCTION, BUILT AS A SWEEP NOT A FADE ═══════════
+ *
+ * "Add icons, on hover icons animate and background colour animate."
+ *
+ * Each card carries its own two colours as custom properties, taken from its
+ * category, so one rule set drives four palettes. On hover:
+ *
+ * · the ground SWEEPS UP from the card's bottom edge — a `::before` on
+ *   `scaleY`, not a `background-color` transition. Transitioning a colour is a
+ *   crossfade and reads as a light going on; a wipe reads as a deliberate
+ *   change of state, and it composites on the GPU rather than repainting.
+ * · the icon plate fills with the category's ink, its glyph inverts to white,
+ *   and the icon lifts and tilts.
+ * · the name takes the category ink.
+ *
+ * ⚠ `transform` AND `opacity` ONLY, per docs/05 § N. Nothing here animates a
+ * layout property, so seven cards hovering in sequence cost no reflow.
+ *
+ * ⚠ THESE CARDS ARE NOT LINKS, and that is not an oversight — the school
+ * publishes no page for any of these seven places, and inventing destinations
+ * is the one thing this project does not do. A hover state on a non-interactive
+ * card does carry a mild implication of clickability; it is here because it was
+ * asked for, the cursor stays `default`, and no focus or pointer affordance
+ * suggests an action. If the school ever publishes pages for these, each card
+ * becomes an `<a>` and the styling is unchanged.
  */
 import { expeditions } from '../../../data/excursions';
 import SectionHead from '../../academics/SectionHead.astro';
+import FacIcon from '../../campus/facilities/FacIcon.astro';
 
+/**
+ * One entry per category, and the ONLY place these pairings are written down.
+ * `tint` is the swept ground; `ink` is the plate fill, the glyph on hover and
+ * the name — every one already checked against the section's ground elsewhere
+ * on the site, so no new colour enters the system here.
+ */
 const kinds: Record<string, { label: string; tint: string; ink: string }> = {
   civic: { label: 'Civic', tint: 'var(--sb-accent-wash)', ink: 'var(--sb-accent)' },
   heritage: { label: 'Heritage', tint: 'var(--sb-violet-wash)', ink: 'var(--sb-violet-dark)' },
@@ -34,19 +63,26 @@ const kinds: Record<string, { label: string; tint: string; ink: string }> = {
       id="exp-title"
       eyebrow="Within an afternoon of school"
       heading="Learning expeditions"
-      stand="A dairy, a court, a post office, a fort and a forest park — the places a class can reach and be back by the last bell."
+      stand="A dairy, a court, a post office, a temple and a forest park — the places a class can reach and be back by the last bell."
       measure={20}
     />
 
-    <ul class="exp__list">
+    <ul class="exp__grid">
       {expeditions.map((e, i) => {
         const k = kinds[e.kind];
         return (
-          <li class="exp__row" style={`--tint:${k.tint}; --ink:${k.ink};`} data-reveal data-reveal-delay={i * 45}>
+          <li
+            class="exp__card"
+            style={`--tint:${k.tint}; --ink:${k.ink};`}
+            data-reveal
+            data-reveal-delay={i * 55}
+          >
+            <span class="exp__plate" aria-hidden="true">
+              <FacIcon name={e.icon} size={26} />
+            </span>
+            <h3 class="exp__name">{e.name}</h3>
+            <p class="exp__note">{e.note}</p>
             <span class="exp__kind">{k.label}</span>
-            <span class="exp__name">{e.name}</span>
-            <span class="exp__rule" aria-hidden="true"></span>
-            <span class="exp__note">{e.note}</span>
           </li>
         );
       })}
@@ -60,67 +96,145 @@ const kinds: Record<string, { label: string; tint: string; ink: string }> = {
     background: var(--sb-ivory);
   }
 
-  .exp__list {
+  .exp__grid {
     list-style: none;
     margin: var(--sb-10) 0 0;
     padding: 0;
-  }
-
-  .exp__row {
     display: grid;
-    grid-template-columns: 104px minmax(0, auto) minmax(24px, 1fr) minmax(0, 42%);
-    align-items: baseline;
-    gap: var(--sb-5);
-    padding-block: clamp(16px, 1.6vw, 22px);
-    border-bottom: var(--sb-hairline);
-    transition: padding-left 280ms var(--sb-ease);
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(12px, 1.4vw, 20px);
   }
 
-  .exp__row:hover { padding-left: 10px; }
+  /* --- The card ------------------------------------------------------------ */
 
-  .exp__kind {
-    justify-self: start;
-    padding: 4px 12px;
-    border-radius: var(--sb-r-full);
+  .exp__card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(22px, 2.2vw, 30px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    overflow: hidden;
+    transition: box-shadow var(--sb-dur-link) ease, transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  /* THE SWEEP. A `::before` on scaleY rather than a background-color transition:
+     a colour crossfade reads as a light going on, a wipe reads as a change of
+     state — and this composites instead of repainting the card. Anchored to the
+     bottom edge so it rises into the card. */
+  .exp__card::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
     background: var(--tint);
-    color: var(--ink);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 420ms var(--sb-ease);
   }
+
+  .exp__card:hover::before,
+  .exp__card:focus-within::before { transform: scaleY(1); }
+
+  .exp__card:hover,
+  .exp__card:focus-within {
+    transform: translateY(-4px);
+    box-shadow: inset 0 0 0 1px transparent, var(--sb-shadow-card-hover);
+  }
+
+  /* --- The icon plate ------------------------------------------------------ */
+
+  .exp__plate {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: var(--sb-6);
+    border-radius: 14px;
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    color: var(--ink);
+    transition:
+      background-color 320ms ease,
+      color 320ms ease,
+      box-shadow 320ms ease,
+      transform 460ms var(--sb-ease);
+  }
+
+  /* Lift, tilt and grow — three small moves at once read as one gesture, where
+     any single one of them reads as a twitch. */
+  .exp__card:hover .exp__plate,
+  .exp__card:focus-within .exp__plate {
+    background: var(--ink);
+    color: #fff;
+    box-shadow: inset 0 0 0 1px transparent, 0 10px 22px -10px rgba(28, 14, 8, 0.45);
+    transform: translateY(-3px) rotate(-7deg) scale(1.06);
+  }
+
+  /* --- Type ---------------------------------------------------------------- */
 
   .exp__name {
     font-family: var(--sb-font-display);
-    font-size: clamp(17px, 1.5vw, 21px);
-    font-weight: 650;
-    letter-spacing: -0.02em;
+    font-size: clamp(18px, 1.5vw, 21px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.022em;
     color: var(--sb-charcoal);
+    text-wrap: balance;
+    transition: color 320ms ease;
   }
 
-  /* The leader. A flexible dotted rule is what makes ten entries of very
-     different lengths read as one ruled column rather than as ten loose labels. */
-  .exp__rule {
-    align-self: center;
-    height: 0;
-    border-bottom: 1px dotted var(--sb-border-strong);
-  }
+  .exp__card:hover .exp__name,
+  .exp__card:focus-within .exp__name { color: var(--ink); }
 
   .exp__note {
+    margin-top: var(--sb-4);
     font-size: var(--sb-body-sm);
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--sb-text-secondary);
   }
 
-  @media (max-width: 860px) {
-    /* The leader has nothing to span once the note wraps under the name, and a
-       dotted rule across a stacked row reads as a mistake. */
-    .exp__row {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--sb-3);
-      align-items: start;
-    }
-    .exp__rule { display: none; }
-    .exp__note { max-width: 52ch; }
+  /* Pushed to the card's foot by `margin-top: auto`, so every card in a row ends
+     its label on the same line however long its note runs. */
+  .exp__kind {
+    align-self: flex-start;
+    margin-top: auto;
+    padding-top: var(--sb-6);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+    transition: color 320ms ease;
+  }
+
+  .exp__card:hover .exp__kind,
+  .exp__card:focus-within .exp__kind { color: var(--ink); }
+
+  /* --- Grid ---------------------------------------------------------------- */
+
+  @media (min-width: 620px) {
+    .exp__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  /* Four across, so seven items land 4 + 3. Three across would give 3 + 3 + 1
+     and leave a single card stranded on its own row. */
+  @media (min-width: 1024px) {
+    .exp__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* The colour change survives — it carries the state. The movement does not. */
+    .exp__card,
+    .exp__card::before,
+    .exp__plate { transition-duration: 1ms; }
+
+    .exp__card:hover,
+    .exp__card:focus-within { transform: none; }
+
+    .exp__card:hover .exp__plate,
+    .exp__card:focus-within .exp__plate { transform: none; }
   }
 </style>

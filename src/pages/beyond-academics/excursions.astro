@@ -2,39 +2,81 @@
 /**
  * BEYOND ACADEMICS → EXCURSIONS & EDUCATIONAL TOURS.
  *
- * ⚠ THE PAGE IS CURRENTLY THE BANNER AND NOTHING ELSE, at the client's
- * instruction: "remove all the sections from this page keep heading banner".
+ * ═══ REBUILT TO THE LIVE PAGE, AT THE CLIENT'S INSTRUCTION ══════════════════
  *
- * ═══ NOTHING HAS BEEN DELETED — IT IS ALL STILL HERE ════════════════════════
+ * "I want exact same as it and same content, just enhance its beauty — heading
+ * and content at center, images in a carousel with auto scroll within 2sec, use
+ * animation text split, content remains same not cuts."
  *
- * The sections were removed from this page only. Every component, every line of
- * copy and all 27 photographs remain in the repository, so putting any of it
- * back is uncommenting an import and a tag:
+ * So the page is the live page's sequence of titled sections, each rebuilt as
+ * one `Band`: centred eyebrow, split-animated heading, the account in full, and
+ * that section's photographs on a carousel that steps every two seconds. All
+ * four asks are implemented in Band.astro; the reasoning for each is there.
  *
- *   components/beyond/excursions/RouteMap.astro     the five states, plotted
- *                                                   from real coordinates
- *   components/beyond/excursions/Trips.astro        seven trips — kicker,
- *                                                   heading, account, gallery
- *   components/beyond/excursions/Shorts.astro       four compact visits
- *   components/beyond/excursions/Expeditions.astro  seven local destinations
- *   data/excursions.ts                              all the content
- *   assets/excursions/                              27 photographs, pulled from
- *                                                   the school's live site
+ * ═══ CONTENT PARITY WITH THE LIVE PAGE ═════════════════════════════════════
  *
- * The SectionRail went with them: it navigates between section ids, and with no
- * sections left it would have rendered a rail pointing at nothing.
+ * ALL ELEVEN SECTIONS, IN THE LIVE PAGE'S OWN ORDER, WITH ITS OWN HEADINGS AND
+ * ITS OWN COPY, VERBATIM. Two corrections to an earlier build, both reported by
+ * the client, both worth recording because the same mistake is easy to repeat:
+ *
+ *   · THE KHO-KHO FINAL AT PRAYAGRAJ WAS DROPPED. It had been judged a
+ *     competition result rather than an excursion and left to the Achievements
+ *     page. That was a call to put to the client, not to take for them — it is
+ *     on their excursions page, so it is on this one. Its two photographs were
+ *     pulled from the live page to `assets/excursions/khokho-{1,2}.jpg`.
+ *   · THE HEADINGS HAD BEEN REWRITTEN into house style. "OUR STUDENTS AT JAIPUR
+ *     HERITAGE FESTIVAL 2023" had become "Jaipur Heritage Festival", and every
+ *     account had been rewritten with it. All restored, typos included. The
+ *     instruction was "same content as it" and it meant exactly that.
+ *
+ * The order is the live page's too, not the furthest-reach-first sequence an
+ * earlier build imposed.
+ *
+ * ⚠ EVERY DATED TRIP IS 2023, and the years are printed rather than hidden.
+ * Audit 4.2 names this page specifically: "remove 2023 photographs, replace
+ * with latest tours". A page that quietly drops the dates reads as current when
+ * it is not, and the school cannot see what needs refreshing if the site
+ * conceals it. New sections go at the top of `sections` and this page needs no
+ * change at all.
+ *
+ * ═══ RHYTHM ════════════════════════════════════════════════════════════════
+ *
+ * Grounds cycle ivory → sand → paper so no two adjacent bands share a
+ * treatment. Eleven identical bands on one ground is the "endless gallery" the
+ * audit objects to on the live site, rebuilt in a nicer font.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
+import Band from '../../components/beyond/excursions/Band.astro';
+
+import { sections, photo } from '../../data/excursions';
 
 /* Students outside a building on a visit — the closest thing in the library to
    a photograph of this page's subject. */
 import heroPhoto from '../../assets/photos/sunbeem-students-2.jpg';
+
+const TONES = ['ivory', 'sand', 'paper'] as const;
+
+/**
+ * ⚠ ALT TEXT IS PER TRIP, NOT PER PHOTOGRAPH, and the index suffix is a
+ * mitigation rather than a fix. docs/05 § J3 requires alt authored per image;
+ * the data carries one description per trip because that is all that was ever
+ * written. Numbering at least lets a screen-reader user tell four photographs
+ * of the same visit apart instead of hearing one sentence four times. Per-image
+ * descriptions are owed — they belong with the photography asset request.
+ */
+const slidesFor = (shots: readonly string[], alt: string) =>
+  shots
+    .filter((f) => photo[f])
+    .map((f, i, all) => ({
+      src: photo[f],
+      alt: all.length > 1 ? `${alt} — photograph ${i + 1} of ${all.length}` : alt,
+    }));
 ---
 
 <BaseLayout
   title="Excursions & Educational Tours — Sunbeam School Ballia"
-  description="Excursions and educational tours at Sunbeam School Ballia."
+  description="Where Sunbeam School Ballia takes its students: a Model United Nations floor in Odisha, the IMUN summit at Indore, the Jaipur Heritage Festival, Buxar Fort, and a dairy, a district court and a forest park within an afternoon of school."
 >
   <PageHero
     title="Excursions & Educational Tours"
@@ -48,20 +90,46 @@ import heroPhoto from '../../assets/photos/sunbeem-students-2.jpg';
     position="50% 38%"
   />
 
-  {/* ⚠ THE EMPTY PANEL STAYS, and it is not leftover markup. PageHero is
-      `position: sticky` and relies on the page panel scrolling up over it —
-      remove the panel and the banner has nothing to be covered by, so it hangs
-      under the footer as the page scrolls. The panel keeps the mechanism intact
-      and holds the page open to a sensible height until sections return. */}
-  <div class="u-page-panel exc-panel"></div>
+  {/* padding-block: 0 — every band carries its own --sb-section-y, and the panel
+      adding its own on top is what put a 183px void under the hero on three
+      earlier pages. The panel itself must stay: PageHero is `position: sticky`
+      and needs the panel to scroll up over it. */}
+  <div class="u-page-panel exc-panel">
+    {
+      sections.map((s, i) => (
+        <Band
+          id={s.id}
+          index={i + 1}
+          place={s.place}
+          year={s.year}
+          who={s.who}
+          title={s.title}
+          lang={s.lang}
+          body={s.body}
+          slides={s.shots ? slidesFor(s.shots, s.alt ?? s.title) : []}
+          poster={s.art ? { src: s.art, alt: s.alt ?? s.title } : undefined}
+          needs={s.needs}
+          tone={TONES[i % TONES.length]}
+        />
+      ))
+    }
+
+    {/* ⚠ NO "LEARNING EXPEDITIONS" SECTION HERE, and it is not an omission.
+        Removed at the client's instruction; briefly re-added in a redesigned
+        form and removed again on the same instruction repeated. The page is the
+        live page's eleven sections and nothing else.
+
+        NOTHING WAS DELETED. `components/beyond/excursions/Expeditions.astro`
+        (the icon grid with the hover sweep) and the `expeditions` array in
+        `data/excursions.ts` are both intact, so restoring it is one import and
+        one tag. */}
+  </div>
 </BaseLayout>
 
 <style>
-  /* Sections normally supply this page's height. With none, the panel needs a
-     minimum of its own so the banner has something to scroll under and the
-     footer does not sit directly beneath the hero. */
-  div.exc-panel {
-    padding-block: 0;
-    min-height: 42vh;
+  div.exc-panel { padding-block: 0; }
+
+  .exc-panel :global(section[id]) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
   }
 </style>

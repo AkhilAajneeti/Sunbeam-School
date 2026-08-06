@@ -14,7 +14,14 @@
  *   4 Inter-house    sand  · the sticky ticket deck, house fixture → national
  *   5 Coaching       white · staggered tinted cards under a cloud edge
  *   6 Record        ivory · fourteen achievement blocks, each with its gallery
- *     → Achievements       · a handoff band to the school-wide record
+ *   7 Results       sand  · every published placing, pulled into one board
+ *
+ * §7 IS A CLIENT DECISION AND IT MADE §6 CONSISTENT. The placings used to live
+ * inside two of the fourteen record blocks. Asmita's nine rows are a tournament
+ * scoreboard — the school HOSTED that league, so the published field is mostly
+ * other schools — which read as the school's own honours when it sat under the
+ * school's own heading. Moved out, the results read as results, and all
+ * fourteen blocks became the same object. See Results.astro.
  *
  * §6 IS THE LIVE PAGE'S OWN CONTENT, RESTORED. The client sent their original
  * Sports & Games page back and asked for its structure — a heading, the account,
@@ -53,7 +60,7 @@ import Participation from '../../components/beyond/sports/Participation.astro';
 import Ladder from '../../components/beyond/sports/Ladder.astro';
 import Coaching from '../../components/beyond/sports/Coaching.astro';
 import Record from '../../components/beyond/sports/Record.astro';
-import AchievementsLink from '../../components/beyond/sports/AchievementsLink.astro';
+import Results from '../../components/beyond/sports/Results.astro';
 
 import heroPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
 ---
@@ -82,6 +89,7 @@ import heroPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
       { id: 'houses', label: 'Inter-house' },
       { id: 'coaching', label: 'Coaching' },
       { id: 'record', label: 'The record' },
+      { id: 'results', label: 'Results' },
     ]}
   />
 
@@ -95,7 +103,17 @@ import heroPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
     <Ladder />
     <Coaching />
     <Record />
-    <AchievementsLink />
+    <Results />
+
+    {/* ⚠ NO "BEYOND THE FIELD" HANDOFF BAND HERE — removed at the client's
+        instruction. It linked to /beyond-academics/achievements/ and named the
+        three majors behind that link.
+
+        NOTHING WAS DELETED: `AchievementsLink.astro` is intact, so restoring it
+        is one import and one tag. Worth knowing what went with it — the page
+        now ends on the results board with no route to the school-wide record,
+        which is still reachable from the main navigation but no longer from
+        here. */}
   </div>
 </BaseLayout>
 
