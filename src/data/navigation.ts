@@ -324,36 +324,13 @@ export const mainNav: NavItem[] = [
   {
     label: "News & Events",
     href: "/news-events/",
-    // Audit §10 nests Notices here. §11's list (achievements, events,
-    // competitions, workshops, celebrations, announcements) says what the page
-    // must keep current — it is the section's content, not eight menu rows.
-    columns: [
-      [
-        {
-          label: "News & Events",
-          href: "/news-events/",
-          icon: "spark",
-          desc: "Recent achievements, events and celebrations.",
-          img: imgCampus,
-        },
-        {
-          label: "Notices",
-          href: "/news-events/notices/",
-          icon: "log",
-          desc: "Official circulars as they are issued.",
-          img: imgCampus,
-        },
-      ],
-    ],
-    feature: {
-      eyebrow: "Notice Board",
-      title: "Official notices, in one place",
-      body: "Circulars and announcements as they are issued.",
-      href: "/news-events/notices/",
-      cta: "Read notices",
-      imageBrief:
-        "Notice board or assembly announcement, 3:2 — documentary, not staged",
-    },
+    /* ⚠ NO DROPDOWN — client instruction, and it now matches how the section
+       actually works. Audit §11 lists six things this page must keep current;
+       they are SECTIONS OF ONE PAGE, not menu rows, and Notices is the sixth of
+       them ("important announcements") rather than a separate destination. A
+       two-row mega-menu for a single page is a menu that exists to look like a
+       menu. */
+
   },
   {
     label: "Alumni",

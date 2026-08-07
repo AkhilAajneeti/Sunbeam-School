@@ -230,17 +230,27 @@ const all = [
 
   /* --- Viewport and track --------------------------------------------------- */
 
+  /* ⚠ CONTAINER-BOUND — client instruction: the cards must not touch the
+     viewport's left and right edges. The rail is the container's width and
+     centred, so the row is clipped on the same line the heading is set to. */
   .grail__viewport {
     position: relative;
+    width: min(100vw - 2 * var(--sb-margin), var(--sb-max-content));
+    margin-inline: auto;
+    border-radius: var(--sb-r-2);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    /* MUST MATCH THE TRACK'S LEFT PADDING, or card one can only satisfy its own
-       `snap-align: start` by resting at scrollLeft = the padding — which leaves
-       the rail loading part-scrolled and "previous" enabled at the start. */
-    scroll-padding-inline: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
+    /* Zero now the track has no inset: card one satisfies its own
+       `snap-align: start` at scrollLeft 0, which is what keeps the rail from
+       loading part-scrolled with "previous" already enabled. */
+    scroll-padding-inline: 0;
     scrollbar-width: none;
   }
+
+  /* Snap would pull the rail back to the nearest card on every frame and the
+     drift would stall. Set by the script only while it is actually drifting. */
+  .grail__viewport[data-auto] { scroll-snap-type: none; }
 
   .grail__viewport::-webkit-scrollbar { display: none; }
 
@@ -259,15 +269,13 @@ const all = [
     list-style: none;
     margin: 0;
     padding-block: 10px 26px;
-    padding-left: max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2));
-    padding-right: 0;
+    padding-inline: 0;
   }
 
-  /* Mirrors the left inset less the gap, so the last card finishes the same
-     distance from the right edge as the first starts from the left. */
-  .grail__tail {
-    flex: 0 0 calc(max(var(--sb-margin), calc(50vw - var(--sb-max-content) / 2)) - clamp(14px, 1.4vw, 22px));
-  }
+  /* Zero now the rail is the container: card one already starts on the
+     container line and the last already finishes on it. The element stays
+     because motion-gsap.ts measures a rail's end from `[data-rail-tail]`. */
+  .grail__tail { flex: 0 0 0; }
 
   /* --- Card ------------------------------------------------------------------
      THE SNAP TARGET IS NEVER TRANSFORMED. `.gcard` carries scroll-snap-align and
@@ -552,8 +560,106 @@ const all = [
     const step = (dir: number) =>
       view.scrollBy({ left: dir * pitch(), behavior: reduced.matches ? 'auto' : 'smooth' });
 
-    prev.addEventListener('click', () => step(-1));
-    next.addEventListener('click', () => step(1));
+    /* ═══ SMOOTH AUTO-SCROLL ════════════════════════════════════════════════
+     *
+     * A continuous drift at a walking pace, not a jump every two seconds — a
+     * stepped autoplay on a coverflow reads as a series of lurches because each
+     * jump restarts the lean on every card it passes.
+     *
+     * ⚠ IT REVERSES AT THE ENDS RATHER THAN LOOPING, and that is a deliberate
+     * difference from the record rails on this page, which do clone their cards
+     * into a seamless loop. Three things here make cloning the wrong call:
+     *
+     *   · THE PROGRESS METER measures `scrollWidth - clientWidth`. Doubling the
+     *     track would leave it permanently reading half, and a meter that never
+     *     fills is worse than no meter.
+     *   · THE COVERFLOW leans each card by its distance from the rail's centre,
+     *     from a `cards` array captured at start-up. Clones appended later would
+     *     sit flat among leaning neighbours.
+     *   · A meter only means anything on a FINITE list. Fifteen games with a
+     *     position indicator is a different object from an endless gallery of
+     *     photographs, and it should not pretend otherwise.
+     *
+     * Three gates, as everywhere else on this page: on-screen only, never under
+     * reduced motion, and paused while the reader is in it — with any drag,
+     * wheel or button press stopping it for good. The buttons are the WCAG
+     * 2.2.2 pause mechanism.
+     */
+    const SPEED = 34; // px per second
+    let raf = 0;
+    let last = 0;
+    let pos = 0;
+    let dir = 1;
+    let onScreen = false;
+    let held = false;
+    let stopped = false;
+
+    const drift = (t: number) => {
+      if (!last) last = t;
+      /* `pos` is the source of truth and is never read back from scrollLeft:
+         that value is quantised to the device pixel grid, so re-reading it
+         compounds the rounding and the rail accelerates. Measured on the record
+         rails: 61px/s against a 34px/s setting. */
+      pos += (SPEED * dir * (t - last)) / 1000;
+      last = t;
+      const max = view.scrollWidth - view.clientWidth;
+      if (pos >= max) { pos = max; dir = -1; }
+      else if (pos <= 0) { pos = 0; dir = 1; }
+      view.scrollLeft = pos;
+      raf = requestAnimationFrame(drift);
+    };
+
+    const run = () => {
+      if (raf || stopped || held || !onScreen || reduced.matches) return;
+      if (view.scrollWidth <= view.clientWidth + 4) return;
+      view.dataset.auto = 'true';
+      last = 0;
+      pos = view.scrollLeft;
+      raf = requestAnimationFrame(drift);
+    };
+
+    const halt = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      last = 0;
+      delete view.dataset.auto;
+    };
+
+    /** Permanent: the reader has taken control of this rail. */
+    const stopAuto = () => {
+      stopped = true;
+      halt();
+    };
+
+    const hold = (on: boolean) => {
+      held = on;
+      on ? halt() : run();
+    };
+
+    view.addEventListener('pointerenter', () => hold(true));
+    view.addEventListener('pointerleave', () => hold(false));
+    section.addEventListener('focusin', () => hold(true));
+    section.addEventListener('focusout', () => hold(false));
+    view.addEventListener('wheel', stopAuto, { passive: true });
+
+    new IntersectionObserver(
+      ([e]) => {
+        onScreen = e.isIntersecting;
+        onScreen ? run() : halt();
+      },
+      { threshold: 0.35 },
+    ).observe(view);
+
+    reduced.addEventListener('change', () => (reduced.matches ? halt() : run()));
+
+    prev.addEventListener('click', () => {
+      stopAuto();
+      step(-1);
+    });
+    next.addEventListener('click', () => {
+      stopAuto();
+      step(1);
+    });
 
     /* ── Pointer drag ─────────────────────────────────────────────────────────
        MOUSE AND PEN ONLY. Touch is excluded deliberately: a phone already drags
@@ -570,6 +676,9 @@ const all = [
     view.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'touch') return;
       down = true;
+      /* A drag is the reader taking over — the drift must not resume under
+         their hand, and it must not fight the drag frame by frame. */
+      stopAuto();
       moved = 0;
       startX = e.clientX;
       startLeft = view.scrollLeft;

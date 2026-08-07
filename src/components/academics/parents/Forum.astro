@@ -17,14 +17,55 @@
  * about valuing feedback.
  *
  * COMPOSITION: a two-card comparison, then the route an item actually travels as
- * four numbered steps, then the topics that genuinely come up. Nothing here is a
- * card grid — the comparison is two contrasted panels, the route is a connected
- * sequence, and the topics are a plain ruled list.
+ * four numbered steps. Nothing here is a card grid — the comparison is two
+ * contrasted panels and the route is a connected sequence. The topics list that
+ * closed it was removed at the client's request; see the note in the markup.
  */
 import SectionHead from '../SectionHead.astro';
+import Photo from '../../ui/Photo.astro';
 import { parents } from '../../../data/academics';
 
+/**
+ * ⚠ THE FIRST REAL PHOTOGRAPHS OF PARENTS ON THIS SITE.
+ *
+ * The page header has carried this note since it was built: "the brief asks for
+ * parents interacting with children and teachers meeting parents. The repository
+ * holds no such photograph — every image here is of students or campus." Six
+ * arrived from the school's Parents' Forum and they close exactly that gap, so
+ * they belong in THIS section rather than being spread as decoration.
+ *
+ * The three chosen are the section's own argument, in order: the panel a forum
+ * is held WITH, the parent body it is held FOR, and a parent actually speaking.
+ * That is what makes a forum different from a PTM, which is the point the
+ * section exists to make.
+ *
+ * ⚠ NOT USED: the school's designed "PARENT'S FORUM" poster, dated 10.11.2025.
+ * It is a promotional creative, and audit 10.2 objects specifically to creatives
+ * standing in for content. It is in the repository if the school wants it.
+ */
+import panelPhoto from '../../../assets/parents forum/parents forum (5).jpg';
+import hallPhoto from '../../../assets/parents forum/parents forum (3).jpg';
+import listeningPhoto from '../../../assets/parents forum/parents forum (2).jpg';
+
 const { forum: f } = parents;
+
+const shots = [
+  {
+    src: panelPhoto,
+    alt: 'The Sunbeam School Ballia leadership panel at a Parents’ Forum session, with the session agenda on the screen behind them.',
+    cap: 'The panel, with the session’s agenda on screen',
+  },
+  {
+    src: hallPhoto,
+    alt: 'Parents seated in the Sunbeam School Ballia conference hall for a Parents’ Forum, desks marked with class nameplates.',
+    cap: 'The hall, seated by class',
+  },
+  {
+    src: listeningPhoto,
+    alt: 'Parents listening during a Parents’ Forum session at Sunbeam School Ballia.',
+    cap: 'A session in progress',
+  },
+];
 ---
 
 <section class="pfo" id="forum" aria-labelledby="forum-title">
@@ -38,6 +79,29 @@ const { forum: f } = parents;
       <h2 class="pfo__h" id="forum-title" data-split>{f.heading}</h2>
       <p class="pfo__lede">{f.lede}</p>
     </div>
+
+    {/* --- What one actually looks like ---
+        Before the abstract comparison, not after it: a reader who has seen the
+        room understands "collective, with the leadership" in a way no amount of
+        contrast copy achieves. Captions rather than bare frames — docs/05 § I9
+        asks every photograph in a context like this to be labelled. */}
+    <ul class="pfo__shots">
+      {shots.map((s, i) => (
+        <li class="pfo__shot" data-reveal data-reveal-delay={i * 80}>
+          <figure>
+            <Photo
+              src={s.src}
+              alt={s.alt}
+              brief="Parents' Forum"
+              ratio="3 / 2"
+              position="50% 45%"
+              sizes="(max-width: 767px) 86vw, 30vw"
+            />
+            <figcaption>{s.cap}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
 
     {/* --- The distinction, side by side --- */}
     <div class="pfo__compare">
@@ -75,13 +139,13 @@ const { forum: f } = parents;
       </ol>
     </div>
 
-    {/* --- What actually gets raised --- */}
-    <div class="pfo__topics">
-      <h3 class="pfo__sub">What comes up</h3>
-      <ul class="pfo__topic-list">
-        {f.topics.map((t) => <li>{t}</li>)}
-      </ul>
-    </div>
+    {/* ⚠ NO "WHAT COMES UP" LIST — removed at the client's instruction. It was
+        the nine topics in `parents.forum.topics`, which are still in the data,
+        so restoring it is this block again and nothing else.
+
+        The section now ends on the four-step route, which is the stronger close
+        anyway: it answers "what happens if I raise something" rather than
+        listing what other people have raised. */}
   </div>
 </section>
 
@@ -139,17 +203,54 @@ const { forum: f } = parents;
     color: var(--sb-text-secondary);
   }
 
+  /* --- The photographs ------------------------------------------------------ */
+
+  .pfo__shots {
+    list-style: none;
+    margin: clamp(32px, 4.5vh, 56px) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(12px, 1.4vw, 20px);
+  }
+
+  .pfo__shot figure {
+    margin: 0;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    background: var(--sb-sand);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .pfo__shot :global(.photo) { border-radius: 0; }
+
+  .pfo__shot figcaption {
+    padding: var(--sb-4) var(--sb-5);
+    background: var(--sb-paper);
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: var(--sb-text-muted);
+  }
+
+  @media (min-width: 768px) {
+    .pfo__shots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
   /* --- Comparison ----------------------------------------------------------
      Two panels and a mark between them. The forum panel is the filled one: this
      is the section about the forum, and giving both equal weight would leave a
      reader unsure which one they are being told about. */
+  /* The same step the route below uses, so the section's three blocks are
+     separated by one interval rather than three different ones. It had none:
+     the head's own bottom margin used to do this job, and inserting the
+     photographs between them left the comparison sitting against the captions. */
   .pfo__compare {
     position: relative;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(16px, 2.4vw, 40px);
     max-width: 880px;
-    margin-inline: auto;
+    margin: clamp(48px, 7vh, 88px) auto 0;
   }
 
   .pfo__card {
@@ -314,39 +415,6 @@ const { forum: f } = parents;
     color: var(--sb-text-secondary);
   }
 
-  /* --- Topics -------------------------------------------------------------- */
-
-  .pfo__topics { margin-top: clamp(48px, 7vh, 88px); }
-
-  .pfo__topic-list {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0 clamp(24px, 3.4vw, 52px);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .pfo__topic-list li {
-    display: flex;
-    align-items: center;
-    gap: var(--sb-4);
-    padding-block: clamp(13px, 1.6vh, 18px);
-    border-top: var(--sb-hairline);
-    font-size: var(--sb-body-sm);
-    font-weight: 600;
-    color: var(--sb-charcoal);
-  }
-
-  /* A plan mark rather than a list mark, matching the laboratory index. */
-  .pfo__topic-list li::before {
-    content: '';
-    width: 7px;
-    height: 7px;
-    flex-shrink: 0;
-    background: var(--sb-violet);
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .pfo__step::after,
     .pfo__step-n { transition: none; }
@@ -357,7 +425,6 @@ const { forum: f } = parents;
     /* The connector is a single-row device; wrapped to two rows it would point
        from the end of one row into the start of the next. */
     .pfo__step::after { display: none; }
-    .pfo__topic-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
   @media (max-width: 639px) {
@@ -365,7 +432,6 @@ const { forum: f } = parents;
     .pfo__compare { grid-template-columns: minmax(0, 1fr); gap: var(--sb-5); }
     .pfo__vs { display: none; }
     .pfo__steps { grid-template-columns: minmax(0, 1fr); }
-    .pfo__topic-list { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
 

@@ -10,7 +10,7 @@
  *
  *   1 Facilities     ivory · alternating rows, three photographic slots each
  *   2 Games          INK   · the highlight — a fifteen-card horizontal carousel
- *   3 Participation  ivory · a bento alternating photographs and figures
+ *   3 Participation  — REMOVED at client instruction, see the note in the body
  *   4 Inter-house    sand  · the sticky ticket deck, house fixture → national
  *   5 Coaching       white · staggered tinted cards under a cloud edge
  *   6 Record        ivory · fourteen achievement blocks, each with its gallery
@@ -56,7 +56,6 @@ import SectionRail from '../../components/academics/SectionRail.astro';
 
 import Facilities from '../../components/beyond/sports/Facilities.astro';
 import GamesRail from '../../components/beyond/sports/GamesRail.astro';
-import Participation from '../../components/beyond/sports/Participation.astro';
 import Ladder from '../../components/beyond/sports/Ladder.astro';
 import Coaching from '../../components/beyond/sports/Coaching.astro';
 import Record from '../../components/beyond/sports/Record.astro';
@@ -85,7 +84,6 @@ import heroPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
     items={[
       { id: 'facilities', label: 'Facilities' },
       { id: 'games', label: 'Games' },
-      { id: 'participation', label: 'Participation' },
       { id: 'houses', label: 'Inter-house' },
       { id: 'coaching', label: 'Coaching' },
       { id: 'record', label: 'The record' },
@@ -99,7 +97,15 @@ import heroPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
   <div class="u-page-panel sp-panel">
     <Facilities />
     <GamesRail />
-    <Participation />
+
+    {/* ⚠ NO "STUDENT PARTICIPATION" SECTION — removed at the client's
+        instruction. `Participation.astro` and its data are intact, so restoring
+        it is one import and one tag.
+
+        Worth knowing what went with it: audit 4.5 names student participation
+        explicitly, alongside facilities, games, inter-house and coaching. Four
+        of those five are still here; participation is the one now missing. */}
+
     <Ladder />
     <Coaching />
     <Record />

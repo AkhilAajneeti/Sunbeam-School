@@ -10,8 +10,10 @@ import { school } from '../data/site';
 interface Props {
   title: string;
   description: string;
+  /** e.g. "noindex, follow". Omit on real pages — the default is indexable. */
+  robots?: string;
 }
-const { title, description } = Astro.props;
+const { title, description, robots } = Astro.props;
 ---
 
 <!doctype html>
@@ -40,6 +42,11 @@ const { title, description } = Astro.props;
     <title>{title}</title>
     {/* Finding X8 — the current site ships no meta description at all. */}
     <meta name="description" content={description} />
+    {/* Only emitted where a page asks for it. The not-yet-built pages generated
+        by `[...slug].astro` return a real 200, so a crawler would otherwise
+        index a section with nothing behind it — `noindex, follow` keeps it out
+        of results while still following its links. */}
+    {robots && <meta name="robots" content={robots} />}
     <meta name="theme-color" content="#5C0000" />
     <link rel="canonical" href={Astro.url.href} />
     <link rel="icon" href="/brand/sunbeam-emblem.png" type="image/png" />

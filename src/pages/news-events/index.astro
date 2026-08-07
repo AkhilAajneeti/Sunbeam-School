@@ -1,0 +1,84 @@
+---
+/**
+ * LATEST NEWS & EVENTS — audit §11.
+ *
+ * ═══ SIX SECTIONS, ONE PAGE ════════════════════════════════════════════════
+ *
+ * The audit names six things that must "always remain current": recent
+ * achievements, school events, competitions, workshops, celebrations and
+ * important announcements. They are six SECTIONS of one page, and the client
+ * settled it by removing the dropdown that used to make Notices a separate
+ * destination.
+ *
+ * A page that must stay current can only stay current if it is SHORT. So this
+ * is the recency layer — a rail per category, a handful of items each — and
+ * every category ends in a button to the archive that actually holds the
+ * volume:
+ *
+ *   Achievements   → /beyond-academics/achievements/
+ *   School events  → /beyond-academics/school-activities/
+ *   Competitions   → /beyond-academics/sports/#record
+ *   Workshops      → /academics/parent-partnership/#workshops
+ *   Celebrations   → /beyond-academics/school-activities/
+ *   Announcements  → /news-events/notices/
+ *
+ * That split is the whole design. The live School Activities page carries 148
+ * headings and 4,536 images on a single URL — measured — which is what happens
+ * when the recency layer and the archive are the same page.
+ *
+ * ⚠ THIS FILE RETIRES A PLACEHOLDER AUTOMATICALLY. `/news-events/` was one of
+ * the generated not-yet-built pages; a real file at this path takes precedence
+ * and drops out of that generator's list with no other edit. Deleting this file
+ * restores the placeholder rather than producing a 404 — which is the point of
+ * building it that way.
+ *
+ * ⚠ NOT ONE ITEM IS INVENTED, and there are no dates anywhere. See the header of
+ * data/newsEvents.ts: every card is content the school has already published,
+ * and a static build cannot honestly print "latest" against a date it baked in
+ * months earlier. Dates arrive with asset A7 — which also brings the named
+ * publishing owner audit §11 depends on (C7). Without that this page is stale by
+ * March, and no amount of design prevents it.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import SectionRail from '../../components/academics/SectionRail.astro';
+import Stream from '../../components/news/Stream.astro';
+
+import { streams } from '../../data/newsEvents';
+import heroPhoto from '../../assets/photos/sunbeem-4.jpg';
+
+/* No two adjacent categories share a ground — the page's only structural rule,
+   and with six near-identical sections it is doing real work. */
+const TONES = ['ivory', 'sand', 'paper'] as const;
+---
+
+<BaseLayout
+  title="Latest News & Events — Sunbeam School Ballia"
+  description="What is happening at Sunbeam School Ballia: recent achievements, school events, competitions, workshops for parents, celebrations, and the announcements families need."
+>
+  <PageHero
+    title="Latest News & Events"
+    standfirst="Achievements, events, competitions, workshops, celebrations and the announcements that matter — what the school is doing now."
+    crumbs={[{ label: 'Home', href: '/' }]}
+    src={heroPhoto}
+    alt="An award ceremony at Sunbeam School Ballia"
+    position="50% 40%"
+  />
+
+  <SectionRail items={streams.map((s) => ({ id: s.id, label: s.eyebrow }))} />
+
+  {/* padding-block: 0 — every section carries its own --sb-section-y, and the
+      panel adding its own on top is what put a 183px void under the hero on
+      three earlier pages. */}
+  <div class="u-page-panel news-panel">
+    {streams.map((s, i) => <Stream stream={s} tone={TONES[i % TONES.length]} />)}
+  </div>
+</BaseLayout>
+
+<style>
+  div.news-panel { padding-block: 0; }
+
+  .news-panel :global(section[id]) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
+  }
+</style>

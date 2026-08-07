@@ -1302,7 +1302,7 @@ export const parents = {
       },
     ],
     photo: 'sunbeem-5.jpg',
-    alt: 'Student council office-bearers and NCC cadets of Sunbeam School Ballia on stage with members of staff.',
+    alt: 'Parents seated together at a Parents’ Forum session at Sunbeam School Ballia.',
   },
 
   /* ── 06 · FAQ ─────────────────────────────────────────────────────────────
@@ -1371,7 +1371,7 @@ export const parents = {
       },
     ],
     photo: 'sunbeem-3.jpg',
-    alt: 'Students of Sunbeam School Ballia on the school campus.',
+    alt: 'A parent speaking into a microphone during a Parents’ Forum session at Sunbeam School Ballia, class nameplates on the desks.',
   },
 
   timeline: {
