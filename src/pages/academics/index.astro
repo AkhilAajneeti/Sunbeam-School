@@ -251,6 +251,18 @@ const look: Record<string, { span: string; photo?: ImageMetadata; alt?: string }
     color: rgba(255, 255, 255, 0.5);
   }
 
+  /* ⚠ THIS PAGE HAS ITS OWN HERO, so the 24×24 fix applied to PageHero's crumbs
+     (WCAG 2.2 SC 2.5.8, AA) did not reach it — measured 42×15 here after the
+     other 22 pages were already passing. Any future hero component needs the
+     same, which is the argument for these two eventually being one component. */
+  .ahero__crumbs a,
+  .ahero__crumbs [aria-current] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding-inline: 2px;
+  }
+
   .ahero__crumbs a { color: rgba(255, 255, 255, 0.78); }
   .ahero__crumbs a:hover { color: #fff; }
   /* White, not --sb-lime: the accent measures about 3:1 here, under AA at this size. */

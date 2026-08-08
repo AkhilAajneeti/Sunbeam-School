@@ -241,9 +241,13 @@ export const facilities = [
    -------------------------------------------------------------------------- */
 
 export const voices = {
-  eyebrow: 'Student Voices',
+  eyebrow: 'Alumni',
   heading: 'What our students say',
-  deck: 'Sunbeam students and alumni on what the school gave them — in their own words.',
+  /* ⚠ NOT “in their own words”. The section carries no quotes: the school has
+     published placements, not testimonials, and promising a voice the page does
+     not have is the kind of small untruth a parent notices. Audit 13.6 — the
+     alumnus speaking — arrives with asset A4. */
+  deck: 'Former students, where their degree took them and who they work for — every line taken from the school\x27s own alumni cards.',
   pending: true,
 
   /**

@@ -133,7 +133,21 @@ const { title, standfirst, crumbs, src, alt, position = '50% 45%' } = Astro.prop
      for the same people who ask for reduced motion. It reverts to an ordinary
      block that scrolls away with the page. */
   @media (prefers-reduced-motion: reduce) {
-    .phero { position: static; }
+    /* ⚠ `relative`, NOT `static`. Dropping the sticky is the whole intent here,
+       but `static` also stops this being a containing block — and `.phero__media`
+       and `.phero__scrim` are `position: absolute; inset: 0`. They then resolve
+       against whatever positioned ancestor is above, and `overflow: hidden` on
+       this element CANNOT clip them, because a clipper only clips descendants
+       whose containing block is inside it.
+
+       Measured on Assessment & Support at 1440: the banner is 414px tall and the
+       photograph rendered 900px, bleeding 486px past the bottom of its own
+       section. It affected every page with a banner, for every reader who has
+       reduced motion turned on — which is why it went unseen: the default
+       captures in this project all run `reducedMotion: 'reduce'` for stability,
+       so the bug was in almost every screenshot and invisible in every
+       measurement that only checked horizontal overflow. */
+    .phero { position: relative; }
   }
 
   /* --- Breadcrumbs ---------------------------------------------------------- */
@@ -158,6 +172,24 @@ const { title, standfirst, crumbs, src, alt, position = '50% 45%' } = Astro.prop
     content: '/';
     margin-right: 10px;
     color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* ⚠ 24px OF HEIGHT, NOT 13. WCAG 2.2 SC 2.5.8 (AA) sets a 24×24 minimum
+     target, and measured on a phone these crumbs were 38×13 and 44×13 — a third
+     of the required height. The "inline" exception does NOT cover them: it
+     applies to a link inside a sentence whose size is constrained by the
+     surrounding line-height, and a breadcrumb sits in a nav on its own.
+
+     `inline-flex` + `min-height` grows the HIT AREA without moving the text —
+     the row's `gap: 6px 10px` already spaces the crumbs, so nothing reflows and
+     the trail looks identical. Padding rather than a taller line-height, so the
+     separator stays on the text baseline. */
+  .phero__crumbs a,
+  .phero__crumbs [aria-current='page'] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding-inline: 2px;
   }
 
   .phero__crumbs a {

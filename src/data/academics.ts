@@ -1084,7 +1084,7 @@ export const parents = {
       },
     ],
     cta: { label: 'Orientation details', href: '/admissions/orientation/' },
-    photos: ['sunbeem-2.jpg', 'sunbeem-1.jpg', 'sunbeem-students-2.jpg'],
+    photos: ['sunbeem-2.jpg', 'sunbeem-1.jpg', 'sunbeem-3.jpg'],
   },
 
   /* ── 02 · PARENTS' FORUM ──────────────────────────────────────────────────
@@ -1266,8 +1266,13 @@ export const parents = {
       },
     ],
     cta: { label: 'Open the parent portal', href: school.external.results, external: true },
-    photo: 'sunbeem-students-2.jpg',
-    alt: 'A student of Sunbeam School Ballia reading in the school courtyard while classmates talk behind her.',
+    /* ⚠ NOT sunbeem-students-2.jpg, which this once named. That file is
+       Sunbeam VARANASI (crest and Bhagwanpur hostel in frame), not Ballia.
+       This field is currently unused — Comms.astro dropped the split layout —
+       but it is kept so restoring that layout is a revert. Left pointing at the
+       wrong school, the revert would have quietly put it back on the page. */
+    photo: 'sunbeem-2.jpg',
+    alt: 'The whole school gathered at the entrance of Sunbeam School Ballia beneath the school name.',
   },
 
   /* ── 05 · ENGAGEMENT ──────────────────────────────────────────────────────
@@ -1488,3 +1493,152 @@ export const parents = {
     ],
   },
 } as const;
+
+/* ═══ 04b · ASSESSMENT PATTERN — SEVEN TOPICS, SEVEN PAGES ═════════════════
+
+   Audit §2.D names seven topics under Assessment Pattern and marks them MUST.
+   They were first built as four sections of the Assessment page plus three
+   cross-links; the client has since asked for a page each, so each topic now
+   owns a URL and the Assessment page is the hub above them.
+
+   ⚠ TWO KEEP THEIR EXISTING HOMES RATHER THAN GAINING A DUPLICATE.
+     · Assessment System IS the Assessment page — the six-step cycle on it is
+       exactly that topic, so the row points at the hub instead of minting a
+       second page that repeats it.
+     · Academic Calendar already has its own route, which audit §8 requires as
+       an interactive page. A second calendar page would split one destination
+       in two and one of them would rot.
+
+   ⚠ THE THIN-CONTENT RISK IS REAL AND IS FLAGGED, NOT PAPERED OVER. The school
+   publishes ONE line about homework and ONE about mentoring, and nothing else
+   anywhere on its site. A page each was the client's call after that was raised.
+   So those pages carry what is published, say plainly that the rest is not, and
+   name who to ask — rather than three invented paragraphs about a policy that
+   governs somebody's evenings. `owed` drives that note; it disappears when the
+   school sends the copy, with no other edit. */
+export interface AssessmentTopic {
+  id: string;
+  label: string;
+  /** One line, shown in the nav submenu and on the hub. */
+  hint: string;
+  /** Where the topic lives. A route, always — never an anchor. */
+  href: string;
+  /** Page title, when this topic has a page of its own. */
+  title?: string;
+  standfirst?: string;
+  /** Import key for the hero photograph — resolved by the page file. */
+  photo?: string;
+  body?: string[];
+  points?: { k: string; v: string }[];
+  /** The school publishes no detail on this topic. */
+  owed?: boolean;
+  /** True when the destination already existed and is not a new page. */
+  existing?: boolean;
+}
+
+export const assessmentTopics: AssessmentTopic[] = [
+  {
+    id: 'system',
+    label: 'Assessment System',
+    hint: 'The six-step cycle, and the marks a promotion turns on.',
+    href: '/academics/assessment/',
+    existing: true,
+  },
+  {
+    id: 'homework-policy',
+    label: 'Homework Policy',
+    hint: 'Set to a published pattern, so the week is predictable at home.',
+    href: '/academics/assessment/homework-policy/',
+    title: 'Homework Policy',
+    standfirst:
+      'Homework is set to a published pattern rather than subject by subject on the day — so a family can see the shape of the week.',
+    photo: 'library',
+    body: [
+      'Homework at Sunbeam Ballia is set to a published pattern rather than assigned subject by subject on the day. A family can therefore see the shape of the week in advance, instead of discovering it each evening.',
+      'That predictability is the point of the policy. It lets a parent plan around the evening rather than react to it, and it stops several subjects from landing on the same night by accident.',
+    ],
+    owed: true,
+  },
+  {
+    id: 'remedial-support',
+    label: 'Remedial Support',
+    hint: 'Additional teaching, and a retest with rules attached.',
+    href: '/academics/assessment/remedial-support/',
+    title: 'Remedial Support',
+    standfirst:
+      'Where a student is behind in a subject, additional teaching is provided in it — and the retest that follows is scheduled by rules the school publishes.',
+    photo: 'chem',
+    body: [
+      'Where a student is behind in a subject, additional teaching is provided in that subject rather than the result being left to stand and dealt with at the end of the year.',
+      'The retest is the part the school sets out in detail, and the detail is the substance: it is scheduled far enough after the result for the additional teaching to have actually happened, rather than being a second attempt at the same paper a few days later.',
+    ],
+    points: [
+      { k: 'When', v: 'No sooner than ten days after results are announced.' },
+      { k: 'More than one', v: 'Two clear days between retests, so they are not sat back to back.' },
+      { k: 'Results', v: 'Published within two and a half weeks of the main examination.' },
+      { k: 'Medical absence', v: 'On a medical certificate the retest still has to be sat — a promotion is not given on the half-yearly alone.' },
+      { k: 'Where it applies', v: 'Classes VIII and IX for a single subject below the threshold, and Class XI where one subject is failed.' },
+    ],
+  },
+  {
+    id: 'mentoring',
+    label: 'Mentoring',
+    hint: 'A member of staff who knows the child, not only the class list.',
+    href: '/academics/assessment/mentoring/',
+    title: 'Mentoring',
+    standfirst:
+      'Every student has a member of staff who knows them as a person rather than as a row on a class list.',
+    photo: 'council',
+    body: [
+      'Every student has a member of staff who knows them as a person rather than as a name on a class list — the point of contact when something is wrong, before it becomes a result.',
+      'That matters most in the years where a child is least likely to raise a problem themselves. A mentor who already knows the student notices the change; a subject teacher seeing them four times a week may not.',
+    ],
+    owed: true,
+  },
+  {
+    id: 'academic-calendar',
+    label: 'Academic Calendar',
+    hint: 'Terms, holidays and examination dates for the session.',
+    href: '/academics/academic-calendar/',
+    existing: true,
+  },
+  {
+    id: 'parent-teacher-meetings',
+    label: 'Parent–Teacher Meetings',
+    hint: 'Scheduled on the calendar, not called ad hoc.',
+    href: '/academics/assessment/parent-teacher-meetings/',
+    title: 'Parent–Teacher Meetings',
+    standfirst:
+      'PTMs are placed on the academic calendar for the session, so the date is known in advance rather than announced when there is a problem.',
+    photo: 'forum',
+    body: [
+      'Parent–teacher meetings are placed on the academic calendar at the start of the session. The date is therefore known in advance, rather than arriving as a message when something has already gone wrong.',
+      'A meeting called ad hoc carries a message before anyone has spoken: that there is a problem. A scheduled one does not, which is what makes it possible to talk about a child who is doing perfectly well.',
+    ],
+    points: [
+      { k: 'Frequency', v: 'Through the year, on dates published with the session calendar.' },
+      { k: 'Between meetings', v: 'The parent portal carries term reports and results at any hour.' },
+      { k: 'Also on the calendar', v: 'Examination dates, terms and holidays, so a meeting can be read against them.' },
+    ],
+  },
+  {
+    id: 'competitive-exam-preparation',
+    label: 'Competitive Exam Preparation',
+    hint: 'Vidyarthi Vigyan Manthan · NCSC · Inspire Award MANAK.',
+    href: '/academics/assessment/competitive-exam-preparation/',
+    title: 'Competitive Examination Preparation',
+    standfirst:
+      'Preparation for the national science and aptitude programmes the school enters — named, with the results they have produced.',
+    photo: 'awards',
+    body: [
+      'Beyond the board syllabus, students are prepared for the national programmes the school enters. These are named rather than described in the abstract, because the entry is checkable and the abstraction is not.',
+      'Results from them are recorded on the Student Success page rather than repeated here, so there is one record of what students have won rather than two that can disagree.',
+    ],
+    points: [
+      { k: 'Vidyarthi Vigyan Manthan', v: 'The national science talent search for students of Classes VI to XI.' },
+      { k: 'National Children’s Science Congress', v: 'Project-based science, presented and defended.' },
+      { k: 'Inspire Award MANAK', v: 'Department of Science & Technology — original ideas from school students, taken to national level.' },
+      { k: 'Olympiads', v: 'Science Olympiad Foundation, from the primary years upward.' },
+    ],
+  },
+];

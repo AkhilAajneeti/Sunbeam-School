@@ -1,0 +1,23 @@
+---
+/**
+ * PARENT–TEACHER MEETINGS — audit 2.D4.
+ *
+ * ⚠ THIS DOES NOT REPLACE PARENT PARTNERSHIP, and must not grow into a copy of
+ * it. That page owns the whole relationship with families — the forum, the
+ * portal, the workshops. This one owns the single question "when do I get to
+ * talk to my child's teacher, and how do I know in advance". If the two ever
+ * start saying the same thing, this is the one to fold back.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { assessmentTopics } from '../../../data/academics';
+import photo from '../../../assets/parents forum/parents forum (1).jpg';
+
+const topic = assessmentTopics.find((t) => t.id === 'parent-teacher-meetings')!;
+---
+
+<TopicPage
+  topic={topic}
+  photo={photo}
+  alt="Parents at a forum session at Sunbeam School Ballia."
+  position="50% 45%"
+/>

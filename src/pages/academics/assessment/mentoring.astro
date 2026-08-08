@@ -1,0 +1,22 @@
+---
+/**
+ * MENTORING — audit 2.D6.
+ *
+ * ⚠ AS WITH HOMEWORK, THE SCHOOL PUBLISHES ONE LINE. The page says what that
+ * line says and then says it is all that is published. No mentor-to-student
+ * ratio, no programme name, no meeting frequency — none of that is stated
+ * anywhere, and inventing any of it would be inventing pastoral care.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { assessmentTopics } from '../../../data/academics';
+import photo from '../../../assets/photos/sunbeem-5.jpg';
+
+const topic = assessmentTopics.find((t) => t.id === 'mentoring')!;
+---
+
+<TopicPage
+  topic={topic}
+  photo={photo}
+  alt="Students and staff of Sunbeam School Ballia together on stage beneath the school name."
+  position="50% 42%"
+/>

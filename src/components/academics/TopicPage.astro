@@ -1,0 +1,325 @@
+---
+/**
+ * THE SHELL SHARED BY THE FIVE ASSESSMENT TOPIC PAGES.
+ *
+ * Homework Policy, Remedial Support, Mentoring, Parent–Teacher Meetings and
+ * Competitive Examination Preparation are the same page with different content:
+ * hero, statement, published specifics, and a way across to the other six
+ * topics. Five route files repeating that would be five places to fix one
+ * spacing bug, so the routes hold only their data object and their photograph.
+ *
+ * ⚠ THE SIBLING STRIP IS NOT DECORATION. Each of these pages is reachable only
+ * from one row of one dropdown. A parent arriving from search has no way to
+ * discover the other six without going back to the menu — and these seven are a
+ * set, so reading one usually raises a question the next one answers. The strip
+ * is derived from `assessmentTopics`, so an eighth topic appears on all of them
+ * with no edit here.
+ *
+ * ⚠ `owed` PRINTS A VISIBLE NOTE. Two of these five have exactly one published
+ * sentence behind them. The alternative to saying so is inventing a policy, and
+ * docs/07 settles that: a placeholder is deliberately obvious. A parent reading
+ * "the detail is not published online, here is who to ask" has been told
+ * something true; three invented paragraphs about homework would mislead them
+ * about the rules governing their own evenings.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../ui/PageHero.astro';
+import { assessmentTopics, type AssessmentTopic } from '../../data/academics';
+import { school } from '../../data/site';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  topic: AssessmentTopic;
+  photo: ImageMetadata;
+  alt: string;
+  position?: string;
+}
+
+const { topic: t, photo, alt, position = '50% 45%' } = Astro.props;
+
+const siblings = assessmentTopics.filter((x) => x.id !== t.id);
+---
+
+<BaseLayout
+  title={`${t.title} — Sunbeam School Ballia`}
+  description={t.standfirst}
+>
+  <PageHero
+    title={t.title!}
+    standfirst={t.standfirst}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Assessment Pattern', href: '/academics/assessment/' },
+    ]}
+    src={photo}
+    alt={alt}
+    position={position}
+  />
+
+  {/* padding-block: 0 — each band carries its own --sb-section-y; the panel
+      adding its own on top is what put a 183px void under the hero on three
+      earlier pages. */}
+  <div class="u-page-panel tp-panel">
+    <section class="tp" aria-labelledby="tp-h">
+      <div class="u-container tp__in">
+        <div class="tp__head">
+          <p class="tp__eyebrow t-label">Assessment Pattern</p>
+          <h2 class="tp__h" id="tp-h" data-split>{t.label}</h2>
+        </div>
+
+        <div class="tp__body">
+          {t.body?.map((p) => <p class="tp__p" data-reveal>{p}</p>)}
+
+          {
+            t.points && (
+              <dl class="tp__points">
+                {t.points.map((p) => (
+                  <div class="pt">
+                    <dt class="pt__k">{p.k}</dt>
+                    <dd class="pt__v">{p.v}</dd>
+                  </div>
+                ))}
+              </dl>
+            )
+          }
+
+          {
+            t.owed && (
+              <p class="tp__owed">
+                <span class="tp__owed-i" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6.6" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M8 4.6v4.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                    <circle cx="8" cy="11.3" r="0.9" fill="currentColor" />
+                  </svg>
+                </span>
+                <span>
+                  The school has not published the full detail of this online.
+                  For the current policy, contact the school office on{' '}
+                  <a href={`tel:+91${school.phone.office}`}>{school.phone.officeDisplay}</a>.
+                </span>
+              </p>
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="tp-more" aria-labelledby="tp-more-h">
+      <div class="u-container">
+        <h2 class="tp-more__h" id="tp-more-h">The rest of Assessment Pattern</h2>
+        <ul class="tp-more__list">
+          {
+            siblings.map((s) => (
+              <li>
+                <a class="sib" href={s.href}>
+                  <span class="sib__t">{s.label}</span>
+                  <span class="sib__d">{s.hint}</span>
+                  <span class="sib__go" aria-hidden="true">
+                    <svg width="15" height="10" viewBox="0 0 14 10" fill="none">
+                      <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  div.tp-panel { padding-block: 0; }
+
+  /* --- The statement ------------------------------------------------------- */
+
+  .tp {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .tp__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(20px, 3vh, 34px);
+  }
+
+  .tp__eyebrow { color: var(--sb-violet-dark); }
+
+  h2.tp__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 700;
+    line-height: 1.07;
+    letter-spacing: -0.034em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .tp__p {
+    max-width: 66ch;
+    font-size: clamp(16px, 1.2vw, 18px);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+  }
+
+  .tp__p + .tp__p { margin-top: var(--sb-5); }
+
+  /* --- Published specifics ------------------------------------------------- */
+
+  .tp__points {
+    margin: clamp(24px, 3.2vh, 34px) 0 0;
+    padding: 0;
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .pt {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sb-3) var(--sb-6);
+    padding: clamp(14px, 1.6vw, 18px) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+
+  .pt__k {
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    color: var(--sb-charcoal);
+  }
+
+  .pt__v {
+    max-width: 62ch;
+    margin: 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- The owed note ------------------------------------------------------- */
+
+  .tp__owed {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sb-4);
+    max-width: 62ch;
+    margin-top: clamp(22px, 2.8vh, 30px);
+    padding: clamp(14px, 1.6vw, 18px);
+    border: 1px dashed var(--sb-border-strong);
+    border-radius: var(--sb-r-2);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  .tp__owed-i {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    margin-top: 2px;
+    color: var(--sb-violet-dark);
+  }
+
+  .tp__owed a {
+    font-weight: 700;
+    color: var(--sb-violet-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+  }
+
+  /* --- Siblings ------------------------------------------------------------ */
+
+  .tp-more {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-charcoal);
+  }
+
+  .tp-more__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    color: var(--sb-ivory);
+  }
+
+  .tp-more__list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1px;
+    margin: clamp(20px, 2.6vh, 30px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sib {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sb-3) var(--sb-5);
+    padding: clamp(16px, 1.8vw, 22px) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    text-decoration: none;
+  }
+
+  .tp-more__list li:last-child .sib { border-bottom: 1px solid rgba(255, 255, 255, 0.16); }
+
+  .sib__t {
+    grid-column: 1;
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.5vw, 21px);
+    font-weight: 650;
+    letter-spacing: -0.024em;
+    color: var(--sb-ivory);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .sib__d {
+    grid-column: 1;
+    max-width: 62ch;
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    /* On charcoal — --sb-text-secondary is a light-ground token and would drop
+       under 4.5:1 here. */
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .sib__go {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    color: var(--sb-ivory);
+    transition: background var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease),
+      border-color var(--sb-dur-btn) ease;
+  }
+
+  .sib:hover .sib__t { color: #fff; }
+
+  .sib:hover .sib__go {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    transform: translateX(4px);
+  }
+
+  .sib:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 4px; }
+
+  @media (min-width: 900px) {
+    .tp__in { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); }
+    .tp__head { position: sticky; top: calc(var(--sb-masthead-h) + 28px); align-self: start; }
+    .pt { grid-template-columns: minmax(0, 200px) minmax(0, 1fr); align-items: baseline; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sib__go,
+    .sib__t { transition-duration: 1ms; }
+    .sib:hover .sib__go { transform: none; }
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+/**
+ * SCHOOL EVENTS — News & Events sub-page.
+ *
+ * Content: the school's own /event-chronicles/ and /school-activities/. See
+ * data/newsPages.ts.
+ *
+ * ⚠ THE RECOGNITION GROUP STOPS SHORT OF BOARD RESULTS ON PURPOSE. The school's
+ * /press-release/ page publishes them — 100% at X and XII, a district topper at
+ * each — and they belong on Student Success, not in a list of events. Putting
+ * them here would split the academic record across two URLs, which is the
+ * failure this whole sub-page split exists to avoid.
+ */
+import ChronicleShell from '../../components/news/ChronicleShell.astro';
+import { schoolEvents } from '../../data/newsPages';
+import photo from '../../assets/photos/sunbeem-5.jpg';
+---
+
+<ChronicleShell
+  page={schoolEvents}
+  photo={photo}
+  alt="A guest addressing students in the assembly hall at Sunbeam School Ballia"
+  position="50% 42%"
+/>

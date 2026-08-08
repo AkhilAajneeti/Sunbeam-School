@@ -100,9 +100,16 @@ import { utilityLinks } from '../../data/navigation';
     transform: scaleX(1);
   }
 
+  /* ⚠ min-height MATCHES THE SIBLING LINKS' HIT AREA, WHICH IT DID NOT.
+     `.utility__links a` carries `padding-block: var(--sb-3)`; this one carried
+     none, so on the bar's `line-height: 1` it measured 98×12 — half the 24×24
+     WCAG 2.2 SC 2.5.8 (AA) minimum, on the one control a parent is most likely
+     to want on a phone. The bar's height is set by its own padding, so growing
+     the hit area here moves nothing. */
   .utility__phone {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
+    min-height: 24px;
     gap: var(--sb-3);
     white-space: nowrap;
     transition: color var(--sb-dur-link) ease;

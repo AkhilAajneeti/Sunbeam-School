@@ -1,6 +1,6 @@
 ---
 /**
- * §12 · STUDENT & ALUMNI VOICES — audit 13.1
+ * §12 · ALUMNI — audit §13
  *
  * Three infinite marquee rows, adjacent rows travelling in opposite directions.
  * The avatar sits on the right of every card.
@@ -28,6 +28,7 @@
  * docs/08 D19. Fill `items` in data/home.ts and every card populates.
  */
 import { voices } from '../../data/home';
+import { alumni } from '../../data/alumni';
 import { showBuildNotes } from '../../data/site';
 import { Picture } from 'astro:assets';
 
@@ -65,12 +66,8 @@ const cloudBottom = [
   { cx: 1298, cy: 36, r: 54 }, { cx: 1390, cy: 34, r: 78 }, { cx: 1452, cy: 40, r: 46 },
 ];
 
-const ROWS = 3;
-const hasContent = voices.items.length > 0;
-const all: any[] = hasContent ? [...voices.items] : Array.from({ length: voices.slots });
-const perRow = Math.ceil(all.length / ROWS);
-const rows = Array.from({ length: ROWS }, (_, i) => all.slice(i * perRow, (i + 1) * perRow));
-const durations = ['58s', '72s', '64s'];
+/* The marquee maths is gone with the marquee. `voices` still supplies the
+   eyebrow and the deck. */
 ---
 
 <section class="voices" data-voices aria-labelledby="voices-heading">
@@ -96,79 +93,81 @@ const durations = ['58s', '72s', '64s'];
     <div class="voices__head" data-reveal>
       <p class="voices__eyebrow pill pill--violet">{voices.eyebrow}</p>
       <h2 class="voices__heading t-h2-sans" data-split id="voices-heading">
-        What our students <span class="t-squiggle">say</span>
+        Where Sunbeam students <span class="t-squiggle">end up</span>
       </h2>
       <p class="voices__deck t-body-lg">{voices.deck}</p>
     </div>
 
-    <div class="voices__rows">
-      {rows.map((row, r) => (
-        <div class="voices__row" data-dir={r % 2 === 1 ? 'right' : 'left'}>
-          <div class="voices__track" style={`--dur: ${durations[r]}`}>
-            {/* Rendered twice for the seamless loop; the duplicate is hidden
-                from assistive tech so nothing is announced two times over. */}
-            {[0, 1].map((copy) =>
-              row.map((item: any) => (
-                <figure class="vcard" aria-hidden={copy === 1 ? 'true' : undefined}>
-                  <div class="vcard__body">
-                    <svg class="vcard__quotemark" width="20" height="16" viewBox="0 0 18 15"
-                      fill="currentColor" aria-hidden="true">
-                      <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
-                    </svg>
+    {/* ⚠ THREE MARQUEE ROWS OF EMPTY QUOTE CARDS USED TO SIT HERE — nine slots
+        reading "Quote to be supplied by the school", 1,046px of homepage. An
+        empty testimonial wall is not neutral: a parent reads it as a school
+        whose former students will not vouch for it, in the exact place the
+        audit wants trust built.
 
-                    {hasContent ? (
-                      <>
-                        <blockquote class="vcard__quote">{item.quote}</blockquote>
-                        <figcaption class="vcard__person">
-                          <span class="vcard__name">{item.name}</span>
-                          <span class="vcard__sep" aria-hidden="true"></span>
-                          <span class="vcard__class">Class of {item.classOf}</span>
-                        </figcaption>
-                      </>
-                    ) : (
-                      <>
-                        <p class="vcard__quote vcard__quote--empty">
-                          Quote to be supplied by the school.
-                        </p>
-                        <figcaption class="vcard__person">
-                          <span class="vcard__name vcard__name--empty">Student name</span>
-                          <span class="vcard__sep" aria-hidden="true"></span>
-                          <span class="vcard__class">Class of 20——</span>
-                        </figcaption>
-                      </>
-                    )}
-                  </div>
+        ⚠ AND IT WAS THE WRONG SUBJECT. It was headed "Student Voices"; audit
+        §13 asks for ALUMNI, and three of its four criteria — current
+        profession, higher education journey, career achievements — are things
+        a current pupil cannot answer. It also wanted a named minor's
+        photograph and quote, which is the harder consent case (C5), in order
+        to satisfy a requirement about adults who can consent for themselves
+        (C6). The audit never asks for student testimonials anywhere. */}
+    <ul class="acards">
+      {alumni.map((a) => (
+        <li>
+          <article class="acard" data-acard data-video={a.video ?? undefined}>
+            <div class="acard__media">
+              <Picture
+                src={a.poster}
+                alt={a.alt}
+                formats={['webp']}
+                widths={[420, 840]}
+                sizes="(max-width: 640px) 78vw, 300px"
+                loading="lazy"
+                decoding="async"
+              />
 
-                  <div class="vcard__avatar">
-                    {item?.photo ? (
-                      <Picture
-                        src={item.photo}
-                        alt={`${item.name}, Sunbeam School Ballia, Class of ${item.classOf}`}
-                        formats={['avif', 'webp']}
-                        widths={[88, 176]}
-                        sizes="88px"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <span class="vcard__monogram" aria-hidden="true">
-                        <svg width="18" height="15" viewBox="0 0 18 15" fill="currentColor">
-                          <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
-                        </svg>
-                      </span>
-                    )}
-                  </div>
-                </figure>
-              ))
-            )}
-          </div>
-        </div>
+              {/* Ships empty. The script inserts a <video> only where one is
+                  supplied, so a card with no film carries no dead player. */}
+              <span class="acard__player" data-acard-player></span>
+
+              {a.video && (
+                <span class="acard__play" aria-hidden="true">
+                  <svg width="20" height="22" viewBox="0 0 18 20" fill="currentColor">
+                    <path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79A2 2 0 0 1 0 18.06V1.94A2 2 0 0 1 3 .21l14 8.06Z" />
+                  </svg>
+                </span>
+              )}
+            </div>
+
+            {/* ⚠ NO VISIBLE CAPTION — client instruction: the card is the
+                artwork, as in the supplied reference, and becomes the video
+                frame the moment a film is supplied.
+
+                THE DETAIL IS NOT LOST. Every fact that used to be printed here
+                — name, degree, institution, employer — is carried in the image
+                alt, so a screen reader still hears "…alumni card for Sudhanshu
+                Raj Mishra — B.Tech, Bangalore Institute of Technology, placed
+                at GE Aerospace". It is also still typeset inside the school's
+                own artwork, which is what a sighted reader is looking at.
+                Removing the caption removed a duplicate, not the information.
+
+                ⚠ ONE CONDITION ON THAT, AND IT MATTERS LATER. When video
+                arrives the poster stays as the video's poster frame, so the
+                name still appears before playback. If a film is ever supplied
+                WITHOUT that artwork behind it, this caption has to come back —
+                otherwise the card names nobody, on screen or to a reader. */}
+          </article>
+        </li>
       ))}
-    </div>
+    </ul>
 
-    {!hasContent && showBuildNotes && (
+    {showBuildNotes && (
       <p class="voices__note">
-        <strong>Nine slots are laid out and ready.</strong> Real quotes, names,
-        class years and headshots are outstanding — asset request <strong>A4</strong>.
+        <strong>Three alumni, every field read off the school's own cards.</strong>
+        What none of them carries is the alumnus speaking about Sunbeam — audit 13.6 —
+        which is asset request <strong>A4</strong> and needs written consent as much as
+        it needs a camera. Add a <code>video</code> path to any entry in
+        <code>data/alumni.ts</code> and that card plays it on hover.
       </p>
     )}
   </div>
@@ -199,7 +198,14 @@ const durations = ['58s', '72s', '64s'];
       radial-gradient(62% 78% at 10% 38%, rgba(163, 191, 232, 0.28), transparent 68%),
       radial-gradient(58% 74% at 90% 58%, rgba(255, 176, 148, 0.30), transparent 68%),
       var(--sb-ivory);
-    padding-block: calc(var(--sb-section-y) + var(--cloud-h));
+    /* ⚠ `--sb-section-y`, NOT section-y PLUS the cloud height. That calc gave
+       this section 228px top and bottom against every other section's 120, and
+       it double-counted: docs/08 D25 sized the cloud edge to be SHORTER than the
+       padding on purpose — 108 against 120 at desktop, 52 against 64 on mobile —
+       precisely so the clouds live IN the breathing space rather than needing
+       their own. Adding it again bought 216px of nothing and made the band
+       above the alumni cards read as a hole. */
+    padding-block: var(--sb-section-y);
   }
 
   /* --- Cloud edges ---------------------------------------------------------- */
@@ -257,124 +263,97 @@ const durations = ['58s', '72s', '64s'];
     margin-inline: auto;
   }
 
-  /* --- Rows ---------------------------------------------------------------- */
+  /* --- Alumni cards ---------------------------------------------------------
+     Three portrait cards in a row, per the client's reference. The three
+     marquee rows and their pill cards are gone; the cloud edges, the wash, the
+     centred header and the section rhythm are untouched, as asked. */
 
-  .voices__rows {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sb-5);
-  }
-
-  .voices__row {
-    display: flex;
-    /* Clipping happens HERE — at the container edge, not the viewport. */
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-  }
-
-  .voices__track {
-    display: flex;
-    gap: var(--sb-5);
-    width: max-content;
-    padding-right: var(--sb-5); /* keeps the seam even */
-    animation: voices-marquee var(--dur) linear infinite;
-    will-change: transform;
-  }
-
-  /* Adjacent rows travel in opposite directions. */
-  .voices__row[data-dir='right'] .voices__track { animation-direction: reverse; }
-
-  @keyframes voices-marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  /* Pause on hover and on keyboard focus. The explicit pause button was removed
-     at the client's request — see the WCAG note in the header comment. */
-  .voices__rows:hover .voices__track,
-  .voices__rows:focus-within .voices__track {
-    animation-play-state: paused;
-  }
-
-  /* --- Pill card, avatar always on the right -------------------------------- */
-
-  .vcard {
-    flex: 0 0 auto;
-    width: 404px;
-    display: flex;
-    /* Avatar first on every card — the markup puts the body first for reading
-       order, so the visual order is reversed here. */
-    flex-direction: row-reverse;
-    align-items: center;
-    gap: var(--sb-5);
-    margin: 0;
-    padding: var(--sb-4) var(--sb-7) var(--sb-4) var(--sb-4);
-    background: #fff;
-    border-radius: var(--sb-r-full);
-    box-shadow: var(--sb-shadow-card);
-    transition: box-shadow var(--sb-dur-image) var(--sb-ease);
-  }
-
-  .vcard:hover { box-shadow: var(--sb-shadow-card-hover); }
-
-  .vcard__body {
-    min-width: 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sb-3);
-  }
-
-  .vcard__quotemark { color: var(--sb-violet); opacity: 0.28; }
-
-  .vcard__quote {
-    margin: 0;
-    font-size: var(--sb-body-sm);
-    line-height: 1.5;
-    color: var(--sb-text-secondary);
-  }
-
-  .vcard__quote--empty { font-style: italic; color: var(--sb-text-muted); }
-
-  .vcard__person {
-    display: flex;
-    align-items: center;
-    gap: var(--sb-3);
-    flex-wrap: wrap;
-  }
-
-  .vcard__name {
-    font-size: var(--sb-body-sm);
-    font-weight: 700;
-    color: var(--sb-charcoal);
-  }
-
-  .vcard__name--empty { color: var(--sb-text-muted); font-weight: 600; }
-
-  .vcard__sep { width: 1px; height: 12px; background: var(--sb-border-strong); }
-
-  .vcard__class { font-size: var(--sb-caption); color: var(--sb-text-muted); }
-
-  .vcard__avatar {
-    flex-shrink: 0;
-    width: 88px;
-    height: 88px;
-    border-radius: var(--sb-r-full);
-    overflow: hidden;
-    background: var(--sb-violet-wash);
+  .acards {
+    list-style: none;
+    margin: clamp(34px, 5vh, 58px) 0 0;
+    padding: 0;
     display: grid;
-    place-items: center;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(16px, 2vw, 30px);
+    max-width: 1000px;
+    margin-inline: auto;
   }
 
-  .vcard__avatar :global(img) {
+  .acard {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .acard:hover,
+  .acard:focus-within {
+    transform: translateY(-4px);
+    box-shadow: inset 0 0 0 1px transparent, var(--sb-shadow-card-hover);
+  }
+
+  /* ⚠ `contain`, NOT `cover`. These are the school's own designed cards — crest,
+     "OUR ALUMNI" title, a name banner and the employer's logo — and the three
+     are different shapes (4:5 and 5:7). Cropping them to a common frame would
+     slice the name off one and the employer off another, which is the same rule
+     the award posters on Achievements follow. */
+  .acard__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: var(--sb-sand);
+    overflow: hidden;
+  }
+
+  .acard__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 320ms ease;
+  }
+
+  /* The film, inserted by the script only where one exists. It sits over the
+     poster and fades in, so there is never a black frame while it buffers. */
+  .acard__player {
+    position: absolute;
+    inset: 0;
+  }
+
+  .acard__player :global(video) {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    opacity: 0;
+    transition: opacity 320ms ease;
   }
 
-  .vcard__monogram { color: var(--sb-violet); opacity: 0.55; }
+  .acard[data-playing] .acard__player :global(video) { opacity: 1; }
+
+  .acard__play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: 62px;
+    height: 62px;
+    border-radius: var(--sb-r-full);
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--sb-violet);
+    backdrop-filter: blur(2px);
+    padding-left: 4px; /* optical: a triangle reads left-heavy when centred */
+    transition: opacity 260ms ease, transform 260ms var(--sb-ease);
+  }
+
+  .acard:hover .acard__play { opacity: 0; transform: translate(0, 0) scale(0.9); }
+
+  @media (min-width: 640px) {
+    .acards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
 
   .voices__note {
     margin: var(--sb-8) 0 0;
@@ -388,46 +367,101 @@ const durations = ['58s', '72s', '64s'];
   /* --- Mobile ---------------------------------------------------------------- */
 
   @media (max-width: 767px) {
-    /* The marquee RUNS on mobile too, opposite directions and all — an earlier
-       pass replaced it with a static list, which lost the effect the section is
-       built around. Only the card sizing changes here: at 306px wide with a
-       68px avatar the cards were bigger than the phone could carry, and the
-       text had about four characters a line to work with. */
-    .vcard {
-      width: 276px;
-      gap: var(--sb-5);
-      padding: var(--sb-5);
-      /* A full pill wastes the width a phone does not have. */
-      border-radius: var(--sb-r-2);
-    }
-
-    /* The name and class share a line on desktop with a rule between them. In a
-       176px text column they wrap, and the rule is left dangling at the end of
-       the name. Stack them and drop the rule — it only has a job when the two
-       sit side by side. */
-    .vcard__person {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1px;
-    }
-
-    .vcard__sep { display: none; }
-
-    .voices__rows { gap: var(--sb-4); }
-    .vcard__body { gap: var(--sb-2); }
-    .vcard__avatar { width: 52px; height: 52px; }
-    .vcard__quotemark { width: 16px; height: 13px; }
-    .vcard__quote { font-size: 14px; line-height: 1.5; }
-
     .voices__head { max-width: none; margin-bottom: var(--sb-7); }
   }
 
   /* --- Reduced motion --------------------------------------------------------
-     No movement at all; each row becomes a normal scroller so every card is
-     still reachable. */
+     Nothing in this section moves on its own any more — the marquee is gone —
+     so all that is left is to still the card lift and the hover playback. The
+     script also refuses to start a video at all under this preference. */
   @media (prefers-reduced-motion: reduce) {
-    .voices__track { animation: none; transform: none; }
-    .voices__row { overflow-x: auto; scrollbar-width: thin; }
+    .acard, .acard__play, .acard__media :global(img) { transition: none; }
+    .acard:hover, .acard:focus-within { transform: none; }
+    .acard:hover .acard__play { opacity: 1; transform: none; }
   }
 </style>
+<script>
+  /**
+   * HOVER TO PLAY — the client's ask, built so it costs nothing until there is
+   * something to play.
+   *
+   * ⚠ THE <video> IS CREATED ON FIRST HOVER, NOT AT PAGE LOAD. Three video
+   * elements in the markup would have the browser opening three connections and
+   * fetching metadata for films nobody has asked to watch — on the mid-range
+   * Android over 4G docs/03 § D1 describes, on a homepage whose critical-path
+   * budget is under 1 KB. A card only builds its player when a pointer actually
+   * lands on it, and only if a `video` path exists in data/alumni.ts.
+   *
+   * ⚠ MUTED, `playsinline`, LOOPING. Muted is not a style choice: every browser
+   * blocks autoplay with sound, so an unmuted hover-play simply fails silently.
+   * `playsinline` stops iOS taking the video fullscreen the instant it starts.
+   *
+   * ⚠ POINTER, NOT TOUCH. `hover: hover` gates the whole thing. A phone fires a
+   * synthetic hover on tap, so without this the first tap would start a film
+   * instead of following the card — and a video that plays when you are trying
+   * to read is the behaviour every "autoplaying video" complaint is about.
+   *
+   * ⚠ AND NOT UNDER REDUCED MOTION. A film starting by itself is exactly the
+   * kind of unrequested movement that preference exists to prevent. The poster
+   * stays, which loses nothing: every fact on the card is text beneath it.
+   */
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const stillness = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  document.querySelectorAll<HTMLElement>('[data-acard]').forEach((card) => {
+    const src = card.dataset.video;
+    const slot = card.querySelector<HTMLElement>('[data-acard-player]');
+    if (!src || !slot) return;
+
+    let film: HTMLVideoElement | null = null;
+
+    const build = () => {
+      if (film) return film;
+      film = document.createElement('video');
+      film.src = src;
+      film.muted = true;
+      film.loop = true;
+      film.playsInline = true;
+      film.preload = 'none';
+      /* Decorative here: the card's heading, course and employer already say
+         who this is, so announcing the film again is duplication. */
+      film.setAttribute('aria-hidden', 'true');
+      film.tabIndex = -1;
+      slot.append(film);
+      return film;
+    };
+
+    const start = () => {
+      if (!canHover.matches || stillness.matches) return;
+      const v = build();
+      /* `play()` rejects if the browser declines — an unhandled rejection here
+         would surface as a console error on a card that simply did not play. */
+      v.play().then(
+        () => card.setAttribute('data-playing', 'true'),
+        () => card.removeAttribute('data-playing'),
+      );
+    };
+
+    const stop = () => {
+      card.removeAttribute('data-playing');
+      if (!film) return;
+      film.pause();
+      film.currentTime = 0;
+    };
+
+    card.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'touch') return;
+      start();
+    });
+    card.addEventListener('pointerleave', stop);
+
+    /* Keyboard parity: a card reached by tab behaves as a card hovered. */
+    card.addEventListener('focusin', start);
+    card.addEventListener('focusout', stop);
+
+    /* Scrolled away mid-play, a paused film is one less decoder running. */
+    new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) stop();
+    }).observe(card);
+  });
+</script>

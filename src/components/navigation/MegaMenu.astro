@@ -261,12 +261,37 @@ const links = (item.columns ?? []).flat();
   }
 
   /* --- Level two ------------------------------------------------------------
-     Its own card, opening beside the panel. `left: 100%` off the panel, not off
-     the row, so it always aligns to the card's top edge. */
+     Its own card, opening beside the ROW that owns it.
+
+     ⚠ THIS ROW MUST BE THE CONTAINING BLOCK, EXPLICITLY. `.mnu__item` is
+     `position: static`, so an absolutely-positioned child of it resolves
+     against the panel — EXCEPT while the row's entrance animation is running,
+     because `.mnu__item` carries `transform: translateY(14px)` and a transform
+     makes an element a containing block whatever its `position` says.
+
+     The submenu therefore measured from the ROW for the length of the open
+     animation and then snapped to the PANEL'S TOP when the transform cleared:
+     the flyout visibly jumped up the screen a fraction of a second after
+     appearing. That is the "sometimes it goes up and down" the client reported,
+     and it is not a timing bug — it is the reference frame changing underneath
+     it mid-transition.
+
+     `position: relative` on the parent row pins the frame to the row in both
+     states, which is also where a flyout belongs: it opens from the thing you
+     pointed at, not from the top of a card whose other rows you did not. */
+  .mnu__item--parent { position: relative; }
+
   .mnu__sub {
     position: absolute;
-    top: -1px;
+    /* -6px cancels the card's own padding, so the first submenu row sits on the
+       same baseline as the parent row rather than 6px below it. */
+    top: -6px;
     left: calc(100% + 8px);
+    /* A flyout opening from a low row must never run off the bottom of the
+       screen; it scrolls inside itself instead. */
+    max-height: min(60vh, 340px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     width: max-content;
     min-width: 210px;
     max-width: 280px;
@@ -297,9 +322,14 @@ const links = (item.columns ?? []).flat();
 
   /* STAGGER. Rows arrive one after another off `--j`. The delay is on the OPEN
      state only — a staggered close reads as the menu being slow to let go. */
+  /* ⚠ THE STAGGER MOVES SIDEWAYS, NOT DOWN. It was `translateY(-4px)`, so seven
+     rows each settled downward as they arrived — on a card that had just opened
+     beside the cursor, that read as the whole flyout drifting, which is the
+     second half of the same complaint. Horizontal travel matches the direction
+     the card itself enters from and leaves the vertical position dead still. */
   .mnu__sub li {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateX(-5px);
     transition: opacity 200ms ease, transform 260ms var(--sb-ease);
   }
 

@@ -126,7 +126,7 @@ export const streams: Stream[] = [
         fit: 'contain',
       },
     ],
-    more: { label: 'All school activities', href: '/beyond-academics/school-activities/' },
+    more: { label: 'All school events', href: '/news-events/school-events/' },
   },
 
   {
@@ -136,7 +136,7 @@ export const streams: Stream[] = [
     stand:
       'Leagues, championships and camps the school has hosted or entered — the record runs to fourteen.',
     items: competitions,
-    more: { label: 'The sporting record', href: '/beyond-academics/sports/#record' },
+    more: { label: 'Every competition', href: '/news-events/competitions/' },
   },
 
   {
@@ -149,7 +149,7 @@ export const streams: Stream[] = [
       title: c.title,
       meta: c.chips.slice(0, 2).join(' · '),
     })),
-    more: { label: 'Parent partnership', href: '/academics/parent-partnership/#workshops' },
+    more: { label: 'All workshops & training', href: '/news-events/workshops/' },
   },
 
   {
@@ -196,7 +196,7 @@ export const streams: Stream[] = [
         alt: 'An embroidery activity at Sunbeam School Ballia.',
       },
     ],
-    more: { label: 'All school activities', href: '/beyond-academics/school-activities/' },
+    more: { label: 'The whole year', href: '/news-events/celebrations/' },
   },
 
   {

@@ -1,0 +1,23 @@
+---
+/**
+ * HOMEWORK POLICY — audit 2.D2.
+ *
+ * ⚠ THE SCHOOL PUBLISHES ONE SENTENCE ABOUT HOMEWORK, ANYWHERE ON ITS SITE.
+ * This page carries that sentence, says plainly that the rest is not published,
+ * and gives the office number. It does not invent a policy. Homework rules
+ * govern a family's evenings, so a plausible-sounding invention here would be
+ * among the most damaging things this site could print.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { assessmentTopics } from '../../../data/academics';
+import photo from '../../../assets/library/DSC_1225 copy.jpg';
+
+const topic = assessmentTopics.find((t) => t.id === 'homework-policy')!;
+---
+
+<TopicPage
+  topic={topic}
+  photo={photo}
+  alt="The library at Sunbeam School Ballia, its reading table ringed with chairs and the shelves labelled by subject."
+  position="50% 55%"
+/>

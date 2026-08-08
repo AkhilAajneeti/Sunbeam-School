@@ -93,7 +93,10 @@ export interface NavItem {
 export const utilityLinks = [
   { label: "Notices", href: "/news-events/notices/", tier: 1 },
   { label: "Results", href: school.external.results, external: true, tier: 1 },
-  { label: "Contact", href: "/contact-us/", tier: 2 },
+  /* ⚠ CONTACT WAS REMOVED FROM THIS BAR ON THE CLIENT'S INSTRUCTION. It is not
+     unreachable: the footer carries it, the drawer's quick links carry it, and
+     the admissions helpline sits at the other end of this same bar — which is
+     the thing a parent actually wants when they think "contact". */
 ] as const;
 
 export const mainNav: NavItem[] = [
@@ -189,6 +192,31 @@ export const mainNav: NavItem[] = [
           icon: "badge",
           desc: "Assessment, homework, PTMs and remedial support.",
           img: imgChem,
+          /* Audit §2.D names seven topics under Assessment Pattern and marks
+             them MUST. Each now has a page: five new ones under this route, and
+             two that already existed and were NOT duplicated —
+
+               · Assessment System is this page. The six-step cycle on it is
+                 exactly that topic, so the row points at the parent rather than
+                 minting a second page that repeats it.
+               · Academic Calendar keeps its own route, which audit §8 requires
+                 as an interactive page. A second calendar would split one
+                 destination in two and one of them would go stale.
+
+             ⚠ EVERY href IS A ROUTE, NOT AN ANCHOR. An earlier pass pointed four
+             of these at `#homework`-style sections on the parent page. Those are
+             now pages, so the anchors are gone and the hrefs move with them —
+             leaving them would have produced exactly the submenu of dead anchors
+             the note on `children` warns about. */
+          children: [
+            { label: "Assessment System", href: "/academics/assessment/" },
+            { label: "Homework Policy", href: "/academics/assessment/homework-policy/" },
+            { label: "Remedial Support", href: "/academics/assessment/remedial-support/" },
+            { label: "Mentoring", href: "/academics/assessment/mentoring/" },
+            { label: "Academic Calendar", href: "/academics/academic-calendar/" },
+            { label: "Parent–Teacher Meetings", href: "/academics/assessment/parent-teacher-meetings/" },
+            { label: "Competitive Exam Preparation", href: "/academics/assessment/competitive-exam-preparation/" },
+          ],
         },
       ],
       [
@@ -324,13 +352,90 @@ export const mainNav: NavItem[] = [
   {
     label: "News & Events",
     href: "/news-events/",
-    /* ⚠ NO DROPDOWN — client instruction, and it now matches how the section
-       actually works. Audit §11 lists six things this page must keep current;
-       they are SECTIONS OF ONE PAGE, not menu rows, and Notices is the sixth of
-       them ("important announcements") rather than a separate destination. A
-       two-row mega-menu for a single page is a menu that exists to look like a
-       menu. */
+    /* ⚠ FOUR ROUTES AND TWO ANCHORS — the split is by how much content there is,
+       not by taste.
 
+       Audit §11 names six things this section must keep current. Four of them
+       turned out to have a page's worth of published material behind them once
+       the school's own site was read properly: fourteen workshops with named
+       trainers, thirty-five dated events, a full district-championship results
+       table. Those get routes — /news-events/workshops/, /competitions/,
+       /celebrations/, /school-events/ — built from data/newsPages.ts.
+
+       The other two do NOT, and forcing a route on them would produce two thin
+       pages that rot:
+         · Recent achievements → /beyond-academics/achievements/ already exists.
+           A second achievements page splits one story across two URLs and one
+           of them goes stale.
+         · Important announcements → the school's own /notice/ and
+           /admission-notice/ pages are EMPTY. There is nothing to build from
+           until assets A7 and C7 land, so it stays a section on the index.
+
+       An earlier pass removed this dropdown entirely, when it held only "News &
+       Events" and "Notices" — two rows for one page, which was a menu that
+       existed to look like a menu. Six named destinations is a different thing.
+
+       ⚠ THE TWO REMAINING ANCHOR hrefs MUST MATCH A SECTION id ON THE INDEX:
+       `achievements` and `announcements`, set from `streams` in
+       data/newsEvents.ts. Rename an id there and this menu points at nothing,
+       silently. */
+    columns: [
+      [
+        {
+          label: "Recent achievements",
+          href: "/news-events/#achievements",
+          icon: "badge",
+          desc: "What the school has just won.",
+          img: imgCampus,
+        },
+        {
+          label: "School events",
+          href: "/news-events/school-events/",
+          icon: "hall",
+          desc: "The guests it brings through the gate.",
+          img: imgCampus,
+        },
+        {
+          label: "Competitions",
+          href: "/news-events/competitions/",
+          icon: "target",
+          desc: "Entered, hosted, and placed.",
+          img: imgCampus,
+        },
+      ],
+      [
+        {
+          label: "Workshops",
+          href: "/news-events/workshops/",
+          icon: "speech",
+          desc: "How the school trains its teachers.",
+          img: imgCampus,
+        },
+        {
+          label: "Celebrations",
+          href: "/news-events/celebrations/",
+          icon: "music",
+          desc: "The school year, marked.",
+          img: imgCampus,
+        },
+        {
+          label: "Important announcements",
+          href: "/news-events/#announcements",
+          icon: "mail",
+          desc: "What parents need to know.",
+          img: imgCampus,
+        },
+      ],
+    ],
+    feature: {
+      eyebrow: "Notice Board",
+      title: "Official notices, in one place",
+      body: "Circulars and announcements as they are issued.",
+      href: "/news-events/notices/",
+      cta: "Read notices",
+      imageBrief:
+        "Notice board or assembly announcement, 3:2 — documentary, not staged",
+    },
   },
   {
     label: "Alumni",

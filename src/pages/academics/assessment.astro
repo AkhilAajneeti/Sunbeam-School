@@ -26,9 +26,8 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
-import ChapterNav from '../../components/academics/ChapterNav.astro';
 import JourneyRoad from '../../components/academics/JourneyRoad.astro';
-import { cycle, supports } from '../../data/academics';
+import { cycle, supports, assessmentTopics } from '../../data/academics';
 
 /* Students at the bench during a practical — assessment is a thing that happens
    in a room, not an abstraction. */
@@ -99,6 +98,8 @@ import banner from '../../assets/photos/sunbeem-students.jpg';
     </div>
   </section>
 
+
+
   {/* ══ SUPPORT ════════════════════════════════════════════════════════════ */}
   <section class="sup2" id="support" aria-labelledby="sup2-title">
     <div class="u-container">
@@ -135,7 +136,15 @@ import banner from '../../assets/photos/sunbeem-students.jpg';
 
   </div>
 
-  <ChapterNav current="assessment" />
+  {/* ⚠ NO CHAPTER NAVIGATION — removed at the client's instruction. It was the
+      dark "Chapter 04 of 06 · Academics overview" band with Previous / Next
+      cards to Teaching & Learning and Student Success.
+
+      `ChapterNav.astro` is untouched and the other five academics pages still
+      carry it, so restoring this one is a single tag. Worth knowing what went:
+      this page now has no onward route to the rest of the Academics chapters
+      except the main navigation, and it is the only one of the six without
+      that band — the sequence reads as broken at chapter four. */}
 </BaseLayout>
 
 <style>

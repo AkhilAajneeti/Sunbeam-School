@@ -98,6 +98,19 @@ const columns = [
         label: "Uniform Catalogue",
         href: "/admissions/uniform-catalogue/",
       },
+      /* ⚠ THIS ROW EXISTS BECAUSE THE UTILITY BAR LOST ITS CONTACT LINK. The
+         client asked for Contact off the top bar; measured after that change,
+         /contact-us/ was linked from exactly ONE place on the whole site — a
+         quick card on the homepage — and from no inner page at all. The footer
+         carried the address, a phone and an email, but never a link to the
+         page itself.
+
+         Removing it from the bar was the instruction; stranding the page was
+         not, and the footer is where a contact link conventionally lives. */
+      {
+        label: "Contact Us",
+        href: "/contact-us/",
+      },
     ],
   },
 ];
@@ -342,7 +355,14 @@ const socials = [
     gap: var(--sb-2);
   }
 
+  /* 23px measured at 390 — one pixel under the 24×24 WCAG 2.2 SC 2.5.8 (AA)
+     minimum, on the school's two phone numbers. `min-height` with the text
+     centred costs no layout: the column's own `gap` already separates the rows,
+     so nothing below moves. */
   .foot__contact a {
+    display: flex;
+    align-items: center;
+    min-height: 24px;
     color: #fff;
     font-weight: 600;
     width: fit-content;
@@ -394,7 +414,19 @@ const socials = [
     color: var(--sb-lime);
   }
 
+  /* ⚠ THE WHOLE FOOTER SITEMAP FAILED WCAG 2.2 SC 2.5.8 (AA) — 20 links at 18px
+     tall, on every page of the site. This is the site's second navigation, and
+     on a phone it is the ONLY place several sections are reachable from, so it
+     is the last place a 24px minimum should be missed.
+
+     `inline-flex` + `min-height`, not a bigger `gap` on the list: the gap would
+     push the rows apart without growing the hit area, which looks like a fix
+     and is not one. The anchors are `width: fit-content` by being inline, so a
+     tap still only lands on the label, not on the empty column beside it. */
   .foot__cols li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
     color: rgba(255, 255, 255, 0.66);
     transition: color var(--sb-dur-link) ease;
   }

@@ -117,9 +117,19 @@ export async function getStaticPaths() {
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' ');
 
+  /* ⚠ THE DOT IS IN THE CHARACTER CLASS TO CATCH FILES, NOT TO ACCEPT THEM.
+     An earlier pass stopped the capture at the first dot, so BaseLayout's font
+     preloads — `href="/fonts/bricolage-grotesque-latin-wght-normal.woff2"` —
+     were captured as `/fonts/bricolage-grotesque-latin-wght-normal`, a path with
+     no extension left to recognise. Three "this section is being prepared"
+     pages were built for three font files. Matching the extension is what makes
+     it rejectable. */
+  const isFile = (path: string) => (path.split('/').pop() ?? '').includes('.');
+
   for (const src of Object.values(sources) as string[]) {
     const clean = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
-    for (const m of clean.matchAll(/href\s*[=:]\s*["'`{]?\s*["'`]?(\/[a-z0-9\-/]*)/gi)) {
+    for (const m of clean.matchAll(/href\s*[=:]\s*["'`{]?\s*["'`]?(\/[a-z0-9\-/.]*)/gi)) {
+      if (isFile(m[1])) continue;
       add(m[1], titleFromPath(m[1]));
     }
   }

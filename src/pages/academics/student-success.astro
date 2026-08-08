@@ -28,7 +28,6 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
-import ChapterNav from '../../components/academics/ChapterNav.astro';
 import CounterStrip from '../../components/academics/CounterStrip.astro';
 import { showBuildNotes } from '../../data/site';
 import { wins, guidance, awaiting } from '../../data/academics';
@@ -159,7 +158,20 @@ import banner from '../../assets/photos/sunbeem-5.jpg';
 
   </div>
 
-  <ChapterNav current="student-success" />
+  {/* ⚠ NO CHAPTER NAVIGATION — removed at the client’s instruction.
+
+      WITH THIS ONE, THE PAGER IS NOW GONE FROM ALL SIX ACADEMICS CHAPTERS. It
+      came off Philosophy, Structure and Teaching & Learning in earlier passes,
+      and off Assessment & Support alongside this one, so the sequence is
+      consistently without it rather than half-wired — which is the better
+      outcome of the two.
+
+      `ChapterNav.astro` is intact but is now rendered NOWHERE. It is dead code
+      until someone puts it back; worth deleting on the next tidy-up if the
+      chapter pager is not returning.
+
+      The consequence to know: a reader at the end of a chapter has no onward
+      route through the Academics sequence except the main navigation. */}
 </BaseLayout>
 
 <style>

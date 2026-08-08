@@ -1,0 +1,22 @@
+---
+/**
+ * COMPETITIVE EXAMINATION PREPARATION — audit 2.D7.
+ *
+ * ⚠ RESULTS ARE NOT REPEATED HERE. They live on Student Success, and one record
+ * of what students have won is worth more than two that can disagree the moment
+ * either is updated. This page names the programmes entered; that page says how
+ * they went.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { assessmentTopics } from '../../../data/academics';
+import photo from '../../../assets/photos/sunbeem-4.jpg';
+
+const topic = assessmentTopics.find((t) => t.id === 'competitive-exam-preparation')!;
+---
+
+<TopicPage
+  topic={topic}
+  photo={photo}
+  alt="An award ceremony on stage at Sunbeam School Ballia, beneath the school name."
+  position="50% 40%"
+/>

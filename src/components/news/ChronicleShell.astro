@@ -1,0 +1,232 @@
+---
+/**
+ * THE SHELL SHARED BY ALL FOUR NEWS & EVENTS SUB-PAGES.
+ *
+ * Workshops, Competitions, Celebrations and School events are the same page
+ * with different content: hero, jump rail, an opening statement, N ledger
+ * groups, and a way across to the other three. Four route files repeating that
+ * would be four places to fix a spacing bug — so the route files hold only what
+ * differs (their data object and their photograph) and everything structural
+ * lives here.
+ *
+ * ⚠ THE CROSS-LINK AT THE FOOT IS NOT DECORATION. Each of these pages is
+ * reachable only from a dropdown row, so a reader who lands on Workshops from
+ * search has no way to discover Competitions without going back to the menu.
+ * The strip lists the sibling pages — derived from `chronicles`, so adding a
+ * fifth page adds it to all four foots with no edit here.
+ *
+ * ⚠ `u-page-panel` WITH `padding-block: 0`. Every group carries its own
+ * --sb-section-y; the panel adding its own on top is what put a 183px void
+ * under the hero on three earlier pages.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import SectionRail from '../../components/academics/SectionRail.astro';
+import Chronicle from './Chronicle.astro';
+
+import { chronicles, type ChroniclePage } from '../../data/newsPages';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  page: ChroniclePage;
+  photo: ImageMetadata;
+  alt: string;
+  position?: string;
+}
+
+const { page, photo, alt, position = '50% 42%' } = Astro.props;
+
+/* No two adjacent groups share a ground. */
+const TONES = ['ivory', 'sand', 'paper'] as const;
+
+const siblings = chronicles.filter((c) => c.slug !== page.slug);
+---
+
+<BaseLayout
+  title={`${page.title} — Sunbeam School Ballia`}
+  description={page.standfirst}
+>
+  <PageHero
+    title={page.title}
+    standfirst={page.standfirst}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'News & Events', href: '/news-events/' },
+    ]}
+    src={photo}
+    alt={alt}
+    position={position}
+  />
+
+  <SectionRail items={page.groups.map((g) => ({ id: g.id, label: g.label }))} />
+
+  <div class="u-page-panel chron-panel">
+    {/* The opening statement. One screen, no rail, no card — it sets what the
+        page is claiming before the ledger starts proving it. */}
+    <section class="chron-open">
+      <div class="u-container chron-open__in">
+        <p class="chron-open__eyebrow t-label">{page.eyebrow}</p>
+        <h2 class="chron-open__h" data-split>{page.heading}</h2>
+        <p class="chron-open__stand" data-reveal>{page.stand}</p>
+      </div>
+    </section>
+
+    {
+      page.groups.map((g, i) => (
+        <Chronicle group={g} tone={TONES[(i + 1) % TONES.length]} index={i + 1} />
+      ))
+    }
+
+    <section class="chron-more" aria-labelledby="chron-more-t">
+      <div class="u-container">
+        <h2 class="chron-more__h" id="chron-more-t">Elsewhere in News &amp; Events</h2>
+        <ul class="chron-more__list">
+          {
+            siblings.map((s) => (
+              <li>
+                <a class="crossl" href={`/news-events/${s.slug}/`}>
+                  <span class="crossl__t">{s.title}</span>
+                  <span class="crossl__d">{s.standfirst}</span>
+                  <span class="crossl__go" aria-hidden="true">
+                    <svg width="16" height="11" viewBox="0 0 14 10" fill="none">
+                      <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  div.chron-panel { padding-block: 0; }
+
+  .chron-panel :global(section[id]) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
+  }
+
+  /* --- The opening statement ----------------------------------------------- */
+
+  .chron-open {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-paper);
+  }
+
+  .chron-open__in { max-width: 62ch; }
+
+  .chron-open__eyebrow { color: var(--sb-violet-dark); }
+
+  .chron-open__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3.4vw, 48px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .chron-open__stand {
+    max-width: 58ch;
+    margin-top: var(--sb-5);
+    font-size: clamp(16px, 1.25vw, 19px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- The cross-link strip ------------------------------------------------ */
+
+  .chron-more {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-charcoal);
+  }
+
+  .chron-more__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    color: var(--sb-ivory);
+  }
+
+  .chron-more__list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1px;
+    list-style: none;
+    margin: clamp(20px, 2.6vh, 30px) 0 0;
+    padding: 0;
+  }
+
+  .crossl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sb-3) var(--sb-5);
+    padding: clamp(18px, 2vw, 26px) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    text-decoration: none;
+  }
+
+  .chron-more__list li:last-child .crossl {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .crossl__t {
+    grid-column: 1;
+    font-family: var(--sb-font-display);
+    font-size: clamp(18px, 1.7vw, 24px);
+    font-weight: 650;
+    letter-spacing: -0.024em;
+    color: var(--sb-ivory);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .crossl__d {
+    grid-column: 1;
+    max-width: 62ch;
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    /* On charcoal. Pure --sb-text-secondary is a light-ground token and would
+       drop under 4.5:1 here. */
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .crossl__go {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    color: var(--sb-ivory);
+    transition: background var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease),
+      border-color var(--sb-dur-btn) ease;
+  }
+
+  .crossl:hover .crossl__t { color: #fff; }
+
+  .crossl:hover .crossl__go {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    transform: translateX(4px);
+  }
+
+  .crossl:focus-visible {
+    outline: 2px solid var(--sb-focus);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .crossl__go,
+    .crossl__t { transition-duration: 1ms; }
+    .crossl:hover .crossl__go { transform: none; }
+  }
+</style>

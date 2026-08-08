@@ -1,0 +1,23 @@
+---
+/**
+ * REMEDIAL SUPPORT — audit 2.D5.
+ *
+ * The retest rules here are real published content, read off the school's own
+ * /promotion-policy/ page: the ten-day minimum, the two clear days between
+ * multiple retests, the two-and-a-half-week results window, and the medical
+ * provision. That page turned out to carry more substance on assessment than
+ * any other on their site.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { assessmentTopics } from '../../../data/academics';
+import photo from '../../../assets/photos/sb-chem-lab.jpg';
+
+const topic = assessmentTopics.find((t) => t.id === 'remedial-support')!;
+---
+
+<TopicPage
+  topic={topic}
+  photo={photo}
+  alt="Students of Sunbeam School Ballia working through a practical at the chemistry bench."
+  position="50% 45%"
+/>
