@@ -66,7 +66,17 @@ const links = (item.columns ?? []).flat();
             <ul class="mnu__sub">
               {kids.map((k, j) => (
                 <li style={`--j:${j}`}>
-                  <a class="mnu__sublink" href={k.href}>{k.label}</a>
+                  <a class="mnu__sublink" href={k.href}>
+                    {/* Decorative, exactly as on the parent rows — the label
+                        beside it already names the destination, so announcing
+                        the glyph would be the same word twice. */}
+                    {k.icon && (
+                      <span class="mnu__subplate" aria-hidden="true">
+                        <FacIcon name={k.icon} size={15} />
+                      </span>
+                    )}
+                    <span>{k.label}</span>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -340,8 +350,16 @@ const links = (item.columns ?? []).flat();
     transition-delay: calc(var(--j, 0) * 26ms + 40ms);
   }
 
+  /* ⚠ `grid`, NOT `flex`, AND THE GLYPH COLUMN IS FIXED. A label that wraps to
+     two lines — "Competitive Exam Preparation" does at this width — must have
+     its second line align with its first, not tuck back under the icon. A fixed
+     first track guarantees that; flex would let the text box start at the icon's
+     right edge and wrap to the row's left edge. */
   .mnu__sublink {
-    display: block;
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    align-items: center;
+    gap: 9px;
     padding: 8px 10px;
     border-radius: 8px;
     font-size: var(--sb-body-sm);
@@ -349,6 +367,23 @@ const links = (item.columns ?? []).flat();
     line-height: 1.35;
     color: var(--sb-text-secondary);
     transition: background 160ms ease, color 160ms ease;
+  }
+
+  .mnu__subplate {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    background: var(--sb-sand);
+    color: var(--sb-violet-dark);
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  .mnu__sublink:hover .mnu__subplate,
+  .mnu__sublink:focus-visible .mnu__subplate {
+    background: var(--sb-violet);
+    color: #fff;
   }
 
   .mnu__sublink:hover,

@@ -1,0 +1,169 @@
+---
+/**
+ * WORKSHOPS — the index. A card per session; the facts live on the detail page.
+ *
+ * Content: the school's own /workshops/ page, verbatim as to names, institutions
+ * and dates. See data/newsPages.ts.
+ *
+ * ⚠ THIS REPLACES A LEDGER, AND THE MOVE WAS THE RIGHT ONE. Every fact about
+ * all thirteen sessions used to sit on this one screen — trainer, institution,
+ * date, description — which made the page long and made no single workshop
+ * findable or linkable. Now the index is scannable and each session has a URL
+ * the school can share.
+ *
+ * ⚠ THE FILE MOVED FROM workshops.astro TO workshops/index.astro. The route is
+ * unchanged — /news-events/workshops/ — but the directory is what lets
+ * [slug].astro sit beside it.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import SectionRail from '../../../components/academics/SectionRail.astro';
+import WorkshopCards from '../../../components/news/WorkshopCards.astro';
+
+import { workshops } from '../../../data/newsPages';
+import heroPhoto from '../../../assets/photos/sb-library.jpg';
+
+/**
+ * ⚠ THE FIGURES ARE COUNTED FROM THE DATA, NEVER TYPED. The line this replaced
+ * claimed the page "names the trainer, the institution and the date" — true of
+ * four sessions out of fourteen. Counting instead of asserting means the copy
+ * cannot drift away from the content as sessions are added or corrected, and it
+ * makes the modest number visible rather than hidden behind a boast.
+ */
+const items = workshops.groups.flatMap((g) => g.items);
+const count = items.length;
+
+const NAMED = /\b(Mr|Mrs|Ms|Dr|Prof)\b/;
+const INSTITUTION = /\b(IIT|University|College|School|Eduserve|Consulting|Group|Foundation|Services)\b/i;
+
+const figures = [
+  { n: count, k: 'sessions on record' },
+  { n: items.filter((i) => NAMED.test(i.meta)).length, k: 'name the person who led it' },
+  { n: items.filter((i) => INSTITUTION.test(i.meta)).length, k: 'name the institution' },
+];
+---
+
+<BaseLayout
+  title={`${workshops.title} — Sunbeam School Ballia`}
+  description={workshops.standfirst}
+>
+  <PageHero
+    title={workshops.title}
+    standfirst={workshops.standfirst}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'News & Events', href: '/news-events/' },
+    ]}
+    src={heroPhoto}
+    alt="The library at Sunbeam School Ballia, where staff training sessions are held"
+    position="50% 45%"
+  />
+
+  <SectionRail items={workshops.groups.map((g) => ({ id: g.id, label: g.label }))} />
+
+  <div class="u-page-panel wk-panel">
+    <section class="wk-open">
+      <div class="u-container wk-open__grid">
+        <div class="wk-open__in">
+          <p class="wk-open__k t-label">{workshops.eyebrow}</p>
+          <h2 class="wk-open__h" data-split>{workshops.heading}</h2>
+          <p class="wk-open__b" data-reveal>{workshops.stand}</p>
+        </div>
+
+        <ul class="wk-figs">
+          {
+            figures.map((f) => (
+              <li class="wfig">
+                <p class="wfig__n t-tabular">{f.n}</p>
+                <p class="wfig__k">{f.k}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <WorkshopCards page={workshops} />
+  </div>
+</BaseLayout>
+
+<style>
+  div.wk-panel { padding-block: 0; }
+
+  .wk-panel :global(section[id]) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
+  }
+
+  .wk-open {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .wk-open__in { max-width: 62ch; }
+  .wk-open__k { color: var(--sb-violet-dark); }
+
+  .wk-open__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3.4vw, 48px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .wk-open__b {
+    max-width: 58ch;
+    margin-top: var(--sb-5);
+    font-size: clamp(16px, 1.25vw, 19px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .wk-open__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 4vh, 48px);
+    align-items: end;
+  }
+
+  .wk-figs {
+    display: grid;
+    gap: var(--sb-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .wfig {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--sb-3) var(--sb-5);
+    padding: clamp(12px, 1.4vw, 16px) 0;
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .wfig:last-child { border-bottom: 1px solid var(--sb-border); }
+
+  .wfig__n {
+    min-width: 2ch;
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--sb-violet-dark);
+  }
+
+  .wfig__k {
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (min-width: 900px) {
+    .wk-open__grid { grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr); gap: clamp(36px, 5vw, 80px); }
+  }
+</style>

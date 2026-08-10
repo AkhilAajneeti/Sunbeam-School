@@ -20,12 +20,17 @@ import FacIcon from '../campus/facilities/FacIcon.astro';
 
   <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Site menu">
     <div class="drawer__head">
+      {/* ⚠ 190×144 IS THE FILE'S ACTUAL SIZE — read out of the PNG's IHDR, not
+          eyeballed. These attributes said 191×150, so the browser reserved a
+          1.27 box for a 1.32 image and squashed the crest very slightly on
+          every page of the site. Lighthouse reports it as `image-aspect-ratio`;
+          it is invisible until you know, and wrong everywhere. */}
       <img
         class="drawer__emblem"
         src="/brand/sunbeam-emblem.png"
         alt=""
-        width="191"
-        height="150"
+        width="190"
+        height="144"
       />
       <button class="drawer__close" type="button" aria-label="Close menu" data-drawer-close>
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">

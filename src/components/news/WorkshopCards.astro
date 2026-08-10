@@ -1,0 +1,373 @@
+---
+/**
+ * THE WORKSHOPS INDEX — a card per session, and nothing else on the card.
+ *
+ * ═══ WHY THE CARD IS THIS BARE ═════════════════════════════════════════════
+ *
+ * Client: "only card show and heading of the workshop is written and view type
+ * button to go detail page." So the card carries the heading and the button,
+ * and the trainer, the institution and the date — which used to sit on the
+ * index — move to the detail page where there is room for them.
+ *
+ * That is the right split anyway. The old ledger put every fact about all
+ * thirteen sessions on one screen, which made the page long and made no single
+ * workshop findable. A card grid makes the SET scannable and the detail page
+ * makes each one readable.
+ *
+ * ⚠ THE GROUP HEADINGS STAY. Thirteen identical cards in one run is a wall;
+ * three labelled groups of four-ish is a structure. The groups are the same
+ * ones the ledger used, so nothing has been re-categorised.
+ *
+ * ⚠ A CARD WITHOUT A `slug` DOES NOT OPEN. It renders as a plain tile with no
+ * button rather than a button that goes nowhere — the same rule as the nav
+ * submenu, and for the same reason.
+ */
+import { Picture } from 'astro:assets';
+import type { ChroniclePage } from '../../data/newsPages';
+import { leadPhoto } from '../../data/workshopPhotos';
+
+interface Props {
+  page: ChroniclePage;
+}
+
+const { page } = Astro.props;
+
+/* Numbering runs across the whole set, not per group — the reader is counting
+   workshops, not counting within a category. */
+let n = 0;
+---
+
+{
+  page.groups.map((g, gi) => (
+    <section class:list={['wgrid', `wgrid--${['paper', 'ivory', 'sand'][gi % 3]}`]} id={g.id} aria-labelledby={`${g.id}-h`}>
+      <div class="u-container">
+        {/* ⚠ THE GROUP NAME IS THE HEADING; THE DESCRIPTION IS NOT. This block
+            used to print the label as a small eyebrow and promote `note` — a
+            sentence ending in a full stop — to the h2. Two things were wrong
+            with that: a display heading closed by a full stop reads as a
+            caption rather than a title, and the eyebrow said the same thing
+            immediately above it.
+
+            Now the label is the h2 and the note supports it, which is also the
+            order the section rail and the URL fragment already use. */}
+        <div class="wgrid__head">
+          {/* ⚠ THE STAR IS NOT INSIDE `data-split`. That attribute hands the
+              heading to the motion chunk, which re-wraps its text into per-line
+              masks — a pseudo-element on the heading would be re-parented or
+              clipped by that. It is drawn on a wrapper the splitter does not
+              touch, so the sparkle survives the animation. */}
+          <h2 class="wgrid__h u-starred" id={`${g.id}-h`}>
+            <span data-split>{g.label}</span>
+          </h2>
+          <p class="wgrid__note">{g.note}</p>
+          {/* ⚠ ONE TEMPLATE LITERAL, NOT TWO ADJACENT EXPRESSIONS. Written as
+              `{n} {n === 1 ? 'session' : 'sessions'}` the compiler dropped the
+              whitespace between them and the page read "6SESSIONS". Building
+              the whole string in one expression leaves nothing to trim. */}
+          <p class="wgrid__n">{`${g.items.length} ${g.items.length === 1 ? 'session' : 'sessions'}`}</p>
+        </div>
+
+        <ul class="wgrid__list">
+          {g.items.map((item) => {
+            n += 1;
+            const face = leadPhoto(item.photoDir, item.photoSkip);
+            return (
+              <li class:list={['wcard', face && 'wcard--shot']}>
+                {/* ⚠ THE PICTURE IS DECORATIVE HERE — alt="". The card's own
+                    heading names the session immediately below it, so a
+                    described image would make a screen reader announce the same
+                    workshop twice before the link. The real description lives on
+                    the detail page, where the photographs are the content. */}
+                {face && (
+                  <div class="wcard__face">
+                    <Picture
+                      src={face}
+                      alt=""
+                      formats={['avif', 'webp']}
+                      widths={[420, 840]}
+                      sizes="(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 30vw"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                )}
+                <p class="wcard__n t-tabular" aria-hidden="true">{String(n).padStart(2, '0')}</p>
+                <h3 class="wcard__t">{item.title}</h3>
+
+                {item.slug ? (
+                  <a class="wcard__go" href={`/news-events/workshops/${item.slug}/`}>
+                    <span>View details</span>
+                    <span class="wcard__arrow" aria-hidden="true">
+                      <svg width="15" height="10" viewBox="0 0 14 10" fill="none">
+                        <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.7" />
+                      </svg>
+                    </span>
+                    {/* The heading is inside the card, not inside the link, so a
+                        screen-reader user tabbing the buttons would otherwise
+                        hear "View details" thirteen times with no way to tell
+                        them apart. */}
+                    <span class="u-visually-hidden"> — {item.title}</span>
+                  </a>
+                ) : (
+                  <p class="wcard__none">Detail page to follow</p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  ))
+}
+
+<style>
+  .wgrid { padding-block: var(--sb-section-y); }
+
+  .wgrid--paper { background: var(--sb-paper); }
+  .wgrid--ivory { background: var(--sb-ivory); }
+  .wgrid--sand { background: var(--sb-sand); }
+
+  .wgrid__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.034em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .wgrid__note {
+    max-width: 52ch;
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .wgrid__n {
+    margin-top: var(--sb-5);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .wgrid__list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sb-4);
+    margin: clamp(26px, 3.4vh, 40px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ⚠ THE CARD IS A GRID WITH THE BUTTON ON ITS OWN ROW, PINNED TO THE BOTTOM.
+     Card titles here run from "Critical Thinking" to a sixty-eight character
+     conference name, so a flow layout would leave every button at a different
+     height and the row would read as ragged. `1fr` on the title row pushes the
+     button down to a common baseline whatever the title does. */
+  .wcard {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--sb-4);
+    min-height: 200px;
+    padding: clamp(18px, 2vw, 26px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .wgrid--paper .wcard { background: var(--sb-ivory); }
+
+  /* ═══ THE PHOTOGRAPH CARD ════════════════════════════════════════════════
+     The picture fills the whole card and the copy sits on it, rather than the
+     picture being a strip along the top. The hover language is BurstCard's —
+     the same lift, shadow and warm border used on Parent Partnership — so the
+     two read as one system rather than two people's cards.
+
+     ⚠ THE SCRIM IS SIZED FOR THE WORST PHOTOGRAPH, NOT THE AVERAGE ONE. These
+     images are not art-directed: one is a projector screen at full brightness,
+     another a sunlit courtyard. White text over an unknown photograph is only
+     safe if the scrim alone can carry it, so the bottom band reaches 0.88 —
+     which over pure white still resolves to about rgb(52,49,48) and holds white
+     text at roughly 12:1. The image can be anything and the text stays legible.
+
+     ⚠ `isolation: isolate` MATTERS HERE. The scrim and the picture both sit
+     below the copy on the z-axis; without a stacking context of its own the
+     card's negative z-index children would punch through the section ground
+     behind it and the photograph would vanish. */
+  /* ⚠ flex, NOT THE BASE CARD'S GRID. The base card is `auto 1fr auto`, which
+     puts the flexible row in the MIDDLE and pushes the button to the bottom —
+     right for a card whose copy starts at the top. Here the copy has to sit in
+     the scrim's dark foot, so the flexible space belongs ABOVE everything.
+     Measured before the change, the title sat at 17% of the card's height, in
+     the pale part of the gradient. */
+  .wcard--shot {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--sb-4);
+    min-height: 340px;
+    padding: clamp(18px, 2vw, 26px);
+    overflow: hidden;
+    background: var(--sb-charcoal);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+  }
+
+  .wcard--shot .wcard__go,
+  .wcard--shot .wcard__none { align-self: flex-start; }
+
+  .wgrid--paper .wcard--shot,
+  .wgrid--sand .wcard--shot { background: var(--sb-charcoal); }
+
+  .wcard__face {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  /* ⚠ THE <picture> WRAPPER HAS TO BE STRETCHED TOO, NOT JUST THE <img>. Astro's
+     Picture emits <picture><source…><img></picture>, and `<picture>` is an inline
+     box by default — so `height: 100%` on the img resolved against a wrapper
+     that was only as tall as its own content. Measured: a 279px image in a 340px
+     card, leaving a strip of bare charcoal under the photograph. */
+  .wcard__face :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .wcard__face :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 620ms var(--sb-ease);
+  }
+
+  /* The scrim. Weighted to the foot, where the copy is. */
+  .wcard__face::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(24, 12, 8, 0.12) 0%,
+      rgba(24, 12, 8, 0.34) 42%,
+      rgba(24, 12, 8, 0.78) 74%,
+      rgba(24, 12, 8, 0.88) 100%
+    );
+  }
+
+  .wcard--shot:hover .wcard__face :global(img) { transform: scale(1.06); }
+
+  .wcard--shot:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 66px -30px rgba(28, 14, 8, 0.42);
+  }
+
+  /* The copy rides above both layers, and the number/title/button recolour for
+     the dark ground. */
+  .wcard--shot .wcard__n,
+  .wcard--shot .wcard__t,
+  .wcard--shot .wcard__go,
+  .wcard--shot .wcard__none { position: relative; z-index: 1; }
+
+  .wcard--shot .wcard__n { color: var(--sb-lime); }
+  .wcard--shot .wcard__t { color: #fff; }
+  .wcard--shot .wcard__none { color: rgba(255, 255, 255, 0.72); }
+
+  .wcard--shot .wcard__go {
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #fff;
+  }
+
+  .wcard--shot .wcard__go:hover,
+  .wcard--shot .wcard__go:focus-visible {
+    background: #fff;
+    border-color: #fff;
+    color: var(--sb-charcoal);
+  }
+
+  .wcard:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 0 1px transparent, var(--sb-shadow-card-hover);
+  }
+
+  .wcard__n {
+    font-family: var(--sb-font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-violet-dark);
+  }
+
+  .wcard__t {
+    align-self: start;
+    font-family: var(--sb-font-display);
+    font-size: clamp(18px, 1.6vw, 23px);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.024em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .wcard__go {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    gap: var(--sb-3);
+    min-height: 24px;
+    padding: 10px 18px;
+    border: 1px solid var(--sb-violet);
+    border-radius: var(--sb-r-full);
+    color: var(--sb-violet-dark);
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    text-decoration: none;
+    transition: background var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease;
+  }
+
+  .wcard__go:hover,
+  .wcard__go:focus-visible {
+    background: var(--sb-violet);
+    color: #fff;
+  }
+
+  .wcard__go:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+
+  .wcard__arrow { display: grid; place-items: center; transition: transform var(--sb-dur-btn) var(--sb-ease); }
+  .wcard__go:hover .wcard__arrow { transform: translateX(4px); }
+
+  .wcard__none {
+    justify-self: start;
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (min-width: 700px) {
+    .wgrid__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (min-width: 1100px) {
+    .wgrid__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wcard,
+    .wcard__go,
+    .wcard__arrow,
+    .wcard__face :global(img) { transition-duration: 1ms; }
+    .wcard:hover { transform: none; }
+    .wcard__go:hover .wcard__arrow { transform: none; }
+    .wcard--shot:hover .wcard__face :global(img) { transform: none; }
+  }
+</style>

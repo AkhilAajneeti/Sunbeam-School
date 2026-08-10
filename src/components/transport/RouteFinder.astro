@@ -151,8 +151,16 @@ const wordScale = (name: string) => {
               <button class="chip" type="button" data-rf-chip={c.stop}>
                 <span class="chip__dot" aria-hidden="true" />
                 <span class="chip__t">{c.stop}</span>
-                <span class="chip__n" aria-label={`${c.runs.length} ${c.runs.length === 1 ? 'run' : 'runs'}`}>
+                {/* ⚠ HIDDEN TEXT, NOT `aria-label` ON THE SPAN. ARIA forbids
+                    `aria-label` on a generic element, so the badge announced a
+                    bare number — "Bahadurpur 3" — with nothing saying what the
+                    3 counted. Real text is announced by every reader and passes
+                    `aria-prohibited-attr`. */}
+                <span class="chip__n">
                   {c.runs.length}
+                  <span class="u-visually-hidden">
+                    {c.runs.length === 1 ? ' run' : ' runs'}
+                  </span>
                 </span>
               </button>
             </li>

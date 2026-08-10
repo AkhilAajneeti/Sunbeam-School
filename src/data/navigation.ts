@@ -208,14 +208,24 @@ export const mainNav: NavItem[] = [
              now pages, so the anchors are gone and the hrefs move with them —
              leaving them would have produced exactly the submenu of dead anchors
              the note on `children` warns about. */
+          /* ⚠ EVERY GLYPH IS ONE ALREADY IN FacIcon, not a new drawing. Seven
+             bespoke icons would be seven more shapes to keep consistent with a
+             set of fifty that already share a stroke weight and corner radius.
+             `panel` stands in for the calendar because the set has no calendar
+             — it is a ruled board, which is the nearest true thing rather than
+             a wrong metaphor. */
           children: [
-            { label: "Assessment System", href: "/academics/assessment/" },
-            { label: "Homework Policy", href: "/academics/assessment/homework-policy/" },
-            { label: "Remedial Support", href: "/academics/assessment/remedial-support/" },
-            { label: "Mentoring", href: "/academics/assessment/mentoring/" },
-            { label: "Academic Calendar", href: "/academics/academic-calendar/" },
-            { label: "Parent–Teacher Meetings", href: "/academics/assessment/parent-teacher-meetings/" },
-            { label: "Competitive Exam Preparation", href: "/academics/assessment/competitive-exam-preparation/" },
+            { label: "Assessment System", href: "/academics/assessment/", icon: "target" },
+            { label: "Homework Policy", href: "/academics/assessment/homework-policy/", icon: "book" },
+            { label: "Remedial Support", href: "/academics/assessment/remedial-support/", icon: "hand" },
+            /* ⚠ `compass`, NOT `teacher`. `teacher` and `panel` both draw a
+               board-and-stand and rendered as near-twins at 15px, so Mentoring
+               and Academic Calendar were two rows a reader could not tell
+               apart. Guidance is the better metaphor anyway. */
+            { label: "Mentoring", href: "/academics/assessment/mentoring/", icon: "compass" },
+            { label: "Academic Calendar", href: "/academics/academic-calendar/", icon: "panel" },
+            { label: "Parent–Teacher Meetings", href: "/academics/assessment/parent-teacher-meetings/", icon: "speech" },
+            { label: "Competitive Exam Preparation", href: "/academics/assessment/competitive-exam-preparation/", icon: "cap" },
           ],
         },
       ],

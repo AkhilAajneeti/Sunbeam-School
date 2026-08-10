@@ -100,10 +100,17 @@ const figures = [
               <h3 class="sfc__h">{s.label}</h3>
               <p class="sfc__b">{s.body}</p>
             </div>
-            <span class="sfc__tick" aria-label="Published by the school">
+            {/* ⚠ A VISUALLY-HIDDEN LABEL, NOT `aria-label` ON THE SPAN. ARIA
+                prohibits `aria-label` on a generic element — a <span> with no
+                role — so it is invalid markup and assistive tech is free to
+                ignore it, which means the tick's meaning was reaching nobody.
+                Lighthouse flags this as `aria-prohibited-attr`; real text inside
+                the span is announced by everything. */}
+            <span class="sfc__tick">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M1 6.4l3.1 3.1L11 2.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
+              <span class="u-visually-hidden">Published by the school</span>
             </span>
           </li>
         ))

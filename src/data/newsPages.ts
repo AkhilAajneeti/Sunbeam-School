@@ -38,6 +38,16 @@
 
 export interface ChronicleItem {
   title: string;
+  /**
+   * ⚠ TYPED, NOT DERIVED FROM THE TITLE. A slug generated from the heading
+   * changes the moment the heading is edited, and every link to that page —
+   * including any a parent has bookmarked or the school has shared — breaks
+   * silently. Written down, the URL survives a rewording.
+   *
+   * Only workshops carry one: they are the items with a detail page behind
+   * them. An item without a slug renders as a card that does not open.
+   */
+  slug?: string;
   /** Who led it, who won it, or where it was — never a guess. */
   meta: string;
   body: string;
@@ -45,6 +55,18 @@ export interface ChronicleItem {
   result?: string;
   /** Session or date, exactly as the school states it. Absent if unstated. */
   when?: string;
+  /**
+   * Folder under src/assets/workshops/ holding this session's photographs.
+   * Absent until the school supplies them — see data/workshopPhotos.ts.
+   */
+  photoDir?: string;
+  /**
+   * Filenames inside `photoDir` to leave out — for when a supplied folder
+   * contains a picture of a different event. Named rather than deleted: the
+   * file stays where the client put it, and the exclusion is visible and
+   * reversible in one line.
+   */
+  photoSkip?: string[];
 }
 
 export interface ChronicleGroup {
@@ -70,11 +92,21 @@ export const workshops: ChroniclePage = {
   slug: 'workshops',
   title: 'Workshops',
   standfirst:
-    'Fourteen sessions run for the people who teach — counselling, pedagogy, AI in the classroom and the CBSE capacity-building programme.',
+    'Fifteen sessions run for the people who teach — counselling, pedagogy, AI in the classroom and the CBSE capacity-building programme.',
   eyebrow: 'Workshops',
-  heading: 'The school trains its teachers in public',
+  /* ⚠ THIS HEADING AND STANDFIRST WERE REWRITTEN BECAUSE THE OLD PAIR CLAIMED
+     MORE THAN THE PAGE DELIVERS. They read "The school trains its teachers in
+     public / …names the trainer, the institution and the date". Counted against
+     the data: 11 of 14 sessions name a person, 8 name an institution, and only
+     4 carry a date. A page that opens by promising all three and then breaks the
+     promise ten times is worse than one that opens modestly.
+
+     What replaces it is the same argument made in numbers that are true, and
+     those numbers are COUNTED AT BUILD TIME on the index page rather than typed
+     here — so they cannot drift as sessions are added. */
+  heading: 'Who trains the teachers, and where they came from',
   stand:
-    'Most schools describe professional development. This one names the trainer, the institution and the date — which is the only version a parent can check.',
+    'Professional development is easy to assert and hard to check. Every session below carries whatever the school has actually published about it — the trainer where they are named, the institution where it is stated, the date where there is one. Nothing is filled in for the sake of a tidy page.',
   groups: [
     {
       id: 'teaching',
@@ -83,35 +115,66 @@ export const workshops: ChroniclePage = {
       items: [
         {
           title: 'CBSE Capacity Building Programme on Experiential Learning',
+          slug: 'cbse-experiential-learning',
           meta: 'Dr. Pushkal Giri, Principal, St. Joseph’s School, Siwan · Dr. Ravishankar Mishra, Vice Principal, Heritage International Public School, Kushinagar',
-          body: 'A two-day CBSE programme on experiential learning — activities, engagement, projects, lesson planning and deep learning.',
+          body:
+            'Sunbeam School Ballia hosted the two-day CBSE Capacity Building Programme on Experiential Learning. Sessions were conducted by Dr. Pushkal Giri, Principal of St. Joseph’s School, Siwan, Bihar, and Dr. Ravishankar Mishra, Vice Principal of Heritage International Public School, Kushinagar — built around interaction, shared ideas and practical insight into how experiential learning changes a classroom.',
           when: '20–21 September 2025',
         },
         {
           title: 'Embracing Innovation and Change in the English Classroom',
+          slug: 'innovation-english-classroom',
           meta: 'Ms. Lakshmi Prakash · Hotel Ballians',
-          body: 'Innovative teaching practices to lift student engagement and learning outcomes. Attended by the Principal, the Dean Academics and educators.',
+          body:
+            'The school took part in a professional development training titled “Embracing Innovation and Change in the English Classroom for Better Outcomes”, held at Hotel Ballians and led by Ms. Lakshmi Prakash. The Principal, the Dean Academics and educators attended. The session focused on innovative teaching practices to lift student engagement and learning outcomes.',
           when: '20 December 2025',
         },
         {
           title: 'Storytelling as Pedagogy, and Teaching Science',
+          slug: 'storytelling-as-pedagogy',
+          photoDir: 'Storytelling-Pedagogy',
           meta: 'Ms. Soma Singh',
           body: 'Storytelling as a teaching method, and science instruction for the middle and secondary grades.',
         },
         {
           title: 'Recapitulating Dimension of Learning',
+          slug: 'dimensions-of-learning',
+          photoDir: 'Recapitulating-Dimension-of-Learning2',
           meta: 'Mrs. Soma Singh',
           body: 'A second session with the same trainer, on the dimensions of learning.',
         },
         {
           title: 'Critical Thinking',
+          slug: 'critical-thinking',
+          photoDir: 'CriticalThinking',
           meta: 'Prof. Pradeep Mishra, Lovely Professional University',
           body: 'Teaching critical thinking in the classroom.',
         },
         {
           title: 'Science and Innovation',
+          slug: 'science-and-innovation',
           meta: 'Faculty workshop',
           body: 'A workshop on science teaching and innovation.',
+          photoDir: 'science&innovation',
+        },
+        {
+          /* ⚠ THIS ONE WAS DROPPED ONCE AND HAS BEEN PUT BACK. It was left out
+             because QCT/CIC is an unexplained acronym with no named trainer and
+             no date — but the school lists it, the standing instruction is that
+             this site mirrors their page, and omitting it made the hero's
+             "Fourteen sessions" disagree with the thirteen cards below it.
+
+             The body says exactly what is knowable and no more. Guessing at the
+             expansion of an acronym on a page whose whole argument is "we name
+             the trainer and the institution" would undercut the page. */
+          title: 'QCT/CIC workshop session',
+          slug: 'qct-cic',
+          photoDir: 'QCT-CIC2',
+          /* Two files in that folder are student science-competition results, not
+             this workshop — see the note on photosFor(). */
+          photoSkip: ['QCT-CIC1', 'QCT-CIC3'],
+          meta: 'Faculty workshop',
+          body: 'Listed by the school as a workshop session on QCT/CIC. No trainer, date or expansion of the acronym is published alongside it.',
         },
       ],
     },
@@ -122,19 +185,24 @@ export const workshops: ChroniclePage = {
       items: [
         {
           title: 'Basic Counseling Skills — two-day training',
+          slug: 'basic-counselling-skills',
           meta: 'Mrs. Salony Priya',
-          body: 'Counselling technique, empathetic communication and student support, run over two days for teaching staff.',
+          body:
+            'Mrs. Salony Priya led a two-day session on Basic Counseling Skills for teaching staff. Teachers took an active part throughout, working on counselling technique, empathetic communication and how to support a student who needs more than the syllabus.',
           when: '16–17 September',
         },
         {
           title: 'Basic Counseling Skills — final assessment and viva',
+          slug: 'basic-counselling-skills-viva',
           meta: 'Mrs. Saloni Priya, Founder Director, Ummeed Counselling & Consulting Services, Kolkata',
           body: 'The assessment that closes the counselling programme — counselling psychology and empowerment for educators.',
         },
         {
           title: 'Teacher–Student Bond: from teaching to mentorship',
+          slug: 'teacher-student-bond',
           meta: 'Mr. Kartik Bajoria',
-          body: 'Building stronger teacher–student connections — trust, empathy, and guiding students beyond academics.',
+          body:
+            'Mr. Kartik Bajoria conducted a session for teachers on “Teacher–Student Bond: Teaching to Mentorship”. It focused on building stronger teacher–student connections — trust, empathy, and guiding students beyond academics.',
         },
       ],
     },
@@ -145,22 +213,50 @@ export const workshops: ChroniclePage = {
       items: [
         {
           title: 'AI Masterclass',
+          slug: 'ai-masterclass',
           meta: 'Mr. Sandeep Mukherjee, Chief Operating Officer, Sunbeam Group of Educational Institutions',
-          body: 'AI tools introduced to teaching staff, with their practical use in teaching and learning.',
+          body:
+            'Mr. Sandeep Mukherjee, Chief Operating Officer of the Sunbeam Group of Educational Institutions, conducted an AI Masterclass for teaching staff. He introduced a range of AI tools and explained their practical use in teaching and learning, so that teachers could take them back into their own classrooms.',
         },
         {
           title: '16th Eduexcellence Annual International Conference — EduCarnival 2025',
+          slug: 'educarnival-2025',
           meta: 'IIT Delhi',
           body: 'A two-day conference on emerging trends, innovation and global best practice in education. Attended by Dr. Kunwar Arun Singh, Director; Mr. Pankaj Singh, Senior Academic Head; Mr. Jai Prakash Yadav, Middle Academic Head; and Mr. Prashant Upadhyay, Primary Academic Head.',
           when: '2025',
         },
+        /* ⚠ ONE ENTRY BECAME TWO, BECAUSE THE SCHOOL RUNS TWO. Their workshops
+           page heads these separately — "DHK-EDU-SERVE TRAINING PROGRAM 2024-25"
+           and "…23-24" — and this site had collapsed both into a single
+           "Administrators' and Teachers' Training". That is the same fault as
+           dropping QCT/CIC: the count on the page stops matching the count on
+           theirs, and one of two real programmes disappears.
+
+           ⚠ THE THREE-DAY / LAHARTARA DETAIL SITS ON 2023–24 AND IS NOT CERTAIN.
+           It came from the old merged entry, and the school does not say which
+           session it describes. It is left on the earlier programme rather than
+           duplicated onto both — but it is the one line here worth checking with
+           them before launch. */
         {
-          title: 'Administrators’ and Teachers’ Training — three days',
+          title: 'DHK Eduserve Training Programme 2024–25',
+          slug: 'dhk-eduserve-2024-25',
+          photoDir: 'DHK-EDU-SERVE-TRAINING-PROGRAM-2024-25',
+          meta: 'DHK Eduserve',
+          body: 'The 2024–25 training programme run for the school by DHK Eduserve, attended by teaching and administrative staff.',
+          when: '2024–25',
+        },
+        {
+          title: 'DHK Eduserve Training Programme 2023–24',
+          slug: 'dhk-eduserve-2023-24',
+          photoDir: 'DHK-EDU-SERVE-TRAINING-PROGRAM',
           meta: 'DHK Eduserve · Sunbeam Lahartara, Varanasi',
-          body: 'A three-day residential training for administrators and teachers, run by DHK Eduserve.',
+          body: 'A three-day residential training for administrators and teachers, run by DHK Eduserve at Sunbeam Lahartara, Varanasi.',
+          when: '2023–24',
         },
         {
           title: 'National Education Policy training',
+          slug: 'nep-training',
+          photoDir: 'National-Education-Policy',
           meta: 'Ms. Vishakha Singh · Sunshine Public School, Ghazipur',
           body: 'An NEP training session — conducted BY a Sunbeam Ballia educator, at another school.',
           result: 'Delivered by the school, not received by it',
