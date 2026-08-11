@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const b=await chromium.launch();
+const ctx=await b.newContext({viewport:{width:1280,height:900}});
+const p=await ctx.newPage();
+await p.goto('http://localhost:4351/contact-us/',{waitUntil:'load'});
+await p.evaluate(()=>window.scrollTo(0,document.body.scrollHeight));
+await p.waitForTimeout(7000);
+const box=await p.evaluate(()=>{const r=document.querySelector('.map').getBoundingClientRect();return {top:Math.round(r.top+scrollY),h:Math.round(r.height),pageH:document.body.scrollHeight};});
+console.log(JSON.stringify(box));
+await p.screenshot({path:process.argv[2]+'/page-full.png', fullPage:true});
+await b.close();

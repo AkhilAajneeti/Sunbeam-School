@@ -1,0 +1,1061 @@
+---
+/**
+ * CONTACT — /contact-us/
+ *
+ * ═══ WHAT THIS PAGE IS ═════════════════════════════════════════════════════
+ *
+ * Built to the reference the client supplied: eyebrow pill, oversized display
+ * heading, underline-only fields in a 2×2 grid, a consent checkbox, one
+ * full-width button, and an illustration to the right over a cloud gradient.
+ *
+ * ⚠ THIS ROUTE ALREADY HAD SEVEN INBOUND LINKS AND NO PAGE. `/contact-us/` is
+ * referenced from the footer, the drawer, StayConnected, the parents' data and
+ * the utility bar; until now every one of them landed on the generated
+ * "page coming" placeholder. Writing this file retires that placeholder
+ * automatically — pages/[...slug].astro only mints routes that have no file.
+ *
+ * ⚠ THE PALETTE IS THE REFERENCE'S, NOT THE SITE'S, ON THE CLIENT'S EXPLICIT
+ * INSTRUCTION. Indigo #4F46E5, slate body text, sky-and-amber illustration,
+ * cloud gradient. This was raised as a clash with the warm ivory/violet used on
+ * every other page and the client chose it anyway, so it is deliberate rather
+ * than drift. The masthead and footer are unchanged, so the seam is visible at
+ * the top and bottom of the page — that is the known trade.
+ *
+ * ⚠ THE FORM HAS NO BACKEND YET, AND IT DOES NOT PRETEND OTHERWISE. Client:
+ * "currently we are working on frontend, when backend is prepared then we
+ * worked on it." So every client-side behaviour is finished — validation,
+ * error text, disabled/sending/success states — and the single missing piece
+ * is the endpoint. See ENDPOINT below: set it and the form posts for real.
+ * Until then a submit runs the whole validation pass and then says plainly that
+ * delivery is not connected. It never shows a false "message sent".
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import { school } from '../data/site';
+
+/* ⚠ THE BANNER PHOTOGRAPH IS THE CAMPUS ITSELF, and it is a verified Ballia
+   frame — the school building behind its own ground, with the school buses
+   parked along it. On a page whose whole job is "here is where we are and how
+   to reach us", the arrival view is the only honest hero.
+   See the banned-photo note: `sunbeem-students-2/3/4.jpg` are other campuses
+   and the generically-named files are stock; neither may be used. */
+import heroPhoto from '../assets/photos/sunbeem-1.jpg';
+
+/**
+ * ⚠ EVERY VALUE COMES FROM data/site.ts, THE VERIFIED-FACTS FILE — nothing on
+ * this page is a number somebody typed into the markup. The client supplied the
+ * copy for these blocks and each line was checked against site.ts before use:
+ * the address, the email and both phone numbers match exactly.
+ *
+ * ⚠ THE TRANSPORT NUMBER IS DELIBERATELY ABSENT. It is real (7755005909) and it
+ * is on the transport page, but the client's brief for THIS section lists two
+ * numbers, and adding a third would be inventing the page's content rather than
+ * designing it. Trivial to add if they want it.
+ */
+const addressLines = [
+  `${school.address.line1},`,
+  `${school.address.city}, ${school.address.state} ${school.address.pin},`,
+  `(${school.address.country})`,
+];
+
+const phones = [
+  { display: school.phone.admissionsDisplay, tel: school.phone.admissions },
+  { display: school.phone.officeDisplay, tel: school.phone.office },
+];
+
+const socials = [
+  {
+    name: 'Facebook',
+    href: school.social.facebook,
+    path: 'M15 8h-2a1 1 0 0 0-1 1v2h3l-.4 3H12v7H9v-7H7v-3h2V9a4 4 0 0 1 4-4h2v3Z',
+  },
+  {
+    name: 'Instagram',
+    href: school.social.instagram,
+    path: 'M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Zm0 5.6a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4ZM16 4H8a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4Zm2.8 12a2.8 2.8 0 0 1-2.8 2.8H8A2.8 2.8 0 0 1 5.2 16V8A2.8 2.8 0 0 1 8 5.2h8A2.8 2.8 0 0 1 18.8 8v8Zm-2-8.6a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0Z',
+  },
+  {
+    name: 'LinkedIn',
+    href: school.social.linkedin,
+    path: 'M6.94 5.5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.2 9h3.5v11H3.2V9Zm5.8 0h3.35v1.5h.05A3.67 3.67 0 0 1 15.7 8.7c3.5 0 4.15 2.3 4.15 5.3V20h-3.5v-5.3c0-1.27-.02-2.9-1.77-2.9-1.78 0-2.05 1.38-2.05 2.8V20H9V9Z',
+  },
+] as const;
+
+const addressOneLine = `${school.address.line1}, ${school.address.city}, ${school.address.state} ${school.address.pin}`;
+
+/**
+ * ⚠ THE MAP IS QUERIED BY NAME AND ADDRESS, NOT BY COORDINATES. We have never
+ * been given a latitude and longitude, and typing a plausible pair would be
+ * inventing the school's location — the one fact on this page that must not be
+ * approximated. Google resolves the query itself, so the pin is as accurate as
+ * the school's own listing and it needs no API key.
+ *
+ * VERIFIED: fetching this embed URL returns the place "Sunbeam School Agarsanda
+ * Ballia" at 25.7647524, 84.1224647 — the school's own Google listing, not a
+ * fallback to the town centre. If the school later sends an exact Maps place
+ * link, swapping it in here is one line and strictly better than a query.
+ */
+const mapQuery = encodeURIComponent(`${school.name}, ${addressOneLine}`);
+const mapEmbed = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
+const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+---
+
+<BaseLayout
+  title={`Contact — ${school.name}`}
+  description={`Reach ${school.name} — admissions, school office and transport numbers, email, and the campus address at ${school.address.line1}, ${school.address.city}.`}
+>
+  <PageHero
+    title="Contact us"
+    standfirst="Where the school is, who to call, and a message form that reaches the office."
+    crumbs={[{ label: 'Home', href: '/' }]}
+    src={heroPhoto}
+    alt="The main building of Sunbeam School Ballia seen across its ground, with the school buses parked alongside"
+    position="50% 55%"
+  />
+
+  <div class="ct">
+    <div class="u-container ct__grid">
+      <div class="ct__left">
+        <p class="ct__eyebrow"><span class="ct__dot" aria-hidden="true"></span>Contact us</p>
+        {/* ⚠ h2, NOT h1. The banner above now owns the page's only h1
+            ("Contact us"). Two h1s on one document is the single most common
+            heading-structure fault, and a screen-reader user navigating by
+            heading would be told the page starts twice. */}
+        <h2 class="ct__h1">Get in touch</h2>
+        <p class="ct__stand">
+          Admissions, transport, fees or a question about your child's class — send it here, or
+          call the office directly. Someone from the school will come back to you.
+        </p>
+
+        {/* ⚠ novalidate IS DELIBERATE. The browser's own bubbles cannot be
+            styled, vanish on scroll, and are announced inconsistently; the
+            script below does the same checks and writes a persistent message
+            tied to each field with aria-describedby. The `required` and `type`
+            attributes stay, because they are what the script and assistive
+            tech both read. */}
+        <form class="ct__form" id="contact-form" novalidate>
+          <div class="ct__row">
+            <div class="fld">
+              <input class="fld__in" id="cf-name" name="name" type="text" required placeholder=" " autocomplete="name" />
+              <label class="fld__lb" for="cf-name">Name <span aria-hidden="true">*</span></label>
+              <p class="fld__err" id="cf-name-err" hidden></p>
+            </div>
+
+            <div class="fld">
+              <input class="fld__in" id="cf-email" name="email" type="email" required placeholder=" " autocomplete="email" />
+              <label class="fld__lb" for="cf-email">Email <span aria-hidden="true">*</span></label>
+              <p class="fld__err" id="cf-email-err" hidden></p>
+            </div>
+          </div>
+
+          <div class="ct__row">
+            <div class="fld">
+              <input class="fld__in" id="cf-subject" name="subject" type="text" placeholder=" " />
+              <label class="fld__lb" for="cf-subject">Subject</label>
+            </div>
+
+            <div class="fld">
+              <input class="fld__in" id="cf-phone" name="phone" type="tel" placeholder=" " autocomplete="tel" inputmode="tel" />
+              <label class="fld__lb" for="cf-phone">Phone number</label>
+            </div>
+          </div>
+
+          <div class="fld fld--area">
+            <textarea class="fld__in fld__in--area" id="cf-message" name="message" rows="4" required placeholder=" "></textarea>
+            <label class="fld__lb" for="cf-message">Message <span aria-hidden="true">*</span></label>
+            <p class="fld__err" id="cf-message-err" hidden></p>
+          </div>
+
+          <div class="ct__consent">
+            <input class="ct__box" id="cf-terms" name="terms" type="checkbox" required />
+            <label class="ct__terms" for="cf-terms">I accept the privacy and terms.</label>
+          </div>
+          <p class="fld__err ct__err--consent" id="cf-terms-err" hidden></p>
+
+          <button class="ct__send" type="submit">Send Message</button>
+
+          {/* role="status" so the outcome is announced without stealing focus.
+              It is in the DOM from the start — a live region inserted at the
+              moment it gains text is frequently missed by screen readers. */}
+          <p class="ct__status" id="cf-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      {/* ═══ THE ADDRESS PANEL ═══════════════════════════════════════════════
+          ONE panel, three rows — not three cards.
+
+          ⚠ THE FIRST BUILD USED THREE SEPARATE CARDS AND THE CLIENT ASKED FOR
+          ONE. They were right: three white boxes with three shadows against a
+          form that has none is three competing objects for what is a single
+          idea — how to reach the school. Rows inside one panel keep the three
+          groupings legible while reading as one block.
+
+          "Get directions" is gone too. The map immediately below IS the
+          directions, so the link was sending a reader away from the page to see
+          the thing already at the foot of it. */}
+      <div class="ct__right">
+        <div class="panel">
+          <div class="prow">
+            <span class="prow__ico" aria-hidden="true">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                <circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="1.8" />
+              </svg>
+            </span>
+            <div class="prow__body">
+              <h3 class="prow__h">Address</h3>
+              {/* <address> is italic by default in every browser, which reads as
+                  an aside rather than as the thing the page is for. */}
+              <address class="prow__addr">
+                {addressLines.map((l) => <span>{l}</span>)}
+              </address>
+              <a class="prow__v" href={`tel:${school.phone.admissions}`}>{school.phone.admissionsDisplay}</a>
+            </div>
+          </div>
+
+          <div class="prow">
+            <span class="prow__ico" aria-hidden="true">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5.5" width="18" height="13" rx="2.4" stroke="currentColor" stroke-width="1.8" />
+                <path d="m4 7 8 5.6L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            <div class="prow__body">
+              <h3 class="prow__h">Contact details</h3>
+              <a class="prow__v prow__v--mail" href={`mailto:${school.email}`}>{school.email}</a>
+              {phones.map((p) => <a class="prow__v" href={`tel:${p.tel}`}>{p.display}</a>)}
+            </div>
+          </div>
+
+          <div class="prow">
+            <span class="prow__ico" aria-hidden="true">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <circle cx="18" cy="5.6" r="2.9" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="6" cy="12" r="2.9" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="18" cy="18.4" r="2.9" stroke="currentColor" stroke-width="1.8" />
+                <path d="m8.6 10.6 6.8-3.6m-6.8 6.4 6.8 3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            <div class="prow__body">
+              <h3 class="prow__h">Join us on social</h3>
+              <ul class="soc">
+                {
+                  socials.map((s) => (
+                    <li>
+                      {/* rel is set because target="_blank" without it hands the
+                          new tab a window.opener reference to this page. */}
+                      <a class="soc__a" href={s.href} target="_blank" rel="noopener noreferrer">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d={s.path} />
+                        </svg>
+                        <span class="u-visually-hidden">{s.name} (opens in a new tab)</span>
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* The reference closes on a bank of soft cloud shapes. Decorative, so it
+        is drawn rather than photographed and carries no alt. */}
+    {/* ═══ THE CLOUD BANK ═════════════════════════════════════════════════
+        TWO PARTS, AND THEY HAVE TO BE TWO.
+
+        ⚠ THE BAR IS CSS AND FULL WIDTH; THE LOBES ARE AN SVG AND CENTRED.
+        The client's reference is not a full-width scallop — it is a CLUSTER of
+        cloud sitting in the middle of the frame, with sky still visible at the
+        left and right shoulders above a flat white base. One full-width SVG
+        cannot be both: stretch it and the circles turn to ellipses, slice it
+        and the crowns get cut.
+
+        ⚠ AND THEY WERE GETTING CUT. `preserveAspectRatio="xMidYMax slice"`
+        scales to COVER: on a 1920 screen that is 1.33x, which pushed 66 units
+        of the viewBox past the top edge and sheared the flat tops the client
+        photographed. Anchoring to yMax means the crop always lands on the
+        crowns — the one part of a cloud that must not be flat.
+
+        With the bar carrying the full width, the lobes are free to use `meet`,
+        which fits the whole viewBox and can never crop anything. */}
+    <div class="ct__clouds" aria-hidden="true">
+      <span class="ct__cloudbar"></span>
+
+      {/* viewBox is 1100x120 and EVERY circle satisfies both cy - r >= 0 (so no
+          crown is clipped at the top) and cy + r >= 120 (so every lobe merges
+          into the bar below rather than floating as a disc). The radii taper
+          from the middle outwards, which is what makes it read as one cluster
+          instead of a row of bumps. */}
+      <svg class="ct__lobes" viewBox="0 0 1100 120" preserveAspectRatio="xMidYMax meet">
+        {/* Back layer — a tint darker, pitched to peek through the gaps between
+            the front lobes. Without it the bank is a flat silhouette. */}
+        <g fill="#e7f0fc">
+          <circle cx="290" cy="92" r="66" />
+          <circle cx="536" cy="88" r="88" />
+          <circle cx="770" cy="96" r="72" />
+          <circle cx="960" cy="104" r="54" />
+        </g>
+
+        <g fill="#fff">
+          <circle cx="50" cy="105" r="48" />
+          <circle cx="130" cy="98" r="58" />
+          <circle cx="228" cy="92" r="72" />
+          <circle cx="340" cy="95" r="88" />
+          <circle cx="468" cy="96" r="94" />
+          <circle cx="600" cy="94" r="90" />
+          <circle cx="716" cy="97" r="80" />
+          <circle cx="816" cy="100" r="68" />
+          <circle cx="908" cy="104" r="56" />
+          <circle cx="986" cy="108" r="46" />
+          <circle cx="1058" cy="110" r="40" />
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  {/* ═══ THE MAP ═══════════════════════════════════════════════════════════
+      Full-bleed, below everything, because a map is a destination rather than
+      a detail — it is what a parent opens on the way to the school.
+
+      ⚠ THE FRAME IS BUILT BY AN IntersectionObserver, NOT SHIPPED IN THE HTML,
+      AND `loading="lazy"` WAS NOT ENOUGH. A Google Maps iframe pulls several
+      hundred kilobytes and sets third-party cookies the moment it is parsed, so
+      the first build used `loading="lazy"` and this comment claimed a visitor
+      who never scrolls here is never contacted by Google.
+
+      MEASURED, THAT WAS FALSE: two requests to google.com/maps fired at rest,
+      before any scrolling at all. Chrome's lazy threshold is roughly 1250px on
+      a fast connection, and this map sits about one viewport down — well inside
+      it. The attribute is a hint about when to fetch, never a guarantee that
+      nothing is fetched.
+
+      Creating the iframe from script when the section actually approaches the
+      viewport is the only version that keeps the promise: zero contact with
+      Google until the reader is nearly looking at the map. Same reasoning, and
+      nearly the same code, as about/VideoFeature.astro.
+
+      ⚠ THE IFRAME GETS A title WHEN IT IS BUILT. Without one a screen reader
+      announces it as "frame", with no way to know what is inside.
+
+      ⚠ <noscript> CARRIES A REAL LINK. With scripting off there is no map, so
+      the address and a Google Maps link take its place rather than a dead grey
+      band. */}
+  <section class="map" aria-labelledby="map-h">
+    <h2 class="u-visually-hidden" id="map-h">Where the school is</h2>
+
+    <div
+      class="map__slot"
+      data-map-src={mapEmbed}
+      data-map-title={`Map showing ${school.name} at ${addressOneLine}`}
+    >
+    </div>
+
+    <noscript>
+      <div class="map__off">
+        <p>{addressOneLine}</p>
+        <a href={mapLink} target="_blank" rel="noopener noreferrer">Open the map on Google Maps</a>
+      </div>
+    </noscript>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ═══ GROUND ══════════════════════════════════════════════════════════════
+     The reference's very pale blue wash, deepening toward the foot where the
+     clouds sit. */
+  /* ⚠ z-index: 1 IS REQUIRED, NOT COSMETIC. PageHero is `position: sticky` and
+     pins while the page scrolls over it — it works only because the block that
+     follows is positioned, opaque and ABOVE it. Site-wide that block is
+     `.u-page-panel` (base.css), which carries exactly this pair. This page uses
+     its own wrapper and inherited neither, so the pinned photograph painted
+     straight through the map band at the foot of the page. */
+  .ct {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    padding-block: clamp(40px, 6vw, 84px) clamp(120px, 14vw, 190px);
+    background:
+      radial-gradient(120% 90% at 78% 34%, #dbeafe 0%, rgba(219, 234, 254, 0) 62%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 38%, #e0edfd 100%);
+  }
+
+  .ct__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 72px);
+    /* ⚠ BACK TO center, NOW THAT THE RIGHT COLUMN IS ONE SHORT PANEL. It was
+       switched to `start` when that column held three stacked cards roughly as
+       tall as the form; merged into a single panel it is about half the height,
+       and top-aligning left it stranded against a long run of empty ground. */
+    align-items: center;
+  }
+
+  /* ═══ COPY ════════════════════════════════════════════════════════════════ */
+  .ct__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ct__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4f46e5;
+  }
+
+  .ct__h1 {
+    margin-top: clamp(16px, 2vw, 22px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(38px, 5.4vw, 62px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: #0f172a;
+  }
+
+  .ct__stand {
+    max-width: 46ch;
+    margin-top: clamp(14px, 1.8vw, 20px);
+    font-size: clamp(15px, 1.15vw, 17px);
+    line-height: 1.72;
+    /* 4.76:1 on the palest part of the wash — measured, not eyeballed. */
+    color: #566476;
+  }
+
+  /* ═══ FIELDS ══════════════════════════════════════════════════════════════
+     Underline-only, as the reference draws them.
+
+     ⚠ THE LABEL IS A REAL <label>, NOT A PLACEHOLDER. The reference shows the
+     field name sitting inside the box, which is normally done with `placeholder`
+     — and that is a well-known failure: the name disappears the moment typing
+     starts, so anyone interrupted mid-form cannot tell what a filled field was
+     for, and several screen readers never announce it at all. Here the label
+     starts in the same position and RISES on focus or once the field has
+     content, which looks the same at rest and keeps the name on screen.
+
+     The empty `placeholder=" "` in the markup is what makes `:placeholder-shown`
+     usable as the "is this field empty" test in pure CSS. */
+  .ct__form { margin-top: clamp(26px, 3.4vw, 38px); }
+
+  .ct__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(18px, 2.4vw, 30px);
+  }
+
+  .fld {
+    position: relative;
+    padding-top: 18px;
+    margin-bottom: clamp(16px, 2vw, 22px);
+  }
+
+  .fld__in {
+    display: block;
+    width: 100%;
+    padding: 6px 2px 10px;
+    border: 0;
+    border-bottom: 1px solid #cbd5e1;
+    border-radius: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 15px;
+    color: #0f172a;
+    transition: border-color 180ms ease;
+  }
+
+  .fld__in--area {
+    min-height: 118px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .fld__lb {
+    position: absolute;
+    top: 24px;
+    left: 2px;
+    font-size: 15px;
+    color: #566476;
+    pointer-events: none;
+    transition: top 170ms ease, font-size 170ms ease, color 170ms ease;
+  }
+
+  .fld__in:focus + .fld__lb,
+  .fld__in:not(:placeholder-shown) + .fld__lb {
+    top: 0;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #4f46e5;
+  }
+
+  .fld__in:focus {
+    outline: none;
+    border-bottom-color: #4f46e5;
+    border-bottom-width: 2px;
+    padding-bottom: 9px; /* hold the baseline as the rule thickens */
+  }
+
+  /* ⚠ A VISIBLE FOCUS RING FOR KEYBOARD USERS, on top of the coloured rule.
+     The rule alone is a 1px colour change — it reads as decoration, and against
+     the pale ground it is nowhere near a 3:1 non-text contrast. */
+  .fld__in:focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  .fld__in[aria-invalid='true'] { border-bottom-color: #dc2626; }
+
+  .fld__err {
+    margin-top: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #dc2626; /* 4.83:1 on #f8fafc */
+  }
+
+  .fld__err[hidden] { display: none; }
+
+  /* ═══ CONSENT ═════════════════════════════════════════════════════════════ */
+  .ct__consent {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-top: clamp(4px, 1vw, 10px);
+  }
+
+  /* 20px box in a 24px hit area — SC 2.5.8 wants 24×24, and a 20px tickbox on
+     a phone is a miss waiting to happen. The label is clickable too. */
+  .ct__box {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    accent-color: #4f46e5;
+    cursor: pointer;
+  }
+
+  .ct__box:focus-visible { outline: 2px solid #4f46e5; outline-offset: 3px; }
+
+  .ct__terms {
+    font-size: 14.5px;
+    color: #566476;
+    cursor: pointer;
+  }
+
+  .ct__err--consent { margin-left: 33px; }
+
+  /* ═══ BUTTON ══════════════════════════════════════════════════════════════ */
+  .ct__send {
+    display: block;
+    width: 100%;
+    margin-top: clamp(22px, 3vw, 30px);
+    padding: 17px 24px;
+    border: 0;
+    border-radius: 999px;
+    background: #4f46e5;
+    color: #fff; /* 6.5:1 */
+    font-family: inherit;
+    font-size: 15.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .ct__send:hover { background: #4338ca; }
+  .ct__send:focus-visible { outline: 2px solid #312e81; outline-offset: 3px; }
+  .ct__send:active { transform: translateY(1px); }
+
+  .ct__send[disabled] { opacity: 0.62; cursor: progress; }
+
+  .ct__status {
+    min-height: 1.2em;
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .ct__status[data-tone='bad'] { color: #dc2626; }
+  .ct__status[data-tone='good'] { color: #15803d; }
+
+  /* ═══ RIGHT COLUMN — THE THREE CARDS ══════════════════════════════════════ */
+  .ct__right {
+    display: grid;
+    gap: clamp(14px, 1.8vw, 20px);
+    align-content: start;
+    min-width: 0;
+  }
+
+  /* ═══ GLASS ══════════════════════════════════════════════════════════════
+     ⚠ GLASS NEEDS SOMETHING BEHIND IT. `backdrop-filter` blurs whatever is
+     painted underneath — over the flat pale wash this panel sat on, a blur of
+     an almost-even colour is an almost-even colour, and the effect would have
+     been invisible. These two soft colour fields are what the blur actually
+     bends; they sit under the right-hand column and nowhere near the form's
+     text, so nothing on the page loses contrast to them.
+
+     They are `aria-hidden` by construction — pseudo-elements are never in the
+     accessibility tree. */
+  .ct::before,
+  .ct::after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(10px);
+  }
+
+  .ct::before {
+    top: 6%;
+    right: 6%;
+    width: min(34vw, 460px);
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(129, 140, 248, 0.5) 0%, rgba(129, 140, 248, 0) 68%);
+  }
+
+  .ct::after {
+    top: 42%;
+    right: 26%;
+    width: min(26vw, 340px);
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.42) 0%, rgba(56, 189, 248, 0) 68%);
+  }
+
+  .panel {
+    position: relative;
+    z-index: 1;
+    overflow: hidden; /* so the rows' corners follow the panel's radius */
+    border-radius: 22px;
+
+    /* ⚠ 0.62 IS THE FLOOR, NOT A TASTE CALL. Glassmorphism is usually written
+       at 0.15–0.35 alpha, and at that value the indigo field behind shows
+       through hard enough to drag the body copy under 4.5:1 — measured on the
+       rendered pixels, not on the declared colours. 0.62 keeps the blurred
+       colour visible as a tint while every line of text stays legible. */
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+
+    /* The lit top edge is what actually sells glass: a bright hairline where
+       the light catches, fading to nothing at the foot. A flat 1px border round
+       all four sides reads as a card with a border. */
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.85) inset,
+      0 8px 32px rgba(31, 38, 135, 0.14),
+      0 22px 48px -30px rgba(30, 58, 138, 0.42);
+  }
+
+  /* ⚠ THE OPAQUE FALLBACK IS REQUIRED, NOT OPTIONAL. Without backdrop-filter a
+     0.62-alpha panel is simply a washed-out box with the page showing through
+     it — the blur is the only thing that made the translucency legible. Where
+     the property is unsupported the panel goes solid and keeps its border. */
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .panel {
+      background: #fff;
+      border-color: #e2ebf8;
+    }
+  }
+
+  /* ⚠ THE ROWS ARE A TWO-COLUMN GRID, NOT ICON-ABOVE-HEADING. With the icon in
+     its own column every heading, address line and number starts on one
+     vertical rule down the whole panel — which is what makes three groupings
+     read as one object rather than three stacked cards wearing a shared
+     border. */
+  .prow {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: clamp(14px, 1.6vw, 18px);
+    padding: clamp(20px, 2.4vw, 26px) clamp(20px, 2.4vw, 28px);
+  }
+
+  /* A solid hairline on glass reads as a seam between two cards; a white one
+     reads as a light break in a single sheet. */
+  .prow + .prow { border-top: 1px solid rgba(255, 255, 255, 0.9); }
+
+  .prow__ico {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: rgba(238, 242, 255, 0.9);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    color: #4f46e5;
+  }
+
+  .prow__body { min-width: 0; }
+
+  .prow__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.3vw, 18.5px);
+    font-weight: 700;
+    letter-spacing: -0.018em;
+    line-height: 1.25;
+    color: #0f172a;
+  }
+
+  .prow__addr {
+    display: grid;
+    gap: 2px;
+    margin-top: 9px;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #566476;
+  }
+
+  /* Each contact is its own line and its own 24px target — two numbers on one
+     line read as one long number, and a phone link crammed beside another is a
+     mis-tap waiting to happen. */
+  .prow__v {
+    display: block;
+    width: fit-content;
+    min-height: 24px;
+    margin-top: 9px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: #4f46e5;
+    text-decoration: none;
+  }
+
+  /* An email address has no spaces, so on a narrow panel it would push the
+     layout wide rather than wrap. */
+  .prow__v--mail { overflow-wrap: anywhere; }
+
+  .prow__v:hover { text-decoration: underline; }
+  .prow__v:focus-visible { outline: 2px solid #4f46e5; outline-offset: 3px; border-radius: 4px; }
+
+  /* ═══ SOCIAL ══════════════════════════════════════════════════════════════ */
+  /* ⚠ ONE `margin`, NOT `margin-top` FOLLOWED BY `margin: 0`. Written in that
+     order the shorthand silently wipes the longhand set two lines above it. */
+  .soc {
+    display: flex;
+    gap: 10px;
+    margin: 13px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* 46px, comfortably past the 24×24 floor — these are the only controls in
+     this column and they are commonly tapped on a phone. */
+  .soc__a {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: rgba(241, 245, 253, 0.92);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    color: #4338ca; /* 6.8:1 on the chip */
+    transition: background 180ms ease, color 180ms ease, transform 180ms var(--sb-ease);
+  }
+
+  .soc__a:hover {
+    background: #4f46e5;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .soc__a:focus-visible { outline: 2px solid #4f46e5; outline-offset: 3px; }
+
+  /* ═══ MAP ═════════════════════════════════════════════════════════════════ */
+  /* Same reason as .ct above: a STATIC section paints its background below any
+     positioned element, so the sticky banner sat on top of the map. */
+  .map {
+    position: relative;
+    z-index: 1;
+    display: block;
+    line-height: 0; /* kill the inline-descender gap under the iframe */
+    background: #e2e8f0; /* what shows while the frame is still deferred */
+  }
+
+  /* The slot holds the band's height before the frame exists, so the page does
+     not jump when the map arrives — the layout shift a deferred embed usually
+     causes is exactly what a reserved box prevents. */
+  .map__slot,
+  .map__off {
+    display: block;
+    width: 100%;
+    height: clamp(300px, 42vw, 460px);
+  }
+
+  .map__slot :global(iframe) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .map__off {
+    display: grid;
+    place-content: center;
+    gap: 10px;
+    padding: 24px;
+    line-height: 1.6;
+    text-align: center;
+    color: #334155;
+  }
+
+  .map__off a { color: #4f46e5; font-weight: 700; }
+
+  /* ═══ CLOUDS ══════════════════════════════════════════════════════════════ */
+  .ct__clouds {
+    /* One height drives both parts. The bar takes 34% of it and the lobes the
+       rest, which is the proportion in the reference: roughly a third solid
+       base, two thirds cloud. */
+    --cloud-h: clamp(120px, 13vw, 190px);
+    --cloud-base: calc(var(--cloud-h) * 0.34);
+
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    /* -1px so no sub-pixel hairline shows between the bank and the map. */
+    bottom: -1px;
+    left: 0;
+    height: var(--cloud-h);
+    line-height: 0;
+    pointer-events: none;
+  }
+
+  /* Full width, always — this is what the cloud sits on and what meets the map,
+     and it is a plain rectangle so stretching it costs nothing. */
+  .ct__cloudbar {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--cloud-base);
+    background: #fff;
+  }
+
+  /* ⚠ CAPPED AT 1100px AND CENTRED. Past that the cloud stops growing and the
+     sky stays open at the shoulders, which is the reference's composition. It
+     overlaps the bar by 1px so the two whites meet with no seam. */
+  .ct__lobes {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--cloud-base) - 1px);
+    left: 0;
+    display: block;
+    width: min(100%, 1100px);
+    height: calc(var(--cloud-h) - var(--cloud-base) + 1px);
+    margin-inline: auto;
+  }
+
+  /* ═══ LAYOUT ══════════════════════════════════════════════════════════════ */
+  @media (min-width: 700px) {
+    .ct__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  }
+
+  @media (min-width: 1000px) {
+    .ct__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+      gap: clamp(48px, 6vw, 96px);
+    }
+    /* The illustration is the reference's hero; let it run a little past the
+       container on wide screens as it does there. */
+    .ct__right { margin-right: clamp(-56px, -3vw, 0px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fld__in,
+    .fld__lb,
+    .ct__send { transition-duration: 1ms; }
+    .ct__send:active { transform: none; }
+  }
+</style>
+
+<script>
+  /* THE MAP — built only when the reader nearly reaches it. See the note beside
+     the markup for why `loading="lazy"` was not enough. */
+  {
+    const slot = document.querySelector<HTMLElement>('[data-map-src]');
+
+    if (slot) {
+      const build = () => {
+        const frame = document.createElement('iframe');
+        frame.src = slot.dataset.mapSrc ?? '';
+        frame.title = slot.dataset.mapTitle ?? 'Map';
+        frame.loading = 'lazy';
+        frame.referrerPolicy = 'no-referrer-when-downgrade';
+        frame.allowFullscreen = true;
+        slot.replaceChildren(frame);
+      };
+
+      if (!('IntersectionObserver' in window)) {
+        /* No observer — build it rather than leave an empty band. */
+        build();
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            if (!entries.some((e) => e.isIntersecting)) return;
+            io.disconnect();
+            build();
+          },
+          /* A little ahead of the viewport, so the tiles are painted by the
+             time the band is actually on screen. Small enough that a reader who
+             stops at the form never triggers it. */
+          { rootMargin: '150px' },
+        );
+        io.observe(slot);
+      }
+    }
+  }
+
+  /**
+   * ⚠ EVERY SYMBOL IS INSIDE THE BLOCK. Astro concatenates component scripts
+   * into one page bundle, so a bare `const form` here would collide with any
+   * other component's `form` on the same page.
+   */
+  {
+    /**
+     * ═══ THE ONE LINE THAT TURNS THIS FORM ON ═══════════════════════════════
+     *
+     * Paste the POST endpoint here — a Web3Forms/Formspree URL, or the school's
+     * own handler once the backend exists. Everything else is already written:
+     * validation, per-field errors, the sending state, success and failure.
+     *
+     * While it is empty the form deliberately REFUSES to claim it sent
+     * anything. A contact form on a school site that silently swallows an
+     * admissions enquiry is worse than no form at all, so the honest failure is
+     * the default and it takes one edit to remove.
+     */
+    const ENDPOINT = '';
+
+    const form = document.querySelector<HTMLFormElement>('#contact-form');
+    const status = document.querySelector<HTMLElement>('#cf-status');
+
+    if (form && status) {
+      const say = (msg: string, tone: 'good' | 'bad' | '') => {
+        status.textContent = msg;
+        if (tone) status.dataset.tone = tone;
+        else delete status.dataset.tone;
+      };
+
+      /** Field id → the message shown when it fails, and the test it must pass. */
+      const RULES: { id: string; msg: string; ok: (v: string) => boolean }[] = [
+        { id: 'cf-name', msg: 'Please tell us your name.', ok: (v) => v.trim().length > 0 },
+        {
+          id: 'cf-email',
+          msg: 'Please enter an email address we can reply to.',
+          /* Deliberately loose. Anything stricter rejects real addresses —
+             plus-tags, new TLDs, non-Latin domains — and the only reliable test
+             of an address is sending to it. */
+          ok: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+        },
+        { id: 'cf-message', msg: 'Please write your message.', ok: (v) => v.trim().length > 0 },
+      ];
+
+      const setError = (id: string, msg: string | null) => {
+        const input = document.querySelector<HTMLInputElement>(`#${id}`);
+        const err = document.querySelector<HTMLElement>(`#${id}-err`);
+        if (!input || !err) return;
+        if (msg) {
+          err.textContent = msg;
+          err.hidden = false;
+          input.setAttribute('aria-invalid', 'true');
+          input.setAttribute('aria-describedby', `${id}-err`);
+        } else {
+          err.hidden = true;
+          input.removeAttribute('aria-invalid');
+          input.removeAttribute('aria-describedby');
+        }
+      };
+
+      /* Clear a field's error as soon as it is fixed — leaving red text under a
+         field the reader has already corrected is its own small insult. */
+      for (const r of RULES) {
+        const el = document.querySelector<HTMLInputElement>(`#${r.id}`);
+        el?.addEventListener('input', () => {
+          if (el.getAttribute('aria-invalid') === 'true' && r.ok(el.value)) setError(r.id, null);
+        });
+      }
+
+      const terms = document.querySelector<HTMLInputElement>('#cf-terms');
+      terms?.addEventListener('change', () => {
+        if (terms.checked) {
+          const e = document.querySelector<HTMLElement>('#cf-terms-err');
+          if (e) e.hidden = true;
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        say('', '');
+
+        let firstBad: HTMLElement | null = null;
+
+        for (const r of RULES) {
+          const el = document.querySelector<HTMLInputElement>(`#${r.id}`);
+          if (!el) continue;
+          const good = r.ok(el.value);
+          setError(r.id, good ? null : r.msg);
+          if (!good && !firstBad) firstBad = el;
+        }
+
+        const termsErr = document.querySelector<HTMLElement>('#cf-terms-err');
+        if (terms && termsErr) {
+          const good = terms.checked;
+          termsErr.textContent = good ? '' : 'Please accept the privacy and terms to continue.';
+          termsErr.hidden = good;
+          if (!good && !firstBad) firstBad = terms;
+        }
+
+        if (firstBad) {
+          /* Move focus to the first problem rather than only colouring it —
+             otherwise a keyboard user is told something is wrong and left at
+             the bottom of the form with no way to find it. */
+          firstBad.focus();
+          return;
+        }
+
+        if (!ENDPOINT) {
+          say('This form is not connected to the school’s inbox yet. Please call the office on ' + '+91 77550 05905' + ' meanwhile.', 'bad');
+          return;
+        }
+
+        const btn = form.querySelector<HTMLButtonElement>('.ct__send');
+        const label = btn?.textContent ?? 'Send Message';
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Sending…';
+        }
+        say('', '');
+
+        try {
+          const res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: new FormData(form),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          form.reset();
+          say('Thank you — your message has reached the school. We will reply soon.', 'good');
+        } catch {
+          say('Sorry, that did not send. Please try again, or call the office on +91 77550 05905.', 'bad');
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = label;
+          }
+        }
+      });
+    }
+  }
+</script>

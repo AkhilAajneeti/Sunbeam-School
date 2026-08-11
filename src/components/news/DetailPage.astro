@@ -73,6 +73,14 @@ interface Props {
   metaLabel?: string;
   /** What `item.result` is on this page — 'Note' for a remark, 'Result' for a placing. */
   resultLabel?: string;
+  /**
+   * What one item IS — 'session', 'event', 'day', 'entry'.
+   *
+   * ⚠ THE GALLERY CAPTION READ "14 PHOTOGRAPHS FROM THIS SESSION" ON SAWAN.
+   * Same leak as the card grid's "4 SESSIONS" above four school events: a
+   * component shared by four sections cannot name the thing it is showing.
+   */
+  unit?: string;
 }
 
 const {
@@ -84,6 +92,7 @@ const {
   fallbackAlt,
   metaLabel = 'Led by',
   resultLabel = 'Note',
+  unit = 'session',
 } = Astro.props;
 
 /* ⚠ THE HERO USES THE SESSION'S OWN LEAD PHOTOGRAPH WHERE ONE EXISTS, falling
@@ -122,8 +131,44 @@ const frame = setRatio < 1.15 ? '1 / 1' : setRatio < 1.45 ? '4 / 3' : '3 / 2';
    columns would tower over the page. */
 const wideSet = setRatio >= 1.45;
 
+/**
+ * ⚠ THREE RUNGS, NOT TWO. The ladder was [420, 840] with nothing in between, so
+ * a phone at 412px CSS and 1.75 DPR — needing about 650px — had to take the 840
+ * and throw away a third of it. Lighthouse put the waste at 538 KiB on a
+ * nine-photograph page. 700 is the rung that case actually wants; 1000 covers
+ * the same phone at DPR 2 and the widest single-column tile (552px) on a small
+ * tablet.
+ */
+const GALLERY_WIDTHS = [400, 700, 1000];
+
+/**
+ * ⚠ MEASURED, NOT ESTIMATED. This read `32vw` above 1100px, which claims a 460px
+ * tile at 1440 — the tile is actually 288px, and above 1600 it stops growing at
+ * all because the content column is capped. The browser believes the hint, so a
+ * wrong one costs real bytes on every frame.
+ *
+ * The stops come from measuring `.shot` at ten viewports: 350px at 390, 552 at
+ * 600, 230 at 900, 288 from 1440 up. Each is set slightly ABOVE the measurement
+ * — under-claiming picks a file too small and shows a soft picture, which is a
+ * worse failure than a large one.
+ */
+const GALLERY_SIZES =
+  '(min-width: 1600px) 300px, (min-width: 1101px) 21vw, (min-width: 900px) 26vw, (min-width: 701px) 46vw, 92vw';
+
 const lead = photos[0];
-const leadIsWide = lead ? lead.width / lead.height >= 1.33 : false;
+/**
+ * ⚠ A SOLO GALLERY DOES NOT SUPPLY THE HERO, even when it is landscape enough.
+ * The Attire Speak entry has exactly one image — the competition's own results
+ * card naming the winners — so promoting it to the banner printed the same
+ * graphic twice on a short page, with the page heading laid straight across
+ * "AAKRITI". The aspect test alone could not catch that: the card is 16:9 and
+ * passes it comfortably. What makes it wrong is that it is the ONLY evidence on
+ * the page, and a banner crop damages the thing the reader came to read.
+ *
+ * With more than one photograph the lead is a real choice among several, and
+ * cropping one for the banner costs nothing.
+ */
+const leadIsWide = lead && photos.length > 1 ? lead.width / lead.height >= 1.33 : false;
 const hero = leadIsWide ? lead! : (fallbackHero ?? heroPhoto);
 const heroAlt = leadIsWide
   ? `${item.title} at Sunbeam School Ballia`
@@ -198,7 +243,7 @@ const next = all[here + 1];
               photos.length > 0 ? (
                 <>
                   <p class="wd__gk">
-                    {`${photos.length} ${photos.length === 1 ? 'photograph' : 'photographs'} from this session`}
+                    {`${photos.length} ${photos.length === 1 ? 'photograph' : 'photographs'} from this ${unit}`}
                   </p>
                   {/* ⚠ A SET OF ONE IS NOT A GRID, AND MUST NOT BE CROPPED LIKE
                       ONE. The lead frame is forced to 21:9 so a row of mixed
@@ -245,8 +290,8 @@ const next = all[here + 1];
                             src={src}
                             alt={`${item.title} at Sunbeam School Ballia — photograph ${i + 1} of ${photos.length}`}
                             formats={['avif', 'webp']}
-                            widths={[420, 840]}
-                            sizes="(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 32vw"
+                            widths={GALLERY_WIDTHS}
+                            sizes={GALLERY_SIZES}
                             loading={i < 3 ? 'eager' : 'lazy'}
                             decoding="async"
                           />

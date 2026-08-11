@@ -75,11 +75,20 @@
      the top bar sat bright and undimmed above a darkened page, and the logo
      stayed clickable behind the modal. 900 leaves room for anything added
      between, without reaching for the maximum and starting an arms race. */
+  /* ⚠ THE ROW IS EXPLICIT, AND THAT IS THE WHOLE FIX. Left implicit, the single
+     grid row is AUTO-SIZED — so it grew to the 1656px the panel wanted, and the
+     panel's `height: 100%` then measured itself against that. Circular: content
+     sized the row, the row sized the percentage, nothing was ever clamped.
+
+     `minmax(0, 1fr)` on a fixed, definite-height container gives a definite row
+     that content cannot inflate. That is what makes the percentages down the
+     chain — panel, stage, image — resolve to real numbers. */
   .lbx {
     position: fixed;
     z-index: 900;
     inset: 0;
     display: grid;
+    grid-template-rows: minmax(0, 1fr);
     place-items: center;
     padding: clamp(12px, 2.5vw, 40px);
   }
@@ -96,13 +105,27 @@
 
   .lbx.is-open .lbx__scrim { opacity: 1; }
 
+  /* ⚠ `height`, NOT `max-height`. This read `max-height: 100%`, and that made
+     the panel's height AUTO — content-driven, merely capped. A percentage height
+     on a descendant of an auto-height box is indefinite, so the `max-height:
+     100%` on the image below resolved to nothing at all.
+
+     It went unnoticed because every landscape photograph is caught by
+     `max-width: 100%` first: at 1600×1066 in an 1100px panel the width binds and
+     the height simply follows. The two PORTRAIT frames in the Viswakarma Pooja
+     set are 1066×1600 — narrower than the panel, so nothing bound them and they
+     painted at full natural size. Measured at 1909×1021: the image ran 675px
+     past the bottom of the window, and at 1280×620 it ran 1068px past.
+
+     A definite height here makes the `minmax(0, 1fr)` stage row definite, which
+     is what lets the image's own `max-height: 100%` finally resolve. */
   .lbx__panel {
     position: relative;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: var(--sb-4);
     width: min(100%, 1100px);
-    max-height: 100%;
+    height: 100%;
   }
 
   .lbx__bar {
@@ -155,12 +178,24 @@
     min-height: 0;
   }
 
+  /* ⚠ PINNED TO THE STAGE, NOT SIZED BY `max-width/max-height: 100%`. The
+     percentage pair looks like the obvious answer and quietly fails: a grid
+     item's percentage height resolves against its GRID AREA, and both this
+     stage's row and the wrapper's above it were implicit and therefore
+     content-sized. So the row grew to the photograph and the photograph then
+     measured itself against the row. Fixing the outer row alone was not enough —
+     the same trap sat one level down.
+
+     `inset: 0` plus `object-fit: contain` takes the box from the stage and fits
+     the picture inside it, which cannot overflow whatever the chain above does,
+     and centres on both axes for free. The frame is still never cropped — that
+     is the entire point of this view. */
   .lbx__img {
+    position: absolute;
+    inset: 0;
     display: block;
-    max-width: 100%;
-    max-height: 100%;
-    /* The picture is never cropped here — this view exists precisely so the
-       reader can see the whole frame. */
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     border-radius: var(--sb-r-2);
     opacity: 0;

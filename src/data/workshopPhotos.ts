@@ -22,13 +22,13 @@ import type { ImageMetadata } from 'astro';
  * an explicit mapping instead — the folder can be called anything.
  */
 /**
- * ⚠ TWO GLOBS, MERGED — one per asset root, and they must stay literal.
+ * ⚠ FOUR GLOBS, MERGED — one per asset root, and they must stay literal.
  * Vite can only analyse `import.meta.glob` when the pattern is written inline,
  * so a loop over root names silently resolves to nothing, which looks exactly
  * like "the client has not supplied photographs yet".
  *
- * A folder name only has to be unique ACROSS both roots, because the lookup key
- * is the folder alone.
+ * A folder name only has to be unique ACROSS ALL FOUR roots, because the lookup
+ * key is the folder alone.
  */
 const files: Record<string, { default: ImageMetadata }> = {
   ...import.meta.glob<{ default: ImageMetadata }>(
@@ -39,7 +39,20 @@ const files: Record<string, { default: ImageMetadata }> = {
     '../assets/school-event/**/*.{jpg,jpeg,png,JPG,JPEG,PNG,webp}',
     { eager: true },
   ),
+  ...import.meta.glob<{ default: ImageMetadata }>(
+    '../assets/celebration/**/*.{jpg,jpeg,png,JPG,JPEG,PNG,webp}',
+    { eager: true },
+  ),
+  ...import.meta.glob<{ default: ImageMetadata }>(
+    '../assets/competition/**/*.{jpg,jpeg,png,JPG,JPEG,PNG,webp}',
+    { eager: true },
+  ),
 };
+
+/** The asset roots a gallery folder may live under. Adding one means adding a
+ *  LITERAL glob above as well — this list only drives the lookup, not the
+ *  bundling. */
+const ROOTS = ['/assets/workshops/', '/assets/school-event/', '/assets/celebration/', '/assets/competition/'];
 
 /**
  * ⚠ NATURAL ORDER, NOT LEXICAL. The supplied set runs `…innovation.jpg`,
@@ -54,7 +67,8 @@ const natural = (a: string, b: string) =>
 const byFolder = new Map<string, ImageMetadata[]>();
 
 for (const [path, mod] of Object.entries(files)) {
-  const folder = (path.split('/assets/workshops/')[1] ?? path.split('/assets/school-event/')[1])?.split('/')[0];
+  const root = ROOTS.find((r) => path.includes(r));
+  const folder = root ? path.split(root)[1]?.split('/')[0] : undefined;
   if (!folder) continue;
   const list = byFolder.get(folder) ?? [];
   list.push(mod.default);
@@ -65,7 +79,7 @@ for (const [path, mod] of Object.entries(files)) {
    is the glob's, which is not guaranteed to be the export order. */
 for (const [folder, list] of byFolder) {
   const paths = Object.entries(files)
-    .filter(([p]) => p.includes('/assets/workshops/' + folder + '/') || p.includes('/assets/school-event/' + folder + '/'))
+    .filter(([p]) => ROOTS.some((r) => p.includes(r + folder + '/')))
     .sort(([a], [b]) => natural(a, b))
     .map(([, m]) => m.default);
   byFolder.set(folder, paths);

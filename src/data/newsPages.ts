@@ -344,6 +344,7 @@ export const competitions: ChroniclePage = {
         {
           title: 'Cohort Inter-Branch Attire Speak Competition',
         slug: 'attire-speak-competition',
+        photoDir: 'attire-speak-competition',
           meta: 'Class I',
           body: 'A speaking competition across Sunbeam branches, entered by the school’s six-year-olds.',
           result: '1st — Avinashi Yadav · 3rd — Mariam Ali',
@@ -366,6 +367,7 @@ export const competitions: ChroniclePage = {
         {
           title: 'Chaturang 2.0 — District Level Chess Championship',
         slug: 'chaturang-chess-championship',
+        photoDir: 'chaturang-chess-championship',
           meta: 'Chief Guest: Mr. Umesh Singh, Secretary, Ballia Sports Association',
           body: 'The school hosted the district chess championship, opening it with a ceremony attended by schools from across Ballia and closing it by felicitating every winner and participant.',
           when: '2025',
@@ -418,6 +420,7 @@ export const celebrations: ChroniclePage = {
         {
           title: 'Republic Day',
         slug: 'republic-day',
+        photoDir: 'republic-day',
           meta: 'Whole school',
           body: 'The school’s Republic Day assembly and cultural programme.',
         },
@@ -444,30 +447,35 @@ export const celebrations: ChroniclePage = {
         {
           title: 'Durga Pooja, Vijaya Dashami and Janmashtami',
         slug: 'durga-pooja-and-janmashtami',
+        photoDir: 'durga-pooja-and-janmashtami',
           meta: 'Devotional and cultural festival celebration',
           body: 'The school’s devotional and cultural programme across the autumn festivals.',
         },
         {
           title: 'Holi',
         slug: 'holi',
+        photoDir: 'holi',
           meta: 'Whole school',
           body: 'The school’s Holi celebration.',
         },
         {
           title: 'Lohri and Baisakhi',
         slug: 'lohri-and-baisakhi',
+        photoDir: 'lohri-and-baisakhi',
           meta: 'Whole school',
           body: 'The harvest festivals, marked together.',
         },
         {
           title: 'Viswakarma Pooja',
         slug: 'viswakarma-pooja',
+        photoDir: 'viswakarma-pooja',
           meta: 'Whole school',
           body: 'The Viswakarma Pooja celebration.',
         },
         {
           title: 'Sawan',
         slug: 'sawan',
+        photoDir: 'sawan',
           meta: 'Whole school',
           body: 'The school’s Sawan celebration.',
         },
@@ -481,6 +489,7 @@ export const celebrations: ChroniclePage = {
         {
           title: 'Teachers’ Day — the student-led programme',
         slug: 'teachers-day-students',
+        photoDir: 'teachers-day-students',
           meta: 'KG to Class XII',
           body: 'Music and dance from every year group — and Class XII students stepping into the shoes of their teachers to take classes for the day.',
           when: '2025',
@@ -502,18 +511,21 @@ export const celebrations: ChroniclePage = {
         {
           title: 'Grandparents’ Day',
         slug: 'grandparents-day',
+        photoDir: 'grandparents-day',
           meta: 'Held before the examinations',
           body: 'The school’s Grandparents’ Day celebration, timed before the examination season.',
         },
         {
           title: 'International Women’s Day',
         slug: 'womens-day',
+        photoDir: 'womens-day',
           meta: 'Whole school',
           body: 'The school’s Women’s Day programme.',
         },
         {
           title: 'Farewell — Class XII',
         slug: 'farewell-class-xii',
+        photoDir: 'farewell-class-xii',
           meta: 'Class XII',
           body: 'The leavers’ assembly and farewell for the outgoing Class XII.',
           when: '2025',
@@ -521,6 +533,7 @@ export const celebrations: ChroniclePage = {
         {
           title: 'KG Convocation and KG Farewell',
         slug: 'kg-convocation',
+        photoDir: 'kg-convocation',
           meta: 'Kindergarten',
           body: 'The school’s youngest leavers get a convocation of their own.',
         },

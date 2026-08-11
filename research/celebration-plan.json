@@ -1,0 +1,2270 @@
+{
+  "independence-day": {
+    "titles": [
+      "[sa5] Independence Day Celebration"
+    ],
+    "total": 16,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/16-1.jpg",
+        "from": "sa5",
+        "name": "16-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/16-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/17-1.jpg",
+        "from": "sa5",
+        "name": "17-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/17-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/18-1.jpg",
+        "from": "sa5",
+        "name": "18-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/18-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/19-1.jpg",
+        "from": "sa5",
+        "name": "19-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/19-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/20-1.jpg",
+        "from": "sa5",
+        "name": "20-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/20-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/21-1.jpg",
+        "from": "sa5",
+        "name": "21-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/21-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/34.jpg",
+        "from": "sa5",
+        "name": "34.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/34.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/35.jpg",
+        "from": "sa5",
+        "name": "35.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/35.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/36.jpg",
+        "from": "sa5",
+        "name": "36.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/36.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/37.jpg",
+        "from": "sa5",
+        "name": "37.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/37.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/38.jpg",
+        "from": "sa5",
+        "name": "38.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/38.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/39.jpg",
+        "from": "sa5",
+        "name": "39.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/39.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/68.jpg",
+        "from": "sa5",
+        "name": "68.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/68.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/73.jpg",
+        "from": "sa5",
+        "name": "73.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/73.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/89.jpg",
+        "from": "sa5",
+        "name": "89.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/89.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/90.jpg",
+        "from": "sa5",
+        "name": "90.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/90.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      }
+    ],
+    "dropped": []
+  },
+  "republic-day": {
+    "titles": [
+      "[sa30] Republic Day Celebrations"
+    ],
+    "total": 13,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422840805_788378006641243_4337839096972098142_n.jpg",
+        "from": "sa30",
+        "name": "422840805_788378006641243_4337839096972098142_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422840805_788378006641243_4337839096972098142_n.jpg",
+        "batch": 788378006641243
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422814126_788377929974584_8034128464841591585_n.jpg",
+        "from": "sa30",
+        "name": "422814126_788377929974584_8034128464841591585_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422814126_788377929974584_8034128464841591585_n.jpg",
+        "batch": 788377929974584
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422871939_788377876641256_3239004017273757349_n.jpg",
+        "from": "sa30",
+        "name": "422871939_788377876641256_3239004017273757349_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422871939_788377876641256_3239004017273757349_n.jpg",
+        "batch": 788377876641256
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422826177_788377813307929_4072620236397786552_n.jpg",
+        "from": "sa30",
+        "name": "422826177_788377813307929_4072620236397786552_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422826177_788377813307929_4072620236397786552_n.jpg",
+        "batch": 788377813307929
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421794179_788377776641266_7291634283868338368_n.jpg",
+        "from": "sa30",
+        "name": "421794179_788377776641266_7291634283868338368_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421794179_788377776641266_7291634283868338368_n.jpg",
+        "batch": 788377776641266
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422859203_788377733307937_2280145085353394194_n.jpg",
+        "from": "sa30",
+        "name": "422859203_788377733307937_2280145085353394194_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422859203_788377733307937_2280145085353394194_n.jpg",
+        "batch": 788377733307937
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422874744_788377709974606_6113459254266344753_n.jpg",
+        "from": "sa30",
+        "name": "422874744_788377709974606_6113459254266344753_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422874744_788377709974606_6113459254266344753_n.jpg",
+        "batch": 788377709974606
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422848868_788377693307941_6149899945583239887_n.jpg",
+        "from": "sa30",
+        "name": "422848868_788377693307941_6149899945583239887_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422848868_788377693307941_6149899945583239887_n.jpg",
+        "batch": 788377693307941
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422798147_788377189974658_7397596621031091033_n.jpg",
+        "from": "sa30",
+        "name": "422798147_788377189974658_7397596621031091033_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422798147_788377189974658_7397596621031091033_n.jpg",
+        "batch": 788377189974658
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422802029_788376703308040_2889136957185127943_n.jpg",
+        "from": "sa30",
+        "name": "422802029_788376703308040_2889136957185127943_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422802029_788376703308040_2889136957185127943_n.jpg",
+        "batch": 788376703308040
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422822309_788376603308050_2725767955656876394_n.jpg",
+        "from": "sa30",
+        "name": "422822309_788376603308050_2725767955656876394_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422822309_788376603308050_2725767955656876394_n.jpg",
+        "batch": 788376603308050
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422833538_788376543308056_300768003426511127_n.jpg",
+        "from": "sa30",
+        "name": "422833538_788376543308056_300768003426511127_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422833538_788376543308056_300768003426511127_n.jpg",
+        "batch": 788376543308056
+      }
+    ],
+    "dropped": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422467210_787872893358421_1507647921465290065_n-2.jpg",
+        "from": "sa30",
+        "name": "422467210_787872893358421_1507647921465290065_n-2.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422467210_787872893358421_1507647921465290065_n-2.jpg",
+        "batch": 787872893358421,
+        "med": 788377709974606
+      }
+    ]
+  },
+  "durga-pooja-and-janmashtami": {
+    "titles": [
+      "[sa25] Devotional and Cultural Festival Celebration Durga Pooja, Vijaya",
+      "[sa110] Happy Krishna Janmashtami"
+    ],
+    "total": 70,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391503243_729894875822890_5363253632682015458_n.jpg",
+        "from": "sa25",
+        "name": "391503243_729894875822890_5363253632682015458_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391503243_729894875822890_5363253632682015458_n.jpg",
+        "batch": 729894875822890
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391569727_729894712489573_2218773348606216238_n.jpg",
+        "from": "sa25",
+        "name": "391569727_729894712489573_2218773348606216238_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391569727_729894712489573_2218773348606216238_n.jpg",
+        "batch": 729894712489573
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391570808_729893982489646_685064889797595307_n.jpg",
+        "from": "sa25",
+        "name": "391570808_729893982489646_685064889797595307_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391570808_729893982489646_685064889797595307_n.jpg",
+        "batch": 729893982489646
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391574431_729895809156130_6655863114270273388_n.jpg",
+        "from": "sa25",
+        "name": "391574431_729895809156130_6655863114270273388_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391574431_729895809156130_6655863114270273388_n.jpg",
+        "batch": 729895809156130
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391574463_729895692489475_1845153049173063440_n.jpg",
+        "from": "sa25",
+        "name": "391574463_729895692489475_1845153049173063440_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391574463_729895692489475_1845153049173063440_n.jpg",
+        "batch": 729895692489475
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391574522_729894349156276_8156774171259113252_n.jpg",
+        "from": "sa25",
+        "name": "391574522_729894349156276_8156774171259113252_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391574522_729894349156276_8156774171259113252_n.jpg",
+        "batch": 729894349156276
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391575051_729895652489479_2387911859868249135_n.jpg",
+        "from": "sa25",
+        "name": "391575051_729895652489479_2387911859868249135_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391575051_729895652489479_2387911859868249135_n.jpg",
+        "batch": 729895652489479
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391576536_729894569156254_1536863690690371296_n.jpg",
+        "from": "sa25",
+        "name": "391576536_729894569156254_1536863690690371296_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391576536_729894569156254_1536863690690371296_n.jpg",
+        "batch": 729894569156254
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391577307_729895092489535_3415279537338277913_n.jpg",
+        "from": "sa25",
+        "name": "391577307_729895092489535_3415279537338277913_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391577307_729895092489535_3415279537338277913_n.jpg",
+        "batch": 729895092489535
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391578316_729894835822894_2671093372347110404_n.jpg",
+        "from": "sa25",
+        "name": "391578316_729894835822894_2671093372347110404_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391578316_729894835822894_2671093372347110404_n.jpg",
+        "batch": 729894835822894
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391579567_729894592489585_6981385569994128988_n.jpg",
+        "from": "sa25",
+        "name": "391579567_729894592489585_6981385569994128988_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391579567_729894592489585_6981385569994128988_n.jpg",
+        "batch": 729894592489585
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391580479_729895769156134_7530262958318745531_n.jpg",
+        "from": "sa25",
+        "name": "391580479_729895769156134_7530262958318745531_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391580479_729895769156134_7530262958318745531_n.jpg",
+        "batch": 729895769156134
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391581177_729894659156245_3612527654765762954_n.jpg",
+        "from": "sa25",
+        "name": "391581177_729894659156245_3612527654765762954_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391581177_729894659156245_3612527654765762954_n.jpg",
+        "batch": 729894659156245
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391581276_729894685822909_201219244288329697_n.jpg",
+        "from": "sa25",
+        "name": "391581276_729894685822909_201219244288329697_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391581276_729894685822909_201219244288329697_n.jpg",
+        "batch": 729894685822909
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391581326_729893565823021_6216849738256263677_n.jpg",
+        "from": "sa25",
+        "name": "391581326_729893565823021_6216849738256263677_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391581326_729893565823021_6216849738256263677_n.jpg",
+        "batch": 729893565823021
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391582530_729894192489625_2554423368251106146_n.jpg",
+        "from": "sa25",
+        "name": "391582530_729894192489625_2554423368251106146_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391582530_729894192489625_2554423368251106146_n.jpg",
+        "batch": 729894192489625
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391583473_729893395823038_2803988391779461222_n.jpg",
+        "from": "sa25",
+        "name": "391583473_729893395823038_2803988391779461222_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391583473_729893395823038_2803988391779461222_n.jpg",
+        "batch": 729893395823038
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391586168_729893865822991_5587121429144708774_n.jpg",
+        "from": "sa25",
+        "name": "391586168_729893865822991_5587121429144708774_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391586168_729893865822991_5587121429144708774_n.jpg",
+        "batch": 729893865822991
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391587559_729892959156415_3171357405317529012_n.jpg",
+        "from": "sa25",
+        "name": "391587559_729892959156415_3171357405317529012_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391587559_729892959156415_3171357405317529012_n.jpg",
+        "batch": 729892959156415
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391587850_729893825822995_3842742099853465612_n.jpg",
+        "from": "sa25",
+        "name": "391587850_729893825822995_3842742099853465612_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391587850_729893825822995_3842742099853465612_n.jpg",
+        "batch": 729893825822995
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391590148_729893765823001_1401510383949036429_n.jpg",
+        "from": "sa25",
+        "name": "391590148_729893765823001_1401510383949036429_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391590148_729893765823001_1401510383949036429_n.jpg",
+        "batch": 729893765823001
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391590402_729894532489591_5261192000132037249_n.jpg",
+        "from": "sa25",
+        "name": "391590402_729894532489591_5261192000132037249_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391590402_729894532489591_5261192000132037249_n.jpg",
+        "batch": 729894532489591
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391591224_729896049156106_2763601682675587736_n.jpg",
+        "from": "sa25",
+        "name": "391591224_729896049156106_2763601682675587736_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391591224_729896049156106_2763601682675587736_n.jpg",
+        "batch": 729896049156106
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391602431_729894789156232_4560149049974887196_n.jpg",
+        "from": "sa25",
+        "name": "391602431_729894789156232_4560149049974887196_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391602431_729894789156232_4560149049974887196_n.jpg",
+        "batch": 729894789156232
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391605606_729893482489696_5418474542682794449_n.jpg",
+        "from": "sa25",
+        "name": "391605606_729893482489696_5418474542682794449_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391605606_729893482489696_5418474542682794449_n.jpg",
+        "batch": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391606594_729894509156260_8712036635668429934_n.jpg",
+        "from": "sa25",
+        "name": "391606594_729894509156260_8712036635668429934_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391606594_729894509156260_8712036635668429934_n.jpg",
+        "batch": 729894509156260
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391606706_729895889156122_8108186774940766676_n.jpg",
+        "from": "sa25",
+        "name": "391606706_729895889156122_8108186774940766676_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391606706_729895889156122_8108186774940766676_n.jpg",
+        "batch": 729895889156122
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391609729_729894132489631_7980915549767874297_n.jpg",
+        "from": "sa25",
+        "name": "391609729_729894132489631_7980915549767874297_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391609729_729894132489631_7980915549767874297_n.jpg",
+        "batch": 729894132489631
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391610019_729893249156386_7003236786493398974_n.jpg",
+        "from": "sa25",
+        "name": "391610019_729893249156386_7003236786493398974_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391610019_729893249156386_7003236786493398974_n.jpg",
+        "batch": 729893249156386
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391612216_729894449156266_5351140919831792339_n.jpg",
+        "from": "sa25",
+        "name": "391612216_729894449156266_5351140919831792339_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391612216_729894449156266_5351140919831792339_n.jpg",
+        "batch": 729894449156266
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391653735_729893942489650_3553274519912543052_n.jpg",
+        "from": "sa25",
+        "name": "391653735_729893942489650_3553274519912543052_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391653735_729893942489650_3553274519912543052_n.jpg",
+        "batch": 729893942489650
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391768326_729894282489616_1156865227636384354_n.jpg",
+        "from": "sa25",
+        "name": "391768326_729894282489616_1156865227636384354_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/391768326_729894282489616_1156865227636384354_n.jpg",
+        "batch": 729894282489616
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/456418359_926253396187036_7846422748176496422_n.jpg",
+        "from": "sa110",
+        "name": "456418359_926253396187036_7846422748176496422_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/456418359_926253396187036_7846422748176496422_n.jpg",
+        "batch": 926253396187036
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/456586922_926254102853632_7944120355702648979_n.jpg",
+        "from": "sa110",
+        "name": "456586922_926254102853632_7944120355702648979_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/456586922_926254102853632_7944120355702648979_n.jpg",
+        "batch": 926254102853632
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/456778110_926254159520293_4822053582943778072_n.jpg",
+        "from": "sa110",
+        "name": "456778110_926254159520293_4822053582943778072_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/456778110_926254159520293_4822053582943778072_n.jpg",
+        "batch": 926254159520293
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/456854264_926254392853603_5800196341894034798_n.jpg",
+        "from": "sa110",
+        "name": "456854264_926254392853603_5800196341894034798_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/456854264_926254392853603_5800196341894034798_n.jpg",
+        "batch": 926254392853603
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/456870461_926253406187035_2662977830366760841_n.jpg",
+        "from": "sa110",
+        "name": "456870461_926253406187035_2662977830366760841_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/456870461_926253406187035_2662977830366760841_n.jpg",
+        "batch": 926253406187035
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/456901285_926254522853590_3781307490327297316_n.jpg",
+        "from": "sa110",
+        "name": "456901285_926254522853590_3781307490327297316_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/456901285_926254522853590_3781307490327297316_n.jpg",
+        "batch": 926254522853590
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/456980206_926254486186927_5986596779438605239_n.jpg",
+        "from": "sa110",
+        "name": "456980206_926254486186927_5986596779438605239_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/456980206_926254486186927_5986596779438605239_n.jpg",
+        "batch": 926254486186927
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/457000159_926254356186940_8755773264414131467_n.jpg",
+        "from": "sa110",
+        "name": "457000159_926254356186940_8755773264414131467_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/457000159_926254356186940_8755773264414131467_n.jpg",
+        "batch": 926254356186940
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/457003912_926254279520281_6880380160774762382_n.jpg",
+        "from": "sa110",
+        "name": "457003912_926254279520281_6880380160774762382_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/457003912_926254279520281_6880380160774762382_n.jpg",
+        "batch": 926254279520281
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/457040699_926254322853610_7734127761931799213_n.jpg",
+        "from": "sa110",
+        "name": "457040699_926254322853610_7734127761931799213_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/457040699_926254322853610_7734127761931799213_n.jpg",
+        "batch": 926254322853610
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/457052480_926254449520264_190753922679210415_n.jpg",
+        "from": "sa110",
+        "name": "457052480_926254449520264_190753922679210415_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/457052480_926254449520264_190753922679210415_n.jpg",
+        "batch": 926254449520264
+      }
+    ],
+    "dropped": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371976731_702517255227319_2339241273858885846_n.jpg",
+        "from": "sa25",
+        "name": "371976731_702517255227319_2339241273858885846_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371976731_702517255227319_2339241273858885846_n.jpg",
+        "batch": 702517255227319,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371993595_702518305227214_8524583599163802530_n.jpg",
+        "from": "sa25",
+        "name": "371993595_702518305227214_8524583599163802530_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371993595_702518305227214_8524583599163802530_n.jpg",
+        "batch": 702518305227214,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372021202_703636268448751_1015458419466762693_n.jpg",
+        "from": "sa25",
+        "name": "372021202_703636268448751_1015458419466762693_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372021202_703636268448751_1015458419466762693_n.jpg",
+        "batch": 703636268448751,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372026311_703636621782049_1187666933567938837_n.jpg",
+        "from": "sa25",
+        "name": "372026311_703636621782049_1187666933567938837_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372026311_703636621782049_1187666933567938837_n.jpg",
+        "batch": 703636621782049,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372035904_703636551782056_5603764338607133223_n.jpg",
+        "from": "sa25",
+        "name": "372035904_703636551782056_5603764338607133223_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372035904_703636551782056_5603764338607133223_n.jpg",
+        "batch": 703636551782056,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372036010_703636368448741_2105463078121083469_n.jpg",
+        "from": "sa25",
+        "name": "372036010_703636368448741_2105463078121083469_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372036010_703636368448741_2105463078121083469_n.jpg",
+        "batch": 703636368448741,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372049585_703636801782031_8435795677476274164_n.jpg",
+        "from": "sa25",
+        "name": "372049585_703636801782031_8435795677476274164_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372049585_703636801782031_8435795677476274164_n.jpg",
+        "batch": 703636801782031,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372057114_703636725115372_4898078812016316610_n.jpg",
+        "from": "sa25",
+        "name": "372057114_703636725115372_4898078812016316610_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372057114_703636725115372_4898078812016316610_n.jpg",
+        "batch": 703636725115372,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372982652_703636768448701_7591334645888863107_n.jpg",
+        "from": "sa25",
+        "name": "372982652_703636768448701_7591334645888863107_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372982652_703636768448701_7591334645888863107_n.jpg",
+        "batch": 703636768448701,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/373092624_703636178448760_4771413298330234872_n.jpg",
+        "from": "sa25",
+        "name": "373092624_703636178448760_4771413298330234872_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/373092624_703636178448760_4771413298330234872_n.jpg",
+        "batch": 703636178448760,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/373370664_703636471782064_5606412422890597018_n.jpg",
+        "from": "sa25",
+        "name": "373370664_703636471782064_5606412422890597018_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/373370664_703636471782064_5606412422890597018_n.jpg",
+        "batch": 703636471782064,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/373733476_703636641782047_1626118191443308844_n.jpg",
+        "from": "sa25",
+        "name": "373733476_703636641782047_1626118191443308844_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/373733476_703636641782047_1626118191443308844_n.jpg",
+        "batch": 703636641782047,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/374528813_703636095115435_803629598021568977_n.jpg",
+        "from": "sa25",
+        "name": "374528813_703636095115435_803629598021568977_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/374528813_703636095115435_803629598021568977_n.jpg",
+        "batch": 703636095115435,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/375908733_703635795115465_8457870808032900821_n.jpg",
+        "from": "sa25",
+        "name": "375908733_703635795115465_8457870808032900821_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/375908733_703635795115465_8457870808032900821_n.jpg",
+        "batch": 703635795115465,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/375987606_703635881782123_9102362089370850277_n.jpg",
+        "from": "sa25",
+        "name": "375987606_703635881782123_9102362089370850277_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/375987606_703635881782123_9102362089370850277_n.jpg",
+        "batch": 703635881782123,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/376914345_703636585115386_7573091654232838851_n.jpg",
+        "from": "sa25",
+        "name": "376914345_703636585115386_7573091654232838851_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/376914345_703636585115386_7573091654232838851_n.jpg",
+        "batch": 703636585115386,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/376914909_703636215115423_8691739109644465517_n.jpg",
+        "from": "sa25",
+        "name": "376914909_703636215115423_8691739109644465517_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/376914909_703636215115423_8691739109644465517_n.jpg",
+        "batch": 703636215115423,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/377263431_709860127826365_5655722378338275854_n.jpg",
+        "from": "sa25",
+        "name": "377263431_709860127826365_5655722378338275854_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/377263431_709860127826365_5655722378338275854_n.jpg",
+        "batch": 709860127826365,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380096359_715402393938805_3145775933620623876_n.jpg",
+        "from": "sa25",
+        "name": "380096359_715402393938805_3145775933620623876_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380096359_715402393938805_3145775933620623876_n.jpg",
+        "batch": 715402393938805,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380106020_715402437272134_2448385753445132056_n.jpg",
+        "from": "sa25",
+        "name": "380106020_715402437272134_2448385753445132056_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380106020_715402437272134_2448385753445132056_n.jpg",
+        "batch": 715402437272134,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380118736_715402323938812_7363655893761318800_n.jpg",
+        "from": "sa25",
+        "name": "380118736_715402323938812_7363655893761318800_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380118736_715402323938812_7363655893761318800_n.jpg",
+        "batch": 715402323938812,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380126956_715402297272148_551994384924140895_n.jpg",
+        "from": "sa25",
+        "name": "380126956_715402297272148_551994384924140895_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380126956_715402297272148_551994384924140895_n.jpg",
+        "batch": 715402297272148,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380175337_715401080605603_3673778194714233768_n.jpg",
+        "from": "sa25",
+        "name": "380175337_715401080605603_3673778194714233768_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380175337_715401080605603_3673778194714233768_n.jpg",
+        "batch": 715401080605603,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/381705869_715402230605488_4759479159795418247_n.jpg",
+        "from": "sa25",
+        "name": "381705869_715402230605488_4759479159795418247_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/381705869_715402230605488_4759479159795418247_n.jpg",
+        "batch": 715402230605488,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/381713439_715401240605587_8419202074635752385_n.jpg",
+        "from": "sa25",
+        "name": "381713439_715401240605587_8419202074635752385_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/381713439_715401240605587_8419202074635752385_n.jpg",
+        "batch": 715401240605587,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/382070802_718500086962369_1160331896791729720_n.jpg",
+        "from": "sa25",
+        "name": "382070802_718500086962369_1160331896791729720_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/382070802_718500086962369_1160331896791729720_n.jpg",
+        "batch": 718500086962369,
+        "med": 729893482489696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/457253491_927657909379918_4484063602400018912_n.jpg",
+        "from": "sa110",
+        "name": "457253491_927657909379918_4484063602400018912_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/457253491_927657909379918_4484063602400018912_n.jpg",
+        "batch": 927657909379918,
+        "med": 926254356186940
+      }
+    ]
+  },
+  "holi": {
+    "titles": [
+      "[sa43] Holi Celebrations"
+    ],
+    "total": 9,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434080289_825480472930996_3486046866856485645_n.jpg",
+        "from": "sa43",
+        "name": "434080289_825480472930996_3486046866856485645_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434080289_825480472930996_3486046866856485645_n.jpg",
+        "batch": 825480472930996
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434227315_825481132930930_4291646646129191491_n.jpg",
+        "from": "sa43",
+        "name": "434227315_825481132930930_4291646646129191491_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434227315_825481132930930_4291646646129191491_n.jpg",
+        "batch": 825481132930930
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434273140_825481282930915_160613624350343109_n.jpg",
+        "from": "sa43",
+        "name": "434273140_825481282930915_160613624350343109_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434273140_825481282930915_160613624350343109_n.jpg",
+        "batch": 825481282930915
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434337331_825481316264245_2319398026437629759_n.jpg",
+        "from": "sa43",
+        "name": "434337331_825481316264245_2319398026437629759_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434337331_825481316264245_2319398026437629759_n.jpg",
+        "batch": 825481316264245
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434341298_825480912930952_3864423614176911646_n.jpg",
+        "from": "sa43",
+        "name": "434341298_825480912930952_3864423614176911646_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434341298_825480912930952_3864423614176911646_n.jpg",
+        "batch": 825480912930952
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434346274_825481056264271_1034552814130392755_n.jpg",
+        "from": "sa43",
+        "name": "434346274_825481056264271_1034552814130392755_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434346274_825481056264271_1034552814130392755_n.jpg",
+        "batch": 825481056264271
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434346557_825481196264257_5157834527040395223_n.jpg",
+        "from": "sa43",
+        "name": "434346557_825481196264257_5157834527040395223_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434346557_825481196264257_5157834527040395223_n.jpg",
+        "batch": 825481196264257
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434347405_825481006264276_8505839638173766850_n.jpg",
+        "from": "sa43",
+        "name": "434347405_825481006264276_8505839638173766850_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434347405_825481006264276_8505839638173766850_n.jpg",
+        "batch": 825481006264276
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/434347765_825480712930972_3918001765414359796_n.jpg",
+        "from": "sa43",
+        "name": "434347765_825480712930972_3918001765414359796_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/434347765_825480712930972_3918001765414359796_n.jpg",
+        "batch": 825480712930972
+      }
+    ],
+    "dropped": []
+  },
+  "lohri-and-baisakhi": {
+    "titles": [
+      "[sa26] Lohri Baisakhi Celebration",
+      "[sa213] 🌞✨ Lohri Celebration ! ✨🌾 Today, our school campus came alive "
+    ],
+    "total": 43,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419732865_780234060788971_1330291358912292580_n-1.jpg",
+        "from": "sa26",
+        "name": "419732865_780234060788971_1330291358912292580_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419732865_780234060788971_1330291358912292580_n-1.jpg",
+        "batch": 780234060788971
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418891979_780235924122118_7676898397437618029_n-1.jpg",
+        "from": "sa26",
+        "name": "418891979_780235924122118_7676898397437618029_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418891979_780235924122118_7676898397437618029_n-1.jpg",
+        "batch": 780235924122118
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418861092_780235897455454_3451897051062723155_n-1.jpg",
+        "from": "sa26",
+        "name": "418861092_780235897455454_3451897051062723155_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418861092_780235897455454_3451897051062723155_n-1.jpg",
+        "batch": 780235897455454
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419304195_780235847455459_301435820528612634_n-1.jpg",
+        "from": "sa26",
+        "name": "419304195_780235847455459_301435820528612634_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419304195_780235847455459_301435820528612634_n-1.jpg",
+        "batch": 780235847455459
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419718681_780233797455664_6259804527205113114_n-1.jpg",
+        "from": "sa26",
+        "name": "419718681_780233797455664_6259804527205113114_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419718681_780233797455664_6259804527205113114_n-1.jpg",
+        "batch": 780233797455664
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419214298_780235834122127_971315945955366635_n-1.jpg",
+        "from": "sa26",
+        "name": "419214298_780235834122127_971315945955366635_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419214298_780235834122127_971315945955366635_n-1.jpg",
+        "batch": 780235834122127
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418860822_780235804122130_856273674369671604_n-1.jpg",
+        "from": "sa26",
+        "name": "418860822_780235804122130_856273674369671604_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418860822_780235804122130_856273674369671604_n-1.jpg",
+        "batch": 780235804122130
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418885948_780235764122134_4881947134377325376_n-1.jpg",
+        "from": "sa26",
+        "name": "418885948_780235764122134_4881947134377325376_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418885948_780235764122134_4881947134377325376_n-1.jpg",
+        "batch": 780235764122134
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418858221_780235714122139_3780691620111476575_n-1.jpg",
+        "from": "sa26",
+        "name": "418858221_780235714122139_3780691620111476575_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418858221_780235714122139_3780691620111476575_n-1.jpg",
+        "batch": 780235714122139
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418911315_780235677455476_845116910288978972_n-1.jpg",
+        "from": "sa26",
+        "name": "418911315_780235677455476_845116910288978972_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418911315_780235677455476_845116910288978972_n-1.jpg",
+        "batch": 780235677455476
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418886203_780235640788813_4110897943482941908_n-1.jpg",
+        "from": "sa26",
+        "name": "418886203_780235640788813_4110897943482941908_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418886203_780235640788813_4110897943482941908_n-1.jpg",
+        "batch": 780235640788813
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419200753_780235604122150_1663059549156237340_n-1.jpg",
+        "from": "sa26",
+        "name": "419200753_780235604122150_1663059549156237340_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419200753_780235604122150_1663059549156237340_n-1.jpg",
+        "batch": 780235604122150
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418904689_780235570788820_6118843566213025477_n-1.jpg",
+        "from": "sa26",
+        "name": "418904689_780235570788820_6118843566213025477_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418904689_780235570788820_6118843566213025477_n-1.jpg",
+        "batch": 780235570788820
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418851957_780235534122157_1524546885705643305_n-1.jpg",
+        "from": "sa26",
+        "name": "418851957_780235534122157_1524546885705643305_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418851957_780235534122157_1524546885705643305_n-1.jpg",
+        "batch": 780235534122157
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419227836_780235490788828_2986927480205629290_n-1.jpg",
+        "from": "sa26",
+        "name": "419227836_780235490788828_2986927480205629290_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419227836_780235490788828_2986927480205629290_n-1.jpg",
+        "batch": 780235490788828
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418855283_780235470788830_5005716045845364603_n-1.jpg",
+        "from": "sa26",
+        "name": "418855283_780235470788830_5005716045845364603_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418855283_780235470788830_5005716045845364603_n-1.jpg",
+        "batch": 780235470788830
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418880567_780235374122173_2350890345780176141_n-1.jpg",
+        "from": "sa26",
+        "name": "418880567_780235374122173_2350890345780176141_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418880567_780235374122173_2350890345780176141_n-1.jpg",
+        "batch": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418937864_780234264122284_5412963153007831844_n-1.jpg",
+        "from": "sa26",
+        "name": "418937864_780234264122284_5412963153007831844_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418937864_780234264122284_5412963153007831844_n-1.jpg",
+        "batch": 780234264122284
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418922679_780234097455634_1798414472572894163_n-1.jpg",
+        "from": "sa26",
+        "name": "418922679_780234097455634_1798414472572894163_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418922679_780234097455634_1798414472572894163_n-1.jpg",
+        "batch": 780234097455634
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/471420889_1029092655903109_3913569388718380208_n.jpg",
+        "from": "sa213",
+        "name": "471420889_1029092655903109_3913569388718380208_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/471420889_1029092655903109_3913569388718380208_n.jpg",
+        "batch": 1029092655903109
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/471421487_1029092622569779_6858738435659854404_n.jpg",
+        "from": "sa213",
+        "name": "471421487_1029092622569779_6858738435659854404_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/471421487_1029092622569779_6858738435659854404_n.jpg",
+        "batch": 1029092622569779
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/471807587_1029087662570275_8636964974512560464_n.jpg",
+        "from": "sa213",
+        "name": "471807587_1029087662570275_8636964974512560464_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/471807587_1029087662570275_8636964974512560464_n.jpg",
+        "batch": 1029087662570275
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/472552222_1029087459236962_7382409309706557935_n.jpg",
+        "from": "sa213",
+        "name": "472552222_1029087459236962_7382409309706557935_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/472552222_1029087459236962_7382409309706557935_n.jpg",
+        "batch": 1029087459236962
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/472790915_1029087752570266_325597303938927718_n.jpg",
+        "from": "sa213",
+        "name": "472790915_1029087752570266_325597303938927718_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/472790915_1029087752570266_325597303938927718_n.jpg",
+        "batch": 1029087752570266
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/473037210_1029087295903645_3275711226672103508_n.jpg",
+        "from": "sa213",
+        "name": "473037210_1029087295903645_3275711226672103508_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/473037210_1029087295903645_3275711226672103508_n.jpg",
+        "batch": 1029087295903645
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/473056662_1029087699236938_597682419016852225_n.jpg",
+        "from": "sa213",
+        "name": "473056662_1029087699236938_597682419016852225_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/473056662_1029087699236938_597682419016852225_n.jpg",
+        "batch": 1029087699236938
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/473070207_1029087525903622_5944673834413289117_n.jpg",
+        "from": "sa213",
+        "name": "473070207_1029087525903622_5944673834413289117_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/473070207_1029087525903622_5944673834413289117_n.jpg",
+        "batch": 1029087525903622
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/473221517_1029092559236452_2328578534605621198_n.jpg",
+        "from": "sa213",
+        "name": "473221517_1029092559236452_2328578534605621198_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/473221517_1029092559236452_2328578534605621198_n.jpg",
+        "batch": 1029092559236452
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/473334257_1029087425903632_8350891667593529398_n.jpg",
+        "from": "sa213",
+        "name": "473334257_1029087425903632_8350891667593529398_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/473334257_1029087425903632_8350891667593529398_n.jpg",
+        "batch": 1029087425903632
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/473355242_1029087562570285_9129395689543095696_n.jpg",
+        "from": "sa213",
+        "name": "473355242_1029087562570285_9129395689543095696_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/473355242_1029087562570285_9129395689543095696_n.jpg",
+        "batch": 1029087562570285
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/471795210_1029087349236973_4635705572271725930_n.jpg",
+        "from": "sa213",
+        "name": "471795210_1029087349236973_4635705572271725930_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/471795210_1029087349236973_4635705572271725930_n.jpg",
+        "batch": 1029087349236973
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/471983824_1029087395903635_1544219253285076113_n.jpg",
+        "from": "sa213",
+        "name": "471983824_1029087395903635_1544219253285076113_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/471983824_1029087395903635_1544219253285076113_n.jpg",
+        "batch": 1029087395903635
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/473037210_1029087295903645_3275711226672103508_n-1.jpg",
+        "from": "sa213",
+        "name": "473037210_1029087295903645_3275711226672103508_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/473037210_1029087295903645_3275711226672103508_n-1.jpg",
+        "batch": 1029087295903645
+      }
+    ],
+    "dropped": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419435096_780094777469566_2826968300616363351_n-1.jpg",
+        "from": "sa26",
+        "name": "419435096_780094777469566_2826968300616363351_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419435096_780094777469566_2826968300616363351_n-1.jpg",
+        "batch": 780094777469566,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419215855_780094594136251_6608608448367768187_n-1.jpg",
+        "from": "sa26",
+        "name": "419215855_780094594136251_6608608448367768187_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419215855_780094594136251_6608608448367768187_n-1.jpg",
+        "batch": 780094594136251,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419432053_780094584136252_8557942283404319415_n-1.jpg",
+        "from": "sa26",
+        "name": "419432053_780094584136252_8557942283404319415_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419432053_780094584136252_8557942283404319415_n-1.jpg",
+        "batch": 780094584136252,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419435086_780094557469588_9133426825919316388_n-1.jpg",
+        "from": "sa26",
+        "name": "419435086_780094557469588_9133426825919316388_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419435086_780094557469588_9133426825919316388_n-1.jpg",
+        "batch": 780094557469588,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419214284_780094527469591_89872889032574670_n-1.jpg",
+        "from": "sa26",
+        "name": "419214284_780094527469591_89872889032574670_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419214284_780094527469591_89872889032574670_n-1.jpg",
+        "batch": 780094527469591,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419434949_780094490802928_3758338912636918274_n-1.jpg",
+        "from": "sa26",
+        "name": "419434949_780094490802928_3758338912636918274_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419434949_780094490802928_3758338912636918274_n-1.jpg",
+        "batch": 780094490802928,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419432038_780094154136295_7719841315912301233_n-1.jpg",
+        "from": "sa26",
+        "name": "419432038_780094154136295_7719841315912301233_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419432038_780094154136295_7719841315912301233_n-1.jpg",
+        "batch": 780094154136295,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419439937_780094104136300_8294799197267165911_n-1.jpg",
+        "from": "sa26",
+        "name": "419439937_780094104136300_8294799197267165911_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419439937_780094104136300_8294799197267165911_n-1.jpg",
+        "batch": 780094104136300,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/418753697_780094077469636_1373457738634914377_n-1.jpg",
+        "from": "sa26",
+        "name": "418753697_780094077469636_1373457738634914377_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/418753697_780094077469636_1373457738634914377_n-1.jpg",
+        "batch": 780094077469636,
+        "med": 780235374122173
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/419071437_780093930802984_1159289478410069512_n-1.jpg",
+        "from": "sa26",
+        "name": "419071437_780093930802984_1159289478410069512_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/419071437_780093930802984_1159289478410069512_n-1.jpg",
+        "batch": 780093930802984,
+        "med": 780235374122173
+      }
+    ]
+  },
+  "viswakarma-pooja": {
+    "titles": [
+      "[sa24] Viswakarma Pooja Celebrations"
+    ],
+    "total": 10,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/377265685_709862027826175_7471317198347808994_n.jpg",
+        "from": "sa24",
+        "name": "377265685_709862027826175_7471317198347808994_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/377265685_709862027826175_7471317198347808994_n.jpg",
+        "batch": 709862027826175
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/377268880_709861851159526_1193427615650714981_n.jpg",
+        "from": "sa24",
+        "name": "377268880_709861851159526_1193427615650714981_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/377268880_709861851159526_1193427615650714981_n.jpg",
+        "batch": 709861851159526
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378457499_709861521159559_3998630586723997926_n.jpg",
+        "from": "sa24",
+        "name": "378457499_709861521159559_3998630586723997926_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378457499_709861521159559_3998630586723997926_n.jpg",
+        "batch": 709861521159559
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378483377_709861064492938_8066514956122634358_n.jpg",
+        "from": "sa24",
+        "name": "378483377_709861064492938_8066514956122634358_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378483377_709861064492938_8066514956122634358_n.jpg",
+        "batch": 709861064492938
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378490180_709861794492865_4457517729819595903_n.jpg",
+        "from": "sa24",
+        "name": "378490180_709861794492865_4457517729819595903_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378490180_709861794492865_4457517729819595903_n.jpg",
+        "batch": 709861794492865
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378493318_709861727826205_854970236506665456_n.jpg",
+        "from": "sa24",
+        "name": "378493318_709861727826205_854970236506665456_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378493318_709861727826205_854970236506665456_n.jpg",
+        "batch": 709861727826205
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378494367_709862131159498_1304815100040644294_n.jpg",
+        "from": "sa24",
+        "name": "378494367_709862131159498_1304815100040644294_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378494367_709862131159498_1304815100040644294_n.jpg",
+        "batch": 709862131159498
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378496969_709861097826268_411703351945192135_n.jpg",
+        "from": "sa24",
+        "name": "378496969_709861097826268_411703351945192135_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378496969_709861097826268_411703351945192135_n.jpg",
+        "batch": 709861097826268
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380095869_709862861159425_9174642173023535881_n.jpg",
+        "from": "sa24",
+        "name": "380095869_709862861159425_9174642173023535881_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/380095869_709862861159425_9174642173023535881_n.jpg",
+        "batch": 709862861159425
+      }
+    ],
+    "dropped": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378397894_707509684728076_1506748382854380834_n.jpg",
+        "from": "sa24",
+        "name": "378397894_707509684728076_1506748382854380834_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/378397894_707509684728076_1506748382854380834_n.jpg",
+        "batch": 707509684728076,
+        "med": 709861794492865
+      }
+    ]
+  },
+  "sawan": {
+    "titles": [
+      "[sa11] SAWAN CELEBRATION"
+    ],
+    "total": 24,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/42-1.jpg",
+        "from": "sa11",
+        "name": "42-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/42-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/43-1.jpg",
+        "from": "sa11",
+        "name": "43-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/43-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/45-1.jpg",
+        "from": "sa11",
+        "name": "45-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/45-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/47-1.jpg",
+        "from": "sa11",
+        "name": "47-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/47-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/48-1.jpg",
+        "from": "sa11",
+        "name": "48-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/48-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/49-1.jpg",
+        "from": "sa11",
+        "name": "49-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/49-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/50-1.jpg",
+        "from": "sa11",
+        "name": "50-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/50-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/51-1.jpg",
+        "from": "sa11",
+        "name": "51-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/51-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/53.jpg",
+        "from": "sa11",
+        "name": "53.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/53.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/54.jpg",
+        "from": "sa11",
+        "name": "54.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/54.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/55.jpg",
+        "from": "sa11",
+        "name": "55.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/55.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/59.jpg",
+        "from": "sa11",
+        "name": "59.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/59.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/60.jpg",
+        "from": "sa11",
+        "name": "60.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/60.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/61.jpg",
+        "from": "sa11",
+        "name": "61.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/61.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/63.jpg",
+        "from": "sa11",
+        "name": "63.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/63.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/64.jpg",
+        "from": "sa11",
+        "name": "64.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/64.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/65.jpg",
+        "from": "sa11",
+        "name": "65.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/65.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/66.jpg",
+        "from": "sa11",
+        "name": "66.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/66.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/68-1.jpg",
+        "from": "sa11",
+        "name": "68-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/68-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/71.jpg",
+        "from": "sa11",
+        "name": "71.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/71.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/72.jpg",
+        "from": "sa11",
+        "name": "72.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/72.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/73-1.jpg",
+        "from": "sa11",
+        "name": "73-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/73-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/74.jpg",
+        "from": "sa11",
+        "name": "74.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/74.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/75-1.jpg",
+        "from": "sa11",
+        "name": "75-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2023/08/75-1.jpg",
+        "batch": null,
+        "check": "no-batch-id"
+      }
+    ],
+    "dropped": []
+  },
+  "teachers-day-students": {
+    "titles": [
+      "[sa23] Teacher's Day Celebration"
+    ],
+    "total": 18,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371927062_702520105227034_5760310879243938071_n.jpg",
+        "from": "sa23",
+        "name": "371927062_702520105227034_5760310879243938071_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371927062_702520105227034_5760310879243938071_n.jpg",
+        "batch": 702520105227034
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371927119_702519878560390_5619472204699404638_n.jpg",
+        "from": "sa23",
+        "name": "371927119_702519878560390_5619472204699404638_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371927119_702519878560390_5619472204699404638_n.jpg",
+        "batch": 702519878560390
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371928615_702517135227331_5309387212478604373_n.jpg",
+        "from": "sa23",
+        "name": "371928615_702517135227331_5309387212478604373_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371928615_702517135227331_5309387212478604373_n.jpg",
+        "batch": 702517135227331
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371930251_702519171893794_1194064533497847063_n.jpg",
+        "from": "sa23",
+        "name": "371930251_702519171893794_1194064533497847063_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371930251_702519171893794_1194064533497847063_n.jpg",
+        "batch": 702519171893794
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371952437_702517375227307_4407266634249366923_n.jpg",
+        "from": "sa23",
+        "name": "371952437_702517375227307_4407266634249366923_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371952437_702517375227307_4407266634249366923_n.jpg",
+        "batch": 702517375227307
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371973400_702519278560450_25043427949804570_n.jpg",
+        "from": "sa23",
+        "name": "371973400_702519278560450_25043427949804570_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371973400_702519278560450_25043427949804570_n.jpg",
+        "batch": 702519278560450
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371986385_702519678560410_6514336242505842930_n.jpg",
+        "from": "sa23",
+        "name": "371986385_702519678560410_6514336242505842930_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371986385_702519678560410_6514336242505842930_n.jpg",
+        "batch": 702519678560410
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372022473_702517081894003_5682431954529348934_n.jpg",
+        "from": "sa23",
+        "name": "372022473_702517081894003_5682431954529348934_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372022473_702517081894003_5682431954529348934_n.jpg",
+        "batch": 702517081894003
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372026352_702518375227207_7791878269439063222_n.jpg",
+        "from": "sa23",
+        "name": "372026352_702518375227207_7791878269439063222_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372026352_702518375227207_7791878269439063222_n.jpg",
+        "batch": 702518375227207
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372035847_702518331893878_3658469030059694386_n.jpg",
+        "from": "sa23",
+        "name": "372035847_702518331893878_3658469030059694386_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372035847_702518331893878_3658469030059694386_n.jpg",
+        "batch": 702518331893878
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372038556_702517178560660_6193444256020091898_n.jpg",
+        "from": "sa23",
+        "name": "372038556_702517178560660_6193444256020091898_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372038556_702517178560660_6193444256020091898_n.jpg",
+        "batch": 702517178560660
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372049703_702518095227235_5581395181182010045_n.jpg",
+        "from": "sa23",
+        "name": "372049703_702518095227235_5581395181182010045_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372049703_702518095227235_5581395181182010045_n.jpg",
+        "batch": 702518095227235
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372062612_702519011893810_10250627079767767_n.jpg",
+        "from": "sa23",
+        "name": "372062612_702519011893810_10250627079767767_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372062612_702519011893810_10250627079767767_n.jpg",
+        "batch": 702519011893810
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372994020_702519755227069_8842383503942764257_n.jpg",
+        "from": "sa23",
+        "name": "372994020_702519755227069_8842383503942764257_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372994020_702519755227069_8842383503942764257_n.jpg",
+        "batch": 702519755227069
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/373014409_702518478560530_6901496834232366368_n.jpg",
+        "from": "sa23",
+        "name": "373014409_702518478560530_6901496834232366368_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/373014409_702518478560530_6901496834232366368_n.jpg",
+        "batch": 702518478560530
+      }
+    ],
+    "dropped": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371928553_700323872113324_6020300266336188214_n.jpg",
+        "from": "sa23",
+        "name": "371928553_700323872113324_6020300266336188214_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/371928553_700323872113324_6020300266336188214_n.jpg",
+        "batch": 700323872113324,
+        "med": 702518375227207
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372026419_700666755412369_468180114807980949_n.jpg",
+        "from": "sa23",
+        "name": "372026419_700666755412369_468180114807980949_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372026419_700666755412369_468180114807980949_n.jpg",
+        "batch": 700666755412369,
+        "med": 702518375227207
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372049229_700323252113386_1130091098194237955_n.jpg",
+        "from": "sa23",
+        "name": "372049229_700323252113386_1130091098194237955_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/2024/01/372049229_700323252113386_1130091098194237955_n.jpg",
+        "batch": 700323252113386,
+        "med": 702518375227207
+      }
+    ]
+  },
+  "grandparents-day": {
+    "titles": [
+      "[sa32] Grand Parents Day Celebrations Before Examination"
+    ],
+    "total": 9,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428673487_805679894911054_1736763033086215223_n.jpg",
+        "from": "sa32",
+        "name": "428673487_805679894911054_1736763033086215223_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428673487_805679894911054_1736763033086215223_n.jpg",
+        "batch": 805679894911054
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428686566_805679921577718_7693684563478409237_n.jpg",
+        "from": "sa32",
+        "name": "428686566_805679921577718_7693684563478409237_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428686566_805679921577718_7693684563478409237_n.jpg",
+        "batch": 805679921577718
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428663767_805679951577715_5061617007200792309_n.jpg",
+        "from": "sa32",
+        "name": "428663767_805679951577715_5061617007200792309_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428663767_805679951577715_5061617007200792309_n.jpg",
+        "batch": 805679951577715
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428666390_805679971577713_3067004098849618420_n.jpg",
+        "from": "sa32",
+        "name": "428666390_805679971577713_3067004098849618420_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428666390_805679971577713_3067004098849618420_n.jpg",
+        "batch": 805679971577713
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428674008_805680021577708_3508305420957977620_n.jpg",
+        "from": "sa32",
+        "name": "428674008_805680021577708_3508305420957977620_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428674008_805680021577708_3508305420957977620_n.jpg",
+        "batch": 805680021577708
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428670195_805680041577706_241063812987308026_n.jpg",
+        "from": "sa32",
+        "name": "428670195_805680041577706_241063812987308026_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428670195_805680041577706_241063812987308026_n.jpg",
+        "batch": 805680041577706
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428659602_805680088244368_2217780956660092779_n.jpg",
+        "from": "sa32",
+        "name": "428659602_805680088244368_2217780956660092779_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428659602_805680088244368_2217780956660092779_n.jpg",
+        "batch": 805680088244368
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428660591_805680141577696_4741985763877714850_n.jpg",
+        "from": "sa32",
+        "name": "428660591_805680141577696_4741985763877714850_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428660591_805680141577696_4741985763877714850_n.jpg",
+        "batch": 805680141577696
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/428688714_805680168244360_6433848213297450939_n.jpg",
+        "from": "sa32",
+        "name": "428688714_805680168244360_6433848213297450939_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/428688714_805680168244360_6433848213297450939_n.jpg",
+        "batch": 805680168244360
+      }
+    ],
+    "dropped": []
+  },
+  "womens-day": {
+    "titles": [
+      "[sa34] International Women's Day Celebrations"
+    ],
+    "total": 12,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431667939_816388150506895_7562436353235998444_n-1.jpg",
+        "from": "sa34",
+        "name": "431667939_816388150506895_7562436353235998444_n-1.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431667939_816388150506895_7562436353235998444_n-1.jpg",
+        "batch": 816388150506895
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431667939_816388150506895_7562436353235998444_n.jpg",
+        "from": "sa34",
+        "name": "431667939_816388150506895_7562436353235998444_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431667939_816388150506895_7562436353235998444_n.jpg",
+        "batch": 816388150506895
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431727079_816388030506907_7037515072317972878_n.jpg",
+        "from": "sa34",
+        "name": "431727079_816388030506907_7037515072317972878_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431727079_816388030506907_7037515072317972878_n.jpg",
+        "batch": 816388030506907
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431753655_816387147173662_5479767970993896309_n.jpg",
+        "from": "sa34",
+        "name": "431753655_816387147173662_5479767970993896309_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431753655_816387147173662_5479767970993896309_n.jpg",
+        "batch": 816387147173662
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431789606_816387310506979_4274739527805730259_n.jpg",
+        "from": "sa34",
+        "name": "431789606_816387310506979_4274739527805730259_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431789606_816387310506979_4274739527805730259_n.jpg",
+        "batch": 816387310506979
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431810730_816388283840215_2895684540462434887_n.jpg",
+        "from": "sa34",
+        "name": "431810730_816388283840215_2895684540462434887_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431810730_816388283840215_2895684540462434887_n.jpg",
+        "batch": 816388283840215
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431835189_816388250506885_5399196362336185789_n.jpg",
+        "from": "sa34",
+        "name": "431835189_816388250506885_5399196362336185789_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431835189_816388250506885_5399196362336185789_n.jpg",
+        "batch": 816388250506885
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431845211_816387380506972_8728987500341266528_n.jpg",
+        "from": "sa34",
+        "name": "431845211_816387380506972_8728987500341266528_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431845211_816387380506972_8728987500341266528_n.jpg",
+        "batch": 816387380506972
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431849759_816388127173564_1483084223609709979_n.jpg",
+        "from": "sa34",
+        "name": "431849759_816388127173564_1483084223609709979_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431849759_816388127173564_1483084223609709979_n.jpg",
+        "batch": 816388127173564
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431859798_816388313840212_5078030586390532928_n.jpg",
+        "from": "sa34",
+        "name": "431859798_816388313840212_5078030586390532928_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431859798_816388313840212_5078030586390532928_n.jpg",
+        "batch": 816388313840212
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431888515_816388090506901_5048071294769860536_n.jpg",
+        "from": "sa34",
+        "name": "431888515_816388090506901_5048071294769860536_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431888515_816388090506901_5048071294769860536_n.jpg",
+        "batch": 816388090506901
+      }
+    ],
+    "dropped": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431724967_817578127054564_4267825610567257318_n.jpg",
+        "from": "sa34",
+        "name": "431724967_817578127054564_4267825610567257318_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431724967_817578127054564_4267825610567257318_n.jpg",
+        "batch": 817578127054564,
+        "med": 816388150506895
+      }
+    ]
+  },
+  "farewell-class-xii": {
+    "titles": [
+      "[sa29] FareWell Celebrations \"Khwabon Ke Parinde\""
+    ],
+    "total": 51,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421969917_793846466094397_902625268181197823_n.jpg",
+        "from": "sa29",
+        "name": "421969917_793846466094397_902625268181197823_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421969917_793846466094397_902625268181197823_n.jpg",
+        "batch": 793846466094397
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424601612_793846419427735_4448443844238069570_n.jpg",
+        "from": "sa29",
+        "name": "424601612_793846419427735_4448443844238069570_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424601612_793846419427735_4448443844238069570_n.jpg",
+        "batch": 793846419427735
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424617584_793846229427754_4959709612761971568_n.jpg",
+        "from": "sa29",
+        "name": "424617584_793846229427754_4959709612761971568_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424617584_793846229427754_4959709612761971568_n.jpg",
+        "batch": 793846229427754
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424638631_793846192761091_2084356428302982067_n.jpg",
+        "from": "sa29",
+        "name": "424638631_793846192761091_2084356428302982067_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424638631_793846192761091_2084356428302982067_n.jpg",
+        "batch": 793846192761091
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425511708_793828826096161_3370067272268244780_n.jpg",
+        "from": "sa29",
+        "name": "425511708_793828826096161_3370067272268244780_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425511708_793828826096161_3370067272268244780_n.jpg",
+        "batch": 793828826096161
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425462132_793828759429501_2407297563519558761_n.jpg",
+        "from": "sa29",
+        "name": "425462132_793828759429501_2407297563519558761_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425462132_793828759429501_2407297563519558761_n.jpg",
+        "batch": 793828759429501
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425486961_793828692762841_5852682180765976995_n.jpg",
+        "from": "sa29",
+        "name": "425486961_793828692762841_5852682180765976995_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425486961_793828692762841_5852682180765976995_n.jpg",
+        "batch": 793828692762841
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425499626_793828652762845_2190039496462953208_n.jpg",
+        "from": "sa29",
+        "name": "425499626_793828652762845_2190039496462953208_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425499626_793828652762845_2190039496462953208_n.jpg",
+        "batch": 793828652762845
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425523855_793828612762849_7617720676564291985_n.jpg",
+        "from": "sa29",
+        "name": "425523855_793828612762849_7617720676564291985_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425523855_793828612762849_7617720676564291985_n.jpg",
+        "batch": 793828612762849
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425462604_793828576096186_4221716946474978009_n.jpg",
+        "from": "sa29",
+        "name": "425462604_793828576096186_4221716946474978009_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425462604_793828576096186_4221716946474978009_n.jpg",
+        "batch": 793828576096186
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425444611_793828536096190_8705769164661350837_n.jpg",
+        "from": "sa29",
+        "name": "425444611_793828536096190_8705769164661350837_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425444611_793828536096190_8705769164661350837_n.jpg",
+        "batch": 793828536096190
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425485981_793828502762860_8199423579981804222_n.jpg",
+        "from": "sa29",
+        "name": "425485981_793828502762860_8199423579981804222_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425485981_793828502762860_8199423579981804222_n.jpg",
+        "batch": 793828502762860
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425450374_793828466096197_2706212793118281305_n.jpg",
+        "from": "sa29",
+        "name": "425450374_793828466096197_2706212793118281305_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425450374_793828466096197_2706212793118281305_n.jpg",
+        "batch": 793828466096197
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425483335_793828422762868_8619992421951247009_n.jpg",
+        "from": "sa29",
+        "name": "425483335_793828422762868_8619992421951247009_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425483335_793828422762868_8619992421951247009_n.jpg",
+        "batch": 793828422762868
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425467979_793828386096205_4612562320852507245_n.jpg",
+        "from": "sa29",
+        "name": "425467979_793828386096205_4612562320852507245_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425467979_793828386096205_4612562320852507245_n.jpg",
+        "batch": 793828386096205
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/425486344_793828259429551_8649634784714746167_n.jpg",
+        "from": "sa29",
+        "name": "425486344_793828259429551_8649634784714746167_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/425486344_793828259429551_8649634784714746167_n.jpg",
+        "batch": 793828259429551
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424860195_793832346095809_4625500923799236115_n.jpg",
+        "from": "sa29",
+        "name": "424860195_793832346095809_4625500923799236115_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424860195_793832346095809_4625500923799236115_n.jpg",
+        "batch": 793832346095809
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424600801_793832299429147_3766581091731876221_n.jpg",
+        "from": "sa29",
+        "name": "424600801_793832299429147_3766581091731876221_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424600801_793832299429147_3766581091731876221_n.jpg",
+        "batch": 793832299429147
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424866179_793832269429150_2501589826320264404_n.jpg",
+        "from": "sa29",
+        "name": "424866179_793832269429150_2501589826320264404_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424866179_793832269429150_2501589826320264404_n.jpg",
+        "batch": 793832269429150
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424735917_793832242762486_2530247344698311871_n.jpg",
+        "from": "sa29",
+        "name": "424735917_793832242762486_2530247344698311871_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424735917_793832242762486_2530247344698311871_n.jpg",
+        "batch": 793832242762486
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421975075_793832212762489_3203559416050419254_n.jpg",
+        "from": "sa29",
+        "name": "421975075_793832212762489_3203559416050419254_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421975075_793832212762489_3203559416050419254_n.jpg",
+        "batch": 793832212762489
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421946912_793832146095829_2103802197391851897_n.jpg",
+        "from": "sa29",
+        "name": "421946912_793832146095829_2103802197391851897_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421946912_793832146095829_2103802197391851897_n.jpg",
+        "batch": 793832146095829
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424621573_793832096095834_1440838868024752980_n.jpg",
+        "from": "sa29",
+        "name": "424621573_793832096095834_1440838868024752980_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424621573_793832096095834_1440838868024752980_n.jpg",
+        "batch": 793832096095834
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421986080_793832082762502_8783356139153231230_n.jpg",
+        "from": "sa29",
+        "name": "421986080_793832082762502_8783356139153231230_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421986080_793832082762502_8783356139153231230_n.jpg",
+        "batch": 793832082762502
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424606013_793831972762513_8168014110721035842_n.jpg",
+        "from": "sa29",
+        "name": "424606013_793831972762513_8168014110721035842_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424606013_793831972762513_8168014110721035842_n.jpg",
+        "batch": 793831972762513
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424594859_793831902762520_1876772498272066564_n.jpg",
+        "from": "sa29",
+        "name": "424594859_793831902762520_1876772498272066564_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424594859_793831902762520_1876772498272066564_n.jpg",
+        "batch": 793831902762520
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422088759_793831842762526_3441406843456043900_n.jpg",
+        "from": "sa29",
+        "name": "422088759_793831842762526_3441406843456043900_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422088759_793831842762526_3441406843456043900_n.jpg",
+        "batch": 793831842762526
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424666903_793831799429197_9162981045211378526_n.jpg",
+        "from": "sa29",
+        "name": "424666903_793831799429197_9162981045211378526_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424666903_793831799429197_9162981045211378526_n.jpg",
+        "batch": 793831799429197
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422052714_793831766095867_3279316143731293074_n.jpg",
+        "from": "sa29",
+        "name": "422052714_793831766095867_3279316143731293074_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422052714_793831766095867_3279316143731293074_n.jpg",
+        "batch": 793831766095867
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424594318_793831712762539_5674416502640985797_n.jpg",
+        "from": "sa29",
+        "name": "424594318_793831712762539_5674416502640985797_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424594318_793831712762539_5674416502640985797_n.jpg",
+        "batch": 793831712762539
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424714395_793831646095879_9223294708559880661_n.jpg",
+        "from": "sa29",
+        "name": "424714395_793831646095879_9223294708559880661_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424714395_793831646095879_9223294708559880661_n.jpg",
+        "batch": 793831646095879
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424624443_793831586095885_708297223509688653_n.jpg",
+        "from": "sa29",
+        "name": "424624443_793831586095885_708297223509688653_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424624443_793831586095885_708297223509688653_n.jpg",
+        "batch": 793831586095885
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421904169_793831556095888_8446522513689342239_n.jpg",
+        "from": "sa29",
+        "name": "421904169_793831556095888_8446522513689342239_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421904169_793831556095888_8446522513689342239_n.jpg",
+        "batch": 793831556095888
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424868985_793831512762559_3534075298858845023_n.jpg",
+        "from": "sa29",
+        "name": "424868985_793831512762559_3534075298858845023_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424868985_793831512762559_3534075298858845023_n.jpg",
+        "batch": 793831512762559
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421967040_793831426095901_2305209268621544797_n.jpg",
+        "from": "sa29",
+        "name": "421967040_793831426095901_2305209268621544797_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421967040_793831426095901_2305209268621544797_n.jpg",
+        "batch": 793831426095901
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424907363_793831392762571_3683529829592410759_n.jpg",
+        "from": "sa29",
+        "name": "424907363_793831392762571_3683529829592410759_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424907363_793831392762571_3683529829592410759_n.jpg",
+        "batch": 793831392762571
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421962352_793831352762575_2348139327600700229_n.jpg",
+        "from": "sa29",
+        "name": "421962352_793831352762575_2348139327600700229_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421962352_793831352762575_2348139327600700229_n.jpg",
+        "batch": 793831352762575
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422003765_793831312762579_793722183245194521_n.jpg",
+        "from": "sa29",
+        "name": "422003765_793831312762579_793722183245194521_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422003765_793831312762579_793722183245194521_n.jpg",
+        "batch": 793831312762579
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424648583_793831256095918_1745523895572913638_n.jpg",
+        "from": "sa29",
+        "name": "424648583_793831256095918_1745523895572913638_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424648583_793831256095918_1745523895572913638_n.jpg",
+        "batch": 793831256095918
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421925387_793831206095923_5923695306217037811_n.jpg",
+        "from": "sa29",
+        "name": "421925387_793831206095923_5923695306217037811_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421925387_793831206095923_5923695306217037811_n.jpg",
+        "batch": 793831206095923
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424601198_793831132762597_5294235429530547741_n.jpg",
+        "from": "sa29",
+        "name": "424601198_793831132762597_5294235429530547741_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424601198_793831132762597_5294235429530547741_n.jpg",
+        "batch": 793831132762597
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424674055_793831169429260_7821035530749877576_n.jpg",
+        "from": "sa29",
+        "name": "424674055_793831169429260_7821035530749877576_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424674055_793831169429260_7821035530749877576_n.jpg",
+        "batch": 793831169429260
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424614064_793831086095935_5824468478291732020_n.jpg",
+        "from": "sa29",
+        "name": "424614064_793831086095935_5824468478291732020_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424614064_793831086095935_5824468478291732020_n.jpg",
+        "batch": 793831086095935
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424585041_793831039429273_6364686484621708385_n.jpg",
+        "from": "sa29",
+        "name": "424585041_793831039429273_6364686484621708385_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424585041_793831039429273_6364686484621708385_n.jpg",
+        "batch": 793831039429273
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421922013_793830959429281_2783003216054003181_n.jpg",
+        "from": "sa29",
+        "name": "421922013_793830959429281_2783003216054003181_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421922013_793830959429281_2783003216054003181_n.jpg",
+        "batch": 793830959429281
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/421895379_793830926095951_6387280817197714270_n.jpg",
+        "from": "sa29",
+        "name": "421895379_793830926095951_6387280817197714270_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/421895379_793830926095951_6387280817197714270_n.jpg",
+        "batch": 793830926095951
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424599423_793830896095954_1585054512132084594_n.jpg",
+        "from": "sa29",
+        "name": "424599423_793830896095954_1585054512132084594_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424599423_793830896095954_1585054512132084594_n.jpg",
+        "batch": 793830896095954
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424613370_793829512762759_5088259728547277459_n.jpg",
+        "from": "sa29",
+        "name": "424613370_793829512762759_5088259728547277459_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424613370_793829512762759_5088259728547277459_n.jpg",
+        "batch": 793829512762759
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424581984_793829442762766_9090237156935179050_n.jpg",
+        "from": "sa29",
+        "name": "424581984_793829442762766_9090237156935179050_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424581984_793829442762766_9090237156935179050_n.jpg",
+        "batch": 793829442762766
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/422065858_793829322762778_7052996268990608183_n.jpg",
+        "from": "sa29",
+        "name": "422065858_793829322762778_7052996268990608183_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/422065858_793829322762778_7052996268990608183_n.jpg",
+        "batch": 793829322762778
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/424672976_793828906096153_7225846875086379957_n.jpg",
+        "from": "sa29",
+        "name": "424672976_793828906096153_7225846875086379957_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/424672976_793828906096153_7225846875086379957_n.jpg",
+        "batch": 793828906096153
+      }
+    ],
+    "dropped": []
+  },
+  "kg-convocation": {
+    "titles": [
+      "[sa36] KG CONVOCATION",
+      "[sa38] KG FAREWELL"
+    ],
+    "total": 20,
+    "kept": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/430904849_813886904090353_9221585163181240098_n.jpg",
+        "from": "sa36",
+        "name": "430904849_813886904090353_9221585163181240098_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/430904849_813886904090353_9221585163181240098_n.jpg",
+        "batch": 813886904090353
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/430962303_813885540757156_4310737516467057861_n.jpg",
+        "from": "sa36",
+        "name": "430962303_813885540757156_4310737516467057861_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/430962303_813885540757156_4310737516467057861_n.jpg",
+        "batch": 813885540757156
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431243670_813886440757066_8537362803060650225_n.jpg",
+        "from": "sa36",
+        "name": "431243670_813886440757066_8537362803060650225_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431243670_813886440757066_8537362803060650225_n.jpg",
+        "batch": 813886440757066
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431537828_813886164090427_908916680369928010_n.jpg",
+        "from": "sa36",
+        "name": "431537828_813886164090427_908916680369928010_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431537828_813886164090427_908916680369928010_n.jpg",
+        "batch": 813886164090427
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431572448_813886414090402_5562535915100147457_n.jpg",
+        "from": "sa36",
+        "name": "431572448_813886414090402_5562535915100147457_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431572448_813886414090402_5562535915100147457_n.jpg",
+        "batch": 813886414090402
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431585399_813887050757005_5430694022682312218_n.jpg",
+        "from": "sa36",
+        "name": "431585399_813887050757005_5430694022682312218_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431585399_813887050757005_5430694022682312218_n.jpg",
+        "batch": 813887050757005
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431597987_813887037423673_1975928807390112151_n.jpg",
+        "from": "sa36",
+        "name": "431597987_813887037423673_1975928807390112151_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431597987_813887037423673_1975928807390112151_n.jpg",
+        "batch": 813887037423673
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431753805_813886514090392_6124588437559459253_n.jpg",
+        "from": "sa36",
+        "name": "431753805_813886514090392_6124588437559459253_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431753805_813886514090392_6124588437559459253_n.jpg",
+        "batch": 813886514090392
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431771945_813886197423757_5188878427978788378_n.jpg",
+        "from": "sa36",
+        "name": "431771945_813886197423757_5188878427978788378_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431771945_813886197423757_5188878427978788378_n.jpg",
+        "batch": 813886197423757
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431790709_813886827423694_6152187626460457654_n.jpg",
+        "from": "sa36",
+        "name": "431790709_813886827423694_6152187626460457654_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431790709_813886827423694_6152187626460457654_n.jpg",
+        "batch": 813886827423694
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/430974045_814460454032998_7123728386989243311_n.jpg",
+        "from": "sa38",
+        "name": "430974045_814460454032998_7123728386989243311_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/430974045_814460454032998_7123728386989243311_n.jpg",
+        "batch": 814460454032998
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431254150_814460300699680_8466262681806836828_n.jpg",
+        "from": "sa38",
+        "name": "431254150_814460300699680_8466262681806836828_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431254150_814460300699680_8466262681806836828_n.jpg",
+        "batch": 814460300699680
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431577871_814460744032969_8604405516390549945_n.jpg",
+        "from": "sa38",
+        "name": "431577871_814460744032969_8604405516390549945_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431577871_814460744032969_8604405516390549945_n.jpg",
+        "batch": 814460744032969
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431577903_814460014033042_204263282638243011_n.jpg",
+        "from": "sa38",
+        "name": "431577903_814460014033042_204263282638243011_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431577903_814460014033042_204263282638243011_n.jpg",
+        "batch": 814460014033042
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431592373_814460057366371_4899690539867906016_n.jpg",
+        "from": "sa38",
+        "name": "431592373_814460057366371_4899690539867906016_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431592373_814460057366371_4899690539867906016_n.jpg",
+        "batch": 814460057366371
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431794091_814461057366271_7013359695100405999_n.jpg",
+        "from": "sa38",
+        "name": "431794091_814461057366271_7013359695100405999_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431794091_814461057366271_7013359695100405999_n.jpg",
+        "batch": 814461057366271
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431799297_814460520699658_905803900879377179_n.jpg",
+        "from": "sa38",
+        "name": "431799297_814460520699658_905803900879377179_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431799297_814460520699658_905803900879377179_n.jpg",
+        "batch": 814460520699658
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431865275_814459957366381_36365448082255672_n.jpg",
+        "from": "sa38",
+        "name": "431865275_814459957366381_36365448082255672_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431865275_814459957366381_36365448082255672_n.jpg",
+        "batch": 814459957366381
+      }
+    ],
+    "dropped": [
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431624810_817576267054750_1098470462824903331_n.jpg",
+        "from": "sa36",
+        "name": "431624810_817576267054750_1098470462824903331_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431624810_817576267054750_1098470462824903331_n.jpg",
+        "batch": 817576267054750,
+        "med": 813886827423694
+      },
+      {
+        "url": "https://sunbeamballia.edu.in/wp-content/uploads/431635182_817575970388113_3628438869079250892_n.jpg",
+        "from": "sa36",
+        "name": "431635182_817575970388113_3628438869079250892_n.jpg",
+        "orig": "https://sunbeamballia.edu.in/wp-content/uploads/431635182_817575970388113_3628438869079250892_n.jpg",
+        "batch": 817575970388113,
+        "med": 813886827423694
+      }
+    ]
+  }
+}

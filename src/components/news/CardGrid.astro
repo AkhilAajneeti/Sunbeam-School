@@ -121,6 +121,15 @@ let n = 0;
                   </div>
                 )}
                 <p class="wcard__n t-tabular" aria-hidden="true">{String(n).padStart(2, '0')}</p>
+
+                {/* ⚠ ONLY WHERE THE SCHOOL PUBLISHED ONE. Roughly half these
+                    items carry no date — a festival recurs every year, and the
+                    school dates very few of them — so this is rendered
+                    conditionally rather than with an "n/a" or a guessed year.
+                    An empty slot says nothing; an invented one says something
+                    false. Same rule as the counted figures above the grid. */}
+                {item.when && <p class="wcard__when t-tabular">{item.when}</p>}
+
                 <h3 class="wcard__t">{item.title}</h3>
 
                 {item.slug ? (
@@ -207,6 +216,11 @@ let n = 0;
      below that the card is compact rather than half-empty, and nothing on the
      mixed grids moves. */
   .wcard {
+    /* ⚠ POSITIONED SO THE DATE BADGE HAS SOMETHING TO PIN TO. `position:
+       relative` alone creates no stacking context — only `relative` WITH a
+       `z-index` does — so this cannot repeat the flyout bug where a positioned
+       ancestor silently became the containing block for something else. */
+    position: relative;
     display: grid;
     grid-template-rows: auto 1fr auto;
     gap: var(--sb-4);
@@ -344,6 +358,45 @@ let n = 0;
     font-weight: 700;
     letter-spacing: 0.14em;
     color: var(--sb-violet-dark);
+  }
+
+  /* ═══ THE DATE BADGE ══════════════════════════════════════════════════════
+     Pinned to the corner rather than placed in the flow, because the two card
+     variants lay their copy out in opposite directions: the plain card runs
+     top-down from the number, while the photograph card is a flex column
+     pushed to the BOTTOM so the copy sits in the dark foot of the scrim. A
+     flow-placed date would land under the title on one and above it on the
+     other. Pinned, it reads at the top-right of both, opposite the number.
+
+     `inset` matches the card's own padding so it lines up with the number's
+     baseline rather than floating in from the edge. */
+  .wcard__when {
+    position: absolute;
+    top: clamp(18px, 2vw, 26px);
+    right: clamp(18px, 2vw, 26px);
+    max-width: 58%;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: right;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  /* ⚠ THE PHOTOGRAPH CARD NEEDS ITS OWN GROUND, NOT JUST A LIGHTER COLOUR. The
+     scrim is deliberately weakest at the top — 0.12 — because the copy it
+     protects sits at the foot. Plain white text up here would be laid over an
+     unmodified photograph, which for this set includes a sunlit courtyard and a
+     projector screen at full brightness. The pill carries its own 0.62 ground,
+     which over even pure white resolves to about rgb(112,105,102) and holds
+     white text at roughly 4.7:1 whatever the picture underneath is doing. */
+  .wcard--shot .wcard__when {
+    z-index: 1;
+    padding: 5px 10px;
+    border-radius: var(--sb-r-full);
+    background: rgba(24, 12, 8, 0.62);
+    color: #fff;
+    backdrop-filter: blur(3px);
   }
 
   .wcard__t {

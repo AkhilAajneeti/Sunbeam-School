@@ -93,10 +93,13 @@ export interface NavItem {
 export const utilityLinks = [
   { label: "Notices", href: "/news-events/notices/", tier: 1 },
   { label: "Results", href: school.external.results, external: true, tier: 1 },
-  /* ⚠ CONTACT WAS REMOVED FROM THIS BAR ON THE CLIENT'S INSTRUCTION. It is not
-     unreachable: the footer carries it, the drawer's quick links carry it, and
-     the admissions helpline sits at the other end of this same bar — which is
-     the thing a parent actually wants when they think "contact". */
+  /* ⚠ CONTACT SITS HERE AGAIN, AFTER RESULTS, ON THE CLIENT'S INSTRUCTION.
+     It was removed from the MAIN navbar earlier and given to the footer; this
+     is the utility bar above it, which is a different row and the one the
+     client asked for. The footer and drawer links stay — a contact route
+     should be reachable from more than one place, and the admissions helpline
+     still sits at the other end of this same bar. */
+  { label: "Contact", href: "/contact-us/", tier: 1 },
 ] as const;
 
 export const mainNav: NavItem[] = [
