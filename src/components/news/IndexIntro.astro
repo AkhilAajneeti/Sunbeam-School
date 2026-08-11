@@ -1,0 +1,125 @@
+---
+/**
+ * THE OPENING BLOCK OF A NEWS & EVENTS INDEX — standfirst on the left, counted
+ * figures on the right.
+ *
+ * ⚠ EXTRACTED AT THE FOURTH COPY, NOT THE SECOND. Workshops and School Events
+ * each carried their own ninety-line duplicate of this CSS under a private class
+ * prefix (`.wk-*`, `.se-*`). Competitions and Celebrations would have made four,
+ * at which point a spacing change means four edits and three chances to miss
+ * one. The markup was already identical; only the prefix differed.
+ *
+ * ⚠ FIGURES ARE PASSED IN COUNTED, NEVER TYPED. Each index derives its own — a
+ * competition page counts published placings, a workshops page counts named
+ * trainers — but the rule is the same everywhere: an asserted number drifts from
+ * the content the moment an item is added. The caller computes `n` from the
+ * data; this component only renders it.
+ */
+interface Props {
+  eyebrow: string;
+  heading: string;
+  stand: string;
+  figures: { n: number; k: string }[];
+}
+
+const { eyebrow, heading, stand, figures } = Astro.props;
+---
+
+<section class="nx">
+  <div class="u-container nx__grid">
+    <div class="nx__in">
+      <p class="nx__k t-label">{eyebrow}</p>
+      <h2 class="nx__h" data-split>{heading}</h2>
+      <p class="nx__b" data-reveal>{stand}</p>
+    </div>
+
+    <ul class="nx-figs">
+      {
+        figures.map((f) => (
+          <li class="nxfig">
+            <p class="nxfig__n t-tabular">{f.n}</p>
+            <p class="nxfig__k">{f.k}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .nx {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .nx__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 4vh, 48px);
+    align-items: end;
+  }
+
+  .nx__in { max-width: 62ch; }
+  .nx__k { color: var(--sb-violet-dark); }
+
+  .nx__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3.4vw, 48px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .nx__b {
+    max-width: 58ch;
+    margin-top: var(--sb-5);
+    font-size: clamp(16px, 1.25vw, 19px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .nx-figs {
+    display: grid;
+    gap: var(--sb-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nxfig {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--sb-3) var(--sb-5);
+    padding: clamp(12px, 1.4vw, 16px) 0;
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .nxfig:last-child { border-bottom: 1px solid var(--sb-border); }
+
+  .nxfig__n {
+    min-width: 2ch;
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--sb-violet-dark);
+  }
+
+  .nxfig__k {
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (min-width: 900px) {
+    .nx__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
+      gap: clamp(36px, 5vw, 80px);
+    }
+  }
+</style>

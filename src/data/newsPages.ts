@@ -285,6 +285,7 @@ export const competitions: ChroniclePage = {
       items: [
         {
           title: 'Mandal Level Kala Utsav',
+        slug: 'mandal-kala-utsav',
           meta: 'U.P. Mandal — Azamgarh',
           body: 'Students competed at divisional level across music, crafts and dance.',
           result: '1st — Solo Singing · 1st — Local Crafts & Toys · 1st — Group Instrumental Music · 2nd — Regional Folk Dance. Winners qualified for the state level.',
@@ -292,6 +293,7 @@ export const competitions: ChroniclePage = {
         },
         {
           title: 'Janpad Stariya Kala Utsav Pratiyogita',
+        slug: 'janpad-kala-utsav',
           meta: 'Mentors: Mr. Nurul · Ms. Archana · Mr. Amit',
           body: 'The district round of Kala Utsav, across music, dance and art.',
           result: 'Numerous trophies and medals; students selected for the State Level in Music, Dance and Art',
@@ -299,17 +301,20 @@ export const competitions: ChroniclePage = {
         },
         {
           title: 'Kala Utsav at GGIC Ballia, and the Sambhagiya Shastriya Evam Sugam Sangeet Pratiyogita at Mau',
+        slug: 'kala-utsav-ggic-and-mau',
           meta: 'Mentors: Mr. Nurul · Ms. Archana · Mr. Amit',
           body: 'Two further arts competitions, one in Ballia and one at Mau. Winners were felicitated in assembly.',
           when: '2025',
         },
         {
           title: 'Indian Folk Painting Competition',
+        slug: 'indian-folk-painting',
           meta: 'Impetus · Classes III–V',
           body: 'Students showed the richness of Indian folk art in their own strokes.',
         },
         {
           title: 'Shining Star Kids Fashion Show',
+        slug: 'shining-star-fashion-show',
           meta: 'Miss Ayana Pandey, Class VIII',
           body: 'A contest of more than seventy entrants, with the award presented by Miss Universe India 2024, Riya Singha.',
           result: 'Winner — over 70 contestants',
@@ -324,18 +329,21 @@ export const competitions: ChroniclePage = {
       items: [
         {
           title: 'Science Olympiad Foundation — Zonal Excellence Award',
+        slug: 'sof-zonal-excellence',
           meta: 'Classes III–V',
           body: 'The SOF zonal award, with a ₹500 voucher, for students in the primary years.',
           result: 'Zonal Excellence Award',
         },
         {
           title: 'SOF Olympiad — Nursery to Class II',
+        slug: 'sof-olympiad-juniors',
           meta: 'Science Olympiad Foundation',
           body: 'The school’s youngest entrants were felicitated for their performance in the SOF Olympiad.',
           when: '2025',
         },
         {
           title: 'Cohort Inter-Branch Attire Speak Competition',
+        slug: 'attire-speak-competition',
           meta: 'Class I',
           body: 'A speaking competition across Sunbeam branches, entered by the school’s six-year-olds.',
           result: '1st — Avinashi Yadav · 3rd — Mariam Ali',
@@ -343,6 +351,7 @@ export const competitions: ChroniclePage = {
         },
         {
           title: 'IPN Yuva Conclave — Gwalior edition',
+        slug: 'ipn-yuva-conclave',
           meta: 'IPN',
           body: 'Students travelled to the Gwalior edition of the conclave and were felicitated in morning assembly on their return.',
           when: '2025',
@@ -356,12 +365,14 @@ export const competitions: ChroniclePage = {
       items: [
         {
           title: 'Chaturang 2.0 — District Level Chess Championship',
+        slug: 'chaturang-chess-championship',
           meta: 'Chief Guest: Mr. Umesh Singh, Secretary, Ballia Sports Association',
           body: 'The school hosted the district chess championship, opening it with a ceremony attended by schools from across Ballia and closing it by felicitating every winner and participant.',
           when: '2025',
         },
         {
           title: 'District Junior Volleyball Championship',
+        slug: 'district-junior-volleyball',
           meta: 'Ballia Sports Association · hosted at Sunbeam',
           body: 'A district championship run on the school ground, with the full field placed.',
           result: 'Boys — 1st Sohaon Ballia, 2nd Veer Lorik Stadium, 3rd Sunbeam & Narahi · Girls — 1st Narahi Ballia, 2nd Sunbeam Ballia, 3rd Veer Lorik · Best players: Ritika Singh (Sunbeam) and Ashish Rai (Narahi)',
@@ -369,6 +380,7 @@ export const competitions: ChroniclePage = {
         },
         {
           title: 'District Junior Hockey Championship — final',
+        slug: 'district-junior-hockey',
           meta: 'Sunbeam Ballia v Stadium Ballia',
           body: 'The school’s hockey side took the district final.',
           result: 'Won 3–0',
@@ -398,23 +410,27 @@ export const celebrations: ChroniclePage = {
       items: [
         {
           title: 'Independence Day',
+        slug: 'independence-day',
           meta: 'Chief Guest: Mr. Ashutosh Kumar Pandey, IRS, Deputy Commissioner of Income Tax',
           body: 'The national flag hoisted by the chief guest, followed by cultural performances, patriotic songs and student acts.',
           when: '2025 · the 78th',
         },
         {
           title: 'Republic Day',
+        slug: 'republic-day',
           meta: 'Whole school',
           body: 'The school’s Republic Day assembly and cultural programme.',
         },
         {
           title: 'Birth anniversary of Major Dhyan Chand',
+        slug: 'major-dhyan-chand',
           meta: 'Ceremonial lamp lighting by the Director',
           body: 'A tribute to the hockey wizard on his birth anniversary — lamp lighting by the Director, followed by floral tribute.',
           when: '2025',
         },
         {
           title: 'National Voters’ Day',
+        slug: 'national-voters-day',
           meta: 'Vote-awareness programme',
           body: 'A programme run to explain the vote to students old enough to be thinking about it.',
         },
@@ -427,26 +443,31 @@ export const celebrations: ChroniclePage = {
       items: [
         {
           title: 'Durga Pooja, Vijaya Dashami and Janmashtami',
+        slug: 'durga-pooja-and-janmashtami',
           meta: 'Devotional and cultural festival celebration',
           body: 'The school’s devotional and cultural programme across the autumn festivals.',
         },
         {
           title: 'Holi',
+        slug: 'holi',
           meta: 'Whole school',
           body: 'The school’s Holi celebration.',
         },
         {
           title: 'Lohri and Baisakhi',
+        slug: 'lohri-and-baisakhi',
           meta: 'Whole school',
           body: 'The harvest festivals, marked together.',
         },
         {
           title: 'Viswakarma Pooja',
+        slug: 'viswakarma-pooja',
           meta: 'Whole school',
           body: 'The Viswakarma Pooja celebration.',
         },
         {
           title: 'Sawan',
+        slug: 'sawan',
           meta: 'Whole school',
           body: 'The school’s Sawan celebration.',
         },
@@ -459,40 +480,47 @@ export const celebrations: ChroniclePage = {
       items: [
         {
           title: 'Teachers’ Day — the student-led programme',
+        slug: 'teachers-day-students',
           meta: 'KG to Class XII',
           body: 'Music and dance from every year group — and Class XII students stepping into the shoes of their teachers to take classes for the day.',
           when: '2025',
         },
         {
           title: 'Teachers’ Day — the staff evening',
+        slug: 'teachers-day-staff',
           meta: 'Teaching and support staff',
           body: 'Games, mementos and tokens of thanks for the staff, run by the school administration.',
           when: '2025',
         },
         {
           title: 'Heritage Week',
+        slug: 'heritage-week',
           meta: 'Classes III–V',
           body: 'A week inside the culture and traditions of India — art, dance and music, and the stories behind them.',
           when: '2025',
         },
         {
           title: 'Grandparents’ Day',
+        slug: 'grandparents-day',
           meta: 'Held before the examinations',
           body: 'The school’s Grandparents’ Day celebration, timed before the examination season.',
         },
         {
           title: 'International Women’s Day',
+        slug: 'womens-day',
           meta: 'Whole school',
           body: 'The school’s Women’s Day programme.',
         },
         {
           title: 'Farewell — Class XII',
+        slug: 'farewell-class-xii',
           meta: 'Class XII',
           body: 'The leavers’ assembly and farewell for the outgoing Class XII.',
           when: '2025',
         },
         {
           title: 'KG Convocation and KG Farewell',
+        slug: 'kg-convocation',
           meta: 'Kindergarten',
           body: 'The school’s youngest leavers get a convocation of their own.',
         },
@@ -520,23 +548,31 @@ export const schoolEvents: ChroniclePage = {
       items: [
         {
           title: 'Guiding Futures, Shaping Lives',
+        slug: 'guiding-futures',
+        photoDir: 'Guiding-Futures',
           meta: 'Mr. Ashutosh Kumar Pandey, IRS, Deputy Commissioner of Income Tax · Classes IX–XII',
           body: 'A career-guidance session in which the officer shared his own educational journey and the lessons in it, in an interactive session with the senior school.',
           when: '2025',
         },
         {
           title: 'Kindness over Violence',
+        slug: 'kindness-over-violence',
+        photoDir: 'Kindness-over-Violence',
           meta: 'Mrs. Pratima Gupta, Assistant Director, Sunbeam Group',
           body: 'A session on choosing compassion and empathy over anger and conflict, with students interacting throughout.',
         },
         {
           title: 'Seventeen books, given to the library',
+        slug: 'author-book-donation',
+        photoDir: 'Seventeen-books',
           meta: 'Mr. Ramesh Chandra Srivastava, retired professor and author',
           body: 'The author gifted seventeen of his own books to the school library, and spoke to students about building the habits of reading and writing.',
           result: '17 books donated',
         },
         {
           title: 'Reading Carnival — the book fair',
+        slug: 'reading-carnival',
+        photoDir: 'Reading-Carnival',
           meta: 'Inaugurated by Shri Tribhuvan Ram, CRO Ballia',
           body: 'A book fair open to students, parents and visitors, running until the thirtieth of August.',
           when: 'to 30 August',
@@ -550,24 +586,30 @@ export const schoolEvents: ChroniclePage = {
       items: [
         {
           title: 'Monash Innovation Guarantee — the school’s first',
+        slug: 'monash-innovation-guarantee',
+        photoDir: 'Monash-Innovation',
           meta: 'K.R. Mangalam World School, G.K-II, New Delhi · in collaboration with Monash University, Australia · Mentor: Mr. Arun Pandey',
           body: 'Students travelled to Delhi for an international innovation project on entrepreneurship, run with Monash University — the first the school has entered.',
           when: '27–29 August 2025',
         },
         {
           title: 'Impetus — Classes III to V',
+        slug: 'impetus',
+        photoDir: 'Impetus—ClassesIII-V',
           meta: 'Science Quest · Maths Mania · Digital Dash · Hindi Vani Vihar · Spell Bee · Community Connect · English Quest',
           body: 'A multi-event programme for the primary years, from experiments and mental arithmetic to public speaking in Hindi and English.',
           when: '2025',
         },
         {
           title: 'Child Parent Teacher Dialogue',
+        slug: 'child-parent-teacher-dialogue',
           meta: 'Parents, teachers and students across classes',
           body: 'A three-way session on progress, feedback and suggestions, with parents taking an active part.',
           when: '2025',
         },
         {
           title: 'Class XII Physics — the half-deflection method',
+        slug: 'class-xii-physics-practical',
           meta: 'Class XII-B',
           body: 'Students determined the internal resistance of a galvanometer and calculated its figure of merit — the practical, done properly.',
           when: '2025',
@@ -581,6 +623,7 @@ export const schoolEvents: ChroniclePage = {
       items: [
         {
           title: 'Cfore School Rankings — School Excellence Award',
+        slug: 'cfore-school-rankings',
           meta: 'Cfore',
           body: 'The school was ranked first in Ballia and recognised among Uttar Pradesh’s best day co-ed schools.',
           result: 'Ranked No. 1 in Ballia',
@@ -588,18 +631,22 @@ export const schoolEvents: ChroniclePage = {
         },
         {
           title: 'CUET (UG) results',
+        slug: 'cuet-ug-results',
+        photoDir: 'CUET-(UG)-results',
           meta: 'PCM · Commerce · Humanities',
           body: 'The school marked its students’ CUET (UG) results across all three streams.',
           when: '2025',
         },
         {
           title: 'IPN Leadership Summit — Uttar Pradesh Dialogue',
+        slug: 'ipn-leadership-summit',
           meta: 'Theme: School Education 5.0 — Nurturing the Human & Tech Connect',
           body: 'Three of the school’s leaders represented Sunbeam Ballia at the summit.',
           when: '2025',
         },
         {
           title: 'Best performing classes, and staff of the month',
+        slug: 'monthly-awards',
           meta: 'Monthly, in assembly',
           body: 'A standing monthly award: best discipline, best performing, neatest, most energetic and best reading culture — extended to monitors, the bus monitor, support staff, the driver and the conductor.',
           result: 'Recognition reaches the driver and the conductor, not only the classroom',

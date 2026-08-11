@@ -1,0 +1,87 @@
+---
+/**
+ * COMPETITIONS — the index. A card per contest; the placing lives on its page.
+ *
+ * Content: the school's own /event-chronicles/, verbatim as to placings, names
+ * and dates. See data/newsPages.ts.
+ *
+ * ⚠ THE SPORT HERE IS THE HOSTING, NOT THE SEASON. Fixtures, records and the
+ * house system live on /beyond-academics/sports/ and are not duplicated. What
+ * appears under "Hosted at Sunbeam" is there because the school RAN the
+ * championship — a different claim, and one the sports page does not make.
+ *
+ * ⚠ THE FILE MOVED FROM competitions.astro TO competitions/index.astro. The
+ * route is unchanged — /news-events/competitions/ — but the directory is what
+ * lets [slug].astro sit beside it.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import SectionRail from '../../../components/academics/SectionRail.astro';
+import IndexIntro from '../../../components/news/IndexIntro.astro';
+import CardGrid from '../../../components/news/CardGrid.astro';
+
+import { competitions } from '../../../data/newsPages';
+
+/* ⚠ THE HERO MUST BE A VERIFIED SUNBEAM BALLIA PHOTOGRAPH — this page was
+   first built with `photos/sunbeem-students-3.jpg` and the client identified it
+   as ANOTHER SCHOOL's: different crest, different uniform, "CITY" on the
+   trophy. See docs/07 on why an unverifiable photograph is worse than no
+   photograph — a school page that shows someone else's students is a false
+   claim about the school, not a styling error.
+                                       ↓
+   This frame is the school's own JOSH ground, with "JOSH Sunbeam School" on the
+   boundary wall, and it is the volleyball court the District Junior Volleyball
+   Championship below was actually played on. The sports page hero comes from
+   the same client-supplied set. */
+import heroPhoto from '../../../assets/JOSH GROUND/DSC_1283 copy.jpg';
+
+/**
+ * ⚠ COUNTED, NEVER TYPED. A placing is the checkable thing on this page, so it
+ * is what the figures count — and the count stays honest as entries are added.
+ */
+const items = competitions.groups.flatMap((g) => g.items);
+
+const figures = [
+  { n: items.length, k: 'contests on record' },
+  { n: items.filter((i) => i.result).length, k: 'carry a published placing' },
+  { n: items.filter((i) => i.when).length, k: 'carry a published date' },
+];
+---
+
+<BaseLayout
+  title={`${competitions.title} — Sunbeam School Ballia`}
+  description={competitions.standfirst}
+>
+  <PageHero
+    title={competitions.title}
+    standfirst={competitions.standfirst}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'News & Events', href: '/news-events/' },
+    ]}
+    src={heroPhoto}
+    alt="The JOSH ground at Sunbeam School Ballia, the volleyball court marked out and the school's name on the boundary wall"
+    position="50% 55%"
+  />
+
+  <SectionRail items={competitions.groups.map((g) => ({ id: g.id, label: g.label }))} />
+
+  <div class="u-page-panel cp-panel">
+    <IndexIntro
+      eyebrow={competitions.eyebrow}
+      heading={competitions.heading}
+      stand={competitions.stand}
+      figures={figures}
+    />
+
+    <CardGrid page={competitions} base="/news-events/competitions/" unit="entry" units="entries" />
+  </div>
+</BaseLayout>
+
+<style>
+  div.cp-panel { padding-block: 0; }
+
+  .cp-panel :global(section[id]) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
+  }
+</style>

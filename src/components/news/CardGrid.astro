@@ -1,6 +1,8 @@
 ---
 /**
- * THE WORKSHOPS INDEX — a card per session, and nothing else on the card.
+ * THE CARD GRID — a card per item, and nothing else on the card.
+ *
+ * Shared by Workshops and School Events. The route prefix arrives as `base`.
  *
  * ═══ WHY THE CARD IS THIS BARE ═════════════════════════════════════════════
  *
@@ -28,9 +30,36 @@ import { leadPhoto } from '../../data/workshopPhotos';
 
 interface Props {
   page: ChroniclePage;
+  /**
+   * Route prefix for a card's detail page — '/news-events/workshops/' etc.
+   *
+   * ⚠ A PROP, NOT A CONSTANT. This grid was written for Workshops with the path
+   * hard-coded, and School Events needed the identical design. Copying it would
+   * have meant two files drifting apart the first time either was touched — the
+   * same reasoning recorded in ui/BurstCard.astro, which exists because that
+   * card was needed twice.
+   */
+  base: string;
+  /**
+   * What one card IS — 'session' for workshops, 'event' for school events.
+   *
+   * ⚠ THIS WAS HARD-CODED TO 'session', and the School Events page duly
+   * announced "4 SESSIONS" above four events. A shared component cannot name
+   * the thing it lists; only its caller knows what that is.
+   */
+  unit?: string;
+  /**
+   * The plural, when English will not make it by adding an s.
+   *
+   * ⚠ THE `unit + 's'` RULE PRINTED "5 ENTRYS". Naive pluralisation is fine for
+   * session/event/day and wrong for entry/match/party, and the component cannot
+   * know which it has been handed. The caller states the plural when it is
+   * irregular; everything else keeps working untouched.
+   */
+  units?: string;
 }
 
-const { page } = Astro.props;
+const { page, base, unit = 'session', units = `${unit}s` } = Astro.props;
 
 /* Numbering runs across the whole set, not per group — the reader is counting
    workshops, not counting within a category. */
@@ -64,7 +93,7 @@ let n = 0;
               `{n} {n === 1 ? 'session' : 'sessions'}` the compiler dropped the
               whitespace between them and the page read "6SESSIONS". Building
               the whole string in one expression leaves nothing to trim. */}
-          <p class="wgrid__n">{`${g.items.length} ${g.items.length === 1 ? 'session' : 'sessions'}`}</p>
+          <p class="wgrid__n">{`${g.items.length} ${g.items.length === 1 ? unit : units}`}</p>
         </div>
 
         <ul class="wgrid__list">
@@ -95,7 +124,7 @@ let n = 0;
                 <h3 class="wcard__t">{item.title}</h3>
 
                 {item.slug ? (
-                  <a class="wcard__go" href={`/news-events/workshops/${item.slug}/`}>
+                  <a class="wcard__go" href={`${base}${item.slug}/`}>
                     <span>View details</span>
                     <span class="wcard__arrow" aria-hidden="true">
                       <svg width="15" height="10" viewBox="0 0 14 10" fill="none">
@@ -167,12 +196,21 @@ let n = 0;
      Card titles here run from "Critical Thinking" to a sixty-eight character
      conference name, so a flow layout would leave every button at a different
      height and the row would read as ragged. `1fr` on the title row pushes the
-     button down to a common baseline whatever the title does. */
+     button down to a common baseline whatever the title does.
+
+     ⚠ THE FLOOR IS 168px, NOT 200px, BECAUSE OF THE ALL-PLAIN GRIDS. Workshops
+     mixes photograph cards (340px) with plain ones, and grid stretch pulls the
+     plain ones up to the row anyway — so the floor was never visible there.
+     Competitions and Celebrations have no photographs at all, which made every
+     card in the grid sit at exactly 200px with a band of empty ground between a
+     one-line title and its button. 168px is the height a two-line title needs;
+     below that the card is compact rather than half-empty, and nothing on the
+     mixed grids moves. */
   .wcard {
     display: grid;
     grid-template-rows: auto 1fr auto;
     gap: var(--sb-4);
-    min-height: 200px;
+    min-height: 168px;
     padding: clamp(18px, 2vw, 26px);
     border-radius: var(--sb-r-2);
     background: var(--sb-paper);

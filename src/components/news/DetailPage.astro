@@ -1,0 +1,593 @@
+---
+/**
+ * ONE ITEM — the detail page behind a card, shared by every News & Events
+ * section that uses the card grid.
+ *
+ * ⚠ EXTRACTED RATHER THAN COPIED. This was the Workshops detail page; School
+ * Events needed the same thing. Duplicating ~500 lines of gallery, lightbox
+ * wiring, sticky facts column and prev/next would have meant two files that
+ * drift the first time either is touched — and the gallery alone has already
+ * taken four rounds of fixes (crop ratios, the portrait poster, the caption
+ * collision, the stacking context). One copy, two callers.
+ *
+ * The caller supplies `page` and `base`; nothing here knows about workshops.
+ *
+ * ═══ WHAT THIS PAGE IS, AND WHY IT IS NOT AN ARTICLE ═══════════════════════
+ *
+ * Measured on the school's own /workshops/ page: **283 photographs and two
+ * paragraphs**. The whole page. They publish workshops as picture galleries,
+ * not as writing.
+ *
+ * So this is a record, not an essay: who ran it, what institution they came
+ * from, when it happened where that is published, and the one or two published
+ * sentences about it. What it deliberately does NOT do is pad thirteen pages
+ * out to article length — that would be inventing professional development, and
+ * the trainers named here are real people whose sessions we would be describing
+ * from nothing.
+ *
+ * ⚠ THE GALLERY SLOT IS A PLACEHOLDER, AND IT IS THE POINT OF THE PAGE. The
+ * photographs exist — 135 of the 283 are linked to full-size originals on the
+ * school's server, and they resolve — but they are not ours to host until the
+ * school hands them over, and the page's markup does not reliably say which
+ * photograph belongs to which workshop (seven headings for fourteen galleries).
+ * The slot states the brief so the gap is visible rather than quietly absent.
+ *
+ * ⚠ getStaticPaths BUILDS ONLY THE ITEMS THAT CARRY A SLUG. An item without one
+ * produces no route, and the index renders it as a card with no button — so a
+ * missing detail page can never surface as a broken link.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../ui/PageHero.astro';
+import AssetPlaceholder from '../ui/AssetPlaceholder.astro';
+import Lightbox from '../ui/Lightbox.astro';
+import { Picture } from 'astro:assets';
+import { photosFor } from '../../data/workshopPhotos';
+
+import type { ImageMetadata } from 'astro';
+import type { ChronicleItem, ChroniclePage } from '../../data/newsPages';
+import heroPhoto from '../../assets/photos/sunbeem-5.jpg';
+
+
+interface Props {
+  item: ChronicleItem;
+  group: string;
+  /** The section this item belongs to — supplies the title and the crumb. */
+  page: ChroniclePage;
+  /** Route prefix, e.g. '/news-events/school-events/'. */
+  base: string;
+  /**
+   * The banner for items with no photographs of their own.
+   *
+   * ⚠ THE SECTION'S OWN HERO, NOT ONE IMAGE FOR THE WHOLE SITE. Competitions
+   * and Celebrations supplied no per-item photographs at all, so without this
+   * every one of their twenty-eight detail pages opened on the same school-hall
+   * frame — and a chess championship opened on a photograph that had nothing to
+   * do with it. Passing the index's own banner down means a competition page is
+   * headed by the ground it was played on and the fallback still reads as part
+   * of the section rather than as a stock plate.
+   */
+  fallbackHero?: ImageMetadata;
+  /** Alt text for `fallbackHero`. Required whenever one is passed. */
+  fallbackAlt?: string;
+  /** What `item.meta` is on this page — 'Led by', 'Who took part', 'Marked by'. */
+  metaLabel?: string;
+  /** What `item.result` is on this page — 'Note' for a remark, 'Result' for a placing. */
+  resultLabel?: string;
+}
+
+const {
+  item,
+  group,
+  page,
+  base,
+  fallbackHero,
+  fallbackAlt,
+  metaLabel = 'Led by',
+  resultLabel = 'Note',
+} = Astro.props;
+
+/* ⚠ THE HERO USES THE SESSION'S OWN LEAD PHOTOGRAPH WHERE ONE EXISTS, falling
+   back to the shared school image only where it does not. A workshop page
+   headed by a generic hall shot says nothing; headed by the room it actually
+   happened in, it says what no amount of copy can. */
+const photos = photosFor(item.photoDir, item.photoSkip);
+
+/* ⚠ THE HERO ONLY TAKES A LANDSCAPE LEAD IMAGE. A banner is panoramic by
+   definition — roughly 3:1 at desktop — so a portrait graphic dropped into it is
+   cropped to a horizontal band through its middle. The NEP session supplied
+   exactly that: a tall poster whose own headline and photo montage were sliced
+   off the top and bottom. Anything narrower than 4:3 keeps the shared campus
+   banner and appears whole in the gallery instead, where it can be read. */
+/**
+ * ⚠ THE FRAME FOLLOWS THE SET, RATHER THAN THE SET BEING FORCED INTO A FRAME.
+ *
+ * Measured across the six supplied folders: five are entirely SQUARE (460×460),
+ * one mixes ten squares with two landscapes, and one is a single portrait
+ * graphic. A hard-coded 3:2 grid was therefore wrong for almost every picture
+ * the school has actually sent — either cropping a third off each square, or,
+ * once fitted, pillarboxing all of them between bars of sand.
+ *
+ * So the grid takes the set's own median ratio. Square sets get square frames
+ * and nothing is cropped or padded; a landscape set still gets the panoramic
+ * lead. The rule holds for whatever the next folder turns out to be.
+ */
+const ratios = photos.map((ph) => ph.width / ph.height).sort((a, b) => a - b);
+const setRatio = ratios.length ? ratios[Math.floor(ratios.length / 2)] : 1.5;
+/* ⚠ ONE RATIO PER SET, AND ONLY THREE POSSIBLE VALUES. Square sets get square
+   frames, landscape sets get 3:2 — so the common case crops nothing. The point
+   is that every tile in a given gallery is the SAME shape; which shape matters
+   less than that they agree. */
+const frame = setRatio < 1.15 ? '1 / 1' : setRatio < 1.45 ? '4 / 3' : '3 / 2';
+/* Only a landscape set earns the wide lead frame — a square one spanning three
+   columns would tower over the page. */
+const wideSet = setRatio >= 1.45;
+
+const lead = photos[0];
+const leadIsWide = lead ? lead.width / lead.height >= 1.33 : false;
+const hero = leadIsWide ? lead! : (fallbackHero ?? heroPhoto);
+const heroAlt = leadIsWide
+  ? `${item.title} at Sunbeam School Ballia`
+  : (fallbackAlt ?? 'Staff and students of Sunbeam School Ballia in the school hall');
+
+/* Siblings, so a reader who arrives from search is not stranded on one session.
+   Derived, so a fourteenth workshop appears here with no edit. */
+const all = page.groups.flatMap((g) => g.items).filter((i) => i.slug);
+const here = all.findIndex((i) => i.slug === item.slug);
+const prev = all[here - 1];
+const next = all[here + 1];
+---
+
+<BaseLayout
+  title={`${item.title} — ${page.title} — Sunbeam School Ballia`}
+  description={item.body}
+>
+  <PageHero
+    title={item.title}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'News & Events', href: '/news-events/' },
+      { label: page.title, href: base },
+    ]}
+    src={hero}
+    alt={heroAlt}
+    position="50% 42%"
+  />
+
+  <div class="u-page-panel wd-panel">
+    <section class="wd">
+      <div class="u-container wd__in">
+        <div class="wd__facts">
+          <p class="wd__k t-label">{group}</p>
+
+          {/* ⚠ THE ROW LABELS ARE THE CALLER'S, BECAUSE `meta` AND `result` HOLD
+              A DIFFERENT KIND OF FACT ON EACH PAGE. Hard-coded from the
+              workshops build, they read "Led by — Sunbeam Ballia v Stadium
+              Ballia" and "Note — Won 3–0" on a hockey final: a fixture is not a
+              person who led it, and a score is not a note. Same data, different
+              nouns; only the section knows which. */}
+          <dl class="wd__dl">
+            <div class="wd__row">
+              <dt>{metaLabel}</dt>
+              <dd>{item.meta}</dd>
+            </div>
+            {
+              item.when && (
+                <div class="wd__row">
+                  <dt>When</dt>
+                  <dd>{item.when}</dd>
+                </div>
+              )
+            }
+            {
+              item.result && (
+                <div class="wd__row">
+                  <dt>{resultLabel}</dt>
+                  <dd>{item.result}</dd>
+                </div>
+              )
+            }
+          </dl>
+        </div>
+
+        <div class="wd__body">
+          <p class="wd__p" data-reveal>{item.body}</p>
+
+          {/* The gallery this page is built around. */}
+          <div class="wd__gallery">
+            {
+              photos.length > 0 ? (
+                <>
+                  <p class="wd__gk">
+                    {`${photos.length} ${photos.length === 1 ? 'photograph' : 'photographs'} from this session`}
+                  </p>
+                  {/* ⚠ A SET OF ONE IS NOT A GRID, AND MUST NOT BE CROPPED LIKE
+                      ONE. The lead frame is forced to 21:9 so a row of mixed
+                      photographs keeps its rhythm — but the NEP session supplied
+                      a single PORTRAIT graphic, and 21:9 sliced its own headline
+                      and montage off. One image gets its own natural ratio and a
+                      sensible cap instead, so a designed poster arrives whole.
+
+                      The same reasoning already governs Stream.astro's
+                      `--whole` cards: the school's graphics carry their own
+                      titles, and cropping one cuts the title off. */}
+                  <ul
+                    class:list={[
+                      'wd__shots',
+                      photos.length === 1 && 'wd__shots--solo',
+                      wideSet && 'wd__shots--wide',
+                    ]}
+                    style={`--frame: ${frame};`}
+                  >
+                    {photos.map((src, i) => (
+                      <li
+                        class="shot"
+                        style={photos.length === 1 ? `aspect-ratio: ${src.width} / ${src.height};` : undefined}
+                      >
+                        {/* ⚠ AN <a href>, NOT A BUTTON. Without JavaScript the
+                            link still opens the full-size photograph — the
+                            reader loses the viewer, not the picture. The script
+                            intercepts a plain left click and leaves ⌘/Ctrl-click
+                            alone, so "open in a new tab" still works.
+
+                            ⚠ ALT IS NUMBERED, NOT REPEATED. Twelve images each
+                            described with the same sentence is twelve identical
+                            announcements. The school supplies no per-photograph
+                            caption, so the honest thing is to say which of the
+                            set this is. */}
+                        <a
+                          class="shot__open"
+                          href={src.src}
+                          data-lb-open
+                          data-lb-alt={`${item.title} at Sunbeam School Ballia — photograph ${i + 1} of ${photos.length}`}
+                          data-lb-cap={item.title}
+                        >
+                          <Picture
+                            src={src}
+                            alt={`${item.title} at Sunbeam School Ballia — photograph ${i + 1} of ${photos.length}`}
+                            formats={['avif', 'webp']}
+                            widths={[420, 840]}
+                            sizes="(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 32vw"
+                            loading={i < 3 ? 'eager' : 'lazy'}
+                            decoding="async"
+                          />
+                          <span class="shot__zoom" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                              <circle cx="8" cy="8" r="5.6" stroke="currentColor" stroke-width="1.7" />
+                              <path d="M12.4 12.4L16.5 16.5M8 5.8v4.4M5.8 8h4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                            </svg>
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <AssetPlaceholder
+                  ratio="3 / 2"
+                  tone="sand"
+                  brief={`Photographs from “${item.title}” — the session in progress, 3:2. The school's own /workshops/ page holds 283 such photographs; these are not yet supplied to us grouped by session.`}
+                  ref="A2 · workshop photography"
+                />
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="wd-more" aria-label={`More ${page.title.toLowerCase()}`}>
+      <div class="u-container wd-more__in">
+        {
+          prev ? (
+            <a class="wd-more__l wd-more__l--prev" href={`${base}${prev.slug}/`}>
+              <span class="wd-more__k">Previous</span>
+              <span class="wd-more__t">{prev.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+
+        <a class="wd-more__all" href={base}>All {page.title.toLowerCase()}</a>
+
+        {
+          next ? (
+            <a class="wd-more__l wd-more__l--next" href={`${base}${next.slug}/`}>
+              <span class="wd-more__k">Next</span>
+              <span class="wd-more__t">{next.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+      </div>
+    </nav>
+
+  </div>
+
+  {/* ⚠ MOUNTED OUTSIDE `.u-page-panel`, AND IT HAS TO BE. That panel is
+      `position: relative; z-index: 1`, which makes it a stacking context — so a
+      child's z-index is resolved INSIDE it, and the viewer at 900 still painted
+      beneath the sticky masthead at 50. Measured: with the modal open,
+      `elementFromPoint` at the masthead's centre returned a nav link, meaning
+      the top bar sat bright above a darkened page and its links stayed
+      clickable through the overlay. Raising the number cannot fix a stacking
+      context; leaving the context can. */}
+  {photos.length > 0 && <Lightbox />}
+</BaseLayout>
+
+<style>
+  div.wd-panel { padding-block: 0; }
+
+  .wd {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .wd__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(24px, 3.4vh, 44px);
+  }
+
+  .wd__k { color: var(--sb-violet-dark); }
+
+  .wd__dl {
+    margin: var(--sb-5) 0 0;
+    padding: 0;
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .wd__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sb-3);
+    padding: var(--sb-5) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+
+  .wd__row dt {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .wd__row dd {
+    margin: 0;
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--sb-charcoal);
+  }
+
+  .wd__p {
+    max-width: 66ch;
+    font-size: clamp(16px, 1.2vw, 19px);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+  }
+
+  .wd__gallery { margin-top: clamp(24px, 3vh, 34px); }
+
+  .wd__gk {
+    margin-bottom: var(--sb-5);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .wd__shots {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sb-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ⚠ EVERY FRAME IS THE SAME SHAPE, WHATEVER THE ORIGINAL IS. The supplied set
+     mixes portrait and landscape; left to their own ratios the grid steps up and
+     down its rows and reads as broken rather than as a gallery. A fixed ratio
+     with object-fit: cover holds the rhythm — and the lead frame spans the row
+     so the set opens on something worth looking at rather than a thumbnail. */
+  /* ⚠ THE FRAME COMES FROM THE SET, via --frame set on the list. Hard-coding
+     3:2 cropped a third off every square photograph the school supplied. */
+  .shot {
+    aspect-ratio: var(--frame, 3 / 2);
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-sand);
+  }
+
+  .shot :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 480ms var(--sb-ease);
+  }
+
+  .shot:hover :global(img) { transform: scale(1.04); }
+
+  .shot__open {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: zoom-in;
+  }
+
+  /* ⚠ THE <picture> WRAPPER HAS TO BE STRETCHED, NOT JUST THE <img>. Astro's
+     Picture emits <picture><source…><img></picture>, and <picture> is an inline
+     box — so `height: 100%` on the img resolved against a wrapper only as tall
+     as its own content, and the tile kept a band of bare ground beneath the
+     photograph. The identical fault was fixed on the index card face; it was
+     still here. */
+  .shot__open :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .shot__open:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+
+  /* The affordance. Without it a photograph that opens looks exactly like one
+     that does not, and nobody clicks. */
+  .shot__zoom {
+    position: absolute;
+    z-index: 1;
+    right: 10px;
+    bottom: 10px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: rgba(20, 10, 6, 0.62);
+    color: #fff;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 200ms ease, transform 240ms var(--sb-ease);
+  }
+
+  .shot:hover .shot__zoom,
+  .shot__open:focus-visible .shot__zoom { opacity: 1; transform: none; }
+
+  /* No hover on a touch screen, so the cue is simply always there. */
+  @media (hover: none) {
+    .shot__zoom { opacity: 1; transform: none; }
+  }
+
+  /* ⚠ NO TILE IS FITTED-AND-MATTED ANY MORE, and this reverses an earlier
+     decision deliberately.
+
+     Portrait and near-square images used to sit `contain` on a sand mat so a
+     designed graphic kept its headline. Correct in isolation — and in a mixed
+     set it produced exactly what the client reported: bands of empty ground
+     under some tiles and not others, so the grid read as broken rather than as
+     a gallery.
+
+     The trade is now settled the other way because the LIGHTBOX exists. Every
+     tile is a uniform, filled crop; one click shows the whole frame, uncropped,
+     at full size. Nothing is lost — it moved one tap away — and the grid is
+     quiet. (A one-image gallery still keeps its natural ratio: no grid, no
+     rhythm to protect, and the NEP poster has to be readable in place.) */
+
+  /* A single image keeps its own proportions — the aspect-ratio is written
+     inline from the file's real dimensions. */
+  .wd__shots--solo {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: min(100%, 560px);
+  }
+
+  .wd__shots--solo .shot { aspect-ratio: auto; }
+  .wd__shots--solo .shot :global(img) { object-fit: contain; }
+
+  /* --- Prev / all / next --------------------------------------------------- */
+
+  .wd-more {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-charcoal);
+  }
+
+  .wd-more__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: var(--sb-5);
+  }
+
+  .wd-more__l {
+    display: grid;
+    gap: 4px;
+    text-decoration: none;
+  }
+
+  .wd-more__k {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-lime);
+  }
+
+  .wd-more__t {
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 18px);
+    font-weight: 650;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--sb-ivory);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .wd-more__l:hover .wd-more__t { color: #fff; text-decoration: underline; }
+  .wd-more__l:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 4px; }
+
+  .wd-more__all {
+    justify-self: start;
+    padding: 11px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--sb-r-full);
+    color: var(--sb-ivory);
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease;
+  }
+
+  .wd-more__all:hover { background: var(--sb-violet); border-color: var(--sb-violet); }
+  .wd-more__all:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+
+  /* ⚠ THE PANORAMIC LEAD FRAME IS FOR MULTI-IMAGE SETS ONLY — hence
+     `:not(.wd__shots--solo)` on both. Applied to a set of one it stretched a
+     portrait poster across 21:9 and cropped away everything but a band through
+     its middle. */
+  /* ⚠ THE LEAD FRAME IS BIGGER, NOT A DIFFERENT SHAPE. It used to span the full
+     row AND force 16:9, then 21:9 — a panorama. Applied to an ordinary 3:2
+     photograph that throws away well over half its height: on the Monash page
+     the lead image was cut through the middle of a student's face.
+
+     A feature image should be larger than its neighbours, which spanning two
+     columns achieves. Re-cropping it to a cinematic ratio the photographer never
+     framed for is a different thing, and it destroys the picture. The lead now
+     inherits `--frame` like every other tile, so nothing is cropped twice. */
+  @media (min-width: 620px) {
+    .wd__shots:not(.wd__shots--solo) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  /* ⚠ NO SPANNING LEAD EITHER. A tile spanning two columns is twice as wide and,
+     at a fixed ratio, twice as tall — so the single tile beside it ends up half
+     its height and leaves a block of empty ground under itself. That is the
+     "space on the right side" the client reported, and it is caused by the
+     feature tile, not by the images.
+
+     Every tile is now the same size. The gallery reads as one grid, and the
+     lightbox is where an image gets to be large. */
+  @media (min-width: 1100px) {
+    .wd__shots:not(.wd__shots--solo) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (min-width: 900px) {
+    .wd__in { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); }
+    .wd__facts { position: sticky; top: calc(var(--sb-masthead-h) + 28px); align-self: start; }
+    .wd__row { grid-template-columns: minmax(0, 96px) minmax(0, 1fr); align-items: baseline; gap: var(--sb-5); }
+    .wd-more__in { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+    .wd-more__l--next { text-align: right; }
+    .wd-more__all { justify-self: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wd-more__t,
+    .wd-more__all,
+    .shot :global(img),
+    .shot__zoom { transition-duration: 1ms; }
+    .shot__zoom { transform: none; }
+    .shot:hover :global(img) { transform: none; }
+  }
+</style>

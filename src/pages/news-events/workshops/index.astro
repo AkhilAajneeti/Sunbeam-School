@@ -18,7 +18,8 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
 import SectionRail from '../../../components/academics/SectionRail.astro';
-import WorkshopCards from '../../../components/news/WorkshopCards.astro';
+import IndexIntro from '../../../components/news/IndexIntro.astro';
+import CardGrid from '../../../components/news/CardGrid.astro';
 
 import { workshops } from '../../../data/newsPages';
 import heroPhoto from '../../../assets/photos/sb-library.jpg';
@@ -62,28 +63,14 @@ const figures = [
   <SectionRail items={workshops.groups.map((g) => ({ id: g.id, label: g.label }))} />
 
   <div class="u-page-panel wk-panel">
-    <section class="wk-open">
-      <div class="u-container wk-open__grid">
-        <div class="wk-open__in">
-          <p class="wk-open__k t-label">{workshops.eyebrow}</p>
-          <h2 class="wk-open__h" data-split>{workshops.heading}</h2>
-          <p class="wk-open__b" data-reveal>{workshops.stand}</p>
-        </div>
+    <IndexIntro
+      eyebrow={workshops.eyebrow}
+      heading={workshops.heading}
+      stand={workshops.stand}
+      figures={figures}
+    />
 
-        <ul class="wk-figs">
-          {
-            figures.map((f) => (
-              <li class="wfig">
-                <p class="wfig__n t-tabular">{f.n}</p>
-                <p class="wfig__k">{f.k}</p>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </section>
-
-    <WorkshopCards page={workshops} />
+    <CardGrid page={workshops} base="/news-events/workshops/" />
   </div>
 </BaseLayout>
 
@@ -92,78 +79,5 @@ const figures = [
 
   .wk-panel :global(section[id]) {
     scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
-  }
-
-  .wk-open {
-    padding-block: var(--sb-section-y);
-    background: var(--sb-ivory);
-  }
-
-  .wk-open__in { max-width: 62ch; }
-  .wk-open__k { color: var(--sb-violet-dark); }
-
-  .wk-open__h {
-    margin-top: var(--sb-4);
-    font-family: var(--sb-font-display);
-    font-size: clamp(28px, 3.4vw, 48px);
-    font-weight: 700;
-    line-height: 1.06;
-    letter-spacing: -0.035em;
-    color: var(--sb-charcoal);
-    text-wrap: balance;
-  }
-
-  .wk-open__b {
-    max-width: 58ch;
-    margin-top: var(--sb-5);
-    font-size: clamp(16px, 1.25vw, 19px);
-    line-height: 1.7;
-    color: var(--sb-text-secondary);
-  }
-
-  .wk-open__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: clamp(28px, 4vh, 48px);
-    align-items: end;
-  }
-
-  .wk-figs {
-    display: grid;
-    gap: var(--sb-4);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .wfig {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: baseline;
-    gap: var(--sb-3) var(--sb-5);
-    padding: clamp(12px, 1.4vw, 16px) 0;
-    border-top: 1px solid var(--sb-border);
-  }
-
-  .wfig:last-child { border-bottom: 1px solid var(--sb-border); }
-
-  .wfig__n {
-    min-width: 2ch;
-    font-family: var(--sb-font-display);
-    font-size: clamp(28px, 3vw, 40px);
-    font-weight: 700;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    color: var(--sb-violet-dark);
-  }
-
-  .wfig__k {
-    font-size: var(--sb-body-sm);
-    line-height: 1.5;
-    color: var(--sb-text-secondary);
-  }
-
-  @media (min-width: 900px) {
-    .wk-open__grid { grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr); gap: clamp(36px, 5vw, 80px); }
   }
 </style>

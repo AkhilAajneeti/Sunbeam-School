@@ -21,10 +21,25 @@ import type { ImageMetadata } from 'astro';
  * and an ampersand or a stray capital would break a page silently. `photoDir` is
  * an explicit mapping instead — the folder can be called anything.
  */
-const files = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/workshops/**/*.{jpg,jpeg,png,JPG,JPEG,PNG,webp}',
-  { eager: true },
-);
+/**
+ * ⚠ TWO GLOBS, MERGED — one per asset root, and they must stay literal.
+ * Vite can only analyse `import.meta.glob` when the pattern is written inline,
+ * so a loop over root names silently resolves to nothing, which looks exactly
+ * like "the client has not supplied photographs yet".
+ *
+ * A folder name only has to be unique ACROSS both roots, because the lookup key
+ * is the folder alone.
+ */
+const files: Record<string, { default: ImageMetadata }> = {
+  ...import.meta.glob<{ default: ImageMetadata }>(
+    '../assets/workshops/**/*.{jpg,jpeg,png,JPG,JPEG,PNG,webp}',
+    { eager: true },
+  ),
+  ...import.meta.glob<{ default: ImageMetadata }>(
+    '../assets/school-event/**/*.{jpg,jpeg,png,JPG,JPEG,PNG,webp}',
+    { eager: true },
+  ),
+};
 
 /**
  * ⚠ NATURAL ORDER, NOT LEXICAL. The supplied set runs `…innovation.jpg`,
@@ -39,7 +54,7 @@ const natural = (a: string, b: string) =>
 const byFolder = new Map<string, ImageMetadata[]>();
 
 for (const [path, mod] of Object.entries(files)) {
-  const folder = path.split('/assets/workshops/')[1]?.split('/')[0];
+  const folder = (path.split('/assets/workshops/')[1] ?? path.split('/assets/school-event/')[1])?.split('/')[0];
   if (!folder) continue;
   const list = byFolder.get(folder) ?? [];
   list.push(mod.default);
@@ -50,7 +65,7 @@ for (const [path, mod] of Object.entries(files)) {
    is the glob's, which is not guaranteed to be the export order. */
 for (const [folder, list] of byFolder) {
   const paths = Object.entries(files)
-    .filter(([p]) => p.includes(`/assets/workshops/${folder}/`))
+    .filter(([p]) => p.includes('/assets/workshops/' + folder + '/') || p.includes('/assets/school-event/' + folder + '/'))
     .sort(([a], [b]) => natural(a, b))
     .map(([, m]) => m.default);
   byFolder.set(folder, paths);
