@@ -31,15 +31,11 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/ui/PageHero.astro';
-import { school } from '../data/site';
-
-/* ⚠ THE BANNER PHOTOGRAPH IS THE CAMPUS ITSELF, and it is a verified Ballia
-   frame — the school building behind its own ground, with the school buses
-   parked along it. On a page whose whole job is "here is where we are and how
-   to reach us", the arrival view is the only honest hero.
-   See the banned-photo note: `sunbeem-students-2/3/4.jpg` are other campuses
-   and the generically-named files are stock; neither may be used. */
+import Atmosphere from '../components/contact/Atmosphere.astro';
+import Backdrop from '../components/contact/Backdrop.astro';
+import LocationSection from '../components/contact/LocationSection.astro';
 import heroPhoto from '../assets/photos/sunbeem-1.jpg';
+import { school } from '../data/site';
 
 /**
  * ⚠ EVERY VALUE COMES FROM data/site.ts, THE VERIFIED-FACTS FILE — nothing on
@@ -52,15 +48,39 @@ import heroPhoto from '../assets/photos/sunbeem-1.jpg';
  * numbers, and adding a third would be inventing the page's content rather than
  * designing it. Trivial to add if they want it.
  */
+/**
+ * The class bands the school groups its intake by, exactly as the client wrote
+ * them. Not derived from `school.classRange` — that string is "Nursery to
+ * Class XII", a different granularity, and splitting it here would be inventing
+ * a grouping the school has not published.
+ */
+const CLASSES = [
+  'Pre-Primary',
+  'Classes I – V',
+  'Classes VI – VIII',
+  'Classes IX – X',
+  'Classes XI – XII',
+] as const;
+
 const addressLines = [
   `${school.address.line1},`,
   `${school.address.city}, ${school.address.state} ${school.address.pin},`,
   `(${school.address.country})`,
 ];
 
+/**
+ * ⚠ `role` IS FOR SCREEN READERS ONLY, AND IT IS NOT DECORATION. Both lines now
+ * carry an identical handset icon, so by sight they are two numbers with no way
+ * to tell which is which — and by ear they were already just two strings of
+ * digits. The role goes into the link's accessible name so the difference is at
+ * least available to anyone navigating by link. It PREFIXES the visible number
+ * rather than replacing it: WCAG 2.5.3 requires the accessible name to contain
+ * the visible text, so "Admissions: +91 77550 05908" passes where a bare
+ * "Admissions" would fail.
+ */
 const phones = [
-  { display: school.phone.admissionsDisplay, tel: school.phone.admissions },
-  { display: school.phone.officeDisplay, tel: school.phone.office },
+  { display: school.phone.admissionsDisplay, tel: school.phone.admissions, role: 'Admissions' },
+  { display: school.phone.officeDisplay, tel: school.phone.office, role: 'School office' },
 ];
 
 const socials = [
@@ -81,51 +101,71 @@ const socials = [
   },
 ] as const;
 
-const addressOneLine = `${school.address.line1}, ${school.address.city}, ${school.address.state} ${school.address.pin}`;
-
-/**
- * ⚠ THE MAP IS QUERIED BY NAME AND ADDRESS, NOT BY COORDINATES. We have never
- * been given a latitude and longitude, and typing a plausible pair would be
- * inventing the school's location — the one fact on this page that must not be
- * approximated. Google resolves the query itself, so the pin is as accurate as
- * the school's own listing and it needs no API key.
- *
- * VERIFIED: fetching this embed URL returns the place "Sunbeam School Agarsanda
- * Ballia" at 25.7647524, 84.1224647 — the school's own Google listing, not a
- * fallback to the town centre. If the school later sends an exact Maps place
- * link, swapping it in here is one line and strictly better than a query.
- */
-const mapQuery = encodeURIComponent(`${school.name}, ${addressOneLine}`);
-const mapEmbed = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
-const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 ---
 
 <BaseLayout
   title={`Contact — ${school.name}`}
   description={`Reach ${school.name} — admissions, school office and transport numbers, email, and the campus address at ${school.address.line1}, ${school.address.city}.`}
 >
+  {/* ⚠ THE SHARED BANNER, ON THE CLIENT'S INSTRUCTION — this page had a bespoke
+      one (parallax photograph, orange accent word, floating rings) and now wears
+      exactly what the other 117 pages wear: pinned photograph, centred crumbs
+      and title, the standard scrim. The page-local ContactHero is deleted rather
+      than left orphaned in the tree.
+
+      ⚠ position IS PASSED, THE REST IS DEFAULT. PageHero crops at 50% 45%; the
+      old hero held this frame at 50% 58%, which is what keeps the building —
+      rather than the sky above it — in the band. Same photograph, same focal
+      point, standard everything else. */}
   <PageHero
     title="Contact us"
     standfirst="Where the school is, who to call, and a message form that reaches the office."
     crumbs={[{ label: 'Home', href: '/' }]}
     src={heroPhoto}
-    alt="The main building of Sunbeam School Ballia seen across its ground, with the school buses parked alongside"
-    position="50% 55%"
+    alt={`The main building of ${school.name} seen across its ground, with the school buses parked alongside`}
+    position="50% 58%"
   />
 
-  <div class="ct">
-    <div class="u-container ct__grid">
-      <div class="ct__left">
+  {/* ⚠ THE ANCHOR IS #contact, NOT #contact-form. The <form> below already owns
+      that id, and a duplicate would make the script's querySelector("#contact-form")
+      match this DIV instead — the submit handler would never bind and the form
+      would fall through to a native page reload. */}
+  <div class="ct" id="contact">
+    <Atmosphere tone="light" dots={false} blobs={true} />
+    {/* The curved lines, moved here from the closing section the client removed
+        — same component, same geometry.
+
+        ⚠ NO `word` — THE "Talk" BEHIND THIS SECTION IS GONE on the client's
+        instruction. The component now renders the curves alone; it is not a
+        prop that was dropped by accident. */}
+    <Backdrop tone="light" />
+
+    <div class="u-container">
+      <div class="ct__head">
         <p class="ct__eyebrow"><span class="ct__dot" aria-hidden="true"></span>Contact us</p>
         {/* ⚠ h2, NOT h1. The banner above now owns the page's only h1
             ("Contact us"). Two h1s on one document is the single most common
             heading-structure fault, and a screen-reader user navigating by
             heading would be told the page starts twice. */}
-        <h2 class="ct__h1">Get in touch</h2>
-        <p class="ct__stand">
+        {/* data-split / data-reveal are the site's own motion contract
+            (scripts/motion-gsap.ts): the heading arrives word by word from
+            under a mask, the standfirst fades up behind it. Both are gated on
+            `belowFold`, so nothing above the fold ever animates in — and the
+            CSS default is visible, so with JS off the copy simply sits there. */}
+        <h2 class="ct__h1" data-split>Get in touch</h2>
+        <p class="ct__stand" data-reveal>
           Admissions, transport, fees or a question about your child's class — send it here, or
           call the office directly. Someone from the school will come back to you.
         </p>
+      </div>
+
+      {/* ⚠ THE TWO CARDS ARE THE ONLY GRID ITEMS NOW. With the intro inside the
+          left column, the column was intro + form while the right was panel
+          alone — so `align-items: center` was balancing unequal things and the
+          two cards sat at different heights, one visibly above the other. Lift
+          the intro out and the grid holds two cards and nothing else, which is
+          what lets them stretch to a shared top and a shared base. */}
+      <div class="ct__grid">
 
         {/* ⚠ novalidate IS DELIBERATE. The browser's own bubbles cannot be
             styled, vanish on scroll, and are announced inconsistently; the
@@ -160,10 +200,26 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
             </div>
           </div>
 
-          <div class="fld fld--area">
-            <textarea class="fld__in fld__in--area" id="cf-message" name="message" rows="4" required placeholder=" "></textarea>
-            <label class="fld__lb" for="cf-message">Message <span aria-hidden="true">*</span></label>
-            <p class="fld__err" id="cf-message-err" hidden></p>
+          <div class="ct__row">
+            <div class="fld">
+              <input class="fld__in" id="cf-city" name="city" type="text" placeholder=" " autocomplete="address-level2" />
+              <label class="fld__lb" for="cf-city">City</label>
+            </div>
+
+            {/* ⚠ THE LABEL SITS UP PERMANENTLY ON THE SELECT, unlike its
+                neighbours. The float-label trick the text inputs use keys off
+                `:placeholder-shown`, and a <select> has no placeholder to show —
+                it always has a selected option. So the label stays raised and
+                the first option carries the prompt. A select that looks slightly
+                different from a text field is honest; a label that overlaps the
+                chosen value is not. */}
+            <div class="fld fld--sel">
+              <select class="fld__in fld__in--sel" id="cf-class" name="class">
+                <option value="">Select a class</option>
+                {CLASSES.map((c) => <option value={c}>{c}</option>)}
+              </select>
+              <label class="fld__lb fld__lb--up" for="cf-class">Class</label>
+            </div>
           </div>
 
           <div class="ct__consent">
@@ -179,7 +235,6 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
               moment it gains text is frequently missed by screen readers. */}
           <p class="ct__status" id="cf-status" role="status" aria-live="polite"></p>
         </form>
-      </div>
 
       {/* ═══ THE ADDRESS PANEL ═══════════════════════════════════════════════
           ONE panel, three rows — not three cards.
@@ -193,8 +248,7 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
           "Get directions" is gone too. The map immediately below IS the
           directions, so the link was sending a reader away from the page to see
           the thing already at the foot of it. */}
-      <div class="ct__right">
-        <div class="panel">
+      <div class="panel">
           <div class="prow">
             <span class="prow__ico" aria-hidden="true">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
@@ -209,7 +263,12 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
               <address class="prow__addr">
                 {addressLines.map((l) => <span>{l}</span>)}
               </address>
-              <a class="prow__v" href={`tel:${school.phone.admissions}`}>{school.phone.admissionsDisplay}</a>
+              {/* ⚠ THE ADMISSIONS NUMBER USED TO SIT HERE TOO, AND IT WAS THE
+                  SAME NUMBER as the first line of the row below — one fact
+                  printed twice, three inches apart, under two different
+                  headings. Removed on the client's instruction: every way of
+                  reaching a person is now in "Contact details" and this row is
+                  the postal address and nothing else. */}
             </div>
           </div>
 
@@ -220,10 +279,38 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
                 <path d="m4 7 8 5.6L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
               </svg>
             </span>
+            {/* ⚠ EVERY LINE CARRIES ITS OWN ICON NOW, and they are aria-hidden
+                to a one. The glyph says "this is an email address" / "this is a
+                phone number" at a glance, which is the whole point — but the
+                href already says exactly that to assistive tech (`mailto:` vs
+                `tel:`), so announcing the icon as well would be the same fact
+                read out twice per line. */}
             <div class="prow__body">
               <h3 class="prow__h">Contact details</h3>
-              <a class="prow__v prow__v--mail" href={`mailto:${school.email}`}>{school.email}</a>
-              {phones.map((p) => <a class="prow__v" href={`tel:${p.tel}`}>{p.display}</a>)}
+
+              <a class="prow__v prow__v--mail" href={`mailto:${school.email}`}>
+                <svg class="prow__vico" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3" y="5.5" width="18" height="13" rx="2.4" stroke="currentColor" stroke-width="1.8" />
+                  <path d="m4 7 8 5.6L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                <span>{school.email}</span>
+              </a>
+
+              {
+                phones.map((p) => (
+                  <a class="prow__v" href={`tel:${p.tel}`} aria-label={`${p.role}: ${p.display}`}>
+                    <svg class="prow__vico" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M7.6 3.5h-2A2.1 2.1 0 0 0 3.5 5.8C3.5 13.7 10.3 20.5 18.2 20.5a2.1 2.1 0 0 0 2.3-2.1v-2a1.3 1.3 0 0 0-1-1.3l-3-.7a1.3 1.3 0 0 0-1.3.5l-.9 1.2a12.6 12.6 0 0 1-5.4-5.4l1.2-.9a1.3 1.3 0 0 0 .5-1.3l-.7-3a1.3 1.3 0 0 0-1.3-1Z"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    <span>{p.display}</span>
+                  </a>
+                ))
+              }
             </div>
           </div>
 
@@ -260,59 +347,15 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
       </div>
     </div>
 
-    {/* The reference closes on a bank of soft cloud shapes. Decorative, so it
-        is drawn rather than photographed and carries no alt. */}
-    {/* ═══ THE CLOUD BANK ═════════════════════════════════════════════════
-        TWO PARTS, AND THEY HAVE TO BE TWO.
-
-        ⚠ THE BAR IS CSS AND FULL WIDTH; THE LOBES ARE AN SVG AND CENTRED.
-        The client's reference is not a full-width scallop — it is a CLUSTER of
-        cloud sitting in the middle of the frame, with sky still visible at the
-        left and right shoulders above a flat white base. One full-width SVG
-        cannot be both: stretch it and the circles turn to ellipses, slice it
-        and the crowns get cut.
-
-        ⚠ AND THEY WERE GETTING CUT. `preserveAspectRatio="xMidYMax slice"`
-        scales to COVER: on a 1920 screen that is 1.33x, which pushed 66 units
-        of the viewBox past the top edge and sheared the flat tops the client
-        photographed. Anchoring to yMax means the crop always lands on the
-        crowns — the one part of a cloud that must not be flat.
-
-        With the bar carrying the full width, the lobes are free to use `meet`,
-        which fits the whole viewBox and can never crop anything. */}
-    <div class="ct__clouds" aria-hidden="true">
-      <span class="ct__cloudbar"></span>
-
-      {/* viewBox is 1100x120 and EVERY circle satisfies both cy - r >= 0 (so no
-          crown is clipped at the top) and cy + r >= 120 (so every lobe merges
-          into the bar below rather than floating as a disc). The radii taper
-          from the middle outwards, which is what makes it read as one cluster
-          instead of a row of bumps. */}
-      <svg class="ct__lobes" viewBox="0 0 1100 120" preserveAspectRatio="xMidYMax meet">
-        {/* Back layer — a tint darker, pitched to peek through the gaps between
-            the front lobes. Without it the bank is a flat silhouette. */}
-        <g fill="#e7f0fc">
-          <circle cx="290" cy="92" r="66" />
-          <circle cx="536" cy="88" r="88" />
-          <circle cx="770" cy="96" r="72" />
-          <circle cx="960" cy="104" r="54" />
-        </g>
-
-        <g fill="#fff">
-          <circle cx="50" cy="105" r="48" />
-          <circle cx="130" cy="98" r="58" />
-          <circle cx="228" cy="92" r="72" />
-          <circle cx="340" cy="95" r="88" />
-          <circle cx="468" cy="96" r="94" />
-          <circle cx="600" cy="94" r="90" />
-          <circle cx="716" cy="97" r="80" />
-          <circle cx="816" cy="100" r="68" />
-          <circle cx="908" cy="104" r="56" />
-          <circle cx="986" cy="108" r="46" />
-          <circle cx="1058" cy="110" r="40" />
-        </g>
-      </svg>
-    </div>
+    {/* ⚠ THE CLOSING WAVE IS GONE, AND IT WAS NEVER STYLED. A two-layer white
+        SVG sat here as the section's send-off into the map — but no rule for
+        `.ct__clouds` was ever written, so it was a full-width block in normal
+        flow: a white band across a cream section, with the section's own
+        120–190px of foot padding stacked underneath it and then the map
+        section's top padding under that. That is the empty stretch the client
+        pointed at, and there was nothing to salvage — the shape was white on
+        cream, carrying one pale ground into another pale ground. The section now
+        ends on its own padding and meets the map directly. */}
   </div>
 
   {/* ═══ THE MAP ═══════════════════════════════════════════════════════════
@@ -342,43 +385,46 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
       ⚠ <noscript> CARRIES A REAL LINK. With scripting off there is no map, so
       the address and a Google Maps link take its place rather than a dead grey
       band. */}
-  <section class="map" aria-labelledby="map-h">
-    <h2 class="u-visually-hidden" id="map-h">Where the school is</h2>
-
-    <div
-      class="map__slot"
-      data-map-src={mapEmbed}
-      data-map-title={`Map showing ${school.name} at ${addressOneLine}`}
-    >
-    </div>
-
-    <noscript>
-      <div class="map__off">
-        <p>{addressOneLine}</p>
-        <a href={mapLink} target="_blank" rel="noopener noreferrer">Open the map on Google Maps</a>
-      </div>
-    </noscript>
-  </section>
+  <LocationSection />
 </BaseLayout>
 
 <style>
   /* ═══ GROUND ══════════════════════════════════════════════════════════════
-     The reference's very pale blue wash, deepening toward the foot where the
-     clouds sit. */
-  /* ⚠ z-index: 1 IS REQUIRED, NOT COSMETIC. PageHero is `position: sticky` and
-     pins while the page scrolls over it — it works only because the block that
-     follows is positioned, opaque and ABOVE it. Site-wide that block is
-     `.u-page-panel` (base.css), which carries exactly this pair. This page uses
-     its own wrapper and inherited neither, so the pinned photograph painted
-     straight through the map band at the foot of the page. */
+     The cream the whole page now sits on, with the shared Atmosphere layer
+     supplying grain and blobs on top of it. */
+  /* ⚠ position + z-index + AN OPAQUE GROUND ARE THE THREE HALVES OF ONE THING,
+     and with the shared PageHero back they are load-bearing again. That banner
+     is `position: sticky` and stays pinned while this panel rides up over it;
+     without a positioned, opaque block above it in the stack the photograph
+     paints straight through this section. It is the same contract `.u-page-panel`
+     carries on every other page — spelled out here because this section also
+     needs its own stacking context for the Backdrop layer beneath its content. */
   .ct {
     position: relative;
     z-index: 1;
     overflow: hidden;
-    padding-block: clamp(40px, 6vw, 84px) clamp(120px, 14vw, 190px);
-    background:
-      radial-gradient(120% 90% at 78% 34%, #dbeafe 0%, rgba(219, 234, 254, 0) 62%),
-      linear-gradient(180deg, #ffffff 0%, #f8fafc 38%, #e0edfd 100%);
+    /* ⚠ THE FOOT WAS clamp(120px, 14vw, 190px), SIZED FOR A WAVE THAT IS GONE.
+       That padding existed to clear the closing SVG; with the SVG removed it was
+       190px of bare cream between the panel and the map. It now matches the head
+       of the section, so the seam reads as an ordinary section break. */
+    padding-block: clamp(40px, 6vw, 84px);
+    /* ⚠ ONE FLAT WARM GROUND, replacing the blue wash the page was built on.
+       #FBF7F4 is the client's choice and it pulls this page back toward the
+       ivory used everywhere else on the site — so the seam at the masthead and
+       footer that was flagged when the indigo reference was chosen is now much
+       narrower. Everything that was tuned against the old blue ground (the
+       colour field below, the cursor pool, the field rules) moves with it. */
+    background: #fbf7f4;
+  }
+
+  /* The intro sits above the grid now, so it spans the full measure and the
+     grid holds nothing but the two cards. */
+  .ct__head {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    margin-bottom: clamp(28px, 3.6vw, 46px);
+    text-align: center;
   }
 
   .ct__grid {
@@ -386,12 +432,12 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     z-index: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(40px, 6vw, 72px);
-    /* ⚠ BACK TO center, NOW THAT THE RIGHT COLUMN IS ONE SHORT PANEL. It was
-       switched to `start` when that column held three stacked cards roughly as
-       tall as the form; merged into a single panel it is about half the height,
-       and top-aligning left it stranded against a long run of empty ground. */
-    align-items: center;
+    gap: clamp(24px, 3vw, 40px);
+    /* ⚠ stretch, NOT center. Both children are now cards of their own, so they
+       take a shared top AND a shared base — which is the whole point of moving
+       the intro out. `center` was the right answer only while the two columns
+       held different kinds of thing. */
+    align-items: stretch;
   }
 
   /* ═══ COPY ════════════════════════════════════════════════════════════════ */
@@ -401,8 +447,13 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     gap: 9px;
     padding: 7px 15px;
     border-radius: 999px;
-    background: #eef2ff;
-    color: #4f46e5;
+    background: var(--sb-violet-wash);
+    /* ⚠ THE DARK STEP, NOT THE BRAND ORANGE. These labels are 11–12px uppercase,
+     which WCAG counts as small text at 4.5:1 — and #c93c0a measures 4.48 on the
+     pill wash and 4.35 on the sand ground. Both fail. --sb-violet-dark is the
+     same hue two steps down and clears at 6.24 and 6.07. The decorative dot
+     keeps the brighter brand orange; only the glyphs move. */
+    color: var(--sb-violet-dark);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -413,7 +464,7 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #4f46e5;
+    background: var(--sb-violet);
   }
 
   .ct__h1 {
@@ -427,12 +478,13 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   }
 
   .ct__stand {
-    max-width: 46ch;
+    max-width: 100%;
     margin-top: clamp(14px, 1.8vw, 20px);
     font-size: clamp(15px, 1.15vw, 17px);
     line-height: 1.72;
     /* 4.76:1 on the palest part of the wash — measured, not eyeballed. */
     color: #566476;
+    text-align: center;
   }
 
   /* ═══ FIELDS ══════════════════════════════════════════════════════════════
@@ -448,18 +500,29 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
      The empty `placeholder=" "` in the markup is what makes `:placeholder-shown`
      usable as the "is this field empty" test in pure CSS. */
-  .ct__form { margin-top: clamp(26px, 3.4vw, 38px); }
+  /* No top margin — the intro above the grid carries the separation now. */
+  .ct__form {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(22px, 2.6vw, 30px);
+  }
+
+  /* Pushes the consent row and the button to the foot of a stretched card
+     instead of leaving the gap under them. */
+  /* Only the panel needs this — its rows run edge to edge and have to be
+     clipped by the radius. The form's own padding keeps it clear. */
+  .panel { overflow: hidden; }
 
   .ct__row {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(18px, 2.4vw, 30px);
+    gap: clamp(16px, 2vw, 26px);
   }
 
   .fld {
     position: relative;
     padding-top: 18px;
-    margin-bottom: clamp(16px, 2vw, 22px);
+    margin-bottom: clamp(10px, 1.4vw, 16px);
   }
 
   .fld__in {
@@ -474,12 +537,6 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     font-size: 15px;
     color: #0f172a;
     transition: border-color 180ms ease;
-  }
-
-  .fld__in--area {
-    min-height: 118px;
-    resize: vertical;
-    line-height: 1.6;
   }
 
   .fld__lb {
@@ -499,12 +556,12 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #4f46e5;
+    color: var(--sb-violet);
   }
 
   .fld__in:focus {
     outline: none;
-    border-bottom-color: #4f46e5;
+    border-bottom-color: var(--sb-violet);
     border-bottom-width: 2px;
     padding-bottom: 9px; /* hold the baseline as the rule thickens */
   }
@@ -513,12 +570,62 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
      The rule alone is a 1px colour change — it reads as decoration, and against
      the pale ground it is nowhere near a 3:1 non-text contrast. */
   .fld__in:focus-visible {
-    outline: 2px solid #4f46e5;
+    outline: 2px solid var(--sb-violet);
     outline-offset: 3px;
     border-radius: 3px;
   }
 
   .fld__in[aria-invalid='true'] { border-bottom-color: #dc2626; }
+
+  /* ═══ THE SELECT ══════════════════════════════════════════════════════════
+     `appearance: none` strips the platform control so it can carry the same
+     underline as its neighbours; the chevron is drawn back on by the wrapper.
+     Height is matched to a text input rather than left to the platform, or the
+     row sits a few pixels out of line on Windows. */
+  .fld--sel { position: relative; }
+
+  /* ⚠ NO FIXED HEIGHT. Pinning it to 37px left the select 5px shorter than the
+     City input beside it and the two underlines no longer lined up. It already
+     inherits `.fld__in`'s padding; matching the line-height is all it needs, and
+     the row then measures identically whatever the platform does with the
+     control. */
+  .fld__in--sel {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 26px;
+    line-height: 1.6;
+    cursor: pointer;
+  }
+
+  /* ⚠ THE CHEVRON IS pointer-events: none. Drawn over the control, it would
+     otherwise swallow the click on the one part of the field a reader is most
+     likely to aim at. */
+  .fld--sel::after {
+    content: '';
+    position: absolute;
+    right: 4px;
+    bottom: 18px;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid #566476;
+    border-bottom: 2px solid #566476;
+    transform: rotate(45deg);
+    pointer-events: none;
+    transition: border-color 180ms ease;
+  }
+
+  .fld--sel:focus-within::after { border-color: var(--sb-violet); }
+
+  /* The permanently-raised label, matching the risen state of the text fields
+     exactly so the row reads as one set. */
+  .fld__lb--up {
+    top: 0;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
 
   .fld__err {
     margin-top: 7px;
@@ -530,11 +637,17 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   .fld__err[hidden] { display: none; }
 
   /* ═══ CONSENT ═════════════════════════════════════════════════════════════ */
+  /* ⚠ margin-top: auto, AND IT HAS TO LIVE HERE. It was first written up beside
+     the .ct__form rule, where this later declaration simply overrode it and the
+     button stayed floating mid-card with a block of empty ground beneath it.
+     In a stretched flex column, auto is what pushes the consent row, the button
+     and the status line down to the foot. */
   .ct__consent {
     display: flex;
     align-items: center;
     gap: 11px;
-    margin-top: clamp(4px, 1vw, 10px);
+    margin-top: auto;
+    padding-top: clamp(14px, 2vw, 22px);
   }
 
   /* 20px box in a 24px hit area — SC 2.5.8 wants 24×24, and a 20px tickbox on
@@ -544,11 +657,11 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     width: 20px;
     height: 20px;
     margin: 2px;
-    accent-color: #4f46e5;
+    accent-color: var(--sb-violet);
     cursor: pointer;
   }
 
-  .ct__box:focus-visible { outline: 2px solid #4f46e5; outline-offset: 3px; }
+  .ct__box:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; }
 
   .ct__terms {
     font-size: 14.5px;
@@ -562,11 +675,11 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   .ct__send {
     display: block;
     width: 100%;
-    margin-top: clamp(22px, 3vw, 30px);
+    margin-top: clamp(18px, 2.2vw, 24px);
     padding: 17px 24px;
     border: 0;
     border-radius: 999px;
-    background: #4f46e5;
+    background: var(--sb-violet);
     color: #fff; /* 6.5:1 */
     font-family: inherit;
     font-size: 15.5px;
@@ -575,8 +688,8 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     transition: background 180ms ease, transform 180ms ease;
   }
 
-  .ct__send:hover { background: #4338ca; }
-  .ct__send:focus-visible { outline: 2px solid #312e81; outline-offset: 3px; }
+  .ct__send:hover { background: var(--sb-violet-dark); }
+  .ct__send:focus-visible { outline: 2px solid var(--sb-violet-deep); outline-offset: 3px; }
   .ct__send:active { transform: translateY(1px); }
 
   .ct__send[disabled] { opacity: 0.62; cursor: progress; }
@@ -592,12 +705,19 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   .ct__status[data-tone='bad'] { color: #dc2626; }
   .ct__status[data-tone='good'] { color: #15803d; }
 
-  /* ═══ RIGHT COLUMN — THE THREE CARDS ══════════════════════════════════════ */
-  .ct__right {
-    display: grid;
-    gap: clamp(14px, 1.8vw, 20px);
-    align-content: start;
-    min-width: 0;
+  /* ⚠ THE PANEL IS A FLEX COLUMN AND ITS ROWS SHARE THE HEIGHT. Stretched to
+     match the form, a panel whose rows sit at their natural height leaves a
+     block of empty card under the social row — which looks like the layout
+     failed rather than like a decision. Giving each row an equal share spreads
+     the three groups down the card and the base lands where the form's does. */
+  .panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .prow {
+    flex: 1 1 0;
+    align-content: center;
   }
 
   /* ═══ GLASS ══════════════════════════════════════════════════════════════
@@ -610,36 +730,30 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
      They are `aria-hidden` by construction — pseudo-elements are never in the
      accessibility tree. */
-  .ct::before,
-  .ct::after {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    border-radius: 50%;
-    pointer-events: none;
-    filter: blur(10px);
-  }
+  /* ⚠ THE STANDING COLOUR FIELD IS GONE — the burst is hover-only now.
+     A soft disc sat permanently at the top-right, ahead of the "Get in touch"
+     block, and on a flat cream ground it read as a smudge rather than as light.
+     Removed on the client's instruction.
 
-  .ct::before {
-    top: 6%;
-    right: 6%;
-    width: min(34vw, 460px);
-    aspect-ratio: 1;
-    background: radial-gradient(circle, rgba(129, 140, 248, 0.5) 0%, rgba(129, 140, 248, 0) 68%);
-  }
+     The consequence, stated plainly: `backdrop-filter` now has an even colour
+     to blur, and an even colour blurred is the same even colour — so the cards
+     no longer show a tint at rest. They keep their lit edge and their shadow,
+     and the glass only becomes visible under the pointer, which is where the
+     client wants it. */
 
-  .ct::after {
-    top: 42%;
-    right: 26%;
-    width: min(26vw, 340px);
-    aspect-ratio: 1;
-    background: radial-gradient(circle, rgba(56, 189, 248, 0.42) 0%, rgba(56, 189, 248, 0) 68%);
-  }
+  /* ⚠ ONE RULE FOR BOTH CARDS, NOT TWO COPIES. The form used to sit bare on
+     the wash beside a glass panel, which made one column look designed and the
+     other look unfinished — and it is the FORM that the page is for. Sharing
+     the selector means the two can never drift apart in radius, alpha, blur or
+     shadow.
 
-  .panel {
+     Where there is colour behind (the right-hand column) the tint shows; where
+     there is not (the left) it reads as clean white. Same construction, one
+     material across the section. */
+  .panel,
+  .ct__form {
     position: relative;
     z-index: 1;
-    overflow: hidden; /* so the rows' corners follow the panel's radius */
     border-radius: 22px;
 
     /* ⚠ 0.62 IS THE FLOOR, NOT A TASTE CALL. Glassmorphism is usually written
@@ -666,9 +780,10 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
      it — the blur is the only thing that made the translucency legible. Where
      the property is unsupported the panel goes solid and keeps its border. */
   @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
-    .panel {
+    .panel,
+    .ct__form {
       background: #fff;
-      border-color: #e2ebf8;
+      border-color: var(--sb-border);
     }
   }
 
@@ -694,9 +809,9 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     width: 42px;
     height: 42px;
     border-radius: 13px;
-    background: rgba(238, 242, 255, 0.9);
+    background: color-mix(in srgb, var(--sb-violet-wash) 90%, transparent);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
-    color: #4f46e5;
+    color: var(--sb-violet);
   }
 
   .prow__body { min-width: 0; }
@@ -723,28 +838,54 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   /* Each contact is its own line and its own 24px target — two numbers on one
      line read as one long number, and a phone link crammed beside another is a
      mis-tap waiting to happen. */
+  /* ⚠ flex, NOT block — the line now holds an icon and a label. `fit-content`
+     still keeps the hit area to the width of the content rather than the full
+     column, so the whole row is not a live link. */
   .prow__v {
-    display: block;
+    display: flex;
+    /* ⚠ start, NOT center. The email wraps to two lines on a narrow panel, and
+       centred against a two-line label the icon floats into the gap between
+       them. Anchored to the top it stays on the first line, which is where the
+       eye reads it. */
+    align-items: start;
+    gap: 9px;
     width: fit-content;
     min-height: 24px;
     margin-top: 9px;
     font-size: 15.5px;
     font-weight: 600;
-    color: #4f46e5;
+    line-height: 1.45;
+    color: var(--sb-violet);
     text-decoration: none;
+  }
+
+  /* Optically centred on the first line: (15.5 × 1.45 − 16) ÷ 2 ≈ 3px. */
+  .prow__vico {
+    flex: 0 0 auto;
+    margin-top: 3px;
   }
 
   /* An email address has no spaces, so on a narrow panel it would push the
      layout wide rather than wrap. */
+  /* ⚠ min-width: 0 ON THE LABEL. A flex item will not shrink below its content's
+     intrinsic width by default, and an unbroken email address makes that width
+     the whole address — so `overflow-wrap` never gets the chance to act and the
+     panel is pushed wide instead. */
+  .prow__v > span { min-width: 0; }
   .prow__v--mail { overflow-wrap: anywhere; }
 
-  .prow__v:hover { text-decoration: underline; }
-  .prow__v:focus-visible { outline: 2px solid #4f46e5; outline-offset: 3px; border-radius: 4px; }
+  /* ⚠ THE UNDERLINE IS ON THE LABEL, NOT ON THE LINK. `.prow__v` is a flex
+     container now, and a text-decoration set on one is not reliably propagated
+     into its flex items — the rule looked correct and drew nothing. */
+  .prow__v:hover > span { text-decoration: underline; }
+  .prow__v:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; border-radius: 4px; }
 
   /* ═══ SOCIAL ══════════════════════════════════════════════════════════════ */
   /* ⚠ ONE `margin`, NOT `margin-top` FOLLOWED BY `margin: 0`. Written in that
      order the shorthand silently wipes the longhand set two lines above it. */
+  /* The flip needs a perspective ancestor or rotateY is a flat squash. */
   .soc {
+    perspective: 620px;
     display: flex;
     gap: 10px;
     margin: 13px 0 0;
@@ -760,103 +901,48 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
     width: 46px;
     height: 46px;
     border-radius: 14px;
-    background: rgba(241, 245, 253, 0.92);
+    background: color-mix(in srgb, var(--sb-violet-wash) 92%, transparent);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
-    color: #4338ca; /* 6.8:1 on the chip */
-    transition: background 180ms ease, color 180ms ease, transform 180ms var(--sb-ease);
+    color: var(--sb-violet-dark); /* 6.8:1 on the chip */
+    transform-style: preserve-3d;
+    /* ⚠ AN EXPLICIT rotateY(0deg) AT REST, NOT `transform: none`. Interpolating
+       `none` → `rotateY(360deg)` makes the browser fall back to MATRIX
+       interpolation, and the matrix for a full turn is the identity matrix — so
+       it animates from identity to identity and nothing moves at all. Measured:
+       computed transform stayed `none` right through the hover. With both ends
+       written as the same function the angle itself interpolates and the icon
+       actually turns. */
+    transform: rotateY(0deg);
+    transition:
+      transform 620ms cubic-bezier(0.22, 0.68, 0.26, 1),
+      background 200ms ease,
+      color 200ms ease;
   }
 
-  .soc__a:hover {
-    background: #4f46e5;
+  /* ⚠ A FULL 360, NOT 180. Half a turn leaves the glyph mirrored — an "f" facing
+     backwards — which reads as a rendering fault rather than a flip. A whole
+     turn lands where it started and still reads as the coin-flip that was
+     asked for. Focus gets the same treatment so it is not a mouse-only cue. */
+  .soc__a:hover,
+  .soc__a:focus-visible {
+    transform: rotateY(360deg);
+    background: var(--sb-violet);
     color: #fff;
-    transform: translateY(-2px);
   }
 
-  .soc__a:focus-visible { outline: 2px solid #4f46e5; outline-offset: 3px; }
+  .soc__a:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; }
 
-  /* ═══ MAP ═════════════════════════════════════════════════════════════════ */
-  /* Same reason as .ct above: a STATIC section paints its background below any
-     positioned element, so the sticky banner sat on top of the map. */
-  .map {
-    position: relative;
-    z-index: 1;
-    display: block;
-    line-height: 0; /* kill the inline-descender gap under the iframe */
-    background: #e2e8f0; /* what shows while the frame is still deferred */
-  }
+  /* ⚠ NEITHER CARD HAS A HOVER LIGHT ANY MORE, AND THAT IS THE FINISHED STATE.
+     There were two in succession — a beige pool that tracked the cursor, then
+     BurstCard's warm bloom in its place — and the client has removed both. The
+     cards are glass with a lit top edge and a shadow, and they do not respond to
+     the pointer at all.
 
-  /* The slot holds the band's height before the frame exists, so the page does
-     not jump when the map arrives — the layout shift a deferred embed usually
-     causes is exactly what a reserved box prevents. */
-  .map__slot,
-  .map__off {
-    display: block;
-    width: 100%;
-    height: clamp(300px, 42vw, 460px);
-  }
-
-  .map__slot :global(iframe) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-
-  .map__off {
-    display: grid;
-    place-content: center;
-    gap: 10px;
-    padding: 24px;
-    line-height: 1.6;
-    text-align: center;
-    color: #334155;
-  }
-
-  .map__off a { color: #4f46e5; font-weight: 700; }
-
-  /* ═══ CLOUDS ══════════════════════════════════════════════════════════════ */
-  .ct__clouds {
-    /* One height drives both parts. The bar takes 34% of it and the lobes the
-       rest, which is the proportion in the reference: roughly a third solid
-       base, two thirds cloud. */
-    --cloud-h: clamp(120px, 13vw, 190px);
-    --cloud-base: calc(var(--cloud-h) * 0.34);
-
-    position: absolute;
-    z-index: 0;
-    right: 0;
-    /* -1px so no sub-pixel hairline shows between the bank and the map. */
-    bottom: -1px;
-    left: 0;
-    height: var(--cloud-h);
-    line-height: 0;
-    pointer-events: none;
-  }
-
-  /* Full width, always — this is what the cloud sits on and what meets the map,
-     and it is a plain rectangle so stretching it costs nothing. */
-  .ct__cloudbar {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: var(--cloud-base);
-    background: #fff;
-  }
-
-  /* ⚠ CAPPED AT 1100px AND CENTRED. Past that the cloud stops growing and the
-     sky stays open at the shoulders, which is the reference's composition. It
-     overlaps the bar by 1px so the two whites meet with no seam. */
-  .ct__lobes {
-    position: absolute;
-    right: 0;
-    bottom: calc(var(--cloud-base) - 1px);
-    left: 0;
-    display: block;
-    width: min(100%, 1100px);
-    height: calc(var(--cloud-h) - var(--cloud-base) + 1px);
-    margin-inline: auto;
-  }
+     What went with it: the ::before layer on `.panel` / `.ct__form`, the
+     `--mx`/`--my` custom properties, and the pointermove/pointerleave listeners
+     at the foot of this file. Nothing else read those properties, so there is no
+     dead code left behind — if a hover light is ever wanted back, it is a new
+     pseudo-element plus the listener, not a flag to flip. */
 
   /* ═══ LAYOUT ══════════════════════════════════════════════════════════════ */
   @media (min-width: 700px) {
@@ -868,15 +954,18 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
       gap: clamp(48px, 6vw, 96px);
     }
-    /* The illustration is the reference's hero; let it run a little past the
-       container on wide screens as it does there. */
-    .ct__right { margin-right: clamp(-56px, -3vw, 0px); }
+
   }
 
   @media (prefers-reduced-motion: reduce) {
     .fld__in,
     .fld__lb,
+    .soc__a,
     .ct__send { transition-duration: 1ms; }
+    /* A 360° spin is exactly the kind of motion this setting exists to stop.
+       The colour change alone still confirms the hover. */
+    .soc__a:hover,
+    .soc__a:focus-visible { transform: none; }
     .ct__send:active { transform: none; }
   }
 </style>
@@ -959,7 +1048,6 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
              of an address is sending to it. */
           ok: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
         },
-        { id: 'cf-message', msg: 'Please write your message.', ok: (v) => v.trim().length > 0 },
       ];
 
       const setError = (id: string, msg: string | null) => {
@@ -994,6 +1082,13 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
           if (e) e.hidden = true;
         }
       });
+
+      /* ⚠ THE POINTER-TRACKING BLOCK THAT USED TO SIT HERE IS DELETED, not
+         disabled. It wrote `--mx`/`--my` onto `.panel` and `.ct__form` for the
+         hover light, and the client has removed that light — so the two
+         pointermove/pointerleave listeners had nothing left to feed. Leaving
+         them behind would mean a listener firing on every mouse move over the
+         form for no rendered effect. See the note in the stylesheet. */
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();

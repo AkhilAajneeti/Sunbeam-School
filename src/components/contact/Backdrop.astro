@@ -1,0 +1,94 @@
+---
+/**
+ * BACKDROP — the oversized background word and the curved lines.
+ *
+ * ⚠ LIFTED OUT OF ClosingCTA SO IT IS LITERALLY THE SAME CODE. The client asked
+ * for these two elements "exactly the same" in the contact section. Copying the
+ * markup would have meant two sets of curves drifting apart the first time
+ * either was touched, so the CTA's version was extracted here and the CTA
+ * itself has since been removed — this component is now the only copy.
+ *
+ * ⚠ THE GEOMETRY IS IDENTICAL; ONLY THE INK CHANGES. On the deep ground the
+ * word and strokes were white at low alpha. Over cream that is invisible, so
+ * the light tone uses charcoal at the equivalent weight. Same paths, same
+ * sizes, same parallax — the colour has to invert or there is nothing to see.
+ */
+interface Props {
+  /**
+   * The word set behind the section.
+   *
+   * ⚠ OPTIONAL, AND OMITTING IT IS A SUPPORTED STATE — not a caller forgetting
+   * to pass one. The contact section now wants the curves alone, and the two
+   * halves of this component were always independent: the word is a single
+   * absolutely-positioned span and the curves are their own SVG. Making the span
+   * conditional is what lets one caller take both and another take the lines
+   * only, without a second component that would drift from this one.
+   */
+  word?: string;
+  /** 'light' over cream, 'dark' over the deep grounds. */
+  tone?: 'light' | 'dark';
+  /** Parallax travel in px; negative drifts against the scroll. */
+  drift?: number;
+}
+
+const { word, tone = 'light', drift = -70 } = Astro.props;
+---
+
+<div class:list={['bdrop', `bdrop--${tone}`]} aria-hidden="true">
+  {/* Curved lines, drawn wide and clipped by the section. `vector-effect`
+      keeps the strokes hairline-thin however far the SVG is stretched. */}
+  <svg class="bdrop__curves" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMid slice">
+    <path d="M-120 340C220 190 520 430 780 260S1240 40 1560 150" vector-effect="non-scaling-stroke" />
+    <path d="M-120 400C240 260 560 480 820 320S1280 120 1560 220" vector-effect="non-scaling-stroke" />
+    <path d="M-120 268C260 128 500 372 800 196S1300 -14 1560 84" vector-effect="non-scaling-stroke" />
+  </svg>
+
+  {/* ⚠ THE WORD IS aria-hidden AND NOT A HEADING. A 460px decorative word is
+      texture; announcing it would put a stray noun between the section heading
+      and the form it introduces.
+
+      ⚠ RENDERED ONLY IF ONE WAS PASSED. An empty span would still be a
+      460px-tall, 34vw-wide absolutely-positioned box sitting over the section —
+      invisible, but a real layout object. */}
+  {word && <span class="bdrop__word" data-parallax data-parallax-y={drift}>{word}</span>}
+</div>
+
+<style>
+  .bdrop {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bdrop__curves {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke-width: 1;
+  }
+
+  .bdrop__word {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    font-family: var(--sb-font-display);
+    font-size: clamp(150px, 34vw, 460px);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  /* Low enough to be texture, high enough to survive the ground behind it. */
+  .bdrop--dark .bdrop__curves { stroke: rgba(255, 255, 255, 0.14); }
+  .bdrop--dark .bdrop__word { color: rgba(255, 255, 255, 0.045); }
+
+  .bdrop--light .bdrop__curves { stroke: rgba(27, 21, 18, 0.1); }
+  .bdrop--light .bdrop__word { color: rgba(27, 21, 18, 0.045); }
+</style>
