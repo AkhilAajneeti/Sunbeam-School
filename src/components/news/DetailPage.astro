@@ -81,6 +81,17 @@ interface Props {
    * component shared by four sections cannot name the thing it is showing.
    */
   unit?: string;
+  /**
+   * The section this item's index sits under, for the middle breadcrumb.
+   *
+   * ⚠ THIS WAS HARD-CODED TO News & Events, AND IT WAS WRONG THE MOMENT A FIFTH
+   * CALLER APPEARED. School Activities lives under Beyond Academics, so every
+   * one of its detail pages announced a trail — Home / News & Events / School
+   * Activities — that does not exist in the navigation and leads a reader to the
+   * wrong section. The default keeps the four original callers byte-identical;
+   * only a caller that lives elsewhere has to say so.
+   */
+  section?: { label: string; href: string };
 }
 
 const {
@@ -93,6 +104,7 @@ const {
   metaLabel = 'Led by',
   resultLabel = 'Note',
   unit = 'session',
+  section = { label: 'News & Events', href: '/news-events/' },
 } = Astro.props;
 
 /* ⚠ THE HERO USES THE SESSION'S OWN LEAD PHOTOGRAPH WHERE ONE EXISTS, falling
@@ -190,7 +202,7 @@ const next = all[here + 1];
     title={item.title}
     crumbs={[
       { label: 'Home', href: '/' },
-      { label: 'News & Events', href: '/news-events/' },
+      section,
       { label: page.title, href: base },
     ]}
     src={hero}

@@ -1,0 +1,53 @@
+---
+/**
+ * ONE ACTIVITY — routing only. The page itself is components/news/DetailPage,
+ * the same component behind every workshop, competition, celebration and school
+ * event, which is what makes this section look like the rest of the site.
+ *
+ * ⚠ getStaticPaths BUILDS ONLY THE ITEMS THAT CARRY A SLUG — the same guard the
+ * chronicle routers use. An item without one produces no route, and CardGrid
+ * renders it as a card with no button, so a missing detail page can never
+ * surface as a broken link.
+ *
+ * ⚠ `metaLabel` IS "Photographs", NOT "Led by". DetailPage prints `item.meta`
+ * under a caller-supplied label, and on Workshops that meta is a trainer's name.
+ * Here it is a count of the frames the school published, because the school
+ * published no names — labelling it "Led by 273 photographs published" is
+ * exactly the kind of leak the component's own notes warn about.
+ */
+import DetailPage from '../../../components/news/DetailPage.astro';
+import { schoolActivities } from '../../../data/schoolActivities';
+import type { ChronicleItem } from '../../../data/newsPages';
+import fallbackHero from '../../../assets/photos/sunbeem-1.jpg';
+
+export async function getStaticPaths() {
+  const { schoolActivities: sa } = await import('../../../data/schoolActivities');
+  return sa.groups.flatMap((g) =>
+    g.items
+      .filter((i) => i.slug)
+      .map((item) => ({
+        params: { slug: item.slug! },
+        props: { item, group: g.label },
+      })),
+  );
+}
+
+interface Props {
+  item: ChronicleItem;
+  group: string;
+}
+
+const { item, group } = Astro.props;
+---
+
+<DetailPage
+  item={item}
+  group={group}
+  page={schoolActivities}
+  base="/beyond-academics/school-activities/"
+  fallbackHero={fallbackHero}
+  fallbackAlt="The main building of Sunbeam School Ballia seen across its ground"
+  metaLabel="Photographs"
+  unit="activity"
+  section={{ label: 'Beyond Academics', href: '/beyond-academics/' }}
+/>

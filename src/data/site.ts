@@ -73,6 +73,20 @@ export const school = {
   /** Finding X6 — a domain address is requested (decision C1). */
   email: 'sunbeamballia2131962@gmail.com',
 
+  /**
+   * ⚠ THE RECRUITMENT INBOX, AND IT IS NOT `email` ABOVE. Read off the school's
+   * own hiring posters in src/assets/jobs — it is printed on seven of the ten
+   * (job-2, 3, 4, 5, 6, 7, 8, 10) and is plainly the address the school wants
+   * applications sent to. `email` is the general office address and appears on
+   * none of them; sending a CV there would be a guess.
+   *
+   * ⚠ job-9 PRINTS A SECOND ADDRESS, principalsunbeamballia@gmail.com, and it is
+   * deliberately NOT recorded here. It appears on exactly one poster, alongside
+   * this one, so it reads as a copy to the principal rather than the route in.
+   * Recording both would make the career page ask an applicant to choose.
+   */
+  recruitmentEmail: 'appointmentsunbeamballia@gmail.com',
+
   social: {
     facebook: 'https://www.facebook.com/sunbeambui8413/',
     instagram: 'https://www.instagram.com/sunbeamballia/',

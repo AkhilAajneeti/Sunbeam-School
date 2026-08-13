@@ -47,12 +47,22 @@ const files: Record<string, { default: ImageMetadata }> = {
     '../assets/competition/**/*.{jpg,jpeg,png,JPG,JPEG,PNG,webp}',
     { eager: true },
   ),
+  ...import.meta.glob<{ default: ImageMetadata }>(
+    '../assets/school-activities/**/*.{jpg,jpeg,png,JPG,JPEG,PNG,webp}',
+    { eager: true },
+  ),
 };
 
 /** The asset roots a gallery folder may live under. Adding one means adding a
  *  LITERAL glob above as well — this list only drives the lookup, not the
  *  bundling. */
-const ROOTS = ['/assets/workshops/', '/assets/school-event/', '/assets/celebration/', '/assets/competition/'];
+const ROOTS = [
+  '/assets/workshops/',
+  '/assets/school-event/',
+  '/assets/celebration/',
+  '/assets/competition/',
+  '/assets/school-activities/',
+];
 
 /**
  * ⚠ NATURAL ORDER, NOT LEXICAL. The supplied set runs `…innovation.jpg`,

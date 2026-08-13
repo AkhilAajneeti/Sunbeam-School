@@ -8,6 +8,21 @@
  * either was touched, so the CTA's version was extracted here and the CTA
  * itself has since been removed — this component is now the only copy.
  *
+ * ⚠ IT LIVES IN ui/ BECAUSE IT HAS TWO CALLERS NOW, not one. It was written for
+ * the contact page and sat in components/contact/; the client then asked for
+ * "the same waves" on the career page's apply card. Importing a component out of
+ * another page's folder is the first step toward someone copying it instead —
+ * which is the exact failure the note above was written to prevent. Moved, not
+ * duplicated.
+ *
+ * ⚠ IT SIZES TO ITS POSITIONED ANCESTOR, so it is as happy inside a card as it
+ * is behind a full section — `inset: 0` against whatever box establishes the
+ * containing block. Two things the caller owns: giving that ancestor `position`,
+ * and clipping the corners. This component's own `overflow: hidden` clips to a
+ * RECTANGLE; drop it straight into a rounded card and the curves square off the
+ * corners. Wrap it in a layer carrying `border-radius: inherit` — career.astro
+ * does exactly that and says why.
+ *
  * ⚠ THE GEOMETRY IS IDENTICAL; ONLY THE INK CHANGES. On the deep ground the
  * word and strokes were white at low alpha. Over cream that is invisible, so
  * the light tone uses charcoal at the equivalent weight. Same paths, same
