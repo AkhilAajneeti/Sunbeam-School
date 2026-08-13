@@ -1,0 +1,22 @@
+---
+/**
+ * TEACHING & LEARNING · SMART CLASSROOMS — audit §2C.
+ *
+ * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page itself is
+ * components/academics/TopicPage, the same component the five Assessment topics
+ * use — so the treatment cannot drift between the two sets. The content lives in
+ * data/teachingTopics.ts, which records why fourteen bullets became six pages.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { teachingTopics } from '../../../data/teachingTopics';
+import photo from '../../../assets/computer lab/DSC_1204 copy.jpg';
+
+const topic = teachingTopics.find((t) => t.id === 'smart-classrooms')!;
+---
+
+<TopicPage
+  topic={topic}
+  photo={photo}
+  alt="A computer laboratory at Sunbeam School Ballia, machines set out in rows along the benches."
+  position="50% 50%"
+/>

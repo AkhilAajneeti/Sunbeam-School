@@ -1,0 +1,54 @@
+---
+/**
+ * TEACHING PHILOSOPHY — audit §2A.
+ *
+ * ⚠ THIS PAGE NO LONGER RENDERS A SLICE OF THE OVERVIEW. It previously showed
+ * PhilosophyStory's `triad` movement plus TopicNotes, which was the right answer
+ * while the six sub-topics shared one composed sequence. The client has since
+ * asked for a page art-directed on its own terms, so it now has one: seven
+ * movements built only from what the school publishes about HOW IT TEACHES.
+ *
+ * ⚠ THE OVERVIEW STILL CARRIES ITS OWN `triad`. Nothing was removed from
+ * /academics/philosophy/ — the two now say related things in different shapes,
+ * which is the point of a sub-page rather than a duplicate of one.
+ *
+ * ⚠ SCOPE IS POLICED IN THE COMPONENT. Curriculum, experiential work, STEM,
+ * robotics, AI, smart classrooms, assessment, careers, structure and parent
+ * partnership all have their own pages; see the note at the top of
+ * TeachingPhilosophyPage on why §05 in particular stops at the philosophy of
+ * teaching with technology rather than describing the rooms.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import TeachingPhilosophyPage from '../../../components/academics/TeachingPhilosophyPage.astro';
+import banner from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+---
+
+<BaseLayout
+  title="Teaching Philosophy — Sunbeam School Ballia"
+  description="How Sunbeam School Ballia believes teaching should happen: recognising that every child is different, teachers as facilitators, multiple intelligences, collaborative learning, innovative methods, and teaching towards independence."
+>
+  <PageHero
+    title="Teaching that understands every learner"
+    standfirst="Sunbeam's approach begins by recognising that abilities differ — then guides each child towards their own strengths, through collaboration and methods that keep moving."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Philosophy', href: '/academics/philosophy/' },
+    ]}
+    src={banner}
+    alt="The activity learning lab at Sunbeam School Ballia, tables set out for group work."
+    position="50% 50%"
+  />
+
+  {/* padding-block: 0 — every movement carries its own section rhythm, and the
+      panel adding its own on top is what put a 183px void under the hero on
+      three earlier pages. */}
+  <div class="u-page-panel tp-panel">
+    <TeachingPhilosophyPage />
+  </div>
+</BaseLayout>
+
+<style>
+  div.tp-panel { padding-block: 0; }
+</style>

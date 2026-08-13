@@ -41,9 +41,7 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
-import TeachingPhilosophy from '../../components/academics/TeachingPhilosophy.astro';
-import PhilosophyConstellation from '../../components/academics/PhilosophyConstellation.astro';
-import AffiliationDetails from '../../components/academics/AffiliationDetails.astro';
+import PhilosophyStory from '../../components/academics/PhilosophyStory.astro';
 import banner from '../../assets/library/DSC_1225 copy.jpg';
 ---
 
@@ -65,9 +63,15 @@ import banner from '../../assets/library/DSC_1225 copy.jpg';
   {/* padding-bottom: 0 — the last section in here closes on its own sand ground
       and the panel's 120px of ivory would have shown as a strip beneath it. */}
   <div class="u-page-panel phil-panel">
-    <TeachingPhilosophy />
-    <!-- <PhilosophyConstellation /> -->
-    <AffiliationDetails />
+    {/* ⚠ ONE COMPONENT REPLACES THREE. TeachingPhilosophy, the commented-out
+        PhilosophyConstellation and AffiliationDetails each carried a slice of
+        the seven themes and each was built as its own band of cards. The seven
+        are now one composed sequence in PhilosophyStory, which is what lets the
+        openers, the triad, the collage, the timeline and the record plate share
+        a single decorative language instead of three. The old components are
+        left in the repo rather than deleted — nothing else imports them, so
+        restoring one is a single line. */}
+    <PhilosophyStory />
   </div>
 </BaseLayout>
 

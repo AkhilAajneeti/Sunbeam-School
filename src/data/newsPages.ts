@@ -1,3 +1,4 @@
+import type { ImageMetadata } from 'astro';
 /**
  * NEWS & EVENTS — THE FOUR SUB-PAGES.
  *
@@ -67,6 +68,33 @@ export interface ChronicleItem {
    * reversible in one line.
    */
   photoSkip?: string[];
+  /**
+   * A ready ImageMetadata for the card face, used INSTEAD of resolving a folder.
+   *
+   * ⚠ THIS EXISTS FOR THE AWARD GRAPHICS. Workshop and activity cards resolve
+   * their picture from `photoDir` through the assets glob; the three major
+   * achievements are single designed posters already imported by
+   * data/achievements.ts, with no folder to point at.
+   */
+  art?: ImageMetadata;
+  /**
+   * How the card face treats that picture. Defaults to 'cover'.
+   *
+   * ⚠ 'contain' IS NOT A PREFERENCE, IT IS A CORRECTION. The award graphics are
+   * designed posters — each carries its own headline, crest and framed photo.
+   * Cover-cropping one into a landscape card slices the headline off, which is
+   * the exact fault recorded in the header of Majors.astro: an earlier build
+   * used a poster as a full-bleed background and lost the words on it.
+   */
+  fit?: 'cover' | 'contain';
+  /**
+   * An explicit destination, used INSTEAD of `base + slug`.
+   *
+   * ⚠ FOR CARDS THAT POINT AT A SECTION OF ANOTHER PAGE. The achievements cards
+   * open the full record at /beyond-academics/achievements/#<id>; composed from
+   * a slug that would have produced '…/#robowunder/', which is not a route.
+   */
+  href?: string;
 }
 
 export interface ChronicleGroup {

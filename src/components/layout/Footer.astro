@@ -38,7 +38,10 @@ const columns = [
       { label: "Vision and Mission", href: "/about/vision-mission/" },
       {
         label: "Legacy of the institution",
-        href: "/about/history-legacy/#legacy",
+        /* ⚠ NO FRAGMENT — #legacy does not exist on that page (its anchors are
+           leadership, voices-heading, line-heading, film-heading). In the footer
+           that was one dead fragment on all 129 pages. */
+        href: "/about/history-legacy/",
       },
       { label: "Director's Message", href: "/about/directors-message/" },
       { label: "Principal's Message", href: "/about/principals-message/" },

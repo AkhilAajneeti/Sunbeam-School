@@ -32,6 +32,7 @@
  */
 
 import { record, shot } from './sportsRecord';
+import type { ChroniclePage } from './newsPages';
 import { majors } from './achievements';
 import { parents } from './academics';
 
@@ -219,3 +220,68 @@ export const streams: Stream[] = [
     more: { label: 'The notice board', href: '/news-events/notices/' },
   },
 ];
+
+
+/**
+ * ═══ THE NEWS & EVENTS INDEX, AS A ChroniclePage ═══════════════════════════
+ *
+ * ⚠ THE INDEX NOW SHOWS ACHIEVEMENTS AND NOTHING ELSE, on the client's
+ * instruction — "remove others and only show achievements". The other five
+ * streams are not lost: School Events, Competitions, Workshops and Celebrations
+ * each have their own full page under /news-events/, which is where their cards
+ * already linked. Announcements is the one with no page of its own; its items
+ * are unpublished until it gets one.
+ *
+ * ⚠ IT IS A ChroniclePage, NOT A Stream, AND THAT IS THE WHOLE REASON THE PAGE
+ * LOOKS LIKE WORKSHOPS. The client asked for the Workshops design; `CardGrid`
+ * already is that design and is typed against ChroniclePage. Reusing the
+ * contract means a change to the card treatment lands here too, where a bespoke
+ * shape would have needed a bespoke grid that merely resembled it.
+ *
+ * ⚠ NO CAROUSEL. `Stream` renders a horizontal rail; that existed because six
+ * categories stacked vertically ran to a very long page. With one category there
+ * is nothing to compress, and a rail hides two of three cards behind a swipe for
+ * no reason.
+ *
+ * ⚠ EVERY CARD NOW OPENS ITS OWN DETAIL PAGE, on the same DetailPage component
+ * the workshops use. It first pointed at an anchor on /beyond-academics/
+ * achievements/; the client asked for real pages instead.
+ *
+ * ⚠ NOTHING IS INVENTED TO FILL THEM. The detail page shows what the school
+ * published and stops: the award graphic whole, the one paragraph it wrote, and
+ * the facts read straight off the artwork. No page is padded out to article
+ * length — that would mean describing awards from nothing.
+ */
+export const achievementsPage: ChroniclePage = {
+  slug: 'achievements',
+  title: 'Achievements',
+  standfirst:
+    'What the school has just won — an international robotics placing, a national innovation ranking and a cluster championship.',
+  eyebrow: 'Recent achievements',
+  heading: 'What the school has just won',
+  stand:
+    'The three the school produced an award graphic for. Each card opens the full record, with the facts read straight off the artwork.',
+  groups: [
+    {
+      id: 'achievements',
+      label: 'Major achievements',
+      note: 'The three the school has published award graphics for.',
+      items: majors.map((m) => ({
+        title: m.title,
+        /* ⚠ THE SLUG IS THE AWARD'S OWN id, NOT DERIVED FROM THE TITLE. Same
+           rule as every other section: a slug generated from a heading changes
+           the moment the heading is edited, and every link to that page breaks
+           silently. `m.id` is already written down in data/achievements.ts and
+           is what Majors.astro puts on each article, so the two stay in step. */
+        slug: m.id,
+        meta: m.kicker,
+        body: m.detail,
+        /* The award graphic's own facts, shown as the item's receipt rather than
+           a restatement of the paragraph above it. */
+        result: m.facts.join(' · '),
+        art: m.art,
+        fit: 'contain' as const,
+      })),
+    },
+  ],
+};

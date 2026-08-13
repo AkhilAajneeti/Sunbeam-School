@@ -174,6 +174,14 @@ export const mainNav: NavItem[] = [
           icon: "bulb",
           desc: "Teaching philosophy, curriculum and affiliation.",
           img: imgActivity,
+          children: [
+            { label: "Teaching Philosophy", href: "/academics/philosophy/teaching-philosophy/", icon: "bulb" },
+            { label: "Student-Centred Learning", href: "/academics/philosophy/student-centred-learning/", icon: "hand" },
+            { label: "Experiential & Inquiry-Based Learning", href: "/academics/philosophy/experiential-inquiry/", icon: "compass" },
+            { label: "Critical Thinking & Creativity", href: "/academics/philosophy/critical-thinking/", icon: "target" },
+            { label: "Curriculum", href: "/academics/philosophy/curriculum/", icon: "book" },
+            { label: "Affiliation Details", href: "/academics/philosophy/affiliation-details/", icon: "badge" },
+          ],
         },
         {
           label: "Academic Structure",
@@ -181,6 +189,15 @@ export const mainNav: NavItem[] = [
           icon: "school",
           desc: "Pre-primary to senior secondary, and the streams.",
           img: imgCampus,
+          children: [
+            { label: "Streams Offered", href: "/academics/structure/streams-offered/", icon: "school" },
+            { label: "Subject Combinations", href: "/academics/structure/subject-combinations/", icon: "book" },
+            { label: "Pre-Primary", href: "/academics/structure/pre-primary/", icon: "panel" },
+            { label: "Primary", href: "/academics/structure/primary/", icon: "target" },
+            { label: "Middle School", href: "/academics/structure/middle-school/", icon: "cap" },
+            { label: "Secondary", href: "/academics/structure/secondary/", icon: "compass" },
+            { label: "Senior Secondary", href: "/academics/structure/senior-secondary/", icon: "badge" },
+          ],
         },
         {
           label: "Teaching & Learning",
@@ -188,6 +205,18 @@ export const mainNav: NavItem[] = [
           icon: "panel",
           desc: "Smart classrooms, STEM, robotics and the labs.",
           img: imgComputer,
+          /* ⚠ SIX CHILDREN FOR FOURTEEN BULLETS. The grouping is the school's
+             own — the six blocks the /academics/teaching-learning/ page is
+             already built from, whose eyebrows name them. See the mapping table
+             in data/teachingTopics.ts. */
+          children: [
+            { label: "Teaching Methodology", href: "/academics/teaching-learning/methodology/", icon: "bulb" },
+            { label: "Smart Classrooms & Digital Literacy", href: "/academics/teaching-learning/smart-classrooms/", icon: "panel" },
+            { label: "Experiential & Project-Based Learning", href: "/academics/teaching-learning/experiential-learning/", icon: "hand" },
+            { label: "STEM, Robotics & Enrichment", href: "/academics/teaching-learning/stem-robotics/", icon: "target" },
+            { label: "Reading, Language & Library", href: "/academics/teaching-learning/reading-language/", icon: "book" },
+            { label: "Laboratories & Academic Clubs", href: "/academics/teaching-learning/laboratories-clubs/", icon: "school" },
+          ],
         },
         {
           label: "Assessment Pattern",
@@ -239,6 +268,16 @@ export const mainNav: NavItem[] = [
           icon: "cap",
           desc: "Counselling, board results, olympiads, scholarships.",
           img: imgPrincipal,
+          children: [
+            { label: "Career Guidance", href: "/academics/student-success/career-guidance/", icon: "compass" },
+            { label: "University Counselling", href: "/academics/student-success/university-counselling/", icon: "cap" },
+            { label: "Subject Selection Guidance", href: "/academics/student-success/subject-selection/", icon: "target" },
+            { label: "Alumni Interaction", href: "/academics/student-success/alumni-interaction/", icon: "speech" },
+            { label: "Board Results", href: "/academics/board-results/", icon: "badge" },
+            { label: "Olympiad Achievements", href: "/academics/student-success/olympiad-achievements/", icon: "star" },
+            { label: "Scholarships", href: "/academics/student-success/scholarships/", icon: "bulb" },
+            { label: "Student Success Stories", href: "/academics/student-success/success-stories/", icon: "hand" },
+          ],
         },
         {
           label: "Parent Partnership",
@@ -246,6 +285,14 @@ export const mainNav: NavItem[] = [
           icon: "heart",
           desc: "Orientation, forum, workshops and communication.",
           img: imgCampus,
+          children: [
+            { label: "Parent Orientation", href: "/academics/parent-partnership/parent-orientation/", icon: "hand" },
+            { label: "Parents’ Forum", href: "/academics/parent-partnership/parents-forum/", icon: "speech" },
+            { label: "Workshops & Webinars", href: "/academics/parent-partnership/workshops-webinars/", icon: "panel" },
+            { label: "School–Parent Communication", href: "/academics/parent-partnership/school-parent-communication/", icon: "mail" },
+            { label: "Parent Engagement Initiatives", href: "/academics/parent-partnership/parent-engagement/", icon: "star" },
+            { label: "Frequently Asked Questions", href: "/academics/parent-partnership/faqs/", icon: "bulb" },
+          ],
         },
         // §8, kept as the single item the audit names it.
       ],
@@ -431,13 +478,12 @@ export const mainNav: NavItem[] = [
           desc: "The school year, marked.",
           img: imgCampus,
         },
-        {
-          label: "Important announcements",
-          href: "/news-events/#announcements",
-          icon: "mail",
-          desc: "What parents need to know.",
-          img: imgCampus,
-        },
+        /* ⚠ REMOVED WITH THE STREAM IT POINTED AT. The News & Events index
+           now shows achievements alone, so #announcements is an anchor to a
+           section that is no longer in the document — the browser loads the page
+           and silently does not scroll, which reads as a broken link. The
+           announcements DATA is still in newsEvents.ts; restore this entry the
+           moment those items get a section or a page of their own. */
       ],
     ],
     feature: {

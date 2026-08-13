@@ -1,0 +1,56 @@
+---
+/**
+ * ACADEMIC PHILOSOPHY · CURRICULUM — audit §2A.
+ *
+ * ⚠ THE MOVEMENT IS RENDERED FROM THE OVERVIEW, NOT COPIED FROM IT.
+ * PhilosophyStory takes an `only` key and renders that one movement ("way")
+ * and nothing else. It is the same component /academics/philosophy/ uses, so
+ * this page carries the identical composition, imagery, decoration and motion
+ * the reader saw in the section — never a thinner retelling of it.
+ *
+ * ⚠ AND THEN IT ADDS WHAT ONLY THIS PAGE SAYS. TopicNotes carries the detail
+ * from data/academicTopics.ts underneath. Without it this page would be a
+ * strict subset of the overview — the duplication the client spotted: the same
+ * material at two URLs, with the deeper-sounding one the thinner of the two.
+ *
+ * Movement = what the overview shows. Notes = what only this page says.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import PhilosophyStory from '../../../components/academics/PhilosophyStory.astro';
+import TopicNotes from '../../../components/academics/TopicNotes.astro';
+import { philosophyTopics } from '../../../data/academicTopics';
+import banner from '../../../assets/library/DSC_1225 copy.jpg';
+
+const topic = philosophyTopics.find((t) => t.id === 'curriculum')!;
+---
+
+<BaseLayout
+  title={`${topic.title} — Sunbeam School Ballia`}
+  description={topic.standfirst!}
+>
+  <PageHero
+    title={topic.title!}
+    standfirst={topic.standfirst}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Philosophy', href: '/academics/philosophy/' },
+    ]}
+    src={banner}
+    alt="The library at Sunbeam School Ballia, its reading table ringed with chairs."
+    position="50% 38%"
+  />
+
+  {/* padding-block: 0 — each section carries its own rhythm, and the panel
+      adding its own on top is what put a 183px void under the hero on three
+      earlier pages. */}
+  <div class="u-page-panel phil-topic">
+    <PhilosophyStory only="way" />
+    <TopicNotes topic={topic} />
+  </div>
+</BaseLayout>
+
+<style>
+  div.phil-topic { padding-block: 0; }
+</style>

@@ -1364,7 +1364,11 @@ export const parents = {
           'Sunbeam School Ballia is affiliated to the Central Board of Secondary Education, Delhi, ' +
           'as a co-educational senior secondary school — CBSE affiliation number ' +
           school.affiliationNo + ', school code ' + school.schoolCode + '.',
-        cta: { label: 'Academic philosophy', href: '/academics/philosophy/#affiliation' },
+        /* ⚠ THE PAGE, NOT AN ANCHOR. This pointed at #affiliation, an id the old
+           AffiliationDetails component carried; that component was replaced by
+           PhilosophyStory and the id went with it, leaving a fragment the browser
+           silently fails to scroll to. Affiliation now has a page of its own. */
+        cta: { label: 'Affiliation details', href: '/academics/philosophy/affiliation-details/' },
       },
       {
         q: 'When are parent–teacher meetings held?',

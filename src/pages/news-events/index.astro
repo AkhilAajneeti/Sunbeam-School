@@ -47,15 +47,13 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
-import SectionRail from '../../components/academics/SectionRail.astro';
-import Stream from '../../components/news/Stream.astro';
+import CardGrid from '../../components/news/CardGrid.astro';
 
-import { streams } from '../../data/newsEvents';
+import { achievementsPage } from '../../data/newsEvents';
 import heroPhoto from '../../assets/photos/sunbeem-4.jpg';
 
 /* No two adjacent categories share a ground — the page's only structural rule,
    and with six near-identical sections it is doing real work. */
-const TONES = ['ivory', 'sand', 'paper'] as const;
 ---
 
 <BaseLayout
@@ -71,13 +69,16 @@ const TONES = ['ivory', 'sand', 'paper'] as const;
     position="50% 40%"
   />
 
-  <SectionRail items={streams.map((s) => ({ id: s.id, label: s.eyebrow }))} />
+  {/* ⚠ THE SECTION RAIL IS GONE WITH THE OTHER STREAMS. It was a jump list
+      across six categories; with one section left it would be a navigation
+      control pointing at a single destination — the same "control that does
+      nothing" the pager guards against elsewhere. */}
 
   {/* padding-block: 0 — every section carries its own --sb-section-y, and the
       panel adding its own on top is what put a 183px void under the hero on
       three earlier pages. */}
   <div class="u-page-panel news-panel">
-    {streams.map((s, i) => <Stream stream={s} tone={TONES[i % TONES.length]} />)}
+    <CardGrid page={achievementsPage} base="/news-events/achievements/" unit="achievement" />
   </div>
 </BaseLayout>
 

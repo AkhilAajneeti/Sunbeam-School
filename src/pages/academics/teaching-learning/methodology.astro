@@ -1,0 +1,22 @@
+---
+/**
+ * TEACHING & LEARNING · METHODOLOGY — audit §2C.
+ *
+ * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page itself is
+ * components/academics/TopicPage, the same component the five Assessment topics
+ * use — so the treatment cannot drift between the two sets. The content lives in
+ * data/teachingTopics.ts, which records why fourteen bullets became six pages.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { teachingTopics } from '../../../data/teachingTopics';
+import photo from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+
+const topic = teachingTopics.find((t) => t.id === 'methodology')!;
+---
+
+<TopicPage
+  topic={topic}
+  photo={photo}
+  alt="The activity learning lab at Sunbeam School Ballia, tables set out for group work."
+  position="50% 50%"
+/>

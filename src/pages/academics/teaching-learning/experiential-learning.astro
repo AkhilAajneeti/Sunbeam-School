@@ -1,0 +1,22 @@
+---
+/**
+ * TEACHING & LEARNING · EXPERIENTIAL LEARNING — audit §2C.
+ *
+ * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page itself is
+ * components/academics/TopicPage, the same component the five Assessment topics
+ * use — so the treatment cannot drift between the two sets. The content lives in
+ * data/teachingTopics.ts, which records why fourteen bullets became six pages.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { teachingTopics } from '../../../data/teachingTopics';
+import photo from '../../../assets/chem lab/DSC_1262 copy.jpg';
+
+const topic = teachingTopics.find((t) => t.id === 'experiential-learning')!;
+---
+
+<TopicPage
+  topic={topic}
+  photo={photo}
+  alt="The chemistry laboratory at Sunbeam School Ballia, benches laid out with apparatus."
+  position="50% 52%"
+/>

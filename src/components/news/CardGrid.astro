@@ -99,16 +99,31 @@ let n = 0;
         <ul class="wgrid__list">
           {g.items.map((item) => {
             n += 1;
-            const face = leadPhoto(item.photoDir, item.photoSkip);
+            /* ⚠ `art` WINS OVER THE FOLDER. A workshop resolves its face from
+               photoDir through the assets glob; an award graphic is a single
+               poster already imported by data/achievements.ts and has no folder
+               to point at. */
+            const face = item.art ?? leadPhoto(item.photoDir, item.photoSkip);
+
+            /* ⚠ A POSTER IS FRAMED, NOT CROPPED. The full-bleed treatment below
+               covers the card and lays white copy over the picture — right for a
+               photograph of a session, wrong for a designed graphic that carries
+               its own headline and crest. `fit: 'contain'` puts the artwork whole
+               on a mat at the top of an ordinary card instead. See the header of
+               beyond/achievements/Majors.astro: an earlier build used one of
+               these as a full-bleed background and cropped its headline away. */
+            const framed = item.fit === 'contain';
+            const to = item.href ?? (item.slug ? `${base}${item.slug}/` : null);
+
             return (
-              <li class:list={['wcard', face && 'wcard--shot']}>
+              <li class:list={['wcard', face && !framed && 'wcard--shot', framed && 'wcard--art']}>
                 {/* ⚠ THE PICTURE IS DECORATIVE HERE — alt="". The card's own
                     heading names the session immediately below it, so a
                     described image would make a screen reader announce the same
                     workshop twice before the link. The real description lives on
                     the detail page, where the photographs are the content. */}
                 {face && (
-                  <div class="wcard__face">
+                  <div class:list={[framed ? 'wcard__art' : 'wcard__face']}>
                     <Picture
                       src={face}
                       alt=""
@@ -132,8 +147,8 @@ let n = 0;
 
                 <h3 class="wcard__t">{item.title}</h3>
 
-                {item.slug ? (
-                  <a class="wcard__go" href={`${base}${item.slug}/`}>
+                {to ? (
+                  <a class="wcard__go" href={to}>
                     <span>View details</span>
                     <span class="wcard__arrow" aria-hidden="true">
                       <svg width="15" height="10" viewBox="0 0 14 10" fill="none">
@@ -222,6 +237,15 @@ let n = 0;
        ancestor silently became the containing block for something else. */
     position: relative;
     display: grid;
+    /* ⚠ AN EXPLICIT minmax(0, 1fr) COLUMN, OR THE ARTWORK BLOWS THE CARD OPEN.
+       With rows declared and no columns, the implicit column is `auto` — which
+       sizes to its content's MAX-CONTENT width. A heading and a button have no
+       max-content worth speaking of, so this was harmless until the framed award
+       posters arrived: measured at 1440, three 419px cards held art frames of
+       489, 599 and 571px and the page scrolled 99px sideways. `minmax(0, …)` is
+       what lets a track shrink below its content, exactly as it already does on
+       `.wgrid__list` above. */
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto 1fr auto;
     gap: var(--sb-4);
     min-height: 168px;
@@ -276,6 +300,80 @@ let n = 0;
 
   .wgrid--paper .wcard--shot,
   .wgrid--sand .wcard--shot { background: var(--sb-charcoal); }
+
+  /* ═══ THE FRAMED-ARTWORK CARD ══════════════════════════════════════════════
+     An ordinary card with the poster shown WHOLE on a mat at the top. It keeps
+     the grid's radius, border, hover lift and button, so it reads as the same
+     family as the photograph cards — only the picture is presented differently,
+     because a designed graphic and a photograph are different things.
+
+     The mat is what stops a poster with its own white ground from floating on
+     the card. `aspect-ratio` gives every card in the row the same frame height
+     whatever proportion the artwork inside it happens to be. */
+  /* ⚠ flex, NOT THE BASE CARD'S GRID. The base is `auto 1fr auto`, which puts
+     the flexible row SECOND — fine when the first child is the number, since the
+     slack then sits above the title and pins it to the button. With the artwork
+     taking row one, the number lands in the flexible row and the title is left
+     hanging off the button instead of sitting under the picture: measured at
+     1440, a one-line title started 28px lower than a two-line one across a row
+     of otherwise identical cards. As a flex column the art, number and title
+     stack from the top and only the button is pushed down. */
+  .wcard--art {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .wcard--art .wcard__go { margin-top: auto; align-self: flex-start; }
+
+  .wcard__art {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    margin-bottom: var(--sb-4);
+    padding: clamp(12px, 1.4vw, 18px);
+    /* ⚠ --sb-r-0, NOT --sb-r-1. I guessed the token name and `--sb-r-1` is the
+       full pill, 999px — combined with `overflow: hidden` that clipped every
+       award poster into an ellipse and cut the corners off the artwork. The
+       image radius in this system is --sb-r-0 (16px); the pill is for buttons
+       and badges. */
+    border-radius: var(--sb-r-0);
+    background: var(--sb-sand);
+  }
+
+  /* ⚠ `min-height: 0` ON THE GRID ITEM, OR THE RATIO IS ADVISORY. A grid item
+     defaults to `min-height: auto`, which refuses to shrink below its content's
+     min-content height — so the two PORTRAIT posters pushed their frames taller
+     than 4:3 and the three cards' titles stopped aligning. Measured at 1440: the
+     frames came out at three different heights against a declared single ratio.
+     Zeroing the floor lets the declared box win. */
+  .wcard__art :global(picture) {
+    display: block;
+    /* Definite, so the image's own 100% height below has something real to
+       resolve against. */
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* ⚠ 100% BOTH WAYS PLUS `contain`, NOT `auto` WITH max-* CAPS. The capped
+     version looked right and was not: `max-height: 100%` resolves against the
+     <picture>, and while that was `height: auto` the percentage was indefinite
+     and never bound — so both PORTRAIT posters rendered at full frame width and
+     were clipped off at the bottom. The same indefinite-height trap the lightbox
+     hit. With the picture given a definite height above, `object-fit: contain`
+     does the fitting and cannot overflow. */
+  .wcard__art :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* NEVER `cover` here. That is the whole point of this variant. */
+    object-fit: contain;
+    transition: transform 620ms var(--sb-ease);
+  }
+
+  .wcard--art:hover .wcard__art :global(img) { transform: scale(1.04); }
 
   .wcard__face {
     position: absolute;

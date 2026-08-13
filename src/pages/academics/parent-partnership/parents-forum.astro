@@ -1,0 +1,17 @@
+---
+/**
+ * PARENT PARTNERSHIP · PARENTS’ FORUM — audit §2F.
+ *
+ * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
+ * components/academics/TopicPage — the same component the Assessment and
+ * Teaching & Learning topics use, so the treatment cannot drift between the
+ * four sets. The content lives in data/academicTopics.ts.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { parentTopics } from '../../../data/academicTopics';
+import photo from '../../../assets/library/DSC_1224 copy.jpg';
+
+const topic = parentTopics.find((t) => t.id === 'parents-forum')!;
+---
+
+<TopicPage topic={topic} photo={photo} alt="The Nalanda Library at Sunbeam School Ballia, its shelves labelled by subject." position="50% 50%" />

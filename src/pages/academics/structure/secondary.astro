@@ -1,0 +1,17 @@
+---
+/**
+ * ACADEMIC STRUCTURE · SECONDARY — audit §2B.
+ *
+ * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
+ * components/academics/TopicPage — the same component the Assessment and
+ * Teaching & Learning topics use, so the treatment cannot drift between the
+ * four sets. The content lives in data/academicTopics.ts.
+ */
+import TopicPage from '../../../components/academics/TopicPage.astro';
+import { structureTopics } from '../../../data/academicTopics';
+import photo from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+
+const topic = structureTopics.find((t) => t.id === 'secondary')!;
+---
+
+<TopicPage topic={topic} photo={photo} alt="The activity learning lab at Sunbeam School Ballia, tables set out for group work." position="50% 50%" />

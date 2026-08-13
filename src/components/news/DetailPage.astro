@@ -92,6 +92,17 @@ interface Props {
    * only a caller that lives elsewhere has to say so.
    */
   section?: { label: string; href: string };
+  /**
+   * Where "All …" and the breadcrumb point. Defaults to `base`.
+   *
+   * ⚠ THEY ARE NOT ALWAYS THE SAME PLACE. For every other section the cards and
+   * the detail routes share a prefix, so `base` serves as both. The achievements
+   * cards sit on /news-events/ while their pages are at
+   * /news-events/achievements/…, so using `base` for the back link produced a
+   * link to a directory with no index — one dead destination repeated on all
+   * three pages, and caught only by the site-wide link check.
+   */
+  indexHref?: string;
 }
 
 const {
@@ -105,13 +116,22 @@ const {
   resultLabel = 'Note',
   unit = 'session',
   section = { label: 'News & Events', href: '/news-events/' },
+  indexHref,
 } = Astro.props;
 
 /* ⚠ THE HERO USES THE SESSION'S OWN LEAD PHOTOGRAPH WHERE ONE EXISTS, falling
    back to the shared school image only where it does not. A workshop page
    headed by a generic hall shot says nothing; headed by the room it actually
    happened in, it says what no amount of copy can. */
-const photos = photosFor(item.photoDir, item.photoSkip);
+/**
+ * ⚠ `art` IS A GALLERY OF ONE, AND IT MUST BE, or this page shows the
+ * "photographs not yet supplied" placeholder for an item whose picture is right
+ * there. The award graphics are single imported posters with no folder behind
+ * them — see the note on `art` in data/newsPages.ts. Everything downstream (the
+ * frame ratio, the solo-gallery hero rule, the lightbox) then works unchanged,
+ * because all of it reads this one array.
+ */
+const photos = item.art ? [item.art] : photosFor(item.photoDir, item.photoSkip);
 
 /* ⚠ THE HERO ONLY TAKES A LANDSCAPE LEAD IMAGE. A banner is panoramic by
    definition — roughly 3:1 at desktop — so a portrait graphic dropped into it is
@@ -203,7 +223,7 @@ const next = all[here + 1];
     crumbs={[
       { label: 'Home', href: '/' },
       section,
-      { label: page.title, href: base },
+      { label: page.title, href: indexHref ?? base },
     ]}
     src={hero}
     alt={heroAlt}
@@ -345,7 +365,7 @@ const next = all[here + 1];
           )
         }
 
-        <a class="wd-more__all" href={base}>All {page.title.toLowerCase()}</a>
+        <a class="wd-more__all" href={indexHref ?? base}>All {page.title.toLowerCase()}</a>
 
         {
           next ? (

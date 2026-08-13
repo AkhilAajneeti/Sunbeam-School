@@ -215,3 +215,4 @@ export const posters: Poster[] = [
 
 /** Used by the page's counter, so the number can never drift from the wall. */
 export const posterCount = posters.length;
+
