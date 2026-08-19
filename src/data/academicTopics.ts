@@ -40,20 +40,33 @@ export const philosophyTopics: AssessmentTopic[] = [
     photo: 'activity',
     body: [
       'Sunbeam Ballia describes its teaching as beginning with the learner rather than with the syllabus — the curriculum is what a class moves through, not what a lesson is about.',
-      'In practice that shows up as the four-move lesson shape set out under Teaching & Learning: a lesson opens on a question the class cannot yet answer, and the answer is arrived at rather than delivered.',
+      'In practice that is the three things About Us says the school builds into all areas of teaching — Technology, a theory of Multiple Intelligence, and Collaborative learning — set out under Teaching & Learning.',
     ],
   },
   {
     id: 'student-centred-learning',
     label: 'Student-Centred Learning',
-    hint: 'The student does the work the lesson is made of.',
+    hint: 'A voice, a potential and a path of their own.',
     href: '/academics/philosophy/student-centred-learning/',
     title: 'Student-Centred Learning',
-    standfirst: 'The student handles the apparatus, the source and the argument — not a description of them.',
+    /**
+     * ⚠ WHAT USED TO BE HERE WAS INVENTED. The standfirst read "The student
+     * handles the apparatus, the source and the argument", and the body had
+     * students "handling the apparatus, reading the source, running the code,
+     * and defending a finding to the group", plus a claim that "most of the
+     * talking in a lesson is done by students". None of that appears anywhere on
+     * sunbeamballia.edu.in — it described a classroom nobody had described to us.
+     *
+     * Every sentence below is now traceable: the first two clauses to About Us
+     * ("Learn effectively and develop their full potential", "Ensure that all
+     * children receive equal regard and equal access to the curriculum"), the
+     * Children's Forum wording to the school's own Event Chronicles.
+     */
+    standfirst: 'Equal regard, equal access to the curriculum, and a forum where students are heard.',
     photo: 'activity',
     body: [
-      'Student-centred learning here means the student does the work the lesson is made of: handling the apparatus, reading the source, running the code, and defending a finding to the group.',
-      'It is the reason most of the talking in a lesson is done by students rather than by the teacher.',
+      'The school sets out to help every child “learn effectively and develop their full potential”, and to “ensure that all children receive equal regard and equal access to the curriculum”.',
+      'Students from Grades I to XII take part in the school’s Children’s Forum, which the school describes as a platform for them to express their thoughts, share ideas and discuss academics and school activities — “not just learners but active contributors to the school’s growth and progress”.',
     ],
   },
   {
@@ -72,13 +85,13 @@ export const philosophyTopics: AssessmentTopic[] = [
   {
     id: 'critical-thinking',
     label: 'Critical Thinking & Creativity',
-    hint: 'Defending a result is part of arriving at it.',
+    hint: 'Curiosity and collaboration, in the school’s own words.',
     href: '/academics/philosophy/critical-thinking/',
     title: 'Critical Thinking & Creativity',
-    standfirst: 'A finding has to be defended to the group before it counts as understood.',
+    standfirst: 'The setting the school does describe: classrooms it calls places of curiosity and collaboration.',
     photo: 'activity',
     body: [
-      'Critical thinking is built into the lesson shape rather than taught alongside it: groups compare what they found and have to defend it, which is where a result stops being an answer and becomes an understanding.',
+      'The school does not publish a critical-thinking programme, and none is claimed here. What it does state is the setting such thinking needs: the Principal describes Sunbeam’s classrooms as “places of curiosity and collaboration”, and About Us lists “a theory of Multiple Intelligence and Collaborative learning” among the three things built into all areas of teaching.',
       'The school has also run staff training specifically on critical thinking — see the Workshops record under News & Events.',
     ],
   },
@@ -278,8 +291,8 @@ export const careerTopics: AssessmentTopic[] = [
     standfirst: 'The school runs an alumni programme and brings former students back into the building.',
     photo: 'library',
     body: [
-      'The school runs an alumni programme — Pradeeptam, its alumni event, is recorded under School Activities — and brings former students back to speak to current ones.',
-      'The school has not published the shape of that interaction beyond the events themselves; the alumni pages carry what exists.',
+      'The school issues an alumni card per person carrying the name, the degree, the institution and the employer. Three are published, and every line on them can be checked.',
+      'Beyond those three cards the school publishes nothing about its alumni programme — no event, no talks, no mentoring scheme. The alumni pages carry what exists.',
     ],
     owed: true,
   },
@@ -309,10 +322,10 @@ export const careerTopics: AssessmentTopic[] = [
     hint: 'What the school has published, and what it has not.',
     href: '/academics/student-success/scholarships/',
     title: 'Scholarships',
-    standfirst: 'The school names the Kaushal scholarship; the terms are not published.',
+    standfirst: 'The school publishes no scholarship terms; this page says so rather than inventing them.',
     photo: 'library',
     body: [
-      'The school’s activity record names a Kaushal scholarship, but it does not publish eligibility, value or how to apply.',
+      'The school publishes no scholarship — no name, no eligibility, no value and no way to apply. The audit records the subject as not mentioned.',
       'Rather than describe a scholarship this site cannot verify, this page says what is known and points at the office. A family planning around a scholarship needs the real terms, not a plausible summary.',
     ],
     owed: true,
@@ -347,12 +360,18 @@ export const parentTopics: AssessmentTopic[] = [
     hint: 'You meet the school before your child does.',
     href: '/academics/parent-partnership/parent-orientation/',
     title: 'Parent Orientation',
-    standfirst: 'A walk through the campus, the teachers in person, and how the school actually runs.',
+    standfirst: 'Orientation runs before the session begins; the programme itself is not published.',
     photo: 'library',
+    /* ⚠ THE CAMPUS WALK, THE TEACHERS IN PERSON AND THE HANDBOOK WERE REMOVED,
+       along with a cross-reference to School Activities that does not exist —
+       data/schoolActivities.ts lists ten activities and no orientation among
+       them. A citation to a record that is not there is the most persuasive kind
+       of invention, because it reads as sourcing. */
     body: [
-      'The orientation programme is built so that a parent meets the school before their child does: a walk through the campus, the teachers in person, and an account of how the school runs day to day.',
-      'The student handbook is issued at orientation. The school has run its Parents Orientation Programme in successive sessions — both are recorded under School Activities.',
+      'The school lists orientation as its first standing parent channel and states one thing about it: it runs before the session begins, so a new parent starts informed.',
+      'What the session covers, how long it runs and which classes it is held for are not published, and are not described here. The admissions desk holds both the agenda and the next date.',
     ],
+    owed: true,
   },
   {
     id: 'parents-forum',

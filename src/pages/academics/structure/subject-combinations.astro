@@ -1,17 +1,104 @@
 ---
 /**
- * ACADEMIC STRUCTURE · SUBJECT COMBINATIONS — audit §2B.
+ * ACADEMIC STRUCTURE · SUBJECT COMBINATIONS
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠ THIS IS THE PAGE THAT OWNS THE UNCERTAINTY, and it is written to be honest
+ * about it rather than to look complete. data/academics.ts sets out three
+ * confidence levels for stream composition; every row below is labelled with
+ * which one it sits at, so a parent can tell a definition from an assumption at
+ * a glance. A school site that prints a plausible timetable as fact does real
+ * damage — a family chooses a school on it.
+ *
+ *   1 · DEFINITIONAL — PCM and PCB. The abbreviation IS the subject list, and
+ *       English is compulsory in CBSE Classes XI–XII.
+ *   2 · STANDARD — the Commerce core. Near-certain, not confirmed here.
+ *   3 · NOT PUBLISHED — the Humanities core, and every elective list.
+ *
+ * ⚠ NO ELECTIVE LIST APPEARS ON THIS PAGE. An earlier build carried one; the
+ * school has never published it, so it is gone rather than footnoted.
+ *
+ * Composition: statement (paper, ghost) → collage (ivory, LEFT, the cores on
+ * hairlines with their confidence stated) → close. A statement opening, which
+ * Streams Offered does not use.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { structureTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/library/DSC_1224 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcStatement from '../../../components/academics/system/AcStatement.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = structureTopics.find((t) => t.id === 'subject-combinations')!;
+import banner from '../../../assets/computer lab/DSC_1204 copy.jpg';
+import pBio from '../../../assets/bio lab/DSC_1274 copy.jpg';
+import pChem from '../../../assets/chem lab/DSC_1262 copy.jpg';
+import pLib from '../../../assets/library/DSC_1224 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="The Nalanda Library at Sunbeam School Ballia, its shelves labelled by subject." position="50% 50%" />
+<BaseLayout
+  title="Subject Combinations — Sunbeam School Ballia"
+  description="Subject combinations for Senior Secondary at Sunbeam School Ballia: what each stream contains, with the confidence of each stated — PCM and PCB are definitional, the Commerce core is standard, and the Humanities core is not published."
+>
+  <PageHero
+    title="Subject Combinations"
+    standfirst="What each stream contains — and how far each of those lists can be relied on."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Structure', href: '/academics/structure/' },
+    ]}
+    src={banner}
+    alt="A computer laboratory at Sunbeam School Ballia, rows of workstations facing an interactive board."
+    position="50% 48%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcStatement
+      ground="paper"
+      ghost="XI–XII"
+      ghostAt="left"
+      kicker="Subject Combinations"
+      statement="A definition is not<br /><em>a timetable.</em>"
+      body={[
+        'Two of the four streams need no confirmation from anybody: <strong>PCM</strong> and <strong>PCB</strong> are abbreviations of their own subject lists, and English is compulsory across CBSE Classes XI and XII.',
+        'The other two are different. The <strong>Commerce</strong> core below is the standard CBSE one rather than a list the school has published, and the <strong>Humanities</strong> core is not published at all. Both are marked as such — this page would rather be short than confidently wrong.',
+      ]}
+    />
+
+    <AcCollage
+      ground="ivory"
+      side="left"
+      kicker="The four cores"
+      heading="With the confidence<br /><em>of each, stated</em>"
+      body={[
+        'Every row carries where it comes from. Nothing here is presented as more certain than it is, and no elective list appears at all — the school has never published one.',
+      ]}
+      ledger={[
+        { k: 'PCM · definitional', v: 'Physics, Chemistry, Mathematics + English.' },
+        { k: 'PCB · definitional', v: 'Physics, Chemistry, Biology + English.' },
+        { k: 'Commerce · standard, not confirmed', v: 'Accountancy, Business Studies, Economics + English — the usual CBSE core.' },
+        { k: 'Humanities · not published', v: 'The school has not published its combination. Confirm with the office.' },
+        { k: 'Electives · not published', v: 'No elective list is shown, because none has been published.' },
+      ]}
+      lead={{ src: pBio, alt: `A subject laboratory at ${school}, benches and apparatus laid out along the room` }}
+      support={[
+        { src: pChem, alt: `The chemistry laboratory at ${school}, reagent shelves above the benches` },
+        { src: pLib, alt: `The Nalanda Library at ${school}, its shelves signed by subject` },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Ask before<br /><em>you choose.</em>"
+      body="Final elective availability depends on section strength and the timetable, and changes between sessions. The office is the only reliable source."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

@@ -1,17 +1,106 @@
 ---
 /**
- * ACADEMIC STRUCTURE · STREAMS OFFERED — audit §2B.
+ * ACADEMIC STRUCTURE · STREAMS OFFERED — the four at Senior Secondary.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * Composition: path (paper, the four streams) → split (sand, photo RIGHT) →
+ * close. A path on paper, which no other page in this section uses.
+ *
+ * ⚠ THE MIDDLE BAND IS SAND BECAUSE AcClose IS ALWAYS INK. An ink split here put
+ * two identical grounds side by side, which reads as one long section.
+ *
+ * ═══ WHAT IS VERIFIED, AND WHAT IS NOT ═════════════════════════════════════
+ * The FOUR STREAM NAMES are verified — school.streams in data/site.ts, and the
+ * school publishes them. Beyond the names, data/academics.ts sets out three
+ * confidence levels and this page respects them:
+ *
+ *   1 · DEFINITIONAL — PCM is Physics, Chemistry, Mathematics; PCB is Physics,
+ *       Chemistry, Biology. The names ARE the subject lists, so stating them
+ *       claims nothing extra. English is compulsory in CBSE XI–XII.
+ *   2 · STANDARD — Accountancy, Business Studies and Economics are the CBSE
+ *       commerce core almost everywhere. Stated as the usual core, not as this
+ *       school's confirmed timetable.
+ *   3 · NOT VERIFIED — the Humanities core and every elective list. Humanities
+ *       composition varies more between schools than any other stream.
+ *
+ * ⚠ A DATA INCONSISTENCY WORTH FIXING UPSTREAM: `streamDetail` sets
+ * `unverified: false` on Humanities, which contradicts the same file's own note
+ * placing the Humanities core at level 3. This page follows the note, not the
+ * flag, and says plainly that the Humanities combination is not confirmed.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { structureTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/chem lab/DSC_1262 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcPath from '../../../components/academics/system/AcPath.astro';
+import AcSplit from '../../../components/academics/system/AcSplit.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = structureTopics.find((t) => t.id === 'streams-offered')!;
+import banner from '../../../assets/bio lab/DSC_1274 copy.jpg';
+import pChem from '../../../assets/chem lab/DSC_1262 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="A subject laboratory at Sunbeam School Ballia, benches laid out with apparatus." position="50% 50%" />
+<BaseLayout
+  title="Streams Offered — Sunbeam School Ballia"
+  description="The four Senior Secondary streams at Sunbeam School Ballia: PCM, PCB, Commerce and Humanities, each taught to CBSE board level in Classes XI and XII."
+>
+  <PageHero
+    title="Streams Offered"
+    standfirst="Four streams at Senior Secondary — PCM, PCB, Commerce and Humanities."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Structure', href: '/academics/structure/' },
+    ]}
+    src={banner}
+    alt="A subject laboratory at Sunbeam School Ballia, benches and apparatus laid out along the room."
+    position="50% 50%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcPath
+      ground="paper"
+      kicker="Classes XI – XII"
+      heading="Four streams,<br /><em>taught to board level</em>"
+      body={[
+        'The stream names are what the school publishes, and they are the decision a student makes at the end of Class X. What each name contains is set out below with its confidence stated — this site does not print a timetable it has not seen.',
+      ]}
+      beats={[
+        { k: 'PCM', body: 'Physics · Chemistry · Mathematics. Engineering and the physical sciences.' },
+        { k: 'PCB', body: 'Physics · Chemistry · Biology. Medicine and the life sciences.' },
+        { k: 'Commerce', body: 'Business, finance and management — how money, firms and markets work.' },
+        { k: 'Humanities', body: 'Law, civil services, design, media and the social sciences.' },
+      ]}
+    />
+
+    <AcSplit
+      ground="sand"
+      side="right"
+      ratio="wide"
+      texture={true}
+      aspect="4 / 3"
+      kicker="What is certain, and what is not"
+      heading="The names are published.<br /><em>The lists are not.</em>"
+      body={[
+        '<strong>PCM and PCB need no confirmation</strong> — the abbreviations are the subject lists. English is compulsory across CBSE Classes XI and XII, so it belongs to every core.',
+        '<strong>Commerce</strong> is stated here as the CBSE commerce core — Accountancy, Business Studies and Economics — which is standard almost everywhere it is taught, but the school has not published its own.',
+        '<strong>Humanities is not confirmed at all.</strong> Its composition varies more between schools than any other stream, so no combination is asserted for it here.',
+      ]}
+      photo={pChem}
+      alt={`The chemistry laboratory at ${school}, reagent shelves above the benches`}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Four names.<br /><em>Confirmed by the office.</em>"
+      body="Elective availability, the Humanities combination and final subject lists depend on section strength and the timetable — the school office is the only reliable source for them."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

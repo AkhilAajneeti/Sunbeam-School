@@ -1,17 +1,109 @@
 ---
 /**
- * ACADEMIC STRUCTURE · SECONDARY — audit §2B.
+ * ACADEMIC STRUCTURE · SECONDARY — Classes IX and X.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠ REBUILT ON EVIDENCE. The stage is defined here by two published things: the
+ * point at which the full board practical programme begins, and the people the
+ * school brings in to talk to these year groups.
+ *
+ * SOURCE — verified in this repository:
+ *   "Guiding Futures, Shaping Lives" — Mr. Ashutosh Kumar Pandey, IRS, Deputy
+ *     Commissioner of Income Tax · Classes IX–XII: "a career-guidance session in
+ *     which the officer shared his own educational journey."
+ *   Physics, Chemistry and Biology laboratories — "Board practicals, Classes
+ *     IX–XII."
+ *   PRECEPT — a published syllabus document per class, session 2026-27.
+ *   Milestone: the CBSE Class X board examination.
+ *
+ * ⚠ NO RESULTS ARE CLAIMED HERE. Board results have their own published page.
+ * ⚠ The laboratories are photographed empty — captions describe the rooms. The
+ * Guiding Futures frame shows a visiting guest being shown the library, and is
+ * captioned as that rather than as the session itself.
+ *
+ * Composition: split (ink, photo RIGHT — opens dark) → collage (ivory, LEFT) →
+ * close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { structureTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcSplit from '../../../components/academics/system/AcSplit.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = structureTopics.find((t) => t.id === 'secondary')!;
+import banner from '../../../assets/chem lab/DSC_1262 copy.jpg';
+import pGuest from '../../../assets/school-event/Guiding-Futures/Guiding-Futures-01.jpg';
+import pBio from '../../../assets/bio lab/DSC_1274 copy.jpg';
+import pChem from '../../../assets/chem lab/DSC_1262 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="The activity learning lab at Sunbeam School Ballia, tables set out for group work." position="50% 50%" />
+<BaseLayout
+  title="Secondary — Sunbeam School Ballia"
+  description="Secondary at Sunbeam School Ballia, Classes IX and X: the full board practical programme in the Physics, Chemistry and Biology laboratories, and career-guidance sessions with named officers."
+>
+  <PageHero
+    title="Secondary"
+    standfirst="Classes IX and X — where board practicals begin and an IRS officer comes to talk about how he got there."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Structure', href: '/academics/structure/' },
+    ]}
+    src={banner}
+    alt="The chemistry laboratory at Sunbeam School Ballia, benches laid out with reagent shelves and gas taps."
+    position="50% 52%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcSplit
+      ground="ink"
+      side="right"
+      ratio="wide"
+      texture={true}
+      aspect="16 / 10"
+      kicker="Classes IX – X"
+      heading="Someone who<br /><em>actually did it</em>"
+      body={[
+        'The school runs <strong>Guiding Futures, Shaping Lives</strong> for Classes IX to XII. The 2025 session was taken by <strong>Mr. Ashutosh Kumar Pandey, IRS, Deputy Commissioner of Income Tax</strong>, who <em>shared his own educational journey</em> rather than a careers slide deck.',
+        'The measure of a school’s programme is who agrees to come and speak at it — and the school names its guests, with their office, every time.',
+      ]}
+      photo={pGuest}
+      alt={`A visiting guest being shown the Nalanda Library at ${school} by staff, the shelves signed by subject behind them`}
+    />
+
+    <AcCollage
+      ground="ivory"
+      side="left"
+      kicker="And the reason for the rooms"
+      heading="Board practicals<br /><em>start here</em>"
+      body={[
+        'Class IX is the year the laboratory programme stops being introductory. Physics, Chemistry and Biology each carry <strong>board practicals from Class IX to Class XII</strong> — the same practicals a board expects a candidate to have done, in rooms built for one subject each.',
+        'The curriculum itself is published class by class as the school’s <strong>PRECEPT</strong> syllabus, session 2026-27.',
+      ]}
+      ledger={[
+        { k: 'Physics · Chemistry · Biology', v: 'Board practicals, Classes IX–XII.' },
+        { k: 'Guiding Futures · IX–XII', v: 'Mr. Ashutosh Kumar Pandey, IRS, Deputy Commissioner of Income Tax.' },
+        { k: 'PRECEPT syllabus', v: 'A published document per class, session 2026-27.' },
+        { k: 'Milestone', v: 'The CBSE Class X board examination.' },
+      ]}
+      lead={{ src: pBio, alt: `A subject laboratory at ${school}, benches and apparatus laid out along the room` }}
+      support={[
+        { src: pChem, alt: `The chemistry laboratory at ${school}, reagent shelves above the benches` },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="The practicals<br /><em>a board expects.</em>"
+      body="The school publishes the laboratory programme, its guests by name and office, and a syllabus document per class. Board results are published separately; subject lists and timetables are not."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

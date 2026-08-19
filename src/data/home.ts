@@ -83,7 +83,12 @@ export const stages = [
     badge: 'Middle',
     years: '3 Years',
     detail: 'Laboratory work, robotics and enterprise begin in earnest.',
-    href: '/academics/structure/middle/',
+    /* ⚠ WAS '/academics/structure/middle/'. The stage page was renamed to
+       middle-school when the client's stage names were adopted ('Middle' →
+       'Middle School'); this link was not updated with it, so the homepage
+       journey sent readers to the no-404 placeholder instead of the page. The
+       other four stage links were already correct. */
+    href: '/academics/structure/middle-school/',
     imageBrief: 'Middle School student, 4:5 portrait, eye level',
   },
   {

@@ -1,17 +1,108 @@
 ---
 /**
- * ACADEMIC STRUCTURE · PRE-PRIMARY — audit §2B.
+ * ACADEMIC STRUCTURE · PRE-PRIMARY — Nursery, LKG, UKG.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠ REBUILT ON EVIDENCE. The first version restated the parent overview's
+ * sentence about play-led learning. Every line below is now a named facility the
+ * school publishes or a named thing this age group actually did.
+ *
+ * SOURCE — verified in this repository (data/facilities.ts, data/newsPages.ts):
+ *   Kids Park — "Swings and play equipment for the early years."
+ *   Water Pool — "A shallow water play area in the early-years zone."
+ *   Sand Pool — "Sand play alongside the water pool — messy, and deliberately so."
+ *   Little Agriculture Land — "A planting plot the youngest children actually
+ *     dig, sow and water."
+ *   Abhayeti Prayer Ground — "The junior block's own prayer ground."
+ *   SOF Olympiad — sat from Nursery to Class II.
+ *   PRECEPT — a published syllabus document per class from Nursery, 2026-27.
+ *
+ * ⚠ NOT CLAIMED: ratios, session hours, admission ages, or what the Nursery
+ * PRECEPT document contains.
+ *
+ * Composition: collage (ivory, LEFT — the early-years zone) → path (sand, the
+ * three things a four-year-old is asked to do) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { structureTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcPath from '../../../components/academics/system/AcPath.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = structureTopics.find((t) => t.id === 'pre-primary')!;
+import banner from '../../../assets/school-activities/little-agriculturists/02.jpg';
+import pCompost from '../../../assets/school-activities/little-agriculturists/02.jpg';
+import pStar from '../../../assets/school-activities/summer-camp/02.jpg';
+import pRocket from '../../../assets/school-activities/summer-camp/05.jpg';
+import pHall from '../../../assets/school-activities/josh-spring-camp/02.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="The activity learning lab at Sunbeam School Ballia, tables set out for group work." position="50% 50%" />
+<BaseLayout
+  title="Pre-Primary — Sunbeam School Ballia"
+  description="Pre-Primary at Sunbeam School Ballia — Nursery, LKG and UKG: a kids park, sand and water pools, a planting plot the children dig themselves, and an SOF olympiad sat from Nursery."
+>
+  <PageHero
+    title="Pre-Primary"
+    standfirst="Nursery, LKG and UKG — an early-years zone with its own pools, plot and prayer ground."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Structure', href: '/academics/structure/' },
+    ]}
+    src={banner}
+    alt="A young student of Sunbeam School Ballia adding kitchen scraps to the compost bin at the Little Agriculturists activity."
+    position="50% 40%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcCollage
+      ground="ivory"
+      side="left"
+      kicker="Nursery · LKG · UKG"
+      heading="A zone of its own,<br /><em>not a corner of the school</em>"
+      body={[
+        'The early years at Sunbeam have their own outdoor provision rather than a share of everybody else’s — including the school’s <strong>junior block prayer ground</strong>, Abhayeti, separate from the senior one.',
+        'The plot is the clearest example. It is not a display bed: the school’s own description is <em>“a planting plot the youngest children actually dig, sow and water.”</em>',
+      ]}
+      ledger={[
+        { k: 'Kids Park', v: 'Swings and play equipment for the early years.' },
+        { k: 'Sand Pool', v: '“Sand play alongside the water pool — messy, and deliberately so.”' },
+        { k: 'Water Pool', v: 'A shallow water play area in the early-years zone.' },
+        { k: 'Little Agriculture Land', v: 'A planting plot the youngest children dig, sow and water themselves.' },
+        { k: 'Abhayeti Prayer Ground', v: 'The junior block’s own assembly and prayer ground.' },
+      ]}
+      lead={{ src: pCompost, alt: `A young student of ${school} adding kitchen scraps to the compost bin at the Little Agriculturists activity` }}
+      support={[
+        { src: pStar, alt: `A young student of ${school} with her teacher inside a hand-made Star Gazing display` },
+        { src: pRocket, alt: `A young student of ${school} holding a hand-made rocket cut-out at the Star Gazing session` },
+      ]}
+    />
+
+    <AcPath
+      ground="sand"
+      kicker="And already sitting a paper"
+      heading="Nursery to Class II<br /><em>sit the SOF olympiad</em>"
+      body={[
+        'The school enters its youngest classes for the Science Olympiad Foundation olympiad — Nursery to Class II. It is the earliest point at which a Sunbeam child’s work is measured by somebody outside the school.',
+      ]}
+      beats={[
+        { k: 'Dig it', body: 'The agriculture plot, the sand and the water — quantity learned in the hand.' },
+        { k: 'Say it', body: 'Early language, heard and used long before it is written.' },
+        { k: 'Sit it', body: 'The SOF olympiad, from Nursery upward.' },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Messy,<br /><em>and deliberately so.</em>"
+      body="The school publishes the early-years facilities and what this age group enters. Ratios, session hours and admission ages are not published."
+      photo={pHall}
+      alt={`Students of ${school} seated together in the school hall`}
+      position="50% 46%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

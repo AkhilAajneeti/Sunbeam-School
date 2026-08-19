@@ -1,22 +1,112 @@
 ---
 /**
- * MENTORING — audit 2.D6.
+ * ASSESSMENT & SUPPORT · MENTORING — audit 2.D6.
  *
- * ⚠ AS WITH HOMEWORK, THE SCHOOL PUBLISHES ONE LINE. The page says what that
- * line says and then says it is all that is published. No mentor-to-student
- * ratio, no programme name, no meeting frequency — none of that is stated
- * anywhere, and inventing any of it would be inventing pastoral care.
+ * ⚠ THE SCHOOL PUBLISHES ONE LINE OF MENTORING COPY. What it also publishes,
+ * and what the stub missed, is its own recruitment advertising — and a school's
+ * job adverts are a harder statement of what it staffs than any pastoral
+ * paragraph. Sunbeam has advertised, in its own posters:
+ *
+ *   "clinical psychology counsellor and wellness trainer" (vacancies poster)
+ *   "School counsellor: MA in counselling or clinical psychology with two years
+ *    of experience as a school counsellor" (walk-in interview poster)
+ *
+ * A school that requires a master's degree and two years' experience for its
+ * counsellor is describing its pastoral provision more precisely than a page of
+ * copy could. Both lines are read off the posters in assets/jobs/.
+ *
+ * ═══ ALSO VERIFIED ═════════════════════════════════════════════════════════
+ *   BCS Counsellors — "trained counsellors available to students"
+ *     (data/facilities.ts, listed on campus).
+ *
+ * ⚠ NOT USED: data/campus.ts carries a "Counselling" entry marked
+ * `verified: false`. It is not cited here.
+ *
+ * ⚠ NOT CLAIMED: a mentor-to-student ratio, a programme name, a meeting
+ * frequency, how a mentor is assigned, or how a parent contacts one. None of it
+ * is published, and inventing any of it would be inventing pastoral care.
+ *
+ * Composition: statement (ivory) → collage (sand, LEFT, what the school staffs
+ * for) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { assessmentTopics } from '../../../data/academics';
-import photo from '../../../assets/photos/sunbeem-5.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcStatement from '../../../components/academics/system/AcStatement.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = assessmentTopics.find((t) => t.id === 'mentoring')!;
+import banner from '../../../assets/photos/sunbeem-5.jpg';
+import pLib from '../../../assets/photos/sb-library.jpg';
+import pCorridor from '../../../assets/corridor and stairs/DSC_1222 copy.jpg';
+import pBench from '../../../assets/photos/sb-chem-lab.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage
-  topic={topic}
-  photo={photo}
-  alt="Students and staff of Sunbeam School Ballia together on stage beneath the school name."
-  position="50% 42%"
-/>
+<BaseLayout
+  title="Mentoring — Sunbeam School Ballia"
+  description="Mentoring at Sunbeam School Ballia: every student has a member of staff who knows them, with trained BCS counsellors on campus and a school counsellor post advertised at master's level."
+>
+  <PageHero
+    title="Mentoring"
+    standfirst="What a school staffs for says more than what it says about itself."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Assessment & Support', href: '/academics/assessment/' },
+    ]}
+    src={banner}
+    alt="Student council office-bearers and NCC cadets of Sunbeam School Ballia on stage with the school's dignitaries."
+    position="50% 38%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcStatement
+      ground="ivory"
+      ghost="1:1"
+      ghostAt="right"
+      kicker="What the school publishes"
+      statement="Someone who knows<br /><em>the child.</em>"
+      body={[
+        'Sunbeam states one thing about mentoring: that every student has <strong>a member of staff who knows them as a person rather than as a name on a class list</strong>. It is a single line, and it is not expanded here into a programme that has not been described.',
+        'What that line is for is easy to say without inventing anything. A subject teacher seeing a child four times a week may not notice a change in them. Someone who already knows the child does — and the years in which a student is least likely to raise a problem themselves are exactly the years in which that difference matters.',
+      ]}
+    />
+
+    <AcCollage
+      ground="sand"
+      side="left"
+      kicker="And what it hires for"
+      heading="A master’s degree,<br /><em>and two years of it</em>"
+      body={[
+        'The firmer evidence is in the school’s own recruitment posters, where a school states what it will and will not accept. Sunbeam’s walk-in advertisement sets its counsellor requirement in one line: <strong>“MA in counselling or clinical psychology with two years of experience as a school counsellor.”</strong>',
+        'A separate vacancies poster lists a <strong>clinical psychology counsellor and wellness trainer</strong> among the posts it was recruiting to. Alongside those, the school lists <strong>BCS Counsellors</strong> — trained counsellors available to students — among its campus provision.',
+      ]}
+      ledger={[
+        { k: 'Every student', v: 'A member of staff who knows them as a person, not as a row on a class list.' },
+        { k: 'School counsellor', v: 'Advertised at MA in counselling or clinical psychology, with two years’ school experience.' },
+        { k: 'Clinical psychology counsellor', v: 'Listed with a wellness trainer among the school’s advertised posts.' },
+        { k: 'BCS Counsellors', v: 'Trained counsellors available to students, on campus.' },
+      ]}
+      lead={{ src: pLib, alt: `Students of ${school} reading at the long tables of the library, a member of staff at the head of the row` }}
+      support={[
+        { src: pCorridor, alt: `A corridor at ${school}, its classroom doors running the length of the block` },
+        { src: pBench, alt: `Students of ${school} working along the chemistry bench` },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Noticed before<br /><em>it is a result.</em>"
+      body="The school publishes that every student has a mentor, and its own adverts show what it requires of a counsellor. It does not publish a ratio, a programme name, a meeting frequency, or how a parent reaches a child's mentor."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

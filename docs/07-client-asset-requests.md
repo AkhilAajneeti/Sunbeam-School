@@ -160,6 +160,65 @@ The audit asks the school to review its YouTube and X profiles and, if they are 
 
 ---
 
+## D. Academics section — frozen, with six outstanding items
+
+The Academics section is **complete and frozen** as of this build: the information
+architecture and page structure are final, every route is designed on the shared
+system, there are no orphan pages, no placeholder pages, and no navigation link
+pointing at a route that does not exist.
+
+Six items remain, and none of them blocks the section. Every page below already
+ships in a finished state that states the gap honestly. **When an asset arrives,
+update only the section that consumes it — do not redesign the page.** Each page
+was built with the slot open.
+
+| # | Item | Page it unblocks | What changes when it arrives |
+|---|---|---|---|
+| D1 | **Session 2026-27 academic calendar** — term dates, holidays, examination dates, PTM dates | `/academics/academic-calendar/` | The page currently carries the calendar's *shape* — the four entry types the school itself describes — and none of its contents, because not one date is published anywhere. That list is deliberately the same taxonomy a month grid needs, so the interactive calendar audit §8 asks for drops into the second section without a redesign. **⚠ Until then no date is printed: a calendar is diarised, not read — a family books travel against a holiday.** |
+| D2 | **CBSE Class X & XII board results** — by year, with cohort size | `/academics/board-results/` | The school publishes no pass percentage, no toppers and no year-on-year data. The page says so and redirects the reader's real question to the outcome data that *is* published (CUET 2025 cards; the eighteen-name placement board). Results drop into a new section above the existing one. **⚠ The brief's "98% Board Results" counter must never be reinstated without a source.** |
+| D3 | **Robotics Lab photography** — 4 frames, the room in use | `/academics/teaching-learning/stem-robotics/` | The Robotics section is currently a typographic composition around the four items the school lists (drone, 3-D printer, telescope, embedded systems). The photo slot is held open directly above it as an AcSplit. **⚠ `Robotics-drones.jpg` and `dron.jpg` are stock and are banned — neither is this school's room.** |
+| D4 | **Parent–teacher meeting photography** | `/academics/assessment/parent-teacher-meetings/` | The page currently uses Parents' Forum photographs and states in the copy that they are a forum and not a PTM, because the school has published no photograph of one. Swap the frames and delete that caveat sentence. |
+| D5 | **KIDS Entrepreneurship photography** — the Class 7 venture in progress | `/academics/structure/middle-school/`, `/academics/teaching-learning/experiential-learning/` | Both pages carry the programme on the strength of the school's own six-word description. Neither has an image of it. |
+| D6 | **Career-counselling day captions** — who spoke, what was covered, both days | `/academics/student-success/career-guidance/` | The school published fifty-plus photographs across two days and no account of either. The speaker's name and credential are printed on a slide behind him but cannot be read with certainty at this resolution, so he is deliberately unnamed. |
+
+### Parent Orientation — rebuilt from the live site, and a consent question it sharpens
+
+Parent Orientation was previously a two-section "the school publishes almost nothing" page. That
+described this repository accurately and the school inaccurately: sunbeamballia.edu.in/orientation/
+carries five programmes for 2024-25, three for 2026-27, attendance figures, ~70 photographs and a
+result document per programme. **An empty repository is not evidence of an empty source.**
+
+What the research established, all from the school's own page and posters:
+
+| Programme | Date | Classes | Attendance |
+|---|---|---|---|
+| 1st · 2024-25 | 17 Jan 2024 | Nur.–IX & XI | **234 students with 389 parents** |
+| 3rd · 2024-25 | 14 Feb 2024 | Nur.–IX & XI | 109 students |
+| 5th · 2024-25 | 11 Mar 2024 | Nur.–IX & XI | 61 students with 104 parents |
+| 1st · 2026-27 | 18 Jan 2026 | Nur.–IX | **292 students appeared** |
+| 3rd | 14 Feb 2026 | Nur.–IX | result published |
+
+**⚠ C5 IS NOW MORE URGENT THAN IT WAS.** Each programme's result document is a public, unauthenticated
+PDF listing every candidate by name alongside their father's name and a remark reading GRANTED or
+NOT GRANTED — 292 rows for 18 January 2026. Orientation is an assessed admission step, not a welcome
+evening. The client decided this site would **describe** that process and **not link or republish**
+those documents; the page points at the school's own orientation page instead. Photography for the
+page was taken from that same source under the same decision.
+
+Orientation is therefore **no longer an asset gap**. What is still owed is the agenda of the morning
+itself — how long it runs, what the children are asked, and how a family books a place.
+
+---
+
+### Two data corrections already applied, for the record
+
+| Item | Was | Now |
+|---|---|---|
+| University placements | Audit §3.8 recorded them as "Not mentioned" | **The school does publish them** — the printed "Vision To Reality" board, session 2024-25, names eighteen leavers with course and institution. It was unused in `assets/placement/`. |
+| Humanities stream core | `unverified: false`, so it rendered with the same confidence as PCM's definitional core | Carries its own `coreUnverified` flag and a "To be confirmed" stamp. **Clearing it needs the school's confirmation, not a judgement that History/PolSci/Geography looks right.** |
+
+---
+
 ## Placeholder policy
 
 Where a required asset is unavailable at build time, the component renders a **visible, labelled placeholder** carrying the exact shot or content brief — for example `[NEEDED: Shooting Range, in use, 16:9, min 2400px]`.

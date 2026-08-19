@@ -54,7 +54,6 @@ import { school } from '../../data/site';
 
 /* Photography — verified Ballia frames only. */
 import pStudents from '../../assets/photos/sunbeem-3.jpg';
-import pLibrary from '../../assets/library/DSC_1224 copy.jpg';
 import pComputers from '../../assets/computer lab/DSC_1204 copy.jpg';
 import pGround from '../../assets/photos/sunbeem-1.jpg';
 import pCeremony from '../../assets/photos/sunbeem-4.jpg';
@@ -85,7 +84,6 @@ import dBrush from '../../assets/icons/paintbrush.png';
 import dSaturn from '../../assets/icons/saturn.png';
 import dRocket from '../../assets/icons/rocketpaper.png';
 import dCap from '../../assets/icons/graduate-cap.png';
-import dStar from '../../assets/icons/star.png';
 import dStars from '../../assets/icons/two-stars.png';
 import dKite from '../../assets/icons/kite.png';
 import dPencil from '../../assets/icons/pencill.webp';
@@ -340,28 +338,6 @@ const abilities = [
     <img class="tp__f tp__f--rocket" src={dRocket.src} alt="" aria-hidden="true" data-parallax data-parallax-y="-40" />
   </section>
 
-  {/* ═══ 06 · INDEPENDENCE ══════════════════════════════════════════════════
-      The calm one. Deliberately the most whitespace on the page — the section
-      about stepping back should not be crowded. */}
-  <section class="tp-six" aria-labelledby="tp-six-h">
-    <div class="u-container tp-six__in">
-      <p class="tp__n tp__n--big" aria-hidden="true">06</p>
-      <p class="tp__k t-label" data-reveal>Independent &amp; self-motivated learners</p>
-      <h2 class="tp-six__h" id="tp-six-h" data-split>Teaching towards independence</h2>
-      <p class="tp-six__lead" data-reveal data-reveal-delay="120">
-        The school's stated aim is to <em>“develop in children a degree of independence and
-        self-motivation”</em>. It is the quiet test of everything above it: teaching has worked
-        when the teacher is needed less.
-      </p>
-
-      <figure class="tp-six__art" data-mask>
-        <Picture src={pLibrary} alt={`The library at ${school.name}, its round reading tables ringed with colour and the shelves signed by subject`} formats={['avif', 'webp']} widths={[700, 1100]} sizes="(max-width: 900px) 92vw, 62vw" loading="lazy" decoding="async" />
-      </figure>
-    </div>
-
-    <img class="tp__f tp__f--star" src={dStar.src} alt="" aria-hidden="true" />
-  </section>
-
   {/* ═══ CLOSING ════════════════════════════════════════════════════════════ */}
   <section class="tp-end" aria-labelledby="tp-end-h">
     <figure class="tp-end__art">
@@ -404,7 +380,6 @@ const abilities = [
   }
 
   .tp__n--onink { color: rgba(255, 255, 255, 0.16); }
-  .tp__n--big { font-size: clamp(64px, 11vw, 168px); }
 
   .tp__p {
     max-width: 52ch;
@@ -537,9 +512,22 @@ const abilities = [
   }
 
   /* ═══ 03 ══════════════════════════════════════════════════════════════════ */
-  .tp-three { padding-block: clamp(60px, 9vw, 122px); background: var(--sb-violet-ink); }
+  /* Asymmetric on purpose: the head needs far less room above it than the
+     constellation needs below, and 122px of empty ink above the "03" was reading
+     as a gap rather than as breathing room. */
+  .tp-three { padding: clamp(26px, 3.4vw, 52px) 0 clamp(60px, 9vw, 122px); background: var(--sb-violet-ink); }
   .tp-three__in { position: relative; z-index: 1; }
-  .tp-three__head { max-width: 56ch; margin-inline: auto; text-align: center; }
+
+  /* Full container width, not 56ch. At the old measure the heading broke across
+     two lines and the standfirst ran to four, so the widest section on the page
+     was introduced by the narrowest column on it. */
+  .tp-three__head { max-width: none; margin-inline: auto; text-align: center; }
+
+  /* ⚠ SCOPED, NOT A CHANGE TO .tp__p. That rule is a 52ch column with no auto
+     margin, which is exactly right for the left-aligned movements that share it.
+     Inside 03's now-full-width centred head it kept hugging the left edge, so the
+     standfirst sat in the left half of the section under a centred heading. */
+  .tp-three__head .tp__p { max-width: 92ch; margin-inline: auto; }
 
   .tp-three__h {
     margin-top: var(--sb-3);
@@ -671,35 +659,6 @@ const abilities = [
   .tp-five__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
 
   /* ═══ 06 ══════════════════════════════════════════════════════════════════ */
-  .tp-six { padding-block: clamp(64px, 10vw, 140px); background: var(--sb-sand); }
-  .tp-six__in { max-width: 74ch; margin-inline: auto; text-align: center; }
-
-  .tp-six__h {
-    margin-top: var(--sb-3);
-    font-family: var(--sb-font-display);
-    font-size: clamp(30px, 4.4vw, 58px);
-    font-weight: 700; line-height: 1.02; letter-spacing: -.042em;
-    color: var(--sb-charcoal); text-wrap: balance;
-  }
-
-  .tp-six__lead {
-    max-width: 54ch;
-    margin: clamp(16px, 2vw, 22px) auto 0;
-    font-size: clamp(16px, 1.3vw, 20px);
-    line-height: 1.7;
-    color: var(--sb-text-secondary);
-  }
-
-  .tp-six__lead em { font-style: italic; color: var(--sb-charcoal); }
-
-  .tp-six__art {
-    margin: clamp(34px, 5vw, 62px) 0 0;
-    overflow: hidden;
-    border-radius: var(--sb-r-3);
-    box-shadow: 0 40px 84px -46px rgba(27,21,18,.6);
-  }
-
-  .tp-six__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
 
   /* ═══ CLOSING ═════════════════════════════════════════════════════════════ */
   .tp-end { padding-block: clamp(76px, 12vw, 156px); background: var(--sb-violet-ink); }

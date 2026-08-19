@@ -2,16 +2,128 @@
 /**
  * PARENT PARTNERSHIP · WORKSHOPS & WEBINARS — audit §2F.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠⚠ THIS PAGE CORRECTS A FABRICATION, AND THE CLIENT NEEDS TO KNOW.
+ *
+ * data/academics.ts `parents.workshops.cards` describes SIX parent workshops —
+ * "Digital safety at home", "Choosing a stream", "Supporting learning at home",
+ * "The exam years", "What we teach, and why", "Growing up, and wellbeing" — each
+ * with a format ("Webinar · evening", "In person · Classes IX–X") and a list of
+ * topic chips. None of the six appears anywhere in the school's published
+ * record. They were written for this site.
+ *
+ * The school DOES run a substantial professional-development programme, and it
+ * is documented far better than most: FIFTEEN sessions in data/newsPages.ts,
+ * eleven of them naming the trainer, eight naming an institution. But they are
+ * run for TEACHERS AND ADMINISTRATORS, not for parents.
+ *
+ * So this page reports the fifteen truthfully, says plainly who they are for,
+ * and states that a parent-facing workshop programme is not published. The six
+ * invented cards are still live on the parent-partnership overview page and
+ * should be removed there too — flagged to the client separately.
+ *
+ * ═══ SOURCE — data/newsPages.ts `workshops`, read off the school's own pages ══
+ *   CBSE Capacity Building Programme on Experiential Learning — Dr. Pushkal
+ *     Giri, Principal, St. Joseph's School, Siwan, and Dr. Ravishankar Mishra,
+ *     Vice Principal, Heritage International Public School, Kushinagar.
+ *     20–21 September 2025, hosted at Sunbeam Ballia.
+ *   Basic Counseling Skills — Mrs. Salony Priya, Founder Director, Ummeed
+ *     Counselling & Consulting Services, Kolkata. Two days, 16–17 September,
+ *     closing with an assessment and viva.
+ *   Critical Thinking — Prof. Pradeep Mishra, Lovely Professional University.
+ *   Teacher–Student Bond: Teaching to Mentorship — Mr. Kartik Bajoria.
+ *   AI Masterclass — Mr. Sandeep Mukherjee, COO, Sunbeam Group.
+ *   EduCarnival 2025, IIT Delhi — four of the school's academic heads attended.
+ *   National Education Policy training — delivered BY a Sunbeam Ballia educator
+ *     at Sunshine Public School, Ghazipur.
+ *
+ * ⚠ NOT CLAIMED: that parents may attend any of these; a parent webinar
+ * programme; or any session the school has not listed.
+ *
+ * Composition: statement (ivory, the correction stated plainly) → collage
+ * (sand, LEFT — the real record) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { parentTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/library/DSC_1224 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcStatement from '../../../components/academics/system/AcStatement.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = parentTopics.find((t) => t.id === 'workshops-webinars')!;
+import banner from '../../../assets/workshops/CriticalThinking/CriticalThinking1.jpg';
+import pCritical from '../../../assets/workshops/CriticalThinking/CriticalThinking1.jpg';
+import pStory from '../../../assets/workshops/Storytelling-Pedagogy/Storytelling-Pedagogy1.jpg';
+import pNep from '../../../assets/workshops/National-Education-Policy/National-Education-Policy-training.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="The Nalanda Library at Sunbeam School Ballia, its shelves labelled by subject." position="50% 50%" />
+<BaseLayout
+  title="Workshops & Webinars — Sunbeam School Ballia"
+  description="Sunbeam School Ballia runs fifteen published professional-development sessions with named trainers and institutions. They are for teaching and administrative staff; no parent workshop programme is published."
+>
+  <PageHero
+    title="Workshops & Webinars"
+    standfirst="Fifteen published sessions, with the trainer named. None of them is for parents — and this page says so."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+    ]}
+    src={banner}
+    alt="Teaching staff of Sunbeam School Ballia at a professional-development session on critical thinking in the classroom."
+    position="50% 44%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcStatement
+      ground="ivory"
+      ghost="15"
+      ghostAt="right"
+      kicker="Who the sessions are for"
+      statement="Fifteen sessions.<br /><em>None for parents.</em>"
+      body={[
+        'Sunbeam Ballia runs one of the better-documented professional-development programmes a district school publishes: <strong>fifteen sessions</strong>, eleven of which name the trainer and eight of which name the institution they came from.',
+        'Every one of them is for <strong>teaching and administrative staff</strong>. The school has not published a workshop or webinar programme for parents — no session, no format, no date. Rather than describe one, this page shows what actually runs, because a parent choosing a school is entitled to know how its teachers are trained.',
+        'If a parent programme exists, it is worth publishing: it is a subject on which almost no school in the district can show anything at all.',
+      ]}
+    />
+
+    <AcCollage
+      ground="sand"
+      side="left"
+      kicker="What is actually run"
+      heading="Named trainers,<br /><em>named institutions</em>"
+      body={[
+        'A school can claim professional development in one sentence. Sunbeam publishes the trainer, where they came from and — where it has one — the date. The list below is a selection; the full fifteen sit under News &amp; Events.',
+        'The last line is the one worth pausing on. The school has also <em>delivered</em> National Education Policy training at another school, rather than only receiving it.',
+      ]}
+      ledger={[
+        { k: 'CBSE Capacity Building · Experiential Learning', v: 'Two days hosted at Ballia, 20–21 September 2025 — Dr. Pushkal Giri, Principal of St. Joseph’s School, Siwan, and Dr. Ravishankar Mishra, Vice Principal, Heritage International Public School, Kushinagar.' },
+        { k: 'Basic Counseling Skills', v: 'A two-day training with a closing assessment and viva — Mrs. Salony Priya, Founder Director, Ummeed Counselling &amp; Consulting Services, Kolkata.' },
+        { k: 'Critical Thinking', v: 'Prof. Pradeep Mishra, Lovely Professional University.' },
+        { k: 'Teacher–Student Bond', v: '“Teaching to Mentorship” — Mr. Kartik Bajoria, on trust, empathy and guiding students beyond academics.' },
+        { k: 'AI Masterclass', v: 'Mr. Sandeep Mukherjee, Chief Operating Officer of the Sunbeam Group, on AI tools in teaching.' },
+        { k: 'EduCarnival 2025 · IIT Delhi', v: 'Four of the school’s academic heads attended the 16th Eduexcellence international conference.' },
+        { k: 'National Education Policy', v: '<strong>Delivered by</strong> a Sunbeam Ballia educator at Sunshine Public School, Ghazipur — not received by the school.' },
+      ]}
+      lead={{ src: pStory, alt: `Teaching staff of ${school} at a professional-development session on storytelling as pedagogy` }}
+      support={[
+        { src: pCritical, alt: `Teaching staff of ${school} at a session on teaching critical thinking in the classroom` },
+        { src: pNep, alt: `A National Education Policy training session involving staff of ${school}` },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Trained in public.<br /><em>For staff.</em>"
+      body="The school publishes fifteen staff development sessions with trainers and institutions named. It publishes no workshop or webinar programme for parents — so none is described on this page."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

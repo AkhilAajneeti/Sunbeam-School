@@ -38,7 +38,7 @@ import type { AssessmentTopic } from './academics';
  *   Academic Clubs ···················· laboratories-clubs
  *
  * ⚠ NOTHING HERE IS WRITTEN FROM NOTHING. Every body below restates what
- * data/academics.ts already carries for that block — the four-move lesson shape,
+ * data/academics.ts already carries for that block — the three the school names,
  * the twelve laboratories, the fifteen thousand books, the Microsoft-certified
  * teachers. Where the school has published no detail, the topic says so through
  * `owed` rather than being padded to length.
@@ -54,22 +54,23 @@ export const teachingTopics: AssessmentTopic[] = [
   {
     id: 'methodology',
     label: 'Teaching Methodology',
-    hint: 'Four moves in the same order, whatever the subject.',
+    hint: 'Technology, Multiple Intelligence, Collaborative learning.',
     href: '/academics/teaching-learning/methodology/',
     title: 'Teaching Methodology',
+    /* ⚠ THE FOUR-MOVE LESSON THAT WAS HERE WAS NOT SUNBEAM'S — see the note on
+       `method` in data/academics.ts for the searches behind that. */
     standfirst:
-      'A lesson opens on a question rather than an answer — four moves, in the same order, whatever the subject.',
+      'Technology, Multiple Intelligence and Collaborative learning — the school’s own three, in all areas of teaching.',
     photo: 'activity',
     body: [
-      'A lesson at Sunbeam Ballia follows four moves in a fixed order: Ask, Do, Discuss, Show. It opens on something the class cannot yet do — a problem, a text, a reading that does not add up — rather than on the conclusion.',
-      'Students then handle the thing itself: apparatus, source, data, code, not a description of it. Groups compare what they found and have to defend it, which is where most of the talking happens and where the students rather than the teacher do it.',
-      'Collaborative learning is not a separate programme here; it is the third move of every lesson. Defending a result to the group is what turns having an answer into understanding one.',
+      'The school states its method as three things built into all areas of teaching: “Incorporate Technology, a theory of Multiple Intelligence and Collaborative learning in all areas of teaching.” None of the three is described as a special lesson or a separate programme.',
+      'Technology is anchored in the staff rather than the equipment — one hundred teachers hold Microsoft Innovative Educator Expert certification, which is what makes the school a Microsoft Showcase School.',
+      'Collaborative learning is what the Principal describes when she calls the school’s classrooms “places of curiosity and collaboration.”',
     ],
     points: [
-      { k: 'Ask', v: 'The lesson opens on something the class cannot yet do.' },
-      { k: 'Do', v: 'Students handle the apparatus, source, data or code themselves.' },
-      { k: 'Discuss', v: 'Groups compare findings and defend them to each other.' },
-      { k: 'Show', v: 'The class demonstrates what it now understands.' },
+      { k: 'Technology', v: '100 Microsoft Innovative Educator Experts; a Microsoft Showcase School.' },
+      { k: 'Multiple Intelligence', v: '“All the students do not have the same talents.” — the Principal.' },
+      { k: 'Collaborative learning', v: '“Classrooms are places of curiosity and collaboration.” — the Principal.' },
     ],
   },
   {

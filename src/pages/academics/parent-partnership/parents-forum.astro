@@ -1,17 +1,129 @@
 ---
 /**
- * PARENT PARTNERSHIP · PARENTS’ FORUM — audit §2F.
+ * PARENT PARTNERSHIP · PARENTS' FORUM — audit §2F.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠ REBUILT. The previous version passed the parent section's own <Forum />
+ * component into TopicPage — literally the same component the overview composes,
+ * shown twice. This page now carries what only it can: the school's own agenda,
+ * transcribed off its own projected slide, and the class nameplates on its own
+ * desks. Neither appears anywhere else on the site.
+ *
+ * ═══ SOURCE — read off the school's own published photographs ══════════════
+ *   assets/parents forum/parents forum (5).jpg — the agenda, projected and
+ *   legible, headed "Agenda for Parents Forum: Session 2025-26 Class IX to XII)"
+ *   and running to twelve numbered items:
+ *     1 Almanac · 2 Syllabi · 3 Quality of classroom teaching · 4 Pace of
+ *     teaching · 5 Quality of assignment in Learner's Comate / Class work /
+ *     Homework · 6 Question Bank · 7 E-Portfolio · 8 Grandparents Cove ·
+ *     9 Positive Affirmations · 10 Scientific Facts · 11 Correction of
+ *     Notebooks / Learner's Comate · 12 Fruit Break
+ *   The same frame shows a panel of four staff behind a name plate reading
+ *   Dr. Arpita Singh — the school's principal.
+ *
+ *   assets/parents forum/parents forum (3).jpg — every desk carries a class
+ *   nameplate: Nursery, KG-I A, II-C, II-E, III-A. A parent sits FOR a named
+ *   class, which makes the forum a representative body rather than an open
+ *   meeting. That sitting is a junior one; the projected agenda above is from a
+ *   Classes IX–XII sitting, so the school runs the forum more than once.
+ *
+ * ⚠ "LEARNER'S COMATE" IS TRANSCRIBED, NOT EXPANDED. It is the school's own
+ * spelling on its own slide. What the artefact is — a diary, a workbook, a
+ * portfolio — is not published, so it is quoted and left alone.
+ *
+ * ⚠ A NAME DISCREPANCY WORTH THE CLIENT'S ATTENTION: data/site.ts records the
+ * principal as "Mrs. Arpita Singh"; her own name plate in this photograph reads
+ * "Dr. Arpita Singh". This page says "the principal" and names no honorific.
+ *
+ * ⚠ NOT CLAIMED: how often the forum sits, how a representative is chosen, how
+ * long a term runs, or what was decided at any session.
+ *
+ * Composition: split (paper, photo RIGHT — the room) → collage (sand, LEFT —
+ * the agenda, all twelve items, grouped and quoted) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { parentTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/library/DSC_1224 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcSplit from '../../../components/academics/system/AcSplit.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = parentTopics.find((t) => t.id === 'parents-forum')!;
+import banner from '../../../assets/parents forum/parents forum (5).jpg';
+import pSeats from '../../../assets/parents forum/parents forum (3).jpg';
+import pPanel from '../../../assets/parents forum/parents forum (5).jpg';
+import pRows from '../../../assets/parents forum/parents forum (2).jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="The Nalanda Library at Sunbeam School Ballia, its shelves labelled by subject." position="50% 50%" />
+<BaseLayout
+  title="Parents’ Forum — Sunbeam School Ballia"
+  description="The Parents' Forum at Sunbeam School Ballia: a seat per class section, a leadership panel, and a twelve-item agenda covering teaching quality, pace, homework and the correction of notebooks."
+>
+  <PageHero
+    title="Parents’ Forum"
+    standfirst="A seat with your child’s class written on it, and an agenda projected on the wall."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+    ]}
+    src={banner}
+    alt="The leadership panel at a Parents' Forum session at Sunbeam School Ballia, the session's agenda projected on the screen beside them."
+    position="50% 46%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcSplit
+      ground="paper"
+      side="right"
+      ratio="wide"
+      aspect="3 / 2"
+      kicker="Not a parent–teacher meeting"
+      heading="A seat with<br /><em>a class on it</em>"
+      body={[
+        'The clearest thing about Sunbeam’s forum is visible on the furniture. Every desk in the room carries a class nameplate — <strong>Nursery, KG-I A, II-C, II-E, III-A</strong> — so a parent is not attending in general. They are sitting <em>for</em> a class, and what they raise is raised on that class’s behalf.',
+        'That is what separates the forum from a parent–teacher meeting. A PTM is about one child, with that child’s teachers, in private. The forum is about the school, with the school’s leadership, in front of the other parents — and the answer is given to the room.',
+        'It sits more than once: the room above is a junior session, while the agenda in the next section was projected at a sitting for <strong>Classes IX to XII</strong>.',
+      ]}
+      photo={pSeats}
+      alt={`Parents of ${school} seated at desks in the forum room, each desk carrying a class nameplate — Nursery, KG-I A, II-C, II-E and III-A`}
+      inset={pRows}
+      insetAlt={`Parents of ${school} seated in the tiered rows of the hall during a Parents’ Forum session`}
+    />
+
+    <AcCollage
+      ground="sand"
+      side="left"
+      kicker="Session 2025-26 · Classes IX to XII"
+      heading="Twelve items,<br /><em>on the wall</em>"
+      body={[
+        'The school projects the agenda rather than keeping it at the front table, which means every parent in the room can see the whole list — including the items still to come. All twelve are below, in the school’s own words, grouped only for reading.',
+        'Four of them are the questions parents most often have no formal channel for: <em>quality of classroom teaching</em>, <em>pace of teaching</em>, <em>quality of assignment</em>, and <em>correction of notebooks</em>. Those are on a published agenda here, not raised as a complaint.',
+      ]}
+      ledger={[
+        { k: 'The teaching itself', v: '“Quality of classroom teaching” · “Pace of teaching”.' },
+        { k: 'The work that comes home', v: '“Quality of assignment in Learner’s Comate / Class work / Homework” · “Correction of Notebooks / Learner’s Comate”.' },
+        { k: 'The documents', v: '“Almanac” · “Syllabi” · “Question Bank” · “E-Portfolio”.' },
+        { k: 'And the rest of the child', v: '“Grandparents Cove” · “Positive Affirmations” · “Scientific Facts” · “Fruit Break”.' },
+      ]}
+      lead={{ src: pPanel, alt: `The leadership panel at a Parents’ Forum session at ${school}, the twelve-item agenda projected on the screen beside them` }}
+      support={[
+        { src: pRows, alt: `Parents of ${school} seated in the tiered rows of the hall during a Parents’ Forum session` },
+        { src: pSeats, alt: `Desks at a Parents’ Forum session at ${school}, each carrying a class nameplate` },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Answered<br /><em>to the room.</em>"
+      body="The school publishes the forum, its agenda and the classes each sitting covers. How often it sits, how a class representative is chosen, and what was decided at any session are not published."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

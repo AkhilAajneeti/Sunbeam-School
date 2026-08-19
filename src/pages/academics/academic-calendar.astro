@@ -1,0 +1,111 @@
+---
+/**
+ * ACADEMICS · ACADEMIC CALENDAR — audit §8.
+ *
+ * ⚠⚠ THE AUDIT ASKS FOR AN INTERACTIVE CALENDAR AND THIS IS NOT ONE. That is a
+ * deliberate under-delivery against the spec, and the reason is the only one
+ * that could justify it: THE SCHOOL PUBLISHES NO DATES. There is not a single
+ * term start, holiday, examination date or PTM date anywhere in this repository
+ * or on the school's site. An interactive calendar needs entries, and every
+ * entry would have had to be invented.
+ *
+ * A calendar of invented dates is the most damaging artefact this site could
+ * ship. It would be believed, diarised and planned around — a family would book
+ * travel against it. So the page carries what IS published (that the calendar
+ * exists, and what the school says is on it), and names who holds the dates.
+ *
+ * ⚠ THE INTERACTIVE PAGE IS NOT CANCELLED, IT IS BLOCKED. When the school
+ * supplies the session calendar the design slot is ready: this page's second
+ * section is a list of exactly the entry types the calendar carries, which is
+ * the same taxonomy a month grid would need. ASSET REQUIREMENT: the session
+ * 2026-27 calendar — term dates, holidays, examination dates and PTM dates.
+ *
+ * ═══ WHAT IS ACTUALLY PUBLISHED — every line traced ════════════════════════
+ *   "PTMs are placed on the academic calendar for the session, so the date is
+ *     known in advance rather than announced when there is a problem."
+ *   "Examination dates, terms and holidays, so a meeting can be read against
+ *     them." (assessmentTopics · parent-teacher-meetings)
+ *   "Terms, holidays and examination dates, published for the session."
+ *     (data/academics.ts `supports`)
+ *   Orientation runs "before the session begins."
+ *   The one dated thing verified anywhere: the Parents' Forum agenda photograph
+ *     is headed "Session 2025-26", and the PRECEPT syllabus is published for
+ *     session 2026-27.
+ *
+ * ⚠ NOT CLAIMED: any date. Not a term start, not a holiday, not an examination
+ * window, not a number of PTMs per year.
+ *
+ * Composition: statement (ivory — the position) → path (sand — the four entry
+ * types the school says the calendar carries) → close.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import AcStatement from '../../components/academics/system/AcStatement.astro';
+import AcPath from '../../components/academics/system/AcPath.astro';
+import AcClose from '../../components/academics/system/AcClose.astro';
+
+import banner from '../../assets/corridor and stairs/DSC_1211 copy.jpg';
+import pCohort from '../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
+---
+
+<BaseLayout
+  title="Academic Calendar — Sunbeam School Ballia"
+  description="Sunbeam School Ballia keeps a session academic calendar carrying terms, holidays, examination dates and parent–teacher meetings. The dates are not published online; the school office holds them."
+>
+  <PageHero
+    title="Academic Calendar"
+    standfirst="The calendar exists and the school plans around it. The dates are not published — so none is printed here."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+    ]}
+    src={banner}
+    alt="A corridor and stairwell at Sunbeam School Ballia, its landings running the length of the block."
+    position="50% 50%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcStatement
+      ground="ivory"
+      ghost="2026-27"
+      ghostAt="right"
+      kicker="The position, stated plainly"
+      statement="A calendar,<br /><em>without dates.</em>"
+      body={[
+        'Sunbeam refers to its academic calendar constantly — parent–teacher meetings are placed on it before the session starts, and it carries the terms, the holidays and the examination dates. The school plainly keeps one, and plans the year around it.',
+        'What it does not do is publish the dates. Not one term start, holiday, examination window or meeting date appears on its site, and none appears here.',
+        'This is the page where inventing would do the most damage. A calendar is not read, it is <em>diarised</em> — a family books travel against a holiday and a candidate revises against an examination window. A plausible date here would be trusted completely and wrong silently, which is why this page carries the shape of the calendar and none of its contents.',
+      ]}
+    />
+
+    <AcPath
+      ground="sand"
+      kicker="What the school says is on it"
+      heading="Four things,<br /><em>and the reason for each</em>"
+      body={[
+        'The school describes the calendar’s contents even where it does not publish them, and the description is consistent across its pages. These are the four entry types — the same four a month grid would need, which is why this list is also the slot the interactive calendar drops into when the dates arrive.',
+      ]}
+      beats={[
+        { k: 'Terms', body: 'The shape of the session — and orientation, which the school runs before it begins rather than during it.' },
+        { k: 'Holidays', body: 'Published with the session so a family plans around the school year rather than against it.' },
+        { k: 'Examination dates', body: 'On the same calendar as everything else, so a meeting can be read against the paper that preceded it.' },
+        { k: 'Parent–teacher meetings', body: 'Placed before the session starts — which is what stops a meeting date arriving as a signal that something is wrong.' },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Diarised,<br /><em>not guessed.</em>"
+      body="The school states that its calendar carries terms, holidays, examination dates and parent–teacher meetings. It publishes none of those dates online — the office below holds the session calendar, and it is the only reliable source for a date."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

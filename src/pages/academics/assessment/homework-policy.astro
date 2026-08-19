@@ -1,23 +1,105 @@
 ---
 /**
- * HOMEWORK POLICY — audit 2.D2.
+ * ASSESSMENT & SUPPORT · HOMEWORK POLICY — audit 2.D2.
  *
- * ⚠ THE SCHOOL PUBLISHES ONE SENTENCE ABOUT HOMEWORK, ANYWHERE ON ITS SITE.
- * This page carries that sentence, says plainly that the rest is not published,
- * and gives the office number. It does not invent a policy. Homework rules
- * govern a family's evenings, so a plausible-sounding invention here would be
- * among the most damaging things this site could print.
+ * ⚠ THE SCHOOL PUBLISHES ONE SENTENCE ABOUT HOMEWORK. Homework rules govern a
+ * family's evenings, so a plausible-sounding invention here would be among the
+ * most damaging things this site could print. The page carries that sentence,
+ * says plainly that the rest is not published, and does not describe a policy.
+ *
+ * ⚠ BUT IT IS NO LONGER A ONE-LINE PAGE, because a second, better piece of
+ * evidence turned up in the school's own photography rather than its text: the
+ * Parents' Forum agenda, projected and legible, puts homework on the record as a
+ * standing item parents may raise. Read off the school's photograph:
+ *
+ *   "Agenda for Parents Forum: Session 2025-26, Class IX to XII"
+ *     5)  Quality of assignment in Learner's Comate / Class work / Homework
+ *     11) Correction of Notebooks / Learner's Comate
+ *
+ * That is worth more to a parent than a paragraph of homework philosophy: it is
+ * the channel through which the homework question is actually answered.
+ *
+ * ⚠ "LEARNER'S COMATE" IS TRANSCRIBED, NOT INTERPRETED. It is the school's own
+ * spelling on its own slide, and it is quoted rather than expanded, because what
+ * the artefact is — a diary, a workbook, a portfolio — is not published.
+ *
+ * ⚠ NOT CLAIMED: minutes per night, days per subject, a weekend rule, a holiday
+ * rule, or a policy document. None is published.
+ *
+ * Composition: statement (sand) → split (paper, photo LEFT — the forum) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { assessmentTopics } from '../../../data/academics';
-import photo from '../../../assets/library/DSC_1225 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcStatement from '../../../components/academics/system/AcStatement.astro';
+import AcSplit from '../../../components/academics/system/AcSplit.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = assessmentTopics.find((t) => t.id === 'homework-policy')!;
+import banner from '../../../assets/photos/sb-library.jpg';
+import pPanel from '../../../assets/parents forum/parents forum (5).jpg';
+import pSeated from '../../../assets/parents forum/parents forum (2).jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage
-  topic={topic}
-  photo={photo}
-  alt="The library at Sunbeam School Ballia, its reading table ringed with chairs and the shelves labelled by subject."
-  position="50% 55%"
-/>
+<BaseLayout
+  title="Homework Policy — Sunbeam School Ballia"
+  description="What Sunbeam School Ballia publishes about homework: that it is set to a published pattern, and that the quality of assignments and the correction of notebooks are standing items on the Parents' Forum agenda."
+>
+  <PageHero
+    title="Homework Policy"
+    standfirst="One published sentence, one published agenda item — and nothing invented to fill the gap between them."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Assessment & Support', href: '/academics/assessment/' },
+    ]}
+    src={banner}
+    alt="Students of Sunbeam School Ballia reading at the long tables of the library, a member of staff at the head of the row."
+    position="50% 46%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcStatement
+      ground="sand"
+      ghost="Prep"
+      ghostAt="left"
+      texture={true}
+      kicker="What the school publishes"
+      statement="A pattern,<br /><em>not a policy.</em>"
+      body={[
+        'The school states one thing about homework: that it is <strong>set to a published pattern</strong> rather than assigned subject by subject on the day. That is the whole of it.',
+        'So the whole of it is what appears here. No minutes per night, no days per subject, no weekend rule, no holiday rule — because none of those is published, and a family that plans its evenings around an invented figure would be planning around us rather than around the school.',
+      ]}
+    />
+
+    <AcSplit
+      ground="paper"
+      side="left"
+      aspect="3 / 2"
+      kicker="Where the question is actually answered"
+      heading="Item five,<br /><em>and item eleven</em>"
+      body={[
+        'The more useful fact is not on the school’s homework page at all — it is projected on a screen in its Parents’ Forum. The agenda for the <strong>2025-26 forum for Classes IX to XII</strong> runs to twelve items, and two of them are this subject: <em>“quality of assignment in Learner’s Comate / class work / homework”</em>, and <em>“correction of notebooks / Learner’s Comate.”</em>',
+        'A parent who wants to know how much homework is set, and whether it comes back marked, has a standing item on a published agenda to raise it under. That is a better answer than a paragraph describing a policy this site cannot verify.',
+      ]}
+      photo={pPanel}
+      alt={`The leadership panel at a Parents’ Forum session at ${school}, the session’s twelve-item agenda projected on the screen beside them`}
+      inset={pSeated}
+      insetAlt={`Parents of ${school} seated in the tiered rows of the hall during a Parents’ Forum session`}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Set to a pattern.<br /><em>The pattern is owed.</em>"
+      body="The school publishes that homework follows a pattern and gives parents a forum item to raise it under. The pattern itself — the load, the days, the weekend and holiday rules — is not published anywhere on its site."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

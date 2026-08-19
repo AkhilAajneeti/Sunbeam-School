@@ -1,17 +1,95 @@
 ---
 /**
- * PARENT PARTNERSHIP · PARENT ENGAGEMENT INITIATIVES — audit §2F.
+ * PARENT PARTNERSHIP · PARENT ENGAGEMENT — audit §2F.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠ TWO SECTIONS, DELIBERATELY. There is exactly one piece of hard evidence
+ * about how parents are engaged at this school, and it is a good one — but it is
+ * one, and a third section would be filled with the generic material this page
+ * exists to replace.
+ *
+ * ⚠ WHAT WAS REMOVED, AND WHY. data/academics.ts `parents.engagement.ways`
+ * describes four channels — sports day with "parents both watching and helping
+ * run it", the annual function, exhibitions where "students explain their own
+ * work to visitors", and volunteering where parents give "a skill, a morning, a
+ * trade". None of the four is published by the school. Two of them make claims
+ * about what parents DO on the premises, which is not ours to assert.
+ *
+ * ═══ THE ONE PIECE OF REAL EVIDENCE ════════════════════════════════════════
+ *   Read off assets/parents forum/parents forum (3).jpg: every desk in the forum
+ *   room carries a CLASS NAMEPLATE — Nursery, KG-I A, II-C, II-E, III-A. Parents
+ *   are seated by class section, not admitted as a general audience. A second
+ *   photograph (5) shows a sitting whose projected agenda is headed "Class IX to
+ *   XII", so the structure repeats up the school.
+ *
+ *   And one named item off that same agenda: "Grandparents Cove" — the school's
+ *   engagement is written to reach past parents. What it is is NOT published, so
+ *   it is named and not explained.
+ *
+ * ASSET REQUIREMENT: the school's own account of how a class representative is
+ * chosen, and what Grandparents Cove is.
+ *
+ * Composition: split (ivory, photo RIGHT — the nameplates) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { parentTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/library/DSC_1224 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcSplit from '../../../components/academics/system/AcSplit.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = parentTopics.find((t) => t.id === 'parent-engagement')!;
+import banner from '../../../assets/parents forum/parents forum (3).jpg';
+import pSeats from '../../../assets/parents forum/parents forum (3).jpg';
+import pRows from '../../../assets/parents forum/parents forum (2).jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="The Nalanda Library at Sunbeam School Ballia, its shelves labelled by subject." position="50% 50%" />
+<BaseLayout
+  title="Parent Engagement — Sunbeam School Ballia"
+  description="How parents are engaged at Sunbeam School Ballia: seated by class section at the Parents' Forum, from Nursery upward, with Grandparents Cove named on the school's own agenda."
+>
+  <PageHero
+    title="Parent Engagement"
+    standfirst="Not an open invitation — a seat, with a class written on it."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+    ]}
+    src={banner}
+    alt="Parents of Sunbeam School Ballia seated at desks carrying class nameplates during a Parents' Forum session."
+    position="50% 52%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcSplit
+      ground="ivory"
+      side="right"
+      ratio="wide"
+      aspect="3 / 2"
+      kicker="How it is actually organised"
+      heading="By the class,<br /><em>not by the crowd</em>"
+      body={[
+        'The evidence for how Sunbeam engages parents is not in a paragraph — it is on the desks. In the school’s own photographs of its Parents’ Forum, each place carries a class nameplate: <strong>Nursery, KG-I A, II-C, II-E, III-A</strong>. A parent is seated <em>for</em> a class, and the structure repeats up the school — another sitting’s agenda is headed <strong>Classes IX to XII</strong>.',
+        'That is a materially different arrangement from a general invitation. It means a concern about one class arrives as that class’s concern rather than as one family’s, and it means every section has somebody in the room whether or not its parents knew to come.',
+        'The same agenda carries an item called <strong>“Grandparents Cove”</strong> — the school’s engagement is written to reach past parents. What it is has not been published, so it is named here and left at that.',
+      ]}
+      photo={pSeats}
+      alt={`Parents of ${school} seated at desks carrying class nameplates — Nursery, KG-I A, II-C, II-E and III-A — during a Parents’ Forum session`}
+      inset={pRows}
+      insetAlt={`Parents of ${school} seated in the tiered rows of the hall during a Parents’ Forum session`}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Every section,<br /><em>has someone there.</em>"
+      body="The school publishes photographs showing parents seated by class section, and names Grandparents Cove on its own forum agenda. How a representative is chosen, and what parents are invited to help run, are not published — so no volunteering or events programme is described here."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

@@ -1,56 +1,58 @@
 ---
 /**
- * ACADEMIC PHILOSOPHY · EXPERIENTIAL INQUIRY — audit §2A.
+ * ACADEMIC PHILOSOPHY · EXPERIENTIAL & INQUIRY-BASED LEARNING — audit §2A.
  *
- * ⚠ THE MOVEMENT IS RENDERED FROM THE OVERVIEW, NOT COPIED FROM IT.
- * PhilosophyStory takes an `only` key and renders that one movement ("hands")
- * and nothing else. It is the same component /academics/philosophy/ uses, so
- * this page carries the identical composition, imagery, decoration and motion
- * the reader saw in the section — never a thinner retelling of it.
+ * ⚠ FOUR SECTIONS AND A CLOSE, not the movement-plus-notes pattern this page
+ * used to carry. It previously rendered PhilosophyStory's `hands` movement with
+ * TopicNotes under it, which was right while the six sub-topics shared one
+ * composed sequence; the client has since asked for a short, art-directed page
+ * instead. Nothing was removed from /academics/philosophy/ — the overview still
+ * carries its own `hands`.
  *
- * ⚠ AND THEN IT ADDS WHAT ONLY THIS PAGE SAYS. TopicNotes carries the detail
- * from data/academicTopics.ts underneath. Without it this page would be a
- * strict subset of the overview — the duplication the client spotted: the same
- * material at two URLs, with the deeper-sounding one the thinner of the two.
+ * ⚠ THE BANNER IS THE SHARED PageHero, DELIBERATELY. The brief asks for an
+ * immersive hero rather than a banner, but the client's standing instruction on
+ * this project — given after a bespoke hero was built and rejected on the
+ * Student-Centred page — is that the banner stays consistent with every other
+ * page. That instruction wins. The art direction the brief asks for lives in the
+ * four sections below it, where it can be different without the masthead area
+ * behaving unlike the rest of the site.
  *
- * Movement = what the overview shows. Notes = what only this page says.
+ * ⚠ SOURCES AND THE TWO CLAIMS NOT MADE are documented at the top of
+ * ExperientialPage: Chandrayaan-3 and a "Science & Mathematics Exhibition" are
+ * offered by the brief as examples but appear neither on the school's site nor
+ * in this repository, so neither is on the page.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import PhilosophyStory from '../../../components/academics/PhilosophyStory.astro';
-import TopicNotes from '../../../components/academics/TopicNotes.astro';
-import { philosophyTopics } from '../../../data/academicTopics';
+import ExperientialPage from '../../../components/academics/ExperientialPage.astro';
 import banner from '../../../assets/chem lab/DSC_1262 copy.jpg';
-
-const topic = philosophyTopics.find((t) => t.id === 'experiential-inquiry')!;
 ---
 
 <BaseLayout
-  title={`${topic.title} — Sunbeam School Ballia`}
-  description={topic.standfirst!}
+  title="Experiential & Inquiry-Based Learning — Sunbeam School Ballia"
+  description="How Sunbeam School Ballia teaches through experience and inquiry: twelve laboratories, gallery walks, a planting plot and a planetarium — a topic met in the hand before it is met in the exam."
 >
   <PageHero
-    title={topic.title!}
-    standfirst={topic.standfirst}
+    title="Experiential & Inquiry-Based Learning"
+    standfirst="A topic met in the hand before it is met in the exam."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Academics', href: '/academics/' },
       { label: 'Academic Philosophy', href: '/academics/philosophy/' },
     ]}
     src={banner}
-    alt="A subject laboratory at Sunbeam School Ballia, benches laid out with apparatus."
+    alt="The chemistry laboratory at Sunbeam School Ballia, benches laid out with reagent shelves and gas taps."
     position="50% 52%"
   />
 
-  {/* padding-block: 0 — each section carries its own rhythm, and the panel
+  {/* padding-block: 0 — every section carries its own rhythm, and the panel
       adding its own on top is what put a 183px void under the hero on three
       earlier pages. */}
-  <div class="u-page-panel phil-topic">
-    <PhilosophyStory only="hands" />
-    <TopicNotes topic={topic} />
+  <div class="u-page-panel ex-panel">
+    <ExperientialPage />
   </div>
 </BaseLayout>
 
 <style>
-  div.phil-topic { padding-block: 0; }
+  div.ex-panel { padding-block: 0; }
 </style>

@@ -2,16 +2,114 @@
 /**
  * CAREER DEVELOPMENT & STUDENT SUCCESS · OLYMPIAD ACHIEVEMENTS — audit §2E.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠ NO TOTAL. docs/01 records that the school publishes no olympiad award count,
+ * and "100+ Olympiad awards" was in the original brief. It is not here. What the
+ * school does publish is WHICH programmes it enters, FROM WHICH CLASS, and a
+ * small number of named results — and that turns out to be the more interesting
+ * fact, because the answer to "from which class" is Nursery.
+ *
+ * ═══ SOURCE — verified in this repository ══════════════════════════════════
+ *   SOF (Science Olympiad Foundation) olympiad — sat from Nursery to Class II.
+ *   SOF Zonal Excellence Award — Classes III–V, "with a ₹500 voucher".
+ *   Vidyarthi Vigyan Manthan — students qualified to the NATIONAL level.
+ *   National Children's Science Congress — national-level qualification.
+ *   Inspire Award MANAK — student innovations selected for the Department of
+ *     Science & Technology's MANAK scheme.
+ *   Indian AI Impact Festival, 2024 — Ayushi, of Class VII, placed first.
+ *
+ * ⚠ THE PHOTOGRAPHS ARE OF EMPTY ROOMS and are captioned as rooms. There is no
+ * photograph of a Sunbeam student sitting an olympiad paper in this repository,
+ * and none is implied. ASSET REQUIREMENT: an olympiad sitting, and the award
+ * graphics for the SOF placings the school has mentioned but not illustrated.
+ *
+ * Composition: split (ivory, photo RIGHT, wide copy) → collage (paper, LEFT, the
+ * four national programmes on hairlines) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { careerTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/chem lab/DSC_1262 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcSplit from '../../../components/academics/system/AcSplit.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = careerTopics.find((t) => t.id === 'olympiad-achievements')!;
+import banner from '../../../assets/composite lab/DSC_1255 copy.jpg';
+import pComposite from '../../../assets/composite lab/DSC_1255 copy.jpg';
+import pMaths from '../../../assets/photos/sb-maths-lab.jpg';
+import pActivity from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+import pLib from '../../../assets/library/DSC_1226 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-5.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="A subject laboratory at Sunbeam School Ballia, benches laid out with apparatus." position="50% 50%" />
+<BaseLayout
+  title="Olympiad Achievements — Sunbeam School Ballia"
+  description="Sunbeam School Ballia enters the Science Olympiad Foundation olympiads from Nursery, holds an SOF Zonal Excellence Award for Classes III–V, and has qualified students to the national level of Vidyarthi Vigyan Manthan."
+>
+  <PageHero
+    title="Olympiad Achievements"
+    standfirst="The school's answer to “from what age do they sit these?” is Nursery."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Student Success', href: '/academics/student-success/' },
+    ]}
+    src={banner}
+    alt="The composite laboratory at Sunbeam School Ballia, its benches and apparatus laid out along the room."
+    position="50% 50%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcSplit
+      ground="ivory"
+      side="right"
+      ratio="wide"
+      aspect="4 / 3"
+      kicker="Science Olympiad Foundation"
+      heading="Entered at Nursery,<br /><em>awarded by Class III</em>"
+      body={[
+        'The school enters its classes for the <strong>SOF olympiad from Nursery to Class II</strong>. It is the earliest point at which a Sunbeam child’s work is measured by somebody outside the building, and it happens years before anything that could be called an examination.',
+        'By Classes III to V the entry has turned into a result: an <strong>SOF Zonal Excellence Award</strong>, which the school records as carrying a <strong>₹500 voucher</strong>. A zonal award is a placing across schools, not a certificate for turning up.',
+      ]}
+      photo={pComposite}
+      alt={`The composite laboratory at ${school}, benches and apparatus laid out along the room`}
+      inset={pMaths}
+      insetAlt={`The mathematics laboratory at ${school}, its models and charts set out on the working surfaces`}
+    />
+
+    <AcCollage
+      ground="paper"
+      side="left"
+      kicker="And the national programmes"
+      heading="Four papers<br /><em>that leave the district</em>"
+      body={[
+        'Beyond SOF, the school enters the national science talent programmes — and in three of them its students have gone past entry to <strong>national-level qualification or selection</strong>. Those are the words the school uses, and they are the words used here.',
+      ]}
+      ledger={[
+        { k: 'Vidyarthi Vigyan Manthan', v: 'Students qualified to the <strong>national level</strong> of the national science talent search.' },
+        { k: 'National Children’s Science Congress', v: 'National-level qualification.' },
+        { k: 'Inspire Award MANAK', v: 'Student innovations selected for the Department of Science &amp; Technology’s MANAK scheme.' },
+        { k: 'Indian AI Impact Festival · 2024', v: 'Ayushi, of Class VII, placed <strong>first</strong>.' },
+        { k: 'SOF · Nursery – Class II', v: 'The olympiad, sat from the youngest years upward.' },
+        { k: 'SOF Zonal Excellence Award · III–V', v: 'The zonal award, with a ₹500 voucher.' },
+      ]}
+      lead={{ src: pActivity, alt: `The activity learning laboratory at ${school}, its worktables set out for group work` }}
+      support={[
+        { src: pMaths, alt: `The mathematics laboratory at ${school}, its models and charts set out on the working surfaces` },
+        { src: pLib, alt: `The Nalanda Library at ${school}, its shelves signed by subject` },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Measured by<br /><em>somebody else.</em>"
+      body="The school publishes the programmes it enters, the classes that sit them and a handful of named results. It publishes no award total, and no total appears here."
+      photo={pCohort}
+      alt={`Student council office-bearers and NCC cadets of ${school} on stage with the school’s dignitaries`}
+      position="50% 38%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

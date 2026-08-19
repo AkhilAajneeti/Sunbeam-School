@@ -2,55 +2,123 @@
 /**
  * ACADEMIC PHILOSOPHY · CURRICULUM — audit §2A.
  *
- * ⚠ THE MOVEMENT IS RENDERED FROM THE OVERVIEW, NOT COPIED FROM IT.
- * PhilosophyStory takes an `only` key and renders that one movement ("way")
- * and nothing else. It is the same component /academics/philosophy/ uses, so
- * this page carries the identical composition, imagery, decoration and motion
- * the reader saw in the section — never a thinner retelling of it.
+ * ⚠ REBUILT. The previous version rendered PhilosophyStory with `only` set —
+ * the same component, imagery and motion the overview composes — and appended
+ * TopicNotes underneath. It was the overview's movement plus a footnote, which
+ * is the pattern the client stopped: parent = overview, child = deep-dive.
  *
- * ⚠ AND THEN IT ADDS WHAT ONLY THIS PAGE SAYS. TopicNotes carries the detail
- * from data/academicTopics.ts underneath. Without it this page would be a
- * strict subset of the overview — the duplication the client spotted: the same
- * material at two URLs, with the deeper-sounding one the thinner of the two.
+ * The deep-dive this page can honestly make is about the DOCUMENT. Most schools
+ * say "we follow CBSE". Sunbeam publishes the syllabus class by class, and that
+ * is a materially different claim — it can be counted, and it can be questioned
+ * at a forum where "Syllabi" is a numbered agenda item.
  *
- * Movement = what the overview shows. Notes = what only this page says.
+ * ═══ SOURCE — verified in this repository ══════════════════════════════════
+ *   PRECEPT — the school's own name for its published syllabus. A document per
+ *     class, Nursery to Class XII, session 2026-27 (data/academics.ts, cited on
+ *     four separate pages). Fifteen year groups; fifteen documents.
+ *   Twelve laboratories, enumerated by the school itself (data/academics.ts:770):
+ *     Physics · Chemistry · Biology · Mathematics · Language · Geography ·
+ *     Srijan · Model UN · Active Learning · Robotics · two computer labs.
+ *     ⚠ THE FOUR INQUIRY ROOMS ARE INSIDE THAT TWELVE, not additional to it —
+ *     eight subject rooms + four inquiry rooms = twelve. The `index` block
+ *     groups them as 9 + 4, which totals thirteen because it also lists a
+ *     General Science lab that the school’s own enumeration of twelve omits.
+ *     This page follows the enumeration, not the grouping.
+ *   Impetus — the school's activity programme for Classes III–V.
+ *   KIDS Entrepreneurship — a Class 7 programme running a real venture.
+ *   Four streams at senior secondary, each to board level.
+ *   "Syllabi" is item 2 of 12 on the school's own Parents' Forum agenda, read
+ *     off its published photograph — so the syllabus is a standing item parents
+ *     may raise, not a document filed away.
+ *
+ * ⚠ WHAT NO PRECEPT DOCUMENT'S CONTENTS ARE CLAIMED. The school publishes that
+ * the documents exist, one per class. It does not publish what is in them, and
+ * no subject list, period allocation or assessment weighting appears here.
+ *
+ * Composition: statement (paper, ghost) → collage (sand, LEFT — what the
+ * curriculum is delivered through) → close.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import PhilosophyStory from '../../../components/academics/PhilosophyStory.astro';
-import TopicNotes from '../../../components/academics/TopicNotes.astro';
-import { philosophyTopics } from '../../../data/academicTopics';
-import banner from '../../../assets/library/DSC_1225 copy.jpg';
+import AcStatement from '../../../components/academics/system/AcStatement.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = philosophyTopics.find((t) => t.id === 'curriculum')!;
+import banner from '../../../assets/library/DSC_1225 copy.jpg';
+import pLib from '../../../assets/photos/sb-library.jpg';
+import pComposite from '../../../assets/composite lab/DSC_1258 copy.jpg';
+import pActivity from '../../../assets/activity learning lab/DSC_1217 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
-  title={`${topic.title} — Sunbeam School Ballia`}
-  description={topic.standfirst!}
+  title="Curriculum — Sunbeam School Ballia"
+  description="The CBSE curriculum at Sunbeam School Ballia, published class by class as its PRECEPT syllabus for session 2026-27 — one document for every year from Nursery to Class XII."
 >
   <PageHero
-    title={topic.title!}
-    standfirst={topic.standfirst}
+    title="Curriculum"
+    standfirst="CBSE, published class by class — fifteen year groups, fifteen syllabus documents."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Academics', href: '/academics/' },
       { label: 'Academic Philosophy', href: '/academics/philosophy/' },
     ]}
     src={banner}
-    alt="The library at Sunbeam School Ballia, its reading table ringed with chairs."
-    position="50% 38%"
+    alt="The Nalanda Library at Sunbeam School Ballia, its shelves signed by subject."
+    position="50% 48%"
   />
 
-  {/* padding-block: 0 — each section carries its own rhythm, and the panel
-      adding its own on top is what put a 183px void under the hero on three
-      earlier pages. */}
-  <div class="u-page-panel phil-topic">
-    <PhilosophyStory only="way" />
-    <TopicNotes topic={topic} />
+  <div class="u-page-panel ac-panel">
+    <AcStatement
+      ground="paper"
+      ghost="PRECEPT"
+      ghostAt="right"
+      kicker="Session 2026-27"
+      statement="One document<br /><em>per class.</em>"
+      body={[
+        'Every CBSE school follows the CBSE curriculum, so saying so tells a parent nothing. What separates one school from another is whether the syllabus is a thing you can be handed — and Sunbeam publishes its own, class by class, under a name of its own: <strong>PRECEPT</strong>.',
+        'That is a document for <strong>every year group from Nursery to Class XII</strong>, for session <strong>2026-27</strong>. Fifteen classes, fifteen documents. A parent of a Class VI child is not reading the school’s general prospectus; they are reading Class VI’s.',
+        'And it is not filed away. <strong>“Syllabi”</strong> is item two of twelve on the school’s own Parents’ Forum agenda — a standing item, on a published list, that any class representative may raise. A syllabus a parent can question is a different object from one they can only receive.',
+      ]}
+    />
+
+    <AcCollage
+      ground="sand"
+      side="left"
+      kicker="And what it is taught through"
+      heading="Twelve rooms,<br /><em>and two programmes of its own</em>"
+      body={[
+        'The curriculum is CBSE’s; the provision around it is the school’s. Sunbeam runs <strong>twelve laboratories</strong>, and four of the twelve are inquiry rooms rather than subject rooms — alongside two activity programmes it names and runs itself.',
+        'The senior years then divide into four streams, each carried to board level. What each stream contains is set out on Subject Combinations, where verified and unverified content is labelled.',
+      ]}
+      ledger={[
+        { k: 'PRECEPT · Nursery–XII', v: 'A published syllabus document per class, session 2026-27.' },
+        { k: 'Eight subject laboratories', v: 'Physics, Chemistry, Biology, Mathematics, Language, Robotics and two computer rooms.' },
+        { k: 'Four inquiry rooms', v: 'Geography, Srijan (making and design), Model United Nations, and the Active Learning Lab — counted inside the twelve, not additional to them.' },
+        { k: 'Impetus · Classes III–V', v: 'The school’s own activity programme for the upper primary years.' },
+        { k: 'KIDS Entrepreneurship · Class 7', v: 'A real venture, run end to end.' },
+        { k: 'Senior secondary', v: 'PCM · PCB · Commerce · Humanities, each taught to CBSE board level.' },
+      ]}
+      lead={{ src: pLib, alt: `Students of ${school} reading at the long tables of the library, a member of staff at the head of the row` }}
+      support={[
+        { src: pComposite, alt: `The composite laboratory at ${school}, apparatus set out along the benches` },
+        { src: pActivity, alt: `The activity learning laboratory at ${school}, its worktables set out for group work` },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Published,<br /><em>class by class.</em>"
+      body="The school publishes that a PRECEPT document exists for every class and names the rooms and programmes around it. What is inside any one document — the subject list, the period allocation, the assessment weighting — is not published, and none is stated here."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
   </div>
 </BaseLayout>
 
 <style>
-  div.phil-topic { padding-block: 0; }
+  div.ac-panel { padding-block: 0; }
 </style>

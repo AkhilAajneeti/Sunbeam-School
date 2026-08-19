@@ -2,16 +2,154 @@
 /**
  * CAREER DEVELOPMENT & STUDENT SUCCESS · UNIVERSITY COUNSELLING — audit §2E.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠ THIS PAGE OVERTURNS A STANDING GAP. docs/01 § 3.8 records "university
+ * placements — Not mentioned", and the parent Student Success page still says
+ * so. That was true of the school's text; it is NOT true of the school's
+ * artwork. The school publishes a printed board — "Vision To Reality, Session
+ * 2024-25, Students Placed In Prestigious Colleges/Universities" — carrying
+ * EIGHTEEN named students with course and institution, plus a strip of
+ * individual placement cards. It is the single strongest piece of evidence in
+ * the Academics section and it was sitting unused in assets/placement/.
+ *
+ * ⚠ DATA CORRECTION OWED UPSTREAM: data/academics.ts `awaiting` still lists
+ * university placements as unpublished. Flagged to the client.
+ *
+ * ═══ SOURCE — read off the school's own published artwork ══════════════════
+ *   assets/placement/ — the Vision To Reality board, session 2024-25. Eighteen
+ *   rows, each a name, a course and an institution. Counted off the board:
+ *   ten University of Delhi colleges, three Banaras Hindu University, and five
+ *   elsewhere (Galgotias, NIET Greater Noida, ITS Greater Noida, Dr. Ram Manohar
+ *   Lohia Avadh University Ayodhya, UPES Dehradun).
+ *
+ *   assets/school-event/CUET-(UG)-results/ — the school's own "Exemplar of
+ *   Excellence" cards, CUET (UG) 2025, with NTA scores and subject percentiles:
+ *     Priyanka Maurya · Humanities · 967/1250
+ *     Prachi Chaurasia · Commerce  · 888/1250
+ *     Manya Chaturvedi · Humanities · 884/1250   (her card also shows a Head
+ *                                                 Prefect badge)
+ *     Manish Kumar Singh · PCM · NTA percentile 82%
+ *   and the individual College Placement cards, Batch 2024-25 — Kirori Mal,
+ *   Miranda House, Dyal Singh, Sri Aurobindo, UPES Dehradun, Sarala Birla
+ *   University Ranchi.
+ *
+ * ⚠ THE ARTWORK IS SHOWN WHOLE, which is why this page uses AcPosters rather
+ * than AcSplit. Cropping the board to fill a landscape frame would cut off the
+ * table, and the table IS the evidence.
+ *
+ * ⚠ NOT CLAIMED: a placement rate, a cohort size, an average score, or any
+ * comparison between years. The board is one session's record, not a statistic.
+ *
+ * Composition: posters (ivory, the board alone, wide) → posters (sand, the four
+ * score cards, staggered) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { careerTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/library/DSC_1224 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcPosters from '../../../components/academics/system/AcPosters.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
 
-const topic = careerTopics.find((t) => t.id === 'university-counselling')!;
+import banner from '../../../assets/library/DSC_1224 copy.jpg';
+import gBoard from '../../../assets/placement/WhatsApp Image 2025-12-02 at 11.49.42 AM.jpeg';
+import gPriyanka from '../../../assets/school-event/CUET-(UG)-results/CUET-(UG)-results-04.jpg';
+import gPrachi from '../../../assets/school-event/CUET-(UG)-results/CUET-(UG)-results-01.jpg';
+import gManya from '../../../assets/school-event/CUET-(UG)-results/CUET-(UG)-results-03.jpg';
+import gManish from '../../../assets/school-event/CUET-(UG)-results/CUET-(UG)-results-02.jpg';
+import pCohort from '../../../assets/photos/sunbeem-5.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="The Nalanda Library at Sunbeam School Ballia, its shelves labelled by subject." position="50% 50%" />
+<BaseLayout
+  title="University Counselling — Sunbeam School Ballia"
+  description="Where the 2024-25 leavers of Sunbeam School Ballia went: eighteen named placements on the school's own board — ten University of Delhi colleges, three at BHU — and the published CUET (UG) 2025 scores behind them."
+>
+  <PageHero
+    title="University Counselling"
+    standfirst="The school prints the destinations on a board, with names on it. This page is that board."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Student Success', href: '/academics/student-success/' },
+    ]}
+    src={banner}
+    alt="The Nalanda Library at Sunbeam School Ballia, its shelves signed by subject and reading tables ringed with chairs."
+    position="50% 48%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcPosters
+      ground="ivory"
+      aspect="4 / 3"
+      stagger={false}
+      kicker="Vision To Reality · Session 2024-25"
+      heading="Eighteen names,<br /><em>and where each one went</em>"
+      body={[
+        'Most schools describe their counselling. Sunbeam prints the result and hangs it up. The board below is the school’s own, and every line on it is a student, a course and an institution — <strong>eighteen of them</strong>.',
+        'Counted off the board: <strong>ten went to a University of Delhi college</strong> — Miranda House, Kamala Nehru, Ramlal Anand, Deshbandhu, Sri Aurobindo, Zakir Husain twice, Dr. B. R. Ambedkar, Satyawati and Kalindi Women’s. <strong>Three went to Banaras Hindu University.</strong> The rest went to Galgotias, NIET and ITS in Greater Noida, Dr. Ram Manohar Lohia Avadh University in Ayodhya, and UPES Dehradun.',
+        'The board’s own last line is <em>“Series will go on…”</em>',
+      ]}
+      posters={[
+        {
+          art: gBoard,
+          alt: `${school}’s printed placement board, “Vision To Reality — Session 2024-25, Students Placed In Prestigious Colleges/Universities”, listing eighteen students with their course and institution above a strip of individual placement cards`,
+          title: 'The placement board, session 2024-25',
+          meta: '18 students · 10 University of Delhi · 3 BHU',
+          note: 'The school’s own artwork, shown whole. The strip along the top carries individual cards for Pranjal Singh (Dyal Singh College), Priyanka Maurya (Miranda House), Anshu Mishra (Sarala Birla University, Ranchi), Kritika Singh (Sri Aurobindo College), Ankit Singh (UPES Dehradun) and Prachi Chaurasia (Kirori Mal College).',
+        },
+      ]}
+    />
+
+    <AcPosters
+      ground="sand"
+      aspect="1 / 1"
+      kicker="CUET (UG) 2025"
+      heading="And the paper<br /><em>that bought the place</em>"
+      body={[
+        'A Delhi University seat is decided by one examination, and the school publishes those results the same way — one card per student, headed <em>“Exemplar of Excellence”</em>, with the NTA score and every subject percentile printed on it rather than summarised.',
+        'All three streams are represented. No average is given here because the school publishes none; these are the four cards it issued.',
+      ]}
+      posters={[
+        {
+          art: gPriyanka,
+          alt: `${school}’s CUET (UG) 2025 result card for Priyanka Maurya of the Humanities stream, showing an NTA score of 967 out of 1250 with her subject percentiles`,
+          title: 'Priyanka Maurya',
+          meta: 'NTA 967 / 1250',
+          note: 'Humanities · History 98.64, Political Science 98.00, English 97.90, Geography 96.05, General Aptitude 94.93.',
+        },
+        {
+          art: gPrachi,
+          alt: `${school}’s CUET (UG) 2025 result card for Prachi Chaurasia of the Commerce stream, showing an NTA score of 888 out of 1250 with her subject percentiles`,
+          title: 'Prachi Chaurasia',
+          meta: 'NTA 888 / 1250',
+          note: 'Commerce · Economics 99.94, Accountancy 99.78, Business Studies 99.38. Placed at Kirori Mal College, University of Delhi.',
+        },
+        {
+          art: gManya,
+          alt: `${school}’s CUET (UG) 2025 result card for Manya Chaturvedi of the Humanities stream, showing an NTA score of 884 out of 1250 with her subject percentiles`,
+          title: 'Manya Chaturvedi',
+          meta: 'NTA 884 / 1250',
+          note: 'Humanities · Political Science 99.32, General Aptitude 97.18, History 94.51. Head Prefect, on the badge in her own card.',
+        },
+        {
+          art: gManish,
+          alt: `${school}’s CUET (UG) 2025 result card for Manish Kumar Singh of the PCM stream, showing an NTA percentile of 82 with his subject percentiles`,
+          title: 'Manish Kumar Singh',
+          meta: 'NTA percentile 82%',
+          note: 'PCM · Physics 97.64, Chemistry 97.14, Mathematics 92.35.',
+        },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Series will<br /><em>go on…</em>"
+      body="The school publishes the destinations by name and the scores card by card. It does not publish a cohort size, a placement rate, or the counselling timetable behind them — so no percentage appears on this page."
+      photo={pCohort}
+      alt={`Student council office-bearers and NCC cadets of ${school} on stage with the school’s dignitaries`}
+      position="50% 38%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

@@ -11,13 +11,11 @@
  * than reusable in principle. It is also what made the redesign a change to one
  * file: nothing here moved when the coverflow became this.
  *
- * ⚠ "SEE ALL WORKSHOPS" POINTS AT THE HOMEPAGE, ON PURPOSE AND TEMPORARILY. The
- * rail carries six sessions and the button is the way to the rest, but the site
- * has no workshops route yet, so it goes to `/` rather than to a 404. The school
- * DOES publish one at sunbeamballia.edu.in/workshops/ — 13 sessions, all of them
- * TEACHER training rather than parent sessions, so it is not a drop-in
- * destination for this section either. Change the one `href` below the moment a
- * route exists. GREP FOR THIS BEFORE LAUNCH.
+ * ⚠ "SEE ALL WORKSHOPS" NOW HAS A REAL DESTINATION. It used to point at `/`
+ * because the rail carried six INVENTED parent sessions and the site's real
+ * workshops route — fifteen staff sessions — was not a destination for them.
+ * The six cards are now those staff sessions, so the button goes to the record
+ * itself: /news-events/workshops/.
  *
  * ⚠ EACH CARD'S `body` IS NO LONGER SHOWN. The reference card is meta, title,
  * rule and three facts — there is no paragraph slot in it. The six descriptions
@@ -31,20 +29,25 @@
 import JourneyCarousel from '../JourneyCarousel.astro';
 import { parents } from '../../../data/academics';
 
-import compPhoto from '../../../assets/photos/sb-comp-lab-2.jpg';
-import phyPhoto from '../../../assets/photos/sb-phy-lab.jpg';
-import libraryPhoto from '../../../assets/photos/sb-library.jpg';
-import mathsPhoto from '../../../assets/photos/sb-maths-lab.jpg';
-import bioPhoto from '../../../assets/photos/sb-bio-lab.jpg';
-import sessionPhoto from '../../../assets/school achivement/robo.jpg';
+/* ⚠ THESE SIX CHANGED WITH THE CARDS THEY ILLUSTRATE. The rail used to show a
+   computer laboratory for "digital safety at home" and the RoboWunder AWARD
+   GRAPHIC for a session on adolescence — a designed poster standing in for a
+   photograph of a session that did not exist. Every image below is a photograph
+   of the session named on the card it sits behind. */
+import cbsePhoto from '../../../assets/workshops/CBSE-Capacity-Building-Programme-Experiential-Learning1/CBSE-Capacity-Building-Programme-Experiential-Learning1.jpg';
+import storyPhoto from '../../../assets/workshops/Storytelling-Pedagogy/Storytelling-Pedagogy1.jpg';
+import criticalPhoto from '../../../assets/workshops/CriticalThinking/CriticalThinking1.jpg';
+import aiPhoto from '../../../assets/workshops/aimaster/AI-Masterclass.jpg';
+import dimensionsPhoto from '../../../assets/workshops/Recapitulating-Dimension-of-Learning2/Recapitulating-Dimension-of-Learning1.jpg';
+import nepPhoto from '../../../assets/workshops/National-Education-Policy/National-Education-Policy-training.jpg';
 
 const photos: Record<string, ImageMetadata> = {
-  'sb-comp-lab-2.jpg': compPhoto,
-  'sb-phy-lab.jpg': phyPhoto,
-  'sb-library.jpg': libraryPhoto,
-  'sb-maths-lab.jpg': mathsPhoto,
-  'sb-bio-lab.jpg': bioPhoto,
-  'robo.jpg': sessionPhoto,
+  'cbse-experiential.jpg': cbsePhoto,
+  'storytelling.jpg': storyPhoto,
+  'critical-thinking.jpg': criticalPhoto,
+  'ai-masterclass.jpg': aiPhoto,
+  'dimensions.jpg': dimensionsPhoto,
+  'nep.jpg': nepPhoto,
 };
 
 const { workshops: w } = parents;
@@ -69,6 +72,6 @@ const cards = w.cards.map((c) => ({
   stand={w.stand}
   items={cards}
   railLabel="Workshops and webinars for parents — scroll sideways for more"
-  cta={{ label: 'See all workshops', href: '/' }}
+  cta={{ label: 'See all fifteen sessions', href: '/news-events/workshops/' }}
   waveInto="var(--sb-ivory)"
 />

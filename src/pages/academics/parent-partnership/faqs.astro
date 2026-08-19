@@ -1,17 +1,122 @@
 ---
 /**
- * PARENT PARTNERSHIP · FREQUENTLY ASKED QUESTIONS — audit §2F.
+ * PARENT PARTNERSHIP · FAQ — audit §2F.
  *
- * ⚠ ROUTING AND A PHOTOGRAPH ONLY. The page is
- * components/academics/TopicPage — the same component the Assessment and
- * Teaching & Learning topics use, so the treatment cannot drift between the
- * four sets. The content lives in data/academicTopics.ts.
+ * ⚠ REBUILT. The previous version passed the parent section's own <Faq />
+ * component into TopicPage — the identical component the overview composes,
+ * printed a second time one level down. Reusing a component is not the same as
+ * having something to say.
+ *
+ * ⚠ AND THE SPLIT IS DELIBERATE. The overview's FAQ answers by POINTING: it
+ * says where the fee schedule lives and who holds the route list, because those
+ * numbers change and a figure restated here would go stale silently. This page
+ * takes the opposite half — the answers that do NOT change, printed in full, so
+ * a parent can copy them into a form without ringing anyone.
+ *
+ * ═══ SOURCE — data/site.ts, all published by the school ════════════════════
+ *   CBSE affiliation number 2131962 · school code 70205
+ *   Co-educational, Nursery to Class XII · established 2013
+ *   Sunbeam group founded 1972 at Varanasi
+ *   Streams: PCM, PCB, Commerce, Humanities
+ *   Address: Agarsanda, near Hanuman Temple, Ballia, Uttar Pradesh 277001 —
+ *     2 km from Ballia Roadways Bus Stand on Garwar Road
+ *   Admissions +91 77550 05908 · office +91 77550 05905 · transport
+ *     +91 77550 05909 (Mr. Sheo Sarjan Singh)
+ *   Online application and transfer-certificate download, both school-hosted
+ *
+ * ⚠ NOT PRINTED HERE, ON PURPOSE: fees, age criteria, route lists and session
+ * dates. Every one of them is a number a family would plan around, none is
+ * published in a form this site can restate, and all four are held by the desk.
+ *
+ * Composition: collage (paper, RIGHT — the fixed facts on hairlines) → path
+ * (ivory — the four questions that must be asked rather than read) → close.
  */
-import TopicPage from '../../../components/academics/TopicPage.astro';
-import { parentTopics } from '../../../data/academicTopics';
-import photo from '../../../assets/library/DSC_1224 copy.jpg';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import AcPath from '../../../components/academics/system/AcPath.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
+import { school as sb } from '../../../data/site';
 
-const topic = parentTopics.find((t) => t.id === 'faqs')!;
+import banner from '../../../assets/photos/sb-library.jpg';
+import pRows from '../../../assets/parents forum/parents forum (2).jpg';
+import pCorridor from '../../../assets/corridor and stairs/DSC_1221 copy.jpg';
+import pLib from '../../../assets/photos/sb-library.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
 ---
 
-<TopicPage topic={topic} photo={photo} alt="The Nalanda Library at Sunbeam School Ballia, its shelves labelled by subject." position="50% 50%" />
+<BaseLayout
+  title="Parent FAQs — Sunbeam School Ballia"
+  description="The fixed facts about Sunbeam School Ballia in one place: CBSE affiliation 2131962, school code 70205, Nursery to Class XII co-educational, four streams, and the three lines to call."
+>
+  <PageHero
+    title="Parent FAQs"
+    standfirst="The answers that do not change, printed in full — so you can fill in a form without ringing anyone."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+    ]}
+    src={banner}
+    alt="Students of Sunbeam School Ballia reading at the long tables of the library, a member of staff at the head of the row."
+    position="50% 46%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <AcCollage
+      ground="paper"
+      side="right"
+      kicker="The fixed answers"
+      heading="Everything a form<br /><em>asks you for</em>"
+      body={[
+        'Half of what a parent needs from a school never changes — an affiliation number, a school code, a range of classes, an address. Those are the questions asked most often and answered slowest, because they usually mean a phone call.',
+        'They are all below. Nothing here needs confirming, and nothing here goes out of date between sessions.',
+      ]}
+      ledger={[
+        { k: 'Board and affiliation', v: `${sb.boardFull} — affiliation number <strong>${sb.affiliationNo}</strong>, school code <strong>${sb.schoolCode}</strong>.` },
+        { k: 'Type and range', v: `A CBSE co-educational day school, <strong>${sb.classRange}</strong>. Established ${sb.established}; the Sunbeam group was founded in ${sb.groupFounded} at ${sb.groupFoundedAt}.` },
+        { k: 'Senior streams', v: `${sb.streams.join(' · ')} — four, each taught to board level.` },
+        { k: 'Where the school is', v: `${sb.address.line1}, ${sb.address.city}, ${sb.address.state} ${sb.address.pin} — ${sb.address.landmark}.` },
+        { k: 'Admissions', v: `${sb.phone.admissionsDisplay} — applications for Nursery to Class IX and for Class XI are made on the school’s own online form.` },
+        { k: 'School office', v: `${sb.phone.officeDisplay} · ${sb.email}` },
+        { k: 'Transport', v: `${sb.phone.transportDisplay} — held by ${sb.phone.transportIncharge}.` },
+        { k: 'Leaving', v: 'The transfer certificate is downloaded from the school’s own site rather than collected in person.' },
+      ]}
+      lead={{ src: pCorridor, alt: `A corridor at ${school}, its classroom doors running the length of the block` }}
+      support={[
+        { src: pLib, alt: `Students of ${school} reading at the long tables of the library` },
+        { src: pRows, alt: `Parents of ${school} seated in the tiered rows of the hall during a Parents’ Forum session` },
+      ]}
+    />
+
+    <AcPath
+      ground="ivory"
+      kicker="And the four that must be asked"
+      heading="These change,<br /><em>so nobody prints them</em>"
+      body={[
+        'The remaining questions are the ones a family actually plans around — and each has an answer specific to your child, your class or your address. Printing a general version would give you a number that does not apply to you, so this site does not print one. Each below names who holds the real answer.',
+      ]}
+      beats={[
+        { k: 'The fee', body: 'Set per class and per session. Ask admissions for the schedule for your child’s class.' },
+        { k: 'The bus', body: 'Whether a route passes your area, and where the stop is — a route-by-route answer the transport in-charge holds.' },
+        { k: 'The dates', body: 'Application windows for a given session are confirmed by the admissions desk, not by a forwarded message.' },
+        { k: 'The age', body: 'Entry age for a class is an admissions answer, and it is not published in a form this site can restate.' },
+      ]}
+    />
+
+    <AcClose
+      owed={true}
+      statement="Read the first half.<br /><em>Ask for the second.</em>"
+      body="Everything on this page is published by the school. Fees, entry ages, route lists and session dates are not — and a plausible figure printed here would be one a family plans around and finds wrong at the desk."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

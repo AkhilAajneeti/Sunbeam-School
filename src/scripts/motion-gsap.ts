@@ -236,6 +236,47 @@ gsap.utils.toArray<HTMLElement>('[data-mask]').forEach((el) => {
   );
 });
 
+/* --- SCROLL ZOOM -------------------------------------------------------------
+   `data-zoom` scales the IMAGE inside a frame as the frame travels through the
+   viewport. `data-zoom-to` is the end scale, defaulting to 1.12.
+
+   THE IMAGE MOVES, NOT THE FRAME. Scaling the frame would change the box the
+   layout reserved and drag its neighbours around; scaling the img inside a frame
+   that already clips leaves every measured position on the page exactly where it
+   was. Every consumer therefore needs `overflow: hidden` — without it the photo
+   simply grows past its own corners.
+
+   SCRUBBED, unlike `data-mask`. A half-finished wipe reads as a broken image, so
+   that one is a one-shot; a half-finished zoom is just a slightly tighter crop,
+   which is a legitimate state to park in mid-scroll.
+
+   `transform-origin: center` is the default and is what keeps the focal point
+   the composition chose from sliding out of frame as it grows.
+
+   `invalidateOnRefresh` because the trigger's start/end come from a live layout:
+   without it a font swap or an image finishing its decode leaves the tween
+   scrubbing against stale positions. */
+gsap.utils.toArray<HTMLElement>('[data-zoom]').forEach((el) => {
+  const img = el.querySelector<HTMLElement>('img');
+  if (!img) return;
+  const to = Number(el.dataset.zoomTo ?? 1.12);
+  gsap.fromTo(
+    img,
+    { scale: 1 },
+    {
+      scale: to,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+      },
+    }
+  );
+});
+
 /* --- HORIZONTAL RAIL PROGRESS ------------------------------------------------
    Reports how far a NATIVELY scrolling rail has been scrolled, as a 0–1 custom
    property the stylesheet turns into a progress bar.
@@ -538,10 +579,15 @@ document.querySelectorAll<HTMLElement>('[data-count]').forEach((figure) => {
   if (!Number.isFinite(target)) return;
 
   const suffix = figure.dataset.countSuffix ?? '';
+  /* ⚠ PER-ELEMENT DURATION, ADDED FOR PARENT ORIENTATION. Two figures counting
+     at identical speeds read as one animation with two labels; a small
+     difference makes them read as two facts arriving. Defaults to the original
+     1.4 so every existing counter is untouched. */
+  const dur = Number(figure.dataset.countDur ?? 1.4);
   const state = { n: 0 };
   gsap.to(state, {
     n: target,
-    duration: 1.4,
+    duration: Number.isFinite(dur) && dur > 0 ? dur : 1.4,
     ease: 'power2.out',
     scrollTrigger: { trigger: figure, start: 'top 80%', once: true },
     onUpdate: () => {
@@ -633,7 +679,132 @@ if (decos.length && belowFold(decos[0])) {
   });
 }
 
+/* ---------------------------------------------------------------------------
+   CLIP — a headline line wiped in behind its own edge.
+
+   Added for Parent Orientation, which needed a hero entrance that was not the
+   word-mask `data-split` every other Academics hero uses. Where split rises
+   words from below, this sweeps the whole line open from the left, which suits
+   a three-line poster headline that should read as one gesture.
+
+   ⚠ INSET, NOT A TRANSFORM. Rule 3 forbids horizontal transforms — an x-tween
+   is the classic way to introduce horizontal overflow for the length of a
+   tween. `clip-path: inset()` moves nothing; it only changes what is painted.
+
+   ⚠ AND IT OBEYS RULE 1, WHICH THE FIRST VERSION DID NOT. That version used
+   fromTo() with an opacity of 0, which GSAP applies the instant the tween is
+   created — so every element was hidden up front and stayed hidden if its
+   ScrollTrigger never fired. Ten of them were measured stuck at opacity 0 with
+   motion enabled. Nothing here hides anything until its trigger has actually
+   fired, and anything already in view is revealed immediately instead.
+--------------------------------------------------------------------------- */
+const armClip = (el: HTMLElement, delay: number) => {
+  const from = 'inset(0 100% 0 0)';
+  gsap.set(el, { clipPath: from, webkitClipPath: from, opacity: 0.001 });
+  gsap.to(el, {
+    clipPath: 'inset(0 0% 0 0)',
+    webkitClipPath: 'inset(0 0% 0 0)',
+    opacity: 1,
+    duration: 1.05,
+    delay,
+    ease: 'power3.out',
+    clearProps: 'clipPath,webkitClipPath',
+  });
+};
+
+gsap.utils.toArray<HTMLElement>('[data-clip]').forEach((el) => {
+  const delay = Number(el.dataset.clipDelay ?? 0) / 1000;
+
+  /* Above the fold — the hero case. Play it now; there is nothing to wait for. */
+  if (!belowFold(el)) {
+    armClip(el, delay);
+    return;
+  }
+
+  /* Below the fold — arm it only when the trigger fires, so a trigger that
+     never fires leaves readable content rather than a blank line. */
+  ScrollTrigger.create({
+    trigger: el,
+    start: START,
+    once: true,
+    onEnter: () => armClip(el, delay),
+  });
+});
+
+/* ---------------------------------------------------------------------------
+   DRIFT — a word that arrives on its own as the reader scrolls past it.
+
+   For the four-word participation section: the words sit around a photograph
+   and should appear one at a time rather than as one stagger, because the
+   reader travels past them at their own speed. Each therefore carries its own
+   trigger rather than sharing a batch.
+
+   Vertical only, per rule 3. Nothing is hidden before its trigger fires, per
+   rule 1 — see the note on CLIP above for what that cost the first time.
+--------------------------------------------------------------------------- */
+gsap.utils.toArray<HTMLElement>('[data-drift]').forEach((el) => {
+  if (!belowFold(el)) return;
+  const y = Number(el.dataset.drift ?? 28);
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 92%',
+    once: true,
+    onEnter: () => {
+      gsap.fromTo(
+        el,
+        { opacity: 0, y },
+        { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', clearProps: 'transform' },
+      );
+    },
+  });
+});
+
+/* ---------------------------------------------------------------------------
+   DRAW — a rule that draws itself along as the reader scrolls.
+
+   For the Parent Orientation timeline, where the line between the programme
+   nodes should extend rather than fade in. Scrubbed rather than one-shot: this
+   is the one case where parking mid-scroll is fine, because a half-drawn RULE
+   is a progress indicator, not a broken graphic — unlike the half-drawn
+   photograph that data-mask exists to avoid.
+
+   ⚠ scaleX, AND IT DOES NOT BREAK RULE 3. That rule forbids horizontal
+   TRANSLATION, which moves a box outside its parent and creates overflow.
+   Scaling from 0 to 1 about the left edge never exceeds the element's own
+   layout box, so the page can still be verified free of horizontal scroll.
+
+   ⚠ AND IT OBEYS RULE 1. The line is drawn only once its trigger is live; if
+   the script never runs, CSS leaves it at full width and the timeline simply
+   reads as finished.
+--------------------------------------------------------------------------- */
+gsap.utils.toArray<HTMLElement>('[data-draw]').forEach((el) => {
+  gsap.fromTo(
+    el,
+    { scaleX: 0 },
+    {
+      scaleX: 1,
+      ease: 'none',
+      transformOrigin: 'left center',
+      scrollTrigger: {
+        trigger: el.closest('[data-draw-scope]') ?? el,
+        start: 'top 78%',
+        end: 'bottom 62%',
+        scrub: 0.5,
+        invalidateOnRefresh: true,
+      },
+    },
+  );
+});
+
 /* Web fonts land after first paint and change the height of every block, so
    every trigger position computed before that was measured against fallback
    metrics and is wrong. */
 document.fonts?.ready.then(() => ScrollTrigger.refresh());
+
+/* ⚠ AND AGAIN ONCE IMAGES HAVE SETTLED. Fonts are not the only thing that
+   changes layout after first paint — a full-height hero image resolving late
+   moves every trigger position below it, which is exactly how the Parent
+   Orientation drift words ended up with triggers that never matched their
+   elements. `window.load` fires after images; the refresh is cheap and idempotent. */
+if (document.readyState === 'complete') ScrollTrigger.refresh();
+else window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });

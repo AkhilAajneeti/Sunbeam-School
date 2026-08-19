@@ -27,9 +27,13 @@
  *     section above link down to them by id. There is nowhere for it to point.
  *     The same call every other card on this page makes.
  *
- * ⚠ THE ELECTIVE LISTS ARE PLACEHOLDERS AND THE PAGE SAYS SO. `unverified: true`
- * in data/academics.ts is the machine-readable flag; the stamp on each card and
- * the notice at the foot are the version a family sees. The failure mode is
+ * ⚠ UNCONFIRMED SUBJECT LISTS ARE STAMPED, AND THERE ARE TWO FLAGS FOR IT.
+ * `unverified` covers the optional and additional lists; `coreUnverified` covers
+ * the core. They are separate because they were confirmed separately — the
+ * school supplied the elective lists, leaving the Humanities core as the only
+ * outstanding one, and a single shared flag silently dropped that caveat the
+ * moment the electives were signed off. The stamp on each card and the notice at
+ * the foot are the version a family sees. The failure mode is
  * someone choosing a school on the strength of a subject nobody confirmed it
  * teaches, so the caveat is rendered rather than left in a comment. It renders
  * FROM the data, so confirming the lists removes every stamp and the notice
@@ -52,7 +56,19 @@ import AcademicGlyph from '../AcademicGlyph.astro';
 import { streamDetail, combinationsFootnote } from '../../../data/academics';
 import cap from '../../../assets/icons/graduate-cap.png';
 
-const anyUnverified = streamDetail.some((s) => s.unverified);
+/* Two independent caveats, because they can be outstanding independently — and
+   right now exactly one of them is. `electivesOwed` is false (the school sent
+   the lists); `coreOwed` is true (Humanities). The notice must fire on either,
+   and must not call a core an elective. */
+const electivesOwed = streamDetail.some((s) => s.unverified);
+const coreOwed = streamDetail.some((s) => s.coreUnverified);
+const anyUnverified = electivesOwed || coreOwed;
+
+const claimText = electivesOwed && coreOwed
+  ? 'The core and elective lists marked above are indicative and awaiting confirmation from the school.'
+  : electivesOwed
+    ? 'The elective lists above are indicative and awaiting confirmation from the school.'
+    : 'The Humanities core above is indicative and awaiting confirmation from the school. Every other subject list on this page is the school’s own.';
 ---
 
 <section class="ascb" id="combinations" aria-labelledby="ascb-title">
@@ -108,7 +124,15 @@ const anyUnverified = streamDetail.some((s) => s.unverified);
 
             <div class="cmb__sets">
               <div class="cmb__set">
-                <p class="cmb__l">Core subjects</p>
+                {/* ⚠ THE CORE CARRIES ITS OWN FLAG, NOT `unverified`. That one
+                    governs the two elective lists below and the school has
+                    confirmed those; the Humanities core is the single line here
+                    it has not. Sharing one flag is how the caveat went missing
+                    when the electives were signed off. */}
+                <p class="cmb__l">
+                  Core subjects
+                  {s.coreUnverified && <span class="cmb__stamp">To be confirmed</span>}
+                </p>
                 <ul class="cmb__chips">
                   {s.core.map((c) => (
                     <li class="cmb__chip cmb__chip--core">{c}</li>
@@ -153,7 +177,7 @@ const anyUnverified = streamDetail.some((s) => s.unverified);
       {
         anyUnverified && (
           <p class="ascb__claim">
-            <span>The elective lists above are indicative and awaiting confirmation from the school.</span>
+            <span>{claimText}</span>
             {/* The reference's hand-drawn swash. An inline path rather than an
                 image: it takes the accent through `currentColor` and stays crisp
                 at any width. */}

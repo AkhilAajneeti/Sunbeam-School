@@ -25,6 +25,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../ui/PageHero.astro';
 import { assessmentTopics, type AssessmentTopic } from '../../data/academics';
+import { philosophyTopics, structureTopics, careerTopics, parentTopics } from '../../data/academicTopics';
+import { teachingTopics } from '../../data/teachingTopics';
 import { school } from '../../data/site';
 import type { ImageMetadata } from 'astro';
 
@@ -37,12 +39,41 @@ interface Props {
 
 const { topic: t, photo, alt, position = '50% 45%' } = Astro.props;
 
-const siblings = assessmentTopics.filter((x) => x.id !== t.id);
+/**
+ * ⚠ THIS COMPONENT USED TO BE HARD-WIRED TO ASSESSMENT. The breadcrumb, the
+ * eyebrow and the sibling list were all literal "Assessment Pattern" /
+ * `assessmentTopics` — written when Assessment was the only section using it.
+ * Five more sections adopted it since, so 26 of the 31 pages built from this
+ * file told the reader they were inside Assessment: wrong trail, wrong eyebrow,
+ * and a "related topics" foot that linked to Assessment topics from, say,
+ * Parent Partnership.
+ *
+ * The section is now DERIVED from the topic's own href, so no page passes it and
+ * no page can pass a wrong one. Labels are copied from data/navigation.ts and
+ * must keep matching it — the breadcrumb and the menu naming the same place
+ * differently is its own bug.
+ */
+const SECTIONS: { href: string; label: string; topics: AssessmentTopic[] }[] = [
+  { href: '/academics/philosophy/', label: 'Academic Philosophy', topics: philosophyTopics },
+  { href: '/academics/structure/', label: 'Academic Structure', topics: structureTopics },
+  { href: '/academics/teaching-learning/', label: 'Teaching & Learning', topics: teachingTopics },
+  { href: '/academics/assessment/', label: 'Assessment Pattern', topics: assessmentTopics },
+  { href: '/academics/student-success/', label: 'Career Development & Student Success', topics: careerTopics },
+  { href: '/academics/parent-partnership/', label: 'Parent Partnership', topics: parentTopics },
+];
+
+const section = SECTIONS.find((s) => t.href?.startsWith(s.href)) ?? SECTIONS[3];
+const siblings = section.topics.filter((x) => x.id !== t.id);
+
+/* When a page passes its parent's movement into the slot, that movement is the
+   content and this component's own body is the follow-up — so the body's head
+   stops repeating the topic name and says what it actually is. */
+const hasMovement = Astro.slots.has('default');
 ---
 
 <BaseLayout
   title={`${t.title} — Sunbeam School Ballia`}
-  description={t.standfirst}
+  description={t.standfirst ?? t.hint ?? t.label}
 >
   <PageHero
     title={t.title!}
@@ -50,7 +81,7 @@ const siblings = assessmentTopics.filter((x) => x.id !== t.id);
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Academics', href: '/academics/' },
-      { label: 'Assessment Pattern', href: '/academics/assessment/' },
+      { label: section.label, href: section.href },
     ]}
     src={photo}
     alt={alt}
@@ -61,11 +92,19 @@ const siblings = assessmentTopics.filter((x) => x.id !== t.id);
       adding its own on top is what put a 183px void under the hero on three
       earlier pages. */}
   <div class="u-page-panel tp-panel">
+    {/* ⚠ THE SLOT IS WHAT STOPS A CHILD BEING A THINNER COPY OF ITS PARENT. A
+        section page like Parent Partnership already gives each of its topics a
+        full, art-directed movement; the child page then restated the same topic
+        in about 170 words, so the deeper-sounding URL held strictly less than the
+        page above it. A child that passes its movement in here renders the real
+        thing, and the block below becomes the detail only this page adds. */}
+    <slot />
+
     <section class="tp" aria-labelledby="tp-h">
       <div class="u-container tp__in">
         <div class="tp__head">
-          <p class="tp__eyebrow t-label">Assessment Pattern</p>
-          <h2 class="tp__h" id="tp-h" data-split>{t.label}</h2>
+          <p class="tp__eyebrow t-label">{hasMovement ? t.label : section.label}</p>
+          <h2 class="tp__h" id="tp-h" data-split>{hasMovement ? 'In more detail' : t.label}</h2>
         </div>
 
         <div class="tp__body">
@@ -108,7 +147,7 @@ const siblings = assessmentTopics.filter((x) => x.id !== t.id);
 
     <section class="tp-more" aria-labelledby="tp-more-h">
       <div class="u-container">
-        <h2 class="tp-more__h" id="tp-more-h">The rest of Assessment Pattern</h2>
+        <h2 class="tp-more__h" id="tp-more-h">The rest of {section.label}</h2>
         <ul class="tp-more__list">
           {
             siblings.map((s) => (

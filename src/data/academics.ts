@@ -426,11 +426,23 @@ export const stages = [
        are the CBSE commerce core almost everywhere it is taught. Still worth a
        nod from the school.
 
-   3 · NOT VERIFIED, and flagged as such by the client in the brief: every
-       ELECTIVE list, and the Humanities core. Humanities composition varies more
-       between schools than any other stream — one school's History/PolSci/Geog
-       is another's Psychology/Sociology/Economics — so what is written here is a
+   3 · NOT VERIFIED. This level once held BOTH every elective list AND the
+       Humanities core. The school has since supplied the elective lists, so they
+       have moved up to verified — but the HUMANITIES CORE never was confirmed
+       and is still here, alone. Humanities composition varies more between
+       schools than any other stream — one school's History/PolSci/Geog is
+       another's Psychology/Sociology/Economics — so what is written here is a
        plausible shape, not this school's timetable.
+
+       ⚠ AND IT NEEDED ITS OWN FLAG. `unverified` reads like a whole-stream
+       caveat but the card only ever stamps the OPTIONAL and ADDITIONAL lists
+       with it — never the core. So when the electives were confirmed and all
+       four streams flipped to `unverified: false`, the Humanities core caveat
+       did not survive the change: it had never had a renderer of its own, and
+       the flag that was loosely standing in for it was now false. The core was
+       left presented with exactly the confidence of PCM's, which is definitional.
+       `coreUnverified` is that missing flag, and Combinations.astro stamps the
+       Core label from it.
 
    The client's instruction was explicit: "replace with the school's actual
    confirmed offerings before publishing". `unverified: true` marks each list
@@ -490,6 +502,14 @@ export const streamAdditional = [
   'Agriculture',
   'Entrepreneurship',
 ] as const;
+/**
+ * ⚠ `coreUnverified` IS SET ON HUMANITIES AND NOWHERE ELSE, ON PURPOSE.
+ * PCM and PCB are definitional — the stream name IS the subject list. Commerce
+ * is the standard CBSE trio almost everywhere it is taught. Humanities is the
+ * one whose core genuinely varies between schools, and the one the school has
+ * not confirmed. An absent flag on the other three is a decision; see the three
+ * confidence levels documented above.
+ */
 export const streamDetail = [
   {
     name: 'PCM',
@@ -534,6 +554,12 @@ export const streamDetail = [
     optional: streamOptional,
     additional: streamAdditional,
     unverified: false,
+    /* ⚠ THE ONE UNCONFIRMED LINE LEFT IN THIS BLOCK. The elective lists came
+       from the school; this core did not. English is safe (compulsory in CBSE
+       XI–XII); History, Political Science and Geography are a plausible shape
+       for a Humanities stream, not this school's stated one. Clearing this flag
+       needs the school's confirmation, not a judgement that it looks right. */
+    coreUnverified: true,
   },
 ] as const;
 
@@ -634,40 +660,50 @@ export const teachingLearning = {
   /* ── ch1 · Teaching methodology + collaborative learning ─────────────────── */
   method: {
     eyebrow: 'Teaching methodology',
-    heading: 'A lesson starts with a question, not an answer',
+    heading: 'Three things the school builds into every lesson',
+    /**
+     * ⚠ THIS SECTION USED TO DESCRIBE A FOUR-MOVE LESSON — "Ask, Do, Discuss,
+     * Show", with students "handling the apparatus, source, data, code" and
+     * "most of the talking" being theirs. None of it was Sunbeam's. It was a
+     * definition of good practice written here and then presented as this
+     * school's method, which is a claim about the client the client cannot
+     * check. Searched About Us, the homepage, the Principal's Message and the
+     * Event Chronicles: no lesson sequence is published anywhere.
+     *
+     * What IS published is a list of three, and the school names them itself:
+     * "Incorporate Technology, a theory of Multiple Intelligence and
+     * Collaborative learning in all areas of teaching." That sentence is the
+     * section now. Each step names one of the three and anchors it to a figure
+     * or a quotation the school has actually put in writing.
+     */
     stand:
-      'Four moves, in the same order, whatever the subject. It is the shape a lesson takes when the ' +
-      'point is understanding rather than coverage.',
-    /** Definitions of the method, not claims about a named programme. */
+      'The school names them itself: “Incorporate Technology, a theory of Multiple Intelligence ' +
+      'and Collaborative learning in all areas of teaching.” Not in a special lesson — in all ' +
+      'areas of it.',
     steps: [
       {
         n: '01',
-        step: 'Ask',
-        body: 'The lesson opens on something the class cannot yet do — a problem, a text, a reading that does not add up.',
+        step: 'Technology',
+        body: 'One hundred teachers hold Microsoft Innovative Educator Expert certification, which is what makes Sunbeam Ballia a Microsoft Showcase School.',
       },
       {
         n: '02',
-        step: 'Do',
-        body: 'Students handle the thing itself: apparatus, source, data, code. Not a description of it.',
+        step: 'Multiple Intelligence',
+        body: 'The Principal puts the reason plainly: “all the students do not have the same talents and so each one will achieve success differently.”',
       },
       {
         n: '03',
-        step: 'Discuss',
-        body: 'Groups compare what they found and have to defend it. This is where most of the talking happens, and the students do it.',
-      },
-      {
-        n: '04',
-        step: 'Show',
-        body: 'The work is presented to somebody, not only handed in to be marked.',
+        step: 'Collaborative learning',
+        body: 'The Principal’s description of the result is a room where children are talking to each other — “classrooms are places of curiosity and collaboration.”',
       },
     ],
-    /** The collaborative-learning note, given its own plate. */
+    /** The one line the school offers about what all three are for. */
     aside: {
-      label: 'Collaborative learning',
+      label: 'What the three are for',
       body:
-        'Step three is the one most timetables lose. Kept in, it turns a class of thirty into ' +
-        'small groups that have to reach agreement — which is a harder test of understanding ' +
-        'than a written answer.',
+        'The school’s stated aim for its teaching is that children “learn effectively and develop ' +
+        'their full potential”, and that “all children receive equal regard and equal access to ' +
+        'the curriculum.” The three above are how it says it gets there.',
     },
     proofs: [
       { value: '130', suffix: '+', label: 'Teaching staff' },
@@ -683,10 +719,20 @@ export const teachingLearning = {
     beats: [
       {
         key: 'panels',
-        title: 'Every room, not a special room',
+        /* ⚠ THIS BEAT CARRIED TWO FALSE STATEMENTS AND BOTH ARE GONE.
+           It read: 'Thirty-plus classrooms carry an interactive flat panel, and
+           there are MORE PANELS THAN ROOMS.' The school publishes 75+ smart
+           classrooms and 49+ panels — so forty-nine is FEWER than seventy-five,
+           the opposite of the claim, and 'thirty-plus' matched neither figure.
+           The anchor line directly below it had the right numbers the whole time,
+           which is how it was caught. The honest version is also the more
+           credible one: a rollout in progress at a real school. */
+        title: 'Standard equipment, not a room you book',
         body:
-          'Thirty-plus classrooms carry an interactive flat panel, and there are more panels than ' +
-          'rooms. A teacher does not book the technology — it is already where the class is.',
+          'Forty-nine-plus interactive flat panels across seventy-five-plus digitally smart ' +
+          'classrooms — not yet one in every room, and the school publishes both numbers so a ' +
+          'reader can see that. Where a panel is, a teacher does not book it; it is already ' +
+          'where the class is.',
         anchor: '75+ smart classrooms · 49+ interactive flat panels',
       },
       {
@@ -975,10 +1021,11 @@ export const awaiting = [
   },
   {
     id: 'A11',
-    title: 'University destinations are not published yet',
+    title: 'University destinations are published — but only as artwork',
     body:
-      'Where students go after Class XII is not recorded anywhere on the school’s site. A list of ' +
-      'real destinations would be one of the strongest things on this page.',
+      'The school prints a placement board, “Vision To Reality”, naming eighteen leavers with course and ' +
+      'institution, and issues individual placement cards. It is set out on University Counselling. What is ' +
+      'still missing is the same record as text, year on year, with a cohort size beside it.',
   },
   {
     id: 'A11',
@@ -1147,80 +1194,100 @@ export const parents = {
   },
 
   /* ── 03 · WORKSHOPS & WEBINARS ────────────────────────────────────────────
-     The slider. Six sessions as cards. */
+     The slider. Six sessions as cards.
+
+     ⚠⚠ THESE SIX WERE REPLACED, AND THE REASON MATTERS MORE THAN THE COPY.
+
+     This block used to describe six PARENT sessions — "Digital safety at home",
+     "Choosing a stream", "Supporting learning at home", "The exam years", "What
+     we teach, and why", "Growing up, and wellbeing" — each with a format
+     ("Webinar · evening"), a paragraph and a chip list. Not one of them appears
+     anywhere in the school's published record. They were written for this site,
+     and they read exactly like real ones, which is what made them dangerous: a
+     parent could have arrived expecting an evening webinar on digital safety.
+
+     What the school ACTUALLY runs is better, and it was sitting unused in
+     data/newsPages.ts: fifteen professional-development sessions, eleven naming
+     the trainer and eight naming the institution they came from. They are for
+     TEACHERS AND ADMINISTRATORS, and the heading now says so rather than
+     implying a parent audience.
+
+     ⚠ THE PHOTOGRAPHS CHANGED TOO, AND HAD TO. The old cards illustrated a
+     wellbeing webinar with the RoboWunder award graphic and a digital-safety
+     session with a computer laboratory. These six carry photographs of the
+     sessions themselves. */
   workshops: {
     n: '03',
-    eyebrow: 'Workshops & webinars',
-    heading: 'Sessions for the parts nobody hands you a manual for',
+    eyebrow: 'Workshops & training',
+    heading: 'Who trains the teachers, and where they came from',
     stand:
-      'Raising a school-age child now involves decisions no previous generation had to make. These ' +
-      'are the sessions the school runs for parents rather than for students.',
+      'Professional development is easy to assert and hard to check. Every session below names ' +
+      'the trainer, and most name the institution they came from. They are run for teaching and ' +
+      'administrative staff — the school publishes no parent workshop programme.',
     cards: [
       {
         n: '01',
-        title: 'Digital safety at home',
-        format: 'Webinar · evening',
+        title: 'CBSE Capacity Building — Experiential Learning',
+        format: 'Two days · 20–21 September 2025',
         body:
-          'What your child actually does online, what the risks look like at each age, and the ' +
-          'settings that make a real difference rather than the ones that only feel like control.',
-        chips: ['Screen time', 'Privacy', 'Online contact', 'Device rules'],
-        photo: 'sb-comp-lab-2.jpg',
-        alt: 'Younger students of Sunbeam School Ballia working at desktop computers in the junior computer laboratory.',
+          'Sunbeam Ballia hosted the two-day CBSE programme, built around interaction, shared ' +
+          'ideas and practical insight into how experiential learning changes a classroom.',
+        chips: ['Dr. Pushkal Giri', 'St. Joseph’s, Siwan', 'Dr. Ravishankar Mishra', 'Hosted at Ballia'],
+        photo: 'cbse-experiential.jpg',
+        alt: 'Teaching staff at the CBSE Capacity Building Programme on Experiential Learning, hosted at Sunbeam School Ballia.',
       },
       {
         n: '02',
-        title: 'Choosing a stream',
-        format: 'In person · Classes IX–X',
+        title: 'Basic Counseling Skills',
+        format: 'Two days · 16–17 September',
         body:
-          'PCM, PCB, Commerce or Humanities is the first decision with consequences, and it is ' +
-          'usually made on rumour. What each stream actually leads to, discussed before the choice.',
-        chips: ['PCM', 'PCB', 'Commerce', 'Humanities'],
-        photo: 'sb-phy-lab.jpg',
-        alt: 'Students of Sunbeam School Ballia working at benches in the physics laboratory.',
+          'Counselling technique, empathetic communication and how to support a student who needs ' +
+          'more than the syllabus. The programme closes with an assessment and a viva.',
+        chips: ['Mrs. Salony Priya', 'Ummeed Counselling, Kolkata', 'Assessment & viva'],
+        photo: 'storytelling.jpg',
+        alt: 'Teaching staff of Sunbeam School Ballia at a professional-development session.',
       },
       {
         n: '03',
-        title: 'Supporting learning at home',
-        format: 'In person · all classes',
-        body:
-          'How to help without doing it for them — what useful homework support looks like, and the ' +
-          'point at which help becomes interference.',
-        chips: ['Homework', 'Reading', 'Routines', 'Revision'],
-        photo: 'sb-library.jpg',
-        alt: 'Students of Sunbeam School Ballia reading and working at tables in the Nalanda Library.',
+        title: 'Critical Thinking',
+        format: 'Faculty session',
+        body: 'Teaching critical thinking in the classroom, taken by a visiting professor.',
+        chips: ['Prof. Pradeep Mishra', 'Lovely Professional University'],
+        photo: 'critical-thinking.jpg',
+        alt: 'Teaching staff of Sunbeam School Ballia at a session on teaching critical thinking in the classroom.',
       },
       {
         n: '04',
-        title: 'The exam years',
-        format: 'In person · Classes X & XII',
+        title: 'AI Masterclass',
+        format: 'Faculty session',
         body:
-          'What a board year asks of a family, how the school prepares for it, and how to keep the ' +
-          'pressure on the work rather than on the child.',
-        chips: ['Board exams', 'Timetables', 'Stress', 'Sleep'],
-        photo: 'sb-maths-lab.jpg',
-        alt: 'Students of Sunbeam School Ballia seated on the floor of a decorated activity room during a lesson.',
+          'A range of AI tools introduced with their practical use in teaching and learning, so ' +
+          'that teachers could take them straight back into their own classrooms.',
+        chips: ['Mr. Sandeep Mukherjee', 'COO, Sunbeam Group', 'Classroom tools'],
+        photo: 'ai-masterclass.jpg',
+        alt: 'An AI Masterclass session for the teaching staff of Sunbeam School Ballia.',
       },
       {
         n: '05',
-        title: 'What we teach, and why',
-        format: 'In person · all classes',
+        title: 'Recapitulating Dimension of Learning',
+        format: 'Faculty session',
         body:
-          'The CBSE scheme explained by the people teaching it — what changes between the middle ' +
-          'school and the senior school, and why the syllabus looks the way it does.',
-        chips: ['CBSE scheme', 'PRECEPT syllabus', 'Assessment'],
-        photo: 'sb-bio-lab.jpg',
-        alt: 'Two students of Sunbeam School Ballia handling glassware in the biology laboratory.',
+          'A second session with the same trainer who took storytelling as pedagogy, this one on ' +
+          'the dimensions of learning.',
+        chips: ['Mrs. Soma Singh', 'Dimensions of learning'],
+        photo: 'dimensions.jpg',
+        alt: 'Teaching staff of Sunbeam School Ballia at a session on the dimensions of learning.',
       },
       {
         n: '06',
-        title: 'Growing up, and wellbeing',
-        format: 'Webinar · evening',
+        title: 'National Education Policy training',
+        format: 'Delivered by the school',
         body:
-          'Adolescence, friendships and the conversations that are easier to have early. Run for ' +
-          'parents so the school and home are not saying different things.',
-        chips: ['Adolescence', 'Friendships', 'Confidence', 'Talking'],
-        photo: 'robo.jpg',
-        alt: 'The school’s RoboWunder International Robotics Championship award graphic.',
+          'The one that runs the other way: an NEP training session conducted BY a Sunbeam Ballia ' +
+          'educator, at another school.',
+        chips: ['Ms. Vishakha Singh', 'Sunshine Public School, Ghazipur', 'Delivered, not received'],
+        photo: 'nep.jpg',
+        alt: 'A National Education Policy training session involving staff of Sunbeam School Ballia.',
       },
     ],
   },
@@ -1276,34 +1343,48 @@ export const parents = {
   },
 
   /* ── 05 · ENGAGEMENT ──────────────────────────────────────────────────────
-     Image left, copy right — the mirror of 04. */
+     Image left, copy right — the mirror of 04.
+
+     ⚠ THE FOUR 'WAYS' WERE REPLACED. They read: sports day with 'parents both
+     watching and helping run it'; the annual function; exhibitions where
+     'students explain their own work to visitors'; and volunteering, where
+     parents give 'a skill, a morning, a trade'. None of the four is published by
+     the school, and two of them assert what parents DO on the premises — which
+     is not ours to claim on their behalf.
+
+     What replaces them is read off the school's own published photographs of its
+     Parents' Forum: every desk carries a CLASS NAMEPLATE (Nursery, KG-I A, II-C,
+     II-E, III-A), and a second sitting's projected agenda is headed 'Class IX to
+     XII'. Parents are seated BY CLASS SECTION, which is a real and unusual
+     structure — and 'Grandparents Cove' is item 8 of that agenda. */
   engagement: {
     n: '05',
     eyebrow: 'Parent engagement',
-    heading: 'The best days here are the ones you are in the building for',
+    heading: 'A seat with your child’s class written on it',
     paragraphs: [
-      'A school year has a handful of days that a child remembers for decades, and almost all of ' +
-        'them are days when the hall is full. Parents are not an audience at those — the events run ' +
-        'better when families are part of putting them on.',
-      'Coming to watch is genuinely welcome. Taking part is better, and there is more to do than ' +
-        'most families realise.',
+      'The way this school brings parents in is visible on its furniture. In its own photographs ' +
+        'of the Parents’ Forum, every place carries a class nameplate — Nursery, KG-I A, II-C, ' +
+        'II-E, III-A — so a parent is not attending in general. They are sitting for a class.',
+      'It means a concern about one section arrives as that section’s concern rather than as one ' +
+        'family’s, and that every class has somebody in the room whether or not its parents knew ' +
+        'to come.',
     ],
     ways: [
       {
-        label: 'Sports day',
-        body: 'The whole school on the field, houses competing, and parents both watching and helping run it.',
+        label: 'A seat per class',
+        body: 'Desks at the forum carry class nameplates — Nursery, KG-I A, II-C, II-E, III-A — so every section is represented.',
       },
       {
-        label: 'Annual function',
-        body: 'The year’s big stage event — months of rehearsal, and a full hall on the night.',
+        label: 'Junior and senior sittings',
+        body: 'One sitting’s nameplates run from Nursery upward; another’s projected agenda is headed Classes IX to XII.',
       },
       {
-        label: 'Exhibitions',
-        body: 'Science, art and project work put up for an audience. Students explain their own work to visitors.',
+        label: 'The agenda, on the wall',
+        body: 'Twelve numbered items projected in the room, so every parent can see the whole list — including what is still to come.',
       },
       {
-        label: 'Volunteering',
-        body: 'Parents who can give time — a skill, a morning, a trade — are the reason several of these run at all.',
+        label: 'Grandparents Cove',
+        body: 'Item eight on the school’s own forum agenda. What it is has not been published, so it is named here and left at that.',
       },
     ],
     photo: 'sunbeem-5.jpg',

@@ -72,7 +72,10 @@ export const groups: Group[] = [
     id: 'learning',
     eyebrow: 'Where lessons happen',
     title: 'Learning Environment',
-    stand: 'Thirty-plus classrooms wired for teaching, and the rooms that are not classrooms at all.',
+    /* ⚠ WAS 'Thirty-plus classrooms wired for teaching' — a figure matching
+       nothing the school publishes, and one the very next item contradicted with
+       the real 75+. Both numbers below are the published pair. */
+    stand: 'Seventy-five-plus classrooms wired for teaching, and the rooms that are not classrooms at all.',
     items: [
       { label: 'Nursery to Class XII', body: 'One campus carries a child from their first day to their board year.', icon: 'school', photo: 'campus' },
       { label: 'Smart Classrooms', body: '75+ digitally equipped rooms, used in ordinary lessons rather than for demonstrations.', icon: 'panel' },
