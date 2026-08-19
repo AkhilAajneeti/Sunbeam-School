@@ -1,0 +1,1383 @@
+---
+/**
+ * TEACHING & LEARNING · STEM, ROBOTICS & ENRICHMENT — five sections.
+ *
+ * ⚠ COMBINED PAGE — three of the brief's fourteen bullets: STEM Education,
+ * Robotics & Coding, and Mathematics & Science Enrichment. The three standalone
+ * routes were an implementation experiment; their verified content is merged
+ * here and the routes are retired.
+ *
+ * ⚠⚠ THE ROBOTICS LAB IS NOT PHOTOGRAPHED, AND NOTHING ON THIS PAGE PRETENDS
+ * OTHERWISE. The client's instruction stands: Robotics-drones.jpg and dron.jpg
+ * are stock DJI product shots, not this school's room, and are banned. Section
+ * 02 is therefore a TYPOGRAPHIC composition around the four things the school
+ * lists as being in the room — drawn marks, not photographs — and it says so on
+ * the page rather than only in this comment. It is built so a real photograph
+ * drops into the reserved plate later without redesigning anything.
+ * ASSET REQUIREMENT: photography of the Robotics Lab.
+ *
+ * ═══ SOURCE — verified in this repository ══════════════════════════════════
+ *   Robotics Lab — "Drone · 3-D printer · telescope · embedded systems".
+ *   Two computer laboratories, 40+ machines each.
+ *   Mathematics laboratory — "mathematics as a practical subject".
+ *   Physics, Chemistry, Biology — board practicals, Classes IX–XII.
+ *   Vidyarthi Vigyan Manthan — the national science talent search, Classes VI–XI.
+ *   National Children's Science Congress — project work presented and defended.
+ *   Inspire Award MANAK — Department of Science & Technology, original ideas
+ *     from school students, taken to national level.
+ *   RoboWunder International Robotics Championship, Kuala Lumpur — Master Deepak
+ *     Kumar, 2nd place, cash prize 1,500 USD, session 2025-26.
+ *   National School Innovation Ranking & Awards (CBSE) — Rank 2, Uttar Pradesh.
+ *
+ * ⚠ SCOPE BOUNDARY — the results in full live on Student Success; the room
+ * inventory lives on Laboratories & Academic Clubs; the panels and computer-room
+ * teaching live on Smart Classrooms. This page is the science and engineering
+ * work and where it is entered.
+ *
+ * ⚠ NOT CLAIMED: a coding curriculum, which classes take robotics, club hours,
+ * or how students are selected for entry. None is published.
+ *
+ * ═══ COMPOSITION — five sections, five different builds ════════════════════
+ *   01 · CREAM  asymmetric gallery — one dominant frame, two overlapping, one
+ *               circular detail, over a faint technical grid.
+ *   02 · INK    the Robotics Lab as a drawn circuit path. No photographs, and
+ *               the section states why.
+ *   03 · CREAM  the interactive gallery — one large stage, a vertical thumbnail
+ *               rail, a counter, prev/next, a progress rule, and the shared
+ *               Lightbox on the stage itself.
+ *   04 · SAND   the ecosystem — four blocks of DIFFERENT weight joined by thin
+ *               rules. Deliberately photograph-free; see the note on it.
+ *   05 · PHOTO  the dark close.
+ *
+ * ⚠ NO SECTION IS TEXT-LEFT / IMAGE-RIGHT TWICE. 01 is copy-left with a
+ * four-frame cluster; 02 is a full-width dark path; 03 is a stage with a rail;
+ * 04 is a connected diagram; 05 is centred over a photograph. That variation is
+ * the brief's first requirement and the easiest thing to lose.
+ *
+ * PHOTOGRAPHY is ten genuine Sunbeam Ballia frames and no stock. Every caption
+ * says what is actually in its picture.
+ *
+ * MOTION is the project's own attribute set — data-clip, data-reveal, data-pop,
+ * data-drift, data-parallax, data-mask, data-zoom — plus one scoped script for
+ * the gallery and one for the circuit draw.
+ */
+import { Picture } from 'astro:assets';
+import Lightbox from '../../ui/Lightbox.astro';
+
+/* ── PHOTOGRAPHY ────────────────────────────────────────────────────────────
+   ⚠ TEN DISTINCT FRAMES, AND THE BANNER IS AN ELEVENTH. A page about rooms is
+   the easiest place on the site to show the same bench five times. */
+import pPhysics from '../../../assets/photos/sb-phy-lab.jpg';
+import pComposite from '../../../assets/composite lab/DSC_1256 copy.jpg';
+import pMicroscope from '../../../assets/photos/sb-sci-lab.jpg';
+import pBio from '../../../assets/photos/sb-bio-lab.jpg';
+import pMaths from '../../../assets/photos/sb-maths-lab.jpg';
+import pLabBusy from '../../../assets/computer lab/it-3.jpeg';
+import pLabTaught from '../../../assets/computer lab/it-10.jpeg';
+import pCompositeRoom from '../../../assets/composite lab/DSC_1258 copy.jpg';
+import pLibrary from '../../../assets/library/DSC_1224 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/* ── THE MARKS ──────────────────────────────────────────────────────────────
+   24-unit box, 1.5 stroke, round caps and joins, no fill, `currentColor`. */
+const MARK: Record<string, string> = {
+  drone: `<path d="M12 9.6h.01"/><rect x="8.8" y="8.8" width="6.4" height="6.4" rx="1.4"/><path d="M8.8 10.4 5.4 7M15.2 10.4 18.6 7M8.8 13.6 5.4 17M15.2 13.6 18.6 17"/><circle cx="4.2" cy="5.8" r="2.2"/><circle cx="19.8" cy="5.8" r="2.2"/><circle cx="4.2" cy="18.2" r="2.2"/><circle cx="19.8" cy="18.2" r="2.2"/>`,
+  printer: `<rect x="4.4" y="8.6" width="15.2" height="7.6" rx="1.6"/><path d="M7.6 8.6V4.4h8.8v4.2M7.6 16.2v3.4h8.8v-3.4"/><path d="M7.4 11.8h2"/>`,
+  telescope: `<path d="m3.4 13.4 11.2-6.5a1.8 1.8 0 0 1 2.5.7l1.5 2.6a1.8 1.8 0 0 1-.7 2.4L6.7 19.2a1.8 1.8 0 0 1-2.5-.7l-1.5-2.6a1.8 1.8 0 0 1 .7-2.5Z"/><path d="m13 16.2 2.4 4.2M9.4 18.2l1.4 2.4M18.2 4.4l1.6 2.8"/>`,
+  chip: `<rect x="6.4" y="6.4" width="11.2" height="11.2" rx="1.6"/><rect x="9.8" y="9.8" width="4.4" height="4.4" rx=".8"/><path d="M9.6 2.8v3.6M14.4 2.8v3.6M9.6 17.6v3.6M14.4 17.6v3.6M2.8 9.6h3.6M2.8 14.4h3.6M17.6 9.6h3.6M17.6 14.4h3.6"/>`,
+  flask: `<path d="M9.6 3.4h4.8M10.6 3.4v5.2L6.9 17a2 2 0 0 0 1.8 2.8h6.6a2 2 0 0 0 1.8-2.8l-3.7-8.4V3.4"/><path d="M8.2 14.4h7.6"/><circle cx="10.8" cy="16.8" r=".9"/>`,
+  gear: `<circle cx="12" cy="12" r="3.2"/><path d="M12 2.6v3M12 18.4v3M2.6 12h3M18.4 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/>`,
+  code: `<path d="m8.6 8.4-4 3.6 4 3.6M15.4 8.4l4 3.6-4 3.6M13.4 4.6l-2.8 14.8"/>`,
+  bulb: `<path d="M9.4 18.4h5.2M10.2 21h3.6"/><path d="M8.2 13.4a5.4 5.4 0 1 1 7.6 0c-.9.9-1.4 1.7-1.4 2.8v.6H9.6v-.6c0-1.1-.5-1.9-1.4-2.8Z"/>`,
+};
+
+/* ── THE ROBOTICS LAB ───────────────────────────────────────────────────────
+   The school's own one-line inventory, split into four. `body` is this site's
+   own gloss on each item — none of it claims a capability the school has not
+   listed. */
+const kit = [
+  { n: '01', mark: 'drone', k: 'Drone', v: 'The machine behind the school’s only international placing.' },
+  { n: '02', mark: 'printer', k: '3-D Printer', v: 'A design that leaves the screen as an object.' },
+  { n: '03', mark: 'telescope', k: 'Telescope', v: 'The one instrument in the room pointed away from the building.' },
+  { n: '04', mark: 'chip', k: 'Embedded Systems', v: 'Where code stops being a screen and starts being a thing that moves.' },
+] as const;
+
+/* ── THE GALLERY ────────────────────────────────────────────────────────────
+   ⚠ SIX FRAMES, EVERY ONE OF THEM STUDENTS OR ROOMS THAT ACTUALLY EXIST, and
+   each `cap` describes what is IN the picture rather than what the section is
+   about. The empty-room frames say "between classes" so nobody reads a bench
+   shot as a lesson in progress. */
+const shots = [
+  { src: pBio, cap: 'The biology laboratory — a measuring cylinder read at the bench.',
+    alt: `Two senior students of ${S} at the biology laboratory bench, one reading a measuring cylinder, anatomy charts behind them` },
+  { src: pMaths, cap: 'The mathematics laboratory — the room most schools do without.',
+    alt: `Senior students of ${S} at work in the mathematics laboratory, subject charts covering the walls behind them` },
+  { src: pLabBusy, cap: 'The senior computer laboratory, in use.',
+    alt: `Students of ${S} at the machines along both benches of the senior computer laboratory, a teacher standing at the back` },
+  { src: pLabTaught, cap: 'Taught, not just equipped — keyboard and shortcut charts on the wall.',
+    alt: `A computer room at ${S} during a lesson, wall charts of keyboard keys and PC shortcuts behind the machines` },
+  { src: pCompositeRoom, cap: 'The composite laboratory between classes — apparatus, models, reagent shelves.',
+    alt: `The composite laboratory at ${S} between classes: a long bench with an anatomy model, sink and taps, reagent shelves along the back wall` },
+  { src: pLibrary, cap: 'The Nalanda Library between classes — shelves signed by subject.',
+    alt: `The Nalanda Library at ${S} between classes: reading tables and chairs, with shelves signed “Ballia Literature”, “Mythology” and “Magazines”` },
+] as const;
+
+/* ── THE ECOSYSTEM ──────────────────────────────────────────────────────────
+   ⚠ FOUR BLOCKS OF DELIBERATELY DIFFERENT WEIGHT, AND NO PHOTOGRAPHS AT ALL.
+   Not an omission: this page already carries ten, and the brief's own warning is
+   against a wall of them. More to the point, three of these four have no frame
+   that would be honest — a chemistry bench captioned "Making" is a mislabel, and
+   the Robotics Lab has no photograph at all. Type and drawn marks claim nothing.
+   `w` sets each block's span so the four read as one system rather than a row. */
+const eco = [
+  { w: 5, mark: 'flask', k: 'Science', v: 'Physics, Chemistry and Biology laboratories, carrying board practicals from Class IX to Class XII.' },
+  { w: 3, mark: 'gear', k: 'Making', v: 'The Robotics Lab — drone, 3-D printer, telescope, embedded systems.' },
+  { w: 4, mark: 'code', k: 'Coding', v: 'Two computer laboratories, junior and senior, 40+ machines each.' },
+  { w: 4, mark: 'bulb', k: 'Discovery', v: 'Three national programmes the school enters: Vidyarthi Vigyan Manthan, the National Children’s Science Congress and Inspire Award MANAK.' },
+] as const;
+
+const SUCCESS = '/academics/student-success/';
+---
+
+{/* ══ 01 · WHERE SCIENCE HAPPENS ═════════════════════════════════════════════
+    Ground: cream. Idea: copy left, a four-frame cluster right — one dominant
+    landscape, two overlapping, one circular detail — over a faint technical
+    grid. */}
+<section class="st-rooms" aria-labelledby="st-rooms-t">
+  <span class="st-rooms__warm" aria-hidden="true"></span>
+  <span class="st-grid" aria-hidden="true"></span>
+  <span class="st-dots st-rooms__dots" aria-hidden="true"></span>
+
+  <svg class="st-trace st-rooms__trace" viewBox="0 0 220 300" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M214 18h-46a12 12 0 0 0-12 12v56a12 12 0 0 1-12 12h-34" />
+      <path d="M214 104h-24a12 12 0 0 0-12 12v104a12 12 0 0 1-12 12h-52" />
+    </g>
+    <circle cx="110" cy="98" r="3.2" fill="currentColor" />
+    <circle cx="114" cy="232" r="3.2" fill="currentColor" />
+  </svg>
+
+  <div class="u-container st-rooms__grid">
+    <div class="st-rooms__copy">
+      <p class="st-kicker" data-reveal>Where science happens</p>
+      <h2 class="st-h st-rooms__h" id="st-rooms-t">
+        <span data-clip data-clip-delay="0">Rooms built for</span>
+        <span data-clip data-clip-delay="150"><em>one subject each.</em></span>
+      </h2>
+      <p class="st-body" data-reveal data-reveal-delay="200">
+        Sunbeam’s STEM provision is a set of named rooms rather than a claim about a culture.
+        Physics, Chemistry and Biology each have a laboratory of their own, carrying
+        {' '}<strong>board practicals from Class IX to Class XII</strong> — a chemistry bench with
+        gas taps and reagent shelves is a different object from a science room with a sink in it.
+      </p>
+      <p class="st-body" data-reveal data-reveal-delay="270">
+        The <strong>mathematics laboratory</strong> is the one most schools do without. Its purpose
+        is to make mathematics a practical subject — something handled rather than only argued on
+        paper — which is a harder room to justify and a more revealing one to have.
+      </p>
+
+      <ul class="st-rooms__tags">
+        {[
+          { m: 'flask', k: 'Named laboratories' },
+          { m: 'gear', k: 'Board practicals IX–XII' },
+          { m: 'code', k: 'Purpose-built spaces' },
+          { m: 'bulb', k: 'Hands-on, everyday' },
+        ].map((t, i) => (
+          <li data-reveal data-reveal-delay={330 + i * 60}>
+            <span aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[t.m]} />
+              </svg>
+            </span>
+            {t.k}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="st-rooms__media">
+      <figure class="st-rooms__lead" data-mask data-zoom data-zoom-to="1.06">
+        <Picture
+          src={pPhysics}
+          alt={`Senior students of ${S} at the physics laboratory benches, apparatus in front of them and subject portraits along the wall`}
+          formats={['avif', 'webp']}
+          widths={[620, 1000, 1320]}
+          sizes="(max-width: 1023px) 92vw, 46vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="st-rooms__side" data-parallax data-parallax-y="26">
+        <Picture
+          src={pComposite}
+          alt={`The composite laboratory at ${S} between classes, its long benches and apparatus set out along the room`}
+          formats={['avif', 'webp']}
+          widths={[360, 620]}
+          sizes="(max-width: 1023px) 46vw, 21vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="st-rooms__disc" data-parallax data-parallax-y="-22">
+        <Picture
+          src={pMicroscope}
+          alt={`A student of ${S} at the microscope, conical flasks of plant cuttings and an anatomy model on the bench beside her`}
+          formats={['avif', 'webp']}
+          widths={[300, 480]}
+          sizes="(max-width: 1023px) 32vw, 14vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · THE ROBOTICS LAB ══════════════════════════════════════════════════
+    Ground: ink. Idea: the four items as nodes on a drawn circuit that draws
+    itself. ⚠ NO PHOTOGRAPHS — see the header note. */}
+<section class="st-bots" aria-labelledby="st-bots-t">
+  <span class="st-bots__glow" aria-hidden="true"></span>
+  <span class="st-bots__grid" aria-hidden="true"></span>
+  <span class="st-bots__grain" aria-hidden="true"></span>
+  <span class="st-bots__ghost" aria-hidden="true" data-parallax data-parallax-y="20">Robotics</span>
+
+  <svg class="st-bots__circuit st-bots__circuit--l" viewBox="0 0 200 260" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-6 26h60a12 12 0 0 1 12 12v50a12 12 0 0 0 12 12h56" />
+      <path d="M-6 128h34a12 12 0 0 1 12 12v78a12 12 0 0 0 12 12h72" />
+    </g>
+    <circle cx="134" cy="100" r="3" fill="currentColor" />
+    <circle cx="124" cy="230" r="3" fill="currentColor" />
+  </svg>
+  <svg class="st-bots__circuit st-bots__circuit--r" viewBox="0 0 200 260" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M206 34h-56a12 12 0 0 0-12 12v56a12 12 0 0 1-12 12H70" />
+      <path d="M206 140h-30a12 12 0 0 0-12 12v66a12 12 0 0 1-12 12H82" />
+    </g>
+    <circle cx="66" cy="114" r="3" fill="currentColor" />
+    <circle cx="78" cy="230" r="3" fill="currentColor" />
+  </svg>
+
+  <div class="u-container st-bots__inner">
+    <div class="st-bots__head">
+      <p class="st-kicker st-kicker--dark" data-reveal>The Robotics Lab</p>
+      <h2 class="st-h st-bots__h" id="st-bots-t">
+        <span data-clip data-clip-delay="0">Four things</span>
+        <span data-clip data-clip-delay="150"><em>in one room.</em></span>
+      </h2>
+      <p class="st-body st-body--dark" data-reveal data-reveal-delay="200">
+        The school’s description of its Robotics Lab is a single line of four items, and it is more
+        specific than most schools manage: <strong>a drone, a 3-D printer, a telescope and embedded
+        systems</strong>. No “state-of-the-art”, no “cutting-edge” — four objects, each of which
+        either exists in a room or does not.
+      </p>
+    </div>
+
+    <div class="st-rail">
+      {/* ⚠ TWO PATHS ON ONE GEOMETRY. The dotted one is the bus and is always
+          painted; the solid one is the same shape drawn on scroll via
+          stroke-dashoffset. `pathLength="1"` keeps the script in fractions. */}
+      <svg class="st-rail__bus" viewBox="0 0 1200 60" fill="none" preserveAspectRatio="none" aria-hidden="true">
+        <path class="st-rail__line" d="M-40 30 Q80 30 150 30 T450 30 T750 30 T1050 30 Q1160 30 1240 30"
+          stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6 9" />
+        <path class="st-rail__draw" pathLength="1" d="M-40 30 Q80 30 150 30 T450 30 T750 30 T1050 30 Q1160 30 1240 30"
+          stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+
+      <ol class="st-rail__list">
+        {kit.map((k, i) => (
+          <li class="st-node" data-drift="24" style={`--i: ${i};`}>
+            <span class="st-node__n t-tabular" data-pop data-pop-delay={i * 110}>{k.n}</span>
+            <span class="st-node__i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[k.mark]} />
+              </svg>
+            </span>
+            <h3 class="st-node__k">{k.k}</h3>
+            <p class="st-node__b">{k.v}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    {/* ⚠ THE MISSING PHOTOGRAPH, STATED ON THE PAGE. The stock drone images in
+        this repository are not this school's room, so the section says the
+        picture is owed rather than borrowing somebody else's. */}
+    <p class="st-bots__owed" data-reveal data-reveal-delay="260">
+      <span aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3.4" y="5.6" width="17.2" height="13.2" rx="2" />
+            <path d="M3.4 15.2 8.6 10l4.4 4.2 3-2.6 4.6 4" />
+            <circle cx="9" cy="9.6" r="1.4" />
+          </g>
+        </svg>
+      </span>
+      The school has published no photograph of this laboratory, so the four items are set as type
+      rather than illustrated with somebody else’s room.
+    </p>
+  </div>
+</section>
+
+{/* ══ 03 · STEM IN PRACTICE ══════════════════════════════════════════════════
+    Ground: cream. Idea: one large stage with a vertical thumbnail rail, a
+    counter, prev/next and a progress rule. The stage opens the Lightbox. */}
+<section class="st-use" aria-labelledby="st-use-t">
+  <span class="st-use__warm" aria-hidden="true"></span>
+
+  <div class="u-container st-use__grid">
+    <div class="st-use__copy">
+      <p class="st-kicker" data-reveal>STEM in practice</p>
+      <h2 class="st-h st-use__h" id="st-use-t">
+        <span data-clip data-clip-delay="0">Not just equipment.</span>
+        <span data-clip data-clip-delay="150"><em>Students using it.</em></span>
+      </h2>
+      <p class="st-body" data-reveal data-reveal-delay="200">
+        Laboratories are only useful when they are in use. Six frames from the school’s own
+        rooms — each caption says what is actually in the picture.
+      </p>
+
+      <div class="st-use__ctrl" data-reveal data-reveal-delay="280">
+        <button type="button" class="st-use__nav" data-gal-prev>
+          <span class="u-visually-hidden">Previous photograph</span>
+          <svg viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <p class="st-use__count t-tabular"><span data-gal-n>01</span> / {String(shots.length).padStart(2, '0')}</p>
+        <button type="button" class="st-use__nav" data-gal-next>
+          <span class="u-visually-hidden">Next photograph</span>
+          <svg viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M9 1l4 4-4 4M13 5H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      <p class="st-use__bar" aria-hidden="true"><span data-gal-bar></span></p>
+    </div>
+
+    <div class="st-use__stage" data-gal-scope>
+      <div class="st-use__frames">
+        {shots.map((sh, i) => (
+          <a class={`st-shot${i === 0 ? ' is-on' : ''}`} href={sh.src.src} data-gal-frame data-lb-open
+            data-lb-alt={sh.alt} data-lb-cap={sh.cap} tabindex={i === 0 ? 0 : -1}>
+            <Picture
+              src={sh.src}
+              alt={sh.alt}
+              formats={['avif', 'webp']}
+              widths={[620, 1000, 1400]}
+              sizes="(max-width: 1023px) 92vw, 46vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+            <span class="st-shot__zoom" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="10.6" cy="10.6" r="6.4" stroke="currentColor" stroke-width="1.7" />
+                <path d="M15.4 15.4 20.4 20.4M10.6 8v5.2M8 10.6h5.2" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round" />
+              </svg>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <p class="st-use__cap" data-gal-cap>{shots[0].cap}</p>
+
+      <ol class="st-rail-thumbs">
+        {shots.map((sh, i) => (
+          <li>
+            <button type="button" class={`st-thumb${i === 0 ? ' is-on' : ''}`} data-gal-thumb={i}>
+              <span class="u-visually-hidden">{`Show photograph ${i + 1}: ${sh.cap}`}</span>
+              <Picture
+                src={sh.src}
+                alt=""
+                formats={['avif', 'webp']}
+                widths={[160, 260]}
+                sizes="120px"
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+{/* ══ 04 · THE ENRICHMENT ECOSYSTEM ══════════════════════════════════════════
+    Ground: sand. Idea: four blocks of different span, joined by thin rules, on a
+    technical grid. No photographs — see the note on `eco`. */}
+<section class="st-eco" aria-labelledby="st-eco-t">
+  <span class="st-eco__warm" aria-hidden="true"></span>
+  <span class="st-grid st-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="st-eco__head">
+      <p class="st-kicker" data-reveal>The enrichment ecosystem</p>
+      <h2 class="st-h st-eco__h" id="st-eco-t">
+        <span data-clip data-clip-delay="0">Many rooms.</span>
+        <span data-clip data-clip-delay="150"><em>One purpose.</em></span>
+      </h2>
+      <p class="st-body st-eco__b" data-reveal data-reveal-delay="200">
+        Different spaces, different tools, one connected idea of learning through doing. What came
+        back from the three national programmes is recorded on
+        {' '}<a class="st-link" href={SUCCESS}>Student Success</a> rather than repeated here — with
+        one exception worth naming, because it came out of the Robotics Lab:
+        {' '}<strong>Master Deepak Kumar took second place at the RoboWunder International Robotics
+        Championship in Kuala Lumpur</strong>, with a 1,500 USD prize.
+      </p>
+    </div>
+
+    <ol class="st-eco__list">
+      {eco.map((e, i) => (
+        <li class="st-cell" style={`--w: ${e.w};`} data-reveal data-reveal-delay={120 + i * 110}>
+          <span class="st-cell__n t-tabular">{`0${i + 1}`}</span>
+          <span class="st-cell__i" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[e.mark]} />
+            </svg>
+          </span>
+          <h3 class="st-cell__k">{e.k}</h3>
+          <p class="st-cell__b">{e.v}</p>
+          <span class="st-cell__wire" aria-hidden="true"></span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 05 · THE CLOSE ═════════════════════════════════════════════════════════ */}
+<section class="st-close" aria-labelledby="st-close-t">
+  <div class="st-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pCohort}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <span class="st-close__scrim" aria-hidden="true"></span>
+  <span class="st-close__glow" aria-hidden="true"></span>
+
+  <div class="u-container st-close__inner">
+    <p class="st-kicker st-kicker--dark" data-reveal>Learning beyond the book</p>
+    <h2 class="st-h st-close__h" id="st-close-t">
+      <span data-clip data-clip-delay="0">Explore. Build.</span>
+      <span data-clip data-clip-delay="150"><em>Discover.</em></span>
+    </h2>
+    <p class="st-close__b" data-reveal data-reveal-delay="180">
+      The school names the rooms, their contents and the programmes it enters. It does not publish
+      a coding curriculum, which classes take robotics, or club hours — and it has published no
+      photograph of the Robotics Lab itself.
+    </p>
+
+    <ul class="st-close__beats">
+      {[
+        { m: 'flask', k: 'Explore' },
+        { m: 'chip', k: 'Build' },
+        { m: 'bulb', k: 'Discover' },
+      ].map((bt, i) => (
+        <li data-reveal data-reveal-delay={260 + i * 90}>
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[bt.m]} />
+            </svg>
+          </span>
+          {bt.k}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<Lightbox />
+
+<script>
+  /* ── THE CIRCUIT DRAWS ITSELF ─────────────────────────────────────────────
+     ⚠ DECORATION ONLY. The dotted bus underneath is always painted, so with
+     this script absent the reader loses the travelling line and nothing else. */
+  const stBots = document.querySelector('.st-bots');
+  const stDraw = document.querySelector('.st-rail__draw');
+
+  if (stBots instanceof HTMLElement && stDraw instanceof SVGPathElement
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let queued = false;
+    const paint = () => {
+      queued = false;
+      const r = stBots.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (window.innerHeight * 0.82 - r.top) / (r.height * 0.7)));
+      stDraw.style.strokeDashoffset = String(1 - p);
+      const on = Math.round(p * 4);
+      document.querySelectorAll('.st-node').forEach((n, i) => n.classList.toggle('is-on', i < on));
+    };
+    const onScroll = () => { if (queued) return; queued = true; requestAnimationFrame(paint); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    paint();
+  }
+
+  /* ── THE GALLERY ──────────────────────────────────────────────────────────
+     ⚠ EVERY FRAME IS IN THE DOM AND ONLY ONE IS SHOWN. Not a src swap: the
+     browser has already decoded the others, so a change is instant and there is
+     no flash of an empty stage. The frames are anchors, so with JavaScript off
+     the reader gets six links to six photographs rather than a dead widget.
+
+     ⚠ AUTOPLAY STOPS AT THE FIRST INTERACTION AND NEVER RESTARTS. A carousel
+     that resumes after a reader has taken control fights them for the rest of
+     the page. It also stops while the tab is hidden and when the section is out
+     of view, so it is not animating to nobody. */
+  const scope = document.querySelector('[data-gal-scope]');
+
+  if (scope) {
+    const frames = [...scope.querySelectorAll('[data-gal-frame]')];
+    const thumbs = [...scope.querySelectorAll('[data-gal-thumb]')];
+    const capEl = scope.querySelector('[data-gal-cap]');
+    const root = scope.closest('.st-use');
+    const nEl = root?.querySelector('[data-gal-n]');
+    const barEl = root?.querySelector('[data-gal-bar]');
+    const prev = root?.querySelector('[data-gal-prev]');
+    const next = root?.querySelector('[data-gal-next]');
+
+    const caps = frames.map((f) => f.getAttribute('data-lb-cap') || '');
+    let at = 0;
+    let timer = 0;
+    let live = false;
+
+    const show = (i) => {
+      at = (i + frames.length) % frames.length;
+      frames.forEach((f, k) => {
+        const on = k === at;
+        f.classList.toggle('is-on', on);
+        f.setAttribute('tabindex', on ? '0' : '-1');
+      });
+      thumbs.forEach((t, k) => {
+        t.classList.toggle('is-on', k === at);
+        t.setAttribute('aria-current', k === at ? 'true' : 'false');
+      });
+      if (capEl) capEl.textContent = caps[at];
+      if (nEl) nEl.textContent = String(at + 1).padStart(2, '0');
+      if (barEl instanceof HTMLElement) {
+        barEl.style.width = `${((at + 1) / frames.length) * 100}%`;
+      }
+    };
+
+    const stop = () => { if (timer) { clearInterval(timer); timer = 0; } live = false; };
+    const start = () => {
+      if (timer || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      live = true;
+      timer = window.setInterval(() => {
+        if (document.hidden) return;
+        show(at + 1);
+      }, 5000);
+    };
+
+    thumbs.forEach((t, i) => t.addEventListener('click', () => { stop(); show(i); }));
+    prev?.addEventListener('click', () => { stop(); show(at - 1); });
+    next?.addEventListener('click', () => { stop(); show(at + 1); });
+
+    /* Arrow keys, but only while the gallery holds focus — hijacking them for
+       the whole document would break normal page scrolling. */
+    scope.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      stop();
+      show(at + (e.key === 'ArrowRight' ? 1 : -1));
+    });
+
+    /* Swipe. Horizontal only, and only past a real threshold, so a vertical
+       scroll that drifts sideways never flips the frame. */
+    let x0 = 0;
+    let y0 = 0;
+    scope.addEventListener('touchstart', (e) => {
+      x0 = e.changedTouches[0].clientX;
+      y0 = e.changedTouches[0].clientY;
+    }, { passive: true });
+    scope.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - x0;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) return;
+      stop();
+      show(at + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+
+    show(0);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) { if (!timer && live !== false) start(); }
+          else if (timer) { clearInterval(timer); timer = 0; }
+        });
+      }, { threshold: 0.4 }).observe(scope);
+      live = true;
+      start();
+    }
+  }
+</script>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .st-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .st-kicker--dark { color: var(--sb-lime); }
+
+  .st-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .st-h span { display: block; }
+  .st-h em { font-style: normal; color: var(--sb-violet); }
+
+  .st-body {
+    max-width: 46ch;
+    margin: clamp(13px, 1.6vw, 19px) 0 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .st-body strong { font-weight: 700; color: var(--sb-charcoal); }
+  .st-body--dark { color: var(--sb-on-dark-78); }
+  .st-body--dark strong { color: #fff; }
+
+  .st-link {
+    font-weight: 700;
+    color: var(--sb-violet);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 60, 10, 0.4);
+  }
+  .st-link:hover { border-bottom-color: var(--sb-violet); }
+
+  /* The page's decorative language: a fine technical grid, right-angled traces
+     with terminal nodes, and a dot field. Never above 14% opacity. */
+  .st-grid {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.05) 1px, transparent 1px);
+    background-size: 38px 38px;
+    -webkit-mask-image: radial-gradient(120% 92% at 28% 42%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(120% 92% at 28% 42%, #000 0%, transparent 78%);
+  }
+  .st-grid--fine {
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(112% 96% at 62% 46%, #000 0%, transparent 80%);
+    mask-image: radial-gradient(112% 96% at 62% 46%, #000 0%, transparent 80%);
+  }
+  .st-trace {
+    position: absolute;
+    z-index: -2;
+    height: auto;
+    color: rgba(201, 60, 10, 0.24);
+  }
+  .st-dots {
+    position: absolute;
+    z-index: -2;
+    background-image: radial-gradient(rgba(201, 60, 10, 0.3) 1.5px, transparent 1.7px);
+    background-size: 17px 17px;
+  }
+
+  /* ═══ 01 · WHERE SCIENCE HAPPENS ══════════════════════════════════════════ */
+  .st-rooms {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(42px, 5.2vw, 84px);
+  }
+  .st-rooms__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 66% at 6% 8%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 70%),
+      radial-gradient(54% 64% at 96% 86%, rgba(201, 60, 10, 0.06) 0%, rgba(201, 60, 10, 0) 72%);
+  }
+  .st-rooms__dots {
+    right: clamp(6px, 2vw, 40px);
+    top: 8%;
+    width: clamp(60px, 7vw, 104px);
+    height: clamp(70px, 8vw, 118px);
+    -webkit-mask-image: linear-gradient(230deg, #000 0%, transparent 92%);
+    mask-image: linear-gradient(230deg, #000 0%, transparent 92%);
+  }
+  .st-rooms__trace { bottom: 6%; right: clamp(-20px, -0.6vw, -4px); width: clamp(110px, 13vw, 220px); }
+
+  .st-rooms__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.14fr);
+    gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+  }
+  .st-rooms__h { font-size: clamp(26px, 3.2vw, 46px); }
+
+  .st-rooms__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(12px, 1.8vw, 28px);
+    margin: clamp(20px, 2.4vw, 32px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .st-rooms__tags li {
+    display: grid;
+    justify-items: center;
+    gap: 7px;
+    max-width: 13ch;
+    text-align: center;
+    font-size: clamp(9.5px, 0.72vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    line-height: 1.4;
+    color: var(--sb-charcoal);
+  }
+  .st-rooms__tags span {
+    display: grid;
+    place-items: center;
+    width: clamp(26px, 2.4vw, 34px);
+    aspect-ratio: 1 / 1;
+    color: var(--sb-violet);
+  }
+  .st-rooms__tags svg { width: 100%; height: auto; }
+
+  /* THE CLUSTER — one dominant frame, one overlapping its bottom-left, one
+     circular detail breaking its bottom-right. Three different sizes on purpose. */
+  .st-rooms__media { position: relative; }
+  .st-rooms__lead {
+    margin: 0 0 0 auto;
+    width: min(100%, 92%);
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .st-rooms__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+  .st-rooms__side {
+    position: absolute;
+    z-index: 2;
+    left: clamp(-16px, -0.4vw, 4px);
+    bottom: clamp(-30px, -1.4vw, -12px);
+    width: clamp(140px, 17vw, 250px);
+    margin: 0;
+    overflow: hidden;
+    border: 7px solid var(--sb-ivory);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .st-rooms__side :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .st-rooms__disc {
+    position: absolute;
+    z-index: 3;
+    right: clamp(8px, 3vw, 60px);
+    bottom: clamp(-34px, -1.6vw, -14px);
+    width: clamp(96px, 11vw, 168px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-ivory);
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card);
+  }
+  .st-rooms__disc :global(picture) { display: block; width: 100%; height: 100%; }
+  .st-rooms__disc :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* ═══ 02 · THE ROBOTICS LAB ═══════════════════════════════════════════════ */
+  .st-bots {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #1a0b05;
+    padding-block: clamp(44px, 5.4vw, 86px);
+  }
+  .st-bots__glow {
+    position: absolute;
+    z-index: -3;
+    top: -18%;
+    left: 8%;
+    width: 60%;
+    aspect-ratio: 1.5 / 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 92, 53, 0.26) 0%, rgba(255, 92, 53, 0) 74%);
+    filter: blur(30px);
+  }
+  .st-bots__grid {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255, 138, 92, 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 138, 92, 0.07) 1px, transparent 1px);
+    background-size: 34px 34px;
+    -webkit-mask-image: radial-gradient(110% 100% at 50% 40%, #000 0%, transparent 82%);
+    mask-image: radial-gradient(110% 100% at 50% 40%, #000 0%, transparent 82%);
+  }
+  .st-bots__grain {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    opacity: 0.3;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+  .st-bots__ghost {
+    position: absolute;
+    z-index: -2;
+    top: clamp(10px, 2vw, 40px);
+    right: calc(var(--sb-margin) * -0.5);
+    font-family: var(--sb-font-display);
+    font-size: clamp(70px, 11vw, 180px);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.86;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: rgba(255, 138, 92, 0.07);
+    user-select: none;
+  }
+  .st-bots__circuit {
+    position: absolute;
+    z-index: -2;
+    top: 22%;
+    width: clamp(96px, 12vw, 200px);
+    height: auto;
+    color: rgba(255, 138, 92, 0.24);
+  }
+  .st-bots__circuit--l { left: clamp(-20px, -0.6vw, -4px); }
+  .st-bots__circuit--r { right: clamp(-20px, -0.6vw, -4px); }
+
+  .st-bots__inner { position: relative; }
+  .st-bots__head { max-width: 62ch; }
+  .st-bots__h { font-size: clamp(26px, 3.2vw, 46px); color: #fff; }
+  .st-bots__h em { color: var(--sb-lime); font-style: italic; }
+
+  /* THE BUS. The four nodes hang off one drawn line. */
+  .st-rail {
+    position: relative;
+    margin-top: clamp(30px, 3.8vw, 58px);
+  }
+  .st-rail__bus {
+    position: absolute;
+    z-index: 0;
+    inset-inline: 0;
+    /* ⚠ CENTRED ON THE NODES, NOT PLACED BY EYE. The bus must run THROUGH the
+       numbered circles — the nodes are opaque, so they mask it and the line
+       reads as passing behind them. Off by a guessed 44px it ran underneath
+       instead, which turns a bus into an underline. */
+    top: calc(clamp(38px, 3.8vw, 52px) / 2 - clamp(20px, 2.4vw, 34px) / 2);
+    width: 100%;
+    height: clamp(20px, 2.4vw, 34px);
+    overflow: visible;
+    color: rgba(255, 138, 92, 0.4);
+  }
+  .st-rail__draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    color: var(--sb-orange-bright);
+    opacity: 0.75;
+  }
+
+  .st-rail__list {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 34px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .st-node { display: grid; justify-items: start; }
+  .st-node__n {
+    display: grid;
+    place-items: center;
+    width: clamp(38px, 3.8vw, 52px);
+    aspect-ratio: 1 / 1;
+    border: 1.4px solid rgba(255, 138, 92, 0.5);
+    border-radius: 50%;
+    background: #1a0b05;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12px, 1vw, 15px);
+    font-weight: 700;
+    color: var(--sb-lime);
+    transition: background var(--sb-dur-reveal) var(--sb-ease),
+      border-color var(--sb-dur-reveal) var(--sb-ease),
+      color var(--sb-dur-reveal) var(--sb-ease);
+  }
+  /* The node the drawn line has reached. */
+  .st-node.is-on .st-node__n {
+    background: var(--sb-orange-bright);
+    border-color: var(--sb-orange-bright);
+    color: #1a0b05;
+  }
+  .st-node__i {
+    display: grid;
+    place-items: center;
+    width: clamp(34px, 3.4vw, 46px);
+    aspect-ratio: 1 / 1;
+    margin-top: clamp(18px, 2.2vw, 30px);
+    color: var(--sb-lime);
+    opacity: 0.85;
+  }
+  .st-node__i svg { width: 100%; height: auto; }
+  .st-node__k {
+    margin: clamp(10px, 1.2vw, 15px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.25vw, 19px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .st-node.is-on .st-node__k { color: var(--sb-lime); }
+  .st-node__b {
+    max-width: 26ch;
+    margin: clamp(7px, 0.9vw, 11px) 0 0;
+    font-size: clamp(10.5px, 0.78vw, 12.5px);
+    line-height: 1.66;
+    color: var(--sb-on-dark-66);
+  }
+
+  .st-bots__owed {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(10px, 1.2vw, 15px);
+    max-width: 74ch;
+    margin: clamp(30px, 3.6vw, 52px) 0 0;
+    padding-top: clamp(16px, 2vw, 26px);
+    border-top: 1px solid rgba(255, 138, 92, 0.2);
+    font-size: clamp(11px, 0.82vw, 13px);
+    line-height: 1.7;
+    color: var(--sb-on-dark-66);
+  }
+  .st-bots__owed span {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: clamp(24px, 2.2vw, 30px);
+    aspect-ratio: 1 / 1;
+    color: var(--sb-lime);
+  }
+  .st-bots__owed svg { width: 100%; height: auto; }
+
+  /* ═══ 03 · STEM IN PRACTICE ═══════════════════════════════════════════════ */
+  .st-use {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(42px, 5.2vw, 84px);
+  }
+  .st-use__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 66% at 92% 10%, rgba(255, 205, 180, 0.36) 0%, rgba(255, 205, 180, 0) 70%),
+      radial-gradient(52% 62% at 4% 92%, rgba(226, 214, 240, 0.34) 0%, rgba(226, 214, 240, 0) 72%);
+  }
+  .st-use__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.6fr);
+    gap: clamp(26px, 3.4vw, 56px);
+    align-items: center;
+  }
+  .st-use__h { font-size: clamp(24px, 2.9vw, 40px); }
+  .st-use__copy .st-body { max-width: 34ch; }
+
+  .st-use__ctrl {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.2vw, 16px);
+    margin-top: clamp(20px, 2.4vw, 32px);
+  }
+  .st-use__nav {
+    display: grid;
+    place-items: center;
+    width: clamp(34px, 3vw, 42px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--sb-border-strong);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--sb-charcoal);
+    cursor: pointer;
+    transition: background var(--sb-dur-btn) var(--sb-ease),
+      border-color var(--sb-dur-btn) var(--sb-ease), color var(--sb-dur-btn) var(--sb-ease);
+  }
+  .st-use__nav svg { width: 42%; height: auto; }
+  .st-use__nav:hover {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+  }
+  .st-use__count {
+    font-size: clamp(12px, 0.9vw, 14px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--sb-text-muted);
+    margin: 0;
+  }
+  .st-use__count span { color: var(--sb-violet); }
+  .st-use__bar {
+    position: relative;
+    height: 2px;
+    width: min(100%, 220px);
+    margin: clamp(14px, 1.6vw, 20px) 0 0;
+    background: var(--sb-border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .st-use__bar span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 16.6667%;
+    background: var(--sb-violet);
+    transition: width var(--sb-dur-reveal) var(--sb-ease);
+  }
+
+  /* THE STAGE. Every frame is in the DOM, stacked; only one is opaque. */
+  .st-use__stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'frames thumbs' 'cap thumbs';
+    gap: clamp(10px, 1.2vw, 18px) clamp(12px, 1.4vw, 20px);
+  }
+  .st-use__frames {
+    grid-area: frames;
+    position: relative;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--sb-r-3);
+    overflow: hidden;
+    background: var(--sb-sand);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .st-shot {
+    position: absolute;
+    inset: 0;
+    display: block;
+    opacity: 0;
+    scale: 1.03;
+    pointer-events: none;
+    transition: opacity 620ms var(--sb-ease), scale 900ms var(--sb-ease);
+  }
+  .st-shot.is-on { opacity: 1; scale: 1; pointer-events: auto; }
+  .st-shot :global(picture) { display: block; width: 100%; height: 100%; }
+  .st-shot :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .st-shot__zoom {
+    position: absolute;
+    right: clamp(10px, 1.2vw, 16px);
+    bottom: clamp(10px, 1.2vw, 16px);
+    display: grid;
+    place-items: center;
+    width: clamp(30px, 2.6vw, 38px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--sb-violet);
+    opacity: 0;
+    transition: opacity var(--sb-dur-link) var(--sb-ease);
+  }
+  .st-shot__zoom svg { width: 54%; height: auto; }
+  .st-shot.is-on:hover .st-shot__zoom,
+  .st-shot.is-on:focus-visible .st-shot__zoom { opacity: 1; }
+
+  .st-use__cap {
+    grid-area: cap;
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12.5px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* THE RAIL — vertical on desktop, and it is the thing that stops this being
+     a wall of thumbnails: five small frames beside one large one. */
+  .st-rail-thumbs {
+    grid-area: thumbs;
+    display: grid;
+    grid-auto-rows: 1fr;
+    gap: clamp(7px, 0.8vw, 11px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .st-thumb {
+    display: block;
+    width: clamp(64px, 7vw, 104px);
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: var(--sb-r-0);
+    background: none;
+    cursor: pointer;
+    opacity: 0.55;
+    transition: opacity var(--sb-dur-btn) var(--sb-ease),
+      border-color var(--sb-dur-btn) var(--sb-ease), transform var(--sb-dur-btn) var(--sb-ease);
+  }
+  .st-thumb :global(picture) { display: block; width: 100%; height: 100%; }
+  .st-thumb :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .st-thumb:hover { opacity: 0.85; transform: translateY(-2px); }
+  .st-thumb.is-on { opacity: 1; border-color: var(--sb-violet); }
+
+  /* ═══ 04 · THE ENRICHMENT ECOSYSTEM ═══════════════════════════════════════ */
+  .st-eco {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: clamp(42px, 5.2vw, 84px);
+  }
+  .st-eco__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 66% at 10% 6%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(56% 62% at 94% 94%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 72%);
+  }
+  .st-eco__head { max-width: 66ch; }
+  .st-eco__h { font-size: clamp(24px, 2.9vw, 40px); }
+  .st-eco__b { max-width: 62ch; }
+
+  /* ⚠ A 16-COLUMN TRACK, AND THE FOUR SPANS ARE NOT EQUAL. Four equal cells is
+     the card grid the brief rules out; 5 / 3 / 4 / 4 gives the row a rhythm and
+     lets each block's copy set at its own measure. */
+  .st-eco__list {
+    display: grid;
+    grid-template-columns: repeat(16, minmax(0, 1fr));
+    gap: clamp(14px, 1.8vw, 28px);
+    margin: clamp(28px, 3.4vw, 50px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .st-cell {
+    position: relative;
+    grid-column: span var(--w);
+    padding-top: clamp(16px, 2vw, 24px);
+    border-top: 1px solid rgba(27, 21, 18, 0.18);
+  }
+  /* The thin rule joining one block to the next — drawn on the gap, so it reads
+     as one system rather than four bordered boxes. */
+  .st-cell__wire {
+    position: absolute;
+    top: -1px;
+    right: calc(clamp(14px, 1.8vw, 28px) * -1);
+    width: clamp(14px, 1.8vw, 28px);
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(201, 60, 10, 0.5) 52%, transparent 52%);
+    background-size: 6px 1px;
+  }
+  .st-cell:last-child .st-cell__wire { display: none; }
+
+  .st-cell__n {
+    font-size: clamp(9.5px, 0.72vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-violet);
+  }
+  .st-cell__i {
+    display: grid;
+    place-items: center;
+    width: clamp(34px, 3.2vw, 44px);
+    aspect-ratio: 1 / 1;
+    margin-top: clamp(12px, 1.4vw, 18px);
+    border-radius: clamp(10px, 1vw, 14px);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+    color: var(--sb-violet);
+  }
+  .st-cell__i svg { width: 52%; height: auto; }
+  .st-cell__k {
+    margin: clamp(12px, 1.4vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.7vw, 26px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .st-cell__b {
+    margin: clamp(8px, 0.9vw, 12px) 0 0;
+    font-size: clamp(11px, 0.82vw, 13px);
+    line-height: 1.7;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 05 · THE CLOSE ══════════════════════════════════════════════════════ */
+  .st-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(48px, 5.8vw, 92px);
+  }
+  .st-close__media { position: absolute; z-index: -3; inset: -12% 0; }
+  .st-close__media :global(picture),
+  .st-close__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+  .st-close__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(22, 10, 4, 0.86) 0%, rgba(22, 10, 4, 0.74) 46%, rgba(22, 10, 4, 0.9) 100%);
+  }
+  .st-close__glow {
+    position: absolute;
+    z-index: -1;
+    top: 46%;
+    left: 50%;
+    translate: -50% -50%;
+    width: min(72%, 780px);
+    aspect-ratio: 1.7 / 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 92, 53, 0.3) 0%, rgba(255, 92, 53, 0) 74%);
+    filter: blur(24px);
+  }
+  .st-close__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+  .st-close__h {
+    max-width: 22ch;
+    font-size: clamp(26px, 3.2vw, 46px);
+    color: #fff;
+  }
+  .st-close__h em { color: var(--sb-lime); font-style: normal; }
+  .st-close__b {
+    max-width: 66ch;
+    margin: clamp(14px, 1.7vw, 21px) 0 0;
+    font-size: clamp(12px, 0.88vw, 14px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+  .st-close__beats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(16px, 2.4vw, 42px);
+    margin: clamp(22px, 2.8vw, 36px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .st-close__beats li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(10px, 0.76vw, 11.5px);
+    font-weight: 700;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .st-close__beats li + li::before {
+    content: '';
+    width: clamp(20px, 3vw, 54px);
+    height: 1px;
+    margin-right: clamp(16px, 2.4vw, 42px);
+    background-image: linear-gradient(to right, rgba(255, 138, 92, 0.6) 52%, transparent 52%);
+    background-size: 7px 1px;
+  }
+  .st-close__beats span {
+    display: grid;
+    place-items: center;
+    width: clamp(26px, 2.4vw, 34px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(255, 138, 92, 0.34);
+    border-radius: 50%;
+    color: var(--sb-lime);
+  }
+  .st-close__beats svg { width: 52%; height: auto; }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .st-rooms__grid,
+    .st-use__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(32px, 4.6vw, 48px);
+    }
+    .st-body,
+    .st-use__copy .st-body { max-width: 58ch; }
+    .st-rooms__lead { width: 100%; }
+    .st-rooms__side { width: clamp(120px, 26vw, 190px); }
+    .st-rooms__disc { width: clamp(84px, 18vw, 132px); }
+
+    .st-rail__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(26px, 4vw, 38px); }
+    /* The bus runs behind one row of four; with two rows it would point at
+       nothing on the wrap, so it goes and the numbered nodes carry the order. */
+    .st-rail__bus { display: none; }
+
+    /* 5 / 3 / 4 / 4 needs a 16-column row to exist in; two-up keeps the pairing
+       without pretending the spans still mean anything. */
+    .st-eco__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .st-cell { grid-column: auto; }
+    .st-cell__wire { display: none; }
+  }
+
+  @media (max-width: 767px) {
+    .st-rail__list { grid-template-columns: minmax(0, 1fr); gap: clamp(22px, 5vw, 30px); }
+    .st-eco__list { grid-template-columns: minmax(0, 1fr); }
+
+    /* ⚠ THE RAIL TURNS HORIZONTAL AND SCROLLS. A vertical rail beside a stage
+       that is now full-width would squeeze the stage to nothing; six thumbs in a
+       swipeable row keeps every frame reachable without shrinking the picture. */
+    .st-use__stage {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'frames' 'cap' 'thumbs';
+    }
+    .st-rail-thumbs {
+      grid-auto-rows: auto;
+      grid-auto-flow: column;
+      justify-content: start;
+      overflow-x: auto;
+      margin-inline: calc(var(--sb-margin) * -1);
+      padding-inline: var(--sb-margin);
+      scroll-snap-type: x proximity;
+    }
+    .st-thumb { width: clamp(66px, 20vw, 92px); aspect-ratio: 4 / 3; scroll-snap-align: start; }
+
+    .st-close__beats { gap: clamp(10px, 3vw, 16px); }
+    .st-close__beats li + li::before { display: none; }
+
+    .st-bots__circuit,
+    .st-rooms__trace { display: none; }
+  }
+</style>

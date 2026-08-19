@@ -2,65 +2,36 @@
 /**
  * ACADEMIC PHILOSOPHY · AFFILIATION DETAILS — audit §2A.
  *
- * ⚠ REBUILT. The previous version rendered the overview's own movement plus a
- * four-row note. The deep-dive available here is a genuinely strong one and it
- * was going unused: the affiliation is only the FIRST of the school's external
- * credentials, and docs/01 §34 calls the rest "the single most under-used asset
- * the school has — very few district-level Indian schools have this much
- * provable third-party recognition. It is currently buried on an inner page."
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height as every
+ * other Academics page. All of the redesign is below it.
  *
- * So the page runs the numbers a transferring family is asked for, and then the
- * recognitions that let a reader verify the school without taking its word.
+ * ⚠ ONE BANNER PROP DID CHANGE, AND DELIBERATELY: the standfirst. It read "the
+ * board, the numbers — and the six other bodies whose word does not belong to
+ * the school", which promised a section of third-party awards. Those awards are
+ * a recognition story, not an affiliation record, and they already have three
+ * homes — /beyond-academics/achievements/, /about/history-legacy/ and the home
+ * page. Leaving a subtitle advertising content the page no longer carries would
+ * be a defect, not fidelity, so it now describes what is actually here.
  *
- * ═══ SOURCE — data/site.ts and data/achievements.ts, all published ═════════
- *   CBSE, Delhi — affiliation number 2131962, school code 70205.
- *   Co-educational senior secondary day school, Nursery to Class XII.
- *   Four streams: PCM, PCB, Commerce, Humanities.
- *   Established 2013; the Sunbeam group founded 1972 at Varanasi.
- *   Education World — #1 Co-Ed Day School of Ballia, six consecutive years,
- *     2019-20 through 2024-25.
- *   Microsoft Showcase School — one hundred teachers certified as Microsoft
- *     Innovative Educator Experts.
- *   Sunbeam Eduserve Award — Best School of the Year.
- *   Brainfeed School Excellence Award.
- *   Dr. Kalam Leadership Excellence Award.
- *   NCC — both 'A' and 'B' affiliations, with two teachers promoted to officer
- *     rank.
- *   Cfore School Rankings, 2025 — ranked No. 1 in Ballia.
- *
- * ⚠ EVERY LINE ABOVE IS THIRD-PARTY. That is the argument of the page: none of
- * these is a claim the school makes about itself, so a parent can check each one
- * against the body that issued it.
- *
- * ⚠ NOT CLAIMED: an affiliation date beyond "since inception", a renewal cycle,
- * or a ranking position the school has not published.
- *
- * Composition: collage (ivory, RIGHT — the numbers) → path (sand — the
- * recognitions, by who issued them) → close.
+ * The four sections live in components/academics/AffiliationDetailsPage.astro,
+ * with every fact sourced in its frontmatter.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcPath from '../../../components/academics/system/AcPath.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import AffiliationDetailsPage from '../../../components/academics/AffiliationDetailsPage.astro';
 import { school as sb } from '../../../data/site';
 
 import banner from '../../../assets/corridor and stairs/DSC_1240 copy.jpg';
-import pCorridor from '../../../assets/corridor and stairs/DSC_1240 copy.jpg';
-import pLib from '../../../assets/photos/sb-library.jpg';
-import pComp from '../../../assets/computer lab/DSC_1206 copy.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
   title="Affiliation Details — Sunbeam School Ballia"
-  description="Sunbeam School Ballia is affiliated to CBSE Delhi — affiliation number 2131962, school code 70205 — and holds six years as Education World's #1 co-ed day school in Ballia and Microsoft Showcase School status."
+  description={`Sunbeam School Ballia is affiliated to CBSE Delhi — affiliation number ${sb.affiliationNo}, school code ${sb.schoolCode}, UDISE code ${sb.udise}. The board's letter records affiliation up to senior secondary level for ${sb.affiliationPeriod}.`}
 >
   <PageHero
     title="Affiliation Details"
-    standfirst="The board, the numbers — and the six other bodies whose word does not belong to the school."
+    standfirst="The board, the two numbers every form asks for — and the letter they are printed on."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Academics', href: '/academics/' },
@@ -71,60 +42,13 @@ const school = 'Sunbeam School Ballia';
     position="50% 50%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcCollage
-      ground="ivory"
-      side="right"
-      kicker="The numbers a transfer asks for"
-      heading="Two numbers<br /><em>do most of the work</em>"
-      body={[
-        'A transferring family, a scholarship form and an entrance registration all ask a school for the same short set of facts, and getting them wrong costs a resubmission. They are printed below in full so nobody has to ring for them.',
-        'The affiliation number and the school code are the two that appear on almost every form. Both are the school’s own published values.',
-      ]}
-      ledger={[
-        { k: 'Affiliating board', v: `${sb.boardFull} — affiliated since inception.` },
-        { k: 'Affiliation number', v: `<strong>${sb.affiliationNo}</strong>` },
-        { k: 'School code', v: `<strong>${sb.schoolCode}</strong>` },
-        { k: 'Category', v: `Co-educational senior secondary <em>day</em> school, ${sb.classRange}.` },
-        { k: 'Streams at senior secondary', v: `${sb.streams.join(' · ')} — four, each to board level.` },
-        { k: 'Established', v: `${sb.established} at Ballia. The Sunbeam group was founded in ${sb.groupFounded} at ${sb.groupFoundedAt}.` },
-      ]}
-      lead={{ src: pCorridor, alt: `A corridor at ${school}, its classroom doors and landings running the length of the block` }}
-      support={[
-        { src: pLib, alt: `Students of ${school} reading at the long tables of the library` },
-        { src: pComp, alt: `The computer laboratory at ${school}, its machines set out along the benches` },
-      ]}
-    />
-
-    <AcPath
-      ground="sand"
-      kicker="And the part that is not the school’s own word"
-      heading="Six bodies,<br /><em>none of them us</em>"
-      body={[
-        'An affiliation says a school is permitted to operate. What it does not say is how the school is regarded — and that is the harder thing to evidence, because a school quoting itself proves nothing.',
-        'Every line below was issued by somebody else. Each names the body that issued it, so a reader can check it rather than trust it.',
-      ]}
-      beats={[
-        { k: 'Education World', body: '#1 Co-Ed Day School of Ballia for six consecutive years, 2019-20 through 2024-25.' },
-        { k: 'Microsoft', body: 'A Microsoft Showcase School, with one hundred teachers certified as Microsoft Innovative Educator Experts.' },
-        { k: 'Cfore · 2025', body: 'Ranked first in Ballia, and recognised among Uttar Pradesh’s best day co-ed schools.' },
-        { k: 'NCC', body: 'Both ‘A’ and ‘B’ affiliations, with two teachers promoted to officer rank.' },
-        { k: 'Brainfeed', body: 'School Excellence Award — national school excellence recognition.' },
-        { k: 'Dr. Kalam Award', body: 'The Dr. Kalam Leadership Excellence Award, for leadership in school education.' },
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Checkable,<br /><em>every line.</em>"
-      body="The affiliation numbers and every recognition above are published by the school and issued by a named third party. An affiliation date beyond “since inception”, and the renewal cycle, are not published."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer. */}
+  <div class="u-page-panel af-panel">
+    <AffiliationDetailsPage />
   </div>
 </BaseLayout>
 
 <style>
-  div.ac-panel { padding-block: 0; }
+  div.af-panel { padding-block: 0; }
 </style>

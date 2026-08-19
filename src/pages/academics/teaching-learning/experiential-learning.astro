@@ -2,57 +2,34 @@
 /**
  * TEACHING & LEARNING · EXPERIENTIAL & PROJECT-BASED LEARNING — audit §2C.
  *
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height, same title
+ * and standfirst as before and as every other Academics page. All of the
+ * redesign is below it.
+ *
  * ⚠ COMBINED PAGE — two of the brief's fourteen bullets: Experiential Learning
  * and Project-Based Learning. The standalone /project-based-learning/ route was
  * an implementation experiment; its verified content is merged here and the
  * route is retired.
  *
- * ═══ SOURCE — verified in this repository ══════════════════════════════════
- *   The school's own framing: a topic "met in the hand before it is met in the
- *     exam".
- *   Little Agriculture Land — "a planting plot the youngest children actually
- *     dig, sow and water", published as the Little Agriculturists activity.
- *   KIDS Entrepreneurship — "a Class 7 programme that runs a real venture end to
- *     end."
- *   Monash University, Australia — students travelled to Delhi for an
- *     international innovation project on entrepreneurship, at K.R. Mangalam
- *     World School, G.K-II.
- *   Taramandal — a planetarium show, published in eleven photographs; the school
- *     did not state where it was held.
- *   Impetus — the activity programme for Classes III–V, including the Indian
- *     Folk Painting competition and a Canva presentation session.
- *   CBSE Capacity Building Programme on Experiential Learning — hosted at
- *     Ballia, 20–21 September 2025. The school trains other schools' staff in
- *     this, which is a stronger claim than running it.
+ * The page was rebuilt off the generic AcStatement → AcCollage → AcSplit →
+ * AcClose system into a composed one: four sections, four different builds — a
+ * photo cluster, a drawn path with a real viewer on it, a documentary stack, and
+ * a dark close. Everything below the banner lives in
+ * components/academics/teaching/ExperientialLearningPage.astro, and that file's
+ * frontmatter carries the source for every claim, plus the note on the two
+ * activities that are deliberately absent because they cannot be checked.
  *
- * ⚠ SCOPE BOUNDARY — the national science programmes (VVM, NCSC, Inspire MANAK)
- * belong to STEM, Robotics & Enrichment, and the laboratory inventory belongs to
- * Laboratories & Academic Clubs. This page is about work that produces an
- * object, a venture or a plot, not about the rooms or the entry forms.
- *
- * ⚠ NOT CLAIMED: what KIDS runs week to week, how many students went to Delhi,
- * or where the planetarium show was held. None is published.
- *
- * Composition: statement (sand) → collage (paper, LEFT — what the youngest
- * actually do) → split (ivory, RIGHT — Monash and KIDS) → close. Four sections:
- * the evidence runs out honestly here rather than being stretched to five.
+ * ⚠ SCOPE BOUNDARY — the national science programmes belong to STEM, Robotics &
+ * Enrichment; the laboratory inventory to Laboratories & Academic Clubs; the
+ * smart-classroom and computer-lab counts to Smart Classrooms & Digital
+ * Literacy. This page is about work that produces an object, a venture or a plot.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcStatement from '../../../components/academics/system/AcStatement.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcSplit from '../../../components/academics/system/AcSplit.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import ExperientialLearningPage from '../../../components/academics/teaching/ExperientialLearningPage.astro';
 
 import banner from '../../../assets/school-activities/little-agriculturists/02.jpg';
-import pCompost from '../../../assets/school-activities/little-agriculturists/02.jpg';
-import pEmbroidery from '../../../assets/School Activity in Uniform/Embriodery.jpg';
-import pDome from '../../../assets/school-activities/taramandal-show/01.jpg';
-import pMonash from '../../../assets/school-event/Monash-Innovation/Monash-Innovation-01.jpg';
-import pRocket from '../../../assets/school-activities/summer-camp/05.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
@@ -72,70 +49,16 @@ const school = 'Sunbeam School Ballia';
     position="50% 40%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcStatement
-      ground="sand"
-      ghost="Do"
-      ghostAt="right"
-      kicker="The claim, and the test of it"
-      statement="In the hand<br /><em>before the exam.</em>"
-      body={[
-        'Sunbeam’s stated approach is that a topic is <strong>met in the hand before it is met in the exam</strong>. Every school says something like it, so the only useful question is what a reader can check.',
-        'Here the check is unusually strong: in September 2025 the school <strong>hosted the CBSE Capacity Building Programme on Experiential Learning</strong> — a two-day programme for teachers, taken by two visiting principals. Sunbeam Ballia was the venue other schools came to. Running experiential learning is a claim; being the place it is taught is a fact with a date on it.',
-      ]}
-    />
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer.
 
-    <AcCollage
-      ground="paper"
-      side="left"
-      kicker="What the youngest ones actually do"
-      heading="A plot they<br /><em>dig themselves</em>"
-      body={[
-        'The clearest example is the smallest. The school’s <strong>Little Agriculture Land</strong> is not a display bed — its own description is <em>“a planting plot the youngest children actually dig, sow and water.”</em> The published photographs show them composting kitchen scraps, which is the unglamorous half of growing anything.',
-        'Around it sit the same kind of activities: embroidery worked from one shared basket, a planetarium dome the children sit inside, and hand-made rockets from the summer camp. None of them can be completed by reading about it.',
-      ]}
-      ledger={[
-        { k: 'Little Agriculture Land', v: 'A planting plot dug, sown and watered by the youngest children themselves.' },
-        { k: 'Taramandal', v: 'A planetarium show, published in eleven photographs. The school did not state where it was held.' },
-        { k: 'Impetus · Classes III–V', v: 'The school’s own activity programme — folk painting, presentation software, heritage week.' },
-        { k: 'CBSE Capacity Building', v: 'Experiential Learning, two days, hosted at Ballia · 20–21 September 2025.' },
-      ]}
-      lead={{ src: pCompost, alt: `A young student of ${school} adding kitchen scraps to the compost bin at the Little Agriculturists activity` }}
-      support={[
-        { src: pDome, alt: `Students of ${school} at the Taramandal planetarium show` },
-        { src: pRocket, alt: `A young student of ${school} holding a hand-made rocket cut-out at the Star Gazing session` },
-      ]}
-    />
-
-    <AcSplit
-      ground="ivory"
-      side="right"
-      ratio="wide"
-      aspect="4 / 5"
-      kicker="And where a project can end up"
-      heading="A real venture,<br /><em>and a flight to Delhi</em>"
-      body={[
-        'Project work at Sunbeam has two published endpoints that are worth more than any description of the method.',
-        'The first is <strong>KIDS Entrepreneurship</strong>, and the school’s account of it is six words long: <em>“a Class 7 programme that runs a real venture end to end.”</em> Not a simulation and not a case study — a venture, carried from start to finish by twelve-year-olds.',
-        'The second left the state. Sunbeam students travelled to Delhi for an <strong>international innovation project on entrepreneurship run with Monash University, Australia</strong>, held at K.R. Mangalam World School, G.K-II. A project that is judged outside the building is judged by people who owe the school nothing.',
-      ]}
-      photo={pMonash}
-      alt={`A student of ${school} beside the Monash University Innovation Guarantee banner at an outreach session`}
-      inset={pEmbroidery}
-      insetAlt={`Students of ${school} working together on embroidery from one shared basket of thread`}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Dug, sown,<br /><em>and watered.</em>"
-      body="The school publishes the plot, the programme, the Monash project and the CBSE programme it hosted. What KIDS runs week to week, how many students travelled to Delhi, and where the planetarium show was held are not published — and no photography of KIDS in progress exists."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+      ⚠ AND THE PADDING RESET IS AN INLINE STYLE, DELIBERATELY. `.u-page-panel`
+      in base.css carries `padding-bottom: var(--sb-section-y)` — 120px of empty
+      cream between the closing section and the footer. A stylesheet form of the
+      override can be served from a different build than the HTML that needs it,
+      and then it silently stops applying; an inline style travels IN the HTML,
+      so the two cannot skew. Same decision as the other redesigned pages. */}
+  <div class="u-page-panel" style="padding-block: 0;">
+    <ExperientialLearningPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

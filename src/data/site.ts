@@ -46,6 +46,31 @@ export const school = {
   affiliationNo: '2131962',
   schoolCode: '70205',
 
+  /**
+   * ⚠ READ OFF THE BOARD'S OWN LETTER, NOT OFF A SCHOOL PAGE. Everything in
+   * this block comes from AFFL.pdf — the Affiliation/Upgradation Letter the
+   * school publishes at item 01 of its Mandatory Public Disclosure. The
+   * /affiliation/ page carries only the number and the code; the letter carries
+   * the period, the letter number and the UDISE code.
+   *
+   *   NO : CBSE/2131962/EX-00497-2526/2025-26/        Dated: 13/03/2024
+   *   SUBJECT: Extension of General Affiliation up to Senior Secondary Level
+   *   Affiliation No used as User ID for both OASIS and LOC/Registration → 2131962
+   *   School No → 70205 · Affiliated for → Extension of General Affiliation
+   *   Category → Extension of Affiliation
+   *   Period of affiliation → 01.04.2025 to 31.03.2030
+   *
+   * ⚠ THE UDISE CODE IS OFF THE PRINCIPAL'S STAMP at the foot of that letter,
+   * which reads "UDISE CODE: 09631300403 / CBSE Affi. No: 2131962 / School
+   * Code: 70205". It appears nowhere else on the school's site — not on
+   * /affiliation/, not in the Mandatory Public Disclosure table.
+   */
+  udise: '09631300403',
+  affiliationPeriod: '01.04.2025 to 31.03.2030',
+  affiliationLetterNo: 'CBSE/2131962/EX-00497-2526/2025-26',
+  affiliationLetterDated: '13.03.2024',
+  affiliationSubject: 'Extension of General Affiliation up to Senior Secondary Level',
+
   classRange: 'Nursery to Class XII',
   streams: ['PCM', 'PCB', 'Commerce', 'Humanities'],
 
@@ -100,6 +125,12 @@ export const school = {
     results: 'https://sbb.nascorptechnologies.com/',
     parentLogin: 'https://sbb.nascorptechnologies.com/',
     downloadTC: 'https://sunbeamballia.edu.in/download-tc/',
+
+    /* The school's own copies. Both are linked from its Mandatory Public
+       Disclosure page; the letter is item 01 there. Recorded as https —
+       the disclosure page prints http, and the host serves both. */
+    affiliationLetter: 'https://sunbeamballia.edu.in/wp-content/uploads/AFFL.pdf',
+    mandatoryDisclosure: 'https://sunbeamballia.edu.in/general-info/',
   },
 } as const;
 

@@ -1,122 +1,923 @@
 ---
 /**
- * PARENT PARTNERSHIP · FAQ — audit §2F.
+ * PARENT PARTNERSHIP · PARENT FAQs — audit §2F.
  *
- * ⚠ REBUILT. The previous version passed the parent section's own <Faq />
- * component into TopicPage — the identical component the overview composes,
- * printed a second time one level down. Reusing a component is not the same as
- * having something to say.
+ * ⚠ BUILT TO THE CLIENT'S REFERENCE MOCKUP. Banner unchanged (the shared
+ * PageHero), then: editorial intro with an asymmetric image pair → a strip of
+ * essential facts → the accordion → a dark closing CTA.
  *
- * ⚠ AND THE SPLIT IS DELIBERATE. The overview's FAQ answers by POINTING: it
- * says where the fee schedule lives and who holds the route list, because those
- * numbers change and a figure restated here would go stale silently. This page
- * takes the opposite half — the answers that do NOT change, printed in full, so
- * a parent can copy them into a form without ringing anyone.
+ * ═══ CONTENT — RESEARCHED AGAINST sunbeamballia.edu.in ═════════════════════
+ * The mockup's sample answer reads "The school operates from 7:45 AM to 1:45 PM,
+ * Monday to Saturday." ⚠ THAT IS NOT PUBLISHED ANYWHERE ON THE SCHOOL'S SITE and
+ * is not used. /general-info/ and the site search return nothing for timings, so
+ * question 07 says so and gives the office number. Inventing a school day would
+ * be among the more damaging things this site could print — a family plans the
+ * morning around it.
  *
- * ═══ SOURCE — data/site.ts, all published by the school ════════════════════
- *   CBSE affiliation number 2131962 · school code 70205
- *   Co-educational, Nursery to Class XII · established 2013
- *   Sunbeam group founded 1972 at Varanasi
- *   Streams: PCM, PCB, Commerce, Humanities
- *   Address: Agarsanda, near Hanuman Temple, Ballia, Uttar Pradesh 277001 —
- *     2 km from Ballia Roadways Bus Stand on Garwar Road
- *   Admissions +91 77550 05908 · office +91 77550 05905 · transport
- *     +91 77550 05909 (Mr. Sheo Sarjan Singh)
- *   Online application and transfer-certificate download, both school-hosted
+ * VERIFIED, and what each answer rests on:
+ *   Apply online     — /general-info/: online application for Nursery to IX and
+ *                      for Class XI; admission helpline +91-7755005908.
+ *   Orientation      — /orientation/: five programmes in 2024-25, three in
+ *                      2026-27, a published result list per programme, and the
+ *                      1st programme poster's "234 Students with 389 Parents".
+ *   Transport        — /bus-routes/: a table of 27 routes, each with the vehicle
+ *                      number, the driver's name and mobile, and the stops.
+ *                      "FOR FURTHER ENQUIRY CONTACT OUR TRANSPORT IN CHARGE:
+ *                      MR. SHEO SARJAN SINGH, MOBILE No. 7755005909."
+ *   Fees             — /fee-structure/: published as a document to view/download,
+ *                      not as a figure this site can restate.
+ *   Affiliation      — CBSE 2131962, school code 70205 (data/site.ts).
+ *   Results          — /result/ and the parent login portal; mandatory
+ *                      disclosure carries "LAST THREE-YEAR RESULT OF THE BOARD
+ *                      EXAMINATION AS PER APPLICABILITY".
+ *   Timings          — NOT PUBLISHED. Stated as such.
  *
- * ⚠ NOT PRINTED HERE, ON PURPOSE: fees, age criteria, route lists and session
- * dates. Every one of them is a number a family would plan around, none is
- * published in a form this site can restate, and all four are held by the desk.
+ * ⚠ NO FEES, DATES, DOCUMENT LISTS, AGE CRITERIA OR TIMINGS ARE INVENTED. Where
+ * the school publishes a document rather than a figure, this page says so and
+ * points at the desk that holds it.
  *
- * Composition: collage (paper, RIGHT — the fixed facts on hairlines) → path
- * (ivory — the four questions that must be asked rather than read) → close.
+ * ⚠ THE ACCORDION IS BUTTONS, NOT <details>. Single-open behaviour and the
+ * grid-template-rows height transition both need the state in one place, and a
+ * <summary> cannot carry the number/plus layout without fighting its marker.
+ * Every row is a real button with aria-expanded and aria-controls, so it works
+ * from the keyboard and reads correctly to a screen reader.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcPath from '../../../components/academics/system/AcPath.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import { Image, Picture } from 'astro:assets';
 import { school as sb } from '../../../data/site';
 
-import banner from '../../../assets/photos/sb-library.jpg';
-import pRows from '../../../assets/parents forum/parents forum (2).jpg';
-import pCorridor from '../../../assets/corridor and stairs/DSC_1221 copy.jpg';
-import pLib from '../../../assets/photos/sb-library.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+/* ⚠ FOUR DIFFERENT PHOTOGRAPHS, ONE PER SLOT. The banner first used the same
+   library frame as the intro lead — the one thing the brief rules out. The
+   banner now carries parents, which is the subject of the page. */
+import banner from '../../../assets/parents forum/parents forum (2).jpg';
+import pReading from '../../../assets/photos/sb-library.jpg';
+import pCampus from '../../../assets/photos/sunbeem-1.jpg';
+import pCohort from '../../../assets/photos/sunbeem-5.jpg';
 
-const school = 'Sunbeam School Ballia';
+/* ⚠ ICONS BY <Image>, dot-bg BY CSS MASK. dot-bg.png is referenced from another
+   component's stylesheet by url(); handing it to astro:assets makes it emit as
+   .webp and 404 that stylesheet. These four have no CSS references. */
+import oPlane from '../../../assets/icons/rocketpaper.png';
+import oBooks from '../../../assets/icons/books.png';
+import oStar from '../../../assets/icons/star.png';
+import oArrow from '../../../assets/icons/arrowcurve.png';
+
+const S = 'Sunbeam School Ballia';
+
+/* The five facts a parent checks first. Every one published. */
+const facts = [
+  { k: 'Affiliation', v: 'CBSE co-educational day school', s: `Affiliation ${sb.affiliationNo} · Code ${sb.schoolCode}` },
+  { k: 'Classes', v: sb.classRange, s: 'Four streams at senior secondary' },
+  { k: 'Location', v: `${sb.address.line1}, ${sb.address.city}`, s: sb.address.landmark },
+  { k: 'Admissions', v: sb.phone.admissionsDisplay, s: sb.email },
+  { k: 'Transport', v: sb.phone.transportDisplay, s: `In-charge · ${sb.phone.transportIncharge}` },
+];
+
+/* ⚠ SEVEN QUESTIONS, FIVE WITH REAL ANSWERS AND TWO THAT SAY SO. A page of
+   seven confident answers would be a page with two inventions in it. */
+const faqs = [
+  {
+    q: 'How do we apply, and when?',
+    a: [
+      `Applications for <strong>Nursery to Class IX</strong> and for <strong>Class XI</strong> are made on the school’s own online form. The admissions desk confirms the dates for a given session — they are the people to ask rather than a forwarded message.`,
+    ],
+    note: `Admissions helpline · ${sb.phone.admissionsDisplay}`,
+    cta: { label: 'Apply online', href: sb.external.applyNurseryToIX, external: true },
+  },
+  {
+    q: 'What happens at the Parent Orientation Programme?',
+    a: [
+      `Orientation is part of the admission process rather than a welcome evening, and it runs <strong>several times each season</strong> — five programmes in 2024-25, three in 2026-27. Parents meet staff at a desk while the children are taken to classrooms and given a paper.`,
+      `The first programme of 2024-25 was attended by <strong>234 students with 389 parents</strong>, and the school publishes a result list after each one.`,
+    ],
+    note: 'A family who misses one is asked to submit the form before the last date to join the next.',
+    cta: { label: 'Parent Orientation', href: '/academics/parent-partnership/parent-orientation/' },
+  },
+  {
+    q: 'Is there school transport to our area?',
+    a: [
+      `Yes, and the school publishes the whole thing rather than a promise. Its route table lists <strong>27 routes</strong>, each with the vehicle number, the driver’s name and mobile number, and the stops that route covers.`,
+      `Whether one passes your area is therefore a question with a printed answer — and the transport in-charge holds the current list.`,
+    ],
+    note: `Transport in-charge · ${sb.phone.transportIncharge} · ${sb.phone.transportDisplay}`,
+    cta: { label: 'Transport and routes', href: '/campus/transport/' },
+  },
+  {
+    q: 'What does it cost?',
+    a: [
+      `The school publishes its <strong>fee structure as a document</strong>, set per class and per session, rather than quoting a figure case by case. This page deliberately does not restate it — a fee copied here would go out of date silently, and a family would plan around our number rather than the school’s.`,
+    ],
+    note: 'Ask admissions for the current schedule for your child’s class.',
+    cta: { label: 'Fee structure', href: '/admissions/fee-structure/' },
+  },
+  {
+    q: 'What board is the school affiliated to?',
+    a: [
+      `${S} is affiliated to the <strong>${sb.boardFull}</strong> as a co-educational senior secondary day school, running ${sb.classRange}.`,
+      `Affiliation number <strong>${sb.affiliationNo}</strong>, school code <strong>${sb.schoolCode}</strong> — the two values almost every form asks for.`,
+    ],
+    cta: { label: 'Affiliation details', href: '/academics/philosophy/affiliation-details/' },
+  },
+  {
+    q: 'How do we see reports and results?',
+    a: [
+      `Term reports and results sit in the <strong>parent portal</strong>, reachable with your own login at any hour, so the record of the year accumulates in one place instead of arriving as letters.`,
+      `The school also publishes a results page, and carries the last three years of board results under its mandatory disclosure.`,
+    ],
+    cta: { label: 'Open the parent portal', href: sb.external.results, external: true },
+  },
+  {
+    q: 'What are the school timings?',
+    a: [
+      `<strong>The school does not publish its daily timings online.</strong> They are not on the general information page or anywhere else on its site, so no hours are printed here — a family plans the morning around this, and a plausible guess would be worse than no answer.`,
+    ],
+    note: `The school office holds them · ${sb.phone.officeDisplay}`,
+  },
+];
 ---
 
 <BaseLayout
   title="Parent FAQs — Sunbeam School Ballia"
-  description="The fixed facts about Sunbeam School Ballia in one place: CBSE affiliation 2131962, school code 70205, Nursery to Class XII co-educational, four streams, and the three lines to call."
+  description="Clear answers to the questions parents ask most about Sunbeam School Ballia — admission, transport across 27 published routes, fees, affiliation 2131962, and the parent portal."
 >
+  {/* ══ BANNER — the shared Academics component, unchanged ═══════════════════ */}
   <PageHero
     title="Parent FAQs"
-    standfirst="The answers that do not change, printed in full — so you can fill in a form without ringing anyone."
+    standfirst="Clear answers to the questions parents ask most about Sunbeam Ballia."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Academics', href: '/academics/' },
       { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
     ]}
     src={banner}
-    alt="Students of Sunbeam School Ballia reading at the long tables of the library, a member of staff at the head of the row."
-    position="50% 46%"
+    alt="Parents of Sunbeam School Ballia seated in the tiered rows of the hall during a Parents' Forum session."
+    position="50% 42%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcCollage
-      ground="paper"
-      side="right"
-      kicker="The fixed answers"
-      heading="Everything a form<br /><em>asks you for</em>"
-      body={[
-        'Half of what a parent needs from a school never changes — an affiliation number, a school code, a range of classes, an address. Those are the questions asked most often and answered slowest, because they usually mean a phone call.',
-        'They are all below. Nothing here needs confirming, and nothing here goes out of date between sessions.',
-      ]}
-      ledger={[
-        { k: 'Board and affiliation', v: `${sb.boardFull} — affiliation number <strong>${sb.affiliationNo}</strong>, school code <strong>${sb.schoolCode}</strong>.` },
-        { k: 'Type and range', v: `A CBSE co-educational day school, <strong>${sb.classRange}</strong>. Established ${sb.established}; the Sunbeam group was founded in ${sb.groupFounded} at ${sb.groupFoundedAt}.` },
-        { k: 'Senior streams', v: `${sb.streams.join(' · ')} — four, each taught to board level.` },
-        { k: 'Where the school is', v: `${sb.address.line1}, ${sb.address.city}, ${sb.address.state} ${sb.address.pin} — ${sb.address.landmark}.` },
-        { k: 'Admissions', v: `${sb.phone.admissionsDisplay} — applications for Nursery to Class IX and for Class XI are made on the school’s own online form.` },
-        { k: 'School office', v: `${sb.phone.officeDisplay} · ${sb.email}` },
-        { k: 'Transport', v: `${sb.phone.transportDisplay} — held by ${sb.phone.transportIncharge}.` },
-        { k: 'Leaving', v: 'The transfer certificate is downloaded from the school’s own site rather than collected in person.' },
-      ]}
-      lead={{ src: pCorridor, alt: `A corridor at ${school}, its classroom doors running the length of the block` }}
-      support={[
-        { src: pLib, alt: `Students of ${school} reading at the long tables of the library` },
-        { src: pRows, alt: `Parents of ${school} seated in the tiered rows of the hall during a Parents’ Forum session` },
-      ]}
-    />
+  <div class="u-page-panel fq-panel">
 
-    <AcPath
-      ground="ivory"
-      kicker="And the four that must be asked"
-      heading="These change,<br /><em>so nobody prints them</em>"
-      body={[
-        'The remaining questions are the ones a family actually plans around — and each has an answer specific to your child, your class or your address. Printing a general version would give you a number that does not apply to you, so this site does not print one. Each below names who holds the real answer.',
-      ]}
-      beats={[
-        { k: 'The fee', body: 'Set per class and per session. Ask admissions for the schedule for your child’s class.' },
-        { k: 'The bus', body: 'Whether a route passes your area, and where the stop is — a route-by-route answer the transport in-charge holds.' },
-        { k: 'The dates', body: 'Application windows for a given session are confirmed by the admissions desk, not by a forwarded message.' },
-        { k: 'The age', body: 'Entry age for a class is an admissions answer, and it is not published in a form this site can restate.' },
-      ]}
-    />
+    {/* ══ 01 · INTRODUCTION ═══════════════════════════════════════════════════ */}
+    <section class="fq-intro" aria-labelledby="fq-intro-title">
+      <span class="fq-intro__dots" aria-hidden="true"></span>
+      <span class="fq-intro__glow" aria-hidden="true"></span>
 
-    <AcClose
-      owed={true}
-      statement="Read the first half.<br /><em>Ask for the second.</em>"
-      body="Everything on this page is published by the school. Fees, entry ages, route lists and session dates are not — and a plausible figure printed here would be one a family plans around and finds wrong at the desk."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+      <div class="u-container fq-intro__grid">
+        <div class="fq-intro__copy">
+          <p class="fq-eyebrow" data-reveal>Parent FAQs</p>
+          <h2 class="fq-intro__h" id="fq-intro-title">
+            <span data-clip data-clip-delay="0">Questions</span>
+            <span data-clip data-clip-delay="130"><em>parents ask.</em></span>
+          </h2>
+          <p class="fq-intro__b" data-reveal data-reveal-delay="180">
+            Clear answers to the most common questions about admission, school life, transport and
+            academics — drawn from what the school itself publishes. Where it publishes nothing, this
+            page says so and names who to ask.
+          </p>
+          <span class="fq-intro__rule" aria-hidden="true"><span data-draw></span></span>
+        </div>
+
+        <div class="fq-intro__media">
+          <Image class="fq-intro__plane" src={oPlane} alt="" width={92} aria-hidden="true"
+            loading="lazy" data-parallax data-parallax-y="16" />
+
+          <figure class="fq-intro__lead" data-mask data-zoom data-zoom-to="1.07">
+            <Picture
+              src={pReading}
+              alt={`Students of ${S} reading at the long tables of the Nalanda Library`}
+              formats={['avif', 'webp']}
+              widths={[560, 900]}
+              sizes="(max-width: 1000px) 92vw, 42vw"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+
+          <figure class="fq-intro__inset" data-parallax data-parallax-y="22">
+            <Picture
+              src={pCampus}
+              alt={`The campus of ${S}, its blocks around the front lawn`}
+              formats={['avif', 'webp']}
+              widths={[380, 640]}
+              sizes="(max-width: 1000px) 52vw, 24vw"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+
+          {/* ⚠ TEXT ON AN SVG PATH, NOT A SPAN ROTATED BEHIND THE ICON. The first
+              version set the words as a block inside the circle, where they
+              simply overlapped the star and were unreadable. A textPath around a
+              real circle is the only way to set type on a curve. */}
+          <span class="fq-seal" aria-hidden="true">
+            <svg class="fq-seal__ring" viewBox="0 0 100 100">
+              <defs>
+                <path id="fq-seal-path" fill="none"
+                  d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+              </defs>
+              <text>
+                <textPath href="#fq-seal-path" startOffset="0">
+                  A partnership that builds futures · A partnership that builds futures ·
+                </textPath>
+              </text>
+            </svg>
+            <Image class="fq-seal__i" src={oStar} alt="" width={30} loading="lazy" />
+          </span>
+        </div>
+      </div>
+    </section>
+
+    {/* ══ 02 · ESSENTIAL FACTS ════════════════════════════════════════════════ */}
+    <section class="fq-facts" aria-label="Essential information">
+      <div class="u-container">
+        <ul class="fq-facts__row">
+          {facts.map((f, i) => (
+            <li class="fq-fact" data-drift="18" style={`--i: ${i};`}>
+              <p class="fq-fact__k">{f.k}</p>
+              <p class="fq-fact__v">{f.v}</p>
+              <p class="fq-fact__s">{f.s}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    {/* ══ 03 · THE ACCORDION ══════════════════════════════════════════════════ */}
+    <section class="fq-main" aria-labelledby="fq-main-title">
+      <div class="u-container fq-main__grid">
+
+        <aside class="fq-main__side">
+          <p class="fq-eyebrow" data-reveal>Frequently asked</p>
+          <h2 class="fq-main__h" id="fq-main-title">
+            <span data-clip data-clip-delay="0">Everything you</span>
+            <span data-clip data-clip-delay="120">want to know,</span>
+            <span data-clip data-clip-delay="240"><em>right here.</em></span>
+          </h2>
+          <Image class="fq-main__deco" src={oBooks} alt="" width={116} aria-hidden="true" loading="lazy" />
+          <p class="fq-main__b" data-reveal data-reveal-delay="200">
+            Open any question to see the answer. Every one is drawn from the school’s own published
+            information — and two of them say plainly that the school has published nothing yet.
+          </p>
+
+          {/* ⚠ THE DRAWN ARROW FROM THE REFERENCE, POINTING AT THE QUESTIONS.
+              It is the one element on the page that says "click these" without
+              writing the words, so it belongs beside the instruction and aimed
+              at the list — not in the intro, where it would point at a
+              photograph and mean nothing.
+
+              Absolute, in a lane the copy is barred from: .fq-main__b's
+              max-width subtracts this same width, so the two can never meet
+              however the column resizes. */}
+          <Image class="fq-main__arrow" src={oArrow} alt="" width={230} aria-hidden="true"
+            loading="lazy" data-reveal data-reveal-delay="320" />
+        </aside>
+
+        <div class="fq-list" data-faq>
+          {faqs.map((f, i) => (
+            <div class={`fq-item${i === 0 ? ' is-open' : ''}`}>
+              <h3 class="fq-item__h">
+                <button
+                  type="button"
+                  class="fq-item__btn"
+                  id={`fq-b-${i}`}
+                  aria-expanded={i === 0 ? 'true' : 'false'}
+                  aria-controls={`fq-p-${i}`}
+                >
+                  <span class="fq-item__n t-tabular">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="fq-item__q">{f.q}</span>
+                  <span class="fq-item__ico" aria-hidden="true"></span>
+                </button>
+              </h3>
+
+              <div class="fq-item__panel" id={`fq-p-${i}`} role="region" aria-labelledby={`fq-b-${i}`}>
+                <div class="fq-item__inner">
+                  {f.a.map((para) => <p class="fq-item__a" set:html={para} />)}
+                  {f.note && <p class="fq-item__note">{f.note}</p>}
+                  {f.cta && (
+                    <a
+                      class="fq-item__cta"
+                      href={f.cta.href}
+                      {...(f.cta.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      {f.cta.label}
+                      <span aria-hidden="true">→</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ══ 04 · STILL HAVE A QUESTION ══════════════════════════════════════════ */}
+    <section class="fq-cta" aria-labelledby="fq-cta-title">
+      <div class="fq-cta__media" data-zoom data-zoom-to="1.1">
+        <Picture
+          src={pCohort}
+          alt={`Student council office-bearers and NCC cadets of ${S} on stage with the school’s dignitaries`}
+          formats={['avif', 'webp']}
+          widths={[900, 1400, 1600]}
+          sizes="100vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <span class="fq-cta__scrim" aria-hidden="true"></span>
+      <span class="fq-cta__glow" aria-hidden="true"></span>
+
+      <div class="u-container fq-cta__grid">
+        <div>
+          <p class="fq-eyebrow fq-eyebrow--onink" data-reveal>Still have a question?</p>
+          <h2 class="fq-cta__h" id="fq-cta-title">
+            <span data-drift="22">We’re here</span>
+            <span data-drift="22">to <em>help.</em></span>
+          </h2>
+        </div>
+
+        <div class="fq-cta__side">
+          <p class="fq-cta__b" data-reveal data-reveal-delay="140">
+            If you need something this page does not answer — a fee schedule for your child’s class,
+            a bus stop, a date — the admissions desk holds it.
+          </p>
+          <ul class="fq-cta__lines">
+            <li><span>Admissions</span><a href={`tel:${sb.phone.admissions}`}>{sb.phone.admissionsDisplay}</a></li>
+            <li><span>School office</span><a href={`tel:${sb.phone.office}`}>{sb.phone.officeDisplay}</a></li>
+            <li><span>Email</span><a href={`mailto:${sb.email}`}>{sb.email}</a></li>
+          </ul>
+          {/* The reference runs a drawn trail off the end of this button; the
+              asset is the plane-and-trail, used at a size where it reads as a
+              flourish beside the button rather than a second illustration. */}
+          <span class="fq-cta__act">
+            <a class="btn btn--primary" href="/contact-us/">Contact the school</a>
+            <span class="fq-cta__trail" aria-hidden="true"></span>
+          </span>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
+<script>
+  /**
+   * The accordion. One open at a time, first open by default.
+   *
+   * ⚠ THE HEIGHT ANIMATION IS grid-template-rows: 0fr → 1fr, NOT max-height.
+   * A max-height transition has to guess a number large enough for the tallest
+   * answer, which makes short answers snap and long ones lag. The grid track
+   * animates to the panel's own content height, so every row opens at the same
+   * speed whatever is inside it — and it needs no measurement in JS.
+   */
+  const root = document.querySelector('[data-faq]');
+  if (root) {
+    const items = Array.from(root.querySelectorAll<HTMLElement>('.fq-item'));
+
+    const setOpen = (item: HTMLElement, open: boolean) => {
+      item.classList.toggle('is-open', open);
+      item.querySelector('button')?.setAttribute('aria-expanded', String(open));
+    };
+
+    root.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('.fq-item__btn');
+      if (!btn) return;
+      const item = btn.closest<HTMLElement>('.fq-item');
+      if (!item) return;
+      const willOpen = !item.classList.contains('is-open');
+      items.forEach((i) => setOpen(i, false));
+      setOpen(item, willOpen);
+    });
+  }
+</script>
+
 <style>
-  div.ac-panel { padding-block: 0; }
+  /* The page sits on cream throughout; each band varies it rather than the
+     wholesale ground changes the Academics system uses. */
+  div.fq-panel { padding-block: 0; background: var(--sb-ivory); }
+
+  .fq-eyebrow {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .fq-eyebrow--onink { color: var(--sb-lime); }
+
+  /* ═══ 01 · INTRO ═════════════════════════════════════════════════════════ */
+  .fq-intro {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(40px, 5vw, 78px);
+  }
+  /* Cream base + a very soft peach glow, so the band reads as designed even
+     before any photograph loads. */
+  .fq-intro__glow {
+    position: absolute;
+    z-index: -2;
+    top: -28%;
+    right: -8%;
+    width: 52%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 60, 10, 0.14) 0%, rgba(201, 60, 10, 0) 68%);
+  }
+  /* ⚠ dot-bg AS A MASK, NOT AN <Image> — see the note in the frontmatter. */
+  .fq-intro__dots {
+    position: absolute;
+    z-index: -1;
+    left: clamp(-30px, -2vw, -10px);
+    bottom: 8%;
+    width: clamp(120px, 16vw, 220px);
+    aspect-ratio: 1 / 1;
+    background: var(--sb-violet);
+    opacity: 0.15;
+    -webkit-mask-image: url('../../../assets/icons/dot-bg.png');
+    mask-image: url('../../../assets/icons/dot-bg.png');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+
+  .fq-intro__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(28px, 4vw, 66px);
+    align-items: center;
+  }
+  .fq-intro__h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(34px, 4.4vw, 64px);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.046em;
+    color: var(--sb-charcoal);
+  }
+  .fq-intro__h span { display: block; }
+  .fq-intro__h em { font-style: normal; color: var(--sb-violet); }
+  .fq-intro__b {
+    max-width: 46ch;
+    margin: clamp(14px, 1.6vw, 20px) 0 0;
+    font-size: clamp(14px, 1.02vw, 16px);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+  .fq-intro__rule {
+    display: block;
+    width: clamp(58px, 6vw, 92px);
+    height: 3px;
+    margin: clamp(16px, 1.8vw, 24px) 0 0;
+    border-radius: 2px;
+    background: rgba(201, 60, 10, 0.2);
+    overflow: hidden;
+  }
+  .fq-intro__rule span { display: block; width: 100%; height: 100%; background: var(--sb-violet); transform-origin: left center; }
+
+
+  .fq-intro__media { position: relative; }
+  .fq-intro__lead {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    border-radius: clamp(18px, 1.8vw, 28px);
+    box-shadow: 0 34px 68px -40px rgba(27, 21, 18, 0.5);
+  }
+  .fq-intro__lead :global(picture) { display: block; width: 100%; height: 100%; }
+  .fq-intro__lead :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* The smaller frame breaks the lead frame's lower-right corner — the
+     asymmetry the brief asks for, rather than two equal cards. */
+  .fq-intro__inset {
+    position: absolute;
+    right: clamp(-14px, -1.2vw, 0px);
+    bottom: clamp(-34px, -3vw, -18px);
+    width: clamp(140px, 25vw, 260px);
+    aspect-ratio: 4 / 3;
+    margin: 0;
+    overflow: hidden;
+    border: 7px solid var(--sb-ivory);
+    border-radius: clamp(12px, 1.2vw, 18px);
+    box-shadow: 0 26px 52px -32px rgba(27, 21, 18, 0.48);
+  }
+  .fq-intro__inset :global(picture) { display: block; width: 100%; height: 100%; }
+  .fq-intro__inset :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .fq-intro__plane {
+    position: absolute;
+    z-index: 3;
+    top: clamp(-26px, -2vw, -12px);
+    left: clamp(-22px, -1.6vw, -8px);
+    width: clamp(52px, 5.4vw, 92px);
+    height: auto;
+    rotate: -8deg;
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  /* The badge, as in the reference — a round seal sitting on the seam between
+     the two frames. */
+  .fq-seal {
+    position: absolute;
+    z-index: 4;
+    left: clamp(8px, 4vw, 62px);
+    bottom: clamp(-34px, -3vw, -20px);
+    display: grid;
+    place-items: center;
+    width: clamp(78px, 8vw, 108px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sb-paper);
+    box-shadow: 0 18px 38px -20px rgba(27, 21, 18, 0.45);
+  }
+  .fq-seal__i { position: relative; z-index: 1; width: 34%; height: auto; }
+  .fq-seal__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: fq-spin 30s linear infinite;
+  }
+  .fq-seal__ring text {
+    font-size: 8.4px;
+    font-weight: 700;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+    fill: var(--sb-violet);
+  }
+  @keyframes fq-spin { to { rotate: 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .fq-seal__ring { animation: none; } }
+
+  /* ═══ 02 · FACTS ═════════════════════════════════════════════════════════ */
+  .fq-facts { padding-block: clamp(30px, 3.4vw, 52px); }
+  .fq-facts__row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: clamp(20px, 2.2vw, 32px) clamp(14px, 1.6vw, 26px);
+    list-style: none;
+    background: var(--sb-paper);
+    border-radius: clamp(16px, 1.6vw, 24px);
+    box-shadow: 0 24px 54px -38px rgba(27, 21, 18, 0.36);
+  }
+  /* Hairlines between, not around — a strip, not five cards. */
+  .fq-fact { padding-inline: clamp(12px, 1.4vw, 22px); border-left: 1px solid rgba(27, 21, 18, 0.1); }
+  .fq-fact:first-child { border-left: 0; }
+  .fq-fact__k {
+    margin: 0;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .fq-fact__v {
+    margin: 7px 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.1vw, 17px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .fq-fact__s { margin: 4px 0 0; font-size: 11.5px; line-height: 1.46; color: var(--sb-text-secondary); }
+
+  /* ═══ 03 · ACCORDION ═════════════════════════════════════════════════════ */
+  .fq-main { padding-block: clamp(34px, 4vw, 66px) clamp(48px, 5.6vw, 90px); }
+  .fq-main__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+    gap: clamp(26px, 3.6vw, 60px);
+    align-items: start;
+  }
+  /* sticky also anchors .fq-main__arrow — see the note at the static override */
+  .fq-main__side { position: sticky; top: clamp(90px, 12vh, 130px); }
+  .fq-main__h {
+    margin: clamp(12px, 1.4vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3vw, 44px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.044em;
+    color: var(--sb-charcoal);
+  }
+  .fq-main__h span { display: block; }
+  .fq-main__h em { font-style: normal; color: var(--sb-violet); }
+  .fq-main__deco {
+    display: block;
+    width: clamp(72px, 8vw, 116px);
+    height: auto;
+    margin: clamp(20px, 2.4vw, 34px) 0 0;
+    opacity: 0.9;
+  }
+  .fq-main__b {
+    /* ⚠ THE SECOND TERM RESERVES THE ARROW'S LANE. Without it the instruction
+       runs the full column width at some sizes and collides with the arrow. */
+    max-width: min(34ch, calc(100% - clamp(84px, 9vw, 132px)));
+    margin: clamp(12px, 1.4vw, 18px) 0 0;
+    font-size: clamp(13.5px, 1vw, 15px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+  .fq-main__arrow {
+    position: absolute;
+    /* Overhangs into the gutter so the head arrives at the cards rather than
+       stopping inside the rail. The gutter is at least 26px, so the card
+       column is never reached. */
+    right: clamp(-34px, -2.6vw, -10px);
+    bottom: 0;
+    width: clamp(72px, 8vw, 118px);
+    height: auto;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .fq-list { display: grid; gap: clamp(9px, 1vw, 13px); }
+
+  .fq-item {
+    border-radius: clamp(12px, 1.2vw, 18px);
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px rgba(27, 21, 18, 0.09);
+    transition: background 0.32s ease, box-shadow 0.32s ease;
+  }
+  /* The open row warms and takes an orange ring — the reference's active state. */
+  .fq-item.is-open {
+    background: linear-gradient(180deg, #fffaf6 0%, #fdf3ec 100%);
+    box-shadow: inset 0 0 0 1.5px rgba(201, 60, 10, 0.34), 0 20px 44px -34px rgba(27, 21, 18, 0.34);
+  }
+
+  .fq-item__h { margin: 0; }
+  .fq-item__btn {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(12px, 1.6vw, 22px);
+    width: 100%;
+    padding: clamp(15px, 1.6vw, 22px) clamp(16px, 1.8vw, 26px);
+    background: none;
+    border: 0;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+  .fq-item__btn:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; border-radius: inherit; }
+
+  .fq-item__n {
+    font-size: clamp(13px, 1.1vw, 16px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--sb-violet);
+  }
+  .fq-item__q {
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.35vw, 20px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -0.022em;
+    color: var(--sb-charcoal);
+  }
+
+  /* Plus → minus without a second element: the vertical bar collapses. */
+  .fq-item__ico {
+    position: relative;
+    flex: none;
+    width: clamp(20px, 2vw, 26px);
+    height: clamp(20px, 2vw, 26px);
+  }
+  .fq-item__ico::before,
+  .fq-item__ico::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--sb-violet);
+    translate: 0 -50%;
+    transition: rotate 0.36s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease;
+  }
+  .fq-item__ico::after { rotate: 90deg; }
+  .fq-item.is-open .fq-item__ico::after { rotate: 0deg; opacity: 0; }
+
+  /* ⚠ 0fr → 1fr, not max-height. See the script's note. */
+  .fq-item__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .fq-item.is-open .fq-item__panel { grid-template-rows: 1fr; }
+  .fq-item__inner {
+    overflow: hidden;
+    padding-inline: clamp(16px, 1.8vw, 26px);
+    padding-left: calc(clamp(16px, 1.8vw, 26px) + clamp(13px, 1.1vw, 16px) + clamp(12px, 1.6vw, 22px));
+    opacity: 0;
+    translate: 0 -6px;
+    transition: opacity 0.3s ease 0.06s, translate 0.36s ease 0.06s;
+  }
+  .fq-item.is-open .fq-item__inner {
+    opacity: 1;
+    translate: 0 0;
+    padding-bottom: clamp(16px, 1.8vw, 24px);
+  }
+
+  .fq-item__a {
+    max-width: 62ch;
+    margin: 0 0 clamp(8px, 0.9vw, 12px);
+    font-size: clamp(13.5px, 1vw, 15px);
+    line-height: 1.74;
+    color: var(--sb-text-secondary);
+  }
+  .fq-item__a:last-of-type { margin-bottom: 0; }
+  .fq-item__a strong { color: var(--sb-violet-dark); font-weight: 700; }
+
+  .fq-item__note {
+    margin: clamp(10px, 1.1vw, 14px) 0 0;
+    padding-left: 12px;
+    border-left: 2px solid var(--sb-violet);
+    font-size: 12px;
+    line-height: 1.56;
+    color: var(--sb-charcoal);
+  }
+  .fq-item__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: clamp(12px, 1.3vw, 16px);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--sb-violet-dark);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 60, 10, 0.4);
+    padding-bottom: 2px;
+  }
+  .fq-item__cta:hover { color: var(--sb-violet); border-bottom-color: currentColor; }
+
+  /* ═══ 04 · CTA ═══════════════════════════════════════════════════════════ */
+  .fq-cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-violet-ink);
+    padding-block: clamp(52px, 6.4vw, 96px);
+  }
+  .fq-cta__media { position: absolute; inset: 0; overflow: hidden; }
+  .fq-cta__media :global(picture) { display: block; width: 100%; height: 100%; }
+  .fq-cta__media :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; }
+  .fq-cta__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, rgba(24, 12, 7, 0.96) 0%, rgba(24, 12, 7, 0.9) 48%, rgba(24, 12, 7, 0.72) 100%);
+  }
+  .fq-cta__glow {
+    position: absolute;
+    z-index: 0;
+    left: 26%;
+    bottom: -40%;
+    width: 46%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 138, 92, 0.2) 0%, rgba(255, 138, 92, 0) 68%);
+    pointer-events: none;
+  }
+  /* ⚠ INLINE-FLEX, NOT FLEX. A block-level flex box fills the column, so the
+     trail's left: 100% landed at the column edge and hung off the viewport.
+     Shrink-to-fit puts 100% at the button's own right edge. */
+  .fq-cta__act {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* ⚠ MASK, NOT <Image> — see the note where the import used to be. Tinting it
+     is the point: the asset is drawn in tan, which disappears into a brown
+     photograph. On the accent it reads as the drawn trail the reference has.
+
+     ⚠ THE ASSET IS DRAWN VERTICALLY AND THE REFERENCE USES IT HORIZONTALLY,
+     running out of the button toward the contact details. So it is turned a
+     quarter-turn — plane leading, dots trailing back to the button.
+
+     ABSOLUTE, so the rotation costs the row no height: a rotated element still
+     reserves its UNROTATED box in flex, which here is twice as tall as the
+     button and would have stretched the band. --tw drives both the size and the
+     re-centring, because rotating about the centre pulls the visual left edge
+     back over the button by (height − width) / 2 — with this aspect ratio,
+     0.56 of the width. */
+  .fq-cta__trail {
+    --tw: clamp(52px, 5.4vw, 84px);
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: var(--tw);
+    aspect-ratio: 344 / 724;
+    margin-left: calc(var(--tw) * 0.56 + clamp(6px, 1vw, 16px));
+    translate: 0 -50%;
+    /* ⚠ THE MIRROR IS NOT DECORATION. A plain quarter-turn lands the plane nose
+       down; mirrored, the dots leave the button at the left and the plane
+       climbs away to the right, which is the gesture the reference draws.
+       scale composes innermost, so the -50% centring above still holds. */
+    rotate: 90deg;
+    scale: -1 1;
+    background: var(--sb-lime);
+    opacity: 0.85;
+    pointer-events: none;
+    -webkit-mask-image: url('../../../assets/icons/arowcurveup.png');
+    mask-image: url('../../../assets/icons/arowcurveup.png');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+  @media (max-width: 620px) { .fq-cta__trail { display: none; } }
+
+  .fq-cta__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.98fr);
+    gap: clamp(26px, 4vw, 62px);
+    align-items: center;
+  }
+  .fq-cta__h {
+    margin: clamp(12px, 1.4vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(32px, 4.4vw, 66px);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.046em;
+    color: #fff;
+  }
+  .fq-cta__h span { display: block; }
+  .fq-cta__h em { font-style: normal; color: var(--sb-lime); }
+
+  .fq-cta__side { position: relative; }
+  .fq-cta__b {
+    max-width: 44ch;
+    margin: 0;
+    font-size: clamp(14px, 1.02vw, 16px);
+    line-height: 1.74;
+    color: rgba(255, 255, 255, 0.86);
+  }
+  .fq-cta__lines {
+    display: grid;
+    gap: 9px;
+    margin: clamp(16px, 1.8vw, 24px) 0 clamp(18px, 2vw, 26px);
+    padding: clamp(14px, 1.5vw, 20px) 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    list-style: none;
+  }
+  .fq-cta__lines li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+  .fq-cta__lines span {
+    min-width: 96px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .fq-cta__lines a {
+    font-size: clamp(13.5px, 1vw, 15px);
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+  }
+  .fq-cta__lines a:hover { border-bottom-color: var(--sb-lime); color: var(--sb-lime); }
+
+  /* ═══ RESPONSIVE ═════════════════════════════════════════════════════════ */
+  @media (max-width: 1060px) {
+    .fq-intro__grid,
+    .fq-main__grid,
+    .fq-cta__grid { grid-template-columns: minmax(0, 1fr); }
+    /* ⚠ RELATIVE, NOT STATIC — .fq-main__arrow is absolute against this. */
+    .fq-main__side { position: relative; }
+    .fq-main__arrow { display: none; }
+    .fq-main__deco { margin-top: clamp(14px, 3vw, 22px); }
+    /* The strip becomes three-then-two rather than five slivers. */
+    .fq-facts__row { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: clamp(16px, 3vw, 24px); }
+    .fq-fact:nth-child(3n + 1) { border-left: 0; }
+  }
+
+  @media (max-width: 760px) {
+    .fq-facts__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fq-fact:nth-child(3n + 1) { border-left: 1px solid rgba(27, 21, 18, 0.1); }
+    .fq-fact:nth-child(odd) { border-left: 0; }
+    .fq-intro__inset { width: clamp(120px, 34vw, 180px); bottom: -22px; }
+    .fq-seal { width: 68px; left: 4px; bottom: -24px; }
+  }
+
+  @media (max-width: 520px) {
+    .fq-facts__row { grid-template-columns: minmax(0, 1fr); }
+    .fq-fact { border-left: 0 !important; padding-inline: 0; }
+    .fq-fact + .fq-fact { padding-top: 14px; border-top: 1px solid rgba(27, 21, 18, 0.1); }
+    /* The number moves above the question so neither is squeezed. */
+    .fq-item__btn { grid-template-columns: minmax(0, 1fr) auto; gap: 10px 14px; }
+    .fq-item__n { grid-column: 1; grid-row: 1; }
+    .fq-item__q { grid-column: 1; grid-row: 2; }
+    .fq-item__ico { grid-column: 2; grid-row: 1 / span 2; }
+    .fq-item__inner { padding-left: clamp(16px, 1.8vw, 26px); }
+  }
 </style>

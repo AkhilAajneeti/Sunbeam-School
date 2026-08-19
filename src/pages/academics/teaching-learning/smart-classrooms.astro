@@ -2,56 +2,33 @@
 /**
  * TEACHING & LEARNING · SMART CLASSROOMS & DIGITAL LITERACY — audit §2C.
  *
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height, same title
+ * and standfirst as before and as every other Academics page. All of the
+ * redesign is below it.
+ *
  * ⚠ COMBINED PAGE — two of the brief's fourteen bullets: Smart Classrooms and
  * AI & Digital Literacy. The standalone /ai-digital-literacy/ route was an
  * implementation experiment; its verified content is merged here and the route
  * is retired.
  *
- * ⚠⚠ AN ERROR FROM THE SPLIT PAGE IS NOT CARRIED OVER. That page read: "75+
- * digitally smart classrooms and 49+ interactive flat panels — MORE PANELS THAN
- * ROOMS." Forty-nine is fewer than seventy-five. The true and more interesting
- * statement is the opposite one, and it is made honestly below: the panels do
- * not yet reach every smart classroom. A school that publishes both numbers has
- * given a reader the means to notice, and writing past it would have been the
- * one thing worse than not mentioning it.
- *
- * ═══ SOURCE — verified in this repository ══════════════════════════════════
- *   75+ digitally smart classrooms · 49+ interactive flat panels
- *     (data/academics.ts counters, and `facilities` — "75+ rooms · 49+
- *     interactive flat panels").
- *   100 Microsoft Innovative Educator Experts → a Microsoft Showcase School.
- *   Junior and senior computer laboratories, 40+ machines each.
- *   Indian AI Impact Festival, 2024 — Ayushi, of Class VII, placed first.
- *   The Reading Carnival photograph shows the school's own wall of "Microsoft
- *     Innovative Educator Expert 2024" posters — the certification is displayed
- *     in the building, not only stated on a website.
- *
- * ⚠ NOT CLAIMED: a device-per-child ratio, a rollout date for the remaining
- * rooms, an AI syllabus, or which classes take digital literacy. None is
- * published.
+ * The page was rebuilt off the generic AcSplit → AcCollage → AcStatement →
+ * AcClose system into a composed one: five sections that tell a single story —
+ * the room, the infrastructure, the point of it, the practice, what is still
+ * changing. Everything below the banner lives in
+ * components/academics/teaching/SmartClassroomsPage.astro, and that file's
+ * frontmatter carries every figure's source and the standing warning about the
+ * one number on this page that has been published wrong before.
  *
  * ⚠ SCOPE BOUNDARY — the METHOD that runs on this equipment is Teaching
  * Methodology's; the Robotics Lab and the national science programmes are STEM,
  * Robotics & Enrichment's. This page is the room and the subject.
- *
- * Composition: split (ivory, photo RIGHT) → collage (paper, LEFT — the numbers)
- * → statement (sand — the honest gap) → close.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcSplit from '../../../components/academics/system/AcSplit.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcStatement from '../../../components/academics/system/AcStatement.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import SmartClassroomsPage from '../../../components/academics/teaching/SmartClassroomsPage.astro';
 
 import banner from '../../../assets/computer lab/DSC_1204 copy.jpg';
-import pComputers from '../../../assets/computer lab/DSC_1204 copy.jpg';
-import pComp2 from '../../../assets/computer lab/DSC_1206 copy.jpg';
-import pCanva from '../../../assets/school-event/Impetus—ClassesIII-V/Impetus—ClassesIII-V-02.jpg';
-import pCarnival from '../../../assets/school-event/Reading-Carnival/Reading-Carnival-02.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
@@ -71,72 +48,16 @@ const school = 'Sunbeam School Ballia';
     position="50% 50%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcSplit
-      ground="ivory"
-      side="right"
-      aspect="3 / 2"
-      kicker="The room"
-      heading="Standard equipment,<br /><em>not a showcase room</em>"
-      body={[
-        'The useful question about a smart classroom is not whether the school has one. It is whether a teacher can assume it. Sunbeam publishes <strong>75+ digitally smart classrooms</strong> — a number at the scale of the whole school rather than of a demonstration suite booked by rotation.',
-        'Alongside them the school runs <strong>two computer laboratories</strong>, junior and senior, carrying <strong>40+ machines each</strong>. The junior room is where nine-year-olds are taught presentation software under the Impetus programme — the session photographed here is one of its sittings.',
-      ]}
-      photo={pComputers}
-      alt={`The computer laboratory at ${school}, its machines set out along the benches`}
-      inset={pCanva}
-      insetAlt={`A class at ${school} during a Canva Presentation activity in the Impetus programme, the interactive board in use behind them`}
-    />
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer.
 
-    <AcCollage
-      ground="paper"
-      side="left"
-      kicker="And the part that is not equipment"
-      heading="A hundred teachers,<br /><em>certified by Microsoft</em>"
-      body={[
-        'A panel does nothing on its own. What makes Sunbeam Ballia a <strong>Microsoft Showcase School</strong> is that <strong>one hundred of its teachers</strong> hold Microsoft Innovative Educator Expert certification — a credential issued by somebody other than the school.',
-        'It is not a website claim either. The school displays the MIE Expert posters along a corridor wall, which is where the photograph on the right was taken — the certification is up in the building where parents walk past it.',
-        'Digital literacy then arrives as <strong>a subject with its own time</strong> rather than as a word attached to existing lessons, and it produces results: <strong>Ayushi, of Class VII, placed first at the Indian AI Impact Festival in 2024</strong>.',
-      ]}
-      ledger={[
-        { k: 'Smart classrooms', v: '75+ digitally smart classrooms across the school.' },
-        { k: 'Interactive flat panels', v: '49+ panels — see the note below on what that number means.' },
-        { k: 'Computer laboratories', v: 'Two, junior and senior, 40+ machines each.' },
-        { k: 'Microsoft Showcase School', v: '100 teachers certified as Microsoft Innovative Educator Experts.' },
-        { k: 'Indian AI Impact Festival · 2024', v: 'Ayushi, of Class VII, placed <strong>first</strong>.' },
-      ]}
-      lead={{ src: pCarnival, alt: `A corridor at ${school} during the Reading Carnival, the school’s Microsoft Innovative Educator Expert 2024 posters displayed on the wall behind the book racks` }}
-      support={[
-        { src: pComp2, alt: `The computer laboratory at ${school}, its machines set out along the benches` },
-        { src: pCanva, alt: `A class at ${school} during a Canva Presentation activity, the interactive board in use` },
-      ]}
-    />
-
-    <AcStatement
-      ground="sand"
-      ghost="49 / 75"
-      ghostAt="left"
-      texture={true}
-      kicker="What the two numbers mean together"
-      statement="Not every room,<br /><em>yet.</em>"
-      body={[
-        'The school publishes both figures, so both are printed here: <strong>75+ smart classrooms</strong> and <strong>49+ interactive flat panels</strong>. Read together they say something the marketing sentence would not — <em>the panels do not yet reach every room.</em>',
-        'That is worth stating plainly rather than writing around. A parent comparing schools is entitled to know that this is a rollout in progress rather than a finished one, and a school that publishes both numbers has already given them the means to work it out.',
-        'It is also the more credible claim. Forty-nine panels in seventy-five rooms is a real school spending real money over several years; a page asserting one in every room, with nothing to check it against, would be worth less.',
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="A hundred teachers,<br /><em>certified elsewhere.</em>"
-      body="The school publishes its room counts, its panel count and the certification behind them. It does not publish a device-per-child ratio, a rollout schedule for the remaining rooms, or which classes take digital literacy and for how long."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+      ⚠ AND THE PADDING RESET IS AN INLINE STYLE, DELIBERATELY. `.u-page-panel`
+      in base.css carries `padding-bottom: var(--sb-section-y)` — 120px of empty
+      cream between the closing section and the footer. A stylesheet form of the
+      override can be served from a different build than the HTML that needs it,
+      and then it silently stops applying; an inline style travels IN the HTML,
+      so the two cannot skew. Same decision as the other redesigned pages. */}
+  <div class="u-page-panel" style="padding-block: 0;">
+    <SmartClassroomsPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

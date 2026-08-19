@@ -1,0 +1,1009 @@
+---
+/**
+ * TEACHING & LEARNING · TEACHING METHODOLOGY — the five sections below the banner.
+ *
+ * ⚠ THIS IS A COMBINED PAGE, AND THE COMBINATION IS THE CLIENT'S IA. It carries
+ * two of the brief's bullets — Teaching Methodology and Collaborative Learning —
+ * because collaborative learning is not a separate programme here. It is the
+ * third of the three things the school names as its method.
+ *
+ * ═══ EVERY CLAIM ON THIS PAGE, AND WHERE IT COMES FROM ═════════════════════
+ *   The method, quoted verbatim from the school:
+ *     "Incorporate Technology, a theory of Multiple Intelligence and
+ *      Collaborative learning in all areas of teaching."
+ *   The Principal: "All the students do not have the same talents."
+ *   The Principal: classrooms are "places of curiosity and collaboration."
+ *   100 Microsoft Innovative Educator Experts → a Microsoft Showcase School.
+ *   The platforms in section 04 are the school's own published record.
+ *
+ * ⚠ THE FOUR-MOVE LESSON ("Ask, Do, Discuss, Show") THAT ONCE SAT ON THIS PAGE
+ * WAS NOT SUNBEAM'S. It was verified absent from the school's site and removed
+ * from three pages and a component. Do not reintroduce it. The school names
+ * THREE THINGS, not four moves, and they are not a lesson shape.
+ *
+ * ⚠ SCOPE BOUNDARY — the panels, the room count and AI as a subject belong to
+ * Smart Classrooms & Digital Literacy. Technology appears here ONLY as the first
+ * of the three, anchored on the certification, and points there rather than
+ * restating it.
+ *
+ * ⚠ NO LESSON SHAPE IS DESCRIBED ANYWHERE. The school publishes its method, the
+ * Principal's words behind two of the three and the certification behind the
+ * first. It does not publish lesson plans, a scheme of work or an observation
+ * framework — so the close says exactly that instead of filling the gap.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ * Five sections, alternating cream and sand, one dark plate to close:
+ *
+ *   01 · CREAM — the statement, with a two-photograph composition breaking the
+ *        grid at the right and a huge ghost "3" behind it.
+ *   02 · SAND  — the three, as ONE connected system: icon tiles on a dotted
+ *        rule that draws itself across, not three bordered cards.
+ *   03 · CREAM — collaboration, told in layered photography.
+ *   04 · SAND  — the four platforms: oversized numerals, hairline separators.
+ *   05 · PHOTO — the dark close.
+ *
+ * ⚠ SECTIONS 02 AND 04 SHARE A SKELETON AND MUST NOT SHARE A RHYTHM. Both are
+ * copy-left, row-right. They are told apart by what leads each item: 02 leads on
+ * an icon tile threaded on a horizontal rule, 04 leads on a large numeral over a
+ * vertical hairline. Give them the same treatment and the page reads as one
+ * section printed twice.
+ *
+ * ⚠ EVERY SECTION IS `overflow: hidden`. The ghost numeral, the dashed arcs and
+ * the inset photographs all run off their section by design.
+ *
+ * PHOTOGRAPHY is five genuine Sunbeam Ballia frames. No stock, per docs/07.
+ *
+ * MOTION is the project's own attribute set — data-clip, data-reveal, data-pop,
+ * data-drift, data-parallax, data-draw, data-mask, data-zoom. Nothing here
+ * declares a keyframe that content depends on: with the motion chunk absent
+ * (reduced motion, Save-Data, a failed request) every section is complete.
+ */
+import { Image, Picture } from 'astro:assets';
+
+/* ── PHOTOGRAPHY ────────────────────────────────────────────────────────────
+   Each frame was chosen because it shows the thing its section is about. */
+import pDesk from '../../../assets/School Activity in Uniform/School Activity in Uniform (5).jpeg';
+import pTables from '../../../assets/activity learning lab/DSC_1217 copy.jpg';
+import pThread from '../../../assets/School Activity in Uniform/Embriodery.jpg';
+import pChef from '../../../assets/School Activity in Uniform/School Activity in Uniform (1).jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/* ── THE MARKS ──────────────────────────────────────────────────────────────
+   24-unit box, 1.5 stroke, round caps and joins, no fill, `currentColor`. Same
+   specification as AcademicGlyph; drawn here because this page needs seven
+   marks that file does not carry, and the seven have to read as one hand.
+
+   INLINE SVG, NOT RASTER. The icon set in assets/icons is hand-drawn colour
+   illustration — right for a floating decoration, wrong for a 22px tile that
+   has to recolour with its row and stay crisp on a 3× screen. */
+const MARK: Record<string, string> = {
+  /* The three. */
+  screen: `<rect x="2.6" y="4.6" width="18.8" height="12.2" rx="1.8"/><path d="M8.4 20.4h7.2M12 16.8v3.6"/><path d="M6.8 12.6l3-3.2 2.4 2 4-4.4"/>`,
+  mind: `<path d="M8.6 20.4v-2.5a6.8 6.8 0 1 1 6.8 0v2.5"/><path d="M9.8 20.4h4.4"/><path d="M9.9 11.4a2.1 2.1 0 1 1 3 1.9c-.5.3-.8.8-.8 1.4"/>`,
+  group: `<circle cx="12" cy="7.4" r="2.9"/><path d="M6.6 19.8a5.4 5.4 0 0 1 10.8 0"/><circle cx="4.9" cy="10.6" r="2"/><circle cx="19.1" cy="10.6" r="2"/><path d="M2.2 18.2a3.3 3.3 0 0 1 2.4-3.2M21.8 18.2a3.3 3.3 0 0 0-2.4-3.2"/>`,
+  /* The four platforms. */
+  speak: `<circle cx="9.6" cy="7.8" r="3"/><path d="M4 19.8a5.6 5.6 0 0 1 11.2 0"/><path d="M17.4 6.8a5.2 5.2 0 0 1 0 7.2M20.2 4.4a8.6 8.6 0 0 1 0 12"/>`,
+  make: `<path d="M14.6 4.4a4 4 0 0 1 5.1 5.1l-9.4 9.4-5.1-5.1Z"/><path d="m12.6 6.4 5.1 5.1"/><path d="M5.2 13.8 3.6 20.4l6.6-1.6"/>`,
+  build: `<path d="M12 3.4 4.6 7.2v9.6L12 20.6l7.4-3.8V7.2z"/><path d="M4.6 7.2 12 11l7.4-3.8M12 11v9.6"/>`,
+  field: `<circle cx="12" cy="12" r="8.6"/><path d="M12 3.4v17.2M3.4 12h17.2"/><path d="M5.9 5.9c3.4 3.4 3.4 8.8 0 12.2M18.1 5.9c-3.4 3.4-3.4 8.8 0 12.2"/>`,
+};
+
+/* ── THE THREE ──────────────────────────────────────────────────────────────
+   ⚠ EVERY `anchor` IS A CHECKABLE THING THE SCHOOL HAS PUT IN WRITING — two of
+   the Principal's own published sentences and one certification held by a
+   hundred members of staff. A method is only worth printing if each part of it
+   points at something a reader can go and verify. */
+const three = [
+  {
+    n: '01',
+    mark: 'screen',
+    k: 'Technology',
+    anchor: '100 Microsoft Innovative Educator Experts',
+    body:
+      'The certification that makes Sunbeam a Microsoft Showcase School. The rooms it runs in are set out on Smart Classrooms &amp; Digital Literacy.',
+    quote: false,
+  },
+  {
+    n: '02',
+    mark: 'mind',
+    k: 'Multiple Intelligence',
+    anchor: '“All the students do not have the same talents.”',
+    body: 'Teaching that looks for different strengths, not a single mould.',
+    quote: true,
+  },
+  {
+    n: '03',
+    mark: 'group',
+    k: 'Collaborative Learning',
+    anchor: 'Classrooms as “places of curiosity and collaboration.”',
+    body: 'Learning with others, from others, because others think differently.',
+    quote: true,
+  },
+] as const;
+
+/* ── THE FOUR PLATFORMS ─────────────────────────────────────────────────────
+   The school's own published record, and nothing beyond it. */
+const platforms = [
+  {
+    n: '01',
+    mark: 'speak',
+    k: 'Speaking',
+    body:
+      'Class I entered an inter-branch Attire Speak competition; Class IV took the top three places in a group-wide declamation.',
+  },
+  {
+    n: '02',
+    mark: 'make',
+    k: 'Making',
+    body: 'Folk painting under Impetus, embroidery, and the Srijan making-and-design room.',
+  },
+  {
+    n: '03',
+    mark: 'build',
+    k: 'Building',
+    body: 'The Robotics Lab, and a second place at an international robotics championship.',
+  },
+  {
+    n: '04',
+    mark: 'field',
+    k: 'The field',
+    body: 'Kho-kho gold, chess, handball, taekwondo — a sporting record stronger than most.',
+  },
+] as const;
+
+const SMART = '/academics/teaching-learning/smart-classrooms/';
+---
+
+{/* ══ 01 · IN ALL AREAS OF TEACHING ══════════════════════════════════════════
+    Ground: cream. Idea: the statement, with a two-photograph composition that
+    breaks the grid at the right and a huge ghost numeral behind it. */}
+<section class="tm-open" aria-labelledby="tm-open-t">
+  <span class="tm-open__warm" aria-hidden="true"></span>
+
+  {/* THE GHOST NUMERAL. Three things — so the page's watermark is a 3, not an
+      ornament chosen for its shape. */}
+  <span class="tm-open__ghost" aria-hidden="true" data-parallax data-parallax-y="26">3</span>
+
+  {/* The dashed path falling out of the numeral and down the right edge. */}
+  <svg class="tm-open__arc" viewBox="0 0 260 420" fill="none" aria-hidden="true">
+    <path d="M242 6c0 118-64 150-64 246 0 74 42 106 42 162" stroke="currentColor"
+      stroke-width="1.2" stroke-linecap="round" stroke-dasharray="5 9" />
+  </svg>
+
+  <div class="u-container tm-open__grid">
+    <div class="tm-open__copy">
+      <p class="tm-kicker" data-reveal>The method, in the school’s words</p>
+      <h2 class="tm-h tm-open__h" id="tm-open-t">
+        <span data-clip data-clip-delay="0">In all areas</span>
+        <span data-clip data-clip-delay="150"><em>of teaching.</em></span>
+      </h2>
+
+      <p class="tm-body" data-reveal data-reveal-delay="200">
+        {S} states its method in one sentence, and the last few words are the part that matters:
+      </p>
+
+      {/* ⚠ THE SCHOOL'S SENTENCE, VERBATIM AND MARKED AS A QUOTATION. It is the
+          only thing on this page the school has written about its own method,
+          so it is set as its own object rather than folded into a paragraph. */}
+      <blockquote class="tm-quote" data-reveal data-reveal-delay="280">
+        <p>
+          “Incorporate Technology, a theory of Multiple Intelligence and Collaborative learning
+          <strong>in all areas of teaching</strong>.”
+        </p>
+      </blockquote>
+
+      <p class="tm-body" data-reveal data-reveal-delay="340">
+        Three things, and none of them a timetabled slot. There is no collaboration lesson and no
+        multiple-intelligence week — the claim is that all three run through ordinary teaching,
+        which is a harder thing to promise and a harder thing to fake.
+      </p>
+    </div>
+
+    <div class="tm-open__media">
+      {/* The dot field behind the picture's left edge. */}
+      <span class="tm-open__dots" aria-hidden="true"></span>
+
+      <figure class="tm-open__lead" data-mask data-zoom data-zoom-to="1.06">
+        <Picture
+          src={pDesk}
+          alt={`Two students of ${S} sharing a desk, one reaching across for a colour pencil while the other works on her own drawing`}
+          formats={['avif', 'webp']}
+          widths={[560, 900, 1200]}
+          sizes="(max-width: 1023px) 92vw, 46vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      {/* The circular crop breaking the picture's bottom-left corner. */}
+      <figure class="tm-open__disc" data-parallax data-parallax-y="24">
+        <Picture
+          src={pTables}
+          alt={`The activity learning laboratory at ${S} — one crescent table with chairs set all the way round it`}
+          formats={['avif', 'webp']}
+          widths={[320, 520]}
+          sizes="(max-width: 1023px) 40vw, 18vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <svg class="tm-spark tm-open__spark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 1.6c.7 5.4 4.3 9 9.7 9.7-5.4.7-9 4.3-9.7 9.7-.7-5.4-4.3-9-9.7-9.7 5.4-.7 9-4.3 9.7-9.7z"
+          stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+      </svg>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · THE THREE, UNPACKED ═══════════════════════════════════════════════
+    Ground: sand. Idea: ONE system, not three cards — the tiles are threaded on a
+    single dotted rule that draws itself across as the reader arrives. */}
+<section class="tm-three" aria-labelledby="tm-three-t">
+  <span class="tm-three__warm" aria-hidden="true"></span>
+
+  {/* The long dashed arc sweeping out of the section's right edge. */}
+  <svg class="tm-three__arc" viewBox="0 0 300 420" fill="none" aria-hidden="true">
+    <path d="M12 8c96 0 150 62 150 148 0 92-96 108-96 186" stroke="currentColor"
+      stroke-width="1.2" stroke-linecap="round" stroke-dasharray="5 9" />
+  </svg>
+
+  <div class="u-container tm-three__grid" data-draw-scope>
+    <div class="tm-three__copy">
+      <p class="tm-kicker" data-reveal>The three, unpacked</p>
+      <h2 class="tm-h tm-three__h" id="tm-three-t">
+        <span data-clip data-clip-delay="0">Named, and each one</span>
+        <span data-clip data-clip-delay="150"><em>anchored to something</em></span>
+      </h2>
+      <p class="tm-body" data-reveal data-reveal-delay="200">
+        A method is only worth reading if each part of it points at something checkable. All three
+        of Sunbeam’s do — two to the Principal’s own published words, and one to a certification
+        held by a hundred members of staff.
+      </p>
+    </div>
+
+    <ol class="tm-three__list">
+      {three.map((t, i) => (
+        <li class="tm-pillar" data-reveal data-reveal-delay={120 + i * 130}>
+          {/* ⚠ THE TILE AND THE RULE ARE ONE ROW. That is what makes the three
+              read as a system rather than as three cards standing near each
+              other — the dotted rule leaves each tile and arrives at the next. */}
+          <div class="tm-pillar__rail">
+            <span class="tm-pillar__i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[t.mark]} />
+              </svg>
+            </span>
+            <span class="tm-pillar__rule" aria-hidden="true"><span data-draw></span></span>
+          </div>
+
+          <h3 class="tm-pillar__k">{t.k}</h3>
+          <p class={`tm-pillar__a${t.quote ? ' tm-pillar__a--q' : ''}`} set:html={t.anchor} />
+          <p class="tm-pillar__b" set:html={t.body} />
+
+          {t.mark === 'screen' && (
+            <p class="tm-pillar__link">
+              <a href={SMART}>Smart Classrooms <span aria-hidden="true">→</span></a>
+            </p>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 03 · ONE BASKET OF THREAD ══════════════════════════════════════════════
+    Ground: cream. Idea: the one section where the photographs carry the
+    argument, because "collaborative" is a word that survives on most school
+    sites without ever touching a picture. */}
+<section class="tm-collab" aria-labelledby="tm-collab-t">
+  <span class="tm-collab__warm" aria-hidden="true"></span>
+
+  <svg class="tm-spark tm-collab__spark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 1.6c.7 5.4 4.3 9 9.7 9.7-5.4.7-9 4.3-9.7 9.7-.7-5.4-4.3-9-9.7-9.7 5.4-.7 9-4.3 9.7-9.7z"
+      stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+  </svg>
+
+  <div class="u-container tm-collab__grid">
+    <div class="tm-collab__copy">
+      <p class="tm-kicker" data-reveal>What collaboration looks like when it is real</p>
+      <h2 class="tm-h tm-collab__h" id="tm-collab-t">
+        <span data-clip data-clip-delay="0">One basket</span>
+        <span data-clip data-clip-delay="150"><em>of thread.</em></span>
+      </h2>
+      <p class="tm-body" data-reveal data-reveal-delay="200">
+        The word “collaborative” survives on most school sites without ever touching a photograph.
+        Here it does.
+      </p>
+      <p class="tm-body" data-reveal data-reveal-delay="270">
+        In the school’s own embroidery session the students are not each issued a kit — they work
+        from <strong>one shared basket of thread</strong>, which means the thing a child needs next
+        is in somebody else’s hand.
+      </p>
+      <p class="tm-body" data-reveal data-reveal-delay="340">
+        The cooking activity is built the same way: one demonstration table, a class in paper chef
+        hats around it, and no version of the task that can be completed alone.
+      </p>
+      <p class="tm-body tm-collab__pt" data-reveal data-reveal-delay="410">
+        Neither is a lesson called Collaboration. That is the school’s point — it is in the shape of
+        an ordinary activity rather than in a slot on the timetable.
+      </p>
+    </div>
+
+    {/* THE STACK. Two frames at different depths, the second overlapping the
+        first's bottom-right corner — layered, not two boxes with a gutter. */}
+    <div class="tm-collab__media">
+      <figure class="tm-collab__lead" data-mask data-zoom data-zoom-to="1.07">
+        <Picture
+          src={pThread}
+          alt={`Students of ${S} sitting in a circle on the floor, embroidering from one shared basket of thread between them`}
+          formats={['avif', 'webp']}
+          widths={[620, 1000, 1320]}
+          sizes="(max-width: 1023px) 92vw, 44vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+      <figure class="tm-collab__inset" data-parallax data-parallax-y="-26">
+        <Picture
+          src={pChef}
+          alt={`A teacher at ${S} demonstrating at the table during the papadi chaat activity, her class in paper chef hats gathered around her`}
+          formats={['avif', 'webp']}
+          widths={[360, 620]}
+          sizes="(max-width: 1023px) 46vw, 22vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </div>
+</section>
+
+{/* ══ 04 · DIFFERENT TALENTS, DIFFERENT PLATFORMS ════════════════════════════
+    Ground: sand. Idea: the second of the three, evidenced. Oversized numerals
+    over hairline separators — deliberately a different rhythm from section 02. */}
+<section class="tm-plat" aria-labelledby="tm-plat-t">
+  <span class="tm-plat__warm" aria-hidden="true"></span>
+
+  <div class="u-container tm-plat__grid">
+    <div class="tm-plat__copy">
+      <p class="tm-kicker" data-reveal>And the second of the three</p>
+      <h2 class="tm-h tm-plat__h" id="tm-plat-t">
+        <span data-clip data-clip-delay="0">Different talents,</span>
+        <span data-clip data-clip-delay="150"><em>different platforms.</em></span>
+      </h2>
+      <p class="tm-body" data-reveal data-reveal-delay="200">
+        “All the students do not have the same talents” is easy to say and expensive to act on —
+        acting on it means running enough different things that a child who is not academic still
+        has somewhere to be good. The school’s own published record is the evidence.
+      </p>
+    </div>
+
+    <ol class="tm-plat__list">
+      {platforms.map((p, i) => (
+        <li class="tm-plat__item" data-drift="26" style={`--i: ${i};`}>
+          <p class="tm-plat__n t-tabular">{p.n}</p>
+          <span class="tm-plat__i" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[p.mark]} />
+            </svg>
+          </span>
+          <h3 class="tm-plat__k">{p.k}</h3>
+          <p class="tm-plat__b">{p.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 05 · THREE THINGS, EVERYWHERE ══════════════════════════════════════════
+    The dark photographic close, and the one place on the page that says plainly
+    what the school does NOT publish. */}
+<section class="tm-close" aria-labelledby="tm-close-t">
+  <div class="tm-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pCohort}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <span class="tm-close__scrim" aria-hidden="true"></span>
+
+  <div class="u-container tm-close__inner">
+    <svg class="tm-spark tm-close__spark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 1.6c.7 5.4 4.3 9 9.7 9.7-5.4.7-9 4.3-9.7 9.7-.7-5.4-4.3-9-9.7-9.7 5.4-.7 9-4.3 9.7-9.7z"
+        stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+    </svg>
+
+    <h2 class="tm-h tm-close__h" id="tm-close-t">
+      <span data-clip data-clip-delay="0">Three things,</span>
+      <span data-clip data-clip-delay="150"><em>everywhere.</em></span>
+    </h2>
+    <p class="tm-close__b" data-reveal data-reveal-delay="180">
+      The school publishes its method, the Principal’s words behind two of the three, and the
+      certification behind the first. It does not publish lesson plans, a scheme of work, or an
+      observation framework — so no lesson shape is described here.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .tm-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .tm-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .tm-h span { display: block; }
+  .tm-h em { font-style: normal; color: var(--sb-violet); }
+
+  .tm-body {
+    max-width: 44ch;
+    margin: clamp(14px, 1.7vw, 20px) 0 0;
+    font-size: clamp(13px, 0.95vw, 15px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .tm-body strong { font-weight: 700; color: var(--sb-charcoal); }
+
+  /* The four-point sparkle. One drawing, three placements. */
+  .tm-spark {
+    position: absolute;
+    /* Above the photographs it sits beside — without this the open section's
+       spark was painted under the lead frame and never appeared. */
+    z-index: 3;
+    width: clamp(14px, 1.5vw, 22px);
+    height: auto;
+    color: var(--sb-violet);
+    opacity: 0.7;
+    animation: tm-twinkle 7s ease-in-out infinite;
+  }
+
+  /* ═══ 01 · IN ALL AREAS OF TEACHING ═══════════════════════════════════════ */
+  .tm-open {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .tm-open__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 66% at 6% 10%, rgba(255, 138, 92, 0.13) 0%, rgba(255, 138, 92, 0) 70%),
+      radial-gradient(54% 64% at 96% 84%, rgba(201, 60, 10, 0.06) 0%, rgba(201, 60, 10, 0) 72%);
+  }
+  /* ⚠ THE NUMERAL IS THE PAGE'S WATERMARK, NOT A DECORATION. Three things — so
+     it is a 3, set enormous, bleeding off the top-right corner. */
+  .tm-open__ghost {
+    position: absolute;
+    z-index: -2;
+    top: clamp(-48px, -3vw, -20px);
+    right: clamp(14px, 2.6vw, 76px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(180px, 24vw, 380px);
+    font-weight: 700;
+    line-height: 0.78;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1.6px rgba(201, 60, 10, 0.2);
+    user-select: none;
+  }
+  .tm-open__arc {
+    position: absolute;
+    z-index: -2;
+    top: 4%;
+    right: clamp(-30px, -1vw, -8px);
+    width: clamp(120px, 15vw, 250px);
+    height: auto;
+    color: rgba(201, 60, 10, 0.28);
+  }
+
+  .tm-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    gap: clamp(28px, 4vw, 66px);
+    align-items: center;
+  }
+  .tm-open__h { font-size: clamp(30px, 3.6vw, 52px); }
+
+  /* ⚠ THE QUOTATION IS THE SCHOOL'S OWN SENTENCE and is set as an object: an
+     orange rule down its left edge, italic, at reading size. Folded into a
+     paragraph a reader cannot tell whose words they are. */
+  .tm-quote {
+    max-width: 44ch;
+    margin: clamp(16px, 1.9vw, 24px) 0 0;
+    padding-left: clamp(14px, 1.4vw, 20px);
+    border-left: 2px solid var(--sb-violet);
+  }
+  .tm-quote p {
+    margin: 0;
+    font-size: clamp(13.5px, 1vw, 16px);
+    font-style: italic;
+    font-weight: 600;
+    line-height: 1.68;
+    color: var(--sb-violet);
+  }
+  .tm-quote strong { font-weight: 800; }
+
+  .tm-open__media { position: relative; }
+  /* The dot field behind the picture's left edge, masked so it fades out
+     rather than ending on a visible last row. */
+  .tm-open__dots {
+    position: absolute;
+    z-index: 0;
+    left: clamp(-38px, -1.6vw, -16px);
+    top: 6%;
+    width: clamp(70px, 8vw, 118px);
+    height: clamp(80px, 9vw, 132px);
+    background-image: radial-gradient(rgba(201, 60, 10, 0.36) 1.6px, transparent 1.8px);
+    background-size: 17px 17px;
+    -webkit-mask-image: linear-gradient(115deg, #000 0%, transparent 92%);
+    mask-image: linear-gradient(115deg, #000 0%, transparent 92%);
+  }
+  .tm-open__lead {
+    position: relative;
+    z-index: 1;
+    /* Off-centre in its own column: the picture BREAKS the grid rather than
+       filling a cell, which is the whole point of the composition. */
+    width: min(100%, 86%);
+    margin: 0 0 0 auto;
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .tm-open__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+  .tm-open__disc {
+    position: absolute;
+    z-index: 2;
+    /* ⚠ INSIDE THE SECTION, NOT HANGING OUT OF IT. At a negative `bottom` the
+       disc was sliced flat by the section's own `overflow: hidden`, which reads
+       as a rendering fault rather than as a crop. It overlaps the photograph's
+       left edge instead — which is where the reference puts it. */
+    left: clamp(-16px, -0.4vw, 4px);
+    bottom: clamp(14px, 2.4vw, 42px);
+    width: clamp(96px, 11.5vw, 178px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-ivory);
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card);
+  }
+  .tm-open__disc :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tm-open__spark { top: -3%; left: 6%; }
+
+  /* ═══ 02 · THE THREE, UNPACKED ════════════════════════════════════════════ */
+  .tm-three {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .tm-three__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(60% 70% at 88% 8%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(50% 60% at 4% 92%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 72%);
+  }
+  .tm-three__arc {
+    position: absolute;
+    z-index: -2;
+    top: 10%;
+    right: clamp(-90px, -4vw, -40px);
+    width: clamp(150px, 19vw, 300px);
+    height: auto;
+    color: rgba(201, 60, 10, 0.26);
+  }
+
+  .tm-three__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.95fr);
+    gap: clamp(28px, 3.6vw, 60px);
+    align-items: start;
+  }
+  .tm-three__h { font-size: clamp(25px, 2.85vw, 38px); }
+  .tm-three__copy .tm-body { max-width: 38ch; }
+
+  .tm-three__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 34px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* ⚠ NO CARD. No border, no plate, no shadow — the tile and the rule do all of
+     the grouping, which is what keeps the three reading as one system. */
+  .tm-pillar { position: relative; }
+
+  .tm-pillar__rail {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1vw, 14px);
+  }
+  .tm-pillar__i {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: clamp(42px, 4vw, 56px);
+    aspect-ratio: 1 / 1;
+    border-radius: clamp(12px, 1.2vw, 16px);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+    color: var(--sb-violet);
+  }
+  .tm-pillar__i svg { width: 52%; height: auto; }
+  /* The dotted rule leaving each tile and arriving at the next. It draws itself
+     from its left edge — a scaleX, so it can never create horizontal overflow. */
+  .tm-pillar__rule {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 1px;
+    overflow: hidden;
+    color: rgba(201, 60, 10, 0.5);
+  }
+  .tm-pillar__rule span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-image: linear-gradient(to right, currentColor 52%, transparent 52%);
+    background-size: 7px 1px;
+    transform-origin: left center;
+  }
+
+  .tm-pillar__k {
+    margin: clamp(14px, 1.7vw, 22px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.4vw, 22px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-violet);
+  }
+  /* The anchor line — the checkable thing. Bold, charcoal, and one step up from
+     the body under it, because it is the evidence and the body is the gloss. */
+  .tm-pillar__a {
+    max-width: 30ch;
+    margin: clamp(9px, 1vw, 13px) 0 0;
+    font-size: clamp(12.5px, 0.94vw, 15px);
+    font-weight: 700;
+    line-height: 1.56;
+    letter-spacing: -0.01em;
+    color: var(--sb-charcoal);
+  }
+  .tm-pillar__a--q { font-style: italic; font-weight: 600; }
+  .tm-pillar__b {
+    max-width: 32ch;
+    margin: clamp(9px, 1vw, 13px) 0 0;
+    font-size: clamp(11.5px, 0.86vw, 13.5px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+
+  .tm-pillar__link { margin: clamp(11px, 1.2vw, 15px) 0 0; }
+  .tm-pillar__link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(201, 60, 10, 0.38);
+    font-size: clamp(11px, 0.82vw, 13px);
+    font-weight: 700;
+    color: var(--sb-violet);
+    text-decoration: none;
+    transition: gap var(--sb-dur-link) var(--sb-ease), border-color var(--sb-dur-link) var(--sb-ease);
+  }
+  .tm-pillar__link a:hover { gap: 11px; border-bottom-color: var(--sb-violet); }
+
+  /* ═══ 03 · ONE BASKET OF THREAD ═══════════════════════════════════════════ */
+  .tm-collab {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .tm-collab__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 68% at 92% 10%, rgba(255, 205, 180, 0.4) 0%, rgba(255, 205, 180, 0) 70%),
+      radial-gradient(52% 62% at 4% 90%, rgba(226, 214, 240, 0.4) 0%, rgba(226, 214, 240, 0) 72%);
+  }
+  .tm-collab__spark { top: 9%; right: 6%; }
+
+  .tm-collab__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.16fr);
+    gap: clamp(28px, 4vw, 66px);
+    align-items: center;
+  }
+  .tm-collab__h { font-size: clamp(28px, 3.4vw, 48px); }
+  /* The last paragraph is the school's point, so it is set apart on a rule
+     rather than run on as a fourth identical block. */
+  .tm-collab__pt {
+    margin-top: clamp(16px, 1.9vw, 24px);
+    padding-top: clamp(14px, 1.6vw, 20px);
+    border-top: 1px solid var(--sb-border);
+    color: var(--sb-charcoal);
+  }
+
+  .tm-collab__media { position: relative; }
+  .tm-collab__lead {
+    margin: 0;
+    width: min(100%, 88%);
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .tm-collab__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    object-position: 50% 55%;
+  }
+  /* The second frame overlapping the first's bottom-right corner. A paper
+     border so it reads as a print laid over, not a hole cut in. */
+  .tm-collab__inset {
+    position: absolute;
+    z-index: 2;
+    right: clamp(-16px, -0.6vw, -4px);
+    bottom: clamp(-34px, -1.6vw, -16px);
+    width: clamp(140px, 17vw, 260px);
+    margin: 0;
+    overflow: hidden;
+    border: 7px solid var(--sb-ivory);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .tm-collab__inset :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: 50% 38%;
+  }
+
+  /* ═══ 04 · DIFFERENT TALENTS, DIFFERENT PLATFORMS ═════════════════════════ */
+  .tm-plat {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .tm-plat__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 66% at 10% 6%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(56% 62% at 94% 94%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 72%);
+  }
+
+  .tm-plat__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.95fr);
+    gap: clamp(28px, 3.6vw, 60px);
+    align-items: start;
+  }
+  .tm-plat__h { font-size: clamp(25px, 2.85vw, 38px); }
+  .tm-plat__copy .tm-body { max-width: 38ch; }
+
+  .tm-plat__list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 1.8vw, 30px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* ⚠ A HAIRLINE, NOT A CARD — and a VERTICAL one, where section 02 runs its
+     rule horizontally. Two sections on the same skeleton have to be told apart
+     by something, and this is it. */
+  .tm-plat__item {
+    position: relative;
+    padding-left: clamp(14px, 1.6vw, 24px);
+    border-left: 1px dashed rgba(201, 60, 10, 0.34);
+  }
+  .tm-plat__item:first-child { padding-left: 0; border-left: 0; }
+
+  .tm-plat__n {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(18px, 1.6vw, 24px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--sb-orange-bright);
+  }
+  .tm-plat__i {
+    display: grid;
+    place-items: center;
+    width: clamp(40px, 3.8vw, 52px);
+    aspect-ratio: 1 / 1;
+    margin-top: clamp(12px, 1.4vw, 18px);
+    border-radius: clamp(12px, 1.2vw, 16px);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+    color: var(--sb-violet);
+  }
+  .tm-plat__i svg { width: 52%; height: auto; }
+  .tm-plat__k {
+    margin: clamp(12px, 1.4vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 20px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .tm-plat__b {
+    margin: clamp(8px, 0.9vw, 12px) 0 0;
+    font-size: clamp(11.5px, 0.86vw, 13.5px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 05 · THREE THINGS, EVERYWHERE ═══════════════════════════════════════ */
+  .tm-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(50px, 6vw, 96px);
+  }
+  /* ⚠ THE MEDIA BOX IS OVERSIZED ON PURPOSE. It carries a parallax drift, and a
+     box sized exactly to the section would show the section's own background at
+     one end of the travel. */
+  .tm-close__media {
+    position: absolute;
+    z-index: -3;
+    inset: -12% 0;
+  }
+  .tm-close__media :global(picture),
+  .tm-close__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+  /* ⚠ A REAL SCRIM, NOT A TINT. White type over photography, and docs/05 § J4
+     requires a measured wash rather than raw image. */
+  .tm-close__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(28, 14, 8, 0.82) 0%, rgba(28, 14, 8, 0.7) 46%, rgba(28, 14, 8, 0.86) 100%),
+      radial-gradient(66% 76% at 50% 40%, rgba(255, 92, 53, 0.16) 0%, transparent 72%);
+  }
+
+  .tm-close__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+  .tm-close__spark {
+    position: static;
+    margin-bottom: clamp(10px, 1.2vw, 16px);
+    color: var(--sb-lime);
+    opacity: 0.9;
+  }
+  .tm-close__h {
+    max-width: 20ch;
+    margin: 0;
+    font-size: clamp(28px, 3.4vw, 48px);
+    color: #fff;
+  }
+  .tm-close__h em { color: var(--sb-lime); font-style: italic; }
+  .tm-close__b {
+    max-width: 62ch;
+    margin: clamp(15px, 1.8vw, 22px) 0 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+
+  /* ═══ MOTION ══════════════════════════════════════════════════════════════
+     One loop, on decoration only, cut by reduced motion. */
+  @keyframes tm-twinkle {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 0.34; transform: scale(0.9); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tm-spark { animation: none; }
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .tm-open__grid,
+    .tm-three__grid,
+    .tm-collab__grid,
+    .tm-plat__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(32px, 4.6vw, 48px);
+    }
+    .tm-body,
+    .tm-three__copy .tm-body,
+    .tm-plat__copy .tm-body { max-width: 58ch; }
+
+    .tm-open__lead,
+    .tm-collab__lead { width: 100%; }
+    .tm-open__disc { width: clamp(88px, 18vw, 140px); }
+    .tm-collab__inset { width: clamp(120px, 26vw, 190px); }
+
+    /* Three across still fits at 768; four does not. */
+    .tm-plat__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(24px, 3.4vw, 34px); }
+    .tm-plat__item:nth-child(3) { padding-left: 0; border-left: 0; }
+  }
+
+  @media (max-width: 767px) {
+    /* ⚠ THE COMPOSITIONS SURVIVE THE STACK. The circular crop still breaks the
+       photograph's corner and the second frame still overlaps the first — only
+       the sizes come down. Flattening them into two boxes in a column is what
+       the brief rules out, and it is what this block exists to prevent. */
+    .tm-three__list { grid-template-columns: minmax(0, 1fr); gap: clamp(22px, 5vw, 30px); }
+    /* Stacked, a rule leaving a tile points at nothing to its right — so the
+       tile keeps its rule only as a short stub that reads as a bullet. */
+    .tm-pillar__rule { flex: 0 0 clamp(28px, 12vw, 56px); }
+
+    .tm-plat__list { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 5vw, 26px); }
+    /* The hairline turns to run along the top, because vertically stacked items
+       are separated above and below, not left and right. */
+    .tm-plat__item {
+      padding: clamp(18px, 4.5vw, 24px) 0 0;
+      border-left: 0;
+      border-top: 1px dashed rgba(201, 60, 10, 0.34);
+    }
+    .tm-plat__item:first-child { padding-top: 0; border-top: 0; }
+
+    .tm-open__ghost { font-size: clamp(150px, 42vw, 240px); }
+    .tm-open__arc,
+    .tm-three__arc { display: none; }
+  }
+</style>
