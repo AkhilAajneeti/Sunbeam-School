@@ -1,43 +1,21 @@
 ---
 /**
- * CAREER DEVELOPMENT & STUDENT SUCCESS · SCHOLARSHIPS — audit §2E.
+ * STUDENT SUCCESS · SCHOLARSHIPS.
  *
- * ⚠ THIS PAGE IS TWO SECTIONS, AND THAT IS THE FINISHED DESIGN. Every other page
- * in the Academics section runs to three, because every other page has three
- * sections' worth of published evidence. This one has none at all, and padding
- * it to match its siblings would mean writing paragraphs about scholarships that
- * do not exist on the school's site. A short honest page is the deliverable.
+ * The school publishes no scholarship terms, and this page invents none. The
+ * reference artwork for this page carried four named awards, all four of them
+ * fabrications; why they were dropped, and why fees are the one subject where a
+ * guess does measurable harm, is set out in the component header.
  *
- * ═══ WHAT THE RECORD ACTUALLY SAYS ═════════════════════════════════════════
- *   docs/01 § 3.8 — scholarships: "Not mentioned".
- *   data/academics.ts `awaiting` A11 — "The audit records scholarships as 'not
- *     mentioned'. If the school offers any, they are worth stating plainly —
- *     parents search for this."
- *
- * ⚠ THE "KAUSHAL SCHOLARSHIP" HAS BEEN REMOVED. The previous stub said "the
- * school's activity record names a Kaushal scholarship". It does not: the only
- * two occurrences of that word anywhere in this repository were in the stub's
- * own data entry, citing an activity record that carries no such line. A named
- * scholarship whose only source is our own copy is exactly the kind of claim
- * this build exists to catch. Also stripped from data/academicTopics.ts.
- *
- * ⚠ WHY THIS MATTERS MORE THAN MOST GAPS. A family that reads a plausible
- * scholarship summary here may choose this school partly because of it, and
- * discover at the fee counter that it was our invention. Fees are the one
- * subject on a school website where a guess does measurable harm.
- *
- * Composition: statement (sand, the gap stated at poster size) → close (ink,
- * owed — which prints the school's office number).
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcStatement from '../../../components/academics/system/AcStatement.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import ScholarshipsPage from '../../../components/academics/assessment/ScholarshipsPage.astro';
 
 import banner from '../../../assets/library/DSC_1230 copy.jpg';
-import pCohort from '../../../assets/photos/sunbeem-5.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
@@ -57,32 +35,7 @@ const school = 'Sunbeam School Ballia';
     position="50% 50%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcStatement
-      ground="sand"
-      ghost="₹"
-      ghostAt="right"
-      texture={true}
-      kicker="What is published"
-      statement="Nothing,<br /><em>yet.</em>"
-      body={[
-        'Sunbeam School Ballia publishes no scholarship — no name, no eligibility, no value and no way to apply. Every other page in this section is built from something the school printed; there is nothing here to build from.',
-        'So this page does not describe one. A scholarship summary invented to fill a page would read exactly like a real one, and a family could choose a school on the strength of it. Fees are the subject where a plausible guess does the most damage, and the honest answer is the short one.',
-        'If the school does run an award — and district schools of this size usually do — <strong>the office holds the terms</strong>, and they are worth publishing here. Parents search for this before they search for almost anything else.',
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Ask the office,<br /><em>not this page.</em>"
-      body="Scholarships are recorded in the site audit as not mentioned by the school. Until the school publishes terms, the number below is the only reliable answer this site can give."
-      photo={pCohort}
-      alt={`Student council office-bearers and NCC cadets of ${school} on stage with the school’s dignitaries`}
-      position="50% 38%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <ScholarshipsPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

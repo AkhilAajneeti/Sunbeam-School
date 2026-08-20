@@ -1,0 +1,863 @@
+---
+/**
+ * ACADEMICS · 04 — ASSESSMENT & SUPPORT, in eight sections.
+ *
+ * ═══ SOURCE OF TRUTH — every line traces to this repository ════════════════
+ *   data/academics.ts `cycle` — the six steps, verbatim:
+ *     Learning · Activities · Assessment · Feedback · Improvement · Achievement
+ *   data/academics.ts `assessmentTopics` — the four support channels and the
+ *     retest rules that hang off step five.
+ *   data/academics.ts — PRECEPT, the CBSE syllabus published class by class.
+ *   The school's own /promotion-policy/ page — a retest sits no sooner than TEN
+ *     DAYS after results, TWO CLEAR DAYS between retests, results within TWO AND
+ *     A HALF WEEKS, and a medical certificate does not waive the retest.
+ *
+ * ⚠ THE SIX STEPS DESCRIBE A CBSE YEAR, NOT A PROPRIETARY SUNBEAM METHOD. The
+ * school has not published one, and the page does not name one.
+ *
+ * ⚠ NOT CLAIMED ANYWHERE ON THIS PAGE: an examination date, a term start, a
+ * weighting, a pass mark, a number of assessments per year, or a promotion
+ * threshold. The threshold in particular: the school's policy says "below the
+ * threshold" and does not give the mark, so section 05 links to the policy
+ * rather than paraphrasing a number that does not exist.
+ *
+ * ⚠ SECTION 07'S PHOTOGRAPHS ARE OF THE PARENTS' FORUM, NOT OF A PTM, AND THE
+ * CAPTION SAYS SO. The school has published no photograph of a parent–teacher
+ * meeting. ASSET REQUIREMENT: photography of an actual PTM.
+ *
+ * ═══ COMPOSITION — eight sections, eight different builds ═══════════════════
+ *   01 · IVORY  copy left, standfirst right, the six steps as one drawn rail.
+ *   02 · SPLIT  a beige panel bleeding LEFT carries the radial cycle; a white
+ *               column right carries four small cards. One band, two grounds.
+ *   03 · PAPER  copy left, four information blocks and one CTA panel right.
+ *   04 · DARK   the support system — statement left, four rows on rules right.
+ *   05 · IVORY  an image composition left, a checked list right.
+ *   06 · PEACH  the four-step "what happens next" rail.
+ *   07 · PHOTO  the cinematic close.
+ */
+import { Picture } from 'astro:assets';
+import '../../../styles/assessment.css';
+import { MARK } from './marks';
+import AsRail from './AsRail.astro';
+import AsClose from './AsClose.astro';
+import { cycle } from '../../../data/academics';
+
+/* ── PHOTOGRAPHY — four genuine Sunbeam Ballia frames, each used ONCE. ────── */
+import pForum from '../../../assets/parents forum/parents forum (3).jpg';
+import pSpeak from '../../../assets/parents forum/parents forum (4).jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+const POLICY = '/academics/philosophy/curriculum/';
+const REMEDIAL = '/academics/assessment/remedial-support/';
+const MENTORING = '/academics/assessment/mentoring/';
+const PTM = '/academics/assessment/parent-teacher-meetings/';
+const CALENDAR = '/academics/academic-calendar/';
+const PARTNERSHIP = '/academics/parent-partnership/';
+
+/* ── THE SIX STEPS ────────────────────────────────────────────────────────
+   `cycle` is the school's own wording and is imported rather than retyped, so
+   the rail in 01 and the radial diagram in 02 cannot disagree. The mark and the
+   longer gloss are this page's; the step name and short body are the data's. */
+const MARKS = ['book', 'hands', 'clipboard', 'speech', 'chart', 'cup'] as const;
+const GLOSS = [
+  'Taught content following the school’s curriculum, published class by class as PRECEPT.',
+  'Practical, project and laboratory work alongside classroom learning.',
+  'Regular assessment through the academic year, with the CBSE boards at Class X and XII.',
+  'Results to parents, and a parent–teacher meeting on the calendar to discuss them.',
+  'Remedial support, mentoring and a retest with published rules, where a subject needs it.',
+  'Board examinations, and the national programmes the school enters beyond them.',
+] as const;
+
+const steps = cycle.map((c, i) => ({
+  n: String(i + 1).padStart(2, '0'),
+  mark: MARKS[i],
+  k: c.step,
+  v: c.body,
+  gloss: GLOSS[i],
+}));
+
+/* Where each node sits on the ring. cx 50, cy 42, rx 36, ry 34 — computed once
+   here rather than typed six times, so moving the ring moves the discs with it. */
+const RING = { cx: 50, cy: 42, rx: 36, ry: 34 };
+const ringed = steps.map((s, i) => {
+  const a = (-90 + i * 60) * (Math.PI / 180);
+  return {
+    ...s,
+    x: (RING.cx + RING.rx * Math.cos(a)).toFixed(2),
+    y: (RING.cy + RING.ry * Math.sin(a)).toFixed(2),
+  };
+});
+
+/* ── SECTION 02 — the four things an assessment looks at ─────────────────── */
+const facets = [
+  { mark: 'desk', k: 'Classroom', v: 'Learning and understanding, every day.' },
+  { mark: 'flask', k: 'Practical', v: 'Application and experimentation.' },
+  { mark: 'chart', k: 'Progress', v: 'Continuous academic development.' },
+  { mark: 'speech', k: 'Feedback', v: 'What happens next, together.' },
+] as const;
+
+/* ── SECTION 03 — what the school publishes about the structure ──────────── */
+const structure = [
+  { n: '01', mark: 'pen', k: 'Half-yearly examination', v: 'A written examination partway through the session, evaluating understanding and academic progress.' },
+  { n: '02', mark: 'doc', k: 'Annual examination', v: 'The assessment at the end of the academic session, and the one a promotion turns on.' },
+  { n: '03', mark: 'clipboard', k: 'Report card', v: 'Results reach parents on the report card, and sit in the parent portal between meetings.' },
+  { n: '04', mark: 'refresh', k: 'Retest / improvement', v: 'Additional teaching and a retest, on a timetable the school publishes in full.' },
+] as const;
+
+/* ── SECTION 04 — the four support channels, all published by name ───────── */
+const support = [
+  { n: '01', mark: 'hand', k: 'Remedial support', v: 'Additional teaching in the subject that needs it — attached to a subject, not to a student.', href: REMEDIAL },
+  { n: '02', mark: 'person', k: 'Mentoring', v: 'A member of staff who knows the child as a person rather than as a name on a class list.', href: MENTORING },
+  { n: '03', mark: 'refresh', k: 'Retest', v: 'No sooner than ten days after results, two clear days apart, and results inside two and a half weeks.', href: REMEDIAL },
+  { n: '04', mark: 'hands', k: 'Parent partnership', v: 'Meetings placed on the session calendar, and a portal carrying reports in between.', href: PTM },
+] as const;
+
+/* ── SECTION 05 — what a parent–teacher meeting is for ───────────────────── */
+const conversation = [
+  'Academic progress, and the strengths behind it',
+  'The areas that need attention next',
+  'Support strategies, planned together',
+  'Preparation for the examination that follows',
+] as const;
+
+/* ── SECTION 06 — what happens when a difficulty appears ─────────────────── */
+const next = [
+  { n: '01', mark: 'bell', k: 'Notice', v: 'A mentor who already knows the child sees the change first.' },
+  { n: '02', mark: 'speech', k: 'Understand', v: 'The subject, not the student, is identified as the thing that needs work.' },
+  { n: '03', mark: 'handHeart', k: 'Support', v: 'Additional teaching in that subject, before any retest is sat.' },
+  { n: '04', mark: 'chart', k: 'Improve', v: 'A retest on a published timetable, and the result declared with the annual one.' },
+] as const;
+---
+
+{/* ══ 01 · HOW A YEAR ACTUALLY RUNS ══════════════════════════════════════════
+    Ground: warm ivory. Copy left, standfirst right, and the six steps as one
+    refined horizontal rail — not the zig-zag timeline this page used to carry,
+    which ran to five screens and said the same six words. */}
+<section class="as-sec as-sec--ivory as-pad ai-open" aria-labelledby="ai-open-t">
+  <span class="as-warm" aria-hidden="true"></span>
+  <span class="as-grid" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="ai-open__grid">
+      <div>
+        <p class="as-kicker" data-reveal>Chapter 04</p>
+        <h2 class="as-h as-h--xl ai-open__h" id="ai-open-t">
+          <span data-clip data-clip-delay="0">How a year actually</span>
+          <span data-clip data-clip-delay="150"><em>runs</em></span>
+        </h2>
+      </div>
+
+      <p class="as-body ai-open__stand" data-reveal data-reveal-delay="180">
+        Six steps, repeating. Content is taught, practised, assessed and fed back — and where a
+        subject needs more, the support is named rather than assumed.
+      </p>
+    </div>
+
+    <div class="ai-open__rail">
+      <AsRail steps={steps} ground="ivory" label="The assessment cycle, six steps" />
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · THE LEARNING CYCLE ════════════════════════════════════════════════
+    ⚠ ONE BAND, TWO GROUNDS. The beige panel bleeds off the left edge and stops
+    at 62%; the white column carries on to the right. That is the reference's
+    composition, and it is what lets the diagram breathe without the section
+    becoming two.
+
+    ⚠ THE RING IS A REAL ELLIPSE AND THE DISCS SIT ON IT. Both come from one
+    RING constant in the frontmatter, so the geometry cannot drift. */}
+<section class="as-sec as-sec--paper ai-cycle" aria-labelledby="ai-cycle-t">
+  <div class="u-container ai-cycle__grid">
+    {/* ⚠ THE PANEL IS A GRID ITEM, NOT A SECTION CHILD. As a sibling of the grid
+        its grid-column did nothing and its right edge had to be guessed as a
+        percentage of the viewport — which put the edge inside the right column's
+        eyebrow. In column one it tracks the column at every width. */}
+    <span class="ai-cycle__panel" aria-hidden="true"></span>
+
+    <div class="ai-cycle__stage">
+      <p class="as-kicker ai-cycle__kick" data-reveal>The learning cycle</p>
+
+      <div class="ai-ring">
+        <svg class="ai-ring__path" viewBox="0 0 100 100" fill="none" preserveAspectRatio="none" aria-hidden="true">
+          <ellipse
+            cx={RING.cx}
+            cy={RING.cy}
+            rx={RING.rx}
+            ry={RING.ry}
+            stroke="currentColor"
+            stroke-width="0.34"
+            stroke-dasharray="1.1 2.2"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <div class="ai-ring__hub" aria-hidden="true">
+          <span>The<br />learning</span>
+          <em>cycle</em>
+        </div>
+
+        <ol class="ai-ring__list">
+          {ringed.map((r, i) => (
+            <li class="ai-node" style={`--x: ${r.x}%; --y: ${r.y}%;`} data-pop data-pop-delay={120 + i * 90}>
+              <span class="ai-node__disc t-tabular" aria-hidden="true">{r.n}</span>
+              <h3 class="ai-node__k">{r.k}</h3>
+              <p class="ai-node__v">{r.gloss}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+
+    <div class="ai-cycle__copy">
+      <p class="as-kicker" data-reveal>Assessment is more than an exam</p>
+      <h2 class="as-h as-h--lg" id="ai-cycle-t">
+        <span data-clip data-clip-delay="0">Assessment is</span>
+        <span data-clip data-clip-delay="150"><em>more than a paper.</em></span>
+      </h2>
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        A result is one reading of a year. The school assesses across the whole of it — understanding
+        in the room, application in the laboratory, progress across terms, and the feedback that
+        follows each.
+      </p>
+
+      <ul class="ai-facets">
+        {facets.map((f, i) => (
+          <li class="ai-facet" data-reveal data-reveal-delay={250 + i * 80}>
+            <span class="ai-facet__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[f.mark]} />
+              </svg>
+            </span>
+            <span class="ai-facet__t">
+              <span class="ai-facet__k">{f.k}</span>
+              <span class="ai-facet__v">{f.v}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · PUBLISHED WHEN IT MATTERS ═════════════════════════════════════════
+    Ground: warm ivory. Copy left, four information blocks right, and the fifth
+    tile is the one call to action — because the promotion rules are long, and
+    paraphrasing them here would be a second version of a policy that already
+    exists in one place. */}
+<section class="as-sec as-sec--ivory as-pad ai-struct" aria-labelledby="ai-struct-t">
+
+  <div class="u-container ai-struct__grid">
+    <div class="ai-struct__head">
+      <p class="as-kicker" data-reveal>Published when it matters</p>
+      <h2 class="as-h as-h--lg" id="ai-struct-t">
+        <span data-clip data-clip-delay="0">Our assessment</span>
+        <span data-clip data-clip-delay="150"><em>structure.</em></span>
+      </h2>
+      <p class="as-body ai-struct__b" data-reveal data-reveal-delay="200">
+        Four things the school states about how a year is examined. The marks a promotion turns on
+        are set out in the policy itself rather than paraphrased here.
+      </p>
+    </div>
+
+    <ol class="ai-blocks">
+      {structure.map((s, i) => (
+        <li class="ai-block" data-pop data-pop-delay={140 + i * 90}>
+          <span class="ai-block__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[s.mark]} />
+            </svg>
+          </span>
+          <p class="ai-block__n t-tabular">{s.n}</p>
+          <h3 class="ai-block__k">{s.k}</h3>
+          <p class="ai-block__v">{s.v}</p>
+        </li>
+      ))}
+
+      {/* ⚠ THE FIFTH TILE IS A LINK, NOT A FACT. The promotion rules run to more
+          than a card, and a summary of them here would be a second, thinner
+          version of a document that already exists. */}
+      <li class="ai-block ai-block--cta" data-pop data-pop-delay="500">
+        <a class="ai-cta" href={POLICY}>
+          <span class="ai-cta__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.doc} />
+            </svg>
+          </span>
+          <span class="ai-cta__k">View the detailed promotion policy and information</span>
+          <span class="ai-cta__go" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+            </svg>
+          </span>
+        </a>
+      </li>
+    </ol>
+  </div>
+</section>
+
+{/* ══ 04 · SUPPORT BEGINS WHERE A DIFFICULTY APPEARS ═════════════════════════
+    Ground: deep brown. Statement left, four rows on thin rules right. This is
+    the page's serious section and it is the only dark one before the close. */}
+<section class="as-sec as-sec--dark as-pad ai-sup" aria-labelledby="ai-sup-t">
+  <span class="ai-sup__glow" aria-hidden="true"></span>
+
+  <div class="u-container ai-sup__grid">
+    <div>
+      <p class="as-kicker as-kicker--dark" data-reveal>Support that makes a difference</p>
+      <h2 class="as-h as-h--lg ai-sup__h" id="ai-sup-t">
+        <span data-clip data-clip-delay="0">Support begins</span>
+        <span data-clip data-clip-delay="150"><em>where a difficulty appears.</em></span>
+      </h2>
+      <p class="ai-sup__b" data-reveal data-reveal-delay="200">
+        Every student learns differently. What matters is that each of the four channels below is
+        published by name and has rules attached — so a family can check what happens next rather
+        than hope that something will.
+      </p>
+    </div>
+
+    <ol class="ai-sup__list">
+      {support.map((s, i) => (
+        <li class="ai-srow" data-reveal data-reveal-delay={200 + i * 90}>
+          <a class="ai-srow__in" href={s.href}>
+            <span class="ai-srow__n t-tabular">{s.n}</span>
+            <span class="ai-srow__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[s.mark]} />
+              </svg>
+            </span>
+            <span class="ai-srow__t">
+              <span class="ai-srow__k">{s.k}</span>
+              <span class="ai-srow__v">{s.v}</span>
+            </span>
+            <span class="ai-srow__go" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+              </svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 05 · PROGRESS IS A CONVERSATION ════════════════════════════════════════
+    Ground: white. The image composition crosses LEFT, the copy right. */}
+<section class="as-sec as-sec--paper as-pad ai-conv" aria-labelledby="ai-conv-t">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+  <span class="as-dots ai-conv__dots" aria-hidden="true"></span>
+
+  <div class="u-container ai-conv__grid">
+    <figure class="ai-conv__stage">
+      <div class="ai-conv__lead as-frame as-fill" data-mask>
+        <Picture
+          src={pForum}
+          alt={`Parents of ${S} seated in the hall at a Parents’ Forum session, each desk carrying a class placard`}
+          formats={['avif', 'webp']}
+          widths={[520, 880, 1200]}
+          sizes="(max-width: 1023px) 92vw, 44vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="ai-conv__sm as-frame as-frame--float as-fill" data-pop data-pop-delay="200">
+        <Picture
+          src={pSpeak}
+          alt={`A parent of ${S} speaking into the microphone at a Parents’ Forum session`}
+          formats={['avif', 'webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 1023px) 50vw, 20vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <figcaption class="ai-conv__cap">
+        Photographs: the school’s Parents’ Forum. No photograph of a parent–teacher meeting has been
+        published.
+      </figcaption>
+    </figure>
+
+    <div class="ai-conv__copy">
+      <p class="as-kicker" data-reveal>Parent–teacher connection</p>
+      <h2 class="as-h as-h--lg" id="ai-conv-t">
+        <span data-clip data-clip-delay="0">Progress is</span>
+        <span data-clip data-clip-delay="150"><em>a conversation.</em></span>
+      </h2>
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        Parent–teacher meetings are placed on the <strong>academic calendar for the session</strong>,
+        alongside the examination dates, the terms and the holidays — so a parent knows the date
+        months in advance and can read it against the paper it follows.
+      </p>
+
+      <ul class="as-checks">
+        {conversation.map((c, i) => (
+          <li class="as-check" data-reveal data-reveal-delay={250 + i * 70}>
+            <span class="as-check__i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9.4" stroke="currentColor" stroke-width="1.4" />
+                <path d="m8 12.2 2.8 2.8 5.4-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            {c}
+          </li>
+        ))}
+      </ul>
+      <p class="as-note" data-reveal data-reveal-delay="540">
+        Meeting dates sit on the {' '}<a class="as-link" href={CALENDAR}>academic calendar</a>; the
+        wider parent channels are on {' '}<a class="as-link" href={PARTNERSHIP}>Parent Partnership</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 06 · WHAT HAPPENS NEXT ═════════════════════════════════════════════════ */}
+<section class="as-sec as-sec--peach as-pad--sm ai-next" aria-labelledby="ai-next-t">
+  <div class="u-container ai-next__inner">
+    <p class="as-kicker ai-next__kick" data-reveal>What happens next?</p>
+    <h2 class="as-h as-h--md ai-next__h" id="ai-next-t">
+      <span data-clip data-clip-delay="0">Noticed, understood,</span>
+      <span data-clip data-clip-delay="150">and <em>acted on.</em></span>
+    </h2>
+
+    <AsRail steps={next} ground="peach" label="What happens next, four steps" class="ai-next__rail" />
+  </div>
+</section>
+
+<AsClose
+  id="ai-close-t"
+  kicker="Assessment with purpose"
+  lead="Assessment tells us"
+  accent="where to go next."
+  body="Learning continues through feedback, support and the opportunity to improve. The school publishes the cycle, the support channels and the retest calendar. It does not publish examination dates, weightings or the promotion threshold — and none is estimated here."
+  photo={pCohort}
+/>
+
+<style>
+  /* ═══ 01 · HOW A YEAR ACTUALLY RUNS ═══════════════════════════════════════ */
+  .ai-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(24px, 3.2vw, 52px);
+    align-items: end;
+  }
+  .ai-open__h { max-width: 14ch; }
+  .ai-open__stand { max-width: 46ch; margin-block: 0 clamp(4px, 0.6vw, 8px); }
+  .ai-open__rail { margin-top: clamp(28px, 3.4vw, 48px); }
+
+  /* ═══ 02 · THE LEARNING CYCLE ═════════════════════════════════════════════ */
+  .ai-cycle {
+    --pad: clamp(34px, 4vw, 62px);
+    --gap: clamp(24px, 3.4vw, 54px);
+    padding-block: var(--pad);
+  }
+  /* ⚠ THE BEIGE BLEEDS LEFT, AND ITS RIGHT EDGE IS THE COLUMN'S. Setting the
+     width as a percentage of the SECTION put the edge inside the right column's
+     eyebrow, because the section is the viewport and the columns are the
+     container. It is a grid item in column one instead, so the edge tracks the
+     column at every width, and only its ::before bleeds — clipped by the
+     section's own overflow: hidden. */
+  .ai-cycle__panel {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: stretch;
+    position: relative;
+    z-index: -1;
+    margin-block: calc(var(--pad) * -1);
+  }
+  .ai-cycle__panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: calc(var(--gap) / -2);
+    left: -100vw;
+    background: #f5ede4;
+  }
+  .ai-cycle__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: var(--gap);
+    align-items: center;
+  }
+  .ai-cycle__stage { grid-column: 1; grid-row: 1; }
+  .ai-cycle__copy { grid-column: 2; grid-row: 1; }
+  .ai-cycle__kick { margin-bottom: clamp(4px, 0.8vw, 10px); }
+
+  .ai-ring {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 0.86;
+    margin-top: clamp(6px, 1vw, 14px);
+    color: rgba(201, 60, 10, 0.34);
+  }
+  .ai-ring__path { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .ai-ring__hub {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    translate: -50% -50%;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    width: 23%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--sb-border);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+    text-align: center;
+  }
+  .ai-ring__hub span {
+    font-size: clamp(8px, 0.72vw, 10.5px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    color: var(--sb-charcoal);
+  }
+  .ai-ring__hub em {
+    font-size: clamp(8px, 0.72vw, 10.5px);
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .ai-ring__list { margin: 0; padding: 0; list-style: none; }
+  /* ⚠ EACH NODE IS ANCHORED ON THE ELLIPSE by the --x/--y pair computed in the
+     frontmatter from the same RING constant the <ellipse> uses. Text hangs below
+     the disc; the block is 27% wide, which is what keeps the six from touching. */
+  .ai-node {
+    position: absolute;
+    top: var(--y);
+    left: var(--x);
+    translate: -50% 0;
+    display: grid;
+    justify-items: center;
+    width: 27%;
+    text-align: center;
+    transition: translate var(--sb-dur-image) var(--sb-ease);
+  }
+  .ai-node::before {
+    /* lifts the disc so its CENTRE, not its top, sits on the ellipse */
+    content: '';
+    display: block;
+    height: calc(clamp(26px, 2.6vw, 36px) / -2);
+  }
+  .ai-node__disc {
+    display: grid;
+    place-items: center;
+    width: clamp(26px, 2.6vw, 36px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sb-violet);
+    font-size: clamp(9.5px, 0.72vw, 11.5px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #fff;
+    transition: background-color var(--sb-dur-image) var(--sb-ease), scale var(--sb-dur-image) var(--sb-ease);
+  }
+  .ai-node__k {
+    margin: clamp(6px, 0.8vw, 10px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(11.5px, 0.95vw, 15px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .ai-node__v {
+    margin: clamp(3px, 0.4vw, 5px) 0 0;
+    font-size: clamp(8.5px, 0.63vw, 10px);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
+    transition: color var(--sb-dur-image) var(--sb-ease);
+  }
+  /* The hover the brief asks for: the step lifts, the accent appears, the
+     description comes forward. Nothing moves horizontally. */
+  .ai-node:hover { translate: -50% -3px; }
+  .ai-node:hover .ai-node__disc { background: var(--sb-orange-bright); scale: 1.08; }
+  .ai-node:hover .ai-node__v { color: var(--sb-text-secondary); }
+
+  .ai-facets {
+    display: grid;
+    gap: clamp(8px, 1vw, 12px);
+    margin: clamp(18px, 2.2vw, 26px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* Small cards, and the only ones on the page — the reference asks for a stack
+     of four here specifically. */
+  .ai-facet {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(10px, 1.2vw, 14px);
+    align-items: center;
+    padding: clamp(10px, 1.2vw, 14px) clamp(12px, 1.4vw, 17px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 4px 16px -10px rgba(28, 14, 8, 0.14);
+    transition: transform var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .ai-facet:hover { transform: translateY(-2px); box-shadow: var(--sb-shadow-card); }
+  .ai-facet__m { display: block; width: clamp(20px, 1.9vw, 26px); color: var(--sb-violet); }
+  .ai-facet__m svg { display: block; width: 100%; height: auto; }
+  .ai-facet__t { display: grid; gap: 2px; }
+  .ai-facet__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(12px, 0.95vw, 14.5px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .ai-facet__v { font-size: clamp(10px, 0.74vw, 11.8px); line-height: 1.55; color: var(--sb-text-muted); }
+
+  /* ═══ 03 · PUBLISHED WHEN IT MATTERS ══════════════════════════════════════ */
+  .ai-struct__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+    gap: clamp(24px, 3.2vw, 50px);
+    align-items: center;
+  }
+  .ai-struct__b { max-width: 34ch; }
+
+  .ai-blocks {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(10px, 1.2vw, 16px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ai-block {
+    display: grid;
+    align-content: start;
+    padding: clamp(14px, 1.6vw, 20px) clamp(12px, 1.4vw, 17px) clamp(15px, 1.8vw, 22px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 4px 16px -10px rgba(28, 14, 8, 0.14);
+    transition: transform var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .ai-block:hover { transform: translateY(-3px); box-shadow: var(--sb-shadow-card); }
+  .ai-block__m { display: block; width: clamp(19px, 1.8vw, 25px); color: var(--sb-violet); }
+  .ai-block__m svg { display: block; width: 100%; height: auto; }
+  .ai-block__n {
+    margin: clamp(9px, 1.1vw, 13px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(11px, 0.86vw, 13.5px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .ai-block__k {
+    margin: clamp(3px, 0.4vw, 5px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 1vw, 16px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--sb-charcoal);
+  }
+  .ai-block__v {
+    margin: clamp(5px, 0.65vw, 9px) 0 0;
+    font-size: clamp(9.5px, 0.72vw, 11.4px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  .ai-block--cta { padding: 0; border-color: transparent; background: var(--sb-violet); box-shadow: none; }
+  .ai-cta {
+    display: grid;
+    align-content: start;
+    height: 100%;
+    padding: clamp(14px, 1.6vw, 20px) clamp(12px, 1.4vw, 17px) clamp(15px, 1.8vw, 22px);
+    color: #fff;
+  }
+  .ai-cta__m { display: block; width: clamp(19px, 1.8vw, 25px); }
+  .ai-cta__m svg { display: block; width: 100%; height: auto; }
+  .ai-cta__k {
+    margin-top: clamp(9px, 1.1vw, 13px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(12px, 0.96vw, 15px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -0.025em;
+  }
+  .ai-cta__go {
+    display: grid;
+    place-items: center;
+    width: clamp(26px, 2.4vw, 32px);
+    aspect-ratio: 1 / 1;
+    margin-top: clamp(12px, 1.5vw, 18px);
+    border: 1.4px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transition: translate var(--sb-dur-image) var(--sb-ease), background-color var(--sb-dur-image) var(--sb-ease);
+  }
+  .ai-cta__go svg { width: 58%; height: auto; }
+  .ai-block--cta:hover .ai-cta__go { translate: 4px 0; background: rgba(255, 255, 255, 0.16); }
+
+  /* ═══ 04 · SUPPORT ════════════════════════════════════════════════════════ */
+  .ai-sup__glow {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: radial-gradient(58% 70% at 8% 0%, rgba(255, 92, 53, 0.13) 0%, transparent 70%);
+  }
+  .ai-sup__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(24px, 3.4vw, 56px);
+    align-items: center;
+  }
+  .ai-sup__h { color: #fff; }
+  .ai-sup__h em { color: var(--sb-lime); }
+  .ai-sup__b {
+    max-width: 44ch;
+    margin: clamp(14px, 1.7vw, 20px) 0 0;
+    font-size: clamp(12px, 0.88vw, 14px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-78);
+  }
+
+  .ai-sup__list { margin: 0; padding: 0; list-style: none; }
+  .ai-srow { border-bottom: 1px solid var(--sb-on-dark-rule); }
+  .ai-srow:first-child { border-top: 1px solid var(--sb-on-dark-rule); }
+  .ai-srow__in {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    gap: clamp(10px, 1.3vw, 17px);
+    align-items: center;
+    padding: clamp(11px, 1.3vw, 17px) 0;
+    transition: padding-inline-start var(--sb-dur-image) var(--sb-ease);
+  }
+  .ai-srow__in:hover { padding-inline-start: clamp(6px, 0.8vw, 12px); }
+  .ai-srow__n {
+    font-size: clamp(9px, 0.68vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-lime);
+  }
+  .ai-srow__m { display: block; width: clamp(20px, 1.9vw, 26px); color: var(--sb-lime); }
+  .ai-srow__m svg { display: block; width: 100%; height: auto; }
+  .ai-srow__t { display: grid; gap: 3px; }
+  .ai-srow__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.05vw, 17px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: #fff;
+  }
+  .ai-srow__v { font-size: clamp(10px, 0.76vw, 12px); line-height: 1.6; color: var(--sb-on-dark-66); }
+  .ai-srow__go { display: block; width: clamp(16px, 1.5vw, 20px); color: var(--sb-lime); opacity: 0.7; }
+  .ai-srow__go svg { display: block; width: 100%; height: auto; }
+
+  /* ═══ 05 · PROGRESS IS A CONVERSATION ═════════════════════════════════════ */
+  .ai-conv__dots { top: 10%; left: 1%; }
+  .ai-conv__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .ai-conv__stage { position: relative; margin: 0; padding-bottom: clamp(46px, 5vw, 68px); }
+  .ai-conv__lead { width: 82%; aspect-ratio: 16 / 11; }
+  .ai-conv__sm {
+    position: absolute;
+    right: 0;
+    bottom: clamp(28px, 3vw, 42px);
+    width: 44%;
+    aspect-ratio: 4 / 3;
+    border: 5px solid var(--sb-paper);
+  }
+  .ai-conv__cap {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    max-width: 48ch;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 06 · WHAT HAPPENS NEXT ══════════════════════════════════════════════ */
+  .ai-next__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+  .ai-next__kick { text-align: center; }
+  .ai-next__h { max-width: 20ch; }
+  .ai-next__rail { margin-top: clamp(24px, 3vw, 40px); }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .ai-struct__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 2.8vw, 30px); }
+    .ai-struct__b { max-width: 62ch; }
+    .ai-blocks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 1023px) {
+    .ai-open__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(14px, 2vw, 20px); align-items: start; }
+    /* ⚠ THE RING BECOMES A COLUMN. Six labelled discs on an ellipse inside a
+       340px column is unreadable; the panel goes, the ring flattens to a plain
+       list and the two halves of the band stack. */
+    .ai-cycle__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(26px, 3.6vw, 40px); }
+    .ai-cycle__panel { grid-row: 1; margin-block: calc(var(--pad) * -1) 0; }
+    .ai-cycle__panel::before { right: -100vw; bottom: calc(var(--gap) / -2); }
+    .ai-cycle__stage { grid-column: 1; grid-row: 1; }
+    .ai-cycle__copy { grid-column: 1; grid-row: 2; }
+    .ai-sup__grid,
+    .ai-conv__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(26px, 3.6vw, 40px); }
+    .ai-conv__stage { order: -1; }
+    .ai-sup__b { max-width: 62ch; }
+  }
+
+  @media (max-width: 767px) {
+    .ai-cycle { padding-block: clamp(30px, 6.6vw, 42px); }
+    .ai-cycle__panel { display: none; }
+    .ai-ring { aspect-ratio: auto; height: auto; }
+    .ai-ring__path,
+    .ai-ring__hub { display: none; }
+    .ai-ring__list {
+      display: grid;
+      gap: clamp(16px, 4.4vw, 22px);
+      padding-top: clamp(12px, 3.4vw, 16px);
+    }
+    .ai-node {
+      position: static;
+      translate: none;
+      grid-template-columns: auto minmax(0, 1fr);
+      justify-items: start;
+      width: 100%;
+      column-gap: clamp(11px, 3.4vw, 15px);
+      text-align: left;
+    }
+    .ai-node::before { display: none; }
+    .ai-node__disc { grid-row: 1 / 3; }
+    .ai-node__k,
+    .ai-node__v { margin-top: 0; }
+    .ai-node:hover { translate: none; }
+
+    .ai-blocks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ai-block--cta { grid-column: 1 / -1; }
+
+    .ai-srow__in { grid-template-columns: auto minmax(0, 1fr); row-gap: 4px; }
+    .ai-srow__m,
+    .ai-srow__go { display: none; }
+
+    .ai-conv__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .ai-conv__sm { width: 46%; bottom: clamp(30px, 8vw, 44px); }
+    .ai-conv__stage { padding-bottom: clamp(58px, 15vw, 78px); }
+  }
+</style>

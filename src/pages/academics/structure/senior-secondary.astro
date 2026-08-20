@@ -2,48 +2,24 @@
 /**
  * ACADEMIC STRUCTURE · SENIOR SECONDARY — Classes XI and XII.
  *
- * ⚠ REBUILT ON EVIDENCE. The stage is carried by two published, specific things
- * a Sunbeam senior actually did — a named practical and an international project
- * — rather than by a description of choosing a stream.
+ * ⚠ THE BODY IS A BESPOKE COMPOSITION, NOT THE Ac* SYSTEM. Sourcing, the
+ * photograph roster and the one section that deliberately uses cards are
+ * documented in the component's header.
  *
- * SOURCE — verified in this repository:
- *   Class XII-B Physics, 2025 — "Students determined the internal resistance of
- *     a galvanometer and calculated its figure of merit — the practical, done
- *     properly." (the half-deflection method)
- *   Monash — "Students travelled to Delhi for an international innovation
- *     project on entrepreneurship, run with Monash University, Australia," at
- *     K.R. Mangalam World School, G.K-II, New Delhi.
- *   Guiding Futures, Shaping Lives — Classes IX–XII.
- *   Four streams: PCM, PCB, Commerce, Humanities (school.streams).
- *   Milestone: the CBSE Class XII board examination.
- *
- * ⚠ ONLY THE STREAM NAMES ARE CLAIMED. data/academics.ts warns that elective
- * lists and the Humanities core are NOT verified; Subject Combinations is the
- * page that carries that, with its confidence labels. This page names the four
- * and stops.
- *
- * Composition: path (ivory, the four streams) → split (sand, photo LEFT — the
- * Monash project) → close.
+ * ⚠ THE BANNER, NAVBAR AND FOOTER ARE UNTOUCHED.
+ * ⚠ THE PANEL'S padding-block IS AN INLINE STYLE — a scoped rule can skew
+ * against its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcPath from '../../../components/academics/system/AcPath.astro';
-import AcSplit from '../../../components/academics/system/AcSplit.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
-import { school as sb } from '../../../data/site';
+import SeniorSecondaryPage from '../../../components/academics/structure/SeniorSecondaryPage.astro';
 
-import banner from '../../../assets/school-event/Monash-Innovation/Monash-Innovation-01.jpg';
-import pMonash from '../../../assets/school-event/Monash-Innovation/Monash-Innovation-01.jpg';
-import pChem from '../../../assets/chem lab/DSC_1262 copy.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
-const streams = [...sb.streams];
+import banner from '../../../assets/photos/sb-phy-lab.jpg';
 ---
 
 <BaseLayout
   title="Senior Secondary — Sunbeam School Ballia"
-  description="Senior Secondary at Sunbeam School Ballia, Classes XI and XII: four streams to board level, a Class XII physics practical done properly, and an international innovation project run with Monash University."
+  description="Senior Secondary at Sunbeam School Ballia, Classes XI and XII: four streams taught to board level, a Class XII physics practical done properly, and an international innovation project run with Monash University, Australia."
 >
   <PageHero
     title="Senior Secondary"
@@ -54,48 +30,11 @@ const streams = [...sb.streams];
       { label: 'Academic Structure', href: '/academics/structure/' },
     ]}
     src={banner}
-    alt="A student of Sunbeam School Ballia beside the Monash University Innovation Guarantee banner at an outreach session."
-    position="50% 34%"
+    alt="Students of Sunbeam School Ballia working at benches in the physics laboratory, with portraits of Nikola Tesla and Michael Faraday on the wall."
+    position="50% 48%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcPath
-      ground="ivory"
-      kicker="Classes XI – XII"
-      heading="Four routes,<br /><em>chosen once</em>"
-      body={[
-        'The stage opens on the only irreversible choice the school asks a student to make. Four streams, each taught to CBSE board level. What each contains — and how far each of those lists can be relied on — is set out on Subject Combinations.',
-      ]}
-      beats={streams.map((s) => ({ k: s }))}
-    />
-
-    <AcSplit
-      ground="sand"
-      side="left"
-      aspect="4 / 5"
-      kicker="What a senior year actually did"
-      heading="Delhi, Monash,<br /><em>and a galvanometer</em>"
-      body={[
-        'Sunbeam students travelled to Delhi for an <strong>international innovation project on entrepreneurship</strong>, run with <strong>Monash University, Australia</strong> at K.R. Mangalam World School, G.K-II.',
-        'Closer to home and just as specific: in 2025 <strong>Class XII-B</strong> determined the internal resistance of a galvanometer and calculated its figure of merit by the half-deflection method. The school’s own note on it is four words — <em>“the practical, done properly.”</em>',
-      ]}
-      photo={pMonash}
-      alt={`A student of ${school} beside the Monash University Innovation Guarantee banner at an outreach session`}
-      inset={pChem}
-      insetAlt={`A subject laboratory at ${school}, reagent shelves above the benches`}
-    />
-
-    <AcClose
-      owed={true}
-      statement="The practical,<br /><em>done properly.</em>"
-      body="The four stream names, the projects and the practicals are published. Subject combinations and elective lists are handled on their own page, where what is verified and what is not is stated."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <SeniorSecondaryPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

@@ -2,57 +2,29 @@
 /**
  * TEACHING & LEARNING · READING, LANGUAGE & LIBRARY — audit §2C.
  *
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height, same title
+ * and standfirst as before and as every other Academics page.
+ *
  * ⚠ COMBINED PAGE — three of the brief's fourteen bullets: Reading Programme,
- * Language Development and Library Programme. The three standalone routes were
- * an implementation experiment; their verified content is merged here and the
- * routes are retired. In the school's own description these are one effort seen
- * from three sides, which is why they read better as one page than three.
+ * Language Development and Library Programme. In the school's own description
+ * these are one effort seen from three sides.
  *
- * ═══ SOURCE — verified in this repository ══════════════════════════════════
- *   Nalanda Library — 17,574 books and 25 periodicals (data/academics.ts, five
- *     separate places). ⚠ USE THE EXACT FIGURE. teachingTopics.ts rounds it to
- *     "around fifteen thousand", which is true but weaker than the number the
- *     school actually counted.
- *   Language laboratory — one of the twelve; "spoken language, recorded and
- *     reviewed", which is the part a textbook cannot do.
- *   Ardent Reader Award — the school's award for its most committed readers,
- *     published in seventy-five photographs. ⚠ The school did NOT publish the
- *     winners' names, so none is given here.
- *   Reading Carnival — a book fair run in the school's own corridors, its racks
- *     signed by section. Read off the school's photographs: a "Reading Club"
- *     header board, and racks headed STUDY SKILLS, STORYBOOK and NEW RELEASE.
- *   Cohort Inter-Branch Attire Speak Competition — a speaking competition across
- *     Sunbeam branches, entered by Class I.
- *   Virtual Interbranch Declamation — Class IV took the top three positions
- *     across the Sunbeam group.
- *
- * ⚠ THE READING CLUB IS NAMED FROM THE SCHOOL'S OWN SIGNAGE and nothing beyond
- * the name and the rack headings is claimed — no membership, no meeting times.
+ * The page was rebuilt off the generic AcSplit → AcCollage → AcStatement →
+ * AcPath → AcClose system into a composed one: five sections, five different
+ * builds. Everything below the banner lives in
+ * components/academics/teaching/ReadingLanguagePage.astro, and that file's
+ * frontmatter carries the source for every claim — including the two places
+ * this page departs from the design brief, and why.
  *
  * ⚠ SCOPE BOUNDARY — the library as a ROOM is inventoried on Laboratories &
  * Academic Clubs; here it is the collection and what is done with it.
- *
- * Composition: split (paper, photo LEFT — the room in use) → collage (ivory,
- * RIGHT — the carnival and the club) → statement (sand — the language lab) →
- * path (paper — speaking, the output side) → close.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcSplit from '../../../components/academics/system/AcSplit.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcStatement from '../../../components/academics/system/AcStatement.astro';
-import AcPath from '../../../components/academics/system/AcPath.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import ReadingLanguagePage from '../../../components/academics/teaching/ReadingLanguagePage.astro';
 
 import banner from '../../../assets/photos/sb-library.jpg';
-import pReading from '../../../assets/photos/sb-library.jpg';
-import pShelves from '../../../assets/library/DSC_1224 copy.jpg';
-import pCarnival from '../../../assets/school-event/Reading-Carnival/Reading-Carnival-02.jpg';
-import pStacks from '../../../assets/library/DSC_1230 copy.jpg';
-import pAward from '../../../assets/school-activities/ardent-reader-award/03.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
@@ -72,87 +44,16 @@ const school = 'Sunbeam School Ballia';
     position="50% 46%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcSplit
-      ground="paper"
-      side="left"
-      ratio="wide"
-      aspect="3 / 2"
-      kicker="The Nalanda Library"
-      heading="Counted,<br /><em>not estimated</em>"
-      body={[
-        'The school does not say “over fifteen thousand books”. It says <strong>17,574</strong>, alongside <strong>25 periodicals</strong> — a figure with a units digit on it, which means somebody counted rather than rounded.',
-        'The periodicals are the quieter half and the more useful one. A library of books alone is a place you go for something you were already sent to find; a shelf of periodicals is how a reader meets a subject nobody assigned them.',
-        'And the photograph is the argument. The room is not empty in it: long tables, a full class reading, and a member of staff at the head of the row.',
-      ]}
-      photo={pReading}
-      alt={`Students of ${school} reading at the long tables of the Nalanda Library, a member of staff at the head of the row`}
-      inset={pShelves}
-      insetAlt={`The Nalanda Library at ${school}, its shelves signed by subject`}
-    />
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer.
 
-    <AcCollage
-      ground="ivory"
-      side="right"
-      kicker="What is run around the collection"
-      heading="A carnival,<br /><em>and a club with racks</em>"
-      body={[
-        'The school runs a <strong>Reading Carnival</strong> — a book fair set up along its own corridors rather than in a hall, so classes file past it on the way to lessons. Its racks are signed by section, and the signage names something the site had not recorded: a <strong>Reading Club</strong>, with racks headed <em>Study Skills</em>, <em>Storybook</em> and <em>New Release</em>.',
-        'Alongside it the school gives an <strong>Ardent Reader Award</strong> to its most committed readers, published in seventy-five photographs — though not, notably, with the winners’ names, so none is given here.',
-      ]}
-      ledger={[
-        { k: 'Nalanda Library', v: '<strong>17,574 books · 25 periodicals.</strong>' },
-        { k: 'Reading Club', v: 'Racks signed Study Skills, Storybook and New Release — read off the school’s own carnival signage.' },
-        { k: 'Reading Carnival', v: 'A book fair run along the school’s corridors, classes filing past it.' },
-        { k: 'Ardent Reader Award', v: 'For the school’s most committed readers — seventy-five photographs published, no names.' },
-        { k: 'Language laboratory', v: 'One of the twelve — spoken language, recorded and reviewed.' },
-      ]}
-      lead={{ src: pCarnival, alt: `A corridor at ${school} during the Reading Carnival, its book racks signed by section` }}
-      support={[
-        { src: pStacks, alt: `The Nalanda Library at ${school}, its reading tables set out beneath the shelves` },
-        { src: pAward, alt: `A student of ${school} in a prefect’s sash with a member of staff, from the school’s Ardent Reader Award photographs` },
-      ]}
-    />
-
-    <AcStatement
-      ground="sand"
-      ghost="Aloud"
-      ghostAt="left"
-      texture={true}
-      kicker="The half a book cannot do"
-      statement="Recorded,<br /><em>then reviewed.</em>"
-      body={[
-        'Reading is the input. The school’s <strong>language laboratory</strong> — one of its twelve laboratories — exists for the output, and its description is precise about what makes it different: <em>spoken language, practised aloud and recorded, which is the part a textbook cannot do.</em>',
-        'The recording is the whole point. A student who has only ever been corrected in the moment has never heard themselves; a student who has been recorded has, and that is a different kind of learning from reading a page about pronunciation.',
-      ]}
-    />
-
-    <AcPath
-      ground="paper"
-      kicker="And where the speaking ends up"
-      heading="On a platform,<br /><em>from Class I</em>"
-      body={[
-        'The test of a language programme is not the room — it is whether children are put in front of an audience, and how early. Sunbeam’s published record answers both, and the first answer is Class I.',
-      ]}
-      beats={[
-        { k: 'Class I', body: 'Entered the Cohort Inter-Branch Attire Speak Competition — a speaking contest across Sunbeam branches, for six-year-olds.' },
-        { k: 'Class IV', body: 'Took the top three positions across the whole Sunbeam group at the Virtual Interbranch Declamation.' },
-        { k: 'The language lab', body: 'Spoken language recorded and played back, at every stage in between.' },
-        { k: 'Model United Nations', body: 'One of the four inquiry rooms — debate, position papers and committee.' },
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Seventeen thousand,<br /><em>five hundred and seventy-four.</em>"
-      body="The school publishes its collection to the book, its reading events and its language laboratory. It does not publish borrowing rights, opening hours, the Reading Club's membership, or the names of its Ardent Reader winners."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+      ⚠ AND THE PADDING RESET IS AN INLINE STYLE, DELIBERATELY. `.u-page-panel`
+      in base.css carries `padding-bottom: var(--sb-section-y)` — 120px of empty
+      cream between the closing section and the footer. A stylesheet form of the
+      override can be served from a different build than the HTML that needs it,
+      and then it silently stops applying; an inline style travels IN the HTML,
+      so the two cannot skew. Same decision as the other redesigned pages. */}
+  <div class="u-page-panel" style="padding-block: 0;">
+    <ReadingLanguagePage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

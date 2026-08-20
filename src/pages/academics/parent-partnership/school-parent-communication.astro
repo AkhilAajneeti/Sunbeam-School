@@ -1,55 +1,25 @@
 ---
 /**
- * PARENT PARTNERSHIP · SCHOOL–PARENT COMMUNICATION — audit §2F.
+ * PARENT PARTNERSHIP · SCHOOL–PARENT COMMUNICATION.
  *
- * ⚠ REBUILT. The previous version passed the parent section's own <Comms />
- * component into TopicPage — the same component the overview composes. This page
- * now carries the thing the overview only gestures at: the actual routes, with
- * the actual numbers on them.
+ * Every number, address and link on the body comes out of data/site.ts — not one
+ * is typed into the component. What the school does NOT publish, and is
+ * therefore not claimed anywhere on the page, is listed in the component header.
  *
- * ═══ SOURCE — data/site.ts, every value published by the school ════════════
- *   Admissions   +91 77550 05908
- *   School office +91 77550 05905
- *   Transport    +91 77550 05909 — in-charge Mr. Sheo Sarjan Singh
- *   Office email sunbeamballia2131962@gmail.com
- *   Parent portal / results  https://sbb.nascorptechnologies.com/
- *   Apply online, Download TC — the school's own hosted forms
- *   Facebook · Instagram · LinkedIn
- *
- * ⚠ THREE NUMBERS IS THE STORY. Most schools of this size publish one. Sunbeam
- * separates admissions, the office and transport, and names the person who holds
- * the transport line — which means a parent asking about a bus does not queue
- * behind an admissions enquiry. That is a real, checkable operational fact and
- * it is the spine of this page.
- *
- * ⚠ THE RECRUITMENT INBOX IS NOT LISTED HERE. appointmentsunbeamballia@gmail.com
- * is for applicants, not parents; putting it on a parent page would send CVs and
- * absence notes to the same address.
- *
- * ⚠ NOT CLAIMED: an app, an SMS gateway, a WhatsApp broadcast, response times,
- * or office hours. None is published.
- *
- * Composition: path (ivory, one number per purpose) → split (sand, photo LEFT —
- * the portal and the written channels) → close.
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcPath from '../../../components/academics/system/AcPath.astro';
-import AcSplit from '../../../components/academics/system/AcSplit.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
-import { school as sb } from '../../../data/site';
+import SchoolParentCommunicationPage from '../../../components/academics/partnership/SchoolParentCommunicationPage.astro';
 
 import banner from '../../../assets/corridor and stairs/DSC_1223 copy.jpg';
-import pRows from '../../../assets/parents forum/parents forum (2).jpg';
-import pLib from '../../../assets/photos/sb-library.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
   title="School–Parent Communication — Sunbeam School Ballia"
-  description="How Sunbeam School Ballia reaches parents: separate lines for admissions, the school office and transport, a named transport in-charge, and a parent portal carrying term reports and results."
+  description="How Sunbeam School Ballia reaches parents: separate published lines for admissions, the school office and transport, a named transport in-charge, an office email, and a parent portal carrying term reports and results."
 >
   <PageHero
     title="School–Parent Communication"
@@ -60,54 +30,11 @@ const school = 'Sunbeam School Ballia';
       { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
     ]}
     src={banner}
-    alt="A corridor at Sunbeam School Ballia, its classroom doors and stairwell running the length of the block."
+    alt="A corridor at Sunbeam School Ballia, its noticeboards ranged along the wall."
     position="50% 50%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcPath
-      ground="ivory"
-      kicker="One line per purpose"
-      heading="Whoever you need,<br /><em>on their own number</em>"
-      body={[
-        'A single switchboard is the commonest reason a small question goes unanswered: the person who can answer it is not the person who picks up. Sunbeam publishes <strong>three separate lines</strong>, and names the person holding one of them.',
-      ]}
-      beats={[
-        { k: 'Admissions', body: `${sb.phone.admissionsDisplay} — applications, dates and the fee schedule for a class.` },
-        { k: 'School office', body: `${sb.phone.officeDisplay} — the day-to-day line: absence, documents, everything else.` },
-        { k: 'Transport', body: `${sb.phone.transportDisplay} — routes and stops, held by ${sb.phone.transportIncharge}.` },
-        { k: 'Email', body: `${sb.email} — the office address, for anything that needs to be in writing.` },
-      ]}
-    />
-
-    <AcSplit
-      ground="sand"
-      side="left"
-      aspect="3 / 2"
-      kicker="And the written record"
-      heading="The report is<br /><em>already there</em>"
-      body={[
-        'Term reports and results are not sent home to be lost. They sit in the school’s <strong>parent portal</strong>, reachable with your own login at any hour, which is also where the record of the year accumulates rather than being reassembled from letters.',
-        'The school runs its <strong>online application</strong> and its <strong>transfer-certificate download</strong> on the same principle — a form a family can complete without coming in for it. Notices are issued to the school’s notice board, and it publishes on <strong>Facebook, Instagram and LinkedIn</strong>.',
-        'What the school does <em>not</em> publish is a mobile app, a broadcast list, an office-hours window or a stated response time. None of those is described here.',
-      ]}
-      photo={pRows}
-      alt={`Parents of ${school} seated in the tiered rows of the hall during a Parents’ Forum session`}
-      inset={pLib}
-      insetAlt={`Students of ${school} reading at the long tables of the library`}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Three lines,<br /><em>and one login.</em>"
-      body="Every number, address and link on this page is published by the school. Office hours, response times and whether messages also travel by app or SMS are not — the office line below is the reliable route."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <SchoolParentCommunicationPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

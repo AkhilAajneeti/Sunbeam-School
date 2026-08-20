@@ -1,44 +1,21 @@
 ---
 /**
- * ASSESSMENT & SUPPORT · PARENT–TEACHER MEETINGS — audit 2.D4.
+ * ASSESSMENT & SUPPORT · PARENT–TEACHER MEETINGS.
  *
- * ⚠ THE PHOTOGRAPH IS NOT OF A PTM, AND THE PAGE SAYS SO. The school has
- * published no photograph of a parent–teacher meeting. It has published several
- * of its Parents' Forum, which is a different thing — a panel session, not a
- * one-to-one. Rather than caption a forum as a PTM, this page shows the forum,
- * names it as the forum, and states the gap. ASSET REQUIREMENT: photography of
- * an actual parent–teacher meeting.
+ * ⚠ THE BODY IS A BESPOKE COMPOSITION. Sourcing — including the twelve-item
+ * agenda read off the school's own projected slide — and the reason every
+ * photograph on the page is captioned as the Parents' Forum rather than as a PTM
+ * are in the component's header.
  *
- * ═══ SOURCE — verified in this repository ══════════════════════════════════
- *   PTMs are placed on the academic calendar for the session, with examination
- *     dates, terms and holidays (data/academics.ts assessmentTopics).
- *   The parent portal carries term reports and results between meetings
- *     (school.external.results).
- *   The Parents' Forum — read off the school's own published photograph, the
- *     projected agenda reads "Agenda for Parents Forum: Session 2025-26,
- *     Class IX to XII" and lists twelve items, of which four are academic
- *     quality: quality of classroom teaching, pace of teaching, quality of
- *     assignment, and correction of notebooks.
- *
- * ⚠ NOT CLAIMED: how many PTMs a year, their length, whether they are by
- * appointment, or whether every subject teacher attends. None is published.
- *
- * Composition: statement (ivory, ghost) → collage (sand, LEFT, the forum and the
- * calendar on hairlines) → close.
+ * ⚠ THE BANNER, NAVBAR AND FOOTER ARE UNTOUCHED.
+ * ⚠ THE PANEL'S padding-block IS AN INLINE STYLE — a scoped rule can skew
+ * against its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcStatement from '../../../components/academics/system/AcStatement.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import ParentTeacherPage from '../../../components/academics/assessment/ParentTeacherPage.astro';
 
 import banner from '../../../assets/parents forum/parents forum (2).jpg';
-import pPanel from '../../../assets/parents forum/parents forum (5).jpg';
-import pSeated from '../../../assets/parents forum/parents forum (2).jpg';
-import pLib from '../../../assets/photos/sb-library.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
@@ -46,7 +23,7 @@ const school = 'Sunbeam School Ballia';
   description="Parent–teacher meetings at Sunbeam School Ballia are placed on the session's academic calendar in advance, with the parent portal carrying term reports and results in between."
 >
   <PageHero
-    title="Parent–Teacher Meetings"
+    title="Parent-Teacher Meetings"
     standfirst="On the calendar before the session starts — so the date arrives before the problem does."
     crumbs={[
       { label: 'Home', href: '/' },
@@ -58,52 +35,7 @@ const school = 'Sunbeam School Ballia';
     position="50% 42%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcStatement
-      ground="ivory"
-      ghost="PTM"
-      ghostAt="right"
-      kicker="Scheduled, not called"
-      statement="The date comes first,<br /><em>not the problem.</em>"
-      body={[
-        'Sunbeam places its parent–teacher meetings on the <strong>academic calendar for the session</strong>, alongside the examination dates, the terms and the holidays. The consequence is small and worth stating: a parent knows the date months before the meeting, and can read it against the examination it follows.',
-        'A meeting called at short notice has already said something before anyone speaks — that something has gone wrong. A meeting that was always in the calendar has not, which is what makes it possible to sit down about a child who is doing perfectly well.',
-      ]}
-    />
-
-    <AcCollage
-      ground="sand"
-      side="left"
-      kicker="And the school’s other parent channel"
-      heading="A forum,<br /><em>with a printed agenda</em>"
-      body={[
-        'The photographs here are of the school’s <strong>Parents’ Forum</strong>, not of a parent–teacher meeting — the school has published none of those. The forum is a panel session, and its agenda is projected in the room rather than kept at the front.',
-        'That agenda is worth reading, because four of its twelve items are the ones parents rarely get a formal channel for: <em>quality of classroom teaching, pace of teaching, quality of assignment, and correction of notebooks.</em> The session photographed was for <strong>Classes IX to XII, 2025-26</strong>.',
-      ]}
-      ledger={[
-        { k: 'Parent–teacher meetings', v: 'On the academic calendar for the session, published in advance.' },
-        { k: 'Between meetings', v: 'The parent portal carries term reports and results at any hour.' },
-        { k: 'On the same calendar', v: 'Examination dates, terms and holidays — a meeting can be read against them.' },
-        { k: 'Parents’ Forum · IX–XII', v: 'A panel session with a twelve-item agenda, projected in the room.' },
-      ]}
-      lead={{ src: pPanel, alt: `The leadership panel at a Parents’ Forum session at ${school}, the session’s twelve-item agenda projected on the screen beside them` }}
-      support={[
-        { src: pSeated, alt: `Parents of ${school} seated in the tiered rows of the hall during a Parents’ Forum session` },
-        { src: pLib, alt: `Students of ${school} reading at the long tables of the library` },
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Read it against<br /><em>the calendar.</em>"
-      body="The school publishes that PTMs are on the session calendar and that reports sit in the parent portal. How many meetings a year, how long they run and whether they are by appointment are not published — and no photograph of a PTM exists on the school's site."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <ParentTeacherPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

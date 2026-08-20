@@ -1,52 +1,26 @@
 ---
 /**
- * ACADEMICS · BOARD RESULTS — audit A1.
+ * ACADEMICS · BOARD RESULTS.
  *
- * ⚠ THIS PAGE EXISTS BECAUSE THE ALTERNATIVE WAS WORSE, NOT TO FILL A SUBMENU.
- * The route was already in the navigation and referenced from careerTopics, and
- * it was rendering the site's generic "We're still writing this page"
- * placeholder. For the single most-searched fact about any CBSE school, that
- * reads as an unfinished website rather than as an unpublished number — and it
- * sends the reader away with nothing. A specific answer, even a negative one,
- * is worth more than a generic one.
+ * The school publishes no board percentages, and this page does not estimate
+ * one. What it sets out instead — the outcome data the school does publish, and
+ * why a guessed pass rate is the single worst number to invent on a school site
+ * — is in the component header.
  *
- * ⚠ NO RESULT IS ESTIMATED, INFERRED OR ILLUSTRATED. docs/01 § 3.8 records
- * board results as: "no pass %, no toppers, no year-on-year data". The client
- * brief asked for a "98% Board Results" counter. It is not here and must never
- * be: a school's results are the one number a family will act on, and an invented
- * one would be indistinguishable from a measured one.
- *
- * ═══ WHAT THE SCHOOL DOES PUBLISH ABOUT OUTCOMES ═══════════════════════════
- * Discovered during the Section E rebuild, and the reason this page is three
- * sections rather than one:
- *   CUET (UG) 2025 — result cards per student, with NTA scores and subject
- *     percentiles, across PCM, Commerce and Humanities.
- *   "Vision To Reality" placement board, session 2024-25 — eighteen named
- *     leavers with course and institution; ten at University of Delhi colleges,
- *     three at BHU.
- * Neither is a board result. Both are outcomes, and a parent who came here for
- * evidence of where students end up should not leave empty-handed.
- *
- * Composition: statement (sand — the gap, stated at poster size) → split (paper,
- * photo LEFT — what IS published) → close.
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
-import AcStatement from '../../components/academics/system/AcStatement.astro';
-import AcSplit from '../../components/academics/system/AcSplit.astro';
-import AcClose from '../../components/academics/system/AcClose.astro';
+import BoardResultsPage from '../../components/academics/assessment/BoardResultsPage.astro';
 
 import banner from '../../assets/library/DSC_1226 copy.jpg';
-import pLib from '../../assets/photos/sb-library.jpg';
-import pBench from '../../assets/photos/sb-chem-lab.jpg';
-import pCohort from '../../assets/photos/sunbeem-5.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
   title="Board Results — Sunbeam School Ballia"
-  description="Sunbeam School Ballia does not publish its CBSE Class X and XII board results. This page says so plainly, and sets out the outcome data the school does publish — CUET scores and named university placements."
+  description="Sunbeam School Ballia does not publish its CBSE Class X and XII board results. This page says so plainly, and sets out the outcome data the school does publish — CUET (UG) 2025 scores and named university placements."
 >
   <PageHero
     title="Board Results"
@@ -57,53 +31,10 @@ const school = 'Sunbeam School Ballia';
     ]}
     src={banner}
     alt="The Nalanda Library at Sunbeam School Ballia, its shelves signed by subject."
-    position="50% 48%"
+    position="50% 50%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcStatement
-      ground="sand"
-      ghost="%"
-      ghostAt="right"
-      texture={true}
-      kicker="What is published"
-      statement="No pass rate.<br /><em>No toppers.</em>"
-      body={[
-        'Sunbeam School Ballia does not currently publish its <strong>CBSE Class X and Class XII results</strong> — no pass percentage, no toppers, and no year-on-year data. That is the whole of the position, and it is stated here rather than worked around.',
-        'It would be easy to fill this page. A pass percentage is the most expected number on a school website, and almost nobody checks one. That is exactly why it is not here: a figure invented on this page would be indistinguishable from a figure the school had measured, and a family would choose a school on it.',
-        'When the school supplies its results, they belong here — with the year, the cohort size and the board attached, so they can be read rather than trusted.',
-      ]}
-    />
-
-    <AcSplit
-      ground="paper"
-      side="left"
-      ratio="wide"
-      aspect="3 / 2"
-      kicker="But the search does not have to end here"
-      heading="What the school<br /><em>does publish</em>"
-      body={[
-        'A parent looking for board results is really asking a broader question: <em>where do students here end up?</em> On that, the school publishes more than most schools in the district — just not in the form of a percentage.',
-        'It publishes <strong>CUET (UG) 2025 results card by card</strong>, with the NTA score and every subject percentile, across PCM, Commerce and Humanities. And it prints a placement board, <strong>“Vision To Reality”</strong>, naming <strong>eighteen leavers of session 2024-25 with their course and institution</strong> — ten of them at University of Delhi colleges and three at Banaras Hindu University.',
-        'Neither is a board result, and neither is presented as one. Both are set out in full on <strong>University Counselling</strong>.',
-      ]}
-      photo={pLib}
-      alt={`Students of ${school} reading at the long tables of the Nalanda Library, a member of staff at the head of the row`}
-      inset={pBench}
-      insetAlt={`Students of ${school} working along the chemistry bench, test tubes held over the burners`}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Unpublished,<br /><em>not unmeasured.</em>"
-      body="The school holds its board results; it has simply not published them. Until it does, this site will not print a figure — the office below can answer for a particular year, and the outcome data that is published sits on University Counselling."
-      photo={pCohort}
-      alt={`Student council office-bearers and NCC cadets of ${school} on stage with the school’s dignitaries`}
-      position="50% 38%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <BoardResultsPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

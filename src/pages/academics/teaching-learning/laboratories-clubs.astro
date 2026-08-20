@@ -2,57 +2,32 @@
 /**
  * TEACHING & LEARNING · LABORATORIES & ACADEMIC CLUBS — audit §2C.
  *
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height and same
+ * title as before and as every other Academics page. The standfirst is the one
+ * line that changed, to the wording the design brief asks for; it says the same
+ * thing about the same twelve rooms.
+ *
  * ⚠ COMBINED PAGE — two of the brief's fourteen bullets: Laboratories and
- * Academic Clubs. They belong on one page because the school pairs them itself:
- * its own inventory groups "Inquiry rooms · academic clubs" together, and the
- * clubs meet in the rooms. The two standalone routes were an implementation
- * experiment; their verified content is merged here and the routes are retired.
+ * Academic Clubs. The school pairs them itself: its own inventory groups
+ * "Inquiry rooms · academic clubs" together, and the clubs meet in the rooms.
  *
- * ⚠⚠ AN ARITHMETIC ERROR FROM THE SPLIT PAGES IS CORRECTED HERE.
- * /academic-clubs/ read "four inquiry rooms that work alongside the twelve
- * laboratories", and a draft of the Curriculum page had "twelve laboratories —
- * nine subject rooms and four inquiry rooms". Nine plus four is thirteen, and
- * the inquiry rooms are not additional to the twelve — they are INSIDE it.
- * The school's own enumeration (data/academics.ts:770) is explicit:
- *
- *   "Twelve laboratories: Physics · Chemistry · Biology · Mathematics ·
- *    Language · Geography · Srijan · Model UN · Active Learning · Robotics ·
- *    two computer labs"
- *
- * Count it: eight subject rooms + four inquiry rooms = twelve. The separate
- * `index` block groups them 9 + 4 because it also lists a General Science lab
- * the enumeration omits; this page follows the enumeration, which is the school's
- * own count, and says so.
- *
- * ⚠ THE LABORATORIES ARE PHOTOGRAPHED EMPTY and every caption describes a room,
- * not a lesson. The one exception is sb-chem-lab.jpg, which genuinely shows
- * students at the bench, and is captioned as that.
- * ASSET REQUIREMENT: the Robotics Lab, and the four inquiry rooms in use.
+ * The page was rebuilt off the generic AcSplit → AcCollage → AcPath → AcClose
+ * system into a composed one: five sections, five different builds. Everything
+ * below the banner lives in
+ * components/academics/teaching/LaboratoriesClubsPage.astro, and that file's
+ * frontmatter carries the source for every claim — including the twelve-room
+ * arithmetic and the club names in the design brief that are NOT published.
  *
  * ⚠ SCOPE BOUNDARY — this page is the INVENTORY. What is done in the science
- * rooms belongs to STEM, Robotics & Enrichment; the library's collection belongs
- * to Reading, Language & Library. No result or programme is repeated here.
- *
- * Composition: split (ivory, photo RIGHT — what a specialised room means) →
- * collage (paper, LEFT — the twelve, enumerated) → path (sand — the four inquiry
- * rooms) → close.
+ * rooms belongs to STEM, Robotics & Enrichment; the library's collection to
+ * Reading, Language & Library.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcSplit from '../../../components/academics/system/AcSplit.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcPath from '../../../components/academics/system/AcPath.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import LaboratoriesClubsPage from '../../../components/academics/teaching/LaboratoriesClubsPage.astro';
 
 import banner from '../../../assets/composite lab/DSC_1255 copy.jpg';
-import pBench from '../../../assets/photos/sb-chem-lab.jpg';
-import pBio from '../../../assets/bio lab/DSC_1274 copy.jpg';
-import pComposite from '../../../assets/composite lab/DSC_1259 copy.jpg';
-import pActivity from '../../../assets/activity learning lab/DSC_1218 copy.jpg';
-import pMaths from '../../../assets/photos/sb-maths-lab.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
@@ -61,7 +36,7 @@ const school = 'Sunbeam School Ballia';
 >
   <PageHero
     title="Laboratories & Academic Clubs"
-    standfirst="Twelve rooms, listed plainly — and four of the twelve are not subject rooms at all."
+    standfirst="Specialised spaces where ideas, curiosity and learning come to life."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Academics', href: '/academics/' },
@@ -72,74 +47,16 @@ const school = 'Sunbeam School Ballia';
     position="50% 50%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcSplit
-      ground="ivory"
-      side="right"
-      ratio="wide"
-      aspect="3 / 2"
-      kicker="Why the number means something"
-      heading="A room for<br /><em>one subject</em>"
-      body={[
-        'Twelve is only a number until you know what kind of rooms they are. The distinction that matters is <strong>specialised against general</strong>: a chemistry laboratory with gas taps, a fume path and reagent shelves is a different object from a science room with a sink at the back, and only one of them lets a class run a practical the board expects.',
-        'Physics, Chemistry and Biology each carry <strong>board practicals from Class IX to Class XII</strong>. The mathematics laboratory is the one most schools do without — its purpose is to make mathematics something handled rather than only argued on paper.',
-      ]}
-      photo={pBench}
-      alt={`Students of ${school} working along the chemistry bench, test tubes held over the burners`}
-      inset={pBio}
-      insetAlt={`A subject laboratory at ${school}, benches and apparatus laid out along the room`}
-    />
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer.
 
-    <AcCollage
-      ground="paper"
-      side="left"
-      kicker="The inventory, as the school counts it"
-      heading="Twelve,<br /><em>and four of them are not labs</em>"
-      body={[
-        'The school enumerates its twelve rooms by name, and the enumeration contains a detail worth pausing on: <strong>four of the twelve are inquiry rooms rather than subject laboratories</strong>. They are counted inside the twelve, not added to it.',
-        'That is a real allocation decision. A school with limited rooms that gives four of twelve to debate, making, maps and open-ended work has chosen to spend space on the subjects that do not sit an exam.',
-      ]}
-      ledger={[
-        { k: 'Physics · Chemistry · Biology', v: 'Three subject laboratories, carrying board practicals for Classes IX–XII.' },
-        { k: 'Mathematics', v: 'Mathematics as a practical subject — the room most schools do without.' },
-        { k: 'Language', v: 'Spoken language, recorded and reviewed. Set out on Reading, Language &amp; Library.' },
-        { k: 'Robotics', v: 'Drone · 3-D printer · telescope · embedded systems. Set out on STEM, Robotics &amp; Enrichment.' },
-        { k: 'Two computer laboratories', v: 'Junior and senior, 40+ machines each.' },
-        { k: 'Four inquiry rooms', v: 'Geography · Srijan · Model United Nations · Active Learning — <strong>inside the twelve, not additional to them</strong>.' },
-      ]}
-      lead={{ src: pComposite, alt: `The composite laboratory at ${school}, apparatus set out along the benches` }}
-      support={[
-        { src: pMaths, alt: `The mathematics laboratory at ${school}, its models and charts set out on the working surfaces` },
-        { src: pActivity, alt: `The activity learning laboratory at ${school}, its worktables set out for group work` },
-      ]}
-    />
-
-    <AcPath
-      ground="sand"
-      kicker="The four, and the clubs that meet in them"
-      heading="Rooms for the work<br /><em>with no right answer</em>"
-      body={[
-        'The school groups its inquiry rooms and its academic clubs together, and this page keeps that pairing, because they are the same thing described twice: a club is what happens in the room. Each of the four is named for a way of working rather than for a subject on the timetable.',
-      ]}
-      beats={[
-        { k: 'Srijan Lab', body: 'Making and design — where an idea has to end up as an object.' },
-        { k: 'Model United Nations', body: 'Debate, position papers and committee. A student argues a country’s case, not their own.' },
-        { k: 'Geography Lab', body: 'Maps, instruments and fieldwork — the subject taken outdoors and measured.' },
-        { k: 'Active Learning Lab', body: 'The school’s own description: work with no single right answer.' },
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Four of twelve,<br /><em>spent on the open questions.</em>"
-      body="The school enumerates its twelve rooms and names the four inquiry rooms among them. It does not publish club membership, meeting times or who runs each one — and it has published no photograph of the Robotics Lab or of the four inquiry rooms in use."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+      ⚠ AND THE PADDING RESET IS AN INLINE STYLE, DELIBERATELY. `.u-page-panel`
+      in base.css carries `padding-bottom: var(--sb-section-y)` — 120px of empty
+      cream between the closing section and the footer. A stylesheet form of the
+      override can be served from a different build than the HTML that needs it,
+      and then it silently stops applying; an inline style travels IN the HTML,
+      so the two cannot skew. Same decision as the other redesigned pages. */}
+  <div class="u-page-panel" style="padding-block: 0;">
+    <LaboratoriesClubsPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

@@ -1,0 +1,942 @@
+---
+/**
+ * TEACHING & LEARNING · LABORATORIES & ACADEMIC CLUBS — five sections.
+ *
+ * ⚠ COMBINED PAGE — two of the brief's fourteen bullets: Laboratories and
+ * Academic Clubs. They belong on one page because the school pairs them itself:
+ * its own inventory groups "Inquiry rooms · academic clubs" together, and the
+ * clubs meet in the rooms.
+ *
+ * ⚠⚠ AN ARITHMETIC ERROR FROM THE OLD SPLIT PAGES STAYS CORRECTED HERE.
+ * /academic-clubs/ read "four inquiry rooms that work alongside the twelve
+ * laboratories", and a draft of Curriculum had "twelve laboratories — nine
+ * subject rooms and four inquiry rooms". Nine plus four is thirteen, and the
+ * inquiry rooms are not additional to the twelve — they are INSIDE it. The
+ * school's own enumeration (data/academics.ts:770) is explicit:
+ *
+ *   "Twelve laboratories: Physics · Chemistry · Biology · Mathematics ·
+ *    Language · Geography · Srijan · Model UN · Active Learning · Robotics ·
+ *    two computer labs"
+ *
+ * Count it: eight subject rooms + four inquiry rooms = twelve. The `index` block
+ * groups them 9 + 4 because it also lists a General Science lab the enumeration
+ * omits; this page follows the enumeration, which is the school's own count.
+ *
+ * ⚠⚠ THE TWELVE NAMED "ACADEMIC CLUBS" IN THE DESIGN BRIEF ARE NOT PUBLISHED.
+ * The reference art lists Eco Club, Language & Literature Club, Computer Club,
+ * Commerce Club, Quiz & GK, Music Club, Art & Design Club and others. None of
+ * those names appears on the school's site or in this repository. What IS
+ * published is the enumeration of twelve ROOMS, four of them inquiry rooms —
+ * and the school's own pairing of "inquiry rooms · academic clubs". Section 02
+ * therefore lists the twelve rooms, marks the four, and invents no club names.
+ *
+ * ⚠ THE LABORATORIES ARE PHOTOGRAPHED EMPTY and every caption describes a room,
+ * not a lesson. The one exception is sb-chem-lab.jpg, which genuinely shows
+ * students at the bench, and is captioned as that.
+ * ASSET REQUIREMENT: the Robotics Lab, and the four inquiry rooms in use.
+ *
+ * ⚠ SCOPE BOUNDARY — this page is the INVENTORY. What is done in the science
+ * rooms belongs to STEM, Robotics & Enrichment; the library's collection to
+ * Reading, Language & Library. No result or programme is repeated here.
+ *
+ * ═══ COMPOSITION — five sections, five different builds ════════════════════
+ *   01 · CREAM  copy left with four fact indicators, a three-frame composition
+ *               right over circuit traces.
+ *   02 · WHITE  the collage crosses LEFT, the copy right, and the twelve are a
+ *               two-column editorial list — not cards.
+ *   03 · CREAM  four editorial columns divided by thin vertical rules.
+ *   04 · GRID   a short typographic break with oversized ghost words.
+ *   05 · PHOTO  the dark close.
+ *
+ * MOTION is the project's own attribute set — data-clip, data-reveal, data-pop,
+ * data-count, data-drift, data-parallax, data-draw, data-mask, data-zoom.
+ */
+import { Picture } from 'astro:assets';
+
+/* ── PHOTOGRAPHY — six genuine Sunbeam Ballia frames, no stock, no repeats. */
+import pBench from '../../../assets/photos/sb-chem-lab.jpg';
+import pBio from '../../../assets/bio lab/DSC_1275 copy.jpg';
+import pMicro from '../../../assets/photos/sb-sci-lab.jpg';
+import pActivity from '../../../assets/activity learning lab/DSC_1218 copy.jpg';
+import pMaths from '../../../assets/photos/sb-maths-lab.jpg';
+import pTables from '../../../assets/activity learning lab/DSC_1217 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/* ── THE MARKS ──────────────────────────────────────────────────────────────
+   24-unit box, 1.5 stroke, round caps and joins, no fill, `currentColor`. */
+const MARK: Record<string, string> = {
+  flask: `<path d="M9.6 3.4h4.8M10.6 3.4v5.2L6.9 17a2 2 0 0 0 1.8 2.8h6.6a2 2 0 0 0 1.8-2.8l-3.7-8.4V3.4"/><path d="M8.2 14.4h7.6"/><circle cx="10.8" cy="16.8" r=".9"/>`,
+  door: `<path d="M4.6 20.4h14.8"/><path d="M6.6 20.4V4.6a1 1 0 0 1 1.2-1l8 1.4a1 1 0 0 1 .8 1v14.4"/><circle cx="13.6" cy="12.4" r=".9"/>`,
+  hand: `<path d="M9.4 11.2V6a1.9 1.9 0 1 1 3.8 0v7.4"/><path d="M13.2 10.4a1.7 1.7 0 0 1 3.4 0v1M16.6 11.6a1.7 1.7 0 0 1 3.4 0v3.2a6 6 0 0 1-6 6h-1.6c-2 0-3-1-4.2-2.4l-3-3.6a1.8 1.8 0 0 1 2.6-2.4l1.6 1.6"/>`,
+  shield: `<path d="M12 2.8 4.6 6v6c0 4.6 3.1 8.2 7.4 9.2 4.3-1 7.4-4.6 7.4-9.2V6z"/><path d="m8.8 12 2.4 2.4 4-4.6"/>`,
+  atom: `<circle cx="12" cy="12" r="1.9"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7" transform="rotate(120 12 12)"/>`,
+  chem: `<path d="M9.6 3.4h4.8M10.6 3.4v5.2L6.9 17a2 2 0 0 0 1.8 2.8h6.6a2 2 0 0 0 1.8-2.8l-3.7-8.4V3.4"/><path d="M8.2 14.4h7.6"/>`,
+  leaf: `<path d="M19.4 4.6c1 6.9-2.2 11.7-7.5 12.4-3 .4-5.4-1-6-3.4-.7-2.9 1.3-5.3 4.6-6"/><path d="M4.6 20.2c1.6-4.6 5.4-8.6 9.8-10.8"/>`,
+  sigma: `<path d="M17.4 5.2H6.8l5 6.8-5 6.8h10.6"/><path d="M17.4 5.2V3.6M17.4 18.8v1.6"/>`,
+  headset: `<path d="M4.4 14.4v-2.2a7.6 7.6 0 0 1 15.2 0v2.2"/><rect x="2.6" y="13.4" width="4" height="6" rx="1.8"/><rect x="17.4" y="13.4" width="4" height="6" rx="1.8"/><path d="M19.6 19.4v.6a2 2 0 0 1-2 2h-3"/>`,
+  map: `<path d="m3.6 6.6 5.6-2.2 5.6 2.2 5.6-2.2v13l-5.6 2.2-5.6-2.2-5.6 2.2Z"/><path d="M9.2 4.4v13M14.8 6.6v13"/>`,
+  make: `<path d="M14.6 4.4a4 4 0 0 1 5.1 5.1l-9.4 9.4-5.1-5.1Z"/><path d="m12.6 6.4 5.1 5.1"/><path d="M5.2 13.8 3.6 20.4l6.6-1.6"/>`,
+  globe: `<circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.2 2.4 3.4 5.4 3.4 8.6S14.2 18.2 12 20.6c-2.2-2.4-3.4-5.4-3.4-8.6S9.8 5.8 12 3.4Z"/>`,
+  spark: `<path d="M12 1.8c.7 5.2 4.2 8.7 9.4 9.4-5.2.7-8.7 4.2-9.4 9.4-.7-5.2-4.2-8.7-9.4-9.4 5.2-.7 8.7-4.2 9.4-9.4z"/>`,
+  chip: `<rect x="6.4" y="6.4" width="11.2" height="11.2" rx="1.6"/><rect x="9.8" y="9.8" width="4.4" height="4.4" rx=".8"/><path d="M9.6 2.8v3.6M14.4 2.8v3.6M9.6 17.6v3.6M14.4 17.6v3.6M2.8 9.6h3.6M2.8 14.4h3.6M17.6 9.6h3.6M17.6 14.4h3.6"/>`,
+  screen: `<rect x="2.6" y="4.4" width="18.8" height="12.4" rx="1.8"/><path d="M8.4 20.4h7.2M12 16.8v3.6"/>`,
+  code: `<path d="m8.6 8.4-4 3.6 4 3.6M15.4 8.4l4 3.6-4 3.6M13.4 4.6l-2.8 14.8"/>`,
+};
+
+/* Four indicators under section 01. Only the first is a published quantity. */
+const facts = [
+  { mark: 'flask', n: 12, k: 'Laboratories' },
+  { mark: 'door', v: 'One subject', k: 'One space' },
+  { mark: 'hand', v: 'Hands-on', k: 'Learning' },
+  { mark: 'shield', v: 'Safety & care', k: 'Always' },
+] as const;
+
+/* ── THE TWELVE, AS THE SCHOOL ENUMERATES THEM ─────────────────────────────
+   ⚠ THIS LIST IS THE SCHOOL'S OWN COUNT AND NOTHING ELSE. `inquiry: true` marks
+   the four that are not subject laboratories — inside the twelve, not added to
+   them. No club names appear because none is published; see the header note. */
+const rooms = [
+  { mark: 'atom', k: 'Physics', v: 'Board practicals, IX–XII.', inquiry: false },
+  { mark: 'chem', k: 'Chemistry', v: 'Gas taps, reagent shelves.', inquiry: false },
+  { mark: 'leaf', k: 'Biology', v: 'Microscopes and models.', inquiry: false },
+  { mark: 'sigma', k: 'Mathematics', v: 'The room most schools skip.', inquiry: false },
+  { mark: 'headset', k: 'Language', v: 'Recorded, then reviewed.', inquiry: false },
+  { mark: 'chip', k: 'Robotics', v: 'Drone · printer · telescope.', inquiry: false },
+  { mark: 'screen', k: 'Computer lab · junior', v: '40+ machines.', inquiry: false },
+  { mark: 'code', k: 'Computer lab · senior', v: '40+ machines.', inquiry: false },
+  { mark: 'map', k: 'Geography', v: 'Maps, instruments, fieldwork.', inquiry: true },
+  { mark: 'make', k: 'Srijan', v: 'Making and design.', inquiry: true },
+  { mark: 'globe', k: 'Model United Nations', v: 'Debate and committee.', inquiry: true },
+  { mark: 'spark', k: 'Active Learning', v: 'No single right answer.', inquiry: true },
+] as const;;
+
+/* ── SECTION 03 ─────────────────────────────────────────────────────────────
+   Four editorial columns, divided by rules rather than boxed. */
+const spaces = [
+  { n: '01', mark: 'flask', k: 'Science laboratories', v: 'Physics, Chemistry, Biology and Mathematics — practical spaces, not a science room with a sink.' },
+  { n: '02', mark: 'screen', k: 'Computer laboratories', v: 'Junior and senior, 40+ machines each.' },
+  { n: '03', mark: 'headset', k: 'Language lab', v: 'Spoken language, practised aloud, recorded and reviewed.' },
+  { n: '04', mark: 'spark', k: 'Academic clubs & spaces', v: 'The four inquiry rooms — Geography, Srijan, Model UN and Active Learning.' },
+] as const;
+
+const STEM = '/academics/teaching-learning/stem-robotics/';
+const READING = '/academics/teaching-learning/reading-language/';
+---
+
+{/* ══ 01 · ONE SUBJECT, ONE SPACE ════════════════════════════════════════════
+    Ground: cream. Idea: copy left with four indicators, a three-frame
+    composition right, over thin circuit traces. */}
+<section class="lb-rooms" aria-labelledby="lb-rooms-t">
+  <span class="lb-rooms__warm" aria-hidden="true"></span>
+  <span class="lb-grid" aria-hidden="true"></span>
+  <span class="lb-dots lb-rooms__dots" aria-hidden="true"></span>
+
+  <svg class="lb-trace lb-rooms__trace" viewBox="0 0 200 260" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M206 22h-48a10 10 0 0 0-10 10v52a10 10 0 0 1-10 10H88" />
+      <path d="M206 122h-28a10 10 0 0 0-10 10v76a10 10 0 0 1-10 10H98" />
+    </g>
+    <circle cx="84" cy="94" r="3" fill="currentColor" />
+    <circle cx="94" cy="220" r="3" fill="currentColor" />
+  </svg>
+
+  <div class="u-container">
+    <div class="lb-rooms__grid">
+      <div class="lb-rooms__copy">
+        <p class="lb-kicker" data-reveal>One subject, one space</p>
+        <h2 class="lb-h lb-rooms__h" id="lb-rooms-t">
+          <span data-clip data-clip-delay="0">A room for</span>
+          <span data-clip data-clip-delay="150"><em>one subject.</em></span>
+        </h2>
+        <p class="lb-body" data-reveal data-reveal-delay="200">
+          Twelve is only a number until you know what kind of rooms they are. The distinction that
+          matters is <strong>specialised against general</strong>: a chemistry laboratory with gas
+          taps, a fume path and reagent shelves is a different object from a science room with a
+          sink at the back — and only one of them lets a class run a practical the board expects.
+        </p>
+        <p class="lb-body" data-reveal data-reveal-delay="270">
+          Physics, Chemistry and Biology each carry <strong>board practicals from Class IX to Class
+          XII</strong>. The mathematics laboratory is the one most schools do without: its purpose
+          is to make mathematics something handled rather than only argued on paper.
+        </p>
+
+        <ul class="lb-facts">
+          {facts.map((f, i) => (
+            <li data-reveal data-reveal-delay={330 + i * 80}>
+              <span class="lb-facts__i" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[f.mark]} />
+                </svg>
+              </span>
+              <p class="lb-facts__n t-tabular">
+                {'n' in f ? <span data-count={f.n} data-count-dur={1.3}>{f.n}</span> : f.v}
+              </p>
+              <p class="lb-facts__k">{f.k}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="lb-rooms__media">
+        <figure class="lb-rooms__lead" data-mask data-zoom data-zoom-to="1.06">
+          <Picture
+            src={pBench}
+            alt={`Students of ${S} working along the chemistry bench, test tubes held over the burners`}
+            formats={['avif', 'webp']}
+            widths={[620, 1000, 1320]}
+            sizes="(max-width: 1023px) 92vw, 46vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+
+        <figure class="lb-rooms__side" data-parallax data-parallax-y="26">
+          <Picture
+            src={pBio}
+            alt={`The biology laboratory at ${S} between classes — red stools along the bench, microscopes on the shelves and anatomy charts on the wall`}
+            formats={['avif', 'webp']}
+            widths={[360, 600]}
+            sizes="(max-width: 1023px) 44vw, 20vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+
+        <figure class="lb-rooms__disc" data-parallax data-parallax-y="-20">
+          <Picture
+            src={pMicro}
+            alt={`A student of ${S} at the microscope, conical flasks of plant cuttings and an anatomy model on the bench beside her`}
+            formats={['avif', 'webp']}
+            widths={[280, 440]}
+            sizes="(max-width: 1023px) 30vw, 13vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · THE TWELVE ════════════════════════════════════════════════════════
+    Ground: white. Idea: the collage crosses LEFT and the copy right; the twelve
+    are a two-column editorial list on hairlines, not cards. */}
+<section class="lb-twelve" aria-labelledby="lb-twelve-t">
+  <span class="lb-grid lb-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container lb-twelve__grid">
+    <div class="lb-twelve__media">
+      <figure class="lb-twelve__lead" data-mask data-zoom data-zoom-to="1.06">
+        <Picture
+          src={pActivity}
+          alt={`The activity learning laboratory at ${S}, its worktables set out for group work`}
+          formats={['avif', 'webp']}
+          widths={[560, 900, 1200]}
+          sizes="(max-width: 1023px) 92vw, 40vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="lb-twelve__side" data-parallax data-parallax-y="-24">
+        <Picture
+          src={pMaths}
+          alt={`The mathematics laboratory at ${S}, its models and charts set out on the working surfaces`}
+          formats={['avif', 'webp']}
+          widths={[340, 560]}
+          sizes="(max-width: 1023px) 42vw, 19vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="lb-twelve__disc" data-parallax data-parallax-y="22">
+        <Picture
+          src={pTables}
+          alt={`The activity learning laboratory at ${S} — one crescent table with chairs set all the way round it`}
+          formats={['avif', 'webp']}
+          widths={[280, 440]}
+          sizes="(max-width: 1023px) 30vw, 13vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+
+    <div class="lb-twelve__copy">
+      <p class="lb-kicker" data-reveal>The spirit of academic clubs</p>
+      <h2 class="lb-h lb-twelve__h" id="lb-twelve-t">
+        <span data-clip data-clip-delay="0">Twelve,</span>
+        <span data-clip data-clip-delay="130"><em>and four of them</em></span>
+        <span data-clip data-clip-delay="230"><em>are not labs.</em></span>
+      </h2>
+      <p class="lb-body" data-reveal data-reveal-delay="200">
+        The school enumerates its twelve rooms by name, and
+        {' '}<strong>four of the twelve are inquiry rooms rather than subject laboratories</strong> —
+        counted inside the twelve, not added to it. A school that spends four of twelve on debate,
+        making, maps and open-ended work has chosen to give space to the subjects that do not sit an
+        exam.
+      </p>
+
+      {/* ⚠ A LIST ON HAIRLINES, TWO COLUMNS — not twelve cards. The four inquiry
+          rooms carry a small orange flag so the count is legible at a glance. */}
+      <ol class="lb-list">
+        {rooms.map((r, i) => (
+          <li class={`lb-room${r.inquiry ? ' lb-room--inq' : ''}`} data-reveal data-reveal-delay={100 + i * 45}>
+            <span class="lb-room__i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[r.mark]} />
+              </svg>
+            </span>
+            <div class="lb-room__t">
+              <p class="lb-room__k">
+                {r.k}
+                {r.inquiry && <span class="lb-room__flag">Inquiry</span>}
+              </p>
+              <p class="lb-room__v">{r.v}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <p class="lb-note" data-reveal data-reveal-delay="640">
+        The Robotics Lab is set out on <a class="lb-link" href={STEM}>STEM, Robotics &amp;
+        Enrichment</a>; the language laboratory on <a class="lb-link" href={READING}>Reading,
+        Language &amp; Library</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · BUILT TO SUPPORT REAL LEARNING ════════════════════════════════════
+    Ground: cream. Idea: four editorial columns divided by thin vertical rules —
+    deliberately not four cards. */}
+<section class="lb-spaces" aria-labelledby="lb-spaces-t">
+  <span class="lb-spaces__warm" aria-hidden="true"></span>
+  <span class="lb-dots lb-spaces__dots" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="lb-spaces__head">
+      <p class="lb-kicker" data-reveal>Built to support real learning</p>
+      <h2 class="lb-h lb-spaces__h" id="lb-spaces-t">
+        <span data-clip data-clip-delay="0">Rooms for the work</span>
+        <span data-clip data-clip-delay="150"><em>with no right answer.</em></span>
+      </h2>
+      <p class="lb-body lb-spaces__b" data-reveal data-reveal-delay="200">
+        Great learning does not come from memorising. It comes from asking, trying, failing safely
+        and trying again — which needs rooms built for experimentation, discussion, making and
+        practical work rather than for listening.
+      </p>
+    </div>
+
+    <ol class="lb-cols">
+      {spaces.map((sp, i) => (
+        <li class="lb-col" data-reveal data-reveal-delay={120 + i * 110}>
+          <span class="lb-col__i" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[sp.mark]} />
+            </svg>
+          </span>
+          <p class="lb-col__n t-tabular">{sp.n}</p>
+          <h3 class="lb-col__k">{sp.k}</h3>
+          <p class="lb-col__b">{sp.v}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 04 · THE BREAK ═════════════════════════════════════════════════════════
+    A short typographic beat between the inventory and the close. Deliberately
+    the shortest section on the page. */}
+<section class="lb-break" aria-labelledby="lb-break-t">
+  <span class="lb-grid lb-grid--wide" aria-hidden="true"></span>
+  <span class="lb-break__ghost lb-break__ghost--a" aria-hidden="true" data-parallax data-parallax-y="18">Rooms</span>
+  <span class="lb-break__ghost lb-break__ghost--b" aria-hidden="true" data-parallax data-parallax-y="-18">Questions</span>
+
+  <div class="u-container lb-break__inner">
+    <h2 class="lb-h lb-break__h" id="lb-break-t">
+      <span data-clip data-clip-delay="0">Different rooms.</span>
+      <span data-clip data-clip-delay="130">Different questions.</span>
+      <span data-clip data-clip-delay="240"><em>One connected idea of learning.</em></span>
+    </h2>
+  </div>
+</section>
+
+{/* ══ 05 · THE CLOSE ═════════════════════════════════════════════════════════ */}
+<section class="lb-close" aria-labelledby="lb-close-t">
+  <div class="lb-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pCohort}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <span class="lb-close__scrim" aria-hidden="true"></span>
+  <span class="lb-close__grain" aria-hidden="true"></span>
+
+  <div class="u-container lb-close__inner">
+    <p class="lb-kicker lb-kicker--dark" data-reveal>Learning beyond textbooks</p>
+    <h2 class="lb-h lb-close__h" id="lb-close-t">
+      <span data-clip data-clip-delay="0">Four of twelve,</span>
+      <span data-clip data-clip-delay="150">spent on the <em>open questions.</em></span>
+    </h2>
+    <p class="lb-close__b" data-reveal data-reveal-delay="180">
+      The school enumerates its twelve rooms and names the four inquiry rooms among them. It does
+      not publish club membership, meeting times or who runs each one — and it has published no
+      photograph of the Robotics Lab or of the four inquiry rooms in use.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .lb-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .lb-kicker--dark { color: var(--sb-lime); }
+
+  .lb-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .lb-h span { display: block; }
+  .lb-h em { font-style: normal; color: var(--sb-violet); }
+
+  .lb-body {
+    max-width: 46ch;
+    margin: clamp(13px, 1.6vw, 19px) 0 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .lb-body strong { font-weight: 700; color: var(--sb-charcoal); }
+
+  .lb-link {
+    font-weight: 700;
+    color: var(--sb-violet);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 60, 10, 0.38);
+  }
+  .lb-link:hover { border-bottom-color: var(--sb-violet); }
+
+  .lb-grid {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.045) 1px, transparent 1px);
+    background-size: 38px 38px;
+    -webkit-mask-image: radial-gradient(120% 92% at 28% 42%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(120% 92% at 28% 42%, #000 0%, transparent 78%);
+  }
+  .lb-grid--fine {
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(110% 96% at 66% 46%, #000 0%, transparent 80%);
+    mask-image: radial-gradient(110% 96% at 66% 46%, #000 0%, transparent 80%);
+  }
+  .lb-grid--wide {
+    background-size: 54px 54px;
+    -webkit-mask-image: radial-gradient(100% 100% at 50% 50%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(100% 100% at 50% 50%, #000 0%, transparent 78%);
+  }
+  .lb-trace {
+    position: absolute;
+    z-index: -2;
+    height: auto;
+    color: rgba(201, 60, 10, 0.22);
+  }
+  .lb-dots {
+    position: absolute;
+    z-index: -2;
+    background-image: radial-gradient(rgba(201, 60, 10, 0.28) 1.5px, transparent 1.7px);
+    background-size: 17px 17px;
+  }
+
+  /* ═══ 01 · ONE SUBJECT, ONE SPACE ═════════════════════════════════════════ */
+  .lb-rooms {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(40px, 5vw, 80px);
+  }
+  .lb-rooms__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 66% at 6% 8%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 70%),
+      radial-gradient(54% 64% at 96% 86%, rgba(201, 60, 10, 0.06) 0%, rgba(201, 60, 10, 0) 72%);
+  }
+  .lb-rooms__dots {
+    right: clamp(6px, 2vw, 40px);
+    top: 8%;
+    width: clamp(58px, 6.6vw, 100px);
+    height: clamp(66px, 7.6vw, 112px);
+    -webkit-mask-image: linear-gradient(230deg, #000 0%, transparent 92%);
+    mask-image: linear-gradient(230deg, #000 0%, transparent 92%);
+  }
+  .lb-rooms__trace { bottom: 4%; right: clamp(-16px, -0.4vw, -2px); width: clamp(100px, 12vw, 200px); }
+
+  .lb-rooms__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    gap: clamp(28px, 4vw, 62px);
+    align-items: center;
+  }
+  .lb-rooms__h { font-size: clamp(28px, 3.4vw, 48px); }
+
+  /* Four indicators, inside the copy column and on their own hairline. */
+  .lb-facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(10px, 1.4vw, 22px);
+    margin: clamp(24px, 3vw, 38px) 0 0;
+    padding: clamp(16px, 2vw, 24px) 0 0;
+    border-top: 1px solid var(--sb-border);
+    list-style: none;
+  }
+  .lb-facts li { display: grid; justify-items: start; gap: 1px; }
+  .lb-facts__i {
+    display: grid;
+    place-items: center;
+    width: clamp(22px, 2vw, 28px);
+    aspect-ratio: 1 / 1;
+    margin-bottom: 5px;
+    color: var(--sb-violet);
+  }
+  .lb-facts__i svg { width: 100%; height: auto; }
+  .lb-facts__n {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.15vw, 18px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .lb-facts__k {
+    margin: 0;
+    font-size: clamp(8.5px, 0.66vw, 10px);
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+
+  .lb-rooms__media { position: relative; }
+  .lb-rooms__lead {
+    margin: 0 0 0 auto;
+    width: min(100%, 92%);
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .lb-rooms__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+  .lb-rooms__side {
+    position: absolute;
+    z-index: 2;
+    left: clamp(-16px, -0.4vw, 4px);
+    bottom: clamp(-28px, -1.2vw, -10px);
+    width: clamp(136px, 16vw, 236px);
+    margin: 0;
+    overflow: hidden;
+    border: 7px solid var(--sb-ivory);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .lb-rooms__side :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .lb-rooms__disc {
+    position: absolute;
+    z-index: 3;
+    right: clamp(6px, 2.6vw, 54px);
+    bottom: clamp(-32px, -1.4vw, -12px);
+    width: clamp(90px, 10vw, 152px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-ivory);
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card);
+  }
+  .lb-rooms__disc :global(picture) { display: block; width: 100%; height: 100%; }
+  .lb-rooms__disc :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* ═══ 02 · THE TWELVE ═════════════════════════════════════════════════════ */
+  .lb-twelve {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(30px, 3.6vw, 58px);
+  }
+  /* ⚠ THE PICTURE CROSSES LEFT HERE. Section 01 put it right; repeating that
+     would give the page one gutter and the repetitive rhythm the brief bans. */
+  .lb-twelve__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.32fr);
+    gap: clamp(28px, 4vw, 60px);
+    align-items: center;
+  }
+  .lb-twelve__h { font-size: clamp(26px, 3.1vw, 42px); }
+
+  .lb-twelve__media { position: relative; }
+  .lb-twelve__lead {
+    margin: 0;
+    width: min(100%, 88%);
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .lb-twelve__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .lb-twelve__side {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: clamp(-26px, -1.1vw, -8px);
+    width: clamp(132px, 15.5vw, 230px);
+    margin: 0;
+    overflow: hidden;
+    border: 7px solid var(--sb-paper);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .lb-twelve__side :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .lb-twelve__disc {
+    position: absolute;
+    z-index: 3;
+    left: clamp(10px, 3vw, 58px);
+    bottom: clamp(-32px, -1.4vw, -12px);
+    width: clamp(86px, 9.6vw, 144px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-paper);
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card);
+  }
+  .lb-twelve__disc :global(picture) { display: block; width: 100%; height: 100%; }
+  .lb-twelve__disc :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* THE TWELVE — two columns of rows on hairlines. */
+  /* ⚠ THREE COLUMNS, FOUR ROWS — not two by six. Six rows ran the list to
+     406px and pushed the section past a screen; the reference sets the twelve
+     three-up, which is a third shorter for the same content. */
+  .lb-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: clamp(12px, 1.5vw, 24px);
+    margin: clamp(18px, 2.2vw, 28px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lb-room {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(7px, 0.8vw, 10px);
+    align-items: start;
+    padding: clamp(7px, 0.85vw, 10px) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .lb-room__i {
+    display: grid;
+    place-items: center;
+    width: clamp(20px, 1.8vw, 24px);
+    aspect-ratio: 1 / 1;
+    margin-top: 1px;
+    color: var(--sb-text-muted);
+  }
+  .lb-room--inq .lb-room__i { color: var(--sb-violet); }
+  .lb-room__i svg { width: 100%; height: auto; }
+  .lb-room__k {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0;
+    font-size: clamp(11.5px, 0.86vw, 13.5px);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--sb-charcoal);
+  }
+  /* The flag that makes the count legible: four of the twelve. */
+  .lb-room__flag {
+    padding: 2px 7px;
+    border-radius: var(--sb-r-1);
+    background: var(--sb-violet-wash);
+    font-size: clamp(7.5px, 0.56vw, 9px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .lb-room__v {
+    margin: 3px 0 0;
+    font-size: clamp(10px, 0.74vw, 11.8px);
+    line-height: 1.55;
+    color: var(--sb-text-muted);
+  }
+  .lb-note {
+    margin: clamp(14px, 1.7vw, 20px) 0 0;
+    font-size: clamp(10px, 0.76vw, 12px);
+    line-height: 1.62;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 03 · BUILT TO SUPPORT REAL LEARNING ═════════════════════════════════ */
+  .lb-spaces {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(38px, 4.6vw, 74px);
+  }
+  .lb-spaces__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 64% at 6% 8%, rgba(255, 205, 180, 0.36) 0%, rgba(255, 205, 180, 0) 72%),
+      radial-gradient(54% 62% at 96% 92%, rgba(255, 138, 92, 0.1) 0%, rgba(255, 138, 92, 0) 72%);
+  }
+  .lb-spaces__dots {
+    right: clamp(6px, 2vw, 40px);
+    top: 12%;
+    width: clamp(58px, 6.6vw, 100px);
+    height: clamp(58px, 6.6vw, 100px);
+    -webkit-mask-image: linear-gradient(230deg, #000 0%, transparent 92%);
+    mask-image: linear-gradient(230deg, #000 0%, transparent 92%);
+  }
+  .lb-spaces__head { max-width: 62ch; }
+  .lb-spaces__h { font-size: clamp(26px, 3.1vw, 42px); }
+  .lb-spaces__b { max-width: 58ch; }
+
+  /* ⚠ COLUMNS DIVIDED BY RULES, NOT CARDS. No plate, no border box, no shadow —
+     one hairline between each pair, which is what makes them read as one row of
+     editorial columns rather than as four UI tiles. */
+  .lb-cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 2.2vw, 38px);
+    margin: clamp(26px, 3.2vw, 46px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lb-col {
+    position: relative;
+    padding-left: clamp(16px, 2.2vw, 38px);
+    border-left: 1px solid var(--sb-border-strong);
+  }
+  .lb-col:first-child { padding-left: 0; border-left: 0; }
+  .lb-col__i {
+    display: grid;
+    place-items: center;
+    width: clamp(26px, 2.4vw, 32px);
+    aspect-ratio: 1 / 1;
+    color: var(--sb-violet);
+  }
+  .lb-col__i svg { width: 100%; height: auto; }
+  .lb-col__n {
+    margin: clamp(10px, 1.2vw, 14px) 0 0;
+    font-size: clamp(9.5px, 0.72vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-orange-bright);
+  }
+  .lb-col__k {
+    margin: 5px 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.25vw, 19px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .lb-col__b {
+    margin: clamp(7px, 0.9vw, 11px) 0 0;
+    font-size: clamp(10px, 0.76vw, 12px);
+    line-height: 1.64;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 04 · THE BREAK ══════════════════════════════════════════════════════
+     ⚠ THE SHORTEST SECTION ON THE PAGE, ON PURPOSE. It is a beat between the
+     inventory and the close; given the padding of a content section it becomes
+     a large empty band, which is exactly what the brief warns against. */
+  .lb-break {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: clamp(34px, 4vw, 62px);
+  }
+  .lb-break__ghost {
+    position: absolute;
+    z-index: -2;
+    font-family: var(--sb-font-display);
+    font-size: clamp(66px, 10vw, 160px);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.86;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: rgba(201, 60, 10, 0.035);
+    user-select: none;
+    pointer-events: none;
+  }
+  .lb-break__ghost--a { top: -8%; left: calc(var(--sb-margin) * -0.5); }
+  .lb-break__ghost--b { bottom: -10%; right: calc(var(--sb-margin) * -0.5); }
+  .lb-break__inner { position: relative; text-align: center; }
+  .lb-break__h {
+    margin: 0 auto;
+    /* Wide enough for the third line to set whole — at 20ch it broke after
+       "idea of" and left "learning." alone on a fourth. */
+    max-width: 28ch;
+    font-size: clamp(24px, 3vw, 44px);
+  }
+
+  /* ═══ 05 · THE CLOSE ══════════════════════════════════════════════════════ */
+  .lb-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .lb-close__media { position: absolute; z-index: -3; inset: -12% 0; }
+  .lb-close__media :global(picture),
+  .lb-close__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+  .lb-close__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(24, 11, 5, 0.86) 0%, rgba(24, 11, 5, 0.74) 46%, rgba(24, 11, 5, 0.9) 100%),
+      radial-gradient(66% 76% at 50% 42%, rgba(255, 92, 53, 0.16) 0%, transparent 72%);
+  }
+  .lb-close__grain {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    opacity: 0.26;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+  .lb-close__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+  .lb-close__h {
+    max-width: 22ch;
+    font-size: clamp(26px, 3.2vw, 46px);
+    color: #fff;
+  }
+  .lb-close__h em { color: var(--sb-lime); font-style: italic; }
+  .lb-close__b {
+    max-width: 66ch;
+    margin: clamp(14px, 1.7vw, 21px) 0 0;
+    font-size: clamp(12px, 0.88vw, 14px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .lb-rooms__grid,
+    .lb-twelve__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(32px, 4.6vw, 48px);
+    }
+    .lb-body { max-width: 58ch; }
+    .lb-rooms__lead,
+    .lb-twelve__lead { width: 100%; }
+    .lb-rooms__side,
+    .lb-twelve__side { width: clamp(120px, 26vw, 186px); }
+    .lb-rooms__disc,
+    .lb-twelve__disc { width: clamp(80px, 17vw, 126px); }
+
+    .lb-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    /* ⚠ THE PICTURE GOES BACK ABOVE THE COPY IN SECTION 02. Source order puts it
+       first so the alternation works on desktop; stacked, a reader meeting the
+       collage before the heading has no idea what they are looking at. */
+    .lb-twelve__media { order: 2; }
+    .lb-twelve__copy { order: 1; }
+
+    /* Two-up columns; the rule turns to run along the top of the second row. */
+    .lb-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(22px, 3.4vw, 32px); }
+    .lb-col:nth-child(3) { padding-left: 0; border-left: 0; }
+    .lb-rooms__trace { display: none; }
+  }
+
+  @media (max-width: 767px) {
+    /* The indicators stay two-up rather than becoming four stacked blocks. */
+    .lb-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(16px, 4vw, 22px); }
+    .lb-list { grid-template-columns: minmax(0, 1fr); }
+    .lb-cols { grid-template-columns: minmax(0, 1fr); gap: clamp(18px, 5vw, 24px); }
+    .lb-col {
+      padding: clamp(16px, 4.5vw, 22px) 0 0;
+      border-left: 0;
+      border-top: 1px solid var(--sb-border-strong);
+    }
+    .lb-col:first-child { padding-top: 0; border-top: 0; }
+
+    /* Overlaps become controlled offsets rather than disappearing. */
+    .lb-rooms__side { left: 0; bottom: clamp(-18px, -4vw, -10px); }
+    .lb-twelve__side { right: 0; bottom: clamp(-16px, -4vw, -8px); }
+    .lb-rooms__disc,
+    .lb-twelve__disc { width: clamp(66px, 19vw, 96px); }
+
+    .lb-break__ghost { font-size: clamp(52px, 20vw, 96px); }
+  }
+</style>

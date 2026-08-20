@@ -1,52 +1,21 @@
 ---
 /**
- * CAREER DEVELOPMENT & STUDENT SUCCESS · CAREER GUIDANCE — audit §2E.
+ * STUDENT SUCCESS · CAREER GUIDANCE.
  *
- * ⚠ REBUILT ON EVIDENCE, NOT ON THE PARENT'S SUMMARY. The stub said guidance
- * "runs alongside the senior years rather than after them" and pointed at the
- * activity gallery. That is the overview's sentence. This page instead reads the
- * school's own twenty-six published photographs and reports what is IN them.
+ * ⚠ THE BODY IS A BESPOKE COMPOSITION, and its slider is data-driven from
+ * data/studentSuccess.ts — eight frames today, unlimited tomorrow. Sourcing,
+ * and the one thing this page refuses to guess (the speaker's name), are in the
+ * component's header.
  *
- * ═══ SOURCE — read off the school's own published photographs ═══════════════
- *   The hall session: a projected deck headed "Career Counselling — Dream BIG
- *   aim HIGH", carrying a Swami Vivekananda line, taken by a visiting speaker on
- *   a lapel microphone. The blackboard beside the stage reads CAREER.
- *
- *   The desk sessions: the school's own hand-painted banner behind every table
- *   reads "CAREER COUNSELING — CLASS X & XI — Your Journey". Students sit one at
- *   a time, several with a family member beside them, opposite a counsellor
- *   working from a laptop.
- *
- *   data/schoolActivities.ts — "The first day of the school's career counselling
- *   programme, in twenty-six photographs. A second day was published separately;
- *   neither carries an account of who spoke or what was covered."
- *   data/newsPages.ts — Guiding Futures, Shaping Lives · Classes IX–XII ·
- *   Mr. Ashutosh Kumar Pandey, IRS, Deputy Commissioner of Income Tax.
- *   data/facilities.ts — Career Counselling ("subject choice, stream selection
- *   and university guidance") and BCS Counsellors, both on campus.
- *
- * ⚠ THE SPEAKER IS NOT NAMED. His name and credential are printed on the slide
- * behind him, but at this resolution they cannot be read with certainty, and the
- * school published no caption. A name guessed off a blurred slide would be worse
- * than no name. ASSET REQUIREMENT: the school's own caption for the two days.
- *
- * Composition: split (paper, photo RIGHT — the hall) → collage (sand, LEFT — the
- * tables) → close. The page is built the way the day is: room, then table.
+ * ⚠ THE BANNER, NAVBAR AND FOOTER ARE UNTOUCHED.
+ * ⚠ THE PANEL'S padding-block IS AN INLINE STYLE — a scoped rule can skew
+ * against its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcSplit from '../../../components/academics/system/AcSplit.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import CareerGuidancePage from '../../../components/academics/assessment/CareerGuidancePage.astro';
 
 import banner from '../../../assets/school-activities/career-counselling/03.jpg';
-import pTalk from '../../../assets/school-activities/career-counselling/08.jpg';
-import pHall from '../../../assets/school-activities/career-counselling/01.jpg';
-import pDeskA from '../../../assets/school-activities/career-counselling/03.jpg';
-import pDeskB from '../../../assets/school-activities/career-counselling/06.jpg';
-import pCohort from '../../../assets/photos/sunbeem-5.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
@@ -66,57 +35,7 @@ const school = 'Sunbeam School Ballia';
     position="50% 46%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcSplit
-      ground="paper"
-      side="right"
-      aspect="3 / 2"
-      kicker="Career counselling · day one"
-      heading="It opens<br /><em>with a room</em>"
-      body={[
-        'The programme begins as a single session for the whole senior school. A visiting speaker takes the hall on a lapel microphone under a deck headed <strong>“Dream BIG aim HIGH”</strong>, opening on a line from Swami Vivekananda — <em>“knowledge does not mean simply intellectual assent, it means realisation.”</em>',
-        'Beside the stage the school has chalked one word on a blackboard, and left it there: <strong>CAREER</strong>. The school published twenty-six photographs of the day, and a second day separately.',
-      ]}
-      photo={pTalk}
-      alt={`A visiting speaker addressing the senior school of ${school} at the career counselling session, his slide headed “Dream BIG aim HIGH”`}
-      inset={pHall}
-      insetAlt={`The hall at ${school} during the career counselling session, the senior school seated in rows facing the projected deck`}
-    />
-
-    <AcCollage
-      ground="sand"
-      side="left"
-      kicker="And then it narrows"
-      heading="Class X and XI,<br /><em>one at a time</em>"
-      body={[
-        'The school’s own hand-painted banner sets the audience, and it is a specific one: <strong>“Career Counseling — Class X &amp; XI — Your Journey.”</strong> Behind that banner the day stops being an assembly. Each student takes a chair opposite a counsellor working from a laptop, with a file of papers between them, and several bring a parent or an elder sibling to sit alongside.',
-        'It is the difference between being told what careers exist and being asked what you are going to do about yours.',
-      ]}
-      ledger={[
-        { k: 'Career Counselling · Classes X &amp; XI', v: 'One-to-one at a desk, a counsellor and a laptop, family welcome.' },
-        { k: 'Guiding Futures · Classes IX–XII', v: 'Mr. Ashutosh Kumar Pandey, IRS, Deputy Commissioner of Income Tax — his own educational journey, not a careers deck.' },
-        { k: 'On campus', v: 'A career counselling desk for subject choice, stream selection and university guidance.' },
-        { k: 'BCS Counsellors', v: 'Trained counsellors available to students, apart from the careers programme.' },
-        { k: 'Published record', v: 'Twenty-six photographs of day one; a second day published separately.' },
-      ]}
-      lead={{ src: pDeskA, alt: `A student of ${school} and a family member in a one-to-one career counselling session, the school’s Class X and XI banner behind them` }}
-      support={[
-        { src: pDeskB, alt: `A student of ${school} seated opposite a counsellor working from a laptop at a career counselling desk` },
-        { src: pHall, alt: `The hall at ${school} during the career counselling session, the senior school seated in rows` },
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Your journey,<br /><em>in their words.</em>"
-      body="The school publishes the programme, the year groups it is for, and twenty-six photographs of the first day. It does not publish who spoke, what was covered, or how a family books a session."
-      photo={pCohort}
-      alt={`Student council office-bearers and NCC cadets of ${school} on stage with the school’s dignitaries`}
-      position="50% 38%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <CareerGuidancePage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

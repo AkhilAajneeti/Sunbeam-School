@@ -1,49 +1,20 @@
 ---
 /**
- * CAREER DEVELOPMENT & STUDENT SUCCESS · STUDENT SUCCESS STORIES — audit §2E.
+ * STUDENT SUCCESS · STUDENT SUCCESS STORIES.
  *
- * ⚠ NO AGGREGATE, ANYWHERE ON THIS PAGE. The client brief asked for "100+
- * Olympiad Awards"-style counters; the school publishes no totals, so a headline
- * number here would be one we invented. What it does publish is three finished
- * award graphics and a handful of named individual results — so the page is
- * built out of those and stops where they stop.
+ * No aggregate anywhere on this page. Sourcing — the three award graphics the
+ * school made artwork for, the four named individual placings, and why the
+ * brief's optional second slider was not built — is in the component header.
  *
- * ═══ SOURCE — data/achievements.ts, every line published ═══════════════════
- *   RoboWunder International Robotics Championship, Kuala Lumpur — Master Deepak
- *     Kumar, 2nd place, cash prize of 1,500 USD, session 2025-26. The only
- *     international placing in the school's record.
- *   National School Innovation Ranking & Awards (CBSE) — Rank 2, Uttar Pradesh.
- *   CBSE Cluster-V Kho-Kho Girls' Championship — gold, girls' under-19, 2025;
- *     champions 2018-19 and 2019-20; hosted the championship in 2016.
- *   Indian AI Impact Festival, 2024 — Ayushi, of Class VII, placed first.
- *   Virtual Interbranch Declamation — Class IV took the top three positions
- *     across the Sunbeam group.
- *
- * ⚠ ALL THREE MAJORS ARE POSTERS, NOT PHOTOGRAPHS — designed graphics with their
- * own headline, crest and framed photograph inside. They are shown WHOLE through
- * AcPosters; cropping one to fill a landscape frame removes its headline, which
- * is the part carrying the fact.
- *
- * ⚠ THE FULL RECORD IS NOT DUPLICATED HERE. Sport lives on Achievements and the
- * CUET scores live on University Counselling; this page carries the three the
- * school itself chose to make artwork for, and the individual placings.
- *
- * Composition: posters (paper, the three majors) → path (ivory, the record read
- * by how far it travelled) → close.
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcPosters from '../../../components/academics/system/AcPosters.astro';
-import AcPath from '../../../components/academics/system/AcPath.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import SuccessStoriesPage from '../../../components/academics/assessment/SuccessStoriesPage.astro';
 
 import banner from '../../../assets/competition/chaturang-chess-championship/chaturang-chess-championship-04.jpg';
-import gRobo from '../../../assets/school achivement/robo.jpg';
-import gInnov from '../../../assets/school achivement/innoventure.jpg';
-import gKho from '../../../assets/school achivement/KHO KHO CHAMPIOANSHIP.jpg';
-import pCohort from '../../../assets/photos/sunbeem-5.jpg';
-
-const school = 'Sunbeam School Ballia';
 ---
 
 <BaseLayout
@@ -60,69 +31,10 @@ const school = 'Sunbeam School Ballia';
     ]}
     src={banner}
     alt="Students of Sunbeam School Ballia mid-game at the boards during the Chaturang chess championship."
-    position="50% 44%"
+    position="50% 50%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcPosters
-      ground="paper"
-      aspect="4 / 5"
-      kicker="The three the school made artwork for"
-      heading="Second in the world,<br /><em>second in the state</em>"
-      body={[
-        'A school that designs an award graphic has decided something matters. These are the three Sunbeam Ballia produced artwork for, and they are shown here whole — headline, crest and all — rather than cropped into a photograph they were never meant to be.',
-      ]}
-      posters={[
-        {
-          art: gRobo,
-          alt: `${school}’s award graphic for the RoboWunder International Robotics Championship in Kuala Lumpur, showing Deepak Kumar with his drone and the team receiving the award`,
-          title: 'Master Deepak Kumar',
-          meta: '2nd place · USD 1,500',
-          note: 'RoboWunder International Robotics Championship, Kuala Lumpur, Malaysia. Session 2025-26 — the furthest afield the school has competed, and the only international placing in its record.',
-        },
-        {
-          art: gInnov,
-          alt: `${school}’s award graphic for securing second position in Uttar Pradesh at the National School Innovation Awards, showing the citation being presented on stage`,
-          title: 'National School Innovation Ranking',
-          meta: 'Rank 2 · Uttar Pradesh',
-          note: 'CBSE, for the school’s work in nurturing an innovation mindset among its students.',
-        },
-        {
-          art: gKho,
-          alt: `${school}’s award graphic for the CBSE Cluster-V Kho-Kho Girls’ Championship under-19 gold medal of 2025, showing the team with their trophy and medals`,
-          title: 'Kho-Kho, girls’ under-19',
-          meta: 'Gold · 2025',
-          note: 'CBSE Cluster V. Champions in 2018-19 and 2019-20, and the school hosted the championship in 2016 — its strongest sporting record by some distance.',
-        },
-      ]}
-    />
-
-    <AcPath
-      ground="ivory"
-      kicker="Read another way"
-      heading="The same record,<br /><em>by how far it travelled</em>"
-      body={[
-        'Arranged by reach rather than by date, the school’s individual results make a shape: a Class VII student placing first in a national field, a Class IV year group taking the top three places across the whole Sunbeam group, and a drone flown to second place in Malaysia.',
-      ]}
-      beats={[
-        { k: 'Kuala Lumpur', body: 'Deepak Kumar, second at an international robotics championship, with a 1,500 USD prize.' },
-        { k: 'Uttar Pradesh', body: 'Rank 2 in the state at CBSE’s National School Innovation Ranking.' },
-        { k: 'Class VII', body: 'Ayushi placed first at the Indian AI Impact Festival, 2024.' },
-        { k: 'Class IV', body: 'The top three positions across the Sunbeam group at the Virtual Interbranch Declamation.' },
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Named,<br /><em>or not printed.</em>"
-      body="Every result on this page is one the school published with a name, a placing or a prize attached. There is no award total here because the school keeps none — and a count nobody can check is worth less than one result anybody can."
-      photo={pCohort}
-      alt={`Student council office-bearers and NCC cadets of ${school} on stage with the school’s dignitaries`}
-      position="50% 38%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <SuccessStoriesPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

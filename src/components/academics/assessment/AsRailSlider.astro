@@ -1,0 +1,211 @@
+---
+/**
+ * THE CARD RAIL — many cards side by side, scrolled horizontally.
+ *
+ * ⚠ FOR A SET OF SEPARATE RECORDS, where the reader wants to scan rather than
+ * study one frame. Olympiads, scholarship records, success stories, result
+ * cards. The photo slider is for the other case.
+ *
+ * ⚠ IT IS A NATIVE SCROLLER AND IS NOT SCROLL-JACKED. `overflow-x: auto` plus
+ * `scroll-snap-type: x mandatory` gives flick, drag, shift-wheel, arrow keys,
+ * trackpad and a screen reader's own scrolling for free. The script only adds
+ * the buttons, the counter and the dots — with it absent the rail still works
+ * exactly as well and simply loses its indicator. That is the same rule the
+ * horizontal rails elsewhere in this project follow, and it is the reason this
+ * component has no drag-emulation code at all.
+ *
+ * ⚠ THE COUNTS ARE CSS VARIABLES, NOT A BREAKPOINT LADDER IN JS. `--per`,
+ * `--per-md` and `--per-sm` set how many cards are visible at each width; the
+ * script reads the rendered geometry rather than being told about it, so a
+ * consumer that wants three-up on desktop changes one number.
+ *
+ * ⚠ UNLIMITED ITEMS BY CONSTRUCTION. Nothing here counts to four. Five cards,
+ * twenty or fifty use the same markup, and the counter and dots follow.
+ *
+ * The cards themselves come from the consumer through the default slot, so this
+ * component never decides what a card looks like — only how the row behaves.
+ */
+import '../../../styles/slider.css';
+
+interface Props {
+  /** Accessible name for the rail. */
+  label: string;
+  /** Cards visible at desktop / tablet / mobile. */
+  per?: number;
+  perMd?: number;
+  perSm?: number;
+  /** Show the counter beside the arrows. */
+  counter?: boolean;
+  /** Show pagination dots beneath. */
+  dots?: boolean;
+  /** Total item count — used for the counter's denominator and the dots. */
+  total: number;
+  /** Let the track bleed to the container's padding. Only for a full-width
+      rail — a rail inside one grid column must leave this off. */
+  bleed?: boolean;
+  id: string;
+  class?: string;
+}
+
+const {
+  label,
+  per = 4,
+  perMd = 2,
+  perSm = 1,
+  counter = true,
+  dots = true,
+  total,
+  bleed = false,
+  id,
+  class: extra = '',
+} = Astro.props;
+
+const totalLabel = String(total).padStart(2, '0');
+---
+
+<div class:list={['sl-rail', bleed && 'sl-rail--bleed', extra]} data-sl-rail>
+  <div class="sl-rail__head">
+    <div class="sl-rail__slot"><slot name="head" /></div>
+
+    <div class="sl-rail__ctrl">
+      {/* ⚠ THE DENOMINATOR IS A HOOK, NOT A FIXED NUMBER. It renders the full
+          count on the server so the figure is right before JavaScript runs, and
+          the script rewrites it whenever a consumer filters the rail — otherwise
+          a three-card filtered view still reads "of 06". */}
+      {counter && (
+        <p class="sl-count" aria-live="polite">
+          <b data-sl-now>01</b> / <span data-sl-total>{totalLabel}</span>
+        </p>
+      )}
+      <button type="button" class="sl-btn" data-sl-prev aria-controls={id}>
+        <span class="u-visually-hidden">Scroll back</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button type="button" class="sl-btn" data-sl-next aria-controls={id}>
+        <span class="u-visually-hidden">Scroll forward</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <ul
+    class="sl-rail__track"
+    id={id}
+    data-sl-track
+    style={`--per: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
+    tabindex="0"
+    role="group"
+    aria-roledescription="carousel"
+    aria-label={label}
+  >
+    <slot />
+  </ul>
+
+  {dots && (
+    <div class="sl-rail__foot">
+      <ul class="sl-dots" data-sl-dots aria-hidden="true"></ul>
+    </div>
+  )}
+</div>
+
+<script>
+  /* EVERY CARD RAIL ON THE PAGE, wired independently.
+
+     ⚠ THE SCRIPT MEASURES, IT DOES NOT ASSUME. Card width, gap and the number
+     visible all come from the rendered box — so a rail that is four-up at 1440
+     and one-up at 390 needs no breakpoint table here, and a filtered rail whose
+     item count changed re-reads itself. */
+  document.querySelectorAll<HTMLElement>('[data-sl-rail]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-sl-track]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-sl-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-sl-next]');
+    const now = root.querySelector<HTMLElement>('[data-sl-now]');
+    const tally = root.querySelector<HTMLElement>('[data-sl-total]');
+    const dots = root.querySelector<HTMLElement>('[data-sl-dots]');
+    if (!track) return;
+
+    const items = () => Array.from(track.children).filter(
+      (c): c is HTMLElement => c instanceof HTMLElement && c.offsetParent !== null,
+    );
+
+    /** One card plus one gap — the distance an arrow press should travel. */
+    const step = () => {
+      const list = items();
+      if (list.length < 2) return list[0]?.getBoundingClientRect().width ?? 0;
+      return list[1].getBoundingClientRect().left - list[0].getBoundingClientRect().left;
+    };
+
+    /** How many pages of cards the rail holds, given how many are visible. */
+    const pages = () => {
+      const s = step();
+      if (!s) return 1;
+      const visible = Math.max(1, Math.round(track.clientWidth / s));
+      return Math.max(1, items().length - visible + 1);
+    };
+
+    const index = () => {
+      const s = step();
+      return s ? Math.round(track.scrollLeft / s) : 0;
+    };
+
+    const paintDots = () => {
+      if (!dots) return;
+      const n = pages();
+      if (dots.children.length !== n) {
+        dots.replaceChildren(
+          ...Array.from({ length: n }, (_, k) => {
+            const li = document.createElement('li');
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'sl-dot';
+            b.setAttribute('aria-label', `Go to card ${k + 1}`);
+            b.addEventListener('click', () => track.scrollTo({ left: k * step(), behavior: 'smooth' }));
+            li.appendChild(b);
+            return li;
+          }),
+        );
+        /* The dots are decorative while there is only one page. */
+        dots.setAttribute('aria-hidden', n > 1 ? 'false' : 'true');
+        dots.parentElement?.toggleAttribute('hidden', n <= 1);
+      }
+    };
+
+    const sync = () => {
+      const i = index();
+      const n = pages();
+      const live = items().length;
+      if (now) now.textContent = String(Math.min(i + 1, live)).padStart(2, '0');
+      if (tally) tally.textContent = String(live).padStart(2, '0');
+      Array.from(dots?.querySelectorAll('.sl-dot') ?? []).forEach((d, k) =>
+        d.setAttribute('aria-current', k === Math.min(i, n - 1) ? 'true' : 'false'),
+      );
+      /* Disabled rather than hidden — see the note in slider.css. */
+      if (prev) prev.disabled = track.scrollLeft <= 2;
+      if (next) next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+    };
+
+    const go = (dir: number) => track.scrollBy({ left: dir * step(), behavior: 'smooth' });
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
+
+    let queued = false;
+    track.addEventListener('scroll', () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; sync(); });
+    }, { passive: true });
+
+    window.addEventListener('resize', () => { paintDots(); sync(); });
+
+    /* A consumer that filters the rail dispatches this, and the indicator
+       catches up without the component knowing what was filtered. */
+    root.addEventListener('sl:refresh', () => { track.scrollTo({ left: 0 }); paintDots(); sync(); });
+
+    paintDots();
+    sync();
+  });
+</script>

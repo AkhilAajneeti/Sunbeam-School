@@ -1,0 +1,334 @@
+/* ============================================================================
+   SLIDERS — the shared layer behind AsPhotoSlider and AsRailSlider.
+
+   ⚠ TWO SLIDERS, NOT ONE, AND NOT SEVEN. Five pages in this section need a
+   slider and they need exactly two behaviours:
+
+     AsPhotoSlider — ONE large frame at a time, with a thumbnail strip. For a
+       set of photographs of the same event, where the reader wants to look at
+       one picture properly. Career Guidance, Subject Selection.
+     AsRailSlider  — MANY cards side by side, scrolled horizontally. For a set
+       of separate records, where the reader wants to scan. Olympiads,
+       Scholarships, Success Stories, University results.
+
+   Copied per page, the fiddly parts — the counter maths, the arrow disabling at
+   the ends, the snap alignment — would have had to be got right five times.
+
+   ⚠ THE RAIL IS A NATIVE SCROLLER AND IS NOT SCROLL-JACKED. `overflow-x: auto`
+   plus `scroll-snap-type` gives flick, drag, shift-wheel, arrow keys, trackpad
+   and a screen reader's own scrolling for free. The script only adds the
+   buttons, the counter and the dots — with it absent the rail still works
+   exactly as well, and simply loses its indicator. The same rule that governs
+   the horizontal rails elsewhere in this project.
+
+   ⚠ NO AUTOPLAY ANYWHERE. Both briefs are explicit, and an image that changes
+   under a reader who is looking at it is a bug wearing a feature's clothes.
+   ========================================================================= */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SHARED CONTROLS — arrows, counter and dots look identical on both sliders.
+   ───────────────────────────────────────────────────────────────────────── */
+.sl-btn {
+  display: grid;
+  place-items: center;
+  width: clamp(34px, 3.2vw, 44px);
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--sb-border-strong);
+  border-radius: 50%;
+  background: var(--sb-paper);
+  color: var(--sb-charcoal);
+  transition: background-color var(--sb-dur-image) var(--sb-ease),
+    color var(--sb-dur-image) var(--sb-ease),
+    border-color var(--sb-dur-image) var(--sb-ease),
+    opacity var(--sb-dur-image) var(--sb-ease);
+}
+.sl-btn svg { width: 42%; height: auto; }
+.sl-btn:hover:not(:disabled) { border-color: var(--sb-violet); background: var(--sb-violet); color: #fff; }
+/* ⚠ DISABLED, NOT HIDDEN. A control that disappears at the end of the run
+   makes the row jump; one that dims stays where the reader left it. */
+.sl-btn:disabled { opacity: 0.34; cursor: default; }
+
+.sl-count {
+  font-family: var(--sb-font-display);
+  font-size: clamp(11px, 0.86vw, 13.5px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--sb-text-muted);
+}
+.sl-count b { font-weight: 700; color: var(--sb-violet); }
+
+.sl-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sl-dot {
+  width: 7px;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sb-charcoal) 22%, transparent);
+  transition: width var(--sb-dur-image) var(--sb-ease), background-color var(--sb-dur-image) var(--sb-ease);
+}
+.sl-dot[aria-current='true'] { width: 22px; border-radius: 999px; background: var(--sb-violet); }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   AsPhotoSlider — one frame at a time.
+   ───────────────────────────────────────────────────────────────────────── */
+.sl-photo { position: relative; }
+
+/* ⚠ EVERY FRAME IS IN THE DOM AND STACKED. Swapping a single <img>'s src would
+   flash white between pictures on a slow connection; cross-fading two layers
+   that are both already decoded does not. */
+/* ⚠ THE STAGE OWNS THE BOX, NOT THE FIRST FRAME. Letting frame one be
+   position: relative and size the stage looked tidy and collapsed to zero: the
+   frame is an <a>, which is inline, so nothing established a height and every
+   absolutely-positioned sibling had nothing to fill. The stage carries the
+   aspect-ratio and all frames are absolute — one rule, no special case. */
+.sl-photo__stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--sb-r-2);
+  background: var(--sb-sand);
+  box-shadow: var(--sb-shadow-card);
+}
+.sl-photo__frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0;
+  transition: opacity 420ms var(--sb-ease);
+  pointer-events: none;
+  cursor: zoom-in;
+}
+.sl-photo__frame.is-on { opacity: 1; pointer-events: auto; }
+.sl-photo__frame picture,
+.sl-photo__frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The counter, set on the frame itself as the brief asks. */
+.sl-photo__n {
+  position: absolute;
+  z-index: 2;
+  top: clamp(10px, 1.2vw, 16px);
+  left: clamp(10px, 1.2vw, 16px);
+  padding: 5px clamp(9px, 1vw, 13px);
+  border-radius: var(--sb-r-1);
+  background: rgba(24, 16, 12, 0.72);
+  font-family: var(--sb-font-display);
+  font-size: clamp(10px, 0.76vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+.sl-photo__n b { color: var(--sb-lime); font-weight: 700; }
+
+.sl-photo__cap {
+  margin: clamp(9px, 1vw, 12px) 0 0;
+  font-size: clamp(9.5px, 0.7vw, 11px);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: var(--sb-text-muted);
+}
+
+/* The arrows sit on the frame's vertical centre, half off its edges. */
+.sl-photo__nav {
+  position: absolute;
+  z-index: 3;
+  top: calc(50% - clamp(34px, 3.2vw, 44px) / 2);
+  inset-inline: clamp(-18px, -1.2vw, -6px);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.sl-photo__nav .sl-btn { pointer-events: auto; box-shadow: var(--sb-shadow-card); }
+
+/* THE THUMBNAIL STRIP. A native scroller, so it simply scrolls when there are
+   more thumbnails than fit — which is what makes fifty images no worse than
+   five. */
+.sl-photo__thumbs {
+  display: flex;
+  gap: clamp(7px, 0.85vw, 11px);
+  margin: clamp(11px, 1.3vw, 16px) 0 0;
+  padding: 0 0 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  list-style: none;
+}
+.sl-photo__thumbs::-webkit-scrollbar { height: 4px; }
+.sl-photo__thumbs::-webkit-scrollbar-thumb { border-radius: 999px; background: var(--sb-border-strong); }
+.sl-thumb {
+  flex: 0 0 auto;
+  width: clamp(58px, 6.6vw, 92px);
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: var(--sb-r-2);
+  background: var(--sb-sand);
+  transition: border-color var(--sb-dur-image) var(--sb-ease), opacity var(--sb-dur-image) var(--sb-ease);
+  opacity: 0.62;
+}
+.sl-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+.sl-thumb:hover { opacity: 0.86; }
+.sl-thumb[aria-current='true'] { border-color: var(--sb-violet); opacity: 1; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   AsRailSlider — many cards, scrolled.
+   ───────────────────────────────────────────────────────────────────────── */
+.sl-rail { position: relative; }
+
+.sl-rail__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: clamp(14px, 1.8vw, 26px);
+  margin: 0 0 clamp(16px, 2vw, 26px);
+}
+.sl-rail__ctrl { display: flex; align-items: center; gap: clamp(9px, 1.1vw, 14px); }
+
+/* ⚠ --gap IS DECLARED, NOT ONLY CONSUMED. It was originally supplied through
+   the `gap` shorthand's fallback — which meant var(--gap) inside
+   grid-auto-columns resolved to nothing, the calc() was invalid, the column
+   size fell back to auto, and eight cards squeezed themselves into the visible
+   width regardless of --per. A custom property has to exist to be read.
+
+   ⚠ THE EDGE BLEED IS OPT-IN. A rail that fills the container should bleed to
+   its padding so a card scrolled to the edge continues rather than looks cut; a
+   rail that sits inside one column of a grid must not, or it escapes its
+   column. `--bleed` is 0 by default and the consumer sets it. */
+.sl-rail__track {
+  --gap: clamp(12px, 1.5vw, 22px);
+  --bleed: 0px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));
+  gap: var(--gap);
+  margin-inline: calc(var(--bleed) * -1);
+  padding-inline: var(--bleed);
+  padding-block: 4px 10px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--bleed);
+  scrollbar-width: none;
+  list-style: none;
+}
+.sl-rail--bleed .sl-rail__track { --bleed: var(--sb-margin); }
+.sl-rail__track::-webkit-scrollbar { display: none; }
+.sl-rail__track > * { scroll-snap-align: start; }
+
+/* ⚠ A FILTERED CARD MUST ACTUALLY LEAVE THE ROW. `hidden` only maps to
+   `display: none` through the UA sheet, so ANY author rule that sets `display`
+   on a card — `.ol-card { display: flex }`, for one — silently outranks it and
+   the filter appears to do nothing. This rule belongs to the component rather
+   than to each consumer, because every consumer would otherwise have to
+   remember it. */
+.sl-rail__track > [hidden] { display: none !important; }
+
+.sl-rail__foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 1.5vw, 20px);
+  margin: clamp(16px, 2vw, 26px) 0 0;
+}
+
+/* THE FILTER CHIPS. Used by the Olympiad rail; harmless where unused. */
+.sl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(6px, 0.8vw, 10px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sl-chip {
+  padding: clamp(6px, 0.7vw, 9px) clamp(12px, 1.4vw, 18px);
+  border: 1px solid var(--sb-border-strong);
+  border-radius: var(--sb-r-1);
+  background: transparent;
+  font-size: clamp(10px, 0.74vw, 11.8px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--sb-text-secondary);
+  transition: background-color var(--sb-dur-image) var(--sb-ease),
+    border-color var(--sb-dur-image) var(--sb-ease),
+    color var(--sb-dur-image) var(--sb-ease);
+}
+.sl-chip:hover { border-color: var(--sb-violet); color: var(--sb-violet); }
+.sl-chip[aria-pressed='true'] { border-color: var(--sb-violet); background: var(--sb-violet); color: #fff; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   THE EMPTY STATE — rendered when a data array is legitimately empty.
+   ⚠ IT IS A STATEMENT, NOT A SKELETON. A greyed-out card placeholder implies
+   something is loading; this says the record does not exist yet.
+   ───────────────────────────────────────────────────────────────────────── */
+.sl-empty {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(16px, 2vw, 26px);
+  align-items: start;
+  padding: clamp(20px, 2.4vw, 32px) clamp(20px, 2.4vw, 34px);
+  border: 1px dashed color-mix(in srgb, var(--sb-violet) 34%, transparent);
+  border-radius: var(--sb-r-3);
+  background: #fdf7f2;
+}
+.sl-empty__m {
+  display: grid;
+  place-items: center;
+  width: clamp(44px, 4.2vw, 60px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: var(--sb-violet-wash);
+  color: var(--sb-violet);
+}
+.sl-empty__m svg { width: 46%; height: auto; }
+.sl-empty__k {
+  margin: 0;
+  font-family: var(--sb-font-display);
+  font-size: clamp(14px, 1.2vw, 19px);
+  font-weight: 700;
+  line-height: 1.24;
+  letter-spacing: -0.028em;
+  color: var(--sb-charcoal);
+}
+.sl-empty__v {
+  max-width: 62ch;
+  margin: clamp(7px, 0.9vw, 11px) 0 0;
+  font-size: clamp(10.5px, 0.78vw, 12.4px);
+  line-height: 1.68;
+  color: var(--sb-text-muted);
+}
+.sl-empty__acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(12px, 1.5vw, 20px);
+  margin: clamp(13px, 1.6vw, 20px) 0 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   RESPONSIVE — the per-view counts the briefs specify, set once.
+   ───────────────────────────────────────────────────────────────────────── */
+@media (max-width: 1179px) {
+  .sl-rail__track { --per: var(--per-md, 2); }
+}
+
+@media (max-width: 767px) {
+  .sl-rail__track { --per: var(--per-sm, 1); }
+  .sl-rail__head { align-items: start; }
+  .sl-photo__nav { inset-inline: clamp(-10px, -2.4vw, -4px); }
+  .sl-empty { grid-template-columns: minmax(0, 1fr); gap: clamp(13px, 3.6vw, 18px); }
+}

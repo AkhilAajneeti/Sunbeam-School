@@ -1,58 +1,26 @@
 ---
 /**
- * CAREER DEVELOPMENT & STUDENT SUCCESS · SUBJECT SELECTION GUIDANCE — audit §2E.
+ * STUDENT SUCCESS · SUBJECT SELECTION GUIDANCE.
  *
- * ⚠ THIS PAGE'S DEEP-DIVE IS THE EVIDENCE THAT THE CHOICE IS SUPPORTED, not a
- * description of how to choose a stream. Anyone can write "we help students
- * choose wisely". What this school can actually show is: the audience is named
- * on its own banner (Classes X and XI), the guidance is one-to-one at a desk,
- * and the outcome of the choice is published by name on a placement board.
+ * The body is a bespoke composition. Sourcing — the four streams, the Class X
+ * and XI audience read off the school's own hand-painted banner, the counselling
+ * desk, and the CUET results that follow the choice — plus the things this page
+ * refuses to claim, are set out in the component header.
  *
- * ═══ SOURCE — verified in this repository and on the school's own artwork ═══
- *   The four streams: PCM, PCB, Commerce, Humanities (data/site.ts school.streams).
- *   Career counselling is run for CLASS X & XI — read off the school's own
- *     hand-painted banner in its published photographs. Class X is the year
- *     before the choice; Class XI is the year it takes effect.
- *   The on-campus career counselling desk covers "subject choice, stream
- *     selection and university guidance" (data/facilities.ts).
- *   CUET (UG) 2025 results published for all three of PCM, Commerce and
- *     Humanities — the choice is followed all the way to the entrance paper.
- *   Guiding Futures, Shaping Lives — Classes IX–XII.
- *
- * ⚠ ELECTIVE LISTS ARE NOT REPEATED HERE. data/academics.ts warns that the
- * subject lists and the Humanities core are not verified; Subject Combinations
- * is the page that carries them, with its confidence labels attached. This page
- * names the four streams and sends the reader there rather than restating an
- * unverified list in a second place.
- *
- * ⚠ NOT CLAIMED: an aptitude test, a psychometric instrument, a deadline, or a
- * procedure for changing stream. None is published.
- *
- * Composition: path (paper, the four routes) → split (ivory, photo LEFT, the
- * desk where the choice is actually discussed) → close.
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcPath from '../../../components/academics/system/AcPath.astro';
-import AcSplit from '../../../components/academics/system/AcSplit.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
-import { school as sb } from '../../../data/site';
+import SubjectSelectionPage from '../../../components/academics/assessment/SubjectSelectionPage.astro';
 
 import banner from '../../../assets/bio lab/DSC_1274 copy.jpg';
-import pDesk from '../../../assets/school-activities/career-counselling/03.jpg';
-import pChem from '../../../assets/chem lab/DSC_1262 copy.jpg';
-import pCohort from '../../../assets/photos/sunbeem-5.jpg';
-
-const school = 'Sunbeam School Ballia';
-
-/* The stream names only — never the elective lists, which live on Subject
-   Combinations with their confidence labels. */
-const streams = [...sb.streams];
 ---
 
 <BaseLayout
   title="Subject Selection Guidance — Sunbeam School Ballia"
-  description="How the stream choice is supported at Sunbeam School Ballia: one-to-one counselling for Classes X and XI, four streams to board level, and CUET results published across all three streams."
+  description="How the stream choice is supported at Sunbeam School Ballia: one-to-one counselling for Classes X and XI, four streams to board level, and CUET (UG) 2025 results published across three of them."
 >
   <PageHero
     title="Subject Selection Guidance"
@@ -64,48 +32,10 @@ const streams = [...sb.streams];
     ]}
     src={banner}
     alt="A subject laboratory at Sunbeam School Ballia, benches and apparatus laid out along the room."
-    position="50% 52%"
+    position="50% 50%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcPath
-      ground="paper"
-      kicker="Four routes"
-      heading="One choice,<br /><em>made once</em>"
-      body={[
-        'Sunbeam Ballia teaches four streams to CBSE board level. Choosing between them is the only decision on a student’s timetable that cannot easily be undone, which is why the guidance sits in Class X rather than in Class XI.',
-        'What each stream contains — and how far each of those lists can be relied on — is set out on <strong>Subject Combinations</strong>, where the verified and the unverified are labelled as such. They are deliberately not restated here.',
-      ]}
-      beats={streams.map((s) => ({ k: s }))}
-    />
-
-    <AcSplit
-      ground="ivory"
-      side="left"
-      aspect="3 / 2"
-      kicker="Where it is actually discussed"
-      heading="A desk, a laptop<br /><em>and one student</em>"
-      body={[
-        'The school’s stream guidance is not an assembly. Its published photographs show single students at a table with a counsellor working from a laptop, papers between them, and in several frames a parent or elder sibling in the next chair. The banner behind reads <strong>“Career Counseling — Class X &amp; XI.”</strong>',
-        'That the guidance works through to the end is checkable rather than asserted: the school published <strong>CUET (UG) 2025 results in all three of PCM, Commerce and Humanities</strong>, and a placement board naming where those students went. A stream chosen in Class X is followed as far as the entrance paper it leads to.',
-      ]}
-      photo={pDesk}
-      alt={`A student of ${school} and a family member in a one-to-one career counselling session, the school’s Class X and XI banner behind them`}
-      inset={pChem}
-      insetAlt={`The chemistry laboratory at ${school}, reagent shelves above the benches`}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Class X,<br /><em>not Class XI.</em>"
-      body="The school publishes the four streams, the year groups its counselling is for, and the results that follow the choice. It does not publish an aptitude test, a deadline, or a procedure for changing stream — the office holds those."
-      photo={pCohort}
-      alt={`Student council office-bearers and NCC cadets of ${school} on stage with the school’s dignitaries`}
-      position="50% 38%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <SubjectSelectionPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>

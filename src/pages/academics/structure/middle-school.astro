@@ -2,107 +2,39 @@
 /**
  * ACADEMIC STRUCTURE · MIDDLE SCHOOL — Classes VI to VIII.
  *
- * ⚠ REBUILT ON EVIDENCE. Two specific, published things define this stage and
- * both are here: a Class 7 programme that runs a real venture, and a Class VIII
- * student who won a contest of more than seventy entrants.
+ * ⚠ THE BODY IS A BESPOKE COMPOSITION, NOT THE Ac* SYSTEM. Sourcing, the
+ * photograph roster and the two places where this page departs from the design
+ * brief on evidence grounds are documented in the component's header.
  *
- * SOURCE — verified in this repository:
- *   KIDS Entrepreneurship — "A Class 7 programme that runs a real venture end to
- *     end." (data/facilities.ts)
- *   Shining Star Kids Fashion Show — "Miss Ayana Pandey, Class VIII"; "a contest
- *     of more than seventy entrants, with the award presented by Miss Universe
- *     India 2024, Riya Singha." Result: winner. 2025. (data/newsPages.ts)
- *   General science laboratory — "Middle-school practical work."
- *   Specialist teaching begins at this stage; the laboratories open up.
- *
- * ⚠ THIS STAGE HAS THE THINNEST PUBLISHED RECORD of the five, and the page is
- * short because of it rather than padded to match its siblings. What KIDS
- * contains week to week is not published, and the close says so.
- *
- * ⚠ NO PHOTOGRAPH OF THE FASHION SHOW OR OF KIDS EXISTS in the repository. The
- * images here are captioned as what they actually show, and the award is carried
- * by the record rather than by a picture pretending to be it.
- * ASSET REQUIREMENT: photography of KIDS Entrepreneurship in progress.
- *
- * Composition: statement (sand) → collage (paper, LEFT, the record) → close.
+ * ⚠ THE BANNER, NAVBAR AND FOOTER ARE UNTOUCHED.
+ * ⚠ THE PANEL'S padding-block IS AN INLINE STYLE — a scoped rule can skew
+ * against its build hash and reopen the white band above the footer.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcStatement from '../../../components/academics/system/AcStatement.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
-import AcClose from '../../../components/academics/system/AcClose.astro';
+import MiddleSchoolPage from '../../../components/academics/structure/MiddleSchoolPage.astro';
 
-import banner from '../../../assets/School Activity in Uniform/School Activity in Uniform (1).jpg';
-import pChef from '../../../assets/School Activity in Uniform/School Activity in Uniform (1).jpg';
-import pMaking from '../../../assets/School Activity in Uniform/Embriodery.jpg';
-import pBio from '../../../assets/bio lab/DSC_1274 copy.jpg';
-import pCohort from '../../../assets/photos/sunbeem-3.jpg';
-
-const school = 'Sunbeam School Ballia';
+import banner from '../../../assets/photos/sb-phy-lab.jpg';
 ---
 
 <BaseLayout
   title="Middle School — Sunbeam School Ballia"
-  description="Middle School at Sunbeam School Ballia, Classes VI to VIII: specialist teaching, the general science laboratory, a Class 7 entrepreneurship programme that runs a real venture, and a Class VIII winner of a seventy-entrant contest."
+  description="Middle School at Sunbeam School Ballia, Classes VI to VIII: specialist teaching, twelve laboratories, a Class VII entrepreneurship programme that runs a real venture end to end, and a Class VIII winner of a seventy-entrant contest."
 >
   <PageHero
     title="Middle School"
-    standfirst="Classes VI to VIII — where Class 7 runs a real venture and the laboratories open up."
+    standfirst="Classes VI to VIII — where learning becomes more independent, practical and exploratory."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Academics', href: '/academics/' },
       { label: 'Academic Structure', href: '/academics/structure/' },
     ]}
     src={banner}
-    alt="A teacher at Sunbeam School Ballia demonstrating at the table during a cooking activity, her class in paper chef hats around her."
+    alt="Students of Sunbeam School Ballia working at benches in the physics laboratory, with portraits of Nikola Tesla and Michael Faraday on the wall."
     position="50% 46%"
   />
 
-  <div class="u-page-panel ac-panel">
-    <AcStatement
-      ground="sand"
-      ghost="Class 7"
-      ghostAt="left"
-      kicker="Classes VI – VIII"
-      statement="A real venture,<br /><em>end to end.</em>"
-      body={[
-        'The school’s description of <strong>KIDS Entrepreneurship</strong> is six words long and does the work: <em>“a Class 7 programme that runs a real venture end to end.”</em> Not a simulation, not a case study — a venture, carried from start to finish by twelve-year-olds.',
-        'Alongside it the stage turns academic: <strong>specialist teaching begins</strong>, and the general science laboratory — the middle-school room specifically — opens up for practical work before the board syllabus starts.',
-      ]}
-    />
-
-    <AcCollage
-      ground="paper"
-      side="left"
-      kicker="And beyond the timetable"
-      heading="Miss Ayana Pandey,<br /><em>Class VIII</em>"
-      body={[
-        'The stage’s published achievement belongs to a named student. Ayana Pandey of Class VIII won the <strong>Shining Star Kids Fashion Show</strong> in 2025 — a contest of <strong>more than seventy entrants</strong>, with the award presented by <strong>Miss Universe India 2024, Riya Singha</strong>.',
-      ]}
-      ledger={[
-        { k: 'KIDS Entrepreneurship · Class 7', v: 'A real venture, run end to end.' },
-        { k: 'Shining Star · Class VIII', v: 'Winner, from over 70 entrants — Miss Ayana Pandey, 2025.' },
-        { k: 'General science laboratory', v: 'Middle-school practical work, before the board syllabus.' },
-        { k: 'Specialist teaching', v: 'A subject taught by someone who teaches only that subject.' },
-      ]}
-      lead={{ src: pMaking, alt: `Students of ${school} working together on embroidery from one shared basket of thread` }}
-      support={[
-        { src: pChef, alt: `A teacher at ${school} demonstrating at the table, her class in paper chef hats around her` },
-        { src: pBio, alt: `A subject laboratory at ${school}, benches and apparatus laid out along the room` },
-      ]}
-    />
-
-    <AcClose
-      owed={true}
-      statement="Twelve years old,<br /><em>and trading.</em>"
-      body="The school names the KIDS programme, its class, and this stage's published achievement. What KIDS runs week to week — and photography of it — are not published."
-      photo={pCohort}
-      alt={`Students and staff of ${school} gathered on the hall stage`}
-      position="50% 42%"
-    />
+  <div class="u-page-panel" style="padding-block: 0;">
+    <MiddleSchoolPage />
   </div>
 </BaseLayout>
-
-<style>
-  div.ac-panel { padding-block: 0; }
-</style>
