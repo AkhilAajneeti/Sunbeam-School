@@ -126,6 +126,19 @@ export const school = {
     parentLogin: 'https://sbb.nascorptechnologies.com/',
     downloadTC: 'https://sunbeamballia.edu.in/download-tc/',
 
+    /* The school's own results page, which is what its top bar's "Result" link
+       opens — distinct from `results` above, the portal itself. */
+    resultPage: 'https://sunbeamballia.edu.in/result/',
+
+    /* ⚠ THE TWO DIRECT APPLICATION FORMS, read off the school's own top bar.
+       They are deliberately NOT used for `applyNurseryToIX`/`applyClassXI`
+       above: those feed generic "Apply online" buttons across the site and point
+       at the school's own landing page, which survives a form being re-issued.
+       These two carry session codes in the query string and are used only where
+       the school itself uses them — the utility bar. */
+    applyFormNurseryToIX: 'https://sbb.nascorptechnologies.com/gw/gls/onlineAppForms?code=KRnfFWgLwE3a7431k0',
+    applyFormClassXI: 'https://sbb.nascorptechnologies.com/gw/adm/applyOnlineRegistration?fm=2',
+
     /* The school's own copies. Both are linked from its Mandatory Public
        Disclosure page; the letter is item 01 there. Recorded as https —
        the disclosure page prints http, and the host serves both. */

@@ -90,16 +90,37 @@ export interface NavItem {
  * Everything dropped is still reachable from the drawer's Quick Links and the
  * footer, so nothing becomes unreachable.
  */
+/**
+ * ⚠ THE BAR NOW MIRRORS THE SCHOOL'S OWN TOP BAR, in its order and its wording:
+ * Mandatory Public Disclosure · Notice · Contact Us · Apply Online Class Nursery
+ * to IX · Apply Online Class XI · Login · Result · Download T.C
+ *
+ * ⚠ INTERNAL WHERE WE HAVE THE PAGE, EXTERNAL WHERE THE SCHOOL OWNS THE ACTION.
+ * The first three open pages on this site — sending a reader out to the old site
+ * for a page we have built better is a downgrade. The five that follow are the
+ * school's own portals and forms, and they open in a new tab.
+ *
+ * ⚠ THREE TIERS, BECAUSE EIGHT LINKS PLUS A PHONE NUMBER DO NOT FIT A LAPTOP.
+ * The bar sheds by tier rather than wrapping to a second line:
+ *   1 — always visible                     Notice · Result
+ *   2 — hidden below 1024px                Contact Us · Login · Download T.C
+ *   3 — hidden below 1280px                Disclosure · both application forms
+ * Everything shed stays reachable from the drawer's Quick Links and the footer,
+ * and Mandatory Public Disclosure additionally holds its permanent footer slot
+ * for the regulatory reason noted above.
+ */
 export const utilityLinks = [
-  { label: "Notices", href: "/news-events/notices/", tier: 1 },
-  { label: "Results", href: school.external.results, external: true, tier: 1 },
-  /* ⚠ CONTACT SITS HERE AGAIN, AFTER RESULTS, ON THE CLIENT'S INSTRUCTION.
-     It was removed from the MAIN navbar earlier and given to the footer; this
-     is the utility bar above it, which is a different row and the one the
-     client asked for. The footer and drawer links stay — a contact route
-     should be reachable from more than one place, and the admissions helpline
-     still sits at the other end of this same bar. */
-  { label: "Contact", href: "/contact-us/", tier: 1 },
+  { label: "Mandatory Public Disclosure", href: "/mandatory-public-disclosure/", tier: 3 },
+  { label: "Notice", href: "/news-events/notices/", tier: 1 },
+  /* ⚠ CONTACT SITS HERE ON THE CLIENT'S INSTRUCTION. It was removed from the
+     MAIN navbar earlier and given to the footer; this is the utility bar above
+     it, which is a different row and the one the client asked for. */
+  { label: "Contact Us", href: "/contact-us/", tier: 2 },
+  { label: "Apply Online Class Nursery to IX", href: school.external.applyFormNurseryToIX, external: true, tier: 3 },
+  { label: "Apply Online Class XI", href: school.external.applyFormClassXI, external: true, tier: 3 },
+  { label: "Login", href: school.external.parentLogin, external: true, tier: 2 },
+  { label: "Result", href: school.external.resultPage, external: true, tier: 1 },
+  { label: "Download T.C", href: school.external.downloadTC, external: true, tier: 2 },
 ] as const;
 
 export const mainNav: NavItem[] = [

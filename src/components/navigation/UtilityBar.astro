@@ -30,16 +30,22 @@ import { utilityLinks } from '../../data/navigation';
     </nav>
 
     <a class="utility__phone" href={`tel:${school.phone.admissions}`}>
-      <span class="utility__phone-label">Admissions Helpline</span>
+      <span class="utility__phone-label">Admission Helpline:</span>
       <span class="utility__phone-number t-tabular">{school.phone.admissionsDisplay}</span>
     </a>
   </div>
 </div>
 
 <style>
+  /* ⚠ --sb-violet (#c93c0a), NOT --sb-orange-bright (#ff5c35). The reference
+     bar is a brighter orange, and white text on it measures 3.08:1 — under the
+     4.5:1 WCAG AA floor for text this size, on the one strip that carries the
+     admissions number. The brand primary is the same orange family and measures
+     5.08:1, which is why the token file annotates it "PRIMARY — 5.1:1 with white
+     text". Verified with scripts/contrast-sample.mjs. */
   .utility {
-    background: var(--sb-violet-ink);
-    color: rgba(255, 255, 255, 0.86);
+    background: var(--sb-violet);
+    color: rgba(255, 255, 255, 0.92);
     font-size: var(--sb-caption);
     line-height: 1;
     /* Hides on scroll-down, returns on scroll-up — docs/06 §01.
@@ -84,7 +90,8 @@ import { utilityLinks } from '../../data/navigation';
     bottom: 2px;
     height: 1px;
     width: 100%;
-    background: var(--sb-lime);
+    /* White, not gold — the gold underline vanished against the orange. */
+    background: #fff;
     transform: scaleX(0);
     transform-origin: left;
     transition: transform var(--sb-dur-link) var(--sb-ease);
@@ -120,7 +127,7 @@ import { utilityLinks } from '../../data/navigation';
   }
 
   .utility__phone-label {
-    color: rgba(255, 255, 255, 0.62);
+    color: rgba(255, 255, 255, 0.78);
   }
 
   .utility__phone-number {
@@ -131,6 +138,17 @@ import { utilityLinks } from '../../data/navigation';
   /* --- Mobile: keep only Notices · Results (docs/06 §01) ------------------
      The bar is three links now, so nothing needs shedding until the phone
      number and the links genuinely compete — which is 767, not 1239. */
+  /* ⚠ SHED BY TIER, WIDEST FIRST. Eight links and a phone number need roughly
+     1400px; below that the bar drops its least time-critical links rather than
+     wrapping to a second line and doubling the masthead height. */
+  @media (max-width: 1279px) {
+    .utility__li--t3 { display: none; }
+  }
+
+  @media (max-width: 1023px) {
+    .utility__li--t2 { display: none; }
+  }
+
   @media (max-width: 767px) {
     .utility__inner {
       gap: var(--sb-4);
@@ -139,8 +157,6 @@ import { utilityLinks } from '../../data/navigation';
     .utility__links {
       gap: var(--sb-5);
     }
-
-    .utility__li--t2 { display: none; }
 
     .utility__phone-label {
       display: none;

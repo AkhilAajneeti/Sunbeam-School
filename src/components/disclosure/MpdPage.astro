@@ -1,0 +1,974 @@
+---
+/**
+ * MANDATORY PUBLIC DISCLOSURE — the whole body.
+ *
+ * ⚠⚠ NOT ONE FIGURE ON THIS PAGE IS TYPED INTO IT. Every value, every document
+ * link and all 131 staff rows come out of data/disclosure.ts, which records the
+ * primary document each was transcribed from. Read that file's header before
+ * changing any number here — it also documents where the school's own web page
+ * disagrees with the PDF it links to, and why the PDF won.
+ *
+ * ⚠⚠ THREE THINGS THE REFERENCE DESIGN GOT WRONG ARE NOT REPRODUCED:
+ *   · Class XII shown at 100%. The school's own letterhead says 98.90% for 2025
+ *     and 96.86% for 2024. A pass rate the school never claimed is the worst
+ *     possible thing to invent on a disclosure page.
+ *   · An "Appeared" column. The school publishes Registered and Passed only.
+ *   · A "Recognition No." distinct from the affiliation number. No such field is
+ *     published; the RTE recognition certificate is linked instead.
+ *
+ * ⚠ THE LEFT NAVIGATION IS DERIVED FROM THE SECTIONS IT POINTS AT. One array
+ * drives the rail, the scroll-spy and the section headings, so a sixth section
+ * cannot be added to one and forgotten in the others.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ *   The floating quick-information card, overlapping the banner.
+ *   A two-column body: sticky rail left, five disclosure sections right.
+ *   A closing compliance callout.
+ */
+import { Picture } from 'astro:assets';
+import '../../styles/assessment.css';
+import { MARK } from '../academics/assessment/marks';
+import MpdStaffTable from './MpdStaffTable.astro';
+import {
+  quickInfo,
+  generalInformation,
+  certificates,
+  academicDocs,
+  boardResults,
+  staffSummary,
+  infrastructure,
+  inspectionVideo,
+  teachers,
+  disclosureSource,
+} from '../../data/disclosure';
+
+import pCampus from '../../assets/photos/sunbeem-1.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/** One array drives the rail, the spy and the headings. */
+const sections = [
+  { id: 'mp-general', n: '01', label: 'General Information' },
+  { id: 'mp-docs', n: '02', label: 'Documents & Certificates' },
+  { id: 'mp-results', n: '03', label: 'Results & Academics' },
+  { id: 'mp-staff', n: '04', label: 'Staff & Teaching' },
+  { id: 'mp-infra', n: '05', label: 'School Infrastructure' },
+];
+---
+
+{/* ══ THE QUICK-INFORMATION CARD ═════════════════════════════════════════════
+    It lifts into the banner above it, which is why the section that holds it is
+    transparent and has no padding of its own. */}
+<section class="mp-quick" aria-label="School identifiers at a glance">
+  <div class="u-container">
+    <ul class="mp-quick__box">
+      {quickInfo.map((q, i) => (
+        <li class="mp-qi" data-pop data-pop-delay={80 + i * 70}>
+          <span class="mp-qi__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[q.mark]} />
+            </svg>
+          </span>
+          <span class="mp-qi__t">
+            <span class="mp-qi__k">{q.k}</span>
+            <span class="mp-qi__v t-tabular">
+              {q.href ? <a href={q.href}>{q.v}</a> : q.v}
+            </span>
+          </span>
+        </li>
+      ))}
+    </ul>
+    <p class="mp-quick__note">
+      As filed in the school’s Mandatory Public Disclosure. {disclosureSource.covers}.
+    </p>
+  </div>
+</section>
+
+<section class="as-sec as-sec--ivory mp-body" aria-label="Mandatory public disclosure">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container mp-body__grid">
+    {/* ── THE RAIL ─────────────────────────────────────────────────────────── */}
+    <aside class="mp-rail" aria-label="Disclosure sections">
+      <nav class="mp-rail__box" data-spy-nav>
+        <p class="mp-rail__lab">Disclosure</p>
+        <ul class="mp-rail__list">
+          {sections.map((s) => (
+            <li>
+              <a class="mp-rail__a" href={`#${s.id}`} data-spy-link={s.id}>
+                <span class="mp-rail__n t-tabular">{s.n}</span>
+                <span class="mp-rail__t">{s.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="mp-rail__pdf">
+        <p class="mp-rail__pdfk">Complete Disclosure PDF</p>
+        <p class="mp-rail__pdfv">
+          The full Mandatory Public Disclosure document, as filed with CBSE.
+        </p>
+        <p class="mp-rail__pdfa">
+          <a class="as-btn as-btn--solid" href={disclosureSource.pdf} target="_blank" rel="noopener noreferrer">
+            View PDF
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.external} />
+            </svg>
+          </a>
+        </p>
+        <p class="mp-rail__pdfb">
+          <a class="mp-rail__dl" href={disclosureSource.pdf} download>
+            Download PDF
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.download} />
+            </svg>
+          </a>
+        </p>
+      </div>
+    </aside>
+
+    {/* ── THE CONTENT ──────────────────────────────────────────────────────── */}
+    <div class="mp-main">
+      {/* 01 · GENERAL INFORMATION */}
+      <section class="mp-sec" id="mp-general" aria-labelledby="mp-general-t">
+        <p class="mp-sec__h" data-reveal>
+          <span class="mp-sec__n t-tabular">01</span>
+          <span class="mp-sec__t" id="mp-general-t">General Information</span>
+        </p>
+
+        <div class="mp-card">
+          <dl class="mp-facts">
+            {generalInformation.map((r) => (
+              <div class="mp-fact">
+                <dt class="mp-fact__k">
+                  {r.k}
+                  {r.from && <span class="mp-fact__src">{r.from}</span>}
+                </dt>
+                <dd class="mp-fact__v">
+                  {r.href ? <a href={r.href}>{r.v}</a> : r.v}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* 02 · DOCUMENTS & CERTIFICATES */}
+      <section class="mp-sec" id="mp-docs" aria-labelledby="mp-docs-t">
+        <p class="mp-sec__h" data-reveal>
+          <span class="mp-sec__n t-tabular">02</span>
+          <span class="mp-sec__t" id="mp-docs-t">Documents &amp; Certificates</span>
+        </p>
+
+        <ul class="mp-docs">
+          {certificates.map((c, i) => (
+            <li class="mp-doc" data-pop data-pop-delay={70 + i * 45}>
+              <span class="mp-doc__m" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[c.mark]} />
+                </svg>
+              </span>
+              <h3 class="mp-doc__k">{c.k}</h3>
+              <p class="mp-doc__v">{c.v}</p>
+              <p class="mp-doc__a">
+                <a href={c.href} target="_blank" rel="noopener noreferrer">
+                  View PDF
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+                  </svg>
+                </a>
+                <a class="mp-doc__dl" href={c.href} download aria-label={`Download ${c.k}`}>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.download} />
+                  </svg>
+                </a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 03 · RESULTS & ACADEMICS
+          ⚠ THE TABS READ THE ARRAY. Three years today; a fourth is one entry in
+          disclosure.ts and nothing here changes. */}
+      <section class="mp-sec" id="mp-results" aria-labelledby="mp-results-t">
+        <p class="mp-sec__h" data-reveal>
+          <span class="mp-sec__n t-tabular">03</span>
+          <span class="mp-sec__t" id="mp-results-t">Results &amp; Academics</span>
+        </p>
+
+        <div class="mp-card mp-res" data-res>
+          <div class="mp-res__tabs" role="tablist" aria-label="Board examination year">
+            {boardResults.map((r, i) => (
+              <button
+                type="button"
+                role="tab"
+                class:list={['mp-res__tab', i === 0 && 'is-on']}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-controls={`mp-res-${r.year}`}
+                id={`mp-tab-${r.year}`}
+                data-res-tab={r.year}
+              >{r.year}</button>
+            ))}
+          </div>
+
+          {boardResults.map((r, i) => (
+            <div
+              class="mp-res__panel"
+              role="tabpanel"
+              id={`mp-res-${r.year}`}
+              aria-labelledby={`mp-tab-${r.year}`}
+              data-res-panel={r.year}
+              hidden={i !== 0}
+            >
+              <div class="mp-res__pair">
+                {[
+                  { cls: 'Class X', d: r.x },
+                  { cls: 'Class XII', d: r.xii },
+                ].map((c) => (
+                  <div class="mp-res__col">
+                    <h3 class="mp-res__k">{c.cls}</h3>
+                    <dl class="mp-res__rows">
+                      <div><dt>Number of students registered</dt><dd class="t-tabular">{c.d.registered}</dd></div>
+                      <div><dt>Number of students passed</dt><dd class="t-tabular">{c.d.passed}</dd></div>
+                      <div class="mp-res__pct"><dt>Pass percentage</dt><dd class="t-tabular">{c.d.percentage}%</dd></div>
+                    </dl>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <p class="mp-res__note">
+            As published by the school in its “Last Three Years Board Result” document. It records
+            students <strong>registered</strong> and <strong>passed</strong>; a separate figure for
+            students <em>appeared</em> is not published, so none is shown.
+          </p>
+        </div>
+
+        <ul class="mp-docs mp-docs--slim">
+          {academicDocs.map((c, i) => (
+            <li class="mp-doc" data-pop data-pop-delay={70 + i * 45}>
+              <span class="mp-doc__m" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[c.mark]} />
+                </svg>
+              </span>
+              <h3 class="mp-doc__k">{c.k}</h3>
+              <p class="mp-doc__v">{c.v}</p>
+              <p class="mp-doc__a">
+                <a href={c.href} target="_blank" rel="noopener noreferrer">
+                  View PDF
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+                  </svg>
+                </a>
+                <a class="mp-doc__dl" href={c.href} download aria-label={`Download ${c.k}`}>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.download} />
+                  </svg>
+                </a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 04 · STAFF & TEACHING */}
+      <section class="mp-sec" id="mp-staff" aria-labelledby="mp-staff-t">
+        <p class="mp-sec__h" data-reveal>
+          <span class="mp-sec__n t-tabular">04</span>
+          <span class="mp-sec__t" id="mp-staff-t">Staff &amp; Teaching</span>
+        </p>
+
+        <ul class="mp-sum">
+          {staffSummary.map((r, i) => (
+            <li class="mp-sum__i" data-pop data-pop-delay={60 + i * 40}>
+              <span class="mp-sum__k">{r.k}</span>
+              <span class="mp-sum__v">{r.v}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p class="mp-staff__lead">
+          The filing names <strong>{teachers.length} members of staff</strong> individually. Its own
+          headline figure of <strong>121 teachers</strong> counts the TGT, PGT, PRT, NTT, wellness
+          and special-education posts; the remaining {teachers.length - 121} — physical education,
+          other staff, the Principal and the Vice Principal — are listed but sit outside that total.
+        </p>
+
+        <MpdStaffTable id="mp-staff-table" per={12} />
+      </section>
+
+      {/* 05 · SCHOOL INFRASTRUCTURE */}
+      <section class="mp-sec" id="mp-infra" aria-labelledby="mp-infra-t">
+        <p class="mp-sec__h" data-reveal>
+          <span class="mp-sec__n t-tabular">05</span>
+          <span class="mp-sec__t" id="mp-infra-t">School Infrastructure</span>
+        </p>
+
+        <ul class="mp-infra">
+          {infrastructure.map((f, i) => (
+            <li class="mp-if" data-pop data-pop-delay={70 + i * 50}>
+              <span class="mp-if__m" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[f.mark]} />
+                </svg>
+              </span>
+              <span class="mp-if__t">
+                <span class="mp-if__k">{f.k}</span>
+                <span class="mp-if__v t-tabular">{f.v}</span>
+                {f.unit && <span class="mp-if__u">{f.unit}</span>}
+              </span>
+            </li>
+          ))}
+
+          <li class="mp-if mp-if--link" data-pop data-pop-delay={70 + infrastructure.length * 50}>
+            <span class="mp-if__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.eye} />
+              </svg>
+            </span>
+            <span class="mp-if__t">
+              <span class="mp-if__k">Inspection video</span>
+              <a class="mp-if__a" href={inspectionVideo} target="_blank" rel="noopener noreferrer">
+                Watch on YouTube
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.external} />
+                </svg>
+              </a>
+            </span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</section>
+
+{/* ══ THE COMPLIANCE CALLOUT ═════════════════════════════════════════════════ */}
+<section class="as-sec as-sec--cream as-pad--sm mp-callout" aria-labelledby="mp-callout-t">
+  <div class="u-container">
+    <div class="mp-callout__box">
+      <span class="mp-callout__m" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.shield} />
+        </svg>
+      </span>
+
+      <div class="mp-callout__copy">
+        <h2 class="mp-callout__h" id="mp-callout-t">
+          All information is published in accordance with CBSE Mandatory Disclosure norms.
+        </h2>
+        <p class="mp-callout__b">
+          Every figure and document on this page is taken from the school’s own filing and the
+          certificates linked beside it. For any query or clarification, please contact the school
+          office on {' '}<a href="tel:+917755005905">7755005905</a>, or write to {' '}
+          <a href="mailto:sunbeamballia2131962@gmail.com">sunbeamballia2131962@gmail.com</a>.
+        </p>
+      </div>
+
+      <div class="mp-callout__pic">
+        <Picture
+          src={pCampus}
+          alt={`The main building of ${S} at Agarsanda, its name across the front elevation.`}
+          formats={['avif', 'webp']}
+          widths={[420, 760]}
+          sizes="(max-width: 1023px) 92vw, 30vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  /* ── THE YEAR TABS ────────────────────────────────────────────────────────
+     Panels are all in the DOM; the tab toggles `hidden`. Arrow keys move
+     between tabs because a `role="tablist"` that ignores them is worse than
+     no role at all. */
+  document.querySelectorAll<HTMLElement>('[data-res]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-res-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-res-panel]'));
+
+    const show = (year: string) => {
+      tabs.forEach((t) => {
+        const on = t.dataset.resTab === year;
+        t.classList.toggle('is-on', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      panels.forEach((p) => { p.hidden = p.dataset.resPanel !== year; });
+    };
+
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(t.dataset.resTab ?? ''));
+      t.addEventListener('keydown', (e) => {
+        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        const next = tabs[(i + d + tabs.length) % tabs.length];
+        next.focus();
+        show(next.dataset.resTab ?? '');
+      });
+    });
+  });
+
+  /* ── THE SCROLL SPY ───────────────────────────────────────────────────────
+     ⚠ IT MARKS THE SECTION THE READER IS IN, NOT THE LAST ONE TO CROSS THE
+     TRIGGER. An IntersectionObserver that just takes the newest entry marks the
+     wrong link when you scroll upward, so the whole visible set is recomputed
+     and the topmost one wins. */
+  const nav = document.querySelector<HTMLElement>('[data-spy-nav]');
+  if (nav) {
+    const links = new Map<string, HTMLAnchorElement>();
+    nav.querySelectorAll<HTMLAnchorElement>('[data-spy-link]').forEach((a) => {
+      links.set(a.dataset.spyLink ?? '', a);
+    });
+
+    const targets = [...links.keys()]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    const visible = new Set<string>();
+    const mark = () => {
+      const first = targets.find((t) => visible.has(t.id))?.id
+        /* Nothing intersecting — past the end, so keep the last section lit. */
+        ?? [...targets].reverse().find((t) => t.getBoundingClientRect().top < window.innerHeight / 2)?.id;
+      links.forEach((a, id) => {
+        const on = id === first;
+        a.classList.toggle('is-on', on);
+        if (on) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) visible.add(e.target.id);
+          else visible.delete(e.target.id);
+        });
+        mark();
+      },
+      { rootMargin: '-96px 0px -55% 0px', threshold: 0 },
+    );
+    targets.forEach((t) => io.observe(t));
+    mark();
+  }
+</script>
+
+<style>
+  /* ═══ THE QUICK CARD ══════════════════════════════════════════════════════ */
+  /* ⚠ NEGATIVE MARGIN, AND THE SECTION MUST STAY TRANSPARENT. The card lifts
+     into the banner above it; a background here would paint a band over the
+     photograph instead. */
+  .mp-quick {
+    position: relative;
+    z-index: 3;
+    margin-top: clamp(-72px, -5vw, -40px);
+  }
+  .mp-quick__box {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(10px, 1.4vw, 22px);
+    margin: 0;
+    padding: clamp(16px, 1.9vw, 26px) clamp(16px, 2vw, 30px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: 0 20px 46px -26px rgba(28, 14, 8, 0.4);
+    list-style: none;
+  }
+  .mp-qi { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(8px, 0.9vw, 12px); align-items: center; }
+  .mp-qi + .mp-qi { border-left: 1px solid var(--sb-border); padding-left: clamp(10px, 1.4vw, 22px); }
+  .mp-qi__m { display: block; width: clamp(20px, 1.9vw, 26px); color: var(--sb-orange-bright); }
+  .mp-qi__m svg { display: block; width: 100%; height: auto; }
+  .mp-qi__t { display: grid; gap: 2px; min-width: 0; }
+  .mp-qi__k {
+    font-size: clamp(8.5px, 0.64vw, 10px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  .mp-qi__v {
+    font-size: clamp(10px, 0.78vw, 12.4px);
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    color: var(--sb-charcoal);
+  }
+  .mp-qi__v a { color: inherit; }
+  .mp-qi__v a:hover { color: var(--sb-orange-bright); }
+  .mp-quick__note {
+    margin: clamp(8px, 1vw, 12px) 0 0;
+    text-align: center;
+    font-size: clamp(8.5px, 0.64vw, 10.2px);
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ THE BODY GRID ═══════════════════════════════════════════════════════ */
+  /* ⚠ clip, NOT hidden — AND THIS IS WHAT MAKES THE STAFF TABLE HEADER STICK.
+     `.as-sec` uses `overflow: hidden` to clip its decorative grid, which makes
+     the section a scrollport; `position: sticky` then resolves against THAT box
+     instead of the viewport, and a box that never scrolls vertically means the
+     header never sticks. `overflow: clip` clips exactly as well and creates no
+     scrollport, so the rule inside starts working. */
+  .mp-body {
+    overflow: clip;
+    padding-block: clamp(34px, 4.4vw, 68px) clamp(40px, 5vw, 78px);
+  }
+  .mp-body__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: clamp(200px, 20vw, 268px) minmax(0, 1fr);
+    gap: clamp(20px, 2.6vw, 44px);
+    align-items: start;
+  }
+
+  .mp-rail { position: sticky; top: clamp(84px, 8vw, 108px); display: grid; gap: clamp(12px, 1.4vw, 18px); }
+  .mp-rail__box {
+    overflow: hidden;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+  }
+  .mp-rail__lab {
+    margin: 0;
+    padding: clamp(12px, 1.3vw, 16px) clamp(14px, 1.5vw, 19px);
+    border-bottom: 1px solid var(--sb-border);
+    font-size: clamp(8.5px, 0.64vw, 10.2px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  .mp-rail__list { margin: 0; padding: 0; list-style: none; }
+  .mp-rail__a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(8px, 0.9vw, 12px);
+    align-items: center;
+    padding: clamp(10px, 1.1vw, 14px) clamp(14px, 1.5vw, 19px);
+    font-size: clamp(10px, 0.76vw, 12.2px);
+    font-weight: 600;
+    color: var(--sb-text-secondary);
+    transition: background var(--sb-dur-image) var(--sb-ease), color var(--sb-dur-image) var(--sb-ease);
+  }
+  .mp-rail__list li + li .mp-rail__a { border-top: 1px solid var(--sb-border); }
+  .mp-rail__n { font-size: clamp(9px, 0.68vw, 10.8px); font-weight: 700; color: var(--sb-orange-bright); }
+  .mp-rail__a:hover { background: var(--sb-ivory); color: var(--sb-charcoal); }
+  .mp-rail__a.is-on { background: var(--sb-orange-bright); color: #fff; }
+  .mp-rail__a.is-on .mp-rail__n { color: #fff; }
+
+  .mp-rail__pdf {
+    padding: clamp(14px, 1.6vw, 20px) clamp(14px, 1.6vw, 19px) clamp(16px, 1.8vw, 22px);
+    border: 1px solid color-mix(in srgb, var(--sb-orange-bright) 34%, transparent);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet-wash);
+  }
+  .mp-rail__pdfk {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(11.5px, 0.9vw, 14px);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    color: var(--sb-violet);
+  }
+  .mp-rail__pdfv { margin: 5px 0 0; font-size: clamp(9px, 0.68vw, 10.8px); line-height: 1.55; color: var(--sb-text-secondary); }
+  .mp-rail__pdfa { margin: clamp(11px, 1.3vw, 15px) 0 0; }
+  .mp-rail__pdfa .as-btn { width: 100%; justify-content: center; }
+  .mp-rail__pdfb { margin: 8px 0 0; text-align: center; }
+  .mp-rail__dl {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: clamp(9.5px, 0.7vw, 11.2px);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+  .mp-rail__dl:hover { color: var(--sb-orange-bright); }
+  .mp-rail__dl svg { width: 13px; height: auto; }
+
+  /* ═══ SECTIONS ════════════════════════════════════════════════════════════ */
+  .mp-main { display: grid; gap: clamp(28px, 3.4vw, 52px); }
+  /* Anchors must clear the fixed header when the rail jumps to them. */
+  .mp-sec { scroll-margin-top: clamp(84px, 8vw, 110px); }
+  .mp-sec__h { display: flex; align-items: center; gap: clamp(8px, 1vw, 13px); margin: 0 0 clamp(12px, 1.5vw, 19px); }
+  .mp-sec__n {
+    font-size: clamp(11px, 0.86vw, 13.6px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--sb-orange-bright);
+  }
+  .mp-sec__t {
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.06vw, 17px);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--sb-charcoal);
+  }
+
+  .mp-card {
+    padding: clamp(6px, 0.8vw, 10px) clamp(14px, 1.7vw, 24px) clamp(12px, 1.4vw, 18px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+  }
+
+  /* ── 01 · the fact table ────────────────────────────────────────────────── */
+  .mp-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(16px, 2vw, 34px); margin: 0; }
+  .mp-fact {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(8px, 1vw, 14px);
+    align-items: baseline;
+    padding: clamp(9px, 1.05vw, 13px) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .mp-fact__k { margin: 0; font-size: clamp(9.5px, 0.72vw, 11.4px); line-height: 1.45; color: var(--sb-text-muted); }
+  .mp-fact__src {
+    display: block;
+    margin-top: 2px;
+    font-size: clamp(8px, 0.58vw, 9.4px);
+    font-style: italic;
+    color: color-mix(in srgb, var(--sb-text-muted) 76%, transparent);
+  }
+  .mp-fact__v {
+    margin: 0;
+    font-size: clamp(10px, 0.78vw, 12.4px);
+    font-weight: 700;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    color: var(--sb-charcoal);
+  }
+  .mp-fact__v a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+  .mp-fact__v a:hover { color: var(--sb-orange-bright); }
+
+  /* ── 02 · the document cards ────────────────────────────────────────────── */
+  .mp-docs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(10px, 1.2vw, 16px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .mp-docs--slim { margin-top: clamp(12px, 1.5vw, 18px); grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  /* ⚠ THE ACTION ROW SHARES A BASELINE ACROSS THE GRID. Descriptions run to one
+     line or two, so an action that simply follows its paragraph lands at two
+     different heights in the same row and the grid stops reading as a grid. */
+  .mp-doc {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
+    align-content: stretch;
+    padding: clamp(13px, 1.5vw, 18px) clamp(13px, 1.5vw, 17px) clamp(12px, 1.4vw, 16px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    transition: transform var(--sb-dur-image) var(--sb-ease), border-color var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .mp-doc:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--sb-orange-bright) 44%, transparent);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .mp-doc__m { display: block; width: clamp(20px, 1.9vw, 26px); color: var(--sb-orange-bright); }
+  .mp-doc__m svg { display: block; width: 100%; height: auto; }
+  .mp-doc__k {
+    margin: clamp(9px, 1.05vw, 13px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(11px, 0.86vw, 13.6px);
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+  .mp-doc__v { margin: 5px 0 0; font-size: clamp(8.6px, 0.64vw, 10.2px); line-height: 1.52; color: var(--sb-text-muted); }
+  .mp-doc__a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    align-self: end;
+    gap: 8px;
+    margin: clamp(10px, 1.2vw, 15px) 0 0;
+  }
+  .mp-doc__a > a:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: clamp(9px, 0.68vw, 10.8px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .mp-doc__a > a:first-child svg { width: 12px; height: auto; transition: transform var(--sb-dur-image) var(--sb-ease); }
+  .mp-doc:hover .mp-doc__a > a:first-child svg { transform: translateX(3px); }
+  .mp-doc__dl {
+    display: grid;
+    place-items: center;
+    width: clamp(22px, 2vw, 27px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+    transition: background var(--sb-dur-image) var(--sb-ease), color var(--sb-dur-image) var(--sb-ease);
+  }
+  .mp-doc__dl svg { width: 52%; height: auto; }
+  .mp-doc__dl:hover { background: var(--sb-orange-bright); color: #fff; }
+
+  /* ── 03 · the results ───────────────────────────────────────────────────── */
+  .mp-res { padding-top: clamp(12px, 1.4vw, 18px); }
+  .mp-res__tabs {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: var(--sb-r-1);
+    background: var(--sb-sand);
+  }
+  .mp-res__tab {
+    padding: clamp(6px, 0.7vw, 9px) clamp(12px, 1.4vw, 19px);
+    border: 0;
+    border-radius: var(--sb-r-1);
+    background: none;
+    font: inherit;
+    font-size: clamp(9.5px, 0.72vw, 11.4px);
+    font-weight: 700;
+    color: var(--sb-text-secondary);
+    cursor: pointer;
+    transition: background var(--sb-dur-image) var(--sb-ease), color var(--sb-dur-image) var(--sb-ease);
+  }
+  .mp-res__tab:hover { color: var(--sb-charcoal); }
+  .mp-res__tab.is-on { background: var(--sb-orange-bright); color: #fff; }
+
+  .mp-res__pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2.2vw, 40px);
+    margin: clamp(14px, 1.8vw, 24px) 0 0;
+  }
+  .mp-res__k {
+    margin: 0 0 clamp(6px, 0.8vw, 10px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.16vw, 19px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .mp-res__rows { margin: 0; }
+  .mp-res__rows > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    padding: clamp(8px, 0.95vw, 12px) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .mp-res__rows dt { font-size: clamp(9.5px, 0.72vw, 11.4px); color: var(--sb-text-muted); }
+  .mp-res__rows dd { margin: 0; font-size: clamp(11px, 0.86vw, 13.6px); font-weight: 700; color: var(--sb-charcoal); }
+  .mp-res__pct dd { color: var(--sb-orange-bright); }
+  .mp-res__note {
+    margin: clamp(13px, 1.6vw, 20px) 0 0;
+    font-size: clamp(8.8px, 0.66vw, 10.4px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* ── 04 · the staff summary ─────────────────────────────────────────────── */
+  .mp-sum {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(9px, 1.1vw, 14px);
+    margin: 0 0 clamp(12px, 1.5vw, 18px);
+    padding: 0;
+    list-style: none;
+  }
+  .mp-sum__i {
+    display: grid;
+    gap: 3px;
+    padding: clamp(10px, 1.2vw, 15px) clamp(11px, 1.3vw, 16px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+  }
+  .mp-sum__k {
+    font-size: clamp(8.5px, 0.62vw, 10px);
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  .mp-sum__v {
+    font-family: var(--sb-font-display);
+    font-size: clamp(11.5px, 0.9vw, 14.4px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+  .mp-staff__lead {
+    margin: 0 0 clamp(12px, 1.5vw, 18px);
+    max-width: 84ch;
+    font-size: clamp(9.6px, 0.72vw, 11.4px);
+    line-height: 1.66;
+    color: var(--sb-text-secondary);
+  }
+
+  /* ── 05 · infrastructure ────────────────────────────────────────────────── */
+  .mp-infra {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(10px, 1.2vw, 16px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .mp-if {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(9px, 1vw, 13px);
+    align-items: center;
+    padding: clamp(13px, 1.5vw, 18px) clamp(13px, 1.5vw, 17px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    transition: border-color var(--sb-dur-image) var(--sb-ease);
+  }
+  .mp-if:hover { border-color: color-mix(in srgb, var(--sb-orange-bright) 44%, transparent); }
+  .mp-if__m { display: block; width: clamp(22px, 2.1vw, 29px); color: var(--sb-orange-bright); }
+  .mp-if__m svg { display: block; width: 100%; height: auto; }
+  .mp-if__t { display: grid; gap: 1px; min-width: 0; }
+  .mp-if__k {
+    font-size: clamp(8.6px, 0.64vw, 10.2px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  .mp-if__v {
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 22px);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    color: var(--sb-charcoal);
+  }
+  .mp-if__u { font-size: clamp(8.2px, 0.6vw, 9.8px); line-height: 1.4; color: var(--sb-text-muted); }
+  .mp-if__a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 3px;
+    font-size: clamp(9.5px, 0.72vw, 11.4px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .mp-if__a svg { width: 12px; height: auto; }
+  .mp-if__a:hover { color: var(--sb-violet); }
+
+  /* ═══ THE CALLOUT ═════════════════════════════════════════════════════════ */
+  .mp-callout__box {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1.25fr) minmax(0, 0.8fr);
+    gap: clamp(16px, 2.2vw, 34px);
+    align-items: center;
+    padding: clamp(16px, 2vw, 26px) clamp(18px, 2.2vw, 30px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .mp-callout__m {
+    display: grid;
+    place-items: center;
+    width: clamp(44px, 4.2vw, 62px);
+    aspect-ratio: 1 / 1;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet-wash);
+    color: var(--sb-orange-bright);
+  }
+  .mp-callout__m svg { width: 52%; height: auto; }
+  .mp-callout__h {
+    margin: 0;
+    max-width: 42ch;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.24vw, 21px);
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: -0.032em;
+    color: var(--sb-charcoal);
+  }
+  .mp-callout__b {
+    margin: clamp(7px, 0.9vw, 11px) 0 0;
+    max-width: 62ch;
+    font-size: clamp(9.6px, 0.72vw, 11.4px);
+    line-height: 1.66;
+    color: var(--sb-text-muted);
+  }
+  .mp-callout__b a { color: var(--sb-violet); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .mp-callout__b a:hover { color: var(--sb-orange-bright); }
+  .mp-callout__pic { overflow: hidden; border-radius: var(--sb-r-2); }
+  .mp-callout__pic :global(picture) { display: block; }
+  .mp-callout__pic :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 8; object-fit: cover; }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .mp-docs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .mp-docs--slim { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .mp-infra { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .mp-sum { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 1023px) {
+    .mp-quick__box { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: clamp(14px, 2.2vw, 20px); }
+    .mp-qi + .mp-qi { border-left: 0; padding-left: 0; }
+
+    /* ⚠ THE RAIL STOPS BEING STICKY BEFORE IT BECOMES HORIZONTAL. A sticky
+       element that scrolls sideways traps the page's own scroll on touch. */
+    .mp-body__grid { grid-template-columns: minmax(0, 1fr); }
+    .mp-rail { position: static; top: auto; grid-template-columns: minmax(0, 1fr); }
+    .mp-rail__list { display: flex; overflow-x: auto; scrollbar-width: none; }
+    .mp-rail__list::-webkit-scrollbar { display: none; }
+    .mp-rail__list li { flex: 0 0 auto; }
+    .mp-rail__list li + li .mp-rail__a { border-top: 0; border-left: 1px solid var(--sb-border); }
+    .mp-rail__a { white-space: nowrap; }
+    .mp-rail__pdf { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: clamp(12px, 2vw, 20px); }
+    .mp-rail__pdfv { grid-column: 1; }
+    .mp-rail__pdfk { grid-column: 1; }
+    .mp-rail__pdfa,
+    .mp-rail__pdfb { margin: 0; }
+    .mp-rail__pdfa { grid-column: 2; grid-row: 1 / span 2; }
+    .mp-rail__pdfb { grid-column: 3; grid-row: 1 / span 2; }
+
+    .mp-callout__box { grid-template-columns: auto minmax(0, 1fr); row-gap: clamp(16px, 2.6vw, 22px); }
+    .mp-callout__pic { grid-column: 1 / -1; }
+    .mp-callout__pic :global(img) { aspect-ratio: 16 / 5.6; }
+  }
+
+  @media (max-width: 767px) {
+    .mp-quick { margin-top: clamp(-40px, -4vw, -24px); }
+    .mp-quick__box { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mp-facts { grid-template-columns: minmax(0, 1fr); }
+    .mp-docs,
+    .mp-docs--slim { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mp-infra { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mp-sum { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mp-res__pair { grid-template-columns: minmax(0, 1fr); }
+    .mp-rail__pdf { grid-template-columns: minmax(0, 1fr); }
+    .mp-rail__pdfa,
+    .mp-rail__pdfb { grid-column: 1; grid-row: auto; }
+    .mp-rail__pdfa { margin-top: clamp(10px, 2vw, 14px); }
+    .mp-rail__pdfb { margin-top: 8px; }
+    .mp-callout__box { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 479px) {
+    .mp-quick__box { grid-template-columns: minmax(0, 1fr); }
+    .mp-docs,
+    .mp-docs--slim { grid-template-columns: minmax(0, 1fr); }
+    .mp-infra { grid-template-columns: minmax(0, 1fr); }
+    .mp-sum { grid-template-columns: minmax(0, 1fr); }
+    .mp-fact { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+  }
+</style>
