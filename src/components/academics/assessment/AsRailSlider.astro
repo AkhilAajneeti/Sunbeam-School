@@ -187,9 +187,15 @@ const totalLabel = String(total).padStart(2, '0');
       const live = items().length;
       if (now) now.textContent = String(Math.min(i + 1, live)).padStart(2, '0');
       if (tally) tally.textContent = String(live).padStart(2, '0');
-      Array.from(dots?.querySelectorAll('.sl-dot') ?? []).forEach((d, k) =>
-        d.setAttribute('aria-current', k === Math.min(i, n - 1) ? 'true' : 'false'),
-      );
+      /* ⚠ --d IS HOW FAR THIS DOT IS FROM THE ACTIVE ONE, and the stylesheet
+         does the rest — size and opacity fall away with it, so a twelve-dot
+         strip reads as a position rather than as confetti. Written here rather
+         than as a dozen CSS sibling selectors, which cannot express distance. */
+      const at = Math.min(i, n - 1);
+      Array.from(dots?.querySelectorAll('.sl-dot') ?? []).forEach((d, k) => {
+        d.setAttribute('aria-current', k === at ? 'true' : 'false');
+        (d as HTMLElement).style.setProperty('--d', String(Math.abs(k - at)));
+      });
       /* Disabled rather than hidden — see the note in slider.css. */
       if (prev) prev.disabled = track.scrollLeft <= 2;
       if (next) next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
