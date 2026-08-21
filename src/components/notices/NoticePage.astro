@@ -1,0 +1,772 @@
+---
+/**
+ * SCHOOL NOTICES — featured rotator, working filters, poster grid, load more.
+ *
+ * ⚠⚠ THE POSTER IS THE NOTICE. The school publishes 24 poster images and nothing
+ * else — no titles, no dates, no PDFs, no links. Every title and date on this
+ * page was read off the artwork itself; sourcing is in data/notices.ts.
+ *
+ * ⚠ NO CATEGORY FILTER, BECAUSE THE SOURCE HAS NO CATEGORIES. The brief permits
+ * one only if the data supports it. Search (by title) and year (from printed
+ * dates) are the two filters the data does support, and they are the two here.
+ *
+ * ⚠ contain, NOT cover, ON EVERY POSTER. These are vertical and square designed
+ * sheets whose whole content is text; cropping one to fill a card would cut the
+ * notice off the notice. The brief says so in as many words.
+ *
+ * ⚠ EVERY CARD IS RENDERED ON THE SERVER. Filtering and "load more" only toggle
+ * `hidden` on cards already in the DOM, so all 24 notices are in the HTML for
+ * search engines and for anyone with JavaScript off — who simply sees them all.
+ */
+import { Picture } from 'astro:assets';
+import '../../styles/assessment.css';
+import { MARK } from '../academics/assessment/marks';
+import Lightbox from '../ui/Lightbox.astro';
+import { notices, featuredNotices, noticeYears, noticeSource } from '../../data/notices';
+
+interface Props {
+  /** Cards shown before "Load more". */
+  step?: number;
+}
+const { step = 10 } = Astro.props;
+
+const S = 'Sunbeam School Ballia';
+---
+
+{/* ══ 01 · THE FEATURED NOTICE ═══════════════════════════════════════════════
+    Poster left, its details right, with prev/next and dots. */}
+<section class="as-sec as-sec--ivory as-pad--sm nt-feat" aria-labelledby="nt-feat-t" data-nt-feat>
+  <span class="as-warm" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <h2 class="u-visually-hidden" id="nt-feat-t">Latest notices</h2>
+
+    {featuredNotices.map((n, i) => (
+      <div class="nt-feat__slide" data-nt-slide={i} hidden={i !== 0}>
+        <a
+          class="nt-feat__art"
+          data-lb-open
+          href={n.image.src}
+          data-lb-alt={n.alt}
+          data-lb-cap={n.title}
+          data-mask
+        >
+          {/* ⚠ A 48px COPY OF THE SAME POSTER, BLURRED — not a second download worth
+              worrying about (~1KB of avif) and not a different picture. It fills
+              whatever the contained poster leaves over, so the letterbox reads as
+              a frame instead of dead white. */}
+          <span class="nt-feat__bg" aria-hidden="true">
+            <Picture
+              src={n.image}
+              alt=""
+              formats={['avif', 'webp']}
+              widths={[48]}
+              sizes="48px"
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+          <span class="nt-feat__fg">
+            <Picture
+              src={n.image}
+              alt={n.alt}
+              formats={['avif', 'webp']}
+              widths={[420, 760, 1100]}
+              sizes="(max-width: 1023px) 92vw, 38vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </span>
+        </a>
+
+        <div class="nt-feat__copy">
+          <p class="as-kicker" data-reveal>Latest notice</p>
+          <h3 class="as-h as-h--lg nt-feat__h">{n.title}</h3>
+          {n.sub && <p class="nt-feat__sub">{n.sub}</p>}
+
+          {n.dateLabel && (
+            <p class="nt-feat__date">
+              <span class="nt-feat__m" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.calendar} />
+                </svg>
+              </span>
+              <span class="t-tabular">{n.dateLabel}</span>
+            </p>
+          )}
+
+          <p class="nt-feat__acts">
+            {/* ⚠ NOT A SECOND data-lb-open. Two triggers for one poster put it
+                into the viewer twice in a row; this forwards to the frame. */}
+            <button type="button" class="nt-btn nt-btn--solid" data-nt-open>
+              View notice
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+              </svg>
+            </button>
+          </p>
+        </div>
+      </div>
+    ))}
+
+    {featuredNotices.length > 1 && (
+      <div class="nt-feat__ctrl">
+        <ul class="nt-dots" data-nt-dots aria-hidden="true">
+          {featuredNotices.map((_, i) => <li><button type="button" class:list={['nt-dot', i === 0 && 'is-on']} data-nt-dot={i}></button></li>)}
+        </ul>
+        <div class="nt-feat__arrows">
+        <button type="button" class="nt-arrow" data-nt-prev>
+          <span class="u-visually-hidden">Previous notice</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        <button type="button" class="nt-arrow" data-nt-next>
+          <span class="u-visually-hidden">Next notice</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+{/* ══ 02 · ALL NOTICES ═══════════════════════════════════════════════════════ */}
+<section class="as-sec as-sec--paper as-pad nt-all" aria-labelledby="nt-all-t" data-nt-grid data-step={step}>
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="nt-all__head">
+      <div>
+        <p class="as-kicker" data-reveal>All notices</p>
+        <h2 class="as-h as-h--md nt-all__h" id="nt-all-t">
+          <span data-clip data-clip-delay="0">Latest</span>
+          <span data-clip data-clip-delay="140"><em>updates</em></span>
+        </h2>
+        <span class="nt-rule" aria-hidden="true"></span>
+      </div>
+
+      {/* ⚠ TWO FILTERS, NOT THREE. There is no category data to filter on. */}
+      <div class="nt-tools">
+        <label class="nt-search">
+          <span class="u-visually-hidden">Search notices by title</span>
+          <span class="nt-search__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.search} />
+            </svg>
+          </span>
+          <input type="search" placeholder="Search notices…" data-nt-q autocomplete="off" />
+        </label>
+
+        <label class="nt-sel">
+          <span class="u-visually-hidden">Filter by year</span>
+          <select data-nt-year>
+            <option value="">All years</option>
+            {noticeYears.map((y) => <option value={y}>{y}</option>)}
+          </select>
+          <span class="nt-sel__chev" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </span>
+        </label>
+
+        <button type="button" class="nt-clear" data-nt-clear>Clear filters</button>
+      </div>
+    </div>
+
+    <ul class="nt-cards" data-nt-list>
+      {notices.map((n, i) => (
+        <li
+          class="nt-card"
+          data-nt-card
+          data-title={n.title.toLowerCase() + ' ' + (n.sub ?? '').toLowerCase()}
+          data-year={n.date ? n.date.slice(0, 4) : ''}
+        >
+          <a
+            class="nt-card__art"
+            data-lb-open
+            href={n.image.src}
+            data-lb-alt={n.alt}
+            data-lb-cap={n.dateLabel ? `${n.title} · ${n.dateLabel}` : n.title}
+          >
+            <Picture
+              src={n.image}
+              alt={n.alt}
+              formats={['avif', 'webp']}
+              widths={[320, 560]}
+              sizes="(max-width: 767px) 88vw, 19vw"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+          <div class="nt-card__body">
+            <h3 class="nt-card__k">{n.title}</h3>
+            {n.dateLabel && (
+              <p class="nt-card__date">
+                <span class="nt-card__m" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.calendar} />
+                  </svg>
+                </span>
+                <span class="t-tabular">{n.dateLabel}</span>
+              </p>
+            )}
+            <p class="nt-card__go">
+              <button type="button" data-nt-open>
+                View notice
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+                </svg>
+              </button>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <p class="nt-empty" data-nt-empty hidden>
+      No notice matches that search.
+      <button type="button" class="nt-clear nt-clear--inline" data-nt-clear>Clear the filters</button>
+    </p>
+
+    <p class="nt-more">
+      <button type="button" class="nt-btn nt-btn--wide" data-nt-more>
+        Load more notices
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      <span class="nt-count" aria-live="polite" data-nt-count></span>
+    </p>
+  </div>
+</section>
+
+{/* ══ 03 · IMPORTANT INFORMATION ═════════════════════════════════════════════
+    One large card left, two document cards right — the reference's own shape.
+
+    ⚠⚠ THE SECOND DOCUMENT CARD IS NOT A CIRCULARS PDF, BECAUSE THERE IS NO SUCH
+    PDF. The reference art offers "School Circulars & Official Notices —
+    download all official circulars in PDF format". The school publishes its
+    circulars as poster IMAGES, on the page these 24 came from; it issues no
+    circulars document of any kind. The brief's own rule settles it — "Do NOT
+    invent PDF/calendar links. If a destination does not exist, do not create a
+    fake link." So that card points at the school's own Notice page, which is a
+    real destination holding the real circulars, and says so.
+    The Academic Calendar card IS real and links to the calendar page. */}
+<section class="as-sec as-sec--cream nt-info" aria-labelledby="nt-info-t">
+  <div class="u-container nt-info__grid">
+    <div class="nt-info__main">
+      <span class="nt-info__m" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.shield} />
+        </svg>
+      </span>
+      <h2 class="nt-info__h" id="nt-info-t">Important information</h2>
+      <p class="nt-info__v">
+        Every notice on this page is an official announcement published by {S}. The school issues
+        them as posters rather than as documents, so each one opens at full size in the viewer.
+      </p>
+      <p class="nt-info__act">
+        <a class="nt-btn" href="#nt-all-t">
+          View all notices
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+          </svg>
+        </a>
+      </p>
+    </div>
+
+    <ul class="nt-docs">
+      <li class="nt-doc">
+        <span class="nt-doc__m" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.megaphone} />
+          </svg>
+        </span>
+        <h3 class="nt-doc__k">School circulars &amp; official notices</h3>
+        <p class="nt-doc__v">
+          The school publishes its circulars as posters on its own Notice page — the source of
+          every notice above.
+        </p>
+        <p class="nt-doc__a">
+          <a href={noticeSource} target="_blank" rel="noopener noreferrer">
+            Open the school’s page
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.external} />
+            </svg>
+          </a>
+        </p>
+      </li>
+
+      <li class="nt-doc">
+        <span class="nt-doc__m" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.calendar} />
+          </svg>
+        </span>
+        <h3 class="nt-doc__k">Academic calendar</h3>
+        <p class="nt-doc__v">
+          The session calendars the school publishes, with the planner for the current session.
+        </p>
+        <p class="nt-doc__a">
+          <a href="/academics/academic-calendar/">
+            View calendar
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+            </svg>
+          </a>
+        </p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<Lightbox />
+
+<script>
+  /* ── THE FEATURED ROTATOR ─────────────────────────────────────────────────
+     ⚠ NO AUTOPLAY. A notice that slides away mid-read is a notice missed. */
+  document.querySelectorAll<HTMLElement>('[data-nt-feat]').forEach((root) => {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-nt-slide]'));
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-nt-dot]'));
+    if (slides.length < 2) return;
+    let at = 0;
+
+    const show = (i: number) => {
+      at = (i + slides.length) % slides.length;
+      slides.forEach((s, k) => { s.hidden = k !== at; });
+      dots.forEach((d, k) => d.classList.toggle('is-on', k === at));
+    };
+
+    root.querySelector('[data-nt-prev]')?.addEventListener('click', () => show(at - 1));
+    root.querySelector('[data-nt-next]')?.addEventListener('click', () => show(at + 1));
+    dots.forEach((d, k) => d.addEventListener('click', () => show(k)));
+  });
+
+  /* ⚠ ONE POSTER, ONE VIEWER ENTRY. Every "View notice" control forwards its
+     click to the poster beside it, so the lightbox set is the 24 posters and not
+     48 alternating duplicates. */
+  document.querySelectorAll<HTMLElement>('[data-nt-open]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const scope = btn.closest('[data-nt-card], [data-nt-slide]');
+      scope?.querySelector<HTMLAnchorElement>('[data-lb-open]')?.click();
+    });
+  });
+
+  /* ── THE GRID: SEARCH, YEAR, LOAD MORE ────────────────────────────────────
+     All three work on cards already in the DOM. */
+  document.querySelectorAll<HTMLElement>('[data-nt-grid]').forEach((root) => {
+    const step = Number(root.dataset.step) || 10;
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-nt-card]'));
+    const q = root.querySelector<HTMLInputElement>('[data-nt-q]');
+    const year = root.querySelector<HTMLSelectElement>('[data-nt-year]');
+    const more = root.querySelector<HTMLButtonElement>('[data-nt-more]');
+    const count = root.querySelector<HTMLElement>('[data-nt-count]');
+    const empty = root.querySelector<HTMLElement>('[data-nt-empty]');
+    let shown = step;
+
+    const matching = () => {
+      const term = (q?.value ?? '').trim().toLowerCase();
+      const y = year?.value ?? '';
+      return cards.filter(
+        (c) => (!term || (c.dataset.title ?? '').includes(term)) && (!y || c.dataset.year === y),
+      );
+    };
+
+    const paint = () => {
+      const hits = matching();
+      const visible = new Set(hits.slice(0, shown));
+      cards.forEach((c) => c.toggleAttribute('hidden', !visible.has(c)));
+
+      if (empty) empty.hidden = hits.length > 0;
+      if (count) {
+        count.textContent = hits.length === 0
+          ? ''
+          : `Showing ${Math.min(shown, hits.length)} of ${hits.length} ${hits.length === 1 ? 'notice' : 'notices'}`;
+      }
+      /* ⚠ HIDDEN, NOT DISABLED, WHEN THERE IS NO MORE. A greyed button that
+         cannot do anything is still something to try clicking. */
+      if (more) more.parentElement?.toggleAttribute('hidden', hits.length === 0 || shown >= hits.length);
+    };
+
+    const restart = () => { shown = step; paint(); };
+    q?.addEventListener('input', restart);
+    year?.addEventListener('change', restart);
+    q?.addEventListener('keydown', (e) => { if (e.key === 'Escape' && q.value) { q.value = ''; restart(); } });
+
+    root.querySelectorAll<HTMLButtonElement>('[data-nt-clear]').forEach((b) =>
+      b.addEventListener('click', () => {
+        if (q) q.value = '';
+        if (year) year.value = '';
+        restart();
+        q?.focus();
+      }),
+    );
+
+    more?.addEventListener('click', () => {
+      shown += step;
+      paint();
+      /* Put focus on the first newly revealed card so a keyboard reader is not
+         dropped back at the top of the list. */
+      matching()[shown - step]?.querySelector<HTMLAnchorElement>('a')?.focus();
+    });
+
+    paint();
+  });
+</script>
+
+<style>
+  /* ⚠⚠ THE hidden ATTRIBUTE ONLY REACHES display:none THROUGH THE UA SHEET, so
+     ANY author rule that sets display outranks it. Both the cards and the
+     featured slides are grids, which silently defeated `hidden` — Load More and
+     both filters were toggling an attribute that changed nothing on screen, and
+     the lightbox counted every hidden card as visible. */
+  .nt-card[hidden],
+  .nt-feat__slide[hidden] { display: none !important; }
+
+  .nt-rule { display: block; width: clamp(34px, 3.4vw, 46px); height: 3px; margin: clamp(9px, 1.1vw, 14px) 0 0; border-radius: 3px; background: var(--sb-orange-bright); }
+
+  .nt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: clamp(9px, 1vw, 12px) clamp(15px, 1.7vw, 22px);
+    border: 1.5px solid color-mix(in srgb, var(--sb-orange-bright) 52%, transparent);
+    border-radius: var(--sb-r-1);
+    background: none;
+    font: inherit;
+    font-size: clamp(10px, 0.76vw, 12.2px);
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--sb-orange-bright);
+    cursor: pointer;
+    transition: background 220ms var(--sb-ease), color 220ms var(--sb-ease), border-color 220ms var(--sb-ease);
+  }
+  .nt-btn svg { width: 13px; height: auto; transition: transform 220ms var(--sb-ease); }
+  .nt-btn:hover { border-color: var(--sb-orange-bright); background: var(--sb-orange-bright); color: #fff; }
+  .nt-btn:hover svg { transform: translateX(3px); }
+  .nt-btn--solid { border-color: var(--sb-orange-bright); background: var(--sb-orange-bright); color: #fff; }
+  .nt-btn--solid:hover { border-color: var(--sb-violet); background: var(--sb-violet); }
+  .nt-btn--wide { padding-inline: clamp(20px, 2.4vw, 32px); }
+  .nt-btn--wide:hover svg { transform: translateY(3px); }
+
+  /* ═══ 01 · FEATURED ═══════════════════════════════════════════════════════ */
+  .nt-feat { position: relative; padding-block: clamp(38px, 4.6vw, 76px); }
+  .nt-feat__slide {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    gap: clamp(26px, 3.6vw, 60px);
+    align-items: center;
+    justify-items: start;
+  }
+  /* An almost-white warm bloom — present, never visibly orange. */
+  .nt-feat::after {
+    content: '';
+    position: absolute;
+    top: -18%;
+    right: -8%;
+    width: 46%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--sb-orange-bright) 11%, transparent), transparent 66%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .nt-feat > .u-container { position: relative; z-index: 1; }
+  /* ⚠⚠ THE STAGE OWNS THE HEIGHT, NOT THE POSTER — and it has to, because the
+     posters run from 0.65 to 1.78 in ratio. Letting each one set its own height
+     swung this section by 365px between slides. 10/11 sits between the featured
+     three (0.71 / 0.80 / 1.00), so each is within a few per cent of filling it;
+     the poster is CONTAINED, never cropped, and the few per cent left over is
+     covered by a blurred copy of that same poster rather than empty white — the
+     mistake this section was rebuilt to remove. A landscape poster added later
+     degrades into more blur, not a broken layout. */
+  .nt-feat__art {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: clamp(300px, 30vw, 430px);
+    aspect-ratio: 10 / 11;
+    overflow: hidden;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: 0 20px 44px -26px rgba(28, 14, 8, 0.34);
+    cursor: zoom-in;
+    transition: transform 300ms var(--sb-ease), box-shadow 300ms var(--sb-ease);
+  }
+  .nt-feat__art:hover { transform: translateY(-3px); box-shadow: 0 26px 52px -26px rgba(28, 14, 8, 0.42); }
+  .nt-feat__bg { position: absolute; inset: 0; z-index: 0; }
+  .nt-feat__bg :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    filter: blur(24px) saturate(1.15);
+    transform: scale(1.25);
+  }
+  .nt-feat__fg { position: absolute; inset: 0; z-index: 1; display: block; }
+  .nt-feat__fg :global(picture) { display: block; width: 100%; height: 100%; }
+  .nt-feat__fg :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 22px rgba(28, 14, 8, 0.22));
+  }
+  .nt-feat__h { margin-top: 0; max-width: 16ch; }
+  .nt-feat__sub { margin: clamp(7px, 0.9vw, 11px) 0 0; max-width: 42ch; font-size: clamp(10.5px, 0.8vw, 12.6px); line-height: 1.66; color: var(--sb-text-secondary); }
+  .nt-feat__date { display: flex; align-items: center; gap: 7px; margin: clamp(10px, 1.2vw, 15px) 0 0; font-size: clamp(10px, 0.76vw, 12.2px); font-weight: 700; color: var(--sb-text-muted); }
+  .nt-feat__m { display: block; width: clamp(14px, 1.2vw, 17px); color: var(--sb-orange-bright); }
+  .nt-feat__m svg { display: block; width: 100%; height: auto; }
+  .nt-feat__acts { margin: clamp(15px, 1.9vw, 24px) 0 0; }
+
+  /* ⚠ THE CONTROLS SIT AT THE RIGHT EDGE ON DESKTOP, as the reference has them —
+     dots above, arrows beneath, both right-aligned and clear of the copy. They
+     return to normal flow below 1024, where an absolutely positioned control
+     would either overlap the text or hang off the column. */
+  .nt-feat__ctrl {
+    position: absolute;
+    top: 32%;
+    right: 0;
+    z-index: 2;
+    display: grid;
+    justify-items: end;
+    gap: clamp(11px, 1.3vw, 16px);
+  }
+  .nt-feat__arrows { display: flex; gap: 8px; }
+  .nt-feat__copy { padding-right: clamp(0px, 7vw, 120px); }
+  .nt-arrow {
+    display: grid;
+    place-items: center;
+    width: clamp(32px, 2.8vw, 38px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--sb-border-strong);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-charcoal);
+    cursor: pointer;
+    transition: background 220ms var(--sb-ease), color 220ms var(--sb-ease), border-color 220ms var(--sb-ease);
+  }
+  .nt-arrow svg { width: 42%; height: auto; }
+  .nt-arrow:hover { border-color: var(--sb-orange-bright); background: var(--sb-orange-bright); color: #fff; }
+  .nt-dots { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .nt-dot { display: block; width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: var(--sb-border-strong); cursor: pointer; transition: width 220ms var(--sb-ease), background 220ms var(--sb-ease); }
+  .nt-dot.is-on { width: 20px; border-radius: 4px; background: var(--sb-orange-bright); }
+
+  /* ═══ 02 · THE GRID ═══════════════════════════════════════════════════════ */
+  .nt-all__head {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(18px, 2.4vw, 34px);
+    align-items: end;
+    margin: 0 0 clamp(22px, 2.8vw, 34px);
+  }
+  .nt-all__head > div:first-child { display: grid; justify-items: start; }
+  /* The reference sets this as a page-scale statement, not a section label. */
+  .nt-all__h { margin-top: 0; font-size: clamp(30px, 3.4vw, 52px); line-height: 1.02; }
+
+  .nt-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: clamp(8px, 1vw, 12px); }
+  .nt-search { position: relative; flex: 1 1 200px; max-width: 280px; }
+  .nt-search__m { position: absolute; top: 50%; left: clamp(10px, 1.1vw, 13px); translate: 0 -50%; display: block; width: clamp(13px, 1.1vw, 16px); color: var(--sb-text-muted); pointer-events: none; }
+  .nt-search__m svg { display: block; width: 100%; height: auto; }
+  .nt-search input,
+  .nt-sel select {
+    width: 100%;
+    padding: clamp(9px, 1vw, 12px) clamp(12px, 1.4vw, 16px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-1);
+    background: var(--sb-paper);
+    font: inherit;
+    font-size: clamp(10px, 0.76vw, 12.2px);
+    color: var(--sb-charcoal);
+  }
+  .nt-search input { padding-left: clamp(29px, 3vw, 37px); }
+  .nt-search input:focus-visible,
+  .nt-sel select:focus-visible { outline: none; border-color: var(--sb-orange-bright); box-shadow: 0 0 0 3px color-mix(in srgb, var(--sb-orange-bright) 18%, transparent); }
+  .nt-sel { position: relative; flex: 0 0 auto; }
+  .nt-sel select { appearance: none; padding-right: clamp(29px, 3vw, 36px); cursor: pointer; }
+  .nt-sel__chev { position: absolute; top: 50%; right: clamp(10px, 1.1vw, 13px); translate: 0 -50%; display: block; width: clamp(12px, 1vw, 15px); color: var(--sb-text-muted); pointer-events: none; }
+  .nt-sel__chev svg { display: block; width: 100%; height: auto; }
+  .nt-clear {
+    padding: clamp(9px, 1vw, 12px) clamp(13px, 1.5vw, 18px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-1);
+    background: none;
+    font: inherit;
+    font-size: clamp(10px, 0.76vw, 12.2px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+    cursor: pointer;
+    transition: border-color 220ms var(--sb-ease);
+  }
+  .nt-clear:hover { border-color: var(--sb-orange-bright); }
+  .nt-clear--inline { margin-left: 8px; }
+
+  .nt-cards {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 22px) clamp(12px, 1.4vw, 18px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nt-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 4px 16px -12px rgba(28, 14, 8, 0.18);
+    transition: transform 240ms var(--sb-ease), border-color 240ms var(--sb-ease), box-shadow 240ms var(--sb-ease);
+  }
+  .nt-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--sb-orange-bright) 44%, transparent); box-shadow: var(--sb-shadow-card); }
+  .nt-card__art {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--sb-sand);
+    cursor: zoom-in;
+  }
+  .nt-card__art :global(picture) { position: absolute; inset: 0; display: block; }
+  .nt-card__art :global(img) { display: block; width: 100%; height: 100%; object-fit: contain; transition: scale 300ms var(--sb-ease); }
+  .nt-card:hover .nt-card__art :global(img) { scale: 1.04; }
+  .nt-card__body { display: grid; grid-template-rows: auto auto 1fr; align-content: stretch; padding: clamp(11px, 1.3vw, 15px) clamp(12px, 1.4vw, 16px) clamp(13px, 1.5vw, 17px); }
+  .nt-card__k {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12px, 0.94vw, 15.5px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+  .nt-card__date { display: flex; align-items: center; gap: 5px; margin: clamp(6px, 0.8vw, 9px) 0 0; font-size: clamp(8.8px, 0.66vw, 10.4px); color: var(--sb-text-muted); }
+  .nt-card__m { display: block; width: clamp(11px, 0.95vw, 13px); color: var(--sb-orange-bright); }
+  .nt-card__m svg { display: block; width: 100%; height: auto; }
+  .nt-card__go { align-self: end; margin: clamp(9px, 1.1vw, 13px) 0 0; }
+  .nt-card__go button { display: inline-flex; align-items: center; gap: 5px; padding: 0; border: 0; background: none; font: inherit; font-size: clamp(9px, 0.68vw, 10.8px); font-weight: 700; color: var(--sb-orange-bright); cursor: pointer; }
+  .nt-card__go svg { width: 12px; height: auto; transition: transform 220ms var(--sb-ease); }
+  .nt-card:hover .nt-card__go svg { transform: translateX(3px); }
+
+  .nt-empty { margin: clamp(26px, 3.4vw, 44px) 0 0; text-align: center; font-size: clamp(10.5px, 0.8vw, 12.6px); color: var(--sb-text-muted); }
+  .nt-more { display: grid; justify-items: center; gap: clamp(8px, 1vw, 12px); margin: clamp(22px, 2.8vw, 36px) 0 0; }
+  .nt-count { font-size: clamp(9.4px, 0.7vw, 11.2px); color: var(--sb-text-muted); }
+
+  /* ═══ 03 · IMPORTANT INFORMATION ══════════════════════════════════════════ */
+  .nt-info { padding-block: clamp(44px, 5.4vw, 92px); }
+  .nt-info__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.95fr);
+    gap: clamp(14px, 1.8vw, 26px);
+    align-items: stretch;
+  }
+
+  .nt-info__main {
+    display: grid;
+    align-content: start;
+    padding: clamp(20px, 2.4vw, 32px) clamp(19px, 2.2vw, 30px);
+    border: 1px solid color-mix(in srgb, var(--sb-orange-bright) 26%, transparent);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-violet-wash);
+  }
+  .nt-info__m {
+    display: grid;
+    place-items: center;
+    width: clamp(44px, 4vw, 56px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sb-orange-bright);
+    color: #fff;
+  }
+  .nt-info__m svg { width: 48%; height: auto; }
+  .nt-info__h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.032em;
+    color: var(--sb-charcoal);
+  }
+  .nt-info__v { margin: 7px 0 0; font-size: clamp(9.6px, 0.72vw, 11.4px); line-height: 1.68; color: var(--sb-text-secondary); }
+  .nt-info__act { margin: clamp(13px, 1.6vw, 20px) 0 0; }
+
+  .nt-docs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 1.8vw, 26px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nt-doc {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    align-content: stretch;
+    padding: clamp(20px, 2.4vw, 32px) clamp(19px, 2.2vw, 28px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: 0 6px 22px -16px rgba(28, 14, 8, 0.22);
+    transition: transform 240ms var(--sb-ease), border-color 240ms var(--sb-ease), box-shadow 240ms var(--sb-ease);
+  }
+  .nt-doc:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--sb-orange-bright) 44%, transparent);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .nt-doc__m {
+    display: grid;
+    place-items: center;
+    width: clamp(40px, 3.6vw, 50px);
+    aspect-ratio: 1 / 1;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet-wash);
+    color: var(--sb-orange-bright);
+  }
+  .nt-doc__m svg { width: 48%; height: auto; }
+  .nt-doc__k {
+    margin: clamp(11px, 1.4vw, 17px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.06vw, 17px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .nt-doc__v { margin: 6px 0 0; font-size: clamp(9.2px, 0.7vw, 11px); line-height: 1.66; color: var(--sb-text-muted); }
+  .nt-doc__a { align-self: end; margin: clamp(13px, 1.6vw, 20px) 0 0; }
+  .nt-doc__a a { display: inline-flex; align-items: center; gap: 6px; font-size: clamp(9.6px, 0.72vw, 11.4px); font-weight: 700; color: var(--sb-orange-bright); }
+  .nt-doc__a svg { width: 13px; height: auto; transition: transform 220ms var(--sb-ease); }
+  .nt-doc:hover .nt-doc__a svg { transform: translateX(3px); }
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1279px) {
+    .nt-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 1023px) {
+    .nt-feat__slide { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 3vw, 28px); }
+    .nt-feat__art { max-width: none; }
+    .nt-feat__copy { padding-right: 0; }
+    .nt-feat__ctrl { position: static; justify-items: start; margin-top: clamp(16px, 2.4vw, 22px); }
+    .nt-feat__h { max-width: none; }
+    .nt-feat__h { min-height: 2lh; }
+    .nt-feat__sub { max-width: none; min-height: calc(1.66em * 2); }
+    .nt-all__head { grid-template-columns: minmax(0, 1fr); gap: clamp(14px, 2vw, 20px); align-items: start; }
+    .nt-tools { justify-content: flex-start; }
+    .nt-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .nt-info__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 767px) {
+    .nt-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .nt-search { max-width: none; }
+  }
+
+  @media (max-width: 479px) {
+    .nt-cards { grid-template-columns: minmax(0, 1fr); }
+    .nt-docs { grid-template-columns: minmax(0, 1fr); }
+    .nt-btn { width: 100%; justify-content: center; }
+  }
+</style>

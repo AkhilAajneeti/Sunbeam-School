@@ -56,7 +56,10 @@ import MegaMenu from './MegaMenu.astro';
     </nav>
 
     <div class="masthead__actions">
-      <a class="btn btn--primary masthead__apply" href="/admissions/">Apply Online</a>
+      {/* ⚠ NO CTA PILL HERE ANY MORE. Uniform Catalogue is an ordinary nav
+          item now, and the two Apply Online links live in the utility bar
+          above, where the school own site puts them. This slot carries the
+          mobile toggle and nothing else. */}
       <button
         class="masthead__toggle"
         type="button"
@@ -246,6 +249,7 @@ import MegaMenu from './MegaMenu.astro';
     flex-shrink: 0;
   }
 
+
   .masthead__toggle {
     display: none;
     align-items: center;
@@ -349,7 +353,6 @@ import MegaMenu from './MegaMenu.astro';
     .brand__wordmark { height: 34px; }
     .masthead.is-scrolled .brand__emblem { height: 32px; }
     .masthead.is-scrolled .brand__wordmark { height: 28px; }
-    .masthead__apply { display: none; } /* Apply is pinned in the drawer instead */
     .masthead__toggle-text { display: none; }
   }
 </style>

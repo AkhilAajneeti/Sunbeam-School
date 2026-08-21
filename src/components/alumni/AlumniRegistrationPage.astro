@@ -41,7 +41,7 @@ import Lightbox from '../ui/Lightbox.astro';
 import { featuredMeet, alumniGallery } from '../../data/alumniMeets';
 import { registrationBenefits, engagementCards, registrationSettings } from '../../data/alumniRegistration';
 
-import pCampus from '../../assets/photos/sunbeem-1.jpg';
+import pCampus from '../../assets/photos/sunbeamcloudimage.png';
 import pCohort from '../../assets/photos/sunbeem-3.jpg';
 
 const S = 'Sunbeam School Ballia';
@@ -81,10 +81,10 @@ const hasGallery = alumniGallery.length > 0;
       <div class="ar-intro__frame" data-mask>
         <Picture
           src={pCampus}
-          alt={`The main building of ${S} at Agarsanda, seen across its front lawn.`}
+          alt={`The campus of ${S} at Agarsanda — its teaching blocks ranged around the field.`}
           formats={['avif', 'webp']}
-          widths={[540, 900, 1280]}
-          sizes="(max-width: 1023px) 92vw, 46vw"
+          widths={[620, 1000, 1440]}
+          sizes="(max-width: 1023px) 96vw, 50vw"
           loading="eager"
           decoding="async"
         />
@@ -343,17 +343,38 @@ const hasGallery = alumniGallery.length > 0;
   .ar-intro__copy .as-body { max-width: 46ch; }
   .ar-intro__media { position: relative; }
   .ar-intro__dots { top: -6%; right: -3%; z-index: 0; }
-  /* The reference fades the campus into the page rather than boxing it. */
-  .ar-intro__frame {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    border-radius: var(--sb-r-3);
-    -webkit-mask-image: linear-gradient(100deg, transparent 0%, #000 16%, #000 100%);
-    mask-image: linear-gradient(100deg, transparent 0%, #000 16%, #000 100%);
-  }
+  /* ⚠ THE EDGE IS FEATHERED HERE, NOT IN THE ARTWORK. The supplied image fades
+     to a warm off-white — rgb(253,247,244) — which is close to the ivory ground
+     but not equal to it, so the two meet in a faint rectangle. Three fixes were
+     tried and rejected before this one:
+
+       · mix-blend-mode: multiply — computed correctly and did nothing. The GSAP
+         reveal on the wrapper opens a stacking context, so the image blended
+         against that transparent group instead of the section behind it.
+       · cutting the halo out with a flood fill — leaked straight through the
+         building, whose cream walls and window frames are the same near-white
+         as the halo. 31% of the picture dissolved.
+       · retoning the halo to the exact background — fixed the corners and left
+         the rest of the border visible, because the halo is not one flat colour.
+
+     A short feather on all four edges works whatever colour the halo happens to
+     be, and leaves the client's file untouched. Two gradients intersected, so
+     the corners fade on both axes rather than only one. */
+  .ar-intro__frame { position: relative; display: block; }
   .ar-intro__frame :global(picture) { display: block; }
-  .ar-intro__frame :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10.2; object-fit: cover; }
+  .ar-intro__frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
 
   .ar-why {
     display: grid;

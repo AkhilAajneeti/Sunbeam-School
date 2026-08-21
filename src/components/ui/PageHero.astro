@@ -37,20 +37,12 @@ interface Props {
   alt: string;
   /** object-position, to hold the focal point through the crop. */
   position?: string;
-  /**
-   * ⚠ OPT-IN, AND CENTRE STAYS THE DEFAULT. Every page built so far centres its
-   * banner, and changing that globally would reflow all of them. `left` exists
-   * for a design that asks for it and touches nothing else.
-   */
-  align?: 'center' | 'left';
-  /** A short orange rule under the title. */
-  rule?: boolean;
 }
 
-const { title, standfirst, crumbs, src, alt, position = '50% 45%', align = 'center', rule = false } = Astro.props;
+const { title, standfirst, crumbs, src, alt, position = '50% 45%' } = Astro.props;
 ---
 
-<header class:list={['phero', align === 'left' && 'phero--left']}>
+<header class="phero">
   <div class="phero__media" style={`--phero-pos: ${position};`}>
     <Picture
       src={src}
@@ -78,7 +70,6 @@ const { title, standfirst, crumbs, src, alt, position = '50% 45%', align = 'cent
     </nav>
 
     <h1 class="phero__title">{title}</h1>
-    {rule && <span class="phero__rule" aria-hidden="true"></span>}
     {standfirst && <p class="phero__standfirst">{standfirst}</p>}
 
     {/* Optional tail — a CTA, a scroll cue. Additive: pages that pass no
@@ -234,22 +225,4 @@ const { title, standfirst, crumbs, src, alt, position = '50% 45%', align = 'cent
     color: rgba(255, 255, 255, 0.86);
   }
 
-
-  /* ⚠ THE LEFT VARIANT IS ADDITIVE. The base styles are untouched, so every
-     existing banner renders exactly as before; only a caller passing
-     `align="left"` gets this. */
-  .phero--left .phero__inner { align-items: flex-start; text-align: left; }
-  .phero--left .phero__crumbs ol { justify-content: flex-start; }
-  .phero--left .phero__title,
-  .phero--left .phero__standfirst { margin-inline: 0; }
-
-  .phero__rule {
-    display: block;
-    width: clamp(38px, 3.6vw, 52px);
-    height: 3px;
-    margin: clamp(12px, 1.4vw, 18px) 0 0;
-    border-radius: 3px;
-    background: var(--sb-orange-bright);
-  }
-  .phero:not(.phero--left) .phero__rule { margin-inline: auto; }
 </style>

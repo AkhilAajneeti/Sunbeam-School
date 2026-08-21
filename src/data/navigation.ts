@@ -119,8 +119,12 @@ export const utilityLinks = [
   { label: "Apply Online Class Nursery to IX", href: school.external.applyFormNurseryToIX, external: true, tier: 3 },
   { label: "Apply Online Class XI", href: school.external.applyFormClassXI, external: true, tier: 3 },
   { label: "Login", href: school.external.parentLogin, external: true, tier: 2 },
-  { label: "Result", href: school.external.resultPage, external: true, tier: 1 },
-  { label: "Download T.C", href: school.external.downloadTC, external: true, tier: 2 },
+  /* ⚠ INTERNAL NOW. These two used to send the reader to the school's own
+     pages; both now exist on this site, wrapping the same portal and the same
+     lookup. Leaving them pointing outward would have made the new pages
+     unreachable from the bar that is supposed to lead to them. */
+  { label: "Result", href: "/result/", tier: 1 },
+  { label: "Download T.C", href: "/download-tc/", tier: 2 },
 ] as const;
 
 export const mainNav: NavItem[] = [
@@ -550,6 +554,9 @@ export const mainNav: NavItem[] = [
         "Alumni gathering or returning student on campus, 3:2 — candid",
     },
   },
+  /* ⚠ A PLAIN LINK, NO MEGA PANEL. The catalogue is one page and the two PDFs
+     live ON it, not under it — a dropdown here would hold a single entry. */
+  { label: "Uniform Catalogue", href: "/admissions/uniform-catalogue/" },
 ];
 
 /**
