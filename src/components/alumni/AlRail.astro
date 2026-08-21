@@ -1,0 +1,249 @@
+---
+/**
+ * THE ALUMNI RAIL — the reference design's carousel, exactly.
+ *
+ * ⚠ WHY THIS EXISTS RATHER THAN AsRailSlider. The shared rail puts its arrows
+ * and counter in a header row above the track. The Alumni reference puts them
+ * OUTSIDE the track, as two circles centred on the card row, with pagination
+ * dots centred underneath. That is a different chrome, not a variant — bolting a
+ * second arrangement onto the shared component would give every other page a
+ * branch it never uses.
+ *
+ * ⚠ THE TRACK IS A NATIVE SCROLLER, same as the shared rail: `overflow-x: auto`
+ * plus scroll snapping gives flick, drag, shift-wheel, trackpad and keyboard for
+ * free. The script only adds the two buttons and the dots — remove it and the
+ * rail still works.
+ *
+ * ⚠ THE ARROWS SIT IN THE PAGE GUTTER, so on a narrow viewport they would hang
+ * off the edge. Below 1280 they move inside the track's own bounds, and below
+ * 768 they hide entirely and the rail is swipe-only — which is what a phone
+ * expects anyway.
+ *
+ * ⚠ THE DOTS ARE PAGES, NOT CARDS. Thirteen dots for thirteen cards is a row of
+ * confetti; the count comes from how many card-widths the track can scroll.
+ */
+interface Props {
+  /** Accessible name for the rail. */
+  label: string;
+  /** Cards visible at desktop / tablet / mobile. */
+  per?: number;
+  perMd?: number;
+  perSm?: number;
+  id: string;
+  class?: string;
+}
+
+const { label, per = 4, perMd = 2, perSm = 1, id, class: extra = '' } = Astro.props;
+---
+
+<div class:list={['alr', extra]} data-alr>
+  <button type="button" class="alr__btn alr__btn--prev" data-alr-prev>
+    <span class="u-visually-hidden">Scroll back</span>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <ul
+    class="alr__track"
+    id={id}
+    data-alr-track
+    style={`--per: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
+    tabindex="0"
+    role="group"
+    aria-roledescription="carousel"
+    aria-label={label}
+  >
+    <slot />
+  </ul>
+
+  <button type="button" class="alr__btn alr__btn--next" data-alr-next>
+    <span class="u-visually-hidden">Scroll forward</span>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <ul class="alr__dots" data-alr-dots aria-hidden="true"></ul>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-alr]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-alr-track]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-alr-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-alr-next]');
+    const dots = root.querySelector<HTMLElement>('[data-alr-dots]');
+    if (!track) return;
+
+    const items = () =>
+      Array.from(track.children).filter(
+        (c): c is HTMLElement => c instanceof HTMLElement && c.offsetParent !== null,
+      );
+
+    /** One card plus one gap — measured, never assumed. */
+    const step = () => {
+      const list = items();
+      if (list.length < 2) return list[0]?.getBoundingClientRect().width ?? 0;
+      return list[1].getBoundingClientRect().left - list[0].getBoundingClientRect().left;
+    };
+
+    const pages = () => {
+      const s = step();
+      if (!s) return 1;
+      const visible = Math.max(1, Math.round(track.clientWidth / s));
+      return Math.max(1, items().length - visible + 1);
+    };
+
+    const index = () => {
+      const s = step();
+      return s ? Math.round(track.scrollLeft / s) : 0;
+    };
+
+    /* ⚠ :global() ON THE DOT STYLES — these buttons are built here at runtime and
+       never receive Astro's build-time scope attribute. See the stylesheet. */
+    const paintDots = () => {
+      if (!dots) return;
+      const n = pages();
+      if (dots.children.length !== n) {
+        dots.replaceChildren(
+          ...Array.from({ length: n }, (_, k) => {
+            const li = document.createElement('li');
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'alr__dot';
+            b.setAttribute('aria-label', `Go to card ${k + 1}`);
+            b.addEventListener('click', () => track.scrollTo({ left: k * step(), behavior: 'smooth' }));
+            li.appendChild(b);
+            return li;
+          }),
+        );
+      }
+      dots.toggleAttribute('hidden', n <= 1);
+    };
+
+    const sync = () => {
+      const i = index();
+      const n = pages();
+      Array.from(dots?.querySelectorAll('.alr__dot') ?? []).forEach((d, k) =>
+        d.classList.toggle('is-on', k === Math.min(i, n - 1)),
+      );
+      if (prev) prev.disabled = track.scrollLeft <= 2;
+      if (next) next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+      /* Both ends reachable in one screen — the controls have nothing to do. */
+      root.classList.toggle('is-static', n <= 1);
+    };
+
+    const go = (dir: number) => track.scrollBy({ left: dir * step(), behavior: 'smooth' });
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
+
+    let queued = false;
+    track.addEventListener('scroll', () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; sync(); });
+    });
+
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    });
+
+    new ResizeObserver(() => { paintDots(); sync(); }).observe(track);
+    paintDots();
+    sync();
+  });
+</script>
+
+<style>
+  .alr { position: relative; }
+
+  .alr__track {
+    --gap: clamp(12px, 1.5vw, 22px);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    list-style: none;
+  }
+  .alr__track::-webkit-scrollbar { display: none; }
+  .alr__track > * { scroll-snap-align: start; }
+  .alr__track > [hidden] { display: none !important; }
+  .alr__track:focus-visible { outline: 2px solid var(--sb-orange-bright); outline-offset: 4px; }
+
+  /* ⚠ CENTRED ON THE CARD ROW, NOT ON THE WHOLE COMPONENT. The dots sit under
+     the track, so centring against the component would push the arrows down by
+     half the dot row. `top` is resolved against the track's own box instead. */
+  .alr__btn {
+    position: absolute;
+    top: calc((100% - var(--alr-foot, 34px)) / 2);
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: clamp(34px, 3vw, 42px);
+    aspect-ratio: 1 / 1;
+    translate: 0 -50%;
+    border: 1px solid var(--sb-border);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    box-shadow: 0 6px 18px -10px rgba(28, 14, 8, 0.32);
+    color: var(--sb-charcoal);
+    cursor: pointer;
+    transition: background var(--sb-dur-image) var(--sb-ease), color var(--sb-dur-image) var(--sb-ease),
+      border-color var(--sb-dur-image) var(--sb-ease), opacity var(--sb-dur-image) var(--sb-ease);
+  }
+  .alr__btn svg { width: 44%; height: auto; }
+  .alr__btn:hover:not(:disabled) { border-color: var(--sb-orange-bright); background: var(--sb-orange-bright); color: #fff; }
+  .alr__btn:disabled { opacity: 0.32; cursor: not-allowed; }
+  .alr__btn--prev { left: clamp(-21px, -1.6vw, -12px); }
+  .alr__btn--next { right: clamp(-21px, -1.6vw, -12px); }
+  /* Nothing to scroll — the chrome removes itself rather than sitting inert. */
+  .alr.is-static .alr__btn,
+  .alr.is-static .alr__dots { display: none; }
+
+  .alr__dots {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin: clamp(14px, 1.7vw, 22px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* ⚠⚠ :global() IS LOAD-BEARING. Astro stamps its scope attribute at BUILD
+     time; these dots are created at RUNTIME and never get one, so a scoped
+     selector would match nothing and they would render as bare bullets. */
+  .alr__dots :global(.alr__dot) {
+    display: block;
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--sb-border-strong);
+    cursor: pointer;
+    transition: background var(--sb-dur-image) var(--sb-ease), width var(--sb-dur-image) var(--sb-ease);
+  }
+  .alr__dots :global(.alr__dot.is-on) { width: 20px; border-radius: 4px; background: var(--sb-orange-bright); }
+  .alr__dots :global(.alr__dot:hover) { background: var(--sb-orange-bright); }
+
+  @media (max-width: 1279px) {
+    .alr__btn--prev { left: 6px; }
+    .alr__btn--next { right: 6px; }
+  }
+
+  @media (max-width: 1023px) {
+    .alr__track { --per: var(--per-md, 2); }
+  }
+
+  @media (max-width: 767px) {
+    .alr__track { --per: var(--per-sm, 1); }
+    /* Swipe is the gesture on a phone; two floating circles over the cards are
+       just something else to mis-tap. */
+    .alr__btn { display: none; }
+  }
+</style>

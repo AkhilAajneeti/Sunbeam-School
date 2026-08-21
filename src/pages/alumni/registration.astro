@@ -1,0 +1,45 @@
+---
+/**
+ * ALUMNI REGISTRATION.
+ *
+ * Two kinds of content sit on this page and are kept apart deliberately: the
+ * Pradiptam 2.0 meet is published fact from the school's own site, and the form,
+ * the purpose strip and the engagement cards are UI proposed for the new site.
+ * The reasoning, and the notice that states it on the page itself, are in the
+ * component header and in data/alumniRegistration.ts.
+ *
+ * The banner, navbar and footer are untouched — the hero uses PageHero's opt-in
+ * `align="left"` and `rule`, which default off everywhere else.
+ *
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import AlumniRegistrationPage from '../../components/alumni/AlumniRegistrationPage.astro';
+
+import banner from '../../assets/alumni-meets/pradiptam-2-0-2026-27/05-lamp-lighting.jpg';
+---
+
+<BaseLayout
+  title="Alumni Registration — Sunbeam School Ballia"
+  description="Leave your details so Sunbeam School Ballia can reach you about its alumni meets. A proposed registration form for the school's former students, alongside the published record of Pradiptam 2.0."
+>
+  <PageHero
+    title="Alumni Registration"
+    standfirst="Reconnect. Remember. Stay connected."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Alumni', href: '/alumni/' },
+    ]}
+    src={banner}
+    alt="Alumni and staff of Sunbeam School Ballia standing around the ceremonial lamp at the Pradiptam 2.0 alumni meet."
+    position="50% 44%"
+    align="left"
+    rule
+  />
+
+  <div class="u-page-panel" style="padding-block: 0;">
+    <AlumniRegistrationPage />
+  </div>
+</BaseLayout>
