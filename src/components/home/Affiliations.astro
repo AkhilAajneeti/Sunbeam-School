@@ -7,33 +7,82 @@
  * displayed logos." Audit 1.14 then places Achievements after it, so the two
  * run in that order in index.astro.
  *
- * LOGOS — supplied by the client and normalised by `scripts/logo-badges.mjs`.
- * They arrived on four different grounds (transparent, white, near-white and
- * solid black), so the script flood-fills each ground away from the edges and
- * trims to the mark's own bounding box. The tiles can then all be white and the
- * row reads as one set rather than six pasted screenshots.
+ * ⚠ A RAIL, NOT A SIX-UP GRID. The set grew from six marks to seventeen. A grid
+ * would have run to three rows and turned a quiet credential band into the
+ * loudest block on the page; the rail keeps it one row tall at every width and
+ * takes any number of logos without another layout decision. It is the same
+ * AsRailSlider every other rail in this project uses — a native scroller with
+ * NO AUTOPLAY, so nothing moves unless the reader moves it.
  *
- * ⚠ education-world.png IS NOT EDUCATION WORLD'S MARK. The supplied file is a
- * generic stock "EDUCATION · GLOBAL ACADEMIC" graduation-cap logo. It is used
- * here because the client asked for it, but captioning it with the Education
- * World ranking tells a parent this is the ranking body's own identity, which
- * it is not. Replace it with the real mark — asset request B1.
+ * ═══ CAPTIONS ═════════════════════════════════════════════════════════════
+ * ⚠ THIRTEEN OF THE SEVENTEEN NOTES ARE VERIFIED from the school's own record
+ * as already transcribed in this project:
+ *   NPSC · AFS · FICCI    — PhilosophyStory: "Memberships: NPSC, AFS, FICCI."
+ *   Microsoft (both)      — MethodologyPage: "100 Microsoft Innovative Educator
+ *                           Experts → a Microsoft Showcase School."
+ *   Inspire Award MANAK   — OlympiadPage: "Student innovations selected for the
+ *                           Department of Science & Technology's MANAK scheme."
+ *   Vidyarthi Vigyan M.   — OlympiadPage: "qualified to the NATIONAL level."
+ *   NCSC                  — OlympiadPage: "National-level qualification."
+ *   CBSE · Sunbeam group · EducationWorld · Brainfeed · NCC — as before.
  *
- * Every affiliation named is verified from the school's own site (docs/01 § 5).
+ * ⚠⚠ FOUR ARE NOT VERIFIED — Hindustan Olympiad, Behes, School Cinema and
+ * UMEED appear nowhere in the school's published record as transcribed here.
+ * The client supplied the marks for this section, so the relationship is their
+ * assertion, not this project's. What that means for the captions: the two that
+ * carry a note carry the tagline PRINTED ON THE MARK ITSELF ("Debate for All",
+ * "A Positive Living Initiative") — transcription, not a claim — and the other
+ * two print no note at all rather than have one invented for them. If the
+ * school can say what each relationship is, the notes go in and this paragraph
+ * comes out.
+ *
+ * ⚠ education-world.png IS RETIRED. The old file was a generic stock
+ * "EDUCATION · GLOBAL ACADEMIC" graduation-cap graphic captioned as Education
+ * World's identity, which it was not — logged as asset request B1. The client
+ * has now supplied the real EducationWorld mark, so B1 is closed. The stock
+ * file is left on disk but no longer imported.
+ *
+ * LOGOS — supplied by the client. The six originals were normalised by
+ * `scripts/logo-badges.mjs`, which flood-fills each ground away from the edges
+ * and trims to the mark's own bounding box, so a set that arrived on four
+ * different grounds reads as one row. The new marks arrived already trimmed on
+ * white or transparent grounds and are used as supplied — the script was not
+ * re-run over them, because a flood fill is destructive and these did not need
+ * it.
  */
 import { Image } from "astro:assets";
 import { school } from "../../data/site";
+import AsRailSlider from "../academics/assessment/AsRailSlider.astro";
 import rocket from "../../assets/icons/rocketpaper.png";
 import wave from "../../assets/icons/wave.png";
 
 import cbse from "../../assets/icons/logos/cbse.png";
 import sunbeam from "../../assets/icons/logos/sunbeam.png";
 import microsoft from "../../assets/icons/logos/microsoft.png";
-import educationWorld from "../../assets/icons/logos/education-world.png";
+import microsoftMiee from "../../assets/icons/logos/microsoftEducation.png";
+import educationWorld from "../../assets/icons/logos/educationWorld.png";
 import brainfeed from "../../assets/icons/logos/brainfeed.png";
 import ncc from "../../assets/icons/logos/ncc.png";
+import npsc from "../../assets/icons/logos/NPSC.png";
+import afs from "../../assets/icons/logos/afs-logo.png";
+import ficci from "../../assets/icons/logos/ficci-logo.png";
+import inspire from "../../assets/icons/logos/inspire.png";
+import vvm from "../../assets/icons/logos/vidyarthiVigyan.png";
+import ncsc from "../../assets/icons/logos/nationalChildren.png";
+import hindustanOlympiad from "../../assets/icons/logos/hindustanolympiad.png";
+import behes from "../../assets/icons/logos/behes.png";
+import schoolCinema from "../../assets/icons/logos/schoolCenema.png";
+import umeed from "../../assets/icons/logos/umeed.png";
 
-const partners = [
+interface Partner {
+  src: ImageMetadata;
+  name: string;
+  /** Optional by design — see the CAPTIONS note in the header. */
+  note?: string;
+}
+
+const partners: Partner[] = [
+  /* ── Affiliation and group ─────────────────────────────────────────────── */
   {
     src: cbse,
     name: "Central Board of Secondary Education",
@@ -44,18 +93,47 @@ const partners = [
     name: "Sunbeam Group of Educational Institutions",
     note: "Part of the group since 1972",
   },
+
+  /* ── Memberships — PhilosophyStory: "Memberships: NPSC, AFS, FICCI." ───── */
+  { src: npsc, name: "National Progressive Schools Conference", note: "Member school" },
+  { src: afs, name: "American Field Service", note: "Member school" },
+  { src: ficci, name: "FICCI", note: "Member school" },
+
+  /* ── Microsoft — two distinct recognitions, not one mark twice ─────────── */
   { src: microsoft, name: "Microsoft", note: "Showcase School" },
   {
-    src: educationWorld,
-    name: "Education World",
-    note: "#1 in Ballia, six years",
+    src: microsoftMiee,
+    name: "Microsoft Innovative Educator Expert",
+    note: "100 certified teachers",
   },
+
+  /* ── Rankings and awards ───────────────────────────────────────────────── */
+  { src: educationWorld, name: "EducationWorld", note: "#1 in Ballia, six years" },
   { src: brainfeed, name: "Brainfeed", note: "School Excellence Award" },
+
+  /* ── Science programmes — every note is the school's own wording ───────── */
+  { src: inspire, name: "Inspire Award MANAK", note: "Innovations selected for MANAK" },
+  { src: vvm, name: "Vidyarthi Vigyan Manthan", note: "Qualified to national level" },
+  {
+    src: ncsc,
+    name: "National Children’s Science Congress",
+    note: "National-level qualification",
+  },
+
+  /* ── Cadet corps ───────────────────────────────────────────────────────── */
   { src: ncc, name: "National Cadet Corps", note: "‘A’ & ‘B’ certificate" },
+
+  /* ⚠ THE FOUR UNVERIFIED ONES — see the header. Notes here are transcribed
+     from the mark itself where the mark carries one, and omitted where it does
+     not. Nothing below is a statement about the school's relationship. */
+  { src: hindustanOlympiad, name: "Hindustan Olympiad" },
+  { src: behes, name: "Behes", note: "Debate for All" },
+  { src: schoolCinema, name: "School Cinema" },
+  { src: umeed, name: "UMEED", note: "A Positive Living Initiative" },
 ];
 ---
 
-<section class="affil" aria-labelledby="affil-heading">
+<section class="affil" aria-labelledby="ach-heading">
   {
     /* Decorative. Sits in the section's own top padding, clear of the heading —
       verified by box overlap, not by eye. */
@@ -77,7 +155,18 @@ const partners = [
       </h2>
     </div>
 
-    <ul class="affil__row">
+    {/* ⚠ NO `bleed`. The section is `overflow: hidden` for the drifting rocket,
+        so a track that bled into the container padding would be clipped at the
+        edge rather than run under it. */}
+    <AsRailSlider
+      label="Affiliations and recognition partners"
+      id="affil-rail"
+      total={partners.length}
+      per={6}
+      perMd={3}
+      perSm={2}
+      class="affil__rail"
+    >
       {
         partners.map((p) => (
           <li class="affil__item">
@@ -86,19 +175,27 @@ const partners = [
                 the layout width follows the INTRINSIC width of whichever
                 candidate the browser picks, so `sizes="120px"` silently pinned
                 every mark to 120px wide and the CSS caps never bound. */}
+              {/* ⚠ EAGER, NOT LAZY, AND fetchpriority="low" INSTEAD. Native lazy
+                  loading measures against the VIEWPORT, and a tile scrolled off
+                  to the right of the rail is outside it — so pressing the arrow
+                  showed an empty white tile that filled in a beat later. These
+                  are 180px marks; fetching all seventeen costs little, and low
+                  priority keeps them from competing with the hero. */}
               <Image
                 src={p.src}
                 alt={`${p.name} logo`}
                 widths={[180, 360]}
                 sizes="180px"
-                loading="lazy"
+                loading="eager"
+                decoding="async"
+                fetchpriority="low"
               />
             </span>
-            <span class="affil__note">{p.note}</span>
+            {p.note && <span class="affil__note">{p.note}</span>}
           </li>
         ))
       }
-    </ul>
+    </AsRailSlider>
 
     <p class="affil__legal t-tabular">
       CBSE Affiliation No. {school.affiliationNo} · School Code {
@@ -190,17 +287,15 @@ const partners = [
     color: var(--sb-text-muted);
   }
 
-  /* Deliberately quiet — a low-volume band between two loud sections.
-     Loud partner logos read as advertising rather than credentials. */
-  .affil__row {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: var(--sb-5);
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  /* ⚠ THE RAIL'S HEAD SLOT IS EMPTY HERE, so the arrows and counter would sit
+     alone on a full-width row. Pulling that row up against the centred heading
+     keeps the band as short as it was as a grid. */
+  .affil__rail :global(.sl-rail__head) {
+    margin-top: calc(var(--sb-6) * -1);
   }
 
+  /* Deliberately quiet — a low-volume band between two loud sections.
+     Loud partner logos read as advertising rather than credentials. */
   .affil__item {
     display: flex;
     flex-direction: column;
@@ -245,7 +340,8 @@ const partners = [
      (a tall Microsoft shield) to 380×299 (a wide CBSE emblem); letting each one
      size itself leaves every caption at a different height and the row reads as
      ragged. The box is a fixed size and `object-fit: contain` fits each mark
-     inside it, so all six share a height and every caption starts on one line.
+     inside it, so all of them share a height and every caption starts on one
+     line.
 
      Sizing the BOX rather than the image is also what makes this deterministic:
      max-width/max-height on the image itself deferred to whichever srcset
@@ -276,12 +372,6 @@ const partners = [
     color: var(--sb-text-muted);
   }
 
-  @media (max-width: 1023px) {
-    .affil__row {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
   @media (max-width: 639px) {
     /* The band is short here and the plane would sit directly behind the
        heading. Smaller, and held up in the top padding. */
@@ -294,10 +384,6 @@ const partners = [
   }
 
   @media (max-width: 479px) {
-    .affil__row {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--sb-4);
-    }
     .affil__item {
       min-height: 168px;
       gap: var(--sb-5);

@@ -14,10 +14,17 @@
  * horizontal rails elsewhere in this project follow, and it is the reason this
  * component has no drag-emulation code at all.
  *
- * ⚠ THE COUNTS ARE CSS VARIABLES, NOT A BREAKPOINT LADDER IN JS. `--per`,
+ * ⚠ THE COUNTS ARE CSS VARIABLES, NOT A BREAKPOINT LADDER IN JS. `--per-lg`,
  * `--per-md` and `--per-sm` set how many cards are visible at each width; the
  * script reads the rendered geometry rather than being told about it, so a
  * consumer that wants three-up on desktop changes one number.
+ *
+ * ⚠⚠ THE THREE INPUTS ARE WRITTEN INLINE, THE RESOLVED `--per` IS NOT, and that
+ * distinction is load-bearing. Writing `--per` inline made it outrank the media
+ * queries in slider.css that reassign it — an INLINE declaration beats any
+ * stylesheet rule — so `perMd` and `perSm` were set on every rail and used by
+ * none. A four-up rail stayed four-up at 390px with 79px cards. The element now
+ * carries only the inputs; slider.css resolves which one `--per` takes.
  *
  * ⚠ UNLIMITED ITEMS BY CONSTRUCTION. Nothing here counts to four. Five cards,
  * twenty or fifty use the same markup, and the counter and dots follow.
@@ -96,7 +103,7 @@ const totalLabel = String(total).padStart(2, '0');
     class="sl-rail__track"
     id={id}
     data-sl-track
-    style={`--per: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
+    style={`--per-lg: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
     tabindex="0"
     role="group"
     aria-roledescription="carousel"

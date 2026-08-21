@@ -211,6 +211,10 @@
 .sl-rail__track {
   --gap: clamp(12px, 1.5vw, 22px);
   --bleed: 0px;
+  /* ⚠ RESOLVED HERE, NOT INLINE ON THE ELEMENT — see the note in
+     AsRailSlider.astro. The media queries below reassign this; an inline
+     --per would outrank every one of them. */
+  --per: var(--per-lg, 4);
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));

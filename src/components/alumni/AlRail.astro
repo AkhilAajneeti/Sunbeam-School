@@ -48,7 +48,7 @@ const { label, per = 4, perMd = 2, perSm = 1, id, class: extra = '' } = Astro.pr
     class="alr__track"
     id={id}
     data-alr-track
-    style={`--per: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
+    style={`--per-lg: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
     tabindex="0"
     role="group"
     aria-roledescription="carousel"
@@ -160,6 +160,9 @@ const { label, per = 4, perMd = 2, perSm = 1, id, class: extra = '' } = Astro.pr
 
   .alr__track {
     --gap: clamp(12px, 1.5vw, 22px);
+    /* ⚠ RESOLVED HERE, NOT INLINE — an inline --per outranks the media queries
+       at the foot of this block. Same fix as AsRailSlider. */
+    --per: var(--per-lg, 4);
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));
