@@ -30,6 +30,10 @@ export default defineConfig({
    * again later.
    */
   redirects: {
+    /* The school publishes this page at /general-info/ and this project had it
+       at /mandatory-public-disclosure/. The route moved to match theirs; this
+       carries anything already pointing at the old path. */
+    '/mandatory-public-disclosure': '/general-info/',
     // → Teaching Methodology
     '/academics/teaching-learning/collaborative-learning': '/academics/teaching-learning/methodology/',
     // → Smart Classrooms & Digital Literacy

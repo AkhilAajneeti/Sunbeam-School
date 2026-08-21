@@ -97,9 +97,28 @@ const slides = [
         A Sunbeam institution since 2013 — {school.currentStrength} students, Nursery to
         Class&nbsp;XII, on a campus built for how children actually learn.
       </p>
+      {/* ⚠ THE TWO APPLICATION FORMS, NOT AN ADMISSIONS PAGE. The school has no
+          admissions page of its own — what it publishes is these two forms, one
+          per intake, named exactly this way in its own top bar. The hero now
+          offers the same two actions rather than routing a parent through a
+          page the school does not have.
+          ⚠ SAME URLS THE UTILITY BAR USES — applyForm*, the session-coded forms
+          the school itself links, not the generic /apply-online/ landing page.
+          ⚠ NEW TAB WITH rel=noopener: both forms are on another host, and a
+          parent part-way through one should not lose the school site behind. */}
       <div class="hero__actions">
-        <a class="btn btn--on-image-primary" href="/admissions/">Admissions</a>
-        <a class="btn btn--on-image-secondary" href="/campus/">Explore the Campus</a>
+        <a
+          class="btn btn--on-image-primary"
+          href={school.external.applyFormNurseryToIX}
+          target="_blank"
+          rel="noopener noreferrer"
+        >Apply Online Class Nursery to IX</a>
+        <a
+          class="btn btn--on-image-secondary"
+          href={school.external.applyFormClassXI}
+          target="_blank"
+          rel="noopener noreferrer"
+        >Apply Online Class XI</a>
       </div>
 
       {/* Floating stat card — reference hero pattern. Verified figures only. */}

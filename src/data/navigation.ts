@@ -110,7 +110,7 @@ export interface NavItem {
  * for the regulatory reason noted above.
  */
 export const utilityLinks = [
-  { label: "Mandatory Public Disclosure", href: "/mandatory-public-disclosure/", tier: 3 },
+  { label: "Mandatory Public Disclosure", href: "/general-info/", tier: 3 },
   { label: "Notice", href: "/news-events/notices/", tier: 1 },
   /* ⚠ CONTACT SITS HERE ON THE CLIENT'S INSTRUCTION. It was removed from the
      MAIN navbar earlier and given to the footer; this is the utility bar above
@@ -594,7 +594,7 @@ export const footerUtility = [
   // { label: "Download TC", href: school.external.downloadTC },
   {
     label: "Mandatory Public Disclosure",
-    href: "/mandatory-public-disclosure/",
+    href: "/general-info/",
   },
   { label: "Contact", href: "/contact-us/" },
   { label: "Privacy", href: "/privacy/" },

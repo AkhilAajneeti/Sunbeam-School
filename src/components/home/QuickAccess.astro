@@ -100,11 +100,16 @@ const looks = [
                 <span>{item.label}</span>
               </span>
               <span class="qcard__desc">{item.desc}</span>
-              <span class="qcard__go" aria-hidden="true">
-                <svg width="13" height="10" viewBox="0 0 14 10" fill="none">
-                  <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
-                </svg>
-              </span>
+            </span>
+
+            {/* ⚠ A SIBLING OF THE BODY, NOT THE LAST LINE INSIDE IT. Sitting in the
+                text column it added a 34px disc plus its margin to every card’s
+                height for no information — six cards paying for the same arrow
+                twice over. Pinned to the corner it costs no height at all. */}
+            <span class="qcard__go" aria-hidden="true">
+              <svg width="13" height="10" viewBox="0 0 14 10" fill="none">
+                <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+              </svg>
             </span>
           </a>
         </li>
@@ -147,7 +152,11 @@ const looks = [
     isolation: isolate;
     overflow: hidden;
     display: flex;
-    align-items: flex-start;
+    /* ⚠ CENTRE, NOT flex-start. Every card stretches to the tallest one in its
+       row, so a short card pinned its disc and copy to the top and left the
+       remainder as dead space underneath. The arrow is absolutely positioned in
+       the corner and is unaffected by this. */
+    align-items: center;
     gap: var(--sb-6);
     height: 100%;
     padding: var(--sb-7);
@@ -236,7 +245,15 @@ const looks = [
     display: flex;
     flex-direction: column;
     gap: var(--sb-3);
-    padding-top: var(--sb-2);
+    /* Clears the corner mark so a long title cannot run under it. */
+    padding-right: 42px;
+    /* ⚠⚠ min-width: 0 IS WHAT MAKES THAT PADDING BIND. This is a flex item, and
+       a flex item defaults to min-width: auto — it refuses to shrink below its
+       content, so the title kept its full width, ignored the padding and ran
+       under the arrow (35px under it at 1024, where the grid is still three-up
+       at its narrowest). With the floor removed the title wraps inside the
+       padded box, which is what the padding was reserving space for. */
+    min-width: 0;
   }
 
   /* --- Title: roll-up swap ----------------------------------------------------
@@ -318,12 +335,18 @@ const looks = [
     color: var(--sb-text-muted);
   }
 
-  .qcard__go {
+  /* ⚠ .qcard > .qcard__go, NOT .qcard__go. The rule above sets position:
+     relative on every direct child to lift it over the wipe fill, and at equal
+     specificity that would fight this one on source order alone. Two classes
+     settles it outright. */
+  .qcard > .qcard__go {
+    position: absolute;
+    top: var(--sb-6);
+    right: var(--sb-6);
     display: grid;
     place-items: center;
     width: 34px;
     height: 34px;
-    margin-top: var(--sb-2);
     border-radius: var(--sb-r-full);
     border: 1px solid var(--sb-border-strong);
     color: var(--sb-charcoal);
@@ -331,9 +354,16 @@ const looks = [
       border-color var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
   }
 
+  /* Turned to point out of the corner it sits in — up and to the right, the
+     direction the card actually sends you. */
+  .qcard__go svg {
+    transform: rotate(-45deg);
+    transition: transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
   .qcard:hover .qcard__go,
   .qcard:focus-within .qcard__go {
-    transform: translateX(3px);
+    transform: translate(4px, -4px);
   }
 
   /* CONTRAST NOTE - the white-text toggle has been removed, not just switched
@@ -375,7 +405,12 @@ const looks = [
 
   /* --- Tablet: 2 columns ------------------------------------------------------ */
 
-  @media (max-width: 1023px) {
+  /* ⚠ 1199, NOT 1023, SINCE THE ARROW MOVED TO THE CORNER. Three-up columns
+     are ~113px of text width at 1024, and the arrow now takes 42px of that from
+     the top line — “Admissions” is one unbreakable word wider than what is left,
+     so it ran 35px under the arrow. It fitted before only because the arrow used
+     to sit BELOW the text. Two-up from 1199 down gives the title its width back. */
+  @media (max-width: 1199px) {
     .quick__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sb-8) var(--sb-7); }
     .qcard__disc { width: 76px; height: 76px; }
     .qcard__disc svg { width: 26px; height: 26px; }
@@ -385,7 +420,7 @@ const looks = [
 
   @media (max-width: 639px) {
     .quick__grid { grid-template-columns: minmax(0, 1fr); gap: var(--sb-7); }
-    .qcard { gap: var(--sb-5); align-items: center; }
+    .qcard { gap: var(--sb-5); }
     .qcard__disc { width: 64px; height: 64px; }
     .qcard__disc svg { width: 24px; height: 24px; }
     .qcard__go { display: none; } /* the whole card is the tap target here */
