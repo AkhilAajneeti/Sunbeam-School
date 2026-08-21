@@ -42,13 +42,19 @@
  * has now supplied the real EducationWorld mark, so B1 is closed. The stock
  * file is left on disk but no longer imported.
  *
- * LOGOS — supplied by the client. The six originals were normalised by
- * `scripts/logo-badges.mjs`, which flood-fills each ground away from the edges
- * and trims to the mark's own bounding box, so a set that arrived on four
- * different grounds reads as one row. The new marks arrived already trimmed on
- * white or transparent grounds and are used as supplied — the script was not
- * re-run over them, because a flood fill is destructive and these did not need
- * it.
+ * ═══ WHY THE IMPORTS POINT AT logos/trimmed/ ═════════════════════════
+ * Every mark is fitted into one box with object-fit: contain, so how big a
+ * logo LOOKS is decided by how much of its own file the mark occupies — and the
+ * supplied files disagreed wildly. CBSE, NCC and Brainfeed fill their canvas
+ * edge to edge; AFS used 30% of its 500x500, Hindustan Olympiad 31%, FICCI 43%,
+ * EducationWorld 48%. In identical boxes the first group rendered at twice the
+ * size of the second and the row read as broken rather than as a set.
+ *
+ * scripts/logo-trim.mjs crops each file to its mark’s true bounding box and
+ * re-pads by a uniform 3%, so all of them now use the same share of their
+ * canvas. It recolours and rescales nothing — the mark’s own pixels come
+ * through untouched — and it writes to logos/trimmed/, leaving the client’s
+ * originals in logos/ exactly as delivered. Add a logo, re-run the script.
  */
 import { Image } from "astro:assets";
 import { school } from "../../data/site";
@@ -56,23 +62,23 @@ import AsRailSlider from "../academics/assessment/AsRailSlider.astro";
 import rocket from "../../assets/icons/rocketpaper.png";
 import wave from "../../assets/icons/wave.png";
 
-import cbse from "../../assets/icons/logos/cbse.png";
-import sunbeam from "../../assets/icons/logos/sunbeam.png";
-import microsoft from "../../assets/icons/logos/microsoft.png";
-import microsoftMiee from "../../assets/icons/logos/microsoftEducation.png";
-import educationWorld from "../../assets/icons/logos/educationWorld.png";
-import brainfeed from "../../assets/icons/logos/brainfeed.png";
-import ncc from "../../assets/icons/logos/ncc.png";
-import npsc from "../../assets/icons/logos/NPSC.png";
-import afs from "../../assets/icons/logos/afs-logo.png";
-import ficci from "../../assets/icons/logos/ficci-logo.png";
-import inspire from "../../assets/icons/logos/inspire.png";
-import vvm from "../../assets/icons/logos/vidyarthiVigyan.png";
-import ncsc from "../../assets/icons/logos/nationalChildren.png";
-import hindustanOlympiad from "../../assets/icons/logos/hindustanolympiad.png";
-import behes from "../../assets/icons/logos/behes.png";
-import schoolCinema from "../../assets/icons/logos/schoolCenema.png";
-import umeed from "../../assets/icons/logos/umeed.png";
+import cbse from "../../assets/icons/logos/trimmed/cbse.png";
+import sunbeam from "../../assets/icons/logos/trimmed/sunbeam.png";
+import microsoft from "../../assets/icons/logos/trimmed/microsoft.png";
+import microsoftMiee from "../../assets/icons/logos/trimmed/microsoftEducation.png";
+import educationWorld from "../../assets/icons/logos/trimmed/educationWorld.png";
+import brainfeed from "../../assets/icons/logos/trimmed/brainfeed.png";
+import ncc from "../../assets/icons/logos/trimmed/ncc.png";
+import npsc from "../../assets/icons/logos/trimmed/NPSC.png";
+import afs from "../../assets/icons/logos/trimmed/afs-logo.png";
+import ficci from "../../assets/icons/logos/trimmed/ficci-logo.png";
+import inspire from "../../assets/icons/logos/trimmed/inspire.png";
+import vvm from "../../assets/icons/logos/trimmed/vidyarthiVigyan.png";
+import ncsc from "../../assets/icons/logos/trimmed/nationalChildren.png";
+import hindustanOlympiad from "../../assets/icons/logos/trimmed/hindustanolympiad.png";
+import behes from "../../assets/icons/logos/trimmed/behes.png";
+import schoolCinema from "../../assets/icons/logos/trimmed/schoolCenema.png";
+import umeed from "../../assets/icons/logos/trimmed/umeed.png";
 
 interface Partner {
   src: ImageMetadata;
@@ -290,8 +296,23 @@ const partners: Partner[] = [
   /* ⚠ THE RAIL'S HEAD SLOT IS EMPTY HERE, so the arrows and counter would sit
      alone on a full-width row. Pulling that row up against the centred heading
      keeps the band as short as it was as a grid. */
-  .affil__rail :global(.sl-rail__head) {
+  /* ⚠⚠ ANCHORED ON .affil, NOT ON .affil__rail. Astro stamps its scope
+     attribute at BUILD time onto elements in THIS component’s template — and
+     .affil__rail is not one of them, it is a class handed to AsRailSlider and
+     printed by that component, so it carries no data-astro-cid of ours. Both
+     rules below silently did nothing until they hung off .affil, which is in
+     this template and does carry it. */
+  .affil :global(.sl-rail__head) {
     margin-top: calc(var(--sb-6) * -1);
+  }
+
+  /* ⚠⚠ THE TRACK IS A SCROLL CONTAINER, and `overflow-x: auto` clips the Y axis
+     too — there is no such thing as scrolling one axis and letting the other
+     spill. So the tile’s 8px hover lift and its drop shadow were being sheared
+     off against the counter row above. The room has to come from padding INSIDE
+     the scrollport; a margin on the tile would only move the clip line. */
+  .affil :global(.sl-rail__track) {
+    padding-block: 16px 20px;
   }
 
   /* Deliberately quiet — a low-volume band between two loud sections.
@@ -306,7 +327,7 @@ const partners: Partner[] = [
        long a caption is. */
     justify-content: flex-start;
     gap: var(--sb-6);
-    min-height: 212px;
+    min-height: 226px;
     padding: var(--sb-7) var(--sb-5);
     text-align: center;
     border: var(--sb-hairline);
@@ -348,7 +369,7 @@ const partners: Partner[] = [
      candidate the browser chose. */
   .affil__mark {
     width: 100%;
-    height: 104px;
+    height: 118px;
   }
 
   .affil__mark :global(img) {
@@ -391,7 +412,7 @@ const partners: Partner[] = [
     }
     /* Only the box changes — the image fills it, so no image override needed. */
     .affil__mark {
-      height: 76px;
+      height: 86px;
     }
   }
 </style>
