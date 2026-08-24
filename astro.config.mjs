@@ -28,6 +28,17 @@ export default defineConfig({
      matches the trailing-slash form every internal href in this project already
      uses, and every canonical tag already emitted. */
   trailingSlash: 'always',
+  /* ⚠⚠ THE OTHER HALF OF THIS LIVES IN vercel.json, AND IT HAS TO. The setting
+     above governs how THIS project builds and links; it cannot make the host
+     redirect, so /about and /about/ would both still answer 200 with nothing
+     between them and analytics would split every page across two URLs.
+     vercel.json carries "trailingSlash": true to 301 the bare form.
+
+     ⚠ AND vercel.json CANNOT BE COMMENTED. Vercel validates it against a strict
+     schema that rejects unknown top-level keys — a "//" note in there fails the
+     deploy outright with "should NOT have additional property". That is why the
+     reasoning is here, in a file that is allowed to explain itself, and
+     vercel.json holds two lines and nothing else. Do not add comments to it. */
 
   integrations: [
     sitemap({

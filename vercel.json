@@ -1,16 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-
-  "//": [
-    "Astro's trailingSlash: 'always' governs how THIS project builds and links.",
-    "It cannot make the host redirect, so /about and /about/ both answered 200",
-    "with no redirect between them and analytics split every page across two",
-    "URLs. This is the other half of that fix: the host now 301s the bare form",
-    "to the canonical trailing-slash form, which is what every internal href and",
-    "every canonical tag in this project already uses.",
-    "",
-    "cleanUrls is deliberately NOT set — it strips the trailing slash and would",
-    "fight the line above."
-  ],
   "trailingSlash": true
 }
