@@ -1,12 +1,45 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 // Sunbeam School Ballia — static-first.
 // See docs/05-design-system.md → "Astro implementation notes".
 // No SPA, no client router. Islands only where interaction demands it.
+/** Live routes that are still placeholders — see the sitemap filter below. */
+const PLACEHOLDER_ROUTES = new Set([
+  '/about/',
+  '/admissions/',
+  '/admissions/campus-visit/',
+  '/campus/classrooms/',
+  '/campus/shooting-range/',
+  '/campus/library/',
+  '/campus/laboratories/',
+  '/campus/conference-room/',
+  '/campus/auditorium/',
+  '/campus/sports-facilities/',
+]);
+
 export default defineConfig({
   site: 'https://sunbeamballia.edu.in',
   output: 'static',
   compressHTML: true,
+
+  /* ⚠ ONE CANONICAL URL FORM. Both /about and /about/ used to return 200 with
+     no redirect, so analytics split every page across two URLs. 'always'
+     matches the trailing-slash form every internal href in this project already
+     uses, and every canonical tag already emitted. */
+  trailingSlash: 'always',
+
+  integrations: [
+    sitemap({
+      /* ⚠ THE NOT-YET-WRITTEN PAGES EXCLUDE THEMSELVES. [...slug].astro returns
+         a real 200 for sections that have no content yet, so a sitemap would
+         invite Google to index a placeholder. They already carry
+         'noindex, follow'; this keeps them out of the sitemap to match.
+         Written as a list rather than a pattern so that finishing a page means
+         deleting one line here, and forgetting to is visible in review. */
+      filter: (page) => !PLACEHOLDER_ROUTES.has(new URL(page).pathname),
+    }),
+  ],
   build: {
     inlineStylesheets: 'auto',
   },

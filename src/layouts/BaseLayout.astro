@@ -49,7 +49,13 @@ const { title, description, robots } = Astro.props;
     {robots && <meta name="robots" content={robots} />}
     <meta name="theme-color" content="#5C0000" />
     <link rel="canonical" href={Astro.url.href} />
-    <link rel="icon" href="/brand/sunbeam-emblem.png" type="image/png" />
+    {/* ⚠ THE 57KB FULL EMBLEM WAS THE ONLY ICON DECLARED, and it is unreadable at
+        16px. The mark is unchanged — these are just the sizes a browser and a
+        phone home screen actually ask for. A genuinely simplified mark for the
+        smallest size is still worth having from the school. */}
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <link
       rel="preload"
@@ -79,6 +85,16 @@ const { title, description, robots } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content={school.name} />
+    <meta property="og:url" content={Astro.url.href} />
+    {/* ⚠ WITHOUT THIS, EVERY WHATSAPP AND FACEBOOK SHARE RENDERED WITH NO
+        PICTURE — and those are the school’s main distribution channels. It is
+        the school’s own campus photograph cropped to 1200x630, not a fabricated
+        card. Absolute URL, because both scrapers require one. */}
+    <meta property="og:image" content={new URL("/og/sunbeam-ballia.jpg", Astro.site ?? Astro.url).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`The campus of ${school.name} at Agarsanda.`} />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
 
   <body>

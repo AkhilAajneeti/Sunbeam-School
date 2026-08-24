@@ -46,12 +46,38 @@ import MegaMenu from './MegaMenu.astro';
 
     <nav class="mainnav" aria-label="Main">
       <ul class="mainnav__list">
-        {mainNav.map((item) => (
+        {mainNav.map((item) => {
+          const panelId = `mega-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+          return (
           <li class:list={['mainnav__item', item.columns && 'mainnav__item--has-mega']}>
-            <a class="mainnav__link" href={item.href}>{item.label}</a>
-            {item.columns && <MegaMenu item={item} />}
+            {/* ⚠⚠ A BUTTON, NOT A LINK, WHEN THE ITEM OWNS A SUBMENU — and that is a
+                semantic claim, not a styling one. These six parents have nothing
+                of their own to show; the submenu IS the content. As <a href> they
+                navigated, which on a phone meant tapping “About Us” left the
+                drawer for a page that reads “we’re still writing this” instead of
+                opening the six links underneath it. A button that reveals is
+                what this control has always been.
+                ⚠ /academics/ AND /news-events/ ARE NO LONGER REACHED FROM THIS
+                BAR, deliberately — the client’s call. Both remain in the footer
+                and the sitemap; neither is orphaned.
+                ⚠ THE PANEL STILL OPENS ON HOVER AND focus-within IN CSS. This
+                button adds the click/Enter/Space path for pointer and touch, and
+                keeps aria-expanded honest about what is actually showing. */}
+            {item.columns ? (
+              <button
+                type="button"
+                class="mainnav__link mainnav__link--toggle"
+                aria-expanded="false"
+                aria-controls={panelId}
+                data-mega-toggle
+              >{item.label}</button>
+            ) : (
+              <a class="mainnav__link" href={item.href}>{item.label}</a>
+            )}
+            {item.columns && <MegaMenu item={item} panelId={panelId} />}
           </li>
-        ))}
+          );
+        })}
       </ul>
     </nav>
 
@@ -211,9 +237,28 @@ import MegaMenu from './MegaMenu.astro';
     transform: scaleX(1);
   }
 
-  /* CSS-first mega-menu reveal. */
+  /* ⚠ THE TOGGLE IS A <button>, SO IT ARRIVES WITH A UA BUTTON’S BACKGROUND,
+     BORDER, PADDING, FONT AND CENTRED TEXT. Every one of those has to be reset
+     or it would sit a few pixels off its nine neighbours — which is exactly the
+     kind of drift that makes a semantic fix look like a regression. */
+  .mainnav__link--toggle {
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: clamp(12px, 0.92vw, 13px);
+    font-weight: 600;
+    line-height: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  /* CSS-first mega-menu reveal — plus .is-open, which is how a CLICK or a tap
+     holds the panel open for anyone not using hover. */
   .mainnav__item--has-mega:hover :global(.mega),
-  .mainnav__item--has-mega:focus-within :global(.mega) {
+  .mainnav__item--has-mega:focus-within :global(.mega),
+  .mainnav__item--has-mega.is-open :global(.mega) {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -401,6 +446,75 @@ import MegaMenu from './MegaMenu.astro';
       { passive: true }
     );
 
+    /* ⚠⚠ CLICK/TAP TOGGLES THE PANEL, because hover is not available to a
+       touch user and these triggers no longer navigate. The panel is still
+       revealed by :hover and :focus-within in CSS — this only adds .is-open for
+       the pointer path, and keeps aria-expanded truthful, which a CSS-only
+       reveal cannot do on its own.
+
+       ⚠ ONE OPEN AT A TIME. Two panels overlapping the hero at once is how a
+       nav starts looking broken. */
+    const megaToggles = Array.from(
+      masthead.querySelectorAll<HTMLButtonElement>('[data-mega-toggle]'),
+    );
+
+    const setOpen = (btn: HTMLButtonElement, open: boolean) => {
+      btn.closest('.mainnav__item')?.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    };
+    const closeAllMega = (except?: HTMLButtonElement) =>
+      megaToggles.forEach((b) => b !== except && setOpen(b, false));
+
+    megaToggles.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        /* ⚠ READ .is-open, NOT aria-expanded. aria-expanded also tracks the
+           HOVER reveal, so using it here meant a mouse user who hovered a parent
+           and then clicked it saw the panel vanish — the click was read as
+           ‘close the thing hover just opened’. .is-open is the click state alone:
+           first click pins the panel, second unpins it, and hovering is
+           unaffected either way. */
+        const open = btn.closest('.mainnav__item')?.classList.contains('is-open') ?? false;
+        closeAllMega(btn);
+        setOpen(btn, !open);
+      });
+
+      /* aria-expanded has to follow the CSS reveal too, or a screen-reader user
+         hears “collapsed” about a panel that is plainly on screen. */
+      const item = btn.closest('.mainnav__item');
+      item?.addEventListener('pointerenter', () => btn.setAttribute('aria-expanded', 'true'));
+      /* ⚠⚠ THE POINTER LEAVING CLOSES THE PANEL, PINNED OR NOT. A clicked-open
+         menu that survived the cursor walking away sat over the hero until
+         something else was clicked, which reads as stuck rather than as pinned.
+         Two things have to be undone, and missing either one leaves it open:
+           · .is-open, the click state;
+           · FOCUS — a mouse click leaves the button focused, and :focus-within
+             reveals the panel on its own, so clearing .is-open alone changed
+             nothing visible.
+         ⚠ MOUSE ONLY. A tap fires pointerleave too, and on a touchscreen there
+         is no hover to fall back on — closing there would make the menu
+         unopenable. Keyboard focus is untouched: if nobody is moving a mouse,
+         this never fires. */
+      item?.addEventListener('pointerleave', (event) => {
+        const e = event as PointerEvent;
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        setOpen(btn, false);
+        if (item.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
+      });
+      item?.addEventListener('focusin', () => btn.setAttribute('aria-expanded', 'true'));
+      item?.addEventListener('focusout', (e) => {
+        const to = (e as FocusEvent).relatedTarget as Node | null;
+        if (item.contains(to)) return;
+        if (!item.classList.contains('is-open')) btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    /* A click anywhere else dismisses a clicked-open panel. */
+    document.addEventListener('click', (event) => {
+      const t = event.target as Node;
+      if (!masthead.contains(t)) closeAllMega();
+      else if (!(t as Element).closest?.('.mainnav__item--has-mega')) closeAllMega();
+    });
+
     // Escape closes an open mega-menu and returns focus to its trigger.
     masthead.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
@@ -408,7 +522,8 @@ import MegaMenu from './MegaMenu.astro';
         .querySelector('.mainnav__item--has-mega:focus-within');
       if (!openItem) return;
 
-      const trigger = openItem.querySelector<HTMLAnchorElement>('.mainnav__link');
+      const trigger = openItem.querySelector<HTMLElement>('.mainnav__link');
+      closeAllMega();
       masthead.classList.add('is-mega-suppressed');
       trigger?.focus();
       // Release the suppression once focus moves on, so hover still works.

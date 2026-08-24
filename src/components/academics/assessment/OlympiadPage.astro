@@ -247,7 +247,9 @@ const categories = ['All', ...Array.from(new Set(olympiads.map((o) => o.category
       </p>
     </div>
 
-    <ul class="sl-chips ol-all__chips" role="group" aria-label="Filter olympiads by category">
+    {/* ⚠ NO role="group" HERE — see the note in AsRailSlider. It replaced the
+        implicit list role and orphaned every <li> beneath it. */}
+    <ul class="sl-chips ol-all__chips" aria-label="Filter olympiads by category">
       {categories.map((c, i) => (
         <li>
           <button type="button" class="sl-chip" data-ol-chip={c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>

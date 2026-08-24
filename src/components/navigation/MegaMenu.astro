@@ -30,13 +30,15 @@ import FacIcon from '../campus/facilities/FacIcon.astro';
 
 interface Props {
   item: NavItem;
+  /** id for the trigger’s aria-controls. See the note in Masthead.astro. */
+  panelId?: string;
 }
-const { item } = Astro.props;
+const { item, panelId } = Astro.props;
 
 const links = (item.columns ?? []).flat();
 ---
 
-<div class="mega" data-mega>
+<div class="mega" data-mega id={panelId}>
   <ul class="mnu">
     {links.map((child, i) => {
       const kids = child.children ?? [];
@@ -166,8 +168,14 @@ const links = (item.columns ?? []).flat();
       transform 140ms var(--sb-ease);
   }
 
+  /* ⚠⚠ .is-open BELONGS HERE TOO, NOT ONLY ON THE PANEL. The panel’s own
+     visibility and the ROWS inside it are gated separately, and a click-opened
+     menu satisfied the first rule and not this one — so tapping a parent gave a
+     blank white card with every row stranded at opacity 0. The same class has to
+     unlock both, or the pointer path gets the box without the contents. */
   :global(.mainnav__item--has-mega:hover) .mnu__item,
-  :global(.mainnav__item--has-mega:focus-within) .mnu__item {
+  :global(.mainnav__item--has-mega:focus-within) .mnu__item,
+  :global(.mainnav__item--has-mega.is-open) .mnu__item {
     opacity: 1;
     transform: none;
     transition:

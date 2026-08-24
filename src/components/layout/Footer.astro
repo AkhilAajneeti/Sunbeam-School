@@ -89,8 +89,11 @@ const columns = [
     ],
   },
   {
+    /* ⚠ NO href — AND THAT IS THE POINT. This was href: "#", which rendered a
+       link identical to its three siblings that did nothing but steal focus.
+       The other columns head a real section; this one is a grouping label, so
+       it renders as a heading instead. */
     heading: "Other Links",
-    href: "#",
     links: [
       {
         label: "School Planner & Academic Calendar",
@@ -185,9 +188,13 @@ const socials = [
         {
           columns.map((col) => (
             <div class="foot__col">
-              <a class="foot__col-head" href={col.href}>
-                {col.heading}
-              </a>
+              {col.href ? (
+                <a class="foot__col-head" href={col.href}>
+                  {col.heading}
+                </a>
+              ) : (
+                <h3 class="foot__col-head foot__col-head--plain">{col.heading}</h3>
+              )}
               <ul>
                 {col.links.map((l) => (
                   <li>
@@ -415,6 +422,17 @@ const socials = [
 
   .foot__col-head:hover {
     color: var(--sb-lime);
+  }
+
+  /* ⚠ THE ONE COLUMN HEAD THAT IS NOT A LINK. An <h3> brings UA margins and a
+     bolder default weight an <a> does not, and it must not react to hover —
+     looking clickable is exactly what was wrong with it before. */
+  .foot__col-head--plain {
+    margin-top: 0;
+    cursor: default;
+  }
+  .foot__col-head--plain:hover {
+    color: #fff;
   }
 
   /* ⚠ THE WHOLE FOOTER SITEMAP FAILED WCAG 2.2 SC 2.5.8 (AA) — 20 links at 18px

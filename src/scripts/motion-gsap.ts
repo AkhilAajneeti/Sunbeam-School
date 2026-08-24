@@ -114,20 +114,25 @@ gsap.utils.toArray<HTMLElement>('[data-split]').forEach((heading) => {
    included. `batch` groups everything entering together into one stagger rather
    than firing a separate tween per element. */
 const targets = gsap.utils.toArray<HTMLElement>('[data-reveal]').filter(belowFold);
+
+/** The finished state, reachable from the rescue sweep at the foot of this file. */
+const playReveal = (batch: Element[], instant = false) =>
+  gsap.to(batch, {
+    opacity: 1,
+    y: 0,
+    duration: instant ? 0 : 0.75,
+    ease: 'power3.out',
+    stagger: instant ? 0 : 0.09,
+    overwrite: 'auto',
+    delay: instant ? 0 : Number((batch[0] as HTMLElement).dataset.revealDelay ?? 0) / 1000,
+  });
+
 if (targets.length) {
   gsap.set(targets, { opacity: 0, y: 26 });
   ScrollTrigger.batch(targets, {
     start: START,
     once: true,
-    onEnter: (batch) =>
-      gsap.to(batch, {
-        opacity: 1,
-        y: 0,
-        duration: 0.75,
-        ease: 'power3.out',
-        stagger: 0.09,
-        delay: Number((batch[0] as HTMLElement).dataset.revealDelay ?? 0) / 1000,
-      }),
+    onEnter: (batch) => playReveal(batch),
   });
 }
 
@@ -808,3 +813,71 @@ document.fonts?.ready.then(() => ScrollTrigger.refresh());
    elements. `window.load` fires after images; the refresh is cheap and idempotent. */
 if (document.readyState === 'complete') ScrollTrigger.refresh();
 else window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+
+/* ---------------------------------------------------------------------------
+   RESCUE SWEEP — the safety net for a page that was JUMPED rather than scrolled.
+
+   ⚠⚠ THE BUG THIS EXISTS FOR. Drag the scrollbar, press End, or let the browser
+   restore a scroll position on refresh, and whole sections rendered PERMANENTLY
+   blank: `.notice__board` and `.notice__alumni` sat at opacity 0 with the
+   viewport parked on them, and no amount of further scrolling brought them
+   back. Every element here is hidden by this script before its trigger fires,
+   so anything whose trigger is missed stays hidden forever — an animation
+   failure that presents as missing content, which is the worst kind.
+
+   ⚠ WHY A SWEEP AND NOT A DIFFERENT TRIGGER. `once: true` is correct: these are
+   entrances, they should not replay. The failure is not the trigger's logic, it
+   is that an instantaneous jump can skip the crossing that fires it — and a
+   document that resizes after positions were cached widens that window. Rather
+   than weaken every trigger, this asks one question after the fact: is anything
+   sitting in the viewport that this script hid and never showed? If so, show it
+   with no animation, because the entrance moment has already passed.
+
+   ⚠ NO ANIMATION ON RESCUE. Fading a section in under a reader who is already
+   looking at it draws attention to the glitch. Instant is the honest repair.
+
+   ⚠ IT IS IDEMPOTENT AND CHEAP. It only touches elements still at opacity 0, so
+   a normal scroll — where every trigger fired properly — finds nothing to do. */
+{
+  const inView = (el: Element) => {
+    const r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < window.innerHeight && r.height > 0;
+  };
+
+  const sweep = () => {
+    /* 1 · Batched reveals, which run their tween from onEnter rather than from
+       a ScrollTrigger `animation`, so they cannot be reached through getAll(). */
+    const stranded = targets.filter(
+      (el) => inView(el) && Number(getComputedStyle(el).opacity) < 0.05,
+    );
+    if (stranded.length) playReveal(stranded, true);
+
+    /* 2 · Everything else: a trigger that owns an animation still at progress 0
+       while its element is on screen was skipped, so finish it. `progress(1)`
+       rather than `play()` for the same reason as above — no replay. */
+    ScrollTrigger.getAll().forEach((st) => {
+      const el = st.trigger;
+      const anim = st.animation;
+      if (!el || !anim || st.scrub) return;
+      if (anim.progress() === 0 && inView(el)) anim.progress(1);
+    });
+  };
+
+  /* After every refresh — which already happens on fonts.ready and window.load,
+     the two moments when cached trigger positions go stale. */
+  ScrollTrigger.addEventListener('refresh', sweep);
+
+  /* And after the reader stops moving. `scrollend` is the precise signal; the
+     debounced fallback covers browsers that do not fire it yet. */
+  let idle: number | undefined;
+  const onScroll = () => {
+    window.clearTimeout(idle);
+    idle = window.setTimeout(sweep, 140);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  if ('onscrollend' in window) window.addEventListener('scrollend', sweep, { passive: true });
+
+  /* Back/forward cache restores a scroll position without firing a scroll. */
+  window.addEventListener('pageshow', () => requestAnimationFrame(sweep));
+  requestAnimationFrame(sweep);
+}

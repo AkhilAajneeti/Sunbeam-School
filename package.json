@@ -19,6 +19,7 @@
     "sharp": "^0.34.1"
   },
   "devDependencies": {
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/ibm-plex-sans": "^5.2.5",
     "@fontsource-variable/source-serif-4": "^5.2.5",
     "lighthouse": "^13.4.1",

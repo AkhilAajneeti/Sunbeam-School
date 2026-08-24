@@ -99,18 +99,23 @@ const totalLabel = String(total).padStart(2, '0');
     </div>
   </div>
 
-  <ul
-    class="sl-rail__track"
-    id={id}
-    data-sl-track
-    style={`--per-lg: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
-    tabindex="0"
-    role="group"
-    aria-roledescription="carousel"
-    aria-label={label}
-  >
-    <slot />
-  </ul>
+  {/* ⚠⚠ role="group" USED TO BE ON THE <ul>, AND IT BROKE THE LIST. An explicit
+      role REPLACES the implicit one, so the track stopped being a list and every
+      <li> inside it became a list item with no list — axe fails it, and a screen
+      reader loses "list, 17 items" entirely. The carousel semantics belong to
+      the container anyway, which is what the ARIA authoring practices show; the
+      <ul> goes back to being a plain list of slides. */}
+  <div class="sl-rail__viewport" role="group" aria-roledescription="carousel" aria-label={label}>
+    <ul
+      class="sl-rail__track"
+      id={id}
+      data-sl-track
+      style={`--per-lg: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
+      tabindex="0"
+    >
+      <slot />
+    </ul>
+  </div>
 
   {dots && (
     <div class="sl-rail__foot">

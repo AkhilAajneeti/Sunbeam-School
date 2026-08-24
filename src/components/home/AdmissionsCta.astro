@@ -49,10 +49,28 @@ import brush from '../../assets/icons/paintbrush.png';
         </p>
 
         <div class="adm__actions">
-          <a class="btn btn--primary adm__apply" href={school.external.applyNurseryToIX}
-            target="_blank" rel="noopener">
-            Apply online
-          </a>
+          {/* ⚠⚠ TWO BUTTONS, AND THE SESSION-CODED URLs. This was ONE “Apply
+              online” pointing at sunbeamballia.edu.in/apply-online/ — the legacy
+              site — while the utility bar and the hero both linked the school’s
+              two actual forms. The same action sent a parent to two different
+              websites depending on which link they clicked. It now matches the
+              hero exactly: applyForm*, the URLs the school itself publishes,
+              under the school’s own labels.
+              ⚠ NEW TAB WITH rel="noopener noreferrer": both forms are on another
+              host, and a parent part-way through one should not lose the school
+              site behind them. */}
+          <a
+            class="btn btn--primary adm__apply"
+            href={school.external.applyFormNurseryToIX}
+            target="_blank"
+            rel="noopener noreferrer"
+          >Apply Online Class Nursery to IX</a>
+          <a
+            class="btn adm__apply adm__apply--ghost"
+            href={school.external.applyFormClassXI}
+            target="_blank"
+            rel="noopener noreferrer"
+          >Apply Online Class XI</a>
           <a class="btn adm__call t-tabular" href={`tel:${school.phone.admissions}`}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -232,6 +250,22 @@ import brush from '../../assets/icons/paintbrush.png';
   }
 
   .adm__apply:hover { background: #ffede6; border-color: #ffede6; }
+
+  /* ⚠ THE SECOND INTAKE IS AN OUTLINE, NOT A SECOND SOLID FILL. Two white
+     blocks side by side on orange would read as one wide button split in half,
+     and neither would look like the main route. Same shape, same size, less
+     weight — which is what “the other intake” should look like. */
+  .adm__apply--ghost {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    color: #fff;
+    transition: background-color var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease;
+  }
+  .adm__apply--ghost:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: #fff;
+    color: #fff;
+  }
 
   /* The call button is an outline — a second solid fill would compete with
      Apply and neither would read as the primary route. */

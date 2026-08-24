@@ -44,18 +44,21 @@ const { label, per = 4, perMd = 2, perSm = 1, id, class: extra = '' } = Astro.pr
     </svg>
   </button>
 
+  {/* ⚠⚠ THE CAROUSEL ROLE IS ON THE WRAPPER, NOT THE <ul>. An explicit role
+      REPLACES the implicit one, so role="group" here stopped the track being a
+      list and orphaned every <li> in it — axe fails that, and a screen reader
+      loses the item count. Same fix as AsRailSlider. */}
+  <div class="alr__viewport" role="group" aria-roledescription="carousel" aria-label={label}>
   <ul
     class="alr__track"
     id={id}
     data-alr-track
     style={`--per-lg: ${per}; --per-md: ${perMd}; --per-sm: ${perSm};`}
     tabindex="0"
-    role="group"
-    aria-roledescription="carousel"
-    aria-label={label}
   >
     <slot />
   </ul>
+  </div>
 
   <button type="button" class="alr__btn alr__btn--next" data-alr-next>
     <span class="u-visually-hidden">Scroll forward</span>
@@ -158,6 +161,11 @@ const { label, per = 4, perMd = 2, perSm = 1, id, class: extra = '' } = Astro.pr
 <style>
   .alr { position: relative; }
 
+  /* Carries the carousel role off the <ul> — see the markup note. A plain
+     block, never display: contents, which can drop the role from the a11y
+     tree. */
+  .alr__viewport { min-width: 0; }
+
   .alr__track {
     --gap: clamp(12px, 1.5vw, 22px);
     /* ⚠ RESOLVED HERE, NOT INLINE — an inline --per outranks the media queries
@@ -240,11 +248,21 @@ const { label, per = 4, perMd = 2, perSm = 1, id, class: extra = '' } = Astro.pr
   }
 
   @media (max-width: 1023px) {
-    .alr__track { --per: var(--per-md, 2); }
+    /* Carries the carousel role off the <ul> — see the markup note. A plain
+     block, never display: contents, which can drop the role from the a11y
+     tree. */
+  .alr__viewport { min-width: 0; }
+
+  .alr__track { --per: var(--per-md, 2); }
   }
 
   @media (max-width: 767px) {
-    .alr__track { --per: var(--per-sm, 1); }
+    /* Carries the carousel role off the <ul> — see the markup note. A plain
+     block, never display: contents, which can drop the role from the a11y
+     tree. */
+  .alr__viewport { min-width: 0; }
+
+  .alr__track { --per: var(--per-sm, 1); }
     /* Swipe is the gesture on a phone; two floating circles over the cards are
        just something else to mis-tap. */
     .alr__btn { display: none; }

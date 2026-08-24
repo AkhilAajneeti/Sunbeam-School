@@ -55,7 +55,11 @@
   letter-spacing: 0.06em;
   color: var(--sb-text-muted);
 }
-.sl-count b { font-weight: 700; color: var(--sb-violet); }
+/* ⚠ --sb-violet-dark, NOT --sb-violet. #c93c0a clears AA on white (5.1:1) but
+   this counter sits on --sb-ivory, where it measures 4.35:1 — under the 4.5
+   floor for 11.6px text. The darker token is the same hue and passes on both
+   grounds. */
+.sl-count b { font-weight: 700; color: var(--sb-violet-dark); }
 
 .sl-dots {
   display: flex;
@@ -251,6 +255,14 @@
    its padding so a card scrolled to the edge continues rather than looks cut; a
    rail that sits inside one column of a grid must not, or it escapes its
    column. `--bleed` is 0 by default and the consumer sets it. */
+/* ⚠ A PLAIN BLOCK, AND NOT display: contents. This wrapper exists only to
+   carry the carousel role off the <ul> — see the note in AsRailSlider.astro —
+   and display: contents has a history of dropping an element’s role from the
+   accessibility tree, which would delete the very semantics it is here to hold.
+   A default block adds no visual step: the track was already the full width of
+   its parent and still is. */
+.sl-rail__viewport { min-width: 0; }
+
 .sl-rail__track {
   --gap: clamp(12px, 1.5vw, 22px);
   --bleed: 0px;
@@ -272,7 +284,15 @@
   scrollbar-width: none;
   list-style: none;
 }
-.sl-rail--bleed .sl-rail__track { --bleed: var(--sb-margin); }
+.sl-rail--bleed /* ⚠ A PLAIN BLOCK, AND NOT display: contents. This wrapper exists only to
+   carry the carousel role off the <ul> — see the note in AsRailSlider.astro —
+   and display: contents has a history of dropping an element’s role from the
+   accessibility tree, which would delete the very semantics it is here to hold.
+   A default block adds no visual step: the track was already the full width of
+   its parent and still is. */
+.sl-rail__viewport { min-width: 0; }
+
+.sl-rail__track { --bleed: var(--sb-margin); }
 .sl-rail__track::-webkit-scrollbar { display: none; }
 .sl-rail__track > * { scroll-snap-align: start; }
 
@@ -370,11 +390,27 @@
    RESPONSIVE — the per-view counts the briefs specify, set once.
    ───────────────────────────────────────────────────────────────────────── */
 @media (max-width: 1179px) {
-  .sl-rail__track { --per: var(--per-md, 2); }
+  /* ⚠ A PLAIN BLOCK, AND NOT display: contents. This wrapper exists only to
+   carry the carousel role off the <ul> — see the note in AsRailSlider.astro —
+   and display: contents has a history of dropping an element’s role from the
+   accessibility tree, which would delete the very semantics it is here to hold.
+   A default block adds no visual step: the track was already the full width of
+   its parent and still is. */
+.sl-rail__viewport { min-width: 0; }
+
+.sl-rail__track { --per: var(--per-md, 2); }
 }
 
 @media (max-width: 767px) {
-  .sl-rail__track { --per: var(--per-sm, 1); }
+  /* ⚠ A PLAIN BLOCK, AND NOT display: contents. This wrapper exists only to
+   carry the carousel role off the <ul> — see the note in AsRailSlider.astro —
+   and display: contents has a history of dropping an element’s role from the
+   accessibility tree, which would delete the very semantics it is here to hold.
+   A default block adds no visual step: the track was already the full width of
+   its parent and still is. */
+.sl-rail__viewport { min-width: 0; }
+
+.sl-rail__track { --per: var(--per-sm, 1); }
   .sl-rail__head { align-items: start; }
   .sl-photo__nav { inset-inline: clamp(-10px, -2.4vw, -4px); }
   .sl-empty { grid-template-columns: minmax(0, 1fr); gap: clamp(13px, 3.6vw, 18px); }

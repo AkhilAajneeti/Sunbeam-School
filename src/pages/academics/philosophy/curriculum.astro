@@ -40,14 +40,10 @@
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/ui/PageHero.astro';
-import AcStatement from '../../../components/academics/system/AcStatement.astro';
-import AcCollage from '../../../components/academics/system/AcCollage.astro';
+import CurriculumPage from '../../../components/academics/CurriculumPage.astro';
 import AcClose from '../../../components/academics/system/AcClose.astro';
 
 import banner from '../../../assets/library/DSC_1225 copy.jpg';
-import pLib from '../../../assets/photos/sb-library.jpg';
-import pComposite from '../../../assets/composite lab/DSC_1258 copy.jpg';
-import pActivity from '../../../assets/activity learning lab/DSC_1217 copy.jpg';
 import pCohort from '../../../assets/photos/sunbeem-3.jpg';
 
 const school = 'Sunbeam School Ballia';
@@ -71,42 +67,7 @@ const school = 'Sunbeam School Ballia';
   />
 
   <div class="u-page-panel ac-panel">
-    <AcStatement
-      ground="paper"
-      ghost="PRECEPT"
-      ghostAt="right"
-      kicker="Session 2026-27"
-      statement="One document<br /><em>per class.</em>"
-      body={[
-        'Every CBSE school follows the CBSE curriculum, so saying so tells a parent nothing. What separates one school from another is whether the syllabus is a thing you can be handed — and Sunbeam publishes its own, class by class, under a name of its own: <strong>PRECEPT</strong>.',
-        'That is a document for <strong>every year group from Nursery to Class XII</strong>, for session <strong>2026-27</strong>. Fifteen classes, fifteen documents. A parent of a Class VI child is not reading the school’s general prospectus; they are reading Class VI’s.',
-        'And it is not filed away. <strong>“Syllabi”</strong> is item two of twelve on the school’s own Parents’ Forum agenda — a standing item, on a published list, that any class representative may raise. A syllabus a parent can question is a different object from one they can only receive.',
-      ]}
-    />
-
-    <AcCollage
-      ground="sand"
-      side="left"
-      kicker="And what it is taught through"
-      heading="Twelve rooms,<br /><em>and two programmes of its own</em>"
-      body={[
-        'The curriculum is CBSE’s; the provision around it is the school’s. Sunbeam runs <strong>twelve laboratories</strong>, and four of the twelve are inquiry rooms rather than subject rooms — alongside two activity programmes it names and runs itself.',
-        'The senior years then divide into four streams, each carried to board level. What each stream contains is set out on Subject Combinations, where verified and unverified content is labelled.',
-      ]}
-      ledger={[
-        { k: 'PRECEPT · Nursery–XII', v: 'A published syllabus document per class, session 2026-27.' },
-        { k: 'Eight subject laboratories', v: 'Physics, Chemistry, Biology, Mathematics, Language, Robotics and two computer rooms.' },
-        { k: 'Four inquiry rooms', v: 'Geography, Srijan (making and design), Model United Nations, and the Active Learning Lab — counted inside the twelve, not additional to them.' },
-        { k: 'Impetus · Classes III–V', v: 'The school’s own activity programme for the upper primary years.' },
-        { k: 'KIDS Entrepreneurship · Class 7', v: 'A real venture, run end to end.' },
-        { k: 'Senior secondary', v: 'PCM · PCB · Commerce · Humanities, each taught to CBSE board level.' },
-      ]}
-      lead={{ src: pLib, alt: `Students of ${school} reading at the long tables of the library, a member of staff at the head of the row` }}
-      support={[
-        { src: pComposite, alt: `The composite laboratory at ${school}, apparatus set out along the benches` },
-        { src: pActivity, alt: `The activity learning laboratory at ${school}, its worktables set out for group work` },
-      ]}
-    />
+    <CurriculumPage />
 
     <AcClose
       owed={true}

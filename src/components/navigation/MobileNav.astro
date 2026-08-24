@@ -48,20 +48,26 @@ import FacIcon from '../campus/facilities/FacIcon.astro';
           <li class="drawer__item">
             {item.columns ? (
               <>
-                <div class="drawer__row">
-                  <a class="drawer__row-link" href={item.href}>{item.label}</a>
-                  <button
-                    class="drawer__expand"
-                    type="button"
-                    aria-expanded="false"
-                    aria-label={`Show ${item.label} sections`}
-                    data-accordion
-                  >
+                {/* ⚠⚠ ONE CONTROL PER ROW, NOT TWO. This row used to hold a text
+                    LINK and a separate chevron BUTTON: tapping the words left the
+                    drawer for the parent page, tapping the 56px chevron expanded
+                    the section. Two targets, indistinguishable to look at, doing
+                    opposite things — and for “About Us” the text half landed on a
+                    placeholder page instead of revealing its six links. The whole
+                    row is now the toggle. */}
+                <button
+                  class="drawer__row drawer__row--toggle"
+                  type="button"
+                  aria-expanded="false"
+                  data-accordion
+                >
+                  <span class="drawer__row-link">{item.label}</span>
+                  <span class="drawer__expand" aria-hidden="true">
                     <svg width="13" height="8" viewBox="0 0 13 8" fill="none" aria-hidden="true">
                       <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.6" />
                     </svg>
-                  </button>
-                </div>
+                  </span>
+                </button>
                 {/* FLATTENED, like the desktop menu. The columns are a
                     desktop layout device; rendered as separate groups here they
                     put a rule and a gap in the middle of one list, which read
@@ -209,6 +215,22 @@ import FacIcon from '../campus/facilities/FacIcon.astro';
     display: flex;
     align-items: stretch;
     border-bottom: var(--sb-hairline);
+  }
+
+  /* ⚠ A <button> BRINGS ITS OWN BACKGROUND, BORDER, PADDING AND CENTRED TEXT.
+     All of it has to go, or the six parent rows sit differently from the four
+     leaf rows beside them. */
+  .drawer__row--toggle {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    border-bottom: var(--sb-hairline);
+    padding: 0;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
   }
 
   .drawer__row-link {

@@ -204,8 +204,14 @@ export const facilities = [
   {
     name: 'Conference Room',
     qualifier: 'Meetings, briefings and parent sessions',
-    // Named by audit 3.4 but absent from the live site — copy is asset B3.
-    detail: '[NEEDED — B3] The school has not yet published a description of this facility.',
+    /* ⚠⚠ NO detail HERE, DELIBERATELY. This used to carry
+       "[NEEDED — B3] …" — an internal authoring marker that was rendering on
+       the live homepage. The facility is named by audit 3.4 but the school has
+       published no description of it, and inventing one is not an option, so
+       the panel prints its name and qualifier and nothing else. Asset B3 is
+       still open: when the copy arrives it goes here.
+       ⚠ A build-time grep for [NEEDED / TBD / TODO belongs in CI so this
+       cannot happen again. */
     href: '/campus/conference-room/',
     brief: 'Conference room — not photographed anywhere on the live site. 3:2',
   },

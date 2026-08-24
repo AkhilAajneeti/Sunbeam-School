@@ -1,0 +1,967 @@
+---
+/**
+ * CURRICULUM — the PRECEPT document library, and what surrounds it.
+ *
+ * ═══ SOURCE — every line below is verified in this repository ══════════════
+ *   PRECEPT — the school's own name for its published syllabus. One document
+ *     per class, Nursery to Class XII, session 2026-27 (data/academics.ts,
+ *     cited on four separate pages). Fifteen year groups; fifteen documents.
+ *   The three the school names in one sentence about all its teaching:
+ *     "Incorporate Technology, a theory of Multiple Intelligence and
+ *      Collaborative learning in all areas of teaching."
+ *   Two more from the school's own stated aims (PhilosophyStory:108-112):
+ *     "Develop in children a degree of independence and self-motivation."
+ *     "Encourage behavior that is tolerant, sensitive to others and reflects
+ *      good manners and moral awareness."
+ *     ⚠ THOSE TWO ARE WHY THE PHILOSOPHY ROW HAS FIVE CARDS AND NOT THREE. The
+ *     brief asked for five; three come from the teaching sentence and two from
+ *     the aims. Nothing was invented to reach the number — had the fifth not
+ *     been in the school's own words, the row would have had four.
+ *   Four streams after Class X — PCM · PCB · Commerce · Humanities, each taught
+ *     to CBSE board level. PCM and PCB are definitional (the stream name IS the
+ *     subject list); Commerce and Humanities are named without composition, and
+ *     that is exactly how they are printed here.
+ *   "Syllabi" is item two of twelve on the school's own Parents' Forum agenda.
+ *
+ * ═══ THE PRECEPT FILES ═══════════════════════════════════════════
+ * All fifteen are real, and every href below was fetched and checked: 200,
+ * application/pdf, over HTTPS. They live on the school’s own WordPress uploads
+ * folder and are linked, not copied into this project — the client asked for
+ * links, and a copy would go stale the day the school re-issues one.
+ *
+ * ⚠ THE SOURCE PAGE SERVES THEM OVER http://. Rewritten to https:// here after
+ * confirming each one answers on it; a bare http link from an https page is a
+ * mixed-content warning in the address bar of a school website.
+ *
+ * ⚠⚠ THE SIZES ARE ON THE CARDS BECAUSE SOME ARE ENORMOUS. Class V is 103MB,
+ * Class VI 99MB, Class VII 91MB — while Class XI is under 1MB. A parent in
+ * Ballia opening the wrong one on 4G deserves to know before they tap, not
+ * after. Nothing can be done about the files from here; printing the number is
+ * the honest minimum. The school should be told they need re-exporting.
+ *
+ * ⚠ href: null STILL WORKS. A class without one renders the muted issued-by-
+ * the-school line instead of the action, so a withdrawn document degrades
+ * rather than 404s.
+ *
+ * ⚠ NO DOCUMENT'S CONTENTS ARE CLAIMED. The school publishes that the documents
+ * exist, one per class. It does not publish what is in them, and no subject
+ * list, period allocation or assessment weighting appears anywhere here.
+ *
+ * ⚠ TWO RESOURCES THE BRIEF SUGGESTED ARE ABSENT: "Class Timetable" and "Text
+ * Books". Neither exists in this project or on the school's site, so neither is
+ * a card. The three that are cards each go somewhere real.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ *   01 INTRO     cream · statement left, the five-stage journey right
+ *   02 LIBRARY   white panel on cream · the fifteen PRECEPT cards, by stage
+ *   03 PHILOSOPHY cream · five cards, each a quotation
+ *   04 PATHWAYS  white · the four streams
+ *   05 RESOURCES cream · three documents that exist
+ *   06 CLOSE     the shared cinematic close
+ */
+import { Image } from 'astro:assets';
+import { MARK } from './assessment/marks';
+
+/**
+ * The line-art books-and-cap the brief asks for behind the library.
+ * ⚠ THE -cut FILE, NOT THE ORIGINAL. The supplied artwork is brown ink on a
+ * WHITE ground, which on cream would have shown as a white rectangle behind the
+ * panel. bookwithcap-cut.png is the same artwork with lightness converted to
+ * transparency — not a flood fill, which would have stopped at the first dot of
+ * the baked-in field and left it as a block. The client’s original file is
+ * untouched beside it.
+ */
+import dBooks from '../../assets/icons/bookwithcap-cut.png';
+
+/**
+ * ⚠ href IS null EVERYWHERE UNTIL THE SCHOOL SUPPLIES THE FILES. See the header.
+ * A class with a href renders "View PDF →"; a class without renders the muted
+ * issued-by-the-school line. Nothing else in the component changes.
+ */
+type ClassDoc = { k: string; href: string | null; mb?: number };
+type Stage = {
+  key: string;
+  label: string;
+  range: string;
+  blurb: string;
+  mark: keyof typeof MARK;
+  classes: ClassDoc[];
+};
+
+const stages: Stage[] = [
+  {
+    key: 'pre-primary',
+    label: 'Pre-primary',
+    range: 'Nursery – KG II',
+    blurb: 'Building the foundation',
+    mark: 'grow',
+    classes: [
+      { k: 'Nursery', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Nursery-Syllabus-2026-27V_15-Final.pdf', mb: 43 },
+      { k: 'KG I', href: 'https://sunbeamballia.edu.in/wp-content/uploads/KG-I-Syllabus-2026-27V_15-Final.pdf', mb: 47 },
+      { k: 'KG II', href: 'https://sunbeamballia.edu.in/wp-content/uploads/KG-II-Syllabus-2026-27.pdf', mb: 48 },
+    ],
+  },
+  {
+    key: 'primary',
+    label: 'Primary',
+    range: 'Classes I – V',
+    blurb: 'Growing with curiosity',
+    mark: 'book',
+    classes: [
+      { k: 'Class I', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Syllabus-Precept-Class-I-2026-27-curved-cdr-17.pdf', mb: 61 },
+      { k: 'Class II', href: 'https://sunbeamballia.edu.in/wp-content/uploads/syllabus-class-2-2026-27.pdf', mb: 49 },
+      { k: 'Class III', href: 'https://sunbeamballia.edu.in/wp-content/uploads/III-Syllabus-2026-27-Final.pdf', mb: 3 },
+      { k: 'Class IV', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Final-Syllabus-Class-IV-1-NEW.pdf', mb: 46 },
+      { k: 'Class V', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Syllabus-Class-V-2026-27_v17-Final.pdf', mb: 103 },
+    ],
+  },
+  {
+    key: 'middle',
+    label: 'Middle',
+    range: 'Classes VI – VIII',
+    blurb: 'Exploring and expanding',
+    mark: 'cap',
+    classes: [
+      { k: 'Class VI', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Syllabus-Class-VI-2026-27.pdf', mb: 99 },
+      { k: 'Class VII', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Syllabus-VII-2026-27.pdf', mb: 91 },
+      { k: 'Class VIII', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Class-VIII-Syllabus-2026-27.pdf', mb: 26 },
+    ],
+  },
+  {
+    key: 'secondary',
+    label: 'Secondary',
+    range: 'Classes IX – X',
+    blurb: 'Preparing for tomorrow',
+    mark: 'pen',
+    classes: [
+      { k: 'Class IX', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Class-IX-Syllabus-2026-27.pdf', mb: 2 },
+      { k: 'Class X', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Class-X-Syllabus-For-April-May-1.pdf', mb: 46 },
+    ],
+  },
+  {
+    key: 'senior',
+    label: 'Senior Secondary',
+    range: 'Classes XI – XII',
+    blurb: 'Choosing your path',
+    mark: 'spark',
+    classes: [
+      { k: 'Class XI', href: 'https://sunbeamballia.edu.in/wp-content/uploads/XI-Syllabus-Main-for-AprilMay-2026-27.pdf', mb: 1 },
+      { k: 'Class XII', href: 'https://sunbeamballia.edu.in/wp-content/uploads/Syllabus-Main-Subjects-XII-2026-27.pdf', mb: 2 },
+    ],
+  },
+];
+
+const totalDocs = stages.reduce((n, s) => n + s.classes.length, 0);
+
+/**
+ * ⚠ EVERY `v` BELOW IS THE SCHOOL'S OWN SENTENCE OR A DEFINITION OF ITS OWN
+ * TERM. The first three are the teaching sentence; the last two are stated aims.
+ */
+const philosophy = [
+  { k: 'Technology Enabled', mark: 'desk', tone: 'sky', v: 'Technology is integrated into teaching and learning for deeper understanding.' },
+  { k: 'Multiple Intelligence', mark: 'head', tone: 'lilac', v: 'We recognise and nurture different abilities, interests and learning strengths.' },
+  { k: 'Collaborative Learning', mark: 'hands', tone: 'mint', v: 'Students learn together, share ideas and grow through collaboration.' },
+  { k: 'Independence & Motivation', mark: 'person', tone: 'sun', v: 'We encourage independent, confident and self-motivated learners.' },
+  { k: 'Values & Sensitivity', mark: 'handHeart', tone: 'rose', v: 'We build tolerance, sensitivity, integrity and moral awareness.' },
+] as const;
+
+/**
+ * ⚠ PCM AND PCB CARRY THEIR SUBJECT LISTS BECAUSE THE STREAM NAME IS THE LIST.
+ * Commerce and Humanities do not, because the school names the streams without
+ * publishing what is in them — and a guessed elective list on a curriculum page
+ * is exactly the kind of invention this project does not do. Subject
+ * Combinations carries what is known, labelled.
+ */
+const streams = [
+  { k: 'PCM', mark: 'atom', tone: 'sky', v: 'Physics, Chemistry & Mathematics' },
+  { k: 'PCB', mark: 'leaf', tone: 'mint', v: 'Physics, Chemistry & Biology' },
+  { k: 'Commerce', mark: 'chart', tone: 'peach', v: 'Commerce stream' },
+  { k: 'Humanities', mark: 'globe', tone: 'lilac', v: 'Humanities stream' },
+] as const;
+
+/** ⚠ THREE, NOT FIVE. Every one of these goes somewhere that exists. */
+const resources = [
+  { k: 'Academic Calendar', mark: 'calendar', tone: 'peach', v: 'Terms, holidays and the monthly planner', href: '/academics/academic-calendar/' },
+  { k: 'Assessment Pattern', mark: 'clipboard', tone: 'sky', v: 'How the school assesses, term by term', href: '/academics/assessment/' },
+  { k: 'Subject Combinations', mark: 'layers', tone: 'mint', v: 'The four streams after Class X', href: '/academics/structure/subject-combinations/' },
+] as const;
+---
+
+<div class="cu">
+  {/* ═══ 01 · ONE CURRICULUM, EVERY STAGE ════════════════════════════════════ */}
+  <section class="cu-intro" aria-labelledby="cu-intro-h">
+    <span class="cu__dots cu__dots--tr" aria-hidden="true"></span>
+
+    <div class="u-container cu-intro__in">
+      <div class="cu-intro__copy">
+        <p class="cu__k t-label" data-reveal>Session 2026-27</p>
+        <h2 class="cu-intro__h" id="cu-intro-h" data-split>
+          One curriculum.<br /><em>Every stage.</em>
+        </h2>
+        <p class="cu__p" data-reveal data-reveal-delay="150">
+          Every Sunbeam classroom follows the CBSE curriculum. What separates one CBSE school from
+          another is whether the syllabus is a thing you can be handed — and Sunbeam publishes its
+          own, class by class, under a name of its own: <strong>PRECEPT</strong>. One document for
+          every class from Nursery to Class XII, so parents always know what their child is
+          learning and why.
+        </p>
+        <span class="cu__rule" aria-hidden="true"></span>
+      </div>
+
+      {/* ⚠ AN <ol>, NOT A ROW OF DIVS. Nursery → Class XII is an order, and a
+          screen reader should hear it as one. The connectors are drawn between
+          steps with a pseudo-element rather than as elements of their own. */}
+      <ol class="cu-journey">
+        {stages.map((s, i) => (
+          <li class="cu-journey__step" data-pop data-pop-delay={i * 90}>
+            <span class="cu-journey__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[s.mark]} />
+              </svg>
+            </span>
+            <span class="cu-journey__k">{s.label}</span>
+            <span class="cu-journey__v">{s.range}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* ═══ 02 · THE LIBRARY ════════════════════════════════════════════════════
+      The centrepiece. Fifteen classes in five stage rows, on one raised panel
+      over the cream so the whole library reads as a single object. */}
+  <section class="cu-lib" aria-labelledby="cu-lib-h">
+    <span class="cu__grid" aria-hidden="true"></span>
+    <span class="cu-lib__ghost" aria-hidden="true">PRECEPT</span>
+
+    <div class="u-container">
+      <div class="cu-lib__panel">
+        {/* Decorative only — aria-hidden, and it sits behind the panel. The parallax
+            is deliberately small: the brief asks for decoration that moves very
+            subtly, not for the illustration to travel across the section. */}
+        <Image
+          class="cu-lib__art"
+          src={dBooks}
+          alt=""
+          aria-hidden="true"
+          widths={[280, 560]}
+          sizes="380px"
+          loading="lazy"
+          decoding="async"
+          data-parallax
+          data-parallax-y="-26"
+        />
+
+        <header class="cu-lib__head">
+          <p class="cu__k t-label" data-reveal>Explore the curriculum</p>
+          <h2 class="cu-lib__h" id="cu-lib-h" data-split>One document for every class.</h2>
+          <span class="cu__rule cu__rule--mid" aria-hidden="true"></span>
+        </header>
+
+        {stages.map((s) => (
+          <div class="cu-row">
+            <div class="cu-row__stage" data-reveal>
+              <span class="cu-row__m" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[s.mark]} />
+                </svg>
+              </span>
+              <span class="cu-row__t">
+                <span class="cu-row__k">{s.label}</span>
+                <span class="cu-row__v">{s.blurb}</span>
+              </span>
+            </div>
+
+            <ul class="cu-row__cards">
+              {s.classes.map((c, i) => (
+                <li>
+                  {/* ⚠ AN <a> ONLY WHERE A FILE EXISTS. With href null this is a
+                      plain card — not a link that goes nowhere, and not a button
+                      that does nothing. */}
+                  {c.href ? (
+                    <a class="cu-card cu-card--live" href={c.href} target="_blank" rel="noopener noreferrer" data-reveal data-reveal-delay={i * 60}>
+                      <span class="cu-card__k">{c.k}</span>
+                      <span class="cu-card__tag">PRECEPT</span>
+                      <span class="cu-card__go">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.doc} />
+                        </svg>
+                        View PDF{c.mb ? ` · ${c.mb} MB` : ''}
+                        <svg class="cu-card__arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+                        </svg>
+                      </span>
+                    </a>
+                  ) : (
+                    <div class="cu-card" data-reveal data-reveal-delay={i * 60}>
+                      <span class="cu-card__k">{c.k}</span>
+                      <span class="cu-card__tag">PRECEPT</span>
+                      <span class="cu-card__go cu-card__go--pending">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.doc} />
+                        </svg>
+                        Issued by the school
+                      </span>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+
+        {/* ⚠ THE PANEL SAYS OUT LOUD WHY THERE IS NO DOWNLOAD, rather than
+            leaving a parent to click fifteen cards and find out. */}
+        <p class="cu-lib__note" data-reveal>
+          <strong>{totalDocs} classes, {totalDocs} documents.</strong> Each opens the school’s own
+          PRECEPT syllabus for session 2026-27, published on sunbeamballia.edu.in. Several run to
+          tens of megabytes, so the size is printed on the card — worth checking before opening one
+          on mobile data. <em>“Syllabi”</em> is also item two of twelve on the Parents’ Forum
+          agenda, a standing item any class representative may raise.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ═══ 03 · PHILOSOPHY ═════════════════════════════════════════════════════ */}
+  <section class="cu-phil" aria-labelledby="cu-phil-h">
+    <div class="u-container cu-phil__in">
+      <div class="cu-phil__lede">
+        <p class="cu__k t-label" data-reveal>Our curriculum philosophy</p>
+        <h2 class="cu-phil__h" id="cu-phil-h" data-split>
+          More than a syllabus.<br /><em>A way of learning.</em>
+        </h2>
+      </div>
+
+      <ul class="cu-phil__set">
+        {philosophy.map((p, i) => (
+          <li class="cu-tile" data-reveal data-reveal-delay={i * 80}>
+            <span class={`cu-tile__m tone tone--${p.tone}`} aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[p.mark]} />
+              </svg>
+            </span>
+            <span class="cu-tile__k">{p.k}</span>
+            <span class="cu-tile__v">{p.v}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* ═══ 04 · PATHWAYS ═══════════════════════════════════════════════════════ */}
+  <section class="cu-path" aria-labelledby="cu-path-h">
+    <div class="u-container cu-path__in">
+      <div class="cu-path__lede">
+        <p class="cu__k t-label" data-reveal>Four pathways after Class X</p>
+        <h2 class="cu-path__h" id="cu-path-h" data-split>
+          Choose your path.<br /><em>Shape your future.</em>
+        </h2>
+      </div>
+
+      <ul class="cu-path__set">
+        {streams.map((s, i) => (
+          <li class="cu-stream" data-reveal data-reveal-delay={i * 80}>
+            <span class={`cu-stream__m tone tone--${s.tone}`} aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[s.mark]} />
+              </svg>
+            </span>
+            <span class="cu-stream__k">{s.k}</span>
+            <span class="cu-stream__v">{s.v}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* ═══ 05 · RESOURCES ══════════════════════════════════════════════════════ */}
+  <section class="cu-res" aria-labelledby="cu-res-h">
+    <div class="u-container cu-res__in">
+      <div class="cu-res__lede">
+        <p class="cu__k t-label" data-reveal>Academic resources</p>
+        <h2 class="cu-res__h" id="cu-res-h" data-split>Important academic documents.</h2>
+      </div>
+
+      <ul class="cu-res__set">
+        {resources.map((r, i) => (
+          <li data-reveal data-reveal-delay={i * 80}>
+            <a class="cu-doc" href={r.href}>
+              <span class={`cu-doc__m tone tone--${r.tone}`} aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[r.mark]} />
+                </svg>
+              </span>
+              <span class="cu-doc__t">
+                <span class="cu-doc__k">{r.k}</span>
+                <span class="cu-doc__v">{r.v}</span>
+              </span>
+              <span class="cu-doc__go" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</div>
+
+<style>
+  .cu { position: relative; }
+
+  .cu-intro,
+  .cu-lib,
+  .cu-phil,
+  .cu-path,
+  .cu-res {
+    position: relative;
+    overflow: clip;
+  }
+
+  .cu__k { color: var(--sb-violet); }
+
+  /* Body holds at 16.5px on a wide screen and floors at 15 — the offset form,
+     not a bare vw, so a 1440 laptop actually reaches the top of the range. */
+  .cu__p {
+    max-width: 46ch;
+    margin: clamp(12px, 1.5vw, 17px) 0 0;
+    font-size: clamp(15px, 0.5vw + 9px, 16.5px);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+  }
+  .cu__p strong { font-weight: 700; color: var(--sb-charcoal); }
+  .cu__p em { font-style: italic; color: var(--sb-charcoal); }
+
+  .cu__rule {
+    display: block;
+    width: 48px;
+    height: 3px;
+    margin: clamp(18px, 2.2vw, 26px) 0 0;
+    border-radius: 999px;
+    background: var(--sb-violet);
+  }
+  .cu__rule--mid { margin-inline: auto; }
+
+  /* Shared heading shape; `em` is the orange half of every statement here. */
+  .cu-intro__h,
+  .cu-lib__h,
+  .cu-phil__h,
+  .cu-path__h,
+  .cu-res__h {
+    margin: clamp(9px, 1.1vw, 14px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.024em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+  .cu-intro__h em,
+  .cu-phil__h em,
+  .cu-path__h em {
+    font-style: normal;
+    color: var(--sb-violet);
+  }
+
+  /* ⚠ 52px CAP. The brief asked for 48–60 on the major heading and warned off
+     80–100px; the offset middle term reaches the cap by ~1440 instead of
+     idling at 40 on the commonest desktop width there is. */
+  .cu-intro__h { font-size: clamp(28px, 1.9vw + 21px, 54px); }
+  .cu-lib__h { font-size: clamp(25px, 1.2vw + 18px, 42px); }
+  .cu-phil__h,
+  .cu-path__h,
+  .cu-res__h { font-size: clamp(23px, 1.2vw + 16px, 38px); }
+
+  /* ═══ 01 · INTRO ═══════════════════════════════════════════════════════════ */
+  .cu-intro {
+    background: var(--sb-ivory);
+    padding-block: clamp(44px, 5.6vw, 88px);
+  }
+  .cu-intro__in {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    gap: clamp(30px, 4.4vw, 74px);
+    align-items: center;
+  }
+
+  .cu__dots {
+    position: absolute;
+    z-index: 0;
+    width: clamp(120px, 15vw, 220px);
+    aspect-ratio: 1;
+    background-image: radial-gradient(color-mix(in srgb, var(--sb-orange-bright) 46%, transparent) 1.5px, transparent 1.5px);
+    background-size: 14px 14px;
+    pointer-events: none;
+  }
+  .cu__dots--tr {
+    top: -3%;
+    right: -2%;
+    -webkit-mask-image: linear-gradient(220deg, #000 6%, transparent 74%);
+    mask-image: linear-gradient(220deg, #000 6%, transparent 74%);
+  }
+
+  /* ⚠ THE CONNECTOR IS A PSEUDO-ELEMENT ON EACH STEP BUT THE LAST, drawn from
+     the icon's own row so it passes BETWEEN the circles rather than through
+     them. A single line behind the row cannot do that. */
+  .cu-journey {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(4px, 0.8vw, 12px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cu-journey__step {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+  .cu-journey__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: calc(clamp(46px, 4.4vw, 62px) / 2);
+    left: calc(50% + clamp(46px, 4.4vw, 62px) / 2 + 7px);
+    right: calc(-50% + clamp(46px, 4.4vw, 62px) / 2 - 7px);
+    height: 1px;
+    background-image: linear-gradient(to right, color-mix(in srgb, var(--sb-orange-bright) 60%, transparent) 0 5px, transparent 5px 11px);
+    background-size: 11px 1px;
+    background-repeat: repeat-x;
+  }
+  .cu-journey__m {
+    display: grid;
+    place-items: center;
+    width: clamp(46px, 4.4vw, 62px);
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, var(--sb-orange-bright) 42%, transparent);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-violet);
+    box-shadow: 0 10px 22px -14px rgba(28, 14, 8, 0.3);
+  }
+  .cu-journey__m svg { width: 46%; height: auto; }
+  .cu-journey__k {
+    margin-top: 4px;
+    font-size: clamp(8.6px, 0.68vw, 10.5px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .cu-journey__v {
+    font-size: clamp(11px, 0.82vw, 13px);
+    line-height: 1.4;
+    color: var(--sb-text-secondary);
+  }
+
+  /* ═══ 02 · LIBRARY ═════════════════════════════════════════════════════════ */
+  .cu-lib {
+    background: var(--sb-ivory);
+    padding-block: 0 clamp(44px, 5.6vw, 84px);
+  }
+  .cu__grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(color-mix(in srgb, var(--sb-orange-bright) 30%, transparent) 1px, transparent 1px);
+    background-size: 22px 22px;
+    /* Shifted off the books illustration below — two dot fields stacked in one
+       corner read as a printing error rather than as decoration. */
+    -webkit-mask-image: radial-gradient(58% 44% at 90% 34%, #000 8%, transparent 74%);
+    mask-image: radial-gradient(58% 44% at 90% 34%, #000 8%, transparent 74%);
+  }
+  .cu-lib__ghost {
+    position: absolute;
+    left: 50%;
+    bottom: 2%;
+    z-index: 0;
+    translate: -50% 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(74px, 13vw, 190px);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: rgba(27, 21, 18, 0.032);
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  /* ⚠⚠ INSIDE THE PANEL, NOT BEHIND IT. Anchored to the section it sat almost
+     entirely under the panel — the panel is opaque white, so all but the last
+     80px was simply invisible. The short rows (Secondary is two cards, Senior
+     Secondary two) leave a real hole at the panel’s bottom-right, and that hole
+     is where the reference puts this illustration. z-index 0 against the rows’
+     1 keeps it behind the cards it tucks under. */
+  .cu-lib__art {
+    position: absolute;
+    right: clamp(-16px, -0.6vw, -4px);
+    bottom: clamp(58px, 7vw, 104px);
+    z-index: 0;
+    width: clamp(180px, 24vw, 340px);
+    height: auto;
+    opacity: 0.62;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cu-lib__panel {
+    position: relative;
+    z-index: 1;
+    overflow: clip;
+    padding: clamp(26px, 3.4vw, 52px) clamp(18px, 2.6vw, 40px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: 0 36px 78px -46px rgba(28, 14, 8, 0.34);
+  }
+  .cu-lib__head { position: relative; z-index: 1; text-align: center; margin-bottom: clamp(24px, 3vw, 40px); }
+
+  /* ⚠ THE STAGE LABEL IS A COLUMN, NOT A ROW HEADING ABOVE THE CARDS. Keeping
+     it beside its classes is what lets a parent scan down the left edge for
+     their child's stage and read straight across — the whole point of the
+     library. It becomes a row heading only when the grid stacks. */
+  .cu-row {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: clamp(140px, 15vw, 178px) minmax(0, 1fr);
+    gap: clamp(10px, 1.4vw, 18px);
+    margin-bottom: clamp(10px, 1.4vw, 18px);
+  }
+  .cu-row__stage {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(8px, 1vw, 13px);
+    padding: clamp(12px, 1.5vw, 18px);
+    border: 1px solid color-mix(in srgb, var(--sb-orange-bright) 22%, transparent);
+    border-radius: var(--sb-r-2);
+    background: color-mix(in srgb, var(--sb-orange-bright) 5%, transparent);
+  }
+  .cu-row__m {
+    display: grid;
+    place-items: center;
+    width: clamp(30px, 2.8vw, 38px);
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, var(--sb-orange-bright) 40%, transparent);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-violet);
+  }
+  .cu-row__m svg { width: 52%; height: auto; }
+  .cu-row__t { display: grid; gap: 2px; min-width: 0; }
+  .cu-row__k {
+    font-size: clamp(9px, 0.7vw, 10.5px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .cu-row__v {
+    font-size: clamp(11px, 0.82vw, 12.5px);
+    line-height: 1.35;
+    color: var(--sb-text-muted);
+  }
+
+  .cu-row__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(148px, 15vw, 190px), 1fr));
+    gap: clamp(9px, 1.2vw, 14px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cu-row__cards > li { display: grid; }
+
+  .cu-card {
+    display: grid;
+    align-content: start;
+    gap: 3px;
+    height: 100%;
+    padding: clamp(12px, 1.5vw, 17px);
+    border: 1px solid var(--sb-border);
+    border-radius: 16px;
+    background: var(--sb-paper);
+    box-shadow: 0 6px 18px -14px rgba(28, 14, 8, 0.32);
+    transition:
+      border-color 220ms var(--sb-ease),
+      transform 220ms var(--sb-ease),
+      box-shadow 220ms var(--sb-ease);
+  }
+  .cu-card--live:hover {
+    border-color: var(--sb-violet);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 32px -20px rgba(28, 14, 8, 0.4);
+  }
+  .cu-card__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 0.5vw + 12px, 21px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--sb-charcoal);
+  }
+  .cu-card__tag {
+    font-size: clamp(8.6px, 0.66vw, 10px);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  .cu-card__go {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: clamp(8px, 1vw, 12px);
+    font-size: clamp(10.5px, 0.76vw, 12px);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+  .cu-card__go svg { width: 13px; height: auto; flex: none; }
+  .cu-card__arrow { transition: transform 220ms var(--sb-ease); }
+  .cu-card--live:hover .cu-card__arrow { transform: translateX(3px); }
+  /* The pending state is deliberately quiet — it is a statement of fact, not an
+     action, and must not read as a button that failed. */
+  .cu-card__go--pending { font-weight: 600; color: var(--sb-text-muted); }
+
+  .cu-lib__note {
+    position: relative;
+    z-index: 1;
+    margin: clamp(18px, 2.4vw, 30px) 0 0;
+    padding: clamp(14px, 1.8vw, 20px) clamp(16px, 2vw, 24px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-ivory);
+    font-size: clamp(12.5px, 0.4vw + 7px, 14px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+  .cu-lib__note strong { color: var(--sb-charcoal); }
+  .cu-lib__note em { font-style: italic; color: var(--sb-charcoal); }
+
+  /* ═══ 03 · PHILOSOPHY · 04 · PATHWAYS · 05 · RESOURCES ═════════════════════ */
+  .cu-phil { background: var(--sb-sand); padding-block: clamp(40px, 5vw, 76px); }
+  .cu-path { background: var(--sb-paper); padding-block: clamp(40px, 5vw, 76px); }
+  .cu-res { background: var(--sb-ivory); padding-block: clamp(40px, 5vw, 76px); }
+
+  .cu-phil__in,
+  .cu-path__in,
+  .cu-res__in {
+    display: grid;
+    grid-template-columns: clamp(200px, 22vw, 268px) minmax(0, 1fr);
+    gap: clamp(22px, 3vw, 48px);
+    align-items: center;
+  }
+
+  .cu-phil__set,
+  .cu-path__set,
+  .cu-res__set {
+    display: grid;
+    gap: clamp(10px, 1.3vw, 16px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cu-phil__set { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .cu-path__set { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .cu-res__set { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  .cu-tile,
+  .cu-stream {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: clamp(14px, 1.7vw, 20px);
+    border: 1px solid var(--sb-border);
+    border-radius: 16px;
+    background: var(--sb-paper);
+    transition: border-color 220ms var(--sb-ease), transform 220ms var(--sb-ease);
+  }
+  .cu-tile:hover,
+  .cu-stream:hover { border-color: var(--sb-violet); transform: translateY(-3px); }
+
+  /* ═══ TONES ═════════════════════════════════════════════════════════
+     ⚠ THE SAME SIX PAIRS THE HOMEPAGE QUICK-ACCESS DISCS USE, not a new palette
+     invented for this page. Reusing them is what keeps a coloured icon reading
+     as part of the Sunbeam system rather than as decoration borrowed from
+     somewhere else — and each pair was already picked so the glyph clears
+     contrast on its own tint.
+
+     ⚠ THE TINT IS A PLATE, NOT A COLOURED GLYPH ON CREAM. A bare coloured
+     stroke at 30px on a warm ground is thin and washes out; the disc gives it a
+     ground of its own and is what makes five different hues sit level with each
+     other in a row. */
+  .tone {
+    border-radius: 10px;
+    background: var(--tone-bg);
+    color: var(--tone-ink);
+  }
+  .tone--peach { --tone-bg: #ffe6da; --tone-ink: #b03d0c; }
+  .tone--sky   { --tone-bg: #dfeafb; --tone-ink: #1d4e89; }
+  .tone--sun   { --tone-bg: #fdeecb; --tone-ink: #8a5a00; }
+  .tone--mint  { --tone-bg: #dcf0e4; --tone-ink: #2f6b4f; }
+  .tone--rose  { --tone-bg: #fde0e6; --tone-ink: #a8264a; }
+  .tone--lilac { --tone-bg: #e7e3f7; --tone-ink: #4b3b96; }
+
+  .cu-tile__m,
+  .cu-stream__m {
+    display: grid;
+    place-items: center;
+    width: clamp(34px, 3vw, 42px);
+    aspect-ratio: 1;
+    margin-bottom: 5px;
+    padding: clamp(7px, 0.7vw, 9px);
+  }
+  .cu-tile__m svg,
+  .cu-stream__m svg { width: 100%; height: auto; }
+
+  .cu-tile__k,
+  .cu-stream__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(13.5px, 0.4vw + 8px, 16px);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--sb-charcoal);
+  }
+  .cu-stream__k { letter-spacing: 0.06em; text-transform: uppercase; }
+  .cu-tile__v,
+  .cu-stream__v {
+    font-size: clamp(11.5px, 0.3vw + 8px, 13px);
+    line-height: 1.55;
+    color: var(--sb-text-muted);
+  }
+
+  .cu-doc {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(9px, 1.1vw, 13px);
+    height: 100%;
+    padding: clamp(13px, 1.6vw, 18px);
+    border: 1px solid var(--sb-border);
+    border-radius: 16px;
+    background: var(--sb-paper);
+    transition: border-color 220ms var(--sb-ease), transform 220ms var(--sb-ease), box-shadow 220ms var(--sb-ease);
+  }
+  .cu-doc:hover {
+    border-color: var(--sb-violet);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 32px -20px rgba(28, 14, 8, 0.34);
+  }
+  .cu-doc__m {
+    display: grid;
+    place-items: center;
+    width: clamp(32px, 2.9vw, 40px);
+    aspect-ratio: 1;
+    padding: clamp(7px, 0.7vw, 9px);
+  }
+  .cu-doc__m svg { width: 100%; height: auto; }
+  .cu-doc__t { display: grid; gap: 2px; min-width: 0; }
+  .cu-doc__k {
+    font-size: clamp(12.5px, 0.35vw + 8px, 14.5px);
+    font-weight: 700;
+    color: var(--sb-charcoal);
+  }
+  .cu-doc__v {
+    font-size: clamp(11px, 0.3vw + 7px, 12.5px);
+    line-height: 1.45;
+    color: var(--sb-text-muted);
+  }
+  .cu-doc__go {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid var(--sb-border-strong);
+    color: var(--sb-charcoal);
+    transition: transform 220ms var(--sb-ease);
+  }
+  .cu-doc__go svg { width: 13px; height: auto; }
+  .cu-doc:hover .cu-doc__go { transform: translateX(3px); }
+
+  /* ═══ RESPONSIVE ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .cu-intro__in { grid-template-columns: minmax(0, 1fr); }
+    .cu__p { max-width: 62ch; }
+    .cu-phil__in,
+    .cu-path__in,
+    .cu-res__in { grid-template-columns: minmax(0, 1fr); align-items: start; }
+    .cu-phil__set { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 767px) {
+    /* The stage label becomes a heading over its own cards. */
+    .cu-row { grid-template-columns: minmax(0, 1fr); }
+    .cu-phil__set { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cu-path__set { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cu-res__set { grid-template-columns: minmax(0, 1fr); }
+
+    /* ⚠ THE JOURNEY BECOMES A VERTICAL TIMELINE, which is what the brief asks
+       for and what five stages need on a phone — five columns at 390px leaves
+       62px a stage, and "SENIOR SECONDARY" cannot live in that. */
+    .cu-journey { grid-template-columns: minmax(0, 1fr); gap: clamp(12px, 3vw, 18px); }
+    .cu-journey__step {
+      grid-template-columns: auto minmax(0, 1fr);
+      justify-items: start;
+      text-align: left;
+      align-items: center;
+      column-gap: clamp(11px, 3vw, 15px);
+      row-gap: 1px;
+    }
+    .cu-journey__m { grid-row: span 2; }
+    .cu-journey__k { margin-top: 0; align-self: end; }
+    .cu-journey__v { align-self: start; }
+    /* Redrawn vertically, between one circle and the next. */
+    .cu-journey__step:not(:last-child)::after {
+      top: calc(clamp(46px, 4.4vw, 62px) + 5px);
+      bottom: calc(-1 * clamp(12px, 3vw, 18px) - 5px);
+      left: calc(clamp(46px, 4.4vw, 62px) / 2);
+      right: auto;
+      width: 1px;
+      height: auto;
+      background-image: linear-gradient(to bottom, color-mix(in srgb, var(--sb-orange-bright) 60%, transparent) 0 5px, transparent 5px 11px);
+      background-size: 1px 11px;
+      background-repeat: repeat-y;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* ⚠ GONE BELOW 768. At 380px wide against a 390px viewport it is no longer
+       decoration behind the panel — it is a second object competing with it, and
+       a negative right offset on a narrow screen is how decoration ends up
+       pushing the document sideways. */
+    .cu-lib__art { display: none; }
+  }
+
+  @media (max-width: 479px) {
+    .cu-phil__set,
+    .cu-path__set { grid-template-columns: minmax(0, 1fr); }
+    /* ⚠⚠ INSIDE THE PANEL, NOT BEHIND IT. Anchored to the section it sat almost
+     entirely under the panel — the panel is opaque white, so all but the last
+     80px was simply invisible. The short rows (Secondary is two cards, Senior
+     Secondary two) leave a real hole at the panel’s bottom-right, and that hole
+     is where the reference puts this illustration. z-index 0 against the rows’
+     1 keeps it behind the cards it tucks under. */
+  .cu-lib__art {
+    position: absolute;
+    right: clamp(-16px, -0.6vw, -4px);
+    bottom: clamp(58px, 7vw, 104px);
+    z-index: 0;
+    width: clamp(180px, 24vw, 340px);
+    height: auto;
+    opacity: 0.62;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .cu-lib__panel { padding-inline: clamp(13px, 4vw, 18px); }
+  }
+</style>

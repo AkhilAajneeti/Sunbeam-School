@@ -87,6 +87,12 @@ import dCap from '../../assets/icons/graduate-cap.png';
 import dStars from '../../assets/icons/two-stars.png';
 import dKite from '../../assets/icons/kite.png';
 import dPencil from '../../assets/icons/pencill.webp';
+/* The four the client supplied for this constellation. Named for the nodes
+   they belong to, so a future swap is obvious. */
+import iWords from '../../assets/icons/Words.png';
+import iEnquiry from '../../assets/icons/enquire.png';
+import iInvention from '../../assets/icons/Invention.png';
+import iAmbition from '../../assets/icons/Ambition.png';
 import dShape from '../../assets/icons/shape-2.png';
 
 /**
@@ -112,13 +118,16 @@ import dShape from '../../assets/icons/shape-2.png';
  */
 const R = 40;
 
+/* ⚠ FOUR OF THE SEVEN CARRY THE CLIENT’S OWN ICONS; the other three keep the
+   ornament set this page was built with. Nothing else about the constellation
+   changed — the angles are still evenly spaced and still derived from R. */
 const abilities = [
-  { k: 'Words', art: dBooks, a: 0 },
+  { k: 'Words', art: iWords, a: 0 },
   { k: 'Number', art: dPencil, a: 51 },
   { k: 'Making', art: dBrush, a: 103 },
-  { k: 'Enquiry', art: dSaturn, a: 154 },
-  { k: 'Invention', art: dRocket, a: 206 },
-  { k: 'Ambition', art: dCap, a: 257 },
+  { k: 'Enquiry', art: iEnquiry, a: 154 },
+  { k: 'Invention', art: iInvention, a: 206 },
+  { k: 'Ambition', art: iAmbition, a: 257 },
   { k: 'Insight', art: dBulb, a: 309 },
 ];
 ---
@@ -250,7 +259,7 @@ const abilities = [
               were here first and matched neither, which is why the nodes looked
               scattered between two unrelated circles rather than placed on one. */}
           <circle cx="200" cy="200" r="92" stroke="currentColor" stroke-width="1" />
-          <circle cx="200" cy="200" r={R * 4} stroke="currentColor" stroke-width="1" stroke-dasharray="4 10" />
+          <circle class="tp-const__dash" cx="200" cy="200" r={R * 4} stroke="currentColor" stroke-width="1" stroke-dasharray="4 10" />
         </svg>
 
         <ul class="tp-const__set">
@@ -703,6 +712,50 @@ const abilities = [
      keeps its geometry because it is angular rather than columnar, but its
      radius and node size shrink together so the ring never collides with the
      core. */
+  /* ═══ THE CONSTELLATION TURNS ═══════════════════════════════════
+     ⚠⚠ THE SET ROTATES AND EACH PLATE COUNTER-ROTATES BY THE SAME AMOUNT, which
+     is the only way the nodes can travel a circle while their labels stay
+     upright. Both use the same duration and linear timing, or the two stop
+     cancelling and the words wobble.
+
+     ⚠ THE rotate PROPERTY, NOT transform. .node__in already carries
+     translate: -50% -50% to centre itself on its point; animating transform
+     would overwrite that and every plate would jump down-right by half its own
+     size. The independent transform properties compose instead of colliding.
+
+     ⚠ EVERY WIDTH, now that the ring survives on phones too. It was scoped to
+     >=701px when the mobile layout was a flat grid, where rotating would have
+     sent the tiles round the page.
+
+     ⚠ SLOW. 90s for a full turn is about 4° a second: the eye reads it as alive
+     rather than as something spinning. The dashed ring runs the other way at 60s
+     so the two motions are distinguishable. */
+  @media (min-width: 0px) {
+    .tp-const__set { animation: tp-orbit 90s linear infinite; }
+    .node__in { animation: tp-orbit-counter 90s linear infinite; }
+    .tp-const__dash {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: tp-orbit-counter 60s linear infinite;
+    }
+
+    /* Pointing at it stops the drift, so a reader can look at one node without
+       it walking away from the cursor. */
+    .tp-const:hover .tp-const__set,
+    .tp-const:hover .node__in,
+    .tp-const:focus-within .tp-const__set,
+    .tp-const:focus-within .node__in { animation-play-state: paused; }
+  }
+
+  @keyframes tp-orbit {
+    from { rotate: 0deg; }
+    to { rotate: 360deg; }
+  }
+  @keyframes tp-orbit-counter {
+    from { rotate: 0deg; }
+    to { rotate: -360deg; }
+  }
+
   @media (min-width: 900px) {
     .tp-one__in { grid-template-columns: minmax(0,1.02fr) minmax(0,.98fr); }
     .tp-two__in { grid-template-columns: minmax(0,.95fr) minmax(0,1.05fr); }
@@ -720,42 +773,42 @@ const abilities = [
   }
 
   @media (max-width: 700px) {
-    /* THE RING IS ABANDONED ON PHONES, NOT THINNED. An earlier build hid the
-       seventh node here because seven tiles overlap on a ring this small — which
-       quietly deleted an intelligence from the one section whose entire argument
-       is that there is more than one. The ring is the expendable part, so below
-       700px the stage unwinds: portrait on top, all seven abilities in a chip
-       grid under it. Same content, a shape a thumb can read. */
-    .tp-const { aspect-ratio: auto; }
-    .tp-const__rings { display: none; }
+    /* ⚠⚠ THE RING IS KEPT ON PHONES NOW. It used to unwind here into a chip
+       grid — same content, different shape — and the section then looked like a
+       different design on a phone than on a laptop. It turns out the ring did
+       not need abandoning: --x/--y are PERCENTAGES of the stage, so the geometry
+       already scales on its own. The only thing that did not scale was the plate,
+       which is sized in px.
 
-    /* relative, NOT static — the <picture> inside is pinned with inset: 0, so the
-       frame has to stay its containing block or the photo escapes to .tp-const.
-       top/left are reset because the desktop rule centres with 50%/50%, which
-       under `relative` would offset rather than centre. */
-    .tp-const__core {
-      position: relative;
-      top: auto;
-      left: auto;
-      width: min(196px, 52vw);
-      margin: 0 auto clamp(18px, 4vw, 26px);
-      translate: none;
+       ⚠ THE PLATES OVERHANG THE CONTAINER GUTTER, AND THAT IS FINE. What must
+       not be exceeded is the VIEWPORT, not the 24px container padding — the
+       section ground is full-bleed, so a plate reaching into the gutter still
+       sits on the same dark field. At 390px the outermost edge lands at 175px
+       from centre against a 195px half-viewport; at 320px, 147px against 160px.
+
+       ⚠ CHECKED FOR THE TWO WAYS A SMALL RING BREAKS: adjacent plates colliding
+       (centres are 123px apart at 390px, plates are 74px — 49px of air) and
+       plates swallowing the centre portrait (inner edge 100px out, core radius
+       55px). An earlier build hid the seventh node to buy room, which quietly
+       deleted an intelligence from the one section arguing there is more than
+       one. Nothing is hidden here. */
+    .node__in {
+      width: clamp(68px, 19vw, 108px);
+      padding: 8px 5px;
+      gap: 4px;
     }
-
-    .tp-const__set {
-      position: static;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
-      gap: 10px;
-    }
-
-    .node { position: static; width: auto; height: auto; }
-    .node__in { width: 100%; translate: none; }
+    .node__in img { width: 26px; height: 26px; }
+    /* 10.5px, not the desktop 11.5 — “Invention” is the longest label and has to
+       clear the narrower plate on one line. Letter-spacing goes too; at this size
+       it buys nothing and costs 3px. */
+    .node__k { font-size: 10.5px; letter-spacing: 0; }
 
     .tp__f--rocket, .tp__f--shape { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .tp__f, .tp__orb { animation: none; }
+    /* The constellation is still readable standing still — it just stops. */
+    .tp-const__set, .node__in, .tp-const__dash { animation: none; }
   }
 </style>
