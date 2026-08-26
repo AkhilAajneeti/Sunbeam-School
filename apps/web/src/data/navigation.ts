@@ -554,9 +554,12 @@ export const mainNav: NavItem[] = [
         "Alumni gathering or returning student on campus, 3:2 — candid",
     },
   },
-  /* ⚠ A PLAIN LINK, NO MEGA PANEL. The catalogue is one page and the two PDFs
-     live ON it, not under it — a dropdown here would hold a single entry. */
-  { label: "Uniform Catalogue", href: "/admissions/uniform-catalogue/" },
+  /* ⚠⚠ UNIFORM CATALOGUE CAME OUT OF THE MAIN BAR AGAIN, and the reason is
+     measurement, not taste. It was added here only while the Apply Online pill
+     was absent; with Admissions back in that slot the row needs the width, and
+     ten labels plus a pill wrapped “Alumni” onto a second line at 1280-1920.
+     It is not orphaned — footerUtility below still carries it, and so does the
+     mobile drawer’s Quick Links. */
 ];
 
 /**

@@ -116,6 +116,15 @@ import FacIcon from '../campus/facilities/FacIcon.astro';
     </div>
 
     <div class="drawer__foot">
+      {/* Mirrors the masthead button — see the note there. The pulse is not
+          repeated on a phone: the drawer is a short list a thumb is already
+          reading top to bottom, and a moving target in it is a mis-tap. */}
+      <a
+        class="btn btn--primary drawer__apply"
+        href={school.external.applyFormNurseryToIX}
+        target="_blank"
+        rel="noopener noreferrer"
+      >Admissions</a>
       <a class="drawer__phone" href={`tel:${school.phone.admissions}`}>
         Admissions Helpline
         <strong class="t-tabular">{school.phone.admissionsDisplay}</strong>
@@ -357,6 +366,8 @@ import FacIcon from '../campus/facilities/FacIcon.astro';
   .drawer__utility a:hover { color: var(--sb-violet); }
 
   /* --- Footer: Apply pinned ---------------------------------------------- */
+
+  .drawer__apply { width: 100%; }
 
   .drawer__foot {
     margin-top: auto;

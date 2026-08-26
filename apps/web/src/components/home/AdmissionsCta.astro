@@ -49,28 +49,12 @@ import brush from '../../assets/icons/paintbrush.png';
         </p>
 
         <div class="adm__actions">
-          {/* ⚠⚠ TWO BUTTONS, AND THE SESSION-CODED URLs. This was ONE “Apply
-              online” pointing at sunbeamballia.edu.in/apply-online/ — the legacy
-              site — while the utility bar and the hero both linked the school’s
-              two actual forms. The same action sent a parent to two different
-              websites depending on which link they clicked. It now matches the
-              hero exactly: applyForm*, the URLs the school itself publishes,
-              under the school’s own labels.
-              ⚠ NEW TAB WITH rel="noopener noreferrer": both forms are on another
-              host, and a parent part-way through one should not lose the school
-              site behind them. */}
-          <a
-            class="btn btn--primary adm__apply"
-            href={school.external.applyFormNurseryToIX}
-            target="_blank"
-            rel="noopener noreferrer"
-          >Apply Online Class Nursery to IX</a>
-          <a
-            class="btn adm__apply adm__apply--ghost"
-            href={school.external.applyFormClassXI}
-            target="_blank"
-            rel="noopener noreferrer"
-          >Apply Online Class XI</a>
+          {/* ⚠⚠ THE APPLY BUTTONS ARE GONE FROM THIS BAND TOO — same reason as
+              the hero: the client wants Admissions in the header and nowhere on
+              the main page. What is left is what this band is actually for —
+              the board, the classes, the streams, the campus, and a number to
+              ring. The helpline stays because a phone call is not an
+              application form. */}
           <a class="btn adm__call t-tabular" href={`tel:${school.phone.admissions}`}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

@@ -1,0 +1,19 @@
+{
+  "name": "sunbeam-school",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Sunbeam School Ballia — monorepo. apps/web is the Astro site, apps/cms is Strapi. One lockfile lives here; the workspaces have none.",
+  "workspaces": [
+    "apps/web",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "preview": "npm run preview --workspace=apps/web",
+    "check": "npm run check --workspace=apps/web"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}

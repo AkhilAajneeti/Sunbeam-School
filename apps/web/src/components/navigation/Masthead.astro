@@ -20,6 +20,7 @@
  * the gap clamp does not). Below 1280 the drawer takes over.
  */
 import { mainNav } from '../../data/navigation';
+import { school } from '../../data/site';
 import MegaMenu from './MegaMenu.astro';
 ---
 
@@ -82,10 +83,26 @@ import MegaMenu from './MegaMenu.astro';
     </nav>
 
     <div class="masthead__actions">
-      {/* ⚠ NO CTA PILL HERE ANY MORE. Uniform Catalogue is an ordinary nav
-          item now, and the two Apply Online links live in the utility bar
-          above, where the school own site puts them. This slot carries the
-          mobile toggle and nothing else. */}
+      {/* ⚠⚠ ADMISSIONS IS BACK IN THIS SLOT, AT THE CLIENT'S REQUEST. It briefly
+          held Uniform Catalogue, which is now an ordinary nav item instead.
+
+          ⚠ IT POINTS AT THE NURSERY–IX FORM, THE MAIN INTAKE, because one button
+          cannot open two forms. Class XI is not lost: both forms stay in the
+          utility bar directly above, which is where the school's own site puts
+          them, and the mobile drawer lists both under Quick Links.
+
+          ⚠ "BLINK" IS A PULSE, AND THAT IS DELIBERATE. A true blink fails WCAG
+          2.2.2 — anything that flashes must be stoppable, and above three
+          flashes a second it is a seizure risk. This breathes once every 2.4s,
+          never fully disappears (so the label is always readable), and stops
+          dead under prefers-reduced-motion. It only runs while admissionsOpen
+          is true. */}
+      <a
+        class:list={['btn', 'btn--primary', 'masthead__apply', school.admissionsOpen && 'is-live']}
+        href={school.external.applyFormNurseryToIX}
+        target="_blank"
+        rel="noopener noreferrer"
+      >Admissions</a>
       <button
         class="masthead__toggle"
         type="button"
@@ -286,6 +303,30 @@ import MegaMenu from './MegaMenu.astro';
   }
 
   /* --- Actions ----------------------------------------------------------- */
+
+  /* Sized against the nav row rather than the button default — see the note on
+     the row measurement below. */
+  .masthead__apply { padding-inline: 22px; white-space: nowrap; }
+
+  /* ⚠ TWO PROPERTIES, NOT opacity. Fading a button in and out makes its label
+     unreadable at the trough; a shadow bloom and a hair of scale read as "live"
+     while the text never changes contrast. */
+  .masthead__apply.is-live {
+    animation: masthead-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes masthead-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--sb-orange-bright) 46%, transparent);
+      scale: 1;
+    }
+    50% {
+      box-shadow: 0 0 0 7px color-mix(in srgb, var(--sb-orange-bright) 0%, transparent);
+      scale: 1.035;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .masthead__apply.is-live { animation: none; }
+  }
 
   .masthead__actions {
     display: flex;

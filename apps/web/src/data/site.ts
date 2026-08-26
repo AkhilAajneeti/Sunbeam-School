@@ -32,10 +32,26 @@ export const school = {
   /** Tagline in use on the Ballia site. Confirm primacy — asset A3. */
   tagline: 'Educating the FUTURE!',
 
+  /**
+   * ⚠ THE SWITCH BEHIND THE HEADER'S ADMISSIONS BUTTON.
+   *
+   * The client asked that Admissions live in the header and draw attention
+   * "once admission opens". That is a state, not a permanent style, so it is a
+   * flag rather than a hard-coded animation: true makes the header button pulse,
+   * false leaves it as an ordinary button that still works. Flip this one value
+   * when the intake closes — nothing else needs touching.
+   */
+  admissionsOpen: true,
+
   established: 2013,
   groupFounded: 1972,
   groupFoundedAt: 'Varanasi',
-  founders: "Dr. Amrit Lal 'Ishrat' Madhok and his wife",
+  /* ⚠ THE FOUNDER MOTHER IS NAMED NOW. This read “and his wife”, which the
+     school’s own notice board contradicts: its remembrance poster names her
+     Mrs. Deesh Ishrat Madhok, Founder Mother of Sunbeam (data/notices.ts).
+     The client supplied the same name. A co-founder who is only “his wife” on
+     a school’s own history page is a small erasure worth undoing. */
+  founders: "Dr. Amrit Lal 'Ishrat' Madhok and Mrs. Deesh 'Ishrat' Madhok",
 
   openingStrength: 456,
   currentStrength: '2,700+',

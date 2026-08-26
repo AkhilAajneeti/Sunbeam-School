@@ -17,32 +17,47 @@ import { school } from '../../data/site';
 import Photo from '../ui/Photo.astro';
 import campusWide from '../../assets/photos/sunbeem-1.jpg';
 import community from '../../assets/photos/sunbeem-2.jpg';
-import students from '../../assets/school achivement/robo.jpg';
+import practical from '../../assets/photos/sunbeem-students.jpg';
 
 /**
- * docs/07 § A2 Priority 1 — 3 images, 21:9 or 16:9, min 2400px.
- * Slide 2 is still owed: none of the supplied photographs show a classroom,
- * and the audit asks specifically for "students engaged in learning" (1.1).
+ * ⚠⚠ THE STUDENTS PHOTOGRAPH LEADS NOW, and the poster is gone entirely.
+ *
+ * The client asked for students in the hero so the page reads as a school at
+ * first glance. Slide one is a Class IX/X chemistry practical — the school's own
+ * lab, its own uniform, its own blackboard dated 20 NOV 2025. It is the only
+ * supplied photograph that shows learning actually happening, which is what
+ * audit 1.1 asked for and what docs/07 § A2 recorded as still owed. That request
+ * is now closed.
+ *
+ * ⚠ AND IT REPLACES THE RoboWunder POSTER, which fixes a real defect rather than
+ * just reordering. That slide was a finished poster with typography baked into
+ * it, and a full-bleed hero crop sliced the wording into fragments — "nbeam",
+ * "OOL BALLIA", "ONAL ROBOTICS CHAMPI" — competing with the headline in the same
+ * frame. Two headlines, neither readable. A poster cannot survive being cropped
+ * to 21:9; a photograph can.
+ *
+ * ⚠ THE ROBOTICS RESULT IS NOT LOST. It is still published on Achievements and
+ * on the STEM & Robotics page, where it is shown at its own aspect ratio and can
+ * actually be read.
  */
 const slides = [
+  {
+    src: practical,
+    alt: 'Students of Sunbeam School Ballia in lab coats at a chemistry practical, verifying the law of conservation of mass.',
+    /* The faces sit across the upper-middle band, so the crop holds there
+       rather than centring on the bench. */
+    position: '50% 38%',
+    tone: 'ink' as const,
+    brief: 'Students engaged in learning — a practical in progress',
+    caption: 'A senior chemistry practical',
+  },
   {
     src: campusWide,
     alt: 'The Sunbeam School Ballia campus at Agarsanda, seen across the school lawn.',
     position: '50% 60%',
-    tone: 'ink' as const,
+    tone: 'charcoal' as const,
     brief: 'Wide campus establishing shot — Agarsanda, subject right of centre',
     caption: 'The campus at Agarsanda',
-  },
-  {
-    src: students,
-    alt: 'The school’s award graphic for the RoboWunder International Robotics Championship in Kuala Lumpur, showing Deepak Kumar with his drone and the team receiving the award.',
-    position: '58% 42%',
-    tone: 'charcoal' as const,
-    // Note: this is a co-curricular moment rather than the classroom shot the
-    // brief called for. Audit 1.1 asks for "learning AND co-curricular
-    // activities", so it qualifies — but a classroom image is still owed.
-    brief: 'Students engaged in classroom learning — a smart classroom in use',
-    caption: 'Second at the RoboWunder international robotics championship',
   },
   {
     src: community,
@@ -91,7 +106,7 @@ const slides = [
       </p>
       <p class="hero__eyebrow t-label">{school.motto}</p>
       <h1 class="hero__title t-display" data-split>
-        Where Ballia's children <br class="hero__br" />learn to <span class="t-squiggle t-squiggle--lime">lead</span>.
+        Where Ballia's <br class="hero__br" />Future Leaders <span class="t-squiggle t-squiggle--lime">Take Shape</span>
       </h1>
       <p class="hero__deck t-body-lg">
         A Sunbeam institution since 2013 — {school.currentStrength} students, Nursery to
@@ -106,19 +121,15 @@ const slides = [
           the school itself links, not the generic /apply-online/ landing page.
           ⚠ NEW TAB WITH rel=noopener: both forms are on another host, and a
           parent part-way through one should not lose the school site behind. */}
+      {/* ⚠⚠ NO APPLY BUTTONS HERE ANY MORE. The client asked that Admissions
+          live in the header and NOT on the main page, so the one place to apply
+          is the header button and the utility bar above it. Repeating it here
+          was the duplication they were pointing at.
+          These two go where the hero used to send people before the apply links
+          briefly took the slot — both real, finished pages. */}
       <div class="hero__actions">
-        <a
-          class="btn btn--on-image-primary"
-          href={school.external.applyFormNurseryToIX}
-          target="_blank"
-          rel="noopener noreferrer"
-        >Apply Online Class Nursery to IX</a>
-        <a
-          class="btn btn--on-image-secondary"
-          href={school.external.applyFormClassXI}
-          target="_blank"
-          rel="noopener noreferrer"
-        >Apply Online Class XI</a>
+        <a class="btn btn--on-image-primary" href="/academics/">Explore Academics</a>
+        <a class="btn btn--on-image-secondary" href="/campus/">Explore the Campus</a>
       </div>
 
       {/* Floating stat card — reference hero pattern. Verified figures only. */}

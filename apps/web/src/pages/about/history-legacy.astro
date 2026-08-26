@@ -69,36 +69,57 @@ const facts = [
   { label: "Campus", value: `${school.address.line1}, ${school.address.city}` },
 ];
 
-/** Legacy — audit 1.8. Every figure verified in docs/01 § 5. */
+/**
+ * THE TIMELINE, REWRITTEN TO THE CLIENT'S SUPPLIED WORDING.
+ *
+ * ⚠ THE FOURTH ENTRY IS NO LONGER THE EducationWorld RUN. That ranking moved up
+ * to the Legacy heading below, where the client asked for it, and printing it in
+ * both places would say the same thing twice on one screen. The fourth step is
+ * now the closing line the client supplied.
+ *
+ * ⚠ EVERY FIGURE STILL COMES FROM data/site.ts rather than being typed in here,
+ * so 456, 2,700+, 130+ and the four streams cannot drift away from the twenty
+ * other places on this site that print them.
+ */
 const milestones = [
   {
     year: "1972",
-    place: "Varanasi",
-    text: `The Sunbeam group is founded by ${school.founders}, on a conviction that the schools around them were not meeting the whole of a child's needs.`,
+    place: "The Beginning",
+    text: `Founded by ${school.founders}, with the vision of nurturing the complete development of every child.`,
   },
   {
     year: "2013",
     place: "Agarsanda, Ballia",
-    text: `The Ballia campus opens with ${school.openingStrength} students, carrying that same conviction into a new district.`,
+    text: `Sunbeam School, Agarsanda, Ballia begins its journey with ${school.openingStrength} students, carrying forward the Sunbeam philosophy of holistic education, values and excellence.`,
   },
   {
     year: "Today",
     place: "Nursery to Class XII",
-    text: `${school.currentStrength} students and ${school.teachingStaff} teaching staff, across ${school.streams.join(", ")} at senior secondary.`,
+    text: `${school.currentStrength} students, ${school.teachingStaff} educators, Nursery to Class XII, with four senior-secondary pathways — ${school.streams.join(", ")}.`,
   },
   {
-    year: "Six years",
-    place: "Running",
-    text: "Ranked the #1 co-educational day school in Ballia by Education World, 2019-20 through 2024-25.",
+    year: "Onward",
+    place: "Growing with purpose",
+    text: `Growing with purpose. ${school.tagline}`,
   },
 ];
 
 const voices = [
   {
     name: "Mr. Sanjai Kumar Pandey",
-    role: "Chairman",
+    /* ⚠⚠ NOT "Chairman" ANY MORE, AND NOT REPLACED WITH A GUESS.
+       The client says he does not hold that office and thinks he may be
+       connected to the Trust instead. I checked what can be checked: the
+       school's own live site names NO Chairman at all, and does not name him on
+       its home page or its General Information page. There is therefore no
+       published source for any designation — so printing "Trustee" would swap
+       one unverified title for another.
+       "Message from the Management" attributes the words without asserting an
+       office he may not hold. The school needs to confirm his actual role
+       before a title goes back. */
+    role: "Message from the Management",
     portrait: chairman,
-    alt: "Mr. Sanjai Kumar Pandey, Chairman of Sunbeam School Ballia.",
+    alt: "Mr. Sanjai Kumar Pandey of Sunbeam School Ballia.",
     paragraphs: [
       "Sunbeam School Ballia has effectively played a pivotal role in spreading the Sunbeam Education revolution in the district for last 7 years. I congratulate the entire team of Management, staff members, students and last but not the least the parents of the school for this success of Sunbeam Ballia.",
       "Education is a continuous life long process which begins at the early stage of life from a school till one enters the last stage of life. The aim & objective of a school is to instill in the students the qualities of a genuine human and concerns of society. Sunbeam School Ballia fulfills these commitments to realize the welfare of not only an individual but society & country at a large. To realize this we offer many co-curricular activities which help to unfold the hidden talents of our students.",
@@ -192,7 +213,7 @@ const onward = [
             <span class="pill pill--violet">Our Story</span>
           </p>
           <h2 class="hist-film__heading" id="film-heading" data-split>
-            The journey of <span class="t-squiggle">Sunbeam</span>
+            A Legacy of Learning.<br />A Future of <span class="t-squiggle">Possibilities.</span>
           </h2>
           <div class="hist-film__prose">
             {history.map((p) => <p>{p}</p>)}
@@ -208,8 +229,15 @@ const onward = [
       <div class="u-container">
         <div class="hist-line__head" data-reveal>
           <h2 class="hist-line__heading t-h2-sans" id="line-heading" data-split>
-            Fifty years, and thirteen in <span class="t-squiggle">Ballia</span>
+            An Unchallenged Legacy of <span class="t-squiggle">Excellence</span>
           </h2>
+          {/* ⚠ THE RANKING MOVED HERE FROM THE TIMELINE'S FOURTH STEP, which is
+              where the client asked for it. The years are the school's own and
+              unchanged: six consecutive, 2019-20 through 2024-25. */}
+          <p class="hist-line__stand">
+            Ranked <strong>#1 Co-educational Day School in Ballia</strong> by EducationWorld for
+            six consecutive years, from 2019-20 to 2024-25.
+          </p>
         </div>
 
         {/* Extracted to a shared component so Assessment & Support can use
@@ -469,6 +497,17 @@ const onward = [
   .hist-line__heading {
     color: var(--sb-charcoal);
   }
+
+  /* The ranking sits under the heading as a standfirst, not as a fourth step on
+     the road — it is a credential, not a moment in the timeline. */
+  .hist-line__stand {
+    max-width: 56ch;
+    margin: clamp(11px, 1.4vw, 16px) auto 0;
+    font-size: clamp(14px, 0.4vw + 9px, 16.5px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+  .hist-line__stand strong { font-weight: 700; color: var(--sb-charcoal); }
 
   /* The road itself lives in components/academics/JourneyRoad.astro — the
      zigzag, the badges, the dotted arcs, the title roll and the stacked
