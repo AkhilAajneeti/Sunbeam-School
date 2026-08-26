@@ -51,7 +51,10 @@ export const school = {
      Mrs. Deesh Ishrat Madhok, Founder Mother of Sunbeam (data/notices.ts).
      The client supplied the same name. A co-founder who is only “his wife” on
      a school’s own history page is a small erasure worth undoing. */
-  founders: "Dr. Amrit Lal 'Ishrat' Madhok and Mrs. Deesh 'Ishrat' Madhok",
+  /* ⚠ TYPOGRAPHIC QUOTES, NOT APOSTROPHES. The nickname was set with straight
+     '...' — a prime mark, not a quotation mark — while every other quoted
+     phrase on the site curls. The client writes it ‘Ishrat’ too. */
+  founders: "Dr. Amrit Lal ‘Ishrat’ Madhok and Mrs. Deesh ‘Ishrat’ Madhok",
 
   openingStrength: 456,
   currentStrength: '2,700+',
