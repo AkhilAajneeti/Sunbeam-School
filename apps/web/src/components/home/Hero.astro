@@ -15,9 +15,20 @@
  */
 import { school } from '../../data/site';
 import Photo from '../ui/Photo.astro';
-import campusWide from '../../assets/photos/sunbeem-1.jpg';
-import community from '../../assets/photos/sunbeem-2.jpg';
 import practical from '../../assets/photos/sunbeem-students.jpg';
+/* ⚠ THE CLIENT'S OWN BANNER SET, src/assets/banners/ — ALL NINE OF THEM.
+   The folder holds ten files, but banner10.jpg is byte-identical to
+   banner2.jpg (same MD5, same 346,606 bytes), so there are nine distinct
+   photographs and the tenth can never add a frame. */
+import bParade from '../../assets/banners/banner1.jpg';
+import bCouncil from '../../assets/banners/banner2.jpg';
+import bStudio from '../../assets/banners/banner3.jpg';
+import bSchool from '../../assets/banners/banner4.jpg';
+import bRelease from '../../assets/banners/banner5.jpg';
+import bMementoes from '../../assets/banners/banner6.jpg';
+import bHouses from '../../assets/banners/banner7.jpg';
+import bContingent from '../../assets/banners/banner8.jpg';
+import bCaps from '../../assets/banners/banner9.jpg';
 
 /**
  * ⚠⚠ THE STUDENTS PHOTOGRAPH LEADS NOW, and the poster is gone entirely.
@@ -40,6 +51,26 @@ import practical from '../../assets/photos/sunbeem-students.jpg';
  * on the STEM & Robotics page, where it is shown at its own aspect ratio and can
  * actually be read.
  */
+/**
+ * ⚠ EVERY CAPTION AND alt HERE WAS WRITTEN FROM THE PHOTOGRAPH, NOT FROM ITS
+ * FILENAME. banner1.jpg says nothing about what banner1 shows; each of these
+ * was opened and described from what is actually in frame. Where a frame's
+ * occasion is not legible in it — banner3, the podcast studio — the line says
+ * what can be seen and stops. No event name, date or result is inferred.
+ *
+ * ⚠ ALL NINE DISTINCT BANNERS ARE IN THE ROTA. The tenth file is a duplicate
+ * (see the import note), so ten slides is the most this set can produce.
+ *
+ * ⚠ THE ORDER IS NOT THE FILE ORDER. Frames full of children lead, and the
+ * three that are mostly adults — the studio, the mementoes, the release — sit
+ * at the back, because a visitor rarely reaches slide eight and the first
+ * three have to say "school" on their own.
+ *
+ * ⚠ THE PRACTICAL STAYS AT SLIDE ONE. The client asked for students in the hero
+ * so the page reads as a school at first glance, and it is the only frame on
+ * hand that shows learning happening rather than an occasion being marked. The
+ * banners are all occasions.
+ */
 const slides = [
   {
     src: practical,
@@ -52,20 +83,84 @@ const slides = [
     caption: 'A senior chemistry practical',
   },
   {
-    src: campusWide,
-    alt: 'The Sunbeam School Ballia campus at Agarsanda, seen across the school lawn.',
-    position: '50% 60%',
-    tone: 'charcoal' as const,
-    brief: 'Wide campus establishing shot — Agarsanda, subject right of centre',
-    caption: 'The campus at Agarsanda',
+    src: bParade,
+    alt: 'Ranks of NCC cadets of Sunbeam School Ballia standing at attention beneath the assembly canopy while officers walk the red carpet between them.',
+    /* The officers and the near rank sit across the middle band; centring the
+       crop lower would hold the matting and lose the faces. */
+    position: '50% 46%',
+    tone: 'ink' as const,
+    brief: 'NCC cadets at attention, officers reviewing along the carpet',
+    caption: 'NCC cadets on parade',
   },
   {
-    src: community,
-    alt: 'Senior students and staff of Sunbeam School Ballia gathered at the school entrance.',
-    position: '50% 40%',
+    src: bSchool,
+    alt: 'The students and staff of Sunbeam School Ballia assembled in rows on the steps beneath the school’s Sunbeam Ballia sign.',
+    position: '50% 44%',
+    tone: 'charcoal' as const,
+    brief: 'The whole school in rows on the steps under the school sign',
+    caption: 'The whole school, assembled',
+  },
+  {
+    src: bCouncil,
+    alt: 'Office-bearers of the Sunbeam School Ballia student council standing with a hand on their hearts to take the oath, their sashes reading Head Boy, Head Girl and Captain, while a member of staff speaks at the lectern.',
+    position: '50% 50%',
     tone: 'maroon' as const,
-    brief: 'A co-curricular moment — sport, performance or competition',
-    caption: 'Senior school at the main entrance',
+    brief: 'Student council office-bearers taking the oath beside the lectern',
+    caption: 'The student council, invested',
+  },
+  {
+    src: bCaps,
+    alt: 'The youngest classes of Sunbeam School Ballia on stage in graduation caps and striped sashes, each holding a rolled certificate, with their teachers standing behind them.',
+    position: '50% 46%',
+    tone: 'ink' as const,
+    brief: 'The youngest classes on stage in caps, certificates in hand',
+    caption: 'The youngest classes, capped',
+  },
+  {
+    src: bHouses,
+    alt: 'Students of Sunbeam School Ballia on stage holding framed certificates and the house flags, their sashes reading Head and Vice, with staff standing behind them.',
+    position: '50% 48%',
+    tone: 'maroon' as const,
+    brief: 'House office-bearers with their certificates and house flags',
+    caption: 'The houses and their flags',
+  },
+  {
+    src: bContingent,
+    alt: 'The NCC contingent of Sunbeam School Ballia drawn up in ranks on stage in khaki with red plumes, an officer standing at each end of the line.',
+    position: '50% 50%',
+    tone: 'charcoal' as const,
+    brief: 'The NCC contingent in ranks on stage, an officer at each end',
+    caption: 'The NCC contingent',
+  },
+  {
+    src: bStudio,
+    /* ⚠ WHAT IS IN FRAME, NOT WHAT THE OCCASION MIGHT BE. The wall reads
+       "speak · PODCAST STUDIO" and the two sashes read Vice Head and Asst
+       Discipline; why they are there is not legible, so the line stops at
+       what can be seen. */
+    alt: 'Two office-bearers of Sunbeam School Ballia, their sashes reading Vice Head and Asst Discipline, standing with two adults on the lit set of a podcast studio, softboxes and a camera either side.',
+    position: '50% 44%',
+    tone: 'ink' as const,
+    brief: 'Two office-bearers with two adults on a podcast studio set',
+    caption: 'Office-bearers at the podcast studio',
+  },
+  {
+    src: bMementoes,
+    alt: 'A line of guests and staff on stage at Sunbeam School Ballia, each holding a framed memento, with a police officer in uniform at the end of the row.',
+    position: '50% 50%',
+    tone: 'charcoal' as const,
+    brief: 'Guests and staff in a line on stage, each with a framed memento',
+    caption: 'Guests with their mementoes',
+  },
+  {
+    src: bRelease,
+    /* The copies they hold are not readable at this size; the title screen
+       behind them is, so that is what the line names. */
+    alt: 'Guests and staff on stage at Sunbeam School Ballia holding up copies of a publication at its release, the title screen behind them reading Hamar Ballia.',
+    position: '50% 52%',
+    tone: 'maroon' as const,
+    brief: 'A publication held up on stage at its release',
+    caption: 'A publication, released',
   },
 ];
 ---
@@ -106,7 +201,7 @@ const slides = [
       </p>
       <p class="hero__eyebrow t-label">{school.motto}</p>
       <h1 class="hero__title t-display" data-split>
-        Where Ballia's <br class="hero__br" />Future Leaders <span class="t-squiggle t-squiggle--lime">Take Shape</span>
+        Where Ballia’s <br class="hero__br" />Future Leaders <span class="t-squiggle t-squiggle--lime">Take Shape</span>
       </h1>
       <p class="hero__deck t-body-lg">
         A Sunbeam institution since 2013 — {school.currentStrength} students, Nursery to
@@ -155,28 +250,33 @@ const slides = [
         <span class="hero__caption-text">{slides[0].caption ?? slides[0].brief}</span>
       </p>
 
-      <div class="hero__controls">
-        <div class="hero__dots" role="group" aria-label="Choose hero image">
-          {slides.map((_, i) => (
-            <button
-              class="hero__dot"
-              type="button"
-              data-dot
-              aria-label={`Show image ${i + 1} of ${slides.length}`}
-              aria-current={i === 0 ? 'true' : 'false'}
-            ></button>
-          ))}
-        </div>
-        <button class="hero__pause" type="button" data-hero-pause aria-label="Pause image slideshow">
-          <svg class="hero__icon-pause" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
-            <rect x="0" y="0" width="3" height="12" fill="currentColor" />
-            <rect x="7" y="0" width="3" height="12" fill="currentColor" />
-          </svg>
-          <svg class="hero__icon-play" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
-            <path d="M0 0L10 6L0 12Z" fill="currentColor" />
-          </svg>
-        </button>
-      </div>
+      {/* ⚠ THE DOT ROW IS GONE, THE PAUSE CONTROL IS ONLY HIDDEN — and that
+          distinction is deliberate. The client asked for the strip of dashes
+          and the button to come off the banner, and the dashes are pure
+          decoration: they are gone from the markup entirely.
+
+          The button is not decoration. The hero advances on its own every
+          4.5s, and WCAG 2.2.2 requires any auto-updating content that runs
+          longer than five seconds to offer a way to stop it. Deleting the only
+          such control would be a real accessibility failure, not a tidy-up.
+
+          So it is positioned out of the layout at opacity 0 — still in the tab
+          order, still announced, still operable — and it fades in at its old
+          place the moment it takes keyboard focus. Nothing shows on the banner
+          until someone actually reaches for the control.
+
+          The other two guards were already in the script and still hold:
+          autoplay never starts under prefers-reduced-motion, and never starts
+          below 768px at all. */}
+      <button class="hero__pause" type="button" data-hero-pause aria-label="Pause image slideshow">
+        <svg class="hero__icon-pause" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
+          <rect x="0" y="0" width="3" height="12" fill="currentColor" />
+          <rect x="7" y="0" width="3" height="12" fill="currentColor" />
+        </svg>
+        <svg class="hero__icon-play" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
+          <path d="M0 0L10 6L0 12Z" fill="currentColor" />
+        </svg>
+      </button>
     </div>
   </div>
 </section>
@@ -389,6 +489,7 @@ const slides = [
   /* --- Meta: editorial caption + controls, bottom right ------------------ */
 
   .hero__meta {
+    position: relative; /* anchors the hidden pause control */
     grid-column: 9 / span 4;
     display: flex;
     flex-direction: column;
@@ -418,40 +519,15 @@ const slides = [
     max-width: 34ch;
   }
 
-  .hero__controls {
-    display: flex;
-    align-items: center;
-    gap: var(--sb-5);
-  }
-
-  .hero__dots {
-    display: flex;
-    align-items: center;
-    gap: var(--sb-3);
-  }
-
-  /* 24px gold rules, per docs/06 §03. Hit area padded to 44px. */
-  .hero__dot {
-    position: relative;
-    width: 24px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-  }
-
-  .hero__dot::before {
-    content: '';
-    width: 24px;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.38);
-    transition: background-color var(--sb-dur-link) ease;
-  }
-
-  .hero__dot[aria-current='true']::before { background: var(--sb-gold); }
-  .hero__dot:hover::before { background: rgba(255, 255, 255, 0.75); }
-  .hero__dot[aria-current='true']:hover::before { background: var(--sb-gold); }
-
+  /* ⚠ ABSOLUTE AND opacity: 0, NOT display: none OR visibility: hidden.
+     Either of those would drop it out of the tab order, which is the one thing
+     that must not happen — it is the page's only way to stop the slideshow.
+     Absolute keeps it out of the flow, so .hero__meta lays out exactly as if
+     the control were not there. */
   .hero__pause {
+    position: absolute;
+    right: 0;
+    bottom: calc(-1 * var(--sb-8, 44px) - 12px);
     width: 44px;
     height: 44px;
     display: grid;
@@ -459,7 +535,16 @@ const slides = [
     color: rgba(255, 255, 255, 0.72);
     border: 1px solid rgba(255, 255, 255, 0.28);
     border-radius: var(--sb-r-1);
-    transition: color var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease,
+      border-color var(--sb-dur-btn) ease;
+  }
+
+  /* It appears the instant somebody reaches for it, and not before. */
+  .hero__pause:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .hero__pause:hover { color: #fff; border-color: rgba(255, 255, 255, 0.6); }
@@ -531,10 +616,10 @@ const slides = [
     }
 
     .hero__caption { display: none; }
-    .hero__controls { gap: var(--sb-4); }
 
     /* Auto-advance never runs at this width, so a pause control would be a
-       button that does nothing. Swipe and the dots remain. */
+       button that does nothing — and dropping it from the tab order here is
+       safe for exactly that reason. Swiping still moves the slider. */
     .hero__pause { display: none; }
   }
 </style>

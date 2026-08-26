@@ -1,0 +1,481 @@
+---
+/**
+ * LEGACY TIMELINE — the heritage section, rebuilt to the client's reference.
+ *
+ * ⚠⚠ THIS REPLACES JourneyRoad ON THIS PAGE ONLY. JourneyRoad is still used by
+ * Assessment & Support and is untouched — the brief said redesign this section,
+ * not every road on the site, so this is a new component beside it rather than a
+ * rewrite of the shared one.
+ *
+ * ═══ WHAT THE REFERENCE ASKED FOR, AND WHAT IT GOT ════════════════════════
+ * Alternating cards on a centred grid, floating orange number badges that
+ * overlap the card edge, curved dotted SVG connectors behind the cards, and a
+ * heritage background at 3-10% opacity. All present. The connectors are drawn,
+ * not decorative divs, so they curve and can be stroke-animated.
+ *
+ * ⚠ THE HEADING IS THE CLIENT'S NEWER TEXT, NOT THE REFERENCE IMAGE'S.
+ * The reference still shows "Fifty years, and thirteen in Ballia" — which is
+ * also wrong on its face, since 1972 to 2026 is fifty-FOUR years. The client
+ * separately sent "An Unchallenged Legacy of Excellence" as the heading for this
+ * section, so the image is treated as the visual direction and the message as
+ * the copy. That is the only place the two disagree.
+ *
+ * ⚠ THE RANKING IS CARD 04, NOT A STANDFIRST. It briefly lived under the
+ * heading; the reference puts it back in the timeline as the fourth milestone,
+ * and printing it in both places would say it twice on one screen.
+ *
+ * ⚠ THE ARTWORK IS THE CLIENT'S, one sepia pencil drawing per milestone, and it
+ * is used as supplied. No CSS sepia filter runs over it — the drawings ARE
+ * sepia, and filtering an already-warm image a second time turns it muddy. That
+ * filter existed only to make ordinary photographs look like heritage; with real
+ * heritage artwork it does the opposite of its job.
+ */
+import { Image } from 'astro:assets';
+import { school } from '../../data/site';
+
+/* ⚠⚠ THE CLIENT'S OWN SEPIA PENCIL SET, one drawn per milestone. This replaces
+   the stand-ins entirely: 1972 had line-art books because no photograph of the
+   Varanasi founding exists in this project, and 2013/Today used photographs run
+   through a CSS sepia filter to approximate a heritage look. These are the real
+   thing, and they solve the 1972 gap outright — there is now a Varanasi ghats
+   drawing rather than a generic graduation cap. */
+import iVaranasi from '../../assets/icons/varanasi.png';
+import iSchool from '../../assets/icons/shoolsketch.png';
+import iStudents from '../../assets/icons/studentlearning.png';
+import iTrophy from '../../assets/icons/troffe.png';
+
+type Milestone = {
+  n: string;
+  title: string;
+  kicker: string;
+  body: string;
+  art: ImageMetadata;
+  alt: string;
+  /** Illustrations sit inside their panel; photographs fill it. */
+  fit: 'cover' | 'contain';
+};
+
+/**
+ * ⚠ THE CLIENT'S SUPPLIED WORDING, TRANSCRIBED. The only edits are typographic:
+ * the unspaced em dash in "child—academically" is spaced, and the figures read
+ * from data/site.ts so 456 / 2,700+ / 130+ / the four streams cannot drift from
+ * the twenty other pages that print them.
+ */
+const milestones: Milestone[] = [
+  {
+    n: '01',
+    title: '1972',
+    kicker: 'The Beginning',
+    body: `Founded by ${school.founders}, Sunbeam was born from a shared vision to create an institution that nurtures the complete development of every child — academically, intellectually, emotionally and socially.`,
+    art: iVaranasi,
+    alt: 'A pencil drawing of the Varanasi ghats, where the Sunbeam group was founded.',
+    fit: 'cover',
+  },
+  {
+    n: '02',
+    title: '2013',
+    kicker: 'Agarsanda, Ballia',
+    body: `Sunbeam School, Agarsanda, Ballia begins its journey with ${school.openingStrength} students, carrying forward the Sunbeam philosophy of holistic education, values and excellence into a new district.`,
+    art: iSchool,
+    alt: `A pencil drawing of the ${school.name} campus at Agarsanda.`,
+    fit: 'cover',
+  },
+  {
+    n: '03',
+    title: 'Today',
+    kicker: 'Nursery to Class XII',
+    body: `${school.currentStrength} students. ${school.teachingStaff} educators. Nursery to Class XII. Four senior-secondary pathways — ${school.streams.join(', ')}. Growing with purpose. ${school.tagline}`,
+    art: iStudents,
+    alt: 'A pencil drawing of two students in uniform reading together.',
+    fit: 'cover',
+  },
+  {
+    n: '04',
+    title: 'Six years',
+    kicker: 'Running',
+    body: 'Ranked #1 Co-educational Day School in Ballia by EducationWorld for six consecutive years, from 2019–20 to 2024–25.',
+    art: iTrophy,
+    alt: 'A pencil drawing of a trophy with a laurel sprig.',
+    fit: 'cover',
+  },
+];
+---
+
+<section class="lt" aria-labelledby="lt-h">
+  {/* ═══ DECORATIVE GROUND — every layer aria-hidden and under 10% ═════════ */}
+  <span class="lt__wash" aria-hidden="true"></span>
+  <span class="lt__waves" aria-hidden="true"></span>
+  <span class="lt__mark" aria-hidden="true">SUNBEAM<br />BALLIA</span>
+
+  <div class="u-container lt__in">
+    <header class="lt__head">
+      <p class="lt__eyebrow t-label" data-reveal>Our Legacy</p>
+      <h2 class="lt__h" id="lt-h" data-split>
+        An Unchallenged Legacy of <span class="t-squiggle">Excellence</span>
+      </h2>
+      <p class="lt__stand" data-reveal data-reveal-delay="120">
+        A journey rooted in vision, values and commitment to holistic education that continues to
+        transform lives.
+      </p>
+      <span class="lt__rule" aria-hidden="true"></span>
+    </header>
+
+    <ol class="lt__list">
+      {milestones.map((m, i) => (
+        <li class:list={['lt-item', i % 2 === 1 && 'lt-item--right']}>
+          {/* ⚠ THE CONNECTOR IS DRAWN BEHIND THE CARD IT LEAVES, not between two
+              of them, so it needs no knowledge of its neighbour's height. The
+              last item has none. */}
+          {i < milestones.length - 1 && (
+            <svg class="lt-item__link" viewBox="0 0 120 90" fill="none" aria-hidden="true" preserveAspectRatio="none">
+              <path
+                {/* ⚠ STEPPED WITH ROUNDED CORNERS, not a smooth S. The reference
+                    runs its dotted line out, down, across and down again —
+                    orthogonal, like a circuit trace. A bezier read as decorative
+                    squiggle where this reads as a route. */}
+                d={i % 2 === 0
+                  ? 'M6 8 H54 Q62 8 62 20 V70 Q62 82 74 82 H114'
+                  : 'M114 8 H66 Q58 8 58 20 V70 Q58 82 46 82 H6'}
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-dasharray="1 9"
+                vector-effect="non-scaling-stroke"
+              />
+              <circle cx={i % 2 === 0 ? 114 : 6} cy="82" r="3.5" fill="currentColor" />
+            </svg>
+          )}
+
+          <article class="lt-card" data-reveal data-reveal-delay={i * 90}>
+            <span class="lt-card__n" aria-hidden="true">{m.n}</span>
+
+            <span class:list={['lt-card__art', `is-${m.fit}`]}>
+              <Image
+                src={m.art}
+                alt={m.alt}
+                widths={[300, 600]}
+                sizes="(max-width: 767px) 92vw, 260px"
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
+
+            <div class="lt-card__body">
+              <h3 class="lt-card__t">{m.title}</h3>
+              <p class="lt-card__k">{m.kicker}</p>
+              <p class="lt-card__p">{m.body}</p>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .lt {
+    position: relative;
+    overflow: clip;
+    /* ⚠ TUNED AGAINST THE STICKY MASTHEAD, not the raw viewport. The header
+       eats ~96px, so “one screen” on a 950px window is really ~854px of visible
+       room — measuring against 950 leaves the last card half-cut. */
+    padding-block: clamp(26px, 2.6vw, 40px) clamp(28px, 3vw, 46px);
+    background: var(--sb-ivory);
+  }
+
+  /* ═══ GROUND ═════════════════════════════════════════════════════════════
+     ⚠ EVERY LAYER HERE IS UNDER 10% AND aria-hidden. The brief was explicit
+     that decoration must never compete with the timeline, so these are washes
+     and line work rather than blobs — and none of them carries meaning a
+     screen reader would miss. */
+  .lt__wash {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(52% 40% at 88% 12%, color-mix(in srgb, var(--sb-orange-bright) 9%, transparent), transparent 70%),
+      radial-gradient(46% 38% at 8% 82%, color-mix(in srgb, var(--sb-orange-bright) 7%, transparent), transparent 72%);
+  }
+  /* Flowing line pattern — repeating-gradient rather than an asset, so it costs
+     nothing and scales to any width. */
+  .lt__waves {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: repeating-linear-gradient(
+      -68deg,
+      transparent 0 46px,
+      color-mix(in srgb, var(--sb-orange-bright) 6%, transparent) 46px 47px
+    );
+    -webkit-mask-image: radial-gradient(72% 60% at 4% 44%, #000 4%, transparent 76%);
+    mask-image: radial-gradient(72% 60% at 4% 44%, #000 4%, transparent 76%);
+  }
+  .lt__mark {
+    position: absolute;
+    left: clamp(-18px, -1vw, -6px);
+    bottom: clamp(10px, 3vw, 46px);
+    z-index: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(46px, 7.4vw, 118px);
+    font-weight: 700;
+    line-height: 0.88;
+    letter-spacing: 0.02em;
+    color: rgba(27, 21, 18, 0.045);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .lt__in { position: relative; z-index: 1; }
+
+  /* ═══ HEAD ═══════════════════════════════════════════════════════════════ */
+  .lt__head { text-align: center; margin-bottom: clamp(18px, 2vw, 28px); }
+  .lt__eyebrow { color: var(--sb-violet); letter-spacing: 0.25em; }
+  .lt__h {
+    margin: clamp(10px, 1.3vw, 16px) 0 0;
+    font-family: var(--sb-font-display);
+    /* Offset middle term, so 1440 reaches the top of the range rather than 1920
+       doing it alone. */
+    font-size: clamp(25px, 1.5vw + 17px, 44px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.024em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+  .lt__stand {
+    max-width: 46rem;
+    margin: clamp(9px, 1.1vw, 13px) auto 0;
+    font-size: clamp(13px, 0.3vw + 9px, 15px);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+    text-wrap: balance;
+  }
+  .lt__rule {
+    display: block;
+    width: 54px;
+    height: 3px;
+    margin: clamp(12px, 1.5vw, 18px) auto 0;
+    border-radius: 999px;
+    background: var(--sb-violet);
+  }
+
+  /* ═══ THE ALTERNATING GRID ═══════════════════════════════════════════════
+     ⚠ A TWO-COLUMN GRID, NOT A CENTRE LINE WITH MARGINS. Each item owns the
+     full width and places its card into one column or the other, which is what
+     lets the connector span the gap between them without either card knowing
+     where its neighbour sits. */
+  .lt__list {
+    position: relative;
+    display: grid;
+    gap: clamp(10px, 1.1vw, 14px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lt-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(30px, 5vw, 96px);
+  }
+  .lt-item > .lt-card { grid-column: 1; }
+  .lt-item--right > .lt-card { grid-column: 2; }
+
+  /* The connector occupies the gap and the vertical run to the next card. */
+  /* ⚠ IN THE GAP BELOW ITS OWN CARD, not across the middle of the row. At top:46%
+     the curve ran behind the card it belongs to and was invisible; the run that
+     matters is the one from this card down to the next. */
+  .lt-item__link {
+    position: absolute;
+    z-index: 0;
+    top: calc(100% - 26px);
+    left: 13%;
+    /* ⚠ AN EXPLICIT WIDTH, NOT left+right WITH width:auto. An <svg> is a REPLACED
+       element: auto resolves to its intrinsic size — the 120px viewBox — rather
+       than stretching between the two offsets, so the curve rendered as a 60px
+       stub in the corner instead of spanning the gap between the cards. */
+    width: 74%;
+    height: calc(clamp(10px, 1.1vw, 14px) + 46px);
+    color: color-mix(in srgb, var(--sb-orange-bright) 62%, transparent);
+    pointer-events: none;
+  }
+
+  /* ═══ CARD ═══════════════════════════════════════════════════════════════ */
+  .lt-card {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    /* ⚠⚠ NO PADDING ON THE CARD, AND THE PANEL IS WIDER. In the reference the
+       illustration is FLUSH to the card edge and runs its full height — it is
+       half the composition, not a thumbnail floated inside a padded box. Padding
+       moved onto the body alone, and the panel went from 116px to ~34% so the
+       proportion matches. */
+    grid-template-columns: clamp(104px, 22%, 210px) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgba(215, 85, 20, 0.2);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.75);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 15px 40px rgba(80, 40, 20, 0.08);
+    transition:
+      transform 260ms var(--sb-ease),
+      box-shadow 260ms var(--sb-ease),
+      border-color 260ms var(--sb-ease);
+  }
+  /* The image panel swaps sides with the card, so the composition mirrors. */
+  .lt-item--right .lt-card { grid-template-columns: minmax(0, 1fr) clamp(104px, 22%, 210px); }
+  .lt-item--right .lt-card__art { order: 2; }
+
+  .lt-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 52px rgba(80, 40, 20, 0.14);
+    border-color: rgba(215, 85, 20, 0.42);
+  }
+
+  /* ⚠⚠ ON THE SEAM, NOT THE CORNER. The reference floats the badge where the
+     illustration meets the copy, centred on the card's height — it reads as the
+     hinge of the composition. It was pinned to the outer top-left corner, which
+     made it look like a sticker on the box rather than part of it. */
+  .lt-card__n {
+    position: absolute;
+    top: 50%;
+    translate: -50% -50%;
+    left: clamp(104px, 22%, 210px);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: clamp(38px, 3.6vw, 50px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    /* The outer cream ring the reference shows, drawn as a spread shadow so it
+       needs no second element. */
+    box-shadow: 0 0 0 5px var(--sb-ivory), 0 8px 18px -8px rgba(80, 40, 20, 0.5);
+    background: var(--sb-violet);
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1vw, 16px);
+    font-weight: 700;
+    color: #fff;
+  }
+  .lt-item--right .lt-card__n { left: auto; right: clamp(104px, 22%, 210px); translate: 50% -50%; }
+
+  .lt-card__art {
+    overflow: hidden;
+    /* The card clips it, so the panel needs no radius of its own — that is what
+       lets it sit flush into the corner instead of floating inside it. */
+    background: color-mix(in srgb, var(--sb-orange-bright) 7%, transparent);
+  }
+  .lt-card__art :global(img) { display: block; width: 100%; height: 100%; }
+  /* ⚠ SEPIA ON THE PHOTOGRAPHS ONLY. The line-art panels are already warm and
+     already flat; running them through the same filter turned them muddy. */
+  /* No filter: the drawings arrive sepia, and toning them again muddies them. */
+  .lt-card__art.is-cover :global(img) {
+    object-fit: cover;
+    transition: transform 420ms var(--sb-ease);
+  }
+  .lt-card:hover .lt-card__art.is-cover :global(img) { transform: scale(1.03); }
+  .lt-card__art.is-contain :global(img) { object-fit: contain; padding: 12px; opacity: 0.9; }
+
+  .lt-card__body {
+    display: grid;
+    align-content: center;
+    gap: 3px;
+    min-width: 0;
+    padding: clamp(13px, 1.4vw, 20px) clamp(15px, 1.6vw, 24px);
+    /* ⚠⚠ THE BADGE SITS ON THE SEAM, SO THE COPY HAS TO CLEAR IT. Centring the
+       badge there put it straight through the first character of every
+       paragraph — “Founded” lost its F and “2,700+” read as “!,700+”. Half a
+       badge plus a gap of air on whichever side the badge is on. */
+    padding-inline-start: clamp(36px, 3.2vw, 48px);
+  }
+  .lt-item--right .lt-card__body {
+    padding-inline-start: clamp(15px, 1.6vw, 24px);
+    padding-inline-end: clamp(36px, 3.2vw, 48px);
+  }
+  .lt-card__t {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(20px, 0.7vw + 13px, 29px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .lt-card__k {
+    margin: 2px 0 0;
+    font-size: clamp(10px, 0.2vw + 8px, 12px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .lt-card__p {
+    margin: clamp(5px, 0.6vw, 8px) 0 0;
+    font-size: clamp(12.5px, 0.2vw + 10px, 14.2px);
+    line-height: 1.55;
+    color: var(--sb-text-secondary);
+  }
+
+  /* ═══ RESPONSIVE ═════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .lt-item { column-gap: clamp(18px, 3vw, 40px); }
+    /* ⚠⚠ NO SEPARATE COLUMN WIDTH HERE ANY MORE. This override set the panel to
+       104px while the badge stayed at the 22% the base rule uses — so at 768 the
+       badge landed 44px inside the copy and sat on the text. The panel width and
+       the badge offset are the same expression now, and there is exactly one
+       place to change it. */
+  }
+
+  /* ⚠⚠ ONE COLUMN AND A REAL RAIL BELOW 768, which is what the brief asked for
+     and what the geometry demands: two 300px cards plus a curved connector do
+     not fit a 390px screen. The zig-zag SVG is removed rather than squashed —
+     a curve drawn for a 96px gap becomes a scribble in 12px — and replaced by a
+     straight rail down the left, with the badges sitting on it. */
+  @media (max-width: 767px) {
+    /* ⚠ ONE VARIABLE DRIVES THE RAIL, ITS PADDING AND THE BADGE OFFSET. They were
+       three independent clamps and at 320px they disagreed by enough to push the
+       document 32px sideways. */
+    .lt__list { --rail: clamp(30px, 9vw, 40px); padding-left: var(--rail); }
+    .lt__list::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      bottom: 8px;
+      left: calc(var(--rail) / 2 - 1px);
+      width: 2px;
+      border-radius: 999px;
+      background-image: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--sb-orange-bright) 55%, transparent) 0 6px,
+        transparent 6px 12px
+      );
+      background-size: 2px 12px;
+    }
+    .lt-item { grid-template-columns: minmax(0, 1fr); }
+    .lt-item > .lt-card,
+    .lt-item--right > .lt-card { grid-column: 1; }
+    .lt-item__link { display: none; }
+
+    .lt-card,
+    .lt-item--right .lt-card { grid-template-columns: minmax(0, 1fr); }
+    .lt-card__art,
+    .lt-item--right .lt-card__art { order: 0; aspect-ratio: 16 / 9; }
+    .lt-card__n,
+    .lt-item--right .lt-card__n {
+      top: clamp(14px, 4vw, 20px);
+      left: calc(-1 * var(--rail) / 2 - clamp(19px, 1.8vw, 25px));
+      right: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lt-card,
+    .lt-card__art.is-cover :global(img) { transition: none; }
+  }
+</style>

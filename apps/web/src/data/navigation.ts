@@ -136,7 +136,7 @@ export const mainNav: NavItem[] = [
     columns: [
       [
         {
-          label: "History and establishment of the school",
+          label: "Our Journey",
           href: "/about/history-legacy/",
           icon: "school",
           desc: "From Varanasi in 1972 to Agarsanda in 2013.",

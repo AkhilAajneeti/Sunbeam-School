@@ -157,6 +157,7 @@ The audit asks the school to review its YouTube and X profiles and, if they are 
 | C8 | **Archive policy for old academic calendars** | Audit 8.3 — the site currently stacks 2024, 2025 and 2026 |
 | C9 | **Hindi content** — required or not | Determines whether IBM Plex Sans Devanagari is loaded and whether a language layer is scoped |
 | C10 | **Which existing photographs may be reused** while professional replacements are produced | Determines how much of launch ships on placeholders |
+| C11 | **LinoText web licence** — whether the school holds one, or wants one bought | The school's own published PDFs embed LinoText (`OKMPMD+LinoText`, `MCUYLD+LinoText`), so a desktop licence plainly exists somewhere. A copy downloaded from fontsgeek.com was reviewed and **rejected**: its metadata carries Adobe's copyright and Linotype's trademark, and a webfont is served for download, so shipping it would redistribute an unlicensed commercial face. **Decided for now: not used.** No loss at launch — "Sunbeam School" already renders in Linotext on every page as artwork (`public/brand/sunbeam-wordmark.png`), which is how the school itself sets the mark: mixed case, as a wordmark. Testing showed the two obvious extensions both fail on their own merits — blackletter capitals ("SUNBEAM BALLIA", the footer treatment) are close to unreadable, and a blackletter word inside a sentence renders far smaller than the text around it and reads as a fault. That would have affected 827 occurrences across 162 pages |
 
 ---
 

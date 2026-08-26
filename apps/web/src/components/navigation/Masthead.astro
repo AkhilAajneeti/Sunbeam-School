@@ -433,6 +433,14 @@ import MegaMenu from './MegaMenu.astro';
     .masthead.is-scrolled .brand__wordmark { height: 34px; }
   }
 
+  /* ⚠⚠ THE PILL HAS TO SHRINK BELOW 480, or the header overflows. Brand lockup +
+     133px pill + burger came to 352px against a 320px viewport and pushed the
+     whole document 32px sideways. The client wants Admissions in the header, so
+     it stays — it just gets compact rather than hidden. */
+  @media (max-width: 479px) {
+    .masthead__apply { padding-inline: 13px; font-size: 11px; }
+  }
+
   @media (max-width: 767px) {
     .brand { gap: 10px; }
     .brand__emblem { height: 38px; }

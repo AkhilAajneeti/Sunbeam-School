@@ -105,6 +105,18 @@ $RECYCLE.BIN/
 ~$*
 
 
+# ─── Licensed fonts we do not have the right to redistribute ─────────────────
+# ⚠ NOT A FREE FONT, WHATEVER THE DOWNLOAD SITE SAID. The file's own metadata
+# reads "Copyright (c) 1989, 1990, 1991 Adobe Systems Incorporated. All Rights
+# Reserved. Linotext is a trademark of Linotype-Hell AG"; the fontsgeek.com
+# readme beside it grants no licence at all. Committing it would put an
+# unlicensed commercial face into the repository's history, where removing it
+# later means rewriting history. The site does not load it — see C11 in
+# docs/07-client-asset-requests.md — and the wordmark it would have set is
+# already artwork at public/brand/sunbeam-wordmark.png.
+apps/web/src/assets/Linotext Regular/
+
+
 # ─── Deliberately NOT ignored ────────────────────────────────────────────────
 # Keep these tracked — they are the project, not build output:
 #

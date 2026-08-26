@@ -41,7 +41,7 @@ export const story = {
   bentoLabel: 'A heritage school, built for what comes next',
   cta: { label: 'Read our story', href: '/about/history-legacy/' },
   links: [
-    { label: 'History and establishment of the school', href: '/about/history-legacy/' },
+    { label: 'Our Journey', href: '/about/history-legacy/' },
     { label: 'Vision and Mission', href: '/about/vision-mission/' },
   ],
   media: {

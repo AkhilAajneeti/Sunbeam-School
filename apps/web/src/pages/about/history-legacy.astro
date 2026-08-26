@@ -23,7 +23,7 @@
  * the leading educational Institution" → "is one of the leading educational
  * institutions", and the stray capitalisation on "Institution".
  */
-import JourneyRoad from '../../components/academics/JourneyRoad.astro';
+import LegacyTimeline from '../../components/about/LegacyTimeline.astro';
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/ui/PageHero.astro";
 import VideoFeature from "../../components/about/VideoFeature.astro";
@@ -37,15 +37,26 @@ import secretary from "../../assets/photos/secretary-sunbeam.jpeg";
 import { Image } from "astro:assets";
 
 /**
- * The school's own History paragraph, broken in two at its natural seam — the
- * first half is founding and growth, the second is what the school offers. Not
- * a word is changed, added or reordered; four sentences set centred as a single
- * block is simply a wall, and the break is a typographic decision, not an
- * editorial one.
+ * THE CLIENT'S COPY, SET AS TWO PARAGRAPHS AT THE CLIENT'S REQUEST.
+ *
+ * ⚠ NOT ONE WORD IS CUT. The client sent six paragraphs and then asked for two,
+ * so the six are joined 1-2-3 and 4-5-6 — founding and what the school offers,
+ * then how it teaches and where it stands today. Every sentence survives in its
+ * original order; only the breaks between them moved.
+ *
+ * ⚠ FULL WIDTH AND JUSTIFIED, ALSO AT THE CLIENT'S REQUEST. Worth knowing: this
+ * puts the measure back to ~110 characters a line, and justified text at that
+ * width opens rivers of white space between words. It was set to 44rem
+ * ragged-right for exactly that reason. The client has asked for the other
+ * treatment and that is their call — this note is here so the next person does
+ * not "fix" it back.
+ *
+ * ⚠ EVERY FIGURE STILL AGREES WITH data/site.ts — 2013, 456, 2,700+, Nursery to
+ * Class XII, CBSE New Delhi, the four streams, Duty/Devotion/Discipline.
  */
 const history = [
-  'Sunbeam School, Agarsanda, Ballia, founded in 2013, is one of the  leading educational institutions in Ballia district. The school began with 456 students and is now having an ample strength of 2,700+ students from Nursery to Class XII. It facilitates the students as a Co-educational Senior Secondary School for PCM, PCB, Commerce & Humanities, affiliated with CBSE, New Delhi, with the punch line — "Educating the FUTURE!" Over the years, the school has earned a reputation for academic excellence, value-based education, and the holistic development of every learner.',
-  'With a strong commitment to nurturing young minds, Sunbeam School provides a vibrant learning environment supported by experienced educators, modern teaching methodologies, and excellent infrastructure. Guided by its motto, "Duty , Devotion , Discipline," the school encourages students to excel not only in academics but also in sports, cultural activities, leadership, and life skills, empowering them to become confident, responsible, and future-ready citizens.',
+  'Established in 2013, Sunbeam School, Agarsanda, Ballia has grown into one of the district’s leading educational institutions, evolving from a humble beginning of 456 students to a thriving community of 2,700+ learners from Nursery to Class XII. A Co-educational Senior Secondary School affiliated with CBSE, New Delhi, the school offers PCM, PCB, Commerce and Humanities, providing students with diverse pathways to discover their interests, pursue their aspirations and prepare for an ever-changing world. At Sunbeam School Ballia, education extends far beyond the classroom. Over the years, the school has built a strong reputation for academic excellence, value-based education and holistic development, creating an environment where every learner is encouraged to question, explore, create and excel.',
+  'With a vibrant campus, experienced educators, progressive teaching methodologies and excellent infrastructure, Sunbeam School strives to provide an enriching learning experience that nurtures knowledge, character, confidence and leadership. Rooted in the guiding values of Duty, Devotion and Discipline, the school encourages students to participate and excel across academics, sports, cultural pursuits, leadership and life skills. Today, with a growing community of 2,700+ students, Sunbeam School, Agarsanda, Ballia continues its journey with a clear purpose — to educate the future, inspire excellence and empower every learner to make a meaningful difference in the world.',
 ];
 
 /**
@@ -69,57 +80,20 @@ const facts = [
   { label: "Campus", value: `${school.address.line1}, ${school.address.city}` },
 ];
 
-/**
- * THE TIMELINE, REWRITTEN TO THE CLIENT'S SUPPLIED WORDING.
- *
- * ⚠ THE FOURTH ENTRY IS NO LONGER THE EducationWorld RUN. That ranking moved up
- * to the Legacy heading below, where the client asked for it, and printing it in
- * both places would say the same thing twice on one screen. The fourth step is
- * now the closing line the client supplied.
- *
- * ⚠ EVERY FIGURE STILL COMES FROM data/site.ts rather than being typed in here,
- * so 456, 2,700+, 130+ and the four streams cannot drift away from the twenty
- * other places on this site that print them.
- */
-const milestones = [
-  {
-    year: "1972",
-    place: "The Beginning",
-    text: `Founded by ${school.founders}, with the vision of nurturing the complete development of every child.`,
-  },
-  {
-    year: "2013",
-    place: "Agarsanda, Ballia",
-    text: `Sunbeam School, Agarsanda, Ballia begins its journey with ${school.openingStrength} students, carrying forward the Sunbeam philosophy of holistic education, values and excellence.`,
-  },
-  {
-    year: "Today",
-    place: "Nursery to Class XII",
-    text: `${school.currentStrength} students, ${school.teachingStaff} educators, Nursery to Class XII, with four senior-secondary pathways — ${school.streams.join(", ")}.`,
-  },
-  {
-    year: "Onward",
-    place: "Growing with purpose",
-    text: `Growing with purpose. ${school.tagline}`,
-  },
-];
 
 const voices = [
   {
     name: "Mr. Sanjai Kumar Pandey",
-    /* ⚠⚠ NOT "Chairman" ANY MORE, AND NOT REPLACED WITH A GUESS.
-       The client says he does not hold that office and thinks he may be
-       connected to the Trust instead. I checked what can be checked: the
-       school's own live site names NO Chairman at all, and does not name him on
-       its home page or its General Information page. There is therefore no
-       published source for any designation — so printing "Trustee" would swap
-       one unverified title for another.
-       "Message from the Management" attributes the words without asserting an
-       office he may not hold. The school needs to confirm his actual role
-       before a title goes back. */
-    role: "Message from the Management",
+    /* ⚠ “Chairman”, AT THE CLIENT’S DIRECTION, AFTER THE CHECK CAME BACK EMPTY.
+       The client first said he does not hold this office and asked us to verify;
+       the school’s own live site names NO Chairman at all and does not name him
+       on its home page or its General Information page, so there was nothing to
+       verify against either way. The client has since asked for the title back,
+       which is their call to make about their own governance. Recorded here so
+       the history of the decision is not lost. */
+    role: "Chairman",
     portrait: chairman,
-    alt: "Mr. Sanjai Kumar Pandey of Sunbeam School Ballia.",
+    alt: "Mr. Sanjai Kumar Pandey, Chairman of Sunbeam School Ballia.",
     paragraphs: [
       "Sunbeam School Ballia has effectively played a pivotal role in spreading the Sunbeam Education revolution in the district for last 7 years. I congratulate the entire team of Management, staff members, students and last but not the least the parents of the school for this success of Sunbeam Ballia.",
       "Education is a continuous life long process which begins at the early stage of life from a school till one enters the last stage of life. The aim & objective of a school is to instill in the students the qualities of a genuine human and concerns of society. Sunbeam School Ballia fulfills these commitments to realize the welfare of not only an individual but society & country at a large. To realize this we offer many co-curricular activities which help to unfold the hidden talents of our students.",
@@ -163,11 +137,16 @@ const onward = [
 ---
 
 <BaseLayout
-  title="History of the school — Sunbeam School Ballia"
-  description="Sunbeam School Ballia, founded 2013 at Agarsanda and part of the Sunbeam group since 1972 — the school's history, its growth from 456 to 2,700+ students, and messages from the Chairman and Secretary."
+  title="Our Journey — Sunbeam School Ballia"
+  description="Sunbeam School Ballia, founded 2013 at Agarsanda and part of the Sunbeam group since 1972 — the school's journey, its growth from 456 to 2,700+ students, and messages from the school's leadership."
 >
   <PageHero
-    title="History of the school"
+    {/* ⚠ RENAMED AT THE CLIENT'S REQUEST — "History of the school" is struck
+        through on their mark-up and replaced with this. The ROUTE is unchanged:
+        /about/history-legacy/ is linked from the footer, the nav, the homepage
+        and two redirects that target #leadership on it, so renaming the URL as
+        well would break four things to fix a label. */}
+    title="Our Journey"
     crumbs={[
       { label: "Home", href: "/" },
       { label: "About", href: "/about/" },
@@ -187,6 +166,12 @@ const onward = [
           /* No data-reveal: the scale-up IS this element's entrance, and two
             things writing transform would fight each other. */
         }
+        {/* ⚠ HIDDEN AT THE CLIENT’S REQUEST — “for now”, so it is commented out
+            rather than deleted. Everything it needs is still here: the
+            VideoFeature import, the poster image, the YouTube id and the
+            .hist-film__media styles. Delete this comment wrapper to bring it
+            back; nothing else has to be rebuilt. */}
+        {/*
         <div class="hist-film__media" data-expand>
           <VideoFeature
             id="kfCpTF0Aagk"
@@ -198,6 +183,7 @@ const onward = [
             ratio="21 / 9"
           />
         </div>
+        */}
 
         <div class="hist-film__copy" data-reveal>
           <Image
@@ -217,6 +203,12 @@ const onward = [
           </h2>
           <div class="hist-film__prose">
             {history.map((p) => <p>{p}</p>)}
+            {/* ⚠ INSIDE .hist-film__prose, NOT AFTER IT. As a sibling it had its
+                own max-width in ch — and ch is a DIFFERENT WIDTH in the display
+                font than in the body font, so auto-centring a wider box started
+                it 46px to the left of the paragraphs above it. Sharing the
+                container shares the left edge, whatever the fonts do. */}
+            <p class="hist-film__sign">{school.tagline}</p>
           </div>
         </div>
       </div>
@@ -225,30 +217,7 @@ const onward = [
     {
       /* --- Legacy: the line from 1972 ---------------------------------------- */
     }
-    <section class="hist-line" aria-labelledby="line-heading">
-      <div class="u-container">
-        <div class="hist-line__head" data-reveal>
-          <h2 class="hist-line__heading t-h2-sans" id="line-heading" data-split>
-            An Unchallenged Legacy of <span class="t-squiggle">Excellence</span>
-          </h2>
-          {/* ⚠ THE RANKING MOVED HERE FROM THE TIMELINE'S FOURTH STEP, which is
-              where the client asked for it. The years are the school's own and
-              unchanged: six consecutive, 2019-20 through 2024-25. */}
-          <p class="hist-line__stand">
-            Ranked <strong>#1 Co-educational Day School in Ballia</strong> by EducationWorld for
-            six consecutive years, from 2019-20 to 2024-25.
-          </p>
-        </div>
-
-        {/* Extracted to a shared component so Assessment & Support can use
-            the same road — see its header. `milestones` keeps year/place/text;
-            the component takes title/kicker/body. */}
-        <JourneyRoad
-          items={milestones.map((m) => ({ title: m.year, kicker: m.place, body: m.text }))}
-          label="Four milestones, 1972 to today"
-        />
-      </div>
-    </section>
+    <LegacyTimeline />
 
     {
       /* --- Leadership. Audit 1.11, and the target of both redirects ---------- */
@@ -309,9 +278,11 @@ const onward = [
 
                 <div class="voice__sign">
                   <p class="voice__name">{v.name}</p>
-                  <p class="voice__role">
-                    {v.role}, {school.name}
-                  </p>
+                  {/* ⚠ THE ROLE ALONE. This printed “Chairman, Sunbeam School Ballia” —
+                      but the reader is already on the school’s own About page,
+                      under the school’s own masthead, so naming the school after
+                      every office was saying it three times on one screen. */}
+                  <p class="voice__role">{v.role}</p>
                 </div>
               </div>
             </article>
@@ -406,6 +377,45 @@ const onward = [
     margin-bottom: var(--sb-6);
   }
 
+  /* ⚠⚠ A MEASURE, AND NO LONGER JUSTIFIED. At the full container width this ran
+     to about 140 characters a line — near double the comfortable 65-75 — and it
+     was set justify, which at that width pulls rivers of white space through the
+     paragraphs. Six paragraphs made both faults obvious where two had hidden
+     them. Ragged-right at 68ch reads; justified at 140ch does not. */
+  /* ⚠ FULL WIDTH AND JUSTIFIED — the client asked for both, reversing the 44rem
+     ragged-right measure that was here. See the note on the copy above: at this
+     width the line runs ~110 characters and justification opens rivers. Left as
+     asked, documented so it is not silently changed back. */
+  /* ⚠⚠ IT BREAKS OUT OF .u-container, which is what "100%" actually needed.
+     max-width:100% was already true and still looked boxed, because the parent
+     caps at 1280px — the site-wide container — so 100% of it is 1280 however
+     wide the screen. This escapes that cap with a viewport-width breakout and
+     keeps only the page gutter.
+
+     ⚠ IT IS A LONG LINE AND THAT IS THE TRADE. At 1900px this runs ~200
+     characters justified, well past the comfortable 65-75. Asked for twice, so
+     it stands — noted here so it is not "fixed" back by someone who assumes it
+     was an accident. */
+  .hist-film__prose {
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding-inline: var(--sb-margin, clamp(18px, 4vw, 56px));
+    text-align: justify;
+  }
+
+  /* The tagline closes the section, so it carries the weight the prose does not. */
+  .hist-film__sign {
+    text-align: left;
+    margin: clamp(20px, 2.6vw, 30px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 0.6vw + 12px, 23px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--sb-violet);
+    text-align: left;
+  }
+
   .hist-film__prose p {
     font-size: var(--sb-body);
     line-height: 1.75;
@@ -415,7 +425,6 @@ const onward = [
 
   .hist-film__prose p + p {
     margin-top: var(--sb-5);
-    text-align: justify;
   }
 
   /* --- Fact row --------------------------------------------------------------
