@@ -68,7 +68,7 @@ const [s1, s2] = support;
         <Picture
           src={lead.src}
           alt={lead.alt}
-          formats={['avif', 'webp']}
+          formats={['webp']}
           widths={[420, 900]}
           sizes="(max-width: 900px) 88vw, 40vw"
           loading="lazy"
@@ -78,13 +78,13 @@ const [s1, s2] = support;
 
       {s1 && (
         <figure class="ac-frame ac-frame--soft ac-frame--mount accol__b" data-reveal data-reveal-delay="150" data-zoom data-zoom-to="1.16">
-          <Picture src={s1.src} alt={s1.alt} formats={['avif', 'webp']} widths={[300, 620]} sizes="(max-width: 900px) 48vw, 22vw" loading="lazy" decoding="async" />
+          <Picture src={s1.src} alt={s1.alt} formats={['webp']} widths={[300, 620]} sizes="(max-width: 900px) 48vw, 22vw" loading="lazy" decoding="async" />
         </figure>
       )}
 
       {s2 && (
         <figure class="ac-frame ac-frame--round ac-frame--mount accol__c" data-reveal data-reveal-delay="230" data-zoom data-zoom-to="1.2">
-          <Picture src={s2.src} alt={s2.alt} formats={['avif', 'webp']} widths={[260, 520]} sizes="(max-width: 900px) 40vw, 16vw" loading="lazy" decoding="async" />
+          <Picture src={s2.src} alt={s2.alt} formats={['webp']} widths={[260, 520]} sizes="(max-width: 900px) 40vw, 16vw" loading="lazy" decoding="async" />
         </figure>
       )}
     </div>

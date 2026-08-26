@@ -71,7 +71,7 @@ const total = String(items.length).padStart(2, '0');
           <Picture
             src={it.src}
             alt={it.alt}
-            formats={['avif', 'webp']}
+            formats={['webp']}
             widths={[560, 900, 1280]}
             sizes={sizes}
             loading={i === 0 ? 'eager' : 'lazy'}
@@ -106,7 +106,7 @@ const total = String(items.length).padStart(2, '0');
             <Picture
               src={it.src}
               alt=""
-              formats={['avif', 'webp']}
+              formats={['webp']}
               widths={[120, 200]}
               sizes="92px"
               loading="lazy"

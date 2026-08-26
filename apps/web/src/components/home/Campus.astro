@@ -160,7 +160,7 @@ const slots = ['tall', 'top', 'bottom'] as const;
                 >
                   <span class="campus__thumb">
                     {thumb ? (
-                      <Picture src={thumb.src} alt="" formats={['avif', 'webp']}
+                      <Picture src={thumb.src} alt="" formats={['webp']}
                         widths={[56, 112]} sizes="56px" loading="lazy" />
                     ) : (
                       <span class="campus__thumb-mono" aria-hidden="true">
