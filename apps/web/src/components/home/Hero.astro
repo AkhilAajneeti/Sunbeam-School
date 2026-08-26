@@ -195,10 +195,14 @@ const slides = [
 
   <div class="hero__content u-container u-on-dark">
     <div class="hero__copy">
-      <p class="hero__badge pill pill--glass">
-        <span class="hero__badge-dot" aria-hidden="true"></span>
-        Admissions open · Nursery to Class IX &amp; XI
-      </p>
+      {/* ⚠ THE ADMISSIONS BADGE IS GONE FROM THE HERO. The client asked for
+          Admissions in the header and nowhere on the main page — this pill was
+          the last piece of it left, announcing the intake directly above a
+          headline that is about the school, not the intake. The header button
+          carries that message now.
+          ⚠ The .hero__badge / .hero__badge-dot styles are left in place: they
+          cost nothing unused, and this is the kind of thing that comes back for
+          one admissions season. */}
       <p class="hero__eyebrow t-label">{school.motto}</p>
       <h1 class="hero__title t-display" data-split>
         Where Ballia’s <br class="hero__br" />Future Leaders <span class="t-squiggle t-squiggle--lime">Take Shape</span>
