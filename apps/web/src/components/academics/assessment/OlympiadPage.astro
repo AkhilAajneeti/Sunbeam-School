@@ -1,0 +1,559 @@
+---
+/**
+ * STUDENT SUCCESS · OLYMPIAD ACHIEVEMENTS — five sections.
+ *
+ * ⚠⚠ NO AWARD TOTAL, ANYWHERE. The original client brief asked for a "100+
+ * Olympiad awards" counter. The school publishes no total, so there is none
+ * here — and none is derivable from the rail, because a count of the programmes
+ * it enters is not a count of what it has won.
+ *
+ * ⚠ NO "OLYMPIADS. EVERY YEAR. EVERY CLASS." TIMELINE. The brief rules that
+ * section out by name, and it is right to: "every year, every class" is a claim
+ * about frequency and coverage the school has not made.
+ *
+ * ═══ SOURCE — verified in this repository ══════════════════════════════════
+ *   SOF (Science Olympiad Foundation) olympiad — sat from Nursery to Class II.
+ *   SOF Zonal Excellence Award — Classes III–V, "with a ₹500 voucher".
+ *   Vidyarthi Vigyan Manthan — students qualified to the NATIONAL level.
+ *   National Children's Science Congress — national-level qualification.
+ *   Inspire Award MANAK — student innovations selected for the Department of
+ *     Science & Technology's MANAK scheme.
+ *   Indian AI Impact Festival, 2024 — Ayushi, of Class VII, placed first.
+ *
+ * ⚠ THE PHOTOGRAPHS ARE OF EMPTY ROOMS AND EVERY ALT SAYS SO. There is no
+ * photograph of a Sunbeam student sitting an olympiad paper in this repository,
+ * and none is implied by a caption. ASSET REQUEST: an olympiad sitting, and the
+ * SOF award graphics for the placings the school mentions but has not
+ * illustrated.
+ *
+ * ⚠ THE RAIL IS THE SCALABLE CORE. It reads data/studentSuccess.ts; the filter
+ * chips are derived from the records' own categories, so a category with no
+ * record never renders as an empty filter, and a seventh programme is one array
+ * entry.
+ *
+ * ═══ COMPOSITION — five sections, five different builds ════════════════════
+ *   01 · IVORY  copy left with three facts, a two-frame composition right.
+ *   02 · PAPER  the collage crosses LEFT, six programmes right on hairlines.
+ *   03 · CREAM  Explore All Olympiads — chips, then the card rail.
+ *   04 · PHOTO  the cinematic close.
+ */
+import { Picture } from 'astro:assets';
+import '../../../styles/assessment.css';
+import { MARK } from './marks';
+import AsClose from './AsClose.astro';
+import AsRailSlider from './AsRailSlider.astro';
+import { olympiads } from '../../../data/studentSuccess';
+
+import pComposite from '../../../assets/composite lab/DSC_1255 copy.jpg';
+import pMaths from '../../../assets/photos/sb-maths-lab.jpg';
+import pActivity from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+import pLib from '../../../assets/library/DSC_1226 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-5.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+const PREP = '/academics/assessment/competitive-exam-preparation/';
+const STORIES = '/academics/student-success/success-stories/';
+
+/* ── SECTION 01 — three facts, and all three are published quantities ────── */
+const facts = [
+  { mark: 'grow', k: 'Nursery', v: 'Earliest entry' },
+  { mark: 'cup', k: 'Class III–V', v: 'Results & recognition' },
+  { mark: 'medal', k: '₹500', v: 'Zonal Excellence voucher' },
+] as const;
+
+/* ── SECTION 02 — the six, exactly as the school words them ──────────────── */
+const programmes = [
+  { mark: 'person', k: 'Vidyarthi Vigyan Manthan', v: 'Students qualified to the national level of the national science talent search.' },
+  { mark: 'doc', k: 'National Children’s Science Congress', v: 'National-level qualification.' },
+  { mark: 'bulb', k: 'Inspire Award MANAK', v: 'Student innovations selected for the Department of Science &amp; Technology’s MANAK scheme.' },
+  { mark: 'spark', k: 'Indian AI Impact Festival · 2024', v: 'Ayushi, of Class VII, placed <strong>first</strong>.' },
+  { mark: 'atom', k: 'SOF · Nursery – Class II', v: 'The olympiad, sat from the youngest years upward.' },
+  { mark: 'medal', k: 'SOF Zonal Excellence Award · III–V', v: 'The zonal award, with a ₹500 voucher.' },
+] as const;
+
+/* ⚠ THE CHIPS COME FROM THE RECORDS, NOT FROM A TYPED LIST. A category with no
+   record cannot appear, so the filter can never offer an empty result. */
+const categories = ['All', ...Array.from(new Set(olympiads.map((o) => o.category)))];
+---
+
+{/* ══ 01 · ENTERED AT NURSERY ════════════════════════════════════════════════
+    Ground: warm ivory. Copy left with three published facts beneath it, and a
+    two-frame composition right over a soft orange bloom. */}
+<section class="as-sec as-sec--ivory as-pad ol-open" aria-labelledby="ol-open-t">
+  <span class="as-warm" aria-hidden="true"></span>
+
+  <div class="u-container ol-open__grid">
+    <div>
+      <p class="as-kicker" data-reveal>Science Olympiad Foundation</p>
+      <h2 class="as-h as-h--lg ol-open__h" id="ol-open-t">
+        <span data-clip data-clip-delay="0">Entered at Nursery,</span>
+        <span data-clip data-clip-delay="150"><em>awarded by Class III.</em></span>
+      </h2>
+
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        The school enters its classes for the SOF Olympiad from <strong>Nursery to Class II</strong>.
+        It is the earliest point at which a Sunbeam child’s work is measured by somebody outside the
+        building, and it happens years before anything that could be called an examination.
+      </p>
+      <p class="as-body" data-reveal data-reveal-delay="260">
+        By Classes III to V the entry has turned into a result: an <strong>SOF Zonal Excellence
+        Award</strong>, which the school records as carrying a <strong>₹500 voucher</strong>. A zonal
+        award is a placing across schools, not a certificate for turning up.
+      </p>
+
+      <ul class="ol-facts">
+        {facts.map((f, i) => (
+          <li class="ol-fact" data-reveal data-reveal-delay={320 + i * 80}>
+            <span class="ol-fact__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[f.mark]} />
+              </svg>
+            </span>
+            <span class="ol-fact__t">
+              <span class="ol-fact__k">{f.k}</span>
+              <span class="ol-fact__v">{f.v}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <figure class="ol-open__stage">
+      <span class="ol-open__bloom" aria-hidden="true"></span>
+      <span class="as-dots ol-open__dots" aria-hidden="true"></span>
+
+      <div class="ol-open__lead as-frame as-fill" data-mask>
+        <Picture
+          src={pComposite}
+          alt={`The composite laboratory at ${S}, its benches and apparatus laid out along the room`}
+          formats={['webp']}
+          widths={[520, 880, 1200]}
+          sizes="(max-width: 1023px) 92vw, 44vw"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      <div class="ol-open__sm as-frame as-frame--float as-fill" data-pop data-pop-delay="200">
+        <Picture
+          src={pActivity}
+          alt={`The activity learning room at ${S}, its worktables set out for group work`}
+          formats={['webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 1023px) 44vw, 17vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <figcaption class="ol-open__cap">
+        Photographs: the school’s laboratories. No photograph of a Sunbeam student sitting an olympiad
+        paper has been published.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+{/* ══ 02 · FOUR PAPERS THAT LEAVE THE DISTRICT ═══════════════════════════════
+    Ground: white. The collage crosses LEFT; the six programmes sit right as a
+    vertical list on subtle separators rather than as cards. */}
+<section class="as-sec as-sec--paper as-pad ol-nat" aria-labelledby="ol-nat-t">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container ol-nat__grid">
+    <figure class="ol-nat__stage">
+      <div class="ol-nat__lead as-frame as-fill" data-zoom data-zoom-to="1.04">
+        <Picture
+          src={pLib}
+          alt={`The Nalanda Library at ${S}, its shelves signed by subject`}
+          formats={['webp']}
+          widths={[520, 880, 1200]}
+          sizes="(max-width: 1023px) 92vw, 42vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="ol-nat__sm as-frame as-frame--float as-fill" data-pop data-pop-delay="180">
+        <Picture
+          src={pMaths}
+          alt={`The mathematics laboratory at ${S}, its models and charts set out on the working surfaces`}
+          formats={['webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 1023px) 46vw, 18vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="ol-nat__cir as-frame as-frame--float as-frame--round as-fill" data-pop data-pop-delay="280">
+        <Picture
+          src={pComposite}
+          alt={`A detail of the composite laboratory at ${S}`}
+          formats={['webp']}
+          widths={[220, 400]}
+          sizes="(max-width: 1023px) 28vw, 11vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </figure>
+
+    <div class="ol-nat__copy">
+      <p class="as-kicker" data-reveal>And the national programmes</p>
+      <h2 class="as-h as-h--lg" id="ol-nat-t">
+        <span data-clip data-clip-delay="0">Four papers</span>
+        <span data-clip data-clip-delay="150"><em>that leave the district.</em></span>
+      </h2>
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        Beyond SOF, the school enters the national science talent programmes — and in three of them
+        its students have gone past entry to <strong>national-level qualification or selection</strong>.
+        Those are the words the school uses, and they are the words used here.
+      </p>
+
+      <ol class="ol-list">
+        {programmes.map((p, i) => (
+          <li class="ol-item" data-reveal data-reveal-delay={250 + i * 60}>
+            <span class="ol-item__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[p.mark]} />
+              </svg>
+            </span>
+            <span class="ol-item__t">
+              <span class="ol-item__k">{p.k}</span>
+              <span class="ol-item__v" set:html={p.v} />
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · EXPLORE ALL OLYMPIADS ═════════════════════════════════════════════
+    Ground: soft cream. The page's scalable core: chips derived from the data,
+    then the card rail. */}
+<section class="as-sec as-sec--cream as-pad ol-all" aria-labelledby="ol-all-t">
+  <div class="u-container">
+    <div class="ol-all__head">
+      <div>
+        <p class="as-kicker" data-reveal>Explore all olympiads</p>
+        <h2 class="as-h as-h--md" id="ol-all-t">
+          <span data-clip data-clip-delay="0">Every programme</span>
+          <span data-clip data-clip-delay="150"><em>the school enters.</em></span>
+        </h2>
+      </div>
+      <p class="as-note ol-all__b" data-reveal data-reveal-delay="180">
+        The school participates in several olympiad and national science programmes. This is the list
+        it publishes — no award total appears, because it keeps none. What each one asks of a student
+        is set out on {' '}<a class="as-link" href={PREP}>Competitive Examination Preparation</a>.
+      </p>
+    </div>
+
+    {/* ⚠ NO role="group" HERE — see the note in AsRailSlider. It replaced the
+        implicit list role and orphaned every <li> beneath it. */}
+    <ul class="sl-chips ol-all__chips" aria-label="Filter olympiads by category">
+      {categories.map((c, i) => (
+        <li>
+          <button type="button" class="sl-chip" data-ol-chip={c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>
+        </li>
+      ))}
+    </ul>
+
+    <AsRailSlider
+      label="Olympiad and national science programmes"
+      id="ol-rail"
+      total={olympiads.length}
+      per={4}
+      perMd={2}
+      perSm={1}
+      bleed
+      class="ol-all__rail"
+    >
+      {olympiads.map((o) => (
+        <li class="ol-card" data-ol-cat={o.category}>
+          <a class="ol-card__in" href={o.link}>
+            <span class="ol-card__pic">
+              <Picture
+                src={o.image}
+                alt={o.alt}
+                formats={['webp']}
+                widths={[340, 620]}
+                sizes="(max-width: 767px) 84vw, 22vw"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="ol-card__badge">{o.category}</span>
+            </span>
+            <span class="ol-card__body">
+              <span class="ol-card__k">{o.title}</span>
+              <span class="ol-card__meta">{o.classes}</span>
+              <span class="ol-card__year t-tabular">{o.year}</span>
+              <span class="ol-card__v">{o.description}</span>
+              <span class="ol-card__go">
+                View achievement
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+                </svg>
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </AsRailSlider>
+  </div>
+</section>
+
+<AsClose
+  id="ol-close-t"
+  kicker="Measured from outside"
+  lead="Measured by"
+  accent="somebody else."
+  body="The school publishes the programmes it enters, the classes that sit them and a handful of named results. It publishes no award total, and no total appears here — a count nobody can check is worth less than one result anybody can."
+  photo={pCohort}
+  position="50% 38%"
+/>
+
+<script>
+  /* THE CATEGORY FILTER.
+
+     ⚠ IT HIDES CARDS, IT DOES NOT REBUILD THE RAIL. Re-rendering would throw
+     away the rail's scroll position and its listeners; toggling `hidden` leaves
+     the component intact, and the `sl:refresh` event tells it to recount. The
+     rail's own item query already skips hidden children. */
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-ol-chip]'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-ol-cat]'));
+  const rail = document.querySelector('.ol-all__rail');
+
+  if (chips.length && cards.length) {
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const want = chip.dataset.olChip ?? 'All';
+        chips.forEach((c) => c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'));
+        cards.forEach((card) => {
+          card.toggleAttribute('hidden', want !== 'All' && card.dataset.olCat !== want);
+        });
+        rail?.dispatchEvent(new CustomEvent('sl:refresh'));
+      });
+    });
+  }
+</script>
+
+<style>
+  /* ═══ 01 · ENTERED AT NURSERY ═════════════════════════════════════════════ */
+  .ol-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .ol-open__h { max-width: 15ch; }
+
+  .ol-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: clamp(20px, 2.4vw, 32px) 0 0;
+    padding: clamp(14px, 1.6vw, 20px) 0 0;
+    border-top: 1px solid var(--sb-border);
+    list-style: none;
+  }
+  .ol-fact {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(8px, 1vw, 12px);
+    align-items: center;
+    padding: 0 clamp(8px, 1vw, 15px);
+  }
+  .ol-fact + .ol-fact { border-left: 1px solid var(--sb-border); }
+  .ol-fact:first-child { padding-left: 0; }
+  .ol-fact__m { display: block; width: clamp(22px, 2.1vw, 29px); color: var(--sb-violet); }
+  .ol-fact__m svg { display: block; width: 100%; height: auto; }
+  .ol-fact__t { display: grid; gap: 2px; }
+  .ol-fact__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.1vw, 18px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ol-fact__v { font-size: clamp(9px, 0.68vw, 10.8px); line-height: 1.45; color: var(--sb-text-muted); }
+
+  .ol-open__stage { position: relative; margin: 0; padding-bottom: clamp(44px, 4.8vw, 66px); }
+  /* The soft bloom the reference puts behind the composition. */
+  .ol-open__bloom {
+    position: absolute;
+    z-index: -1;
+    inset: -10% -8% 0 6%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 138, 92, 0.22) 0%, transparent 78%);
+  }
+  .ol-open__dots { top: 4%; left: -2%; }
+  .ol-open__lead { width: 82%; margin-left: auto; aspect-ratio: 16 / 11; }
+  .ol-open__sm {
+    position: absolute;
+    left: 0;
+    bottom: clamp(44px, 4.8vw, 66px);
+    width: 44%;
+    aspect-ratio: 4 / 3;
+    border: 5px solid #f7f0ea;
+  }
+  .ol-open__cap {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    max-width: 56ch;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 02 · THE NATIONAL PROGRAMMES ════════════════════════════════════════ */
+  .ol-nat__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .ol-nat__stage { position: relative; margin: 0; padding-bottom: clamp(28px, 3.2vw, 48px); }
+  .ol-nat__lead { width: 80%; aspect-ratio: 4 / 3; }
+  .ol-nat__sm {
+    position: absolute;
+    right: 0;
+    top: 22%;
+    width: 44%;
+    aspect-ratio: 4 / 5;
+    border: 5px solid var(--sb-paper);
+  }
+  .ol-nat__cir {
+    position: absolute;
+    left: 8%;
+    bottom: 0;
+    width: clamp(84px, 9vw, 132px);
+    aspect-ratio: 1 / 1;
+    border: 5px solid var(--sb-paper);
+  }
+
+  /* ⚠ SUBTLE SEPARATORS, NOT HEAVY CARDS. */
+  .ol-list { margin: clamp(17px, 2vw, 25px) 0 0; padding: 0; list-style: none; }
+  .ol-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(10px, 1.2vw, 15px);
+    align-items: start;
+    padding: clamp(8px, 0.95vw, 12px) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .ol-item:first-child { border-top: 1px solid var(--sb-border); }
+  .ol-item__m { display: block; width: clamp(19px, 1.75vw, 24px); margin-top: 1px; color: var(--sb-violet); }
+  .ol-item__m svg { display: block; width: 100%; height: auto; }
+  .ol-item__t { display: grid; gap: 2px; }
+  .ol-item__k {
+    font-size: clamp(9.5px, 0.72vw, 11.2px);
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .ol-item__v { font-size: clamp(10px, 0.76vw, 12px); line-height: 1.6; color: var(--sb-text-muted); }
+  .ol-item__v :global(strong) { font-weight: 700; color: var(--sb-charcoal); }
+
+  /* ═══ 03 · EXPLORE ALL OLYMPIADS ══════════════════════════════════════════ */
+  .ol-all__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: clamp(16px, 2vw, 32px);
+  }
+  .ol-all__b { max-width: 52ch; margin: 0; }
+  .ol-all__chips { margin: clamp(16px, 2vw, 26px) 0 clamp(18px, 2.2vw, 28px); }
+
+  .ol-card { display: flex; }
+  .ol-card__in {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 4px 16px -10px rgba(28, 14, 8, 0.14);
+    transition: transform var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .ol-card__in:hover { transform: translateY(-3px); box-shadow: var(--sb-shadow-card); }
+  .ol-card__pic { position: relative; display: block; overflow: hidden; background: var(--sb-sand); }
+  .ol-card__pic :global(picture) { display: block; }
+  .ol-card__pic :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    transition: scale var(--sb-dur-image) var(--sb-ease);
+  }
+  .ol-card__in:hover .ol-card__pic :global(img) { scale: 1.05; }
+  .ol-card__badge {
+    position: absolute;
+    left: clamp(8px, 0.9vw, 11px);
+    bottom: clamp(8px, 0.9vw, 11px);
+    padding: 4px clamp(8px, 0.9vw, 11px);
+    border-radius: var(--sb-r-1);
+    background: var(--sb-orange-bright);
+    font-size: clamp(8px, 0.6vw, 9.5px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .ol-card__body { display: grid; align-content: start; padding: clamp(12px, 1.4vw, 17px) clamp(13px, 1.5vw, 18px) clamp(14px, 1.7vw, 20px); }
+  .ol-card__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.05vw, 16.5px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+  .ol-card__meta { margin-top: 5px; font-size: clamp(9.5px, 0.72vw, 11.2px); color: var(--sb-text-muted); }
+  .ol-card__year { margin-top: 2px; font-size: clamp(9.5px, 0.72vw, 11.2px); color: var(--sb-text-muted); }
+  .ol-card__v {
+    margin-top: clamp(7px, 0.85vw, 11px);
+    font-size: clamp(9.5px, 0.72vw, 11.2px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+  .ol-card__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: clamp(10px, 1.2vw, 15px);
+    font-size: clamp(10px, 0.74vw, 11.8px);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+  .ol-card__go svg { width: 14px; height: auto; transition: translate var(--sb-dur-image) var(--sb-ease); }
+  .ol-card__in:hover .ol-card__go svg { translate: 4px 0; }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .ol-open__grid,
+    .ol-nat__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 4vw, 40px); }
+    .ol-open__stage,
+    .ol-nat__stage { order: -1; }
+    .ol-open__h { max-width: none; }
+    .ol-all__b { max-width: 62ch; }
+  }
+
+  @media (max-width: 767px) {
+    .ol-facts { grid-template-columns: minmax(0, 1fr); row-gap: clamp(12px, 3.4vw, 16px); }
+    .ol-fact { padding: 0; }
+    .ol-fact + .ol-fact { padding-top: clamp(12px, 3.4vw, 16px); border-left: 0; border-top: 1px solid var(--sb-border); }
+    .ol-open__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .ol-open__sm { width: 46%; }
+    .ol-open__stage { padding-bottom: clamp(56px, 15vw, 74px); }
+
+    .ol-nat__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .ol-nat__sm { width: 46%; top: auto; bottom: 0; }
+    .ol-nat__cir { display: none; }
+    .ol-nat__stage { padding-bottom: clamp(30px, 8vw, 42px); }
+  }
+</style>

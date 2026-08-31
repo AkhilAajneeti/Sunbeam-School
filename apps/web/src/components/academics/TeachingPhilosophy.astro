@@ -1,0 +1,783 @@
+---
+/**
+ * ACADEMICS → 01 · TEACHING PHILOSOPHY — the feature band.
+ *
+ * REFERENCE LAYOUT, followed closely: a centred pill, a two-line display
+ * heading, one centred standfirst, then FOUR CARDS IN A STAGGERED ROW — cards
+ * two and four sit high, one and three drop, which is what stops four equal
+ * white rectangles reading as a table. A line-art illustration sits top-right of
+ * the heading.
+ *
+ * WHAT CHANGED FROM THE REFERENCE, and why:
+ *
+ * · THE ILLUSTRATIONS ARE OURS. bulb.png and rocketpaper.png are the only two
+ *   assets in src/assets/icons drawn in the same hand-inked line family, so they
+ *   are the pair used here. The reference's cut-out photograph of a man at the
+ *   foot of the cards has no equivalent in the repository — the stock 3-D and
+ *   flat-vector figures we do hold (thinkgirl, student, boywithlaptop) are three
+ *   different illustration styles and would fight the line art rather than join
+ *   it. The slot is left to the paper plane instead.
+ *
+ * · THE CARD ICONS ARE INLINE SVG, not raster. They have to recolour on hover
+ *   (charcoal → brand orange) and stay crisp at 44px on a 3× screen; a PNG can
+ *   do neither. Drawn to one specification — 48px box, 1.7 stroke, round caps —
+ *   so four different subjects still read as one set.
+ *
+ * · COLOUR is the school's, not the reference's. The reference runs on a cool
+ *   blue-grey; this band runs ivory → sand with the deep orange primary doing
+ *   the accent work, which is the rest of the site's ground.
+ *
+ * THE STAGGER IS MARGIN, NOT TRANSFORM. Every card carries `data-reveal`, and
+ * motion-gsap.ts animates `y` on those — a CSS transform offset would be
+ * overwritten by the entrance tween the moment the chunk loads, collapsing the
+ * stagger to a flat row. Margin is untouched by it.
+ *
+ * ⚠ THE SCHOOL HAS NOT PUBLISHED A TEACHING-PHILOSOPHY STATEMENT (asset request
+ * A10). Every card here therefore DEFINES the commitment the client brief names
+ * and supports it only with figures already verified in docs/01 § 5. See the
+ * note above `teachingPhilosophy` in src/data/academics.ts before editing copy.
+ */
+import { Image } from 'astro:assets';
+import { teachingPhilosophy as tp } from '../../data/academics';
+import { school } from '../../data/site';
+import bulb from '../../assets/icons/bulb.png';
+import plane from '../../assets/icons/rocketpaper.png';
+import cap from '../../assets/icons/small-cap.png';
+
+/**
+ * One specification, four subjects. `stroke` and `fill` are set on the <svg> in
+ * CSS rather than per-path, so the whole glyph answers a single colour change on
+ * hover. An unknown key renders nothing — a missing icon, never a broken card.
+ */
+const icons: Record<string, string> = {
+  /* A learner, with the lesson orbiting them. */
+  learner: `
+    <circle cx="24" cy="24" r="15.4" stroke-dasharray="3 5" />
+    <circle cx="24" cy="18" r="5.2" />
+    <path d="M15.5 32.6c0-4.7 3.8-8.2 8.5-8.2s8.5 3.5 8.5 8.2" />`,
+
+  /* Practical work, and the question it starts from. */
+  inquiry: `
+    <path d="M19 8.5h10" />
+    <path d="M21 8.5v9.6L14.2 33.4a3.6 3.6 0 0 0 3.3 5.1h13a3.6 3.6 0 0 0 3.3-5.1L27 18.1V8.5" />
+    <path d="M16.6 28.6h14.8" />
+    <circle cx="21.6" cy="32.8" r="1.4" />
+    <circle cx="26.5" cy="35.4" r="1.1" />
+    <path d="M33.6 13.2a2.4 2.4 0 1 1 3.3 2.2c-.9.4-1.4 1.1-1.4 2.1" />
+    <path d="M35.5 21.2h.01" />`,
+
+  /* Insight — one large spark and two small, in the line-art voice. */
+  spark: `
+    <path d="M24 8.5c1.9 7.5 4.2 9.8 11.7 11.7C28.2 22.1 25.9 24.4 24 31.9c-1.9-7.5-4.2-9.8-11.7-11.7C19.8 18.3 22.1 16 24 8.5Z" />
+    <path d="M13.6 30.6c.8 3.1 1.7 4 4.8 4.8-3.1.8-4 1.7-4.8 4.8-.8-3.1-1.7-4-4.8-4.8 3.1-.8 4-1.7 4.8-4.8Z" />
+    <path d="M35.4 28.4c.6 2.3 1.3 3 3.6 3.6-2.3.6-3 1.3-3.6 3.6-.6-2.3-1.3-3-3.6-3.6 2.3-.6 3-1.3 3.6-3.6Z" />`,
+
+  /* A published syllabus — an open book, and a page signed off. */
+  curriculum: `
+    <path d="M24 15.4c-3.4-2.7-7.4-3.9-11.8-3.7-.9 0-1.6.8-1.6 1.7v18.4c0 .9.8 1.7 1.7 1.6 4.1-.1 7.8 1.1 11.7 3.8 3.9-2.7 7.6-3.9 11.7-3.8.9 0 1.7-.7 1.7-1.6V13.4c0-.9-.7-1.7-1.6-1.7-4.4-.2-8.4 1-11.8 3.7Z" />
+    <path d="M24 15.4v22.2" />
+    <path d="M15.7 22.9l2.8 2.9 5-5.6" />`,
+};
+
+/** A figure counts up; a class band is not a quantity and stays put. */
+const isCountable = (v: string) => /^\d+$/.test(v);
+---
+
+<section class="tp" aria-labelledby="tp-heading">
+  <div class="u-container tp__frame">
+    {/* Decoration, both of them — the section reads identically with images off. */}
+    <Image
+      class="tp__bulb"
+      src={bulb}
+      alt=""
+      aria-hidden="true"
+      widths={[180, 360]}
+      sizes="160px"
+      loading="lazy"
+    />
+    <Image
+      class="tp__plane"
+      src={plane}
+      alt=""
+      aria-hidden="true"
+      widths={[160, 320]}
+      sizes="130px"
+      loading="lazy"
+    />
+
+    {/* ── Head ─────────────────────────────────────────────────────────────── */}
+    <div class="tp__head" data-reveal>
+      <p class="tp__eyebrow">
+        <span class="pill pill--violet">
+          <span class="tp__dot" aria-hidden="true"></span>
+          {tp.eyebrow}
+        </span>
+      </p>
+
+      <h2 class="tp__heading" id="tp-heading" data-split>
+        {tp.headingLead} <span class="t-squiggle">{tp.headingMark}</span>
+      </h2>
+
+      <p class="tp__stand">{tp.stand}</p>
+    </div>
+
+    {/* ── The four cards ───────────────────────────────────────────────────── */}
+    <ul class="tp__cards">
+      {
+        tp.cards.map((c, i) => (
+          <li class="tp__cell" data-pop data-pop-delay={i * 70}>
+            <article class="tp__card">
+              <div class="tp__card-head">
+                <h3 class="tp__title">{c.title}</h3>
+                <span class="tp__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" set:html={icons[c.icon] ?? ''} />
+                </span>
+              </div>
+
+              {/* Micro-interaction, and a rule that keeps the two blocks apart
+                  when the title runs to three lines. */}
+              <span class="tp__rule" aria-hidden="true"></span>
+
+              <p class="tp__body">{c.body}</p>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+
+    {/* ── Supporting statement ─────────────────────────────────────────────── */}
+    <div class="tp__creed" data-pop>
+      {/* The perspective grid, as a layer rather than a background-image on the
+          panel itself: the panel's own gradient stays visible underneath, and a
+          transparent PNG needs no blend mode to sit on it. */}
+      <span class="tp__creed-grid" aria-hidden="true"></span>
+
+      <div class="tp__creed-head">
+        <p class="tp__creed-eyebrow">{tp.creed.eyebrow}</p>
+
+        {/* data-split sits on the PARAGRAPH, not on a wrapper: the splitter walks
+            child nodes, so on a wrapper it would treat the whole paragraph as one
+            unit and animate it as a block. The cap is an element child, which the
+            splitter keeps whole and marks `free` — the same path the .t-squiggle
+            plate takes, and the reason it is not sliced by a word mask. */}
+        <p class="tp__quote" data-split>
+          {tp.creed.quoteBefore}
+          <Image
+            class="tp__quote-cap"
+            src={cap}
+            alt=""
+            aria-hidden="true"
+            widths={[60, 120]}
+            sizes="46px"
+            loading="lazy"
+          />
+          {tp.creed.quoteAfter}
+        </p>
+
+        <p class="tp__quote-src">{tp.creed.quoteSource}</p>
+      </div>
+
+      <div class="tp__creed-body">
+        <div class="tp__creed-copy">
+          {tp.creed.paragraphs.map((p) => <p class="tp__creed-p">{p}</p>)}
+        </div>
+
+        {/* The three principles — the school's own motto, one word to a row. */}
+        <div class="tp__principles">
+          <p class="tp__principles-label">Three principles</p>
+
+          <ol class="tp__plist">
+            {
+              tp.creed.principles.map((p) => (
+                <li class="tp__prow">
+                  <span class="tp__pn t-tabular" aria-hidden="true">{p.n}</span>
+                  <span class="tp__pword">{p.word}</span>
+                  <span class="tp__pgloss">{p.gloss}</span>
+                </li>
+              ))
+            }
+          </ol>
+
+          <p class="tp__tagline">{school.tagline}</p>
+        </div>
+      </div>
+
+      <dl class="tp__proofs">
+        {
+          tp.creed.proofs.map((p) => (
+            <div class="tp__proof">
+              <dt class="tp__proof-v">
+                {isCountable(p.value) ? (
+                  <span data-count={p.value}>{p.value}</span>
+                ) : (
+                  p.value
+                )}
+              </dt>
+              <dd class="tp__proof-l">{p.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ══════════ GROUND ═══════════════════════════════════════════════════════
+     The reference cools its band to a blue-grey; this one warms to sand, which
+     is the site's alternate section ground. Opens on --sb-ivory so it meets the
+     page panel above it with no seam. */
+  .tp {
+    position: relative;
+    /* No top padding of its own: .u-page-panel already opens the page. */
+    padding-block: clamp(8px, 2vh, 28px) var(--sb-section-y);
+    background:
+      radial-gradient(120% 62% at 50% 0%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 60%),
+      linear-gradient(180deg, var(--sb-ivory) 0%, #fffdfb 32%, var(--sb-sand) 100%);
+    /* Contains the illustrations where they hang past the container. */
+    overflow: hidden;
+  }
+
+  .tp__frame { position: relative; }
+
+  /* ══════════ ILLUSTRATIONS ════════════════════════════════════════════════
+     Both hang off the container's shoulders, which is why they are inside it.
+     Desktop only: at 1239 and below the heading needs the full measure and a
+     128px drawing beside it becomes a collision, not a flourish. */
+  .tp__bulb,
+  .tp__plane {
+    position: absolute;
+    z-index: 0;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+    will-change: transform;
+  }
+
+  .tp__bulb {
+    top: clamp(4px, 1.5vw, 26px);
+    right: clamp(0px, 1vw, 24px);
+    width: clamp(104px, 10vw, 156px);
+    opacity: 0.9;
+    transform: rotate(4deg);
+    animation: tp-hover 7s ease-in-out infinite;
+  }
+
+  .tp__plane {
+    top: clamp(52px, 6vw, 104px);
+    left: clamp(0px, 1vw, 22px);
+    width: clamp(84px, 8vw, 126px);
+    opacity: 0.34;
+    transform: rotate(-6deg);
+    animation: tp-hover 9s ease-in-out infinite reverse;
+  }
+
+  /* Small travel, long cycle. Anything larger reads as a loading state. */
+  @keyframes tp-hover {
+    0%,
+    100% { translate: 0 0; }
+    50%  { translate: 0 -12px; }
+  }
+
+  @media (max-width: 1239px) {
+    .tp__bulb,
+    .tp__plane { display: none; }
+  }
+
+  /* ══════════ HEAD ═════════════════════════════════════════════════════════ */
+  /* NO MEASURE ON THE HEAD ITSELF. One cap for both would set the heading and
+     the standfirst to the same width, and the reference — correctly — runs the
+     standfirst WIDER than the heading it sits under: a 58px display line wants a
+     short measure, a 17px paragraph wants a longer one. Capped separately, both
+     centred. */
+  .tp__head {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .tp__eyebrow { margin-bottom: var(--sb-6); }
+
+  /* The reference's bulleted label. The dot is the whole difference between a
+     pill and a category tag. */
+  .tp__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    flex-shrink: 0;
+  }
+
+  .tp__eyebrow .pill {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: var(--sb-label);
+  }
+
+  /* h2.tp__heading, not .tp__heading. base.css sets `h2:has(.t-squiggle)` to a
+     1.3 line-height for headings that carry the plate; a scoped class alone
+     loses to it on specificity and the heading opens up to 1.3 unasked. This
+     heading wants 1.14 with the plate's own padding accounted for. */
+  h2.tp__heading {
+    max-width: 20ch;
+    margin-inline: auto;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 4.4vw, 58px);
+    line-height: 1.14;
+    letter-spacing: -0.036em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .tp__stand {
+    max-width: 62ch;
+    margin: var(--sb-7) auto 0;
+    font-size: var(--sb-body);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+
+  /* ══════════ THE STAGGERED ROW ════════════════════════════════════════════
+     Four columns, `align-items: start` so a shorter card does not stretch to
+     match its neighbours — the uneven bottom edge is part of the arrangement.
+
+     The offsets are the reference's, read off it: cards two and four sit at the
+     top of the row, one drops ~55px and three drops ~75px. They scale with the
+     viewport so the pattern survives a narrower desktop. */
+  .tp__cards {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 26px);
+    align-items: start;
+    margin-top: clamp(44px, 6vh, 84px);
+    list-style: none;
+    padding: 0;
+  }
+
+  .tp__cell:nth-child(1) { margin-top: clamp(18px, 3vw, 55px); }
+  .tp__cell:nth-child(3) { margin-top: clamp(26px, 4.2vw, 76px); }
+
+  /* ══════════ CARD ═════════════════════════════════════════════════════════ */
+  .tp__card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: clamp(24px, 2.4vw, 38px);
+    border: 1px solid rgba(201, 60, 10, 0.08);
+    border-radius: var(--sb-r-3);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease),
+      border-color var(--sb-dur-image) var(--sb-ease);
+  }
+
+  /* A wash that arrives from the icon's corner on hover. Behind the content, in
+     an isolated context, so it can never paint over the copy. */
+  .tp__card::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      120% 90% at 100% 0%,
+      rgba(255, 138, 99, 0.16) 0%,
+      rgba(255, 138, 99, 0) 58%
+    );
+    opacity: 0;
+    transition: opacity var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .tp__card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--sb-shadow-card-hover);
+    border-color: rgba(201, 60, 10, 0.2);
+  }
+
+  .tp__card:hover::before { opacity: 1; }
+
+  /* Title left, glyph right, both top-aligned — the reference's arrangement. */
+  .tp__card-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--sb-5);
+  }
+
+  .tp__title {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.24;
+    letter-spacing: -0.022em;
+    color: var(--sb-charcoal);
+    transition: color var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .tp__card:hover .tp__title { color: var(--sb-violet-dark); }
+
+  .tp__icon {
+    display: block;
+    width: clamp(38px, 3.4vw, 48px);
+    flex-shrink: 0;
+    color: var(--sb-charcoal);
+    opacity: 0.88;
+    transition:
+      color var(--sb-dur-link) var(--sb-ease),
+      opacity var(--sb-dur-link) var(--sb-ease),
+      transform var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .tp__icon :global(svg) {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tp__card:hover .tp__icon {
+    color: var(--sb-violet);
+    opacity: 1;
+    transform: rotate(-6deg) scale(1.08);
+  }
+
+  /* Grows and warms on hover — the smallest of the three micro-interactions,
+     and the one that keeps the eye on the card it is over.
+
+     NOT --sb-violet-wash at rest. That token is #ffede6, which against a white
+     card is a 4-point difference: the mark was invisible until hovered and read
+     as a rendering artifact rather than as a deliberate rule. A translucent tint
+     of the primary is legible at rest and still has somewhere to go. */
+  .tp__rule {
+    display: block;
+    width: 30px;
+    height: 2px;
+    margin: clamp(22px, 2.6vw, 36px) 0 clamp(16px, 2vw, 26px);
+    border-radius: var(--sb-r-full);
+    background: rgba(201, 60, 10, 0.28);
+    transition:
+      width var(--sb-dur-image) var(--sb-ease),
+      background-color var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .tp__card:hover .tp__rule {
+    width: 56px;
+    background: var(--sb-violet);
+  }
+
+  .tp__body {
+    font-size: var(--sb-body-sm);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+  }
+
+  /* ══════════ SUPPORTING STATEMENT ═════════════════════════════════════════
+     A centred pull quote across the top, then copy left / principles right, then
+     the verified figures on a hairline across the foot. */
+  .tp__creed {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+    margin-top: clamp(56px, 9vh, 116px);
+    padding: clamp(32px, 3.6vw, 60px) clamp(28px, 3.4vw, 56px);
+    border: 1px solid rgba(201, 60, 10, 0.14);
+    border-radius: 32px;
+    background: linear-gradient(135deg, #fffaf7 0%, #ffffff 52%, #fff3ed 100%);
+    box-shadow: 0 24px 70px -48px rgba(28, 14, 8, 0.42);
+  }
+
+  /* --- The grid floor -------------------------------------------------------
+     A perspective grid anchored to the panel's foot, so the panel reads as a
+     room the content stands in rather than a flat card. The asset's lines are
+     already almost white — it is doing texture, not decoration you look at.
+
+     Sized `100% auto` and pinned to the bottom: `cover` on a 1920×470 image
+     inside a tall panel scales it until the lines are centimetres apart and the
+     perspective is lost. Its own aspect ratio is the effect. */
+  .tp__creed-grid {
+    position: absolute;
+    z-index: -1;
+    inset: auto 0 0 0;
+    height: clamp(180px, 46%, 380px);
+    background: url('../../assets/icons/grid-bg.png') no-repeat bottom center / 100% auto;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+
+  /* --- Head ---------------------------------------------------------------- */
+
+  /* NO MEASURE ON THE HEAD. `ch` here is measured in the head's inherited body
+     font, but the thing that needs capping is set in the DISPLAY face at 36px —
+     a 30ch cap on the wrapper resolved to about 540px and broke the quote over
+     eight lines instead of the reference's three. The cap belongs on the quote
+     itself, where 1ch is the quote's own character. */
+  .tp__creed-head {
+    margin: 0 auto clamp(36px, 5vh, 64px);
+    text-align: center;
+  }
+
+  .tp__creed-eyebrow {
+    margin-bottom: var(--sb-5);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  /* --- Pull quote ----------------------------------------------------------
+     The reference sets its quote large, centred and ranged over three lines with
+     the cap sitting inside the text rather than beside it. 30ch on the head is
+     what holds that three-line shape from 1440 down to 1024. */
+  .tp__quote {
+    /* 42ch of the DISPLAY face lands at roughly 47 characters a line, which is
+       what puts this quote on three lines at 1440 — the reference's shape. */
+    max-width: 42ch;
+    margin-inline: auto;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(21px, 2.5vw, 36px);
+    line-height: 1.32;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    text-wrap: pretty;
+  }
+
+  /* Inline, baseline-shifted, and sized in `em` so it tracks the quote's own
+     type at every breakpoint instead of needing its own clamp. The margin is
+     what stops it colliding with the words either side — an inline image gets no
+     word space of its own. */
+  .tp__quote-cap {
+    display: inline-block;
+    width: 1.32em;
+    height: auto;
+    margin: 0 0.18em;
+    vertical-align: -0.16em;
+    transform: rotate(-6deg);
+  }
+
+  .tp__quote-src {
+    max-width: 44ch;
+    margin-inline: auto;
+    margin-top: var(--sb-6);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+
+  /* --- Body: copy | principles -------------------------------------------- */
+
+  /* align-items: center, not start. Three principles with a gloss each plus the
+     tagline make the card about twice the height of the two paragraphs beside it,
+     and top-aligned that reads as an unfinished column rather than a deliberate
+     one. Centred, the copy sits against the middle of the card. */
+  .tp__creed-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+  }
+
+  .tp__creed-p {
+    font-size: var(--sb-body-sm);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+
+  .tp__creed-p + .tp__creed-p { margin-top: var(--sb-5); }
+
+  /* --- Principles ---------------------------------------------------------
+     Was three words stacked on a flat orange block. Now each word carries its
+     index and a one-line gloss on its own row, divided by hairlines — the same
+     construction as the evidence rows on the homepage's Learning panel, which is
+     where this treatment already exists on the site. */
+  .tp__principles {
+    padding: clamp(22px, 2.4vw, 32px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet);
+    box-shadow: 0 20px 46px -22px rgba(122, 36, 6, 0.6);
+  }
+
+  .tp__principles-label {
+    margin-bottom: var(--sb-5);
+    font-size: var(--sb-label);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-on-violet-muted);
+  }
+
+  .tp__plist { list-style: none; margin: 0; padding: 0; }
+
+  /* index · word / gloss — the gloss starts under the word, not under the
+     numeral, so the column of words reads straight down. */
+  .tp__prow {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--sb-4);
+    row-gap: 3px;
+    padding: var(--sb-4) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.26);
+    /* A transparent bar that fills on hover — reserving it here rather than
+       adding a border on hover means the row never shifts by 2px as you enter
+       it. */
+    border-left: 2px solid transparent;
+    padding-left: 0;
+    transition:
+      border-left-color var(--sb-dur-link) ease,
+      padding-left var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .tp__prow:hover {
+    border-left-color: var(--sb-lime);
+    padding-left: var(--sb-5);
+  }
+
+  /* Hierarchy from size and weight, not from opacity: --sb-violet gives white
+     only 5.08:1, so there is no room to mute it and stay legible (tokens.css). */
+  .tp__pn {
+    grid-row: 1;
+    align-self: baseline;
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    color: var(--sb-on-violet-muted);
+  }
+
+  .tp__pword {
+    grid-column: 2;
+    grid-row: 1;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(19px, 1.8vw, 25px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+
+  .tp__pgloss {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: var(--sb-caption);
+    line-height: 1.55;
+    color: var(--sb-on-violet-muted);
+  }
+
+  .tp__tagline {
+    margin-top: var(--sb-6);
+    padding-top: var(--sb-5);
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--sb-on-violet-muted);
+  }
+
+  /* --- Proof row ------------------------------------------------------------
+     Same construction as the fact row on History: the rule sits on the row's
+     top edge and on each item's left, so there is no trailing divider to
+     suppress and no :last-child exception. */
+  .tp__proofs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: clamp(28px, 3.6vw, 48px) 0 0;
+    padding-top: clamp(22px, 2.6vw, 34px);
+    border-top: var(--sb-hairline);
+  }
+
+  .tp__proof { padding-inline: var(--sb-5); }
+  .tp__proof + .tp__proof { border-left: var(--sb-hairline); }
+  .tp__proof:first-child { padding-left: 0; }
+
+  .tp__proof-v {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 2.4vw, 34px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--sb-violet);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --sb-text-secondary, NOT --sb-text-muted. The muted token is specified at
+     5.3:1 on cream, but this label now sits over the grid floor, whose pale lines
+     DARKEN a light ground rather than lighten it. Pixel-sampled at 390 it came
+     back 4.41:1 — under AA for 13px text — while reading as a comfortable pass at
+     1440. That is exactly the failure a DOM-based contrast check cannot see,
+     because the ground it reports is the panel's flat colour and not the image
+     over it. Re-measure with scripts/contrast-sample.mjs if this colour or the
+     floor's opacity changes. */
+  .tp__proof-l {
+    margin: var(--sb-3) 0 0;
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-secondary);
+    text-wrap: balance;
+  }
+
+  /* ══════════ REDUCED MOTION ═══════════════════════════════════════════════
+     base.css already reduces every animation and transition to 0.01ms, so the
+     only thing left to undo is the transformed rest state a hover would leave
+     an element sitting in. */
+  @media (prefers-reduced-motion: reduce) {
+    .tp__card:hover { transform: none; }
+    .tp__card:hover .tp__icon { transform: none; }
+    .tp__bulb,
+    .tp__plane { animation: none; }
+
+    /* The cap's tilt is a rest state, not motion, so it stays — but the row's
+       slide is motion and does not. */
+    .tp__prow:hover { padding-left: 0; }
+  }
+
+  /* ══════════ TABLET ═══════════════════════════════════════════════════════
+     Four cards across a 900px page leaves a 22-character measure. Two columns,
+     and the stagger becomes a zigzag between the rows instead of across one. */
+  @media (max-width: 1239px) {
+    .tp__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
+    .tp__cell:nth-child(1),
+    .tp__cell:nth-child(3) { margin-top: 0; }
+    .tp__cell:nth-child(2n) { margin-top: clamp(22px, 4vw, 48px); }
+  }
+
+  @media (max-width: 1023px) {
+    .tp__creed-body { grid-template-columns: minmax(0, 1fr); }
+    /* The 30ch cap is there to hold a three-line quote on a wide panel; on a
+       narrow one it makes six short lines instead. */
+    .tp__creed-head { max-width: 34ch; }
+  }
+
+  /* ══════════ MOBILE ═══════════════════════════════════════════════════════ */
+  @media (max-width: 767px) {
+    .tp__cards { grid-template-columns: minmax(0, 1fr); gap: var(--sb-5); }
+    .tp__cell:nth-child(2n) { margin-top: 0; }
+
+    /* A hover lift is a pointer gesture. On touch it can only ever be seen as a
+       stuck sticky state after a tap, so the cards simply sit still. */
+    .tp__card:hover { transform: none; }
+
+    .tp__creed { border-radius: 24px; }
+
+    /* Stacked, a left border on a full-width row reads as a stray tick. */
+    .tp__proofs { grid-template-columns: minmax(0, 1fr); gap: var(--sb-5); }
+    .tp__proof { padding-inline: 0; }
+    .tp__proof + .tp__proof {
+      border-left: 0;
+      border-top: var(--sb-hairline);
+      padding-top: var(--sb-5);
+    }
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+import '../../../styles/academics.css';
+/**
+ * AcClose — the cinematic full-bleed ending.
+ *
+ * One photograph, a scrim heavy enough to carry white type, one statement and
+ * one short line. No cards, no columns, nothing to click. It exists so a page
+ * ends on an image rather than trailing off into the footer.
+ *
+ * `owed` prints the school's own gap instead of padding: where Sunbeam has
+ * published nothing further on a subject, the page says so and points at the
+ * office. A plausible-sounding invention is the most damaging thing this site
+ * could print, and this is the pattern that keeps it out.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { school } from '../../../data/site';
+
+interface Props {
+  statement: string;
+  body?: string;
+  photo: ImageMetadata;
+  alt: string;
+  /** Vertical crop of the backdrop. */
+  position?: string;
+  /** Print the "not published" plate above the statement. */
+  owed?: boolean;
+  id?: string;
+}
+
+const { statement, body, photo, alt, position = '50% 46%', owed = false, id } = Astro.props;
+const headingId = id ?? `acend-${Math.abs(statement.length * 3671 % 9973)}`;
+---
+
+<section class="ac-section ac-section--bleed acend" aria-labelledby={headingId}>
+  <figure class="acend__art" data-zoom data-zoom-to="1.1">
+    <Picture
+      src={photo}
+      alt={alt}
+      formats={['webp']}
+      widths={[900, 1400, 1920]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </figure>
+  <span class="acend__scrim" aria-hidden="true"></span>
+
+  <div class="u-container acend__in">
+    {owed && (
+      <p class="acend__owed" data-reveal>
+        The school has not published more than this. Anything beyond it — and anything that
+        changes from one session to the next — is confirmed by the office rather than guessed at
+        here. <a href={`tel:${school.phone.office}`}>{school.phone.officeDisplay}</a>
+      </p>
+    )}
+    <h2 class="acend__h" id={headingId} data-split set:html={statement} />
+    {body && <p class="acend__p" data-reveal data-reveal-delay="140" set:html={body} />}
+  </div>
+</section>
+
+<style>
+  .acend {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: clamp(360px, 52vw, 600px);
+    overflow: hidden;
+    padding-block: clamp(56px, 8vw, 108px);
+    background: var(--sb-violet-ink);
+  }
+
+  .acend__art { position: absolute; inset: 0; z-index: 0; margin: 0; overflow: hidden; }
+  .acend__art :global(picture) { position: absolute; inset: 0; display: block; }
+  .acend__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .acend__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(28, 14, 8, 0.68) 0%, rgba(28, 14, 8, 0.9) 100%);
+  }
+
+  .acend__in { position: relative; z-index: 2; text-align: center; }
+
+  .acend__owed {
+    max-width: 56ch;
+    margin: 0 auto clamp(20px, 2.6vw, 30px);
+    padding-bottom: clamp(16px, 2vw, 22px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+    font-size: 14px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.76);
+  }
+  .acend__owed a { color: var(--sb-lime); font-weight: 700; text-decoration: none; border-bottom: 1px solid currentColor; }
+  .acend__owed a:hover { color: #fff; }
+  .acend__owed a:focus-visible { outline: 2px solid var(--sb-lime); outline-offset: 3px; }
+
+  .acend__h {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(30px, 5.2vw, 72px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    color: #fff;
+    text-wrap: balance;
+  }
+  .acend__h em { font-style: normal; color: var(--sb-lime); }
+
+  .acend__p {
+    max-width: 54ch;
+    margin: clamp(14px, 2vw, 22px) auto 0;
+    font-size: clamp(15px, 1.2vw, 18px);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.86);
+  }
+</style>

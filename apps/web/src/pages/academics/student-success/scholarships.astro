@@ -1,0 +1,41 @@
+---
+/**
+ * STUDENT SUCCESS · SCHOLARSHIPS.
+ *
+ * The school publishes no scholarship terms, and this page invents none. The
+ * reference artwork for this page carried four named awards, all four of them
+ * fabrications; why they were dropped, and why fees are the one subject where a
+ * guess does measurable harm, is set out in the component header.
+ *
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import ScholarshipsPage from '../../../components/academics/assessment/ScholarshipsPage.astro';
+
+import banner from '../../../assets/library/DSC_1230 copy.jpg';
+---
+
+<BaseLayout
+  title="Scholarships — Sunbeam School Ballia"
+  description="Sunbeam School Ballia does not publish scholarship information. This page says so plainly and points to the school office rather than describing terms that cannot be verified."
+>
+  <PageHero
+    title="Scholarships"
+    standfirst="The school has not published any scholarship terms. This page says that rather than filling the space."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Student Success', href: '/academics/student-success/' },
+    ]}
+    src={banner}
+    alt="The Nalanda Library at Sunbeam School Ballia, its shelves signed by subject and its reading tables set out beneath them."
+    position="50% 50%"
+  />
+
+  <div class="u-page-panel" style="padding-block: 0;">
+    <ScholarshipsPage />
+  </div>
+</BaseLayout>

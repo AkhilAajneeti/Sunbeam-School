@@ -1,0 +1,203 @@
+---
+/**
+ * §6 · CAMPUS SURVEILLANCE — the dark close.
+ *
+ * The page's last band, and the only one built as a stage rather than a list:
+ * a sweeping camera cone behind the copy, drawn in CSS so it costs nothing and
+ * degrades to a flat panel when motion is reduced.
+ *
+ * TONE. Surveillance is the section most easily made sinister — a wall of camera
+ * feeds says "we are watching your child" rather than "your child is looked
+ * after". So the ground is warm ink rather than blue-black, the sweep is slow,
+ * and the copy names people before it names equipment.
+ */
+import { surveillanceCards } from '../../../data/campus';
+import { showBuildNotes } from '../../../data/site';
+import SectionHead from '../../academics/SectionHead.astro';
+import SafetyIcon from './SafetyIcon.astro';
+
+const icons: Record<string, string> = {
+  'CCTV monitoring': 'camera',
+  'Security personnel': 'shield',
+  'Visitor management': 'log',
+  'Access control': 'lock',
+};
+---
+
+<section class="svl" aria-labelledby="svl-title">
+  {/* Decorative stage. aria-hidden and pointer-events:none — it is behind the
+      content and must never intercept a click or be announced. */}
+  <div class="svl__stage" aria-hidden="true">
+    <span class="svl__cone"></span>
+    <span class="svl__ring svl__ring--1"></span>
+    <span class="svl__ring svl__ring--2"></span>
+    <span class="svl__ring svl__ring--3"></span>
+  </div>
+
+  <div class="u-container svl__inner">
+    <SectionHead
+      id="svl-title"
+      eyebrow="Watched over"
+      heading="Eyes on the campus, all day and all night"
+      stand="Cameras across the school, and guards on duty every hour of the year."
+      tone="dark"
+      measure={20}
+    />
+
+    <ul class="svl__cards">
+      {surveillanceCards.map((c, i) => (
+        <li
+          class:list={['svl__card', !c.verified && 'svl__card--pending']}
+          data-reveal
+          data-reveal-delay={i * 80}
+        >
+          <span class="svl__icon"><SafetyIcon name={icons[c.label] ?? 'eye'} size={24} /></span>
+          <h3 class="svl__h">
+            {c.label}
+            {!c.verified && showBuildNotes && <span class="svl__chip">to confirm</span>}
+          </h3>
+          <p class="svl__body">{c.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .svl {
+    position: relative;
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ink);
+    color: rgba(255, 255, 255, 0.76);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .svl__inner { position: relative; z-index: 1; }
+
+  /* --- Stage --------------------------------------------------------------- */
+
+  .svl__stage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* The sweep: a soft wedge pivoting from a point above the band. */
+  .svl__cone {
+    position: absolute;
+    top: -14%;
+    left: 50%;
+    width: 74vw;
+    max-width: 1100px;
+    aspect-ratio: 1 / 1;
+    transform-origin: 50% 0;
+    background: conic-gradient(
+      from 168deg at 50% 0%,
+      transparent 0deg,
+      rgba(201, 60, 10, 0.16) 8deg,
+      rgba(255, 138, 92, 0.09) 18deg,
+      transparent 26deg
+    );
+    translate: -50% 0;
+    animation: svl-sweep 14s ease-in-out infinite alternate;
+  }
+
+  @keyframes svl-sweep {
+    from { rotate: -17deg; }
+    to { rotate: 17deg; }
+  }
+
+  .svl__ring {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    translate: -50% -50%;
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 50%;
+  }
+
+  .svl__ring--1 { width: 520px; height: 520px; }
+  .svl__ring--2 { width: 880px; height: 880px; }
+  .svl__ring--3 { width: 1280px; height: 1280px; }
+
+  /* A slow rotating wedge is exactly the kind of ambient motion § N asks to
+     stop. The wedge stays — it is the section's light — but it holds still. */
+  @media (prefers-reduced-motion: reduce) {
+    .svl__cone { animation: none; rotate: 0deg; }
+  }
+
+  /* --- Cards --------------------------------------------------------------- */
+
+  .svl__cards {
+    list-style: none;
+    margin: var(--sb-10) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sb-6);
+  }
+
+  .svl__card {
+    padding: var(--sb-7) var(--sb-6);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(2px);
+    transition: background var(--sb-dur-link) ease, border-color var(--sb-dur-link) ease;
+  }
+
+  .svl__card:hover {
+    background: rgba(255, 255, 255, 0.075);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .svl__card--pending {
+    background: transparent;
+    border-style: dashed;
+  }
+
+  .svl__icon {
+    color: var(--sb-lime);
+    margin-bottom: var(--sb-5);
+  }
+
+  .svl__card--pending .svl__icon { color: rgba(255, 255, 255, 0.42); }
+
+  .svl__h {
+    font-family: var(--sb-font-display);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  .svl__chip {
+    display: inline-block;
+    margin-left: var(--sb-2);
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: 3px;
+  }
+
+  .svl__body {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.66);
+  }
+
+  @media (max-width: 1023px) {
+    .svl__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 560px) {
+    .svl__cards { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

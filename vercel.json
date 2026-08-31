@@ -1,4 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+<<<<<<< HEAD
+=======
+  "buildCommand": "npm run build",
+  "outputDirectory": "apps/web/dist",
+>>>>>>> 53aaf25ffc5fc04361cc1df922ccc62791a79884
   "trailingSlash": true
 }

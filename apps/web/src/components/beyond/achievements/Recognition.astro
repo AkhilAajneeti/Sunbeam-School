@@ -1,0 +1,152 @@
+---
+/**
+ * §2 · THIRD-PARTY RECOGNITION.
+ *
+ * docs/01 §34 calls this the school's single most under-used asset: "very few
+ * district-level Indian schools have this much PROVABLE third-party recognition.
+ * It is currently buried on an inner page." Six credentials, none of them the
+ * school's own claim about itself — every one is an outside body's judgement,
+ * which is precisely what makes them worth a section.
+ *
+ * THE FIGURE IS ONLY ON THREE CARDS, because only three of the six have a
+ * published number. Inventing "12 awards" to fill the other three would undo the
+ * one thing this section has going for it.
+ */
+import { credentials } from '../../../data/achievements';
+import SectionHead from '../../academics/SectionHead.astro';
+import SportIcon from '../sports/SportIcon.astro';
+---
+
+<section class="rec" id="recognition" aria-labelledby="rec-title">
+  <div class="u-container">
+    <SectionHead
+      id="rec-title"
+      eyebrow="Judged from outside"
+      heading="What others have recognised"
+      stand="Six credentials awarded by bodies other than the school — a district ranking held for six years running, a Microsoft designation, and three national awards."
+      align="start"
+      measure={18}
+    />
+
+    <ul class="rec__grid">
+      {credentials.map((c, i) => (
+        <li class="rec__card" data-reveal data-reveal-delay={i * 70}>
+          <span class="rec__icon" aria-hidden="true"><SportIcon name={c.icon} size={26} /></span>
+          {/* Wrapped so the card can turn side-on at phone widths — the icon
+              takes a left rail and the text keeps a column of its own. On
+              desktop this is an inert block and changes no spacing. */}
+          <div class="rec__text">
+            {c.figure && <p class="rec__fig t-tabular">{c.figure}</p>}
+            <h3 class="rec__h">{c.title}</h3>
+            <p class="rec__b">{c.body}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .rec {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .rec__grid {
+    list-style: none;
+    margin: var(--sb-10) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.4vw, 22px);
+  }
+
+  .rec__card {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(22px, 2.2vw, 34px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .rec__card:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 0 1px transparent, 0 2px 6px rgba(28, 14, 8, 0.05), 0 22px 44px rgba(28, 14, 8, 0.1);
+  }
+
+  .rec__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: var(--sb-5);
+    border-radius: 12px;
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+
+  .rec__fig {
+    font-family: var(--sb-font-display);
+    font-size: clamp(24px, 2.2vw, 32px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-3);
+  }
+
+  .rec__h {
+    font-family: var(--sb-font-display);
+    font-size: 18px;
+    font-weight: 650;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .rec__b {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (max-width: 1023px) { .rec__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  @media (max-width: 620px) {
+    /* ═══ PHONE — the cards turn side-on rather than stacking portrait ═══
+       One column of six portrait boxes measured 1,676px and read as a template:
+       six near-identical objects with nothing to tell them apart at a glance.
+
+       Two columns is not the answer at this width — "Brainfeed School
+       Excellence Award" in a 123px cell breaks to four lines and the body copy
+       falls to a 14-character measure. So the cards stay one per row and turn
+       landscape instead: the icon takes a left rail and the text a column
+       beside it. That roughly halves each card's height, and it finally gives
+       the icon a job — anchoring the row — instead of floating it above a
+       short title with nothing beneath.
+
+       The card ground, radius and border are kept. They are the reference
+       language the client chose (docs/08 D16); the stack was the fault, not
+       the card. */
+    .rec__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-4);
+      margin-top: var(--sb-8);
+    }
+
+    .rec__card {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--sb-5);
+      padding: var(--sb-6);
+    }
+
+    .rec__icon { flex: 0 0 44px; margin-bottom: 0; }
+    .rec__text { flex: 1 1 auto; min-width: 0; }
+    .rec__fig { font-size: 22px; }
+  }
+</style>

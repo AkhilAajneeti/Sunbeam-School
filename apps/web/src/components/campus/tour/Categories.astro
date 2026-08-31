@@ -1,0 +1,192 @@
+---
+/**
+ * §3 · FACILITY CATEGORIES — the campus as sixteen cards, not one long scroll.
+ *
+ * Each card carries a cover, the facility name, a line saying what the room is
+ * FOR, and its photograph count. The count is read off the folder rather than
+ * typed, so it can never drift from what the gallery actually holds.
+ *
+ * The five facilities with no photography are not hidden. They render a labelled
+ * brief and sort to the end — the shooting range is the single rarest thing this
+ * school has, and quietly dropping it would remove the campus's best argument
+ * because of a missing JPEG.
+ *
+ * Cards are links into the masonry wall below, filtered to that facility. That
+ * is the whole navigation model of the page: choose a place, see its frames.
+ */
+import { Picture } from 'astro:assets';
+import { facilities } from '../../../data/campusTour';
+import SectionHead from '../../academics/SectionHead.astro';
+import AssetPlaceholder from '../../ui/AssetPlaceholder.astro';
+---
+
+<section class="fac" aria-labelledby="fac-title">
+  <div class="u-container">
+    <SectionHead
+      id="fac-title"
+      eyebrow="Where to look"
+      heading="Every facility, by the room it is"
+      stand="Choose a place to see its photographs, or scroll on for the whole wall."
+      measure={20}
+    />
+
+    <ul class="fac__grid">
+      {facilities.map((f, i) => (
+        <li class="fac__cell" data-reveal data-reveal-delay={(i % 4) * 70}>
+          <a
+            class:list={['fac__card', f.pending && 'fac__card--pending']}
+            href={f.pending ? '#gallery' : `#gallery`}
+            data-fac-jump={f.id}
+            aria-label={`${f.name} — ${f.images.length} photograph${f.images.length === 1 ? '' : 's'}`}
+          >
+            <span class="fac__media">
+              {f.pending || !f.images.length ? (
+                <AssetPlaceholder ratio="4 / 3" tone="charcoal" brief={f.brief ?? f.name} ref="A2" quiet />
+              ) : (
+                <Picture
+                  src={f.images[0]}
+                  alt={`${f.alt} — cover`}
+                  formats={['webp']}
+                  widths={[400, 800]}
+                  sizes="(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 24vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+
+              <span class="fac__count">
+                {f.pending ? 'Photography pending' : `${f.images.length} photo${f.images.length === 1 ? '' : 's'}`}
+              </span>
+            </span>
+
+            <span class="fac__body">
+              <span class="fac__name">{f.name}</span>
+              <span class="fac__blurb">{f.blurb}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .fac {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  .fac__grid {
+    list-style: none;
+    margin: var(--sb-10) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sb-7);
+  }
+
+  .fac__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--sb-paper);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(28, 14, 8, 0.05), 0 10px 24px rgba(28, 14, 8, 0.05);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .fac__card:hover,
+  .fac__card:focus-visible {
+    transform: translateY(-5px);
+    box-shadow: 0 3px 6px rgba(28, 14, 8, 0.07), 0 22px 46px rgba(28, 14, 8, 0.12);
+  }
+
+  .fac__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--sb-sand);
+  }
+
+  .fac__media :global(picture),
+  .fac__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 600ms var(--sb-ease);
+  }
+
+  .fac__card:hover .fac__media :global(img) { transform: scale(1.06); }
+
+  /* Sits over the image, so it needs its own contrast rather than borrowing the
+     photograph's — a caption over an unknown frame is a contrast bug waiting. */
+  .fac__count {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(18, 12, 8, 0.72);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+  }
+
+  .fac__card--pending .fac__count {
+    background: rgba(18, 12, 8, 0.58);
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .fac__body {
+    display: block;
+    padding: var(--sb-6) var(--sb-6) var(--sb-7);
+  }
+
+  .fac__name {
+    display: block;
+    font-family: var(--sb-font-display);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .fac__card:hover .fac__name { color: var(--sb-violet); }
+
+  .fac__blurb {
+    display: block;
+    margin-top: var(--sb-3);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (max-width: 1100px) {
+    .fac__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 800px) {
+    .fac__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sb-6); }
+  }
+
+  @media (max-width: 520px) {
+    .fac__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+
+<script>
+  /* A category card jumps to the gallery AND filters it. The href already points
+     at #gallery, so this only adds the filter — with JS off the card still lands
+     the reader on the full wall rather than nowhere. */
+  document.querySelectorAll<HTMLAnchorElement>('[data-fac-jump]').forEach((a) => {
+    a.addEventListener('click', () => {
+      const id = a.dataset.facJump!;
+      document.querySelector<HTMLButtonElement>(`[data-gal-filter="${id}"]`)?.click();
+    });
+  });
+</script>

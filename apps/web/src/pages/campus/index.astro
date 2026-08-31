@@ -1,0 +1,158 @@
+---
+/**
+ * CAMPUS TOUR  ·  audit §3 — "Replace existing photographs with high-quality,
+ * professionally captured images", "Properly label important facilities", and
+ * "Merge Facilities and Infrastructure within the Campus Tour section".
+ *
+ * WHAT THE OLD PAGE WAS, AND WHY THIS IS NOT IT. The live site presents the
+ * campus as one endless vertical column of images grouped loosely by facility.
+ * The content is fine; the presentation gives a parent no way in and no way to
+ * stop. This page keeps every photograph and adds the two things the column
+ * lacked — a route through it, and a reason to care about each room.
+ *
+ *   1 Overview    ivory   · four figures, before a single photograph
+ *   2 Categories  sand    · 16 facility cards, each a way into the wall
+ *   3 Masonry     ivory   · 68 frames, filterable, with a full lightbox
+ *   4 Featured    ivory   · six alternating showcases with real highlights
+ *   5 Marquee     ink     · two continuous lanes, opposite directions
+ *   6 Journey     sand    · a student's day, as a zig-zag down a drawn rail
+ *   7 VisitCta    ink     · book a visit
+ *
+ * IMAGES COME FROM THE FOLDERS, NOT FROM A LIST. src/data/campusTour.ts globs
+ * src/assets/**, so a new photograph dropped into `src/assets/library/` appears
+ * in the Library card's count, the masonry wall, the lightbox sequence and the
+ * marquee without anyone editing code.
+ *
+ * ⚠ FIVE FACILITIES HAVE NO PHOTOGRAPH — shooting range, auditorium, medical
+ * centre, robotics lab, smart classrooms. They are kept as cards carrying their
+ * shot brief rather than dropped, because the shooting range in particular is
+ * the rarest thing this school has. Two files that LOOK like they would fill
+ * those slots are stock and are not used: `Robotics-drones.jpg` is a consumer
+ * DJI product photograph and `Smart-classrooms.jpg` is an empty Western lecture
+ * theatre. `src/assets/corridor and stairs/` is excluded too — all six frames
+ * are stored rotated 90° with no EXIF flag to correct them.
+ *
+ * ⚠ PERFORMANCE. 68 frames is a lot of page. Every thumbnail is `loading=lazy`
+ * with two source widths; the lightbox's full sizes are built once at 1600w
+ * WebP by `getImage()` rather than shipping 5568px originals.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import SectionRail from '../../components/academics/SectionRail.astro';
+
+import Overview from '../../components/campus/tour/Overview.astro';
+import Categories from '../../components/campus/tour/Categories.astro';
+import Masonry from '../../components/campus/tour/Masonry.astro';
+import Featured from '../../components/campus/tour/Featured.astro';
+import Marquee from '../../components/campus/tour/Marquee.astro';
+import Journey from '../../components/campus/tour/Journey.astro';
+import VisitCta from '../../components/campus/tour/VisitCta.astro';
+
+import heroPhoto from '../../assets/photos/sunbeem-1.jpg';
+---
+
+<BaseLayout
+  title="Explore Our Campus — Sunbeam School Ballia"
+  description="A tour of the Sunbeam School Ballia campus at Agarsanda — the Nalanda Library, twelve subject laboratories, computer labs, the JOSH ground and the playground, in 68 photographs."
+>
+  <PageHero
+    title="Explore Our Campus"
+    standfirst="The Nalanda Library, twelve laboratories, two computer labs and the ground the whole school assembles on — photographed room by room."
+    crumbs={[{ label: 'Home', href: '/' }]}
+    src={heroPhoto}
+    alt="The Sunbeam School Ballia campus at Agarsanda, seen across the school ground."
+    position="50% 58%"
+  >
+    {/* Hero tail — the slot PageHero exposes. Both are ordinary links, so they
+        work with no JavaScript at all. */}
+    <!-- <div class="tour-cta">
+      <a class="btn btn--primary" href="#gallery">Start exploring</a>
+    </div> -->
+
+    <!-- <a class="tour-cue" href="#overview" aria-label="Scroll to the campus overview">
+      <span class="tour-cue__mouse" aria-hidden="true"><i></i></span>
+    </a> -->
+  </PageHero>
+
+  <SectionRail
+    items={[
+      { id: 'overview', label: 'Overview' },
+      { id: 'facilities', label: 'Facilities' },
+      { id: 'gallery', label: 'Gallery' },
+      { id: 'featured', label: 'Featured' },
+      { id: 'journey', label: 'A day here' },
+      { id: 'visit', label: 'Visit' },
+    ]}
+  />
+
+  {/* padding-bottom: 0 — VisitCta closes on its own ink ground. */}
+  <div class="u-page-panel tour-panel">
+    <div id="overview"><Overview /></div>
+    <!-- <div id="facilities"><Categories /></div> -->
+    <div id="featured"><Featured /></div>
+    <Masonry />
+    <!-- <Marquee /> -->
+    <!-- <div id="journey"><Journey /></div> -->
+    <div id="visit"><VisitCta /></div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* padding-block: 0 — Overview already opens on --sb-section-y, so the panel's
+     own top padding was only doubling it, and VisitCta closes on its own ink
+     ground. `div.` to out-specify .u-page-panel in base.css. */
+  div.tour-panel { padding-block: 0; }
+
+  /* Rail anchors sit on wrappers, so they need the offset the sticky masthead
+     would otherwise eat. */
+  .tour-panel > div[id],
+  .tour-panel :global(#gallery) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
+  }
+
+  .tour-cta { margin-top: var(--sb-7); }
+
+  /* --- Scroll cue ---------------------------------------------------------- */
+
+  .tour-cue {
+    display: inline-grid;
+    place-items: center;
+    margin-top: var(--sb-8);
+    padding: 6px;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .tour-cue:hover { color: #fff; }
+
+  .tour-cue__mouse {
+    display: block;
+    width: 24px;
+    height: 38px;
+    border: 1.5px solid currentColor;
+    border-radius: 13px;
+    position: relative;
+  }
+
+  .tour-cue__mouse i {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    translate: -50% 0;
+    width: 3px;
+    height: 7px;
+    border-radius: 2px;
+    background: currentColor;
+    animation: tour-wheel 1.8s var(--sb-ease) infinite;
+  }
+
+  @keyframes tour-wheel {
+    0% { transform: translateY(0); opacity: 0; }
+    22% { opacity: 1; }
+    68% { transform: translateY(12px); opacity: 0; }
+    100% { transform: translateY(12px); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tour-cue__mouse i { animation: none; opacity: 1; }
+  }
+</style>

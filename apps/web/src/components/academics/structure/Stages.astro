@@ -1,0 +1,617 @@
+---
+/**
+ * ACADEMIC STRUCTURE · 02 — THE FIVE STAGES
+ *
+ * Five rows down a spine, each a node and a panel. Fourteen years have an ORDER,
+ * and this is the shape that says so without asking the copy to fit in a column.
+ *
+ * ⚠ THIS REPLACED A FIVE-ACROSS GRID, and the reason was measured rather than
+ * felt. In that layout, at a 1280 container:
+ *
+ *   · THE BODY COPY SET AT 17–21 CHARACTERS PER LINE. Comfortable reading is
+ *     45–75. Each card was ~208px wide and ~165px of that was text — narrower
+ *     than a newspaper classified. Five columns of it is genuinely hard work,
+ *     and it was the root cause of everything else below.
+ *   · PILLS WRAPPED. "KIDS entrepreneurship, Class VII" and "Full laboratory
+ *     programme" broke to two lines INSIDE a rounded pill, which reads as
+ *     broken rather than as designed.
+ *   · 28–96px OF DEAD SPACE floated mid-card, different on every one: the cards
+ *     stretched to the tallest and `margin-top: auto` dumped all the slack in
+ *     one place.
+ *   · THE CONNECTOR WAS 40×2px. At that size it did not read as a journey; it
+ *     read as dust in the gaps.
+ *
+ * None of that is fixable by adjusting spacing. Five columns was the decision
+ * that had to change.
+ *
+ * ═══ HOW THE ROW IS BUILT ═══════════════════════════════════════════════════
+ *
+ * node · panel, and the panel splits again into copy and a side column carrying
+ * the focus tags and the milestone. That second split is what stops a full-width
+ * row from setting one very long line: the copy takes a measure it can be read
+ * at, and the width left over does useful work instead of being margin.
+ *
+ * ═══ THE CARDS STACK ═══════════════════════════════════════════════════════
+ *
+ * Each card pins a little lower than the one before, so scrolling collects the
+ * five into a deck instead of carrying them off the top of the screen.
+ *
+ * IT IS `position: sticky`, WITH NO JAVASCRIPT AT ALL. The obvious build is a
+ * GSAP ScrollTrigger per card and it buys nothing here: sticky is the browser's
+ * own implementation of exactly this, it runs on the compositor, it cannot
+ * desynchronise from the scroll position, and with a blocked script the section
+ * is still a perfectly good list.
+ *
+ * ⚠ AND IT COST THE SPINE. A side rail and a stack cannot both work — sticky
+ * pins the whole row, so the five nodes piled at a 23px step showed 23px
+ * slivers of one another and read as a rendering fault. The node moved into the
+ * card, the rail and its drawn spine went, and the IntersectionObserver that
+ * drew that spine went with them rather than being left running with nothing to
+ * do. The stack is the sequence device now, and the "01/05" on each card says
+ * where in the five you are — which a reader can no longer count once the cards
+ * overlap.
+ *
+ * THE ROW CLASS IS `astg`, NOT `asr`. Streams already owns `.asr` for its
+ * photograph cards. Astro's scoping keeps the two stylesheets apart, so nothing
+ * was broken — but a page with two different `.asr` blocks is a trap for the
+ * next person reading it, and for any script that queries the page rather than
+ * the component.
+ *
+ * ⚠ NO AGES. The school's age criteria live in a Drive-hosted prospectus and are
+ * not ours to estimate, so every stage is identified by its class band. Asset
+ * request A8, and it is the reason `classes` exists in the data at all.
+ */
+import AcademicGlyph from '../AcademicGlyph.astro';
+import { stages } from '../../../data/academics';
+---
+
+<section
+  class="asst"
+  id="stages"
+  aria-labelledby="asst-title"
+  style={`--stack-n: ${stages.length - 1};`}
+>
+  <span class="asst__dots" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="asst__head">
+      <p class="asst__eyebrow">The five stages</p>
+      <h2 class="asst__h" id="asst-title" data-split>A closer look at each stage</h2>
+    </div>
+
+    <ol class="asst__list">
+      {
+        stages.map((s, i) => (
+          <li
+            class="astg"
+            id={s.key}
+            style={`--acc: var(--as-${s.accent}); --acc-wash: var(--as-${s.accent}-wash); --i: ${i};`}
+          >
+            <article class="astg__panel">
+              {/* THE STUB. A ticket's counterfoil: the glyph, the class band and
+                  the position in the run, torn off down a perforation from the
+                  itemised half. It is also what fixes the plain white card the
+                  receipt had been — the left third now carries the stage's
+                  colour instead of being empty. */}
+              <div class="astg__stub">
+                <span class="astg__node" aria-hidden="true">
+                  <AcademicGlyph name={s.glyph} size={22} />
+                </span>
+                <span class="astg__classes t-tabular">{s.classes}</span>
+                {/* Decorative: the ordered list already carries the sequence,
+                    and hearing "01 Pre-Primary" for five rows is it read twice.
+                    It earns its place once the cards stack, because a reader
+                    looking at the top of the deck can no longer count what is
+                    under it. */}
+                <span class="astg__n t-tabular" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}<i>/{String(stages.length).padStart(2, '0')}</i>
+                </span>
+              </div>
+
+              <div class="astg__main">
+                <h3 class="astg__h">{s.stage}</h3>
+                <p class="astg__b">{s.body}</p>
+              </div>
+
+              {/* The itemised half. Pills became line items with dotted leaders:
+                  three chips of unequal width read as three unrelated labels,
+                  while three ruled lines read as a list of what this stage
+                  covers — which is what they are. */}
+              <div class="astg__side">
+                <p class="astg__l">Focus</p>
+                <ul class="astg__items">
+                  {s.focus.map((f) => (
+                    <li class="astg__item">
+                      <span class="astg__nm">{f}</span>
+                      <span class="astg__lead" aria-hidden="true" />
+                      <span class="astg__mk" aria-hidden="true" />
+                    </li>
+                  ))}
+                </ul>
+
+                <p class="astg__ms">
+                  <span class="astg__ms-l">Milestone</span>
+                  <span class="astg__ms-v">{s.milestone}</span>
+                </p>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* ⚠ NO `overflow: hidden` ON THIS SECTION, EVER. It was added here for one
+     build to clip the dot field and it silently killed the stack: every card
+     stopped pinning and scrolled straight past — measured, the five reported
+     tops of -915, -710, -351, 8 and 367 where they should have been a tidy pile.
+     `overflow` on ANY ancestor makes that ancestor the sticky scroll container,
+     and a non-scrolling box is one a sticky child can never travel within.
+     It is also not needed: the dot layer is `position: absolute; inset: 0`
+     against this relatively-positioned box, so it already cannot paint outside
+     it. `isolation` is what the negative z-index needs, and isolation does not
+     touch sticky. */
+  .asst {
+    position: relative;
+    isolation: isolate;
+    padding-block: clamp(48px, 7vh, 84px) clamp(56px, 8vh, 100px);
+    background: var(--as-ground);
+    --node: clamp(48px, 4vw, 60px);
+
+    /* ── THE STACK ──────────────────────────────────────────────────────────
+       Where the first card comes to rest, and how far each one after it sits
+       below the last. The step is what leaves a strip of every card in the pile
+       visible instead of burying them. */
+    --card-h: 320px;
+    --stack-step: clamp(18px, 1.8vw, 27px);
+
+    /* IT RESTS IN THE MIDDLE OF THE SCREEN, NOT UNDER THE MASTHEAD. Pinning the
+       first card just below the header put the whole deck in the top third with
+       half a screen of empty page beneath it — measured, the pile's centre sat
+       142px above the viewport's at 1600×900. The cards were arriving at the
+       edge of vision rather than where a reader is looking.
+
+       Centring needs the pile's height, which is the tallest card plus every
+       step below it. CSS cannot measure the card, so --card-h approximates it
+       per breakpoint: measured 254–291px on desktop, 316 at 768, 363–387 at 390.
+       Being a few pixels out shifts the deck by half that, which is invisible.
+
+       --stack-n comes off the section as stages.length - 1, so adding a sixth
+       stage re-centres the pile instead of pushing it off the bottom.
+
+       THE max() IS A FLOOR, NOT A PREFERENCE. On a short window the centred
+       value drops under the sticky masthead and the top card would pin behind
+       it; the first term keeps it clear. 100svh rather than 100vh, so mobile
+       browser chrome is counted. */
+    --stack-top: max(
+      calc(var(--sb-masthead-h-condensed) + clamp(10px, 1.4vh, 18px)),
+      calc((100svh - var(--card-h) - var(--stack-n) * var(--stack-step)) / 2)
+    );
+  }
+
+  /* THE SECTION'S DOT FIELD IS THE CLIENT'S dot-bg.png, BLED IN FROM THE LEFT.
+     It replaced a CSS radial-gradient pattern, and the artwork is the better of
+     the two: real squares at an uneven density that thins as it falls, rather
+     than a perfectly regular grid of circles.
+
+     PAINTED THROUGH THE ARTWORK AS A MASK, not laid on as an image. The file is
+     light-coloured on transparency — on this ivory ground it would be invisible.
+     Masking the page's ink through it gives dots that darken the paper, which is
+     what texture actually does.
+
+     TWO MASK LAYERS COMPOSITED with `intersect`: the artwork supplies the dot
+     shapes and a left-to-right gradient supplies the bleed. The field is at full
+     strength against the left edge and gone by two thirds across, so it frames
+     the cards rather than sitting behind them.
+
+     IT NEEDS NO CLIP. `inset: 0` against the relatively-positioned section is
+     already exactly the section's box — see the warning on .asst about what
+     adding `overflow: hidden` here does to the stack. */
+  .asst__dots {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--as-ink);
+    opacity: 0.16;
+    -webkit-mask-image:
+      url('../../../assets/icons/dot-bg.png'),
+      linear-gradient(to right, #000 0%, #000 10%, transparent 64%);
+    mask-image:
+      url('../../../assets/icons/dot-bg.png'),
+      linear-gradient(to right, #000 0%, #000 10%, transparent 64%);
+    /* ONE COPY, NOT TILED. The artwork thins from top to bottom, so repeating it
+       bands at every seam. Sized to a fixed height and anchored top-left, it
+       plays its own fade out down the section and simply stops — which is the
+       effect it was drawn for. */
+    -webkit-mask-size: auto 1200px, 100% 100%;
+    mask-size: auto 1200px, 100% 100%;
+    -webkit-mask-position: left top, left top;
+    mask-position: left top, left top;
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    pointer-events: none;
+  }
+
+  .asst__head { text-align: center; }
+
+  .asst__eyebrow {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--as-teal);
+  }
+
+  h2.asst__h {
+    max-width: 22ch;
+    margin: var(--sb-5) auto 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(27px, 3.6vw, 48px);
+    line-height: 1.06;
+    letter-spacing: -0.036em;
+    color: var(--as-ink);
+    text-wrap: balance;
+  }
+
+  .asst__list {
+    max-width: 1080px;
+    margin: clamp(38px, 5.4vh, 64px) auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* --- The row ------------------------------------------------------------- */
+
+  /* ══ THE ROWS STACK, AND IT IS `position: sticky` DOING IT ═══════════════
+     Each row pins a little lower than the one before, so scrolling collects the
+     five into a deck rather than carrying them off the top of the screen.
+
+     NO JAVASCRIPT, DELIBERATELY. The obvious build for this is a GSAP
+     ScrollTrigger per card, and it buys nothing here: sticky is the browser's
+     own implementation of exactly this, it runs on the compositor, it cannot
+     desynchronise from the scroll position, and with a blocked script the
+     section is still a perfectly good list. The one thing GSAP would add — the
+     buried cards shrinking as they go under — is not worth a scroll handler and
+     five triggers.
+
+     THE OFFSET IS COMPUTED FROM --i, so the pile keeps its order whatever the
+     step resolves to, and the stack is one declaration rather than five.
+
+     ⚠ STICKY DIES INSIDE ANY ANCESTOR WITH `overflow` SET — hidden, auto or
+     scroll. Nothing between here and the document currently sets it (checked:
+     .asst, .u-container, .u-page-panel). If this section ever stops sticking,
+     that is the first thing to look for; it fails silently and completely. */
+  .astg {
+    position: sticky;
+    top: calc(var(--stack-top) + var(--i) * var(--stack-step));
+    /* The scroll distance between one card arriving and the next. Bigger than
+       the old gap because each card now needs a moment on its own before it is
+       covered. */
+    padding-bottom: clamp(30px, 6vh, 84px);
+  }
+
+  .astg:last-child { padding-bottom: 0; }
+
+  /* ⚠ THE NODE MOVED INSIDE THE CARD, AND THE SIDE RAIL AND SPINE WENT WITH IT.
+     A rail and a stack cannot both work: sticky pins the whole row, so five
+     60px nodes piled at a 23px step showed 23px slivers of each other and read
+     as a rendering fault rather than as a deck. The stack is the sequence device
+     now — it is a better one, and the numeral below says where in the five you
+     are, which a reader can no longer count once the cards overlap.
+
+     SATURATED, not tinted. This is the one mark on the card big enough to carry
+     the stage's colour — see the palette note on the page, where the washes were
+     measured at 5 RGB units apart and abandoned as a differentiator. */
+  .astg__meta {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 1.4vw, 18px);
+  }
+
+  .astg__node {
+    display: grid;
+    place-items: center;
+    width: var(--node);
+    height: var(--node);
+    flex-shrink: 0;
+    border-radius: var(--sb-r-full);
+    background: var(--acc);
+    color: #fff;
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--acc) 12%, transparent);
+  }
+
+  .astg__n {
+    flex-shrink: 0;
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--acc);
+  }
+
+  .astg__n i { font-style: normal; opacity: 0.45; }
+
+  /* --- The panel ----------------------------------------------------------
+     copy · side. The second column is what stops a full-width row from setting
+     one very long line — the copy keeps a measure it can be read at, and the
+     width left over carries the tags and the milestone. */
+  /* ⚠ THE TORN BOTTOM EDGE IS GONE, at the client's request, and the card is
+     back on the rounded border it had before it. Three things went with it,
+     because all three existed only to serve the tear:
+       · the `mask` that cut the zigzag;
+       · `--tear`, and the bottom-padding allowance every cell paid it;
+       · the `drop-shadow` filter on the row. A mask clips everything an element
+         paints — a box-shadow included — so the shadow had to be a filter to
+         follow the notches. With no mask, the shadow goes back on the panel
+         where it belongs and costs nothing to composite.
+     `overflow: hidden` replaces the mask's other job: clipping the stub's tint
+     to the card's rounded corners. It is safe here — the sticky element is the
+     ROW above this, and overflow on a descendant does not affect it. */
+  .astg__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: clamp(122px, 13vw, 176px) minmax(0, 1.16fr) minmax(0, 0.84fr);
+    --pad-y: clamp(22px, 2.3vw, 32px);
+    --pad-x: clamp(20px, 2.1vw, 30px);
+    /* OPAQUE, not the glass the other panels on this page use. A translucent
+       card in a stack shows the card beneath it through its own body copy. */
+    background: #fff;
+    border: 1px solid color-mix(in srgb, var(--acc) 16%, transparent);
+    border-radius: clamp(18px, 1.7vw, 26px);
+    /* THE INSET RULE IS WHY THE PILE IS LEGIBLE. Once cards stack, all a reader
+       sees of the ones underneath is a 27px strip — and a strip of white card on
+       an ivory page is a hairline, not a card. Painting the top edge in the
+       stage's own accent turns the pile into a visible run of green → teal →
+       blue → indigo → violet, so the deck shows the progression rather than
+       hiding it. Inset shadow rather than border-top: a border would change the
+       box's height and shift every card in the stack. */
+    box-shadow:
+      inset 0 3px 0 0 var(--acc),
+      0 18px 44px -24px rgba(22, 24, 42, 0.34);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease),
+      border-color var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .astg__panel:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 3px 0 0 var(--acc),
+      0 30px 66px -26px rgba(22, 24, 42, 0.42);
+    border-color: color-mix(in srgb, var(--acc) 34%, transparent);
+  }
+
+  /* ══ THE STUB ════════════════════════════════════════════════════════════
+     Tinted in the stage's own accent and torn off down a perforation. The
+     dashed border IS the perforation — a real one, not an image, so it lands on
+     the pixel grid at every width and never blurs.
+
+     ⚠ NO DOT ARTWORK IN HERE, AND THAT IS THE FIX FOR A REAL BUG. dot-bg.png is
+     880×416 with its dots dense at the top and thinning downward. `cover` into
+     a 176×305 stub scales it to 645×305, so the stub showed 27% of its width —
+     and because the visible slice was the artwork's own top-left, it rendered as
+     a block of squares in the corner with emptiness under it. A fragment, not a
+     texture, and it read exactly like a broken background.
+
+     No scale rescues it: fit the height and you still see a quarter of the
+     width; tile it and the top-dense / bottom-sparse gradient bands at every
+     seam, because the artwork is not seamlessly tileable. A 176px box is simply
+     too small for this piece of art. It stays on the SECTION, which has the room
+     to show it whole, and the stub keeps its accent wash — which was always the
+     thing carrying the stage's colour anyway.
+
+     ⚠ THE TINT IS THE WASH, NOT THE ACCENT. A saturated stub would need white
+     type on five different hues and two of them are only 5.9:1 with it; the
+     wash keeps the accent's own colour legible on top at 6.4:1 and up. */
+  .astg__stub {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(12px, 1.4vw, 18px);
+    padding: var(--pad-y) var(--pad-x) var(--pad-y);
+    background: var(--acc-wash);
+    border-right: 2px dashed color-mix(in srgb, var(--acc) 34%, transparent);
+  }
+
+  .astg__classes {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    color: var(--acc);
+  }
+
+  /* Pushed to the stub's foot, where a ticket prints its serial. */
+  .astg__n { margin-top: auto; }
+
+  /* --- The two paper halves ------------------------------------------------ */
+
+  .astg__main { padding: var(--pad-y) clamp(24px, 2.6vw, 40px) var(--pad-y) clamp(24px, 2.6vw, 38px); }
+
+  h3.astg__h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(21px, 2vw, 29px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--as-ink);
+  }
+
+  /* The whole point of the rebuild. 58ch lands the body at 45–60 characters a
+     line at every width this layout runs at — the old grid managed 17. */
+  .astg__b {
+    max-width: 58ch;
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--as-text);
+  }
+
+  /* --- Side column --------------------------------------------------------- */
+
+  .astg__side {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 1.6vw, 20px);
+    padding: var(--pad-y) clamp(24px, 2.6vw, 34px) var(--pad-y) 0;
+  }
+
+  /* ⚠ THE NUMERAL IS NOT IN THIS ROW ANY MORE — it moved to the stub. It had
+     been absolutely positioned at the panel's top-right, and although the two
+     never visually collided, its box sat INSIDE this label's box: a latent
+     collision waiting for a longer label, and the reason the contrast checker
+     read the numeral's indigo as this label's ground and reported 1.04:1 on
+     type that is really 8:1. */
+  .astg__l {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--as-text);
+  }
+
+  .astg__items {
+    margin: clamp(10px, 1.2vw, 14px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .astg__item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding-block: 4px;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--as-ink);
+  }
+
+  .astg__nm { flex-shrink: 0; }
+
+  /* THE LEADER. A flexible dotted rule between the item and its mark — it is
+     what makes three entries of different lengths read as one ruled column
+     rather than as three loose labels. */
+  .astg__lead {
+    flex: 1;
+    min-width: 10px;
+    border-bottom: 1px dotted var(--sb-border-strong);
+    translate: 0 -3px;
+  }
+
+  .astg__mk {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--acc);
+    border-radius: var(--sb-r-full);
+  }
+
+  /* The total row. margin-top: auto pins it to the panel's foot, so five cards
+     of unequal copy still land their milestones on the same line — and the
+     doubled dashed rule is the one a receipt puts above its total. */
+  /* The gap above the label is 18-24px rather than 12-16, and the extra is not
+     taste. At the tighter value the label's line box grazed the dashed rule
+     above it, which put --sb-border-strong pixels inside the type's own box:
+     harmless to read, but it made every contrast probe that landed there report
+     3.7:1 on type whose real ground is white at 6.4:1. Separating them removes
+     the graze rather than arguing with the checker about it. */
+  .astg__ms {
+    margin-top: auto;
+    padding-top: clamp(18px, 2vw, 24px);
+    border-top: 2px dashed var(--sb-border-strong);
+  }
+
+  .astg__ms-l {
+    display: block;
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--acc);
+  }
+
+  .astg__ms-v {
+    display: block;
+    margin-top: 4px;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--as-ink);
+  }
+
+  /* The spine still ARRIVES under reduced motion — it just stops travelling.
+     Removing it would take away the information that these five are one
+     sequence; only the draw is motion. */
+  /* The spine still ARRIVES under reduced motion — it just stops travelling.
+     THE STACK GOES ENTIRELY. Cards sliding over one another as the page moves is
+     precisely the kind of large-area motion that preference is asking to be
+     spared, and unstacked they are a plain readable list with the spine running
+     the whole way down — which is what the layout was before the stack and is
+     complete on its own. */
+  @media (prefers-reduced-motion: reduce) {
+    .astg {
+      position: static;
+      padding-bottom: clamp(22px, 3vh, 40px);
+    }
+    .astg__panel { transition: none; }
+    .astg__panel:hover { transform: none; }
+  }
+
+  /* Below this the side column is under 220px and the tags start wrapping
+     again — the exact fault the rebuild was for. The panel goes to one column
+     and the side content sits under the copy. */
+  @media (max-width: 899px) {
+    /* The panel goes single-column here and grows, so the pile it has to be
+       centred against grows with it. */
+    .asst { --card-h: 360px; }
+
+    /* The stub becomes a strip across the top, and the perforation turns with
+       it — a counterfoil torn off the short edge instead of the long one. */
+    .astg__panel { grid-template-columns: minmax(0, 1fr); }
+
+    .astg__stub {
+      flex-direction: row;
+      align-items: center;
+      gap: clamp(12px, 2.4vw, 20px);
+      padding-bottom: var(--pad-y);
+      border-right: 0;
+      border-bottom: 2px dashed color-mix(in srgb, var(--acc) 34%, transparent);
+    }
+
+    .astg__n { margin-top: 0; margin-left: auto; }
+
+    .astg__main { padding: var(--pad-y) var(--pad-x) 0; }
+    .astg__side { padding: clamp(16px, 2vw, 22px) var(--pad-x) var(--pad-y); }
+    .astg__tags { flex-direction: row; flex-wrap: wrap; }
+    .astg__ms { margin-top: 0; }
+  }
+
+  @media (max-width: 639px) {
+    .asst { padding-block: var(--sb-8) var(--sb-9); --node: 44px; }
+
+    /* ⚠ NO STACK ON A PHONE. Measured at 390×844 the cards run to ~440px, so a
+       pile of five needs more than half the screen before a single step is
+       added — and the deck ends up crushed against the bottom of the list with
+       the card you are reading only half visible. A stack needs room around it
+       that a phone does not have. They flow as a plain list instead, which is
+       what the layout is under reduced motion too, and it reads perfectly well. */
+    .astg {
+      position: static;
+      padding-bottom: clamp(20px, 3vh, 32px);
+    }
+    .astg__panel:hover { transform: none; }
+    /* The numeral would sit on the class pill at this width. */
+    .astg__n { display: none; }
+  }
+</style>
+

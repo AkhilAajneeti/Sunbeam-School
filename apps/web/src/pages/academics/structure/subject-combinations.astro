@@ -1,0 +1,71 @@
+---
+/**
+ * ACADEMIC STRUCTURE · SUBJECT COMBINATIONS
+ *
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height, same title
+ * and standfirst as before and as every other Academics page. All of the
+ * redesign is below it.
+ *
+ * The page was rebuilt off the generic AcStatement → AcCollage → AcClose system
+ * into a composed one: five sections, five grounds, five different ideas. The
+ * whole composition lives in
+ * components/academics/structure/SubjectCombinationsPage.astro.
+ *
+ * ⚠ THIS IS THE PAGE THAT OWNS THE UNCERTAINTY, and the redesign did not soften
+ * it — it made it the structure. data/academics.ts sets out three confidence
+ * levels, and every panel, stamp and rung on the page is driven by them:
+ *
+ *   1 · DEFINITIONAL — PCM and PCB. The abbreviation IS the subject list, and
+ *       English is compulsory in CBSE Classes XI–XII.
+ *   2 · STANDARD REFERENCE — the Commerce core. Printed, and labelled as the
+ *       CBSE structure rather than as a list the school has published.
+ *   3 · NOT PUBLISHED — the Humanities core, and every elective combination.
+ *
+ * ⚠ NO ELECTIVE LIST APPEARS ON THIS PAGE. That decision is kept from the
+ * previous build, deliberately and unchanged.
+ *
+ * ⚠ THE HUMANITIES PANEL CARRIES NO SUBJECT LIST AT ALL — not a greyed one, not
+ * a caveated one. A plausible Humanities combination is the single easiest thing
+ * on this page to get wrong, and a family may choose a school on it.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import SubjectCombinationsPage from '../../../components/academics/structure/SubjectCombinationsPage.astro';
+
+import banner from '../../../assets/computer lab/DSC_1204 copy.jpg';
+---
+
+<BaseLayout
+  title="Subject Combinations — Sunbeam School Ballia"
+  description="Subject combinations for Senior Secondary at Sunbeam School Ballia: what each stream contains, with the confidence of each stated — PCM and PCB are definitional, the Commerce core is standard, and the Humanities core is not published."
+>
+  <PageHero
+    title="Subject Combinations"
+    standfirst="What each stream contains — and how far each of those lists can be relied on."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Structure', href: '/academics/structure/' },
+    ]}
+    src={banner}
+    alt="A computer laboratory at Sunbeam School Ballia, rows of workstations facing an interactive board."
+    position="50% 48%"
+  />
+
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer.
+
+      ⚠ AND THE PADDING RESET IS AN INLINE STYLE, DELIBERATELY. `.u-page-panel`
+      in base.css carries `padding-bottom: var(--sb-section-y)` — 120px of empty
+      cream between the closing section and the footer. Every stylesheet form of
+      this override (scoped, then global) measured correctly in a clean browser
+      and still showed the gap on the client's screen, because a stylesheet can
+      be served from a different build than the HTML that needs it. An inline
+      style travels IN the HTML, so the two cannot skew, and it outranks every
+      selector without needing !important. This is the one place on the page
+      where that trade is worth making. */}
+  <div class="u-page-panel" style="padding-block: 0;">
+    <SubjectCombinationsPage />
+  </div>
+</BaseLayout>

@@ -1,0 +1,963 @@
+---
+/**
+ * ACADEMIC PHILOSOPHY · AFFILIATION DETAILS — the four sections below the banner.
+ *
+ * ⚠ REBUILT ON THE BOARD'S OWN LETTER, NOT ON THE SCHOOL'S /affiliation/ PAGE.
+ * That page publishes four lines: the board, the affiliation number, the school
+ * code and the +2 streams. The previous version of this page had nothing more to
+ * work with, so it padded the gap with third-party awards — which belong to the
+ * school's recognition story, not to its affiliation record.
+ *
+ * The school's Mandatory Public Disclosure (/general-info/) links eight official
+ * documents. Item 01 is the Affiliation/Upgradation Letter, AFFL.pdf, and it
+ * carries everything this page needed and the site did not have: the period of
+ * affiliation, the letter number, what the school is affiliated FOR, and — on
+ * the principal's stamp at its foot — the UDISE code.
+ *
+ * ═══ EVERY FACT ON THIS PAGE, AND WHERE IT COMES FROM ══════════════════════
+ *   AFFL.pdf, the board's letter, published by the school:
+ *     NO : CBSE/2131962/EX-00497-2526/2025-26/         Dated: 13/03/2024
+ *     SUBJECT: Extension of General Affiliation up to Senior Secondary Level
+ *     Affiliation No used as User ID for both OASIS and LOC/Registration System
+ *                                                       → 2131962
+ *     School No                                         → 70205
+ *     Affiliated for   → Extension of General Affiliation
+ *     Category         → Extension of Affiliation
+ *     Period of affiliation → 01.04.2025 to 31.03.2030
+ *     Principal's stamp     → UDISE CODE: 09631300403
+ *   /general-info/, the Mandatory Public Disclosure table:
+ *     NAME OF THE SCHOOL → SUNBEAM SCHOOL · AFFILIATION NO. → 2131962
+ *     SCHOOL CODE → 70205 · eight linked documents, of which this page links two
+ *   /affiliation/:
+ *     "Affiliated with Central Board of Secondary Education, Delhi"
+ *
+ * ⚠ NOT CLAIMED, BECAUSE IT IS NOT PUBLISHED: what happens at renewal, what the
+ * affiliation permits or forbids, any regulatory explanation of the codes beyond
+ * what they are, and any of the seven other disclosure documents' contents.
+ *
+ * ⚠ THE DOCUMENT IMAGE IS THE REAL LETTER. src/assets/documents/ holds page 1 of
+ * AFFL.pdf as the school publishes it, browser print-header and all. It is shown
+ * as an image AND linked to the school's own PDF, and every value it carries is
+ * also set as HTML text beside it — an image is not a source a screen reader can
+ * read. Nothing here is a redrawn or reconstructed certificate.
+ *
+ * ⚠ THE LINE ART IS INLINE SVG, NOT AN IMAGE ASSET. The row marks, the sparkle,
+ * the drawn school block and the dashed arcs are one-colour 1.4px strokes. As
+ * files they would be seven more requests, each needing re-tinting per ground;
+ * as markup they inherit currentColor and cost nothing. The two REAL marks on
+ * the page — the CBSE emblem in section 01 and its watermark in section 03 —
+ * are the board's own artwork and stay as assets.
+ *
+ * Grounds: ivory (the numbers) → sand (the identity) → ink (the document) →
+ * ivory (why it matters). Nothing between the banner and the dark section is
+ * dark, so the one dark band lands as the page's single accent.
+ */
+import { Image, Picture } from 'astro:assets';
+import { school as sb } from '../../data/site';
+
+/* ⚠ FOUR DIFFERENT PHOTOGRAPHS ACROSS THE PAGE, AND THE BANNER OWNS
+   DSC_1240 — so the stairwell here is a different frame from the banner's. */
+import pCampus from '../../assets/photos/sunbeem-1.jpg';
+import pStairs from '../../assets/corridor and stairs/DSC_1221 copy.jpg';
+/* ⚠ THE BOARD'S EMBLEM WITH ITS WHITE CARD CUT AWAY. cbse_v2.webp is the
+   artwork sitting on an opaque white plate. Inside the ring that plate reads as
+   a sticker, and at watermark opacity it reads as a pale rectangle floating on
+   the brown. This is the identical file with near-white pixels made
+   transparent — the board's own artwork, not a redrawn one. */
+import oCbseCut from '../../assets/icons/cbse-emblem-cut.png';
+import docLetter from '../../assets/documents/cbse-affiliation-letter-2025-2030.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/* 24×24 stroked paths. One per identity row, chosen to say what the row is
+   about — not a decorative set applied at random. */
+const ICON: Record<string, string> = {
+  building: 'M3 21h18M5 21V8.2L12 4l7 4.2V21M9.2 21v-4.4h5.6V21M8.6 11h.01M12 11h.01M15.4 11h.01M8.6 14h.01M12 14h.01M15.4 14h.01',
+  book: 'M12 6.6C10.4 5.1 8 4.6 4 5.1v13c4-.5 6.4 0 8 1.5 1.6-1.5 4-2 8-1.5v-13c-4-.5-6.4 0-8 1.5zM12 6.6v13',
+  people: 'M15.4 19.5v-1.4a3.4 3.4 0 0 0-3.4-3.4H7.4A3.4 3.4 0 0 0 4 18.1v1.4M9.7 11.3a3.4 3.4 0 1 0 0-6.8 3.4 3.4 0 0 0 0 6.8M20 19.5v-1.4a3.4 3.4 0 0 0-2.6-3.3M15 4.7a3.4 3.4 0 0 1 0 6.6',
+  cap: 'M2.5 8.6 12 4.3l9.5 4.3L12 12.9 2.5 8.6zM6.3 10.8v4.1c0 1.6 2.6 2.9 5.7 2.9s5.7-1.3 5.7-2.9v-4.1M21.5 8.6v5',
+  card: 'M3 6.2h18v11.6H3zM7 10.2h3.2v3.4H7zM13.4 10.4h4.2M13.4 13.6h4.2',
+  code: 'M4 5.4v13.2M7.1 5.4v13.2M10.2 5.4v8.4M13.3 5.4v13.2M16.4 5.4v8.4M20 5.4v13.2',
+  calendar: 'M4 6.6h16v13.8H4zM4 10.6h16M8.8 4.2v4.2M15.2 4.2v4.2M8.4 14h1.8M13.8 14h1.8M8.4 17.2h1.8M13.8 17.2h1.8',
+  shield: 'M12 3.6 5.2 6.1v5.4c0 4.2 2.9 7.6 6.8 8.9 3.9-1.3 6.8-4.7 6.8-8.9V6.1L12 3.6z',
+  check: 'M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM8.3 12.2l2.7 2.7 4.9-5.2',
+};
+
+/* The identity stack. Every value is published; the last three come off the
+   board's letter rather than off a school page. */
+const rows = [
+  { k: 'School', v: 'Sunbeam School', i: 'building' },
+  { k: 'Affiliation', v: sb.boardFull, i: 'book' },
+  { k: 'Category', v: 'Co-educational senior secondary school', i: 'people' },
+  { k: 'Classes', v: sb.classRange, i: 'cap' },
+  { k: 'School code', v: sb.schoolCode, i: 'card', mono: true },
+  { k: 'UDISE code', v: sb.udise, i: 'code', mono: true },
+  { k: 'Period of affiliation', v: sb.affiliationPeriod, i: 'calendar', mono: true },
+];
+
+/* ⚠ THE BRIEF'S THREE POINTS, UNEXPANDED. Each says what an identifier IS.
+   None says what the affiliation permits, requires or guarantees — the school
+   publishes no regulatory explanation, and inventing one here would be the
+   easiest thing on this page to get wrong. */
+const points = [
+  {
+    n: '01',
+    k: 'Identity',
+    i: 'shield',
+    body: 'The affiliation number identifies the school’s official CBSE affiliation. The board’s letter also uses it as the school’s user ID on the OASIS and LOC registration systems.',
+  },
+  {
+    n: '02',
+    k: 'Reference',
+    i: 'book',
+    body: 'The school code provides an official school identifier — the short form that appears on board correspondence and on registration paperwork.',
+  },
+  {
+    n: '03',
+    k: 'Verification',
+    i: 'check',
+    body: 'These published details allow families to cross-check school information through official records. The school’s Mandatory Public Disclosure carries them alongside the documents themselves.',
+  },
+];
+---
+
+{/* ══ 01 · THE TWO NUMBERS ═══════════════════════════════════════════════════ */}
+<section class="af-nums" aria-labelledby="af-nums-title">
+  <span class="af-nums__glow" aria-hidden="true"></span>
+  <span class="af-nums__peach" aria-hidden="true"></span>
+
+  {/* The hairlines running off the top-left corner. */}
+  <svg class="af-nums__hair" viewBox="0 0 220 220" fill="none" aria-hidden="true">
+    <path d="M-40 96 96 -40M-40 132 132 -40M-40 168 168 -40" stroke="currentColor" stroke-width="1" />
+  </svg>
+
+  {/* The drawn school block that anchors the bottom-left corner. */}
+  <svg class="af-nums__blk" viewBox="0 0 180 120" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M6 114h168M22 114V44l68-30 68 30v70" />
+      <path d="M74 114V86h32v28" />
+      <path d="M90 14V4M90 4h16l-4 5 4 5H90" />
+      <path d="M38 58h14v12H38zM64 58h14v12H64zM102 58h14v12h-14zM128 58h14v12h-14zM38 82h14v12H38zM128 82h14v12h-14z" />
+    </g>
+  </svg>
+
+  <div class="u-container af-nums__grid" data-draw-scope>
+    <div class="af-nums__head">
+      <p class="af-eyebrow" data-reveal>Official school identifiers</p>
+      <h2 class="af-nums__h" id="af-nums-title">
+        <span data-clip data-clip-delay="0">Two numbers</span>
+        <span data-clip data-clip-delay="140"><em>tell the story.</em></span>
+      </h2>
+      <p class="af-nums__b" data-reveal data-reveal-delay="200">
+        Both are printed on the board’s own letter — and the affiliation number doubles as the
+        school’s user ID on CBSE’s OASIS and registration systems.
+      </p>
+    </div>
+
+    {/* The seal cluster: the board's own emblem, ringed, with the sparkle to
+        its left and the dot field to its right. */}
+    <div class="af-seal" data-parallax data-parallax-y="24">
+      <svg class="af-seal__spark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 1.6c.7 5.4 4.3 9 9.7 9.7-5.4.7-9 4.3-9.7 9.7-.7-5.4-4.3-9-9.7-9.7 5.4-.7 9-4.3 9.7-9.7z"
+          stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+      </svg>
+      <span class="af-seal__rings" aria-hidden="true">
+        <Image class="af-seal__i" src={oCbseCut} alt="" width={220} loading="lazy" />
+      </span>
+      <span class="af-seal__dots" aria-hidden="true"></span>
+    </div>
+
+    {/* ⚠ NO COUNT-UP. An affiliation number is an identifier, not a quantity;
+        animating one upward reads as a slot machine. They rise into place
+        instead, which is the motion every other heading on the site uses. */}
+    <div class="af-pair">
+      <figure class="af-fig">
+        <span class="af-fig__n t-tabular" data-clip data-clip-delay="120">{sb.affiliationNo}</span>
+        <figcaption class="af-fig__k" data-reveal data-reveal-delay="320">CBSE Affiliation No.</figcaption>
+      </figure>
+
+      {/* The connector, with the node the two numbers meet at. */}
+      <span class="af-join" aria-hidden="true">
+        <span class="af-join__l"><span data-draw></span></span>
+        <span class="af-join__d"></span>
+        <span class="af-join__r"><span data-draw></span></span>
+      </span>
+
+      <figure class="af-fig af-fig--accent">
+        <span class="af-fig__n t-tabular" data-clip data-clip-delay="220">{sb.schoolCode}</span>
+        <figcaption class="af-fig__k" data-reveal data-reveal-delay="420">School Code</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · SCHOOL IDENTITY ═══════════════════════════════════════════════════ */}
+<section class="af-id" aria-labelledby="af-id-title">
+  <div class="u-container af-id__grid">
+    <div class="af-id__copy">
+      <p class="af-eyebrow" data-reveal>The school behind the record</p>
+      <h2 class="af-id__h" id="af-id-title">
+        <span data-clip data-clip-delay="0">A school with</span>
+        <span data-clip data-clip-delay="130"><em>an official identity.</em></span>
+      </h2>
+      <p class="af-id__b" data-reveal data-reveal-delay="180">
+        {S} is affiliated to the {sb.boardFull}. The board’s letter records the school as No.
+        {' '}{sb.schoolCode}, affiliated up to senior secondary level for the period
+        {' '}{sb.affiliationPeriod} — and the same two identifiers head the school’s Mandatory
+        Public Disclosure.
+      </p>
+
+      {/* ONE LARGE FRAME, ONE SMALLER ONE BREAKING ITS CORNER — not two equal
+          cards. The inset carries its own sand border so it reads as a print
+          laid over the first rather than a hole cut in it. */}
+      <div class="af-id__media">
+        <figure class="af-id__lead" data-mask data-zoom data-zoom-to="1.06">
+          <Picture
+            src={pCampus}
+            alt={`The campus of ${S} — its teaching blocks standing around the front lawn`}
+            formats={['webp']}
+            widths={[620, 980]}
+            sizes="(max-width: 1060px) 92vw, 46vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <figure class="af-id__inset" data-parallax data-parallax-y="20">
+          <Picture
+            src={pStairs}
+            alt={`A stairwell at ${S} — a marble flight rising to the landing, steel handrails either side and framed notices on the wall above`}
+            formats={['webp']}
+            widths={[320, 520]}
+            sizes="(max-width: 1060px) 44vw, 20vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+
+    {/* ⚠ A STACK, NOT A TABLE. Small orange label over a large value, hairline
+        between, and a stroked mark that names the row — a table would set label
+        and value at the same weight and the values are what a reader came for. */}
+    <dl class="af-id__stack">
+      {rows.map((r, i) => (
+        <div class="af-row" data-reveal data-reveal-delay={80 + i * 70}>
+          <span class="af-row__i" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d={ICON[r.i]} stroke="currentColor" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <div class="af-row__t">
+            <dt class="af-row__k">{r.k}</dt>
+            <dd class={`af-row__v${r.mono ? ' t-tabular af-row__v--n' : ''}`}>{r.v}</dd>
+          </div>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+{/* ══ 03 · OFFICIAL RECORD ═══════════════════════════════════════════════════ */}
+<section class="af-doc" aria-labelledby="af-doc-title">
+  <span class="af-doc__glow" aria-hidden="true"></span>
+  <span class="af-doc__ghost t-tabular" aria-hidden="true">{sb.affiliationNo}</span>
+  <Image class="af-doc__mark" src={oCbseCut} alt="" width={456} aria-hidden="true" loading="lazy" />
+
+  <div class="u-container af-doc__grid" data-draw-scope>
+    <div class="af-doc__copy">
+      <p class="af-eyebrow af-eyebrow--onink" data-reveal>Official record</p>
+      <h2 class="af-doc__h" id="af-doc-title">
+        <span data-clip data-clip-delay="0">Affiliation,</span>
+        <span data-clip data-clip-delay="130"><em>on record.</em></span>
+      </h2>
+      <p class="af-doc__b" data-reveal data-reveal-delay="180">
+        The school publishes its affiliation letter and its mandatory disclosures in full. The
+        document beside this is the board’s letter as the school hosts it — not a summary of it,
+        and not a certificate drawn for this page.
+      </p>
+
+      <dl class="af-meta">
+        <div class="af-meta__row" data-reveal data-reveal-delay="240">
+          <dt>Board</dt><dd>{sb.board}, Delhi</dd>
+        </div>
+        <div class="af-meta__row" data-reveal data-reveal-delay="310">
+          <dt>Affiliation no.</dt><dd class="t-tabular">{sb.affiliationNo}</dd>
+        </div>
+        <div class="af-meta__row" data-reveal data-reveal-delay="380">
+          <dt>School code</dt><dd class="t-tabular">{sb.schoolCode}</dd>
+        </div>
+        <div class="af-meta__row" data-reveal data-reveal-delay="450">
+          <dt>Period</dt><dd class="t-tabular">{sb.affiliationPeriod}</dd>
+        </div>
+        <div class="af-meta__row" data-reveal data-reveal-delay="520">
+          <dt>Letter no.</dt><dd class="af-meta__ref">{sb.affiliationLetterNo}</dd>
+        </div>
+      </dl>
+
+      <p class="af-doc__acts">
+        <a class="btn btn--primary" href={sb.external.affiliationLetter} target="_blank" rel="noopener noreferrer">
+          View official document <span aria-hidden="true">→</span>
+        </a>
+        <a class="af-link" href={sb.external.mandatoryDisclosure} target="_blank" rel="noopener noreferrer">
+          Mandatory public disclosure <span aria-hidden="true">→</span>
+        </a>
+      </p>
+    </div>
+
+    {/* ⚠ contain, NOT cover. This is a document: cropping it removes the table
+        that carries the facts. The plate is sized to the paper, so there is no
+        letterboxing to hide. */}
+    <figure class="af-paper" data-reveal data-reveal-delay="140">
+      <a class="af-paper__a" href={sb.external.affiliationLetter} target="_blank" rel="noopener noreferrer">
+        <Picture
+          src={docLetter}
+          alt={`Page one of the CBSE affiliation letter published by ${S}: letter number CBSE/${sb.affiliationNo}/EX-00497-2526/2025-26 dated ${sb.affiliationLetterDated}, subject “${sb.affiliationSubject}”, with a table giving affiliation number ${sb.affiliationNo}, school number ${sb.schoolCode} and period of affiliation ${sb.affiliationPeriod}, and the school’s stamp carrying UDISE code ${sb.udise}.`}
+          formats={['webp']}
+          widths={[430, 700, 940]}
+          sizes="(max-width: 1060px) 78vw, 34vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+      <figcaption class="af-paper__c">
+        Affiliation/Upgradation Letter · page 1 of 2 · published by the school
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+{/* ══ 04 · WHY THESE DETAILS MATTER ══════════════════════════════════════════ */}
+<section class="af-why" aria-labelledby="af-why-title">
+  {/* The dashed arcs that close the page, one to each corner. */}
+  <svg class="af-why__arc af-why__arc--l" viewBox="0 0 260 200" fill="none" aria-hidden="true">
+    <path d="M-10 8C86 8 168 74 190 192" stroke="currentColor" stroke-width="1.4"
+      stroke-linecap="round" stroke-dasharray="7 11" />
+  </svg>
+  <svg class="af-why__arc af-why__arc--r" viewBox="0 0 260 200" fill="none" aria-hidden="true">
+    <path d="M270 8C174 8 92 74 70 192" stroke="currentColor" stroke-width="1.4"
+      stroke-linecap="round" stroke-dasharray="7 11" />
+    <circle cx="70" cy="192" r="4.5" fill="currentColor" stroke="none" />
+  </svg>
+
+  <div class="u-container af-why__grid">
+    {/* ⚠ AN h2 SET AS AN EYEBROW, NOT A <p>. The composition wants a small
+        orange line here rather than a display heading, but the section still
+        needs a heading in the document outline — so it is one, styled down. */}
+    <h2 class="af-why__h af-eyebrow" id="af-why-title" data-reveal>
+      Small details. Important references.
+    </h2>
+
+    <ol class="af-why__list">
+      {points.map((p, i) => (
+        <li class="af-pt" data-reveal data-reveal-delay={100 + i * 120}>
+          <div class="af-pt__top">
+            <span class="af-pt__n t-tabular">{p.n}</span>
+            <span class="af-pt__i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d={ICON[p.i]} stroke="currentColor" stroke-width="1.4"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <h3 class="af-pt__k">{p.k}</h3>
+          <p class="af-pt__b">{p.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .af-eyebrow {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .af-eyebrow--onink { color: var(--sb-lime); }
+
+  .af-nums__h,
+  .af-id__h,
+  .af-doc__h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .af-nums__h span,
+  .af-id__h span,
+  .af-doc__h span { display: block; }
+  .af-nums__h em,
+  .af-id__h em,
+  .af-doc__h em { font-style: normal; color: var(--sb-violet); }
+
+  /* ═══ 01 · THE TWO NUMBERS ════════════════════════════════════════════════ */
+  .af-nums {
+    position: relative;
+    isolation: isolate;
+    /* ⚠ REQUIRED. The drawn block and the hairlines run off the edges by
+       design; without this the page scrolls sideways. */
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(40px, 4.8vw, 76px) clamp(40px, 5vw, 80px);
+  }
+  .af-nums__glow {
+    position: absolute;
+    z-index: -2;
+    top: -36%;
+    right: -8%;
+    width: 52%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 60, 10, 0.11) 0%, rgba(201, 60, 10, 0) 68%);
+  }
+  /* The peach disc the drawn block sits against. */
+  .af-nums__peach {
+    position: absolute;
+    z-index: -2;
+    left: clamp(30px, 4.6vw, 78px);
+    bottom: clamp(-30px, -2vw, -12px);
+    width: clamp(96px, 11vw, 164px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 138, 92, 0.4) 0%, rgba(255, 138, 92, 0) 70%);
+  }
+  .af-nums__hair {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: clamp(120px, 15vw, 220px);
+    height: auto;
+    color: rgba(201, 60, 10, 0.16);
+  }
+  .af-nums__blk {
+    position: absolute;
+    z-index: -1;
+    left: clamp(6px, 1.4vw, 24px);
+    bottom: clamp(10px, 1.8vw, 28px);
+    width: clamp(84px, 10vw, 152px);
+    height: auto;
+    color: rgba(201, 60, 10, 0.34);
+  }
+
+  .af-nums__grid { position: relative; }
+  .af-nums__head { max-width: 46ch; }
+  .af-nums__h { font-size: clamp(28px, 3.4vw, 48px); }
+  .af-nums__b {
+    max-width: 44ch;
+    margin: clamp(13px, 1.5vw, 19px) 0 0;
+    font-size: clamp(13.5px, 0.98vw, 15.5px);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+
+  /* The seal cluster, held against the top-right of the band. */
+  .af-seal {
+    position: absolute;
+    z-index: 2;
+    top: clamp(0px, 1vw, 16px);
+    right: clamp(-6px, 0.4vw, 12px);
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.4vw, 24px);
+    pointer-events: none;
+  }
+  .af-seal__spark {
+    width: clamp(18px, 1.8vw, 28px);
+    height: auto;
+    color: var(--sb-violet);
+    opacity: 0.75;
+  }
+  /* Two rings drawn as borders on one box: the outer is the element, the inner
+     is its ::before. Cheaper than two more SVGs, and they scale together. */
+  .af-seal__rings {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: clamp(84px, 9.9vw, 148px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(201, 60, 10, 0.22);
+    border-radius: 50%;
+  }
+  .af-seal__rings::before {
+    content: '';
+    position: absolute;
+    inset: clamp(5px, 0.6vw, 9px);
+    border: 1px solid rgba(201, 60, 10, 0.16);
+    border-radius: 50%;
+  }
+  .af-seal__i {
+    position: relative;
+    width: 64%;
+    height: auto;
+  }
+  /* ⚠ DRAWN, NOT MASKED FROM dot-bg.png. That asset is a large sparse field;
+     scaled to 60px it resolved to three or four specks instead of the grid the
+     reference shows. A repeating radial-gradient gives an exact 5 × 5 at any
+     size — and no file to 404 if the pipeline re-emits it. */
+  .af-seal__dots {
+    width: clamp(34px, 4.1vw, 64px);
+    aspect-ratio: 1 / 1;
+    background-image: radial-gradient(var(--sb-violet) 1.4px, transparent 1.6px);
+    background-size: 20% 20%;
+    opacity: 0.6;
+  }
+
+  /* The two identifiers, side by side, joined. */
+  .af-pair {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(14px, 2.2vw, 40px);
+    margin-top: clamp(30px, 4vw, 66px);
+  }
+  .af-fig { margin: 0; text-align: center; }
+  .af-fig__n {
+    display: block;
+    font-family: var(--sb-font-display);
+    font-size: clamp(36px, 7vw, 104px);
+    font-weight: 700;
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+    color: var(--sb-charcoal);
+  }
+  .af-fig--accent .af-fig__n { color: var(--sb-violet); }
+  .af-fig__k {
+    margin: clamp(8px, 1vw, 15px) 0 0;
+    font-size: clamp(9px, 0.76vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+
+  /* Two rules meeting at a node, so the line reads as a join rather than as a
+     rule that happens to sit between two numbers. Each half draws from its own
+     end, which is why there are two and not one. */
+  .af-join {
+    display: flex;
+    align-items: center;
+    flex: 0 1 clamp(48px, 13vw, 200px);
+    margin-bottom: clamp(18px, 2vw, 30px);
+  }
+  .af-join__l,
+  .af-join__r {
+    flex: 1;
+    height: 1.5px;
+    background: rgba(201, 60, 10, 0.2);
+    overflow: hidden;
+  }
+  .af-join__l span,
+  .af-join__r span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--sb-violet);
+    transform-origin: left center;
+  }
+  .af-join__r span { transform-origin: right center; }
+  .af-join__d {
+    flex: none;
+    width: clamp(7px, 0.72vw, 10px);
+    aspect-ratio: 1 / 1;
+    border: 1.5px solid var(--sb-violet);
+    border-radius: 50%;
+  }
+
+  /* ═══ 02 · SCHOOL IDENTITY ════════════════════════════════════════════════ */
+  .af-id {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: clamp(44px, 5.2vw, 84px);
+  }
+  .af-id__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: clamp(30px, 4.4vw, 74px);
+    align-items: start;
+  }
+  .af-id__h { font-size: clamp(28px, 3.4vw, 48px); }
+  .af-id__b {
+    max-width: 44ch;
+    margin: clamp(13px, 1.5vw, 19px) 0 0;
+    font-size: clamp(13.5px, 0.98vw, 15.5px);
+    line-height: 1.74;
+    color: var(--sb-text-secondary);
+  }
+
+  .af-id__media {
+    position: relative;
+    margin-top: clamp(26px, 3.2vw, 48px);
+    /* Room for the inset's overhang, so it never reaches the section edge. */
+    padding-bottom: clamp(24px, 2.8vw, 42px);
+    padding-right: clamp(30px, 5vw, 78px);
+  }
+  .af-id__lead {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    aspect-ratio: 16 / 11;
+    border-radius: clamp(14px, 1.4vw, 22px);
+    box-shadow: 0 30px 60px -38px rgba(27, 21, 18, 0.5);
+  }
+  .af-id__lead :global(picture) { display: block; width: 100%; height: 100%; }
+  .af-id__lead :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .af-id__inset {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: clamp(104px, 19vw, 178px);
+    aspect-ratio: 5 / 6;
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-sand);
+    border-radius: clamp(10px, 1vw, 16px);
+    box-shadow: 0 22px 44px -28px rgba(27, 21, 18, 0.5);
+  }
+  .af-id__inset :global(picture) { display: block; width: 100%; height: 100%; }
+  .af-id__inset :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .af-id__stack { margin: clamp(4px, 0.6vw, 10px) 0 0; }
+  .af-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(12px, 1.4vw, 20px);
+    align-items: center;
+    padding-block: clamp(11px, 1.3vw, 17px);
+    border-top: 1px solid var(--sb-border);
+  }
+  .af-row:first-child { border-top: 0; padding-top: 0; }
+  .af-row__i {
+    display: grid;
+    place-items: center;
+    width: clamp(34px, 3.2vw, 44px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(201, 60, 10, 0.26);
+    border-radius: clamp(9px, 0.9vw, 13px);
+    color: var(--sb-violet);
+  }
+  .af-row__i svg { width: 56%; height: auto; display: block; }
+  .af-row__t { min-width: 0; }
+  .af-row__k {
+    margin: 0;
+    font-size: clamp(9.5px, 0.72vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .af-row__v {
+    margin: clamp(4px, 0.5vw, 7px) 0 0;
+    font-size: clamp(14px, 1.15vw, 17.5px);
+    font-weight: 600;
+    line-height: 1.32;
+    color: var(--sb-charcoal);
+  }
+  .af-row__v--n { letter-spacing: 0.005em; }
+
+  /* ═══ 03 · OFFICIAL RECORD ════════════════════════════════════════════════ */
+  .af-doc {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    /* Deep Sunbeam brown — the warm near-black, lifted at one corner rather
+       than flattened to a single value. */
+    background:
+      radial-gradient(120% 90% at 88% 8%, rgba(201, 60, 10, 0.24) 0%, rgba(201, 60, 10, 0) 58%),
+      linear-gradient(168deg, #2a1409 0%, var(--sb-violet-ink) 62%);
+    padding-block: clamp(46px, 5.6vw, 92px);
+  }
+  .af-doc__glow {
+    position: absolute;
+    z-index: -1;
+    left: -12%;
+    bottom: -30%;
+    width: 56%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 138, 92, 0.13) 0%, rgba(255, 138, 92, 0) 66%);
+  }
+  /* The oversized number behind the paper. Kept at the very edge of visible —
+     it is a texture, not a second headline. */
+  .af-doc__ghost {
+    position: absolute;
+    z-index: -1;
+    right: -3%;
+    bottom: 6%;
+    font-family: var(--sb-font-display);
+    font-size: clamp(96px, 16vw, 240px);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    color: rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+    user-select: none;
+  }
+  .af-doc__mark {
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    right: clamp(-40px, -2.4vw, -12px);
+    width: clamp(150px, 20vw, 300px);
+    height: auto;
+    translate: 0 -50%;
+    opacity: 0.09;
+    pointer-events: none;
+  }
+
+  .af-doc__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+    gap: clamp(34px, 4.6vw, 78px);
+    align-items: center;
+  }
+  .af-doc__h { font-size: clamp(30px, 3.6vw, 52px); color: #fff; }
+  .af-doc__h em { color: var(--sb-lime); }
+  .af-doc__b {
+    max-width: 44ch;
+    margin: clamp(13px, 1.5vw, 19px) 0 0;
+    font-size: clamp(13.5px, 0.98vw, 15.5px);
+    line-height: 1.74;
+    color: var(--sb-on-dark-82);
+  }
+
+  .af-meta { margin: clamp(20px, 2.4vw, 32px) 0 0; }
+  .af-meta__row {
+    display: grid;
+    grid-template-columns: clamp(96px, 10vw, 132px) minmax(0, 1fr);
+    gap: clamp(10px, 1.2vw, 18px);
+    align-items: baseline;
+    padding-block: clamp(8px, 0.9vw, 12px);
+    border-top: 1px solid var(--sb-on-dark-rule);
+  }
+  .af-meta__row:first-child { border-top: 0; }
+  .af-meta dt {
+    font-size: clamp(9.5px, 0.72vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-on-dark-66);
+  }
+  .af-meta dd {
+    margin: 0;
+    font-size: clamp(13.5px, 1.05vw, 16px);
+    font-weight: 600;
+    color: #fff;
+  }
+  .af-meta__ref {
+    font-size: clamp(11.5px, 0.86vw, 13.5px) !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.01em;
+    color: var(--sb-on-dark-82) !important;
+    overflow-wrap: anywhere;
+  }
+
+  .af-doc__acts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(14px, 2vw, 32px);
+    margin: clamp(22px, 2.6vw, 34px) 0 0;
+  }
+  .af-link {
+    font-size: clamp(12.5px, 0.94vw, 14.5px);
+    font-weight: 700;
+    color: var(--sb-on-dark-82);
+    text-decoration: none;
+    border-bottom: 1px solid var(--sb-on-dark-rule);
+    padding-bottom: 3px;
+    transition: color 0.22s ease, border-color 0.22s ease;
+  }
+  .af-link:hover { color: #fff; border-color: #fff; }
+
+  /* The paper. Sized to the page it reproduces, so `contain` has nothing to
+     letterbox — and rotated a degree and a half, which is all a document needs
+     to read as an object rather than a screenshot. */
+  .af-paper { margin: 0; justify-self: center; width: min(100%, 400px); }
+  .af-paper__a {
+    display: block;
+    padding: clamp(8px, 0.9vw, 13px);
+    border-radius: clamp(4px, 0.4vw, 7px);
+    background: #fdfaf5;
+    box-shadow:
+      0 2px 0 rgba(201, 60, 10, 0.5),
+      0 40px 70px -34px rgba(0, 0, 0, 0.72);
+    rotate: -1.6deg;
+    transition: rotate 0.4s ease, translate 0.4s ease, box-shadow 0.4s ease;
+  }
+  .af-paper__a:hover,
+  .af-paper__a:focus-visible {
+    rotate: -0.4deg;
+    translate: 0 -4px;
+    box-shadow:
+      0 2px 0 var(--sb-violet),
+      0 46px 84px -32px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(255, 138, 92, 0.34),
+      0 0 46px -10px rgba(255, 138, 92, 0.3);
+  }
+  .af-paper__a :global(picture) { display: block; }
+  .af-paper__a :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* ⚠ contain, and the plate is the paper's own ratio — see the frontmatter. */
+    object-fit: contain;
+  }
+  .af-paper__c {
+    margin: clamp(12px, 1.4vw, 18px) 0 0;
+    font-size: clamp(9.5px, 0.74vw, 11.5px);
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.7;
+    color: var(--sb-on-dark-66);
+  }
+
+  /* ═══ 04 · WHY THESE DETAILS MATTER ═══════════════════════════════════════ */
+  .af-why {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(42px, 5vw, 80px);
+  }
+  .af-why__arc {
+    position: absolute;
+    z-index: -1;
+    bottom: clamp(-46px, -3vw, -20px);
+    width: clamp(150px, 19vw, 270px);
+    height: auto;
+    color: rgba(201, 60, 10, 0.26);
+  }
+  .af-why__arc--l { left: clamp(-56px, -3.4vw, -22px); }
+  .af-why__arc--r { right: clamp(-56px, -3.4vw, -22px); }
+
+  .af-why__grid { display: grid; gap: clamp(24px, 3vw, 44px); }
+  .af-why__h { margin: 0; }
+
+  .af-why__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* Hairlines BETWEEN the columns, which is why they are borders on the items
+     rather than a gap: a gap cannot draw a line down its own middle. */
+  .af-pt {
+    padding-inline: clamp(16px, 2.4vw, 42px);
+    border-left: 1px solid var(--sb-border);
+  }
+  .af-pt:first-child { padding-left: 0; border-left: 0; }
+  .af-pt:last-child { padding-right: 0; }
+
+  .af-pt__top {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 1.6vw, 24px);
+  }
+  .af-pt__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(26px, 2.7vw, 40px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--sb-violet);
+  }
+  .af-pt__i {
+    display: grid;
+    place-items: center;
+    width: clamp(34px, 3.2vw, 46px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(201, 60, 10, 0.26);
+    border-radius: 50%;
+    color: var(--sb-violet);
+  }
+  .af-pt__i svg { width: 52%; height: auto; display: block; }
+  .af-pt__k {
+    margin: clamp(14px, 1.7vw, 22px) 0 0;
+    font-size: clamp(10.5px, 0.8vw, 12.5px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-charcoal);
+  }
+  .af-pt__b {
+    margin: clamp(8px, 1vw, 12px) 0 0;
+    max-width: 34ch;
+    font-size: clamp(13px, 0.96vw, 14.5px);
+    line-height: 1.74;
+    color: var(--sb-text-secondary);
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1060px) {
+    /* ⚠ THE SEAL'S LANE, RESERVED. Above this width the copy holds its own
+       column and the cluster sits clear of it; below, the copy would run
+       straight under the cluster unless its width is cut by the same amount. */
+    .af-nums__head { max-width: none; padding-right: clamp(130px, 26vw, 240px); }
+    .af-id__grid,
+    .af-doc__grid { grid-template-columns: minmax(0, 1fr); }
+    .af-doc__grid { gap: clamp(30px, 5vw, 46px); }
+    .af-paper { justify-self: start; width: min(100%, 380px); }
+    .af-id__media { padding-right: clamp(40px, 8vw, 96px); }
+  }
+  @media (max-width: 860px) {
+    .af-why__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(24px, 4vw, 36px); }
+    /* Three points over two columns leaves an orphan; the third runs full and
+       starts a new row, so it takes a top rule instead of a left one. */
+    .af-pt:nth-child(3) {
+      grid-column: 1 / -1;
+      padding-left: 0;
+      padding-top: clamp(20px, 3vw, 28px);
+      border-left: 0;
+      border-top: 1px solid var(--sb-border);
+    }
+    .af-pt__b { max-width: none; }
+  }
+  @media (max-width: 700px) {
+    /* The pair stacks, and the join turns upright to keep connecting them. */
+    .af-pair { flex-direction: column; gap: clamp(12px, 3vw, 20px); }
+    .af-join {
+      flex: none;
+      flex-direction: column;
+      width: 1.5px;
+      height: clamp(34px, 9vw, 56px);
+      margin-bottom: 0;
+    }
+    .af-join__l,
+    .af-join__r { width: 1.5px; height: auto; flex: 1; }
+    .af-join__l span,
+    .af-join__r span { transform: none !important; }
+  }
+  @media (max-width: 620px) {
+    .af-seal { position: static; justify-content: flex-start; margin-top: clamp(20px, 5vw, 30px); }
+    .af-nums__head { padding-right: 0; }
+    .af-why__list { grid-template-columns: minmax(0, 1fr); }
+    .af-pt:nth-child(n) {
+      grid-column: auto;
+      padding-inline: 0;
+      padding-top: clamp(18px, 4vw, 24px);
+      border-left: 0;
+      border-top: 1px solid var(--sb-border);
+    }
+    .af-pt:first-child { padding-top: 0; border-top: 0; }
+    .af-meta__row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .af-doc__acts { gap: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .af-paper__a { transition: none; }
+  }
+</style>

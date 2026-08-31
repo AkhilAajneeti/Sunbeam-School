@@ -1,0 +1,1429 @@
+---
+/**
+ * ACADEMIC STRUCTURE · MIDDLE SCHOOL — Classes VI to VIII, in eight sections.
+ *
+ * ═══ SOURCE OF TRUTH — every line traces to this repository ════════════════
+ *   data/facilities.ts
+ *     KIDS Entrepreneurship — "A Class 7 programme that runs a real venture end
+ *       to end."  · General science laboratory — "Middle-school practical work."
+ *     Twelve laboratories, four of them inquiry rooms · two computer labs, 40+
+ *       machines each · Robotics Lab (drone, 3-D printer, telescope) · Nalanda
+ *       Library, 17,574 books.
+ *   data/newsPages.ts
+ *     Shining Star Kids Fashion Show, 2025 — "Miss Ayana Pandey, Class VIII";
+ *     "a contest of more than seventy entrants, with the award presented by Miss
+ *     Universe India 2024, Riya Singha." Result: winner.
+ *   data/academics.ts
+ *     Stage body — "Specialist teaching begins and the laboratories open up.
+ *       Class VII takes the school's KIDS entrepreneurship programme."
+ *     Focus — Practical science · Independent projects · KIDS entrepreneurship.
+ *     Milestone — "Practical science · independent projects."
+ *     PRECEPT, published class by class, session 2026-27.
+ *   data/career.ts (the school's OWN recruitment posters, quoted verbatim)
+ *     "Middle school teachers: English, Science, Social Science, Maths and
+ *      French." — 2024-25 poster.
+ *     "Middle school teachers: English, Science, Social Science and Maths —
+ *      graduate or postgraduate with B.Ed. and minimum two years of relevant
+ *      school experience in grades 6 to 8." — 2023-24 poster.
+ *
+ * ⚠⚠ SECTION 05 IS THE SUBJECT LIST, AND ITS SOURCE IS A RECRUITMENT POSTER.
+ * The brief asked for ten subjects — English, Hindi, Mathematics, Science,
+ * Social Science, Computer, French/Sanskrit, General Knowledge, Physical
+ * Education, Art. THE SCHOOL PUBLISHES NO MIDDLE-SCHOOL SUBJECT SCHEME. What it
+ * does publish, twice, is the list of subjects it hires middle-school teachers
+ * for, and it names grades 6 to 8 explicitly. Five subjects come from there.
+ * Three more — computing, physical education and art — are named as ROOMS on
+ * the facilities inventory rather than as subjects, and are set apart in the
+ * list as exactly that. Hindi, Sanskrit and General Knowledge appear nowhere for
+ * this stage and are therefore absent.
+ * ASSET REQUEST: the Middle School subject scheme, if the school will publish it.
+ *
+ * ⚠ SECTION 07 CARRIES NO PHOTOGRAPH, ON PURPOSE. The brief's fallback applies:
+ * the achievement is verified and named, but the school has published no image
+ * of the Shining Star Kids Fashion Show. A stock crowd shot captioned as a
+ * fashion show would be a fabrication; the section is typographic instead.
+ *
+ * ⚠ NOT CLAIMED: student numbers, teacher ratios, period allocations, what KIDS
+ * runs week to week, or the contents of any PRECEPT document.
+ *
+ * ═══ COMPOSITION — eight sections, eight different builds ═══════════════════
+ *   01 · IVORY  copy LEFT, three-frame collage RIGHT, ghost "VI–VIII" behind.
+ *   02 · WHITE  the collage crosses LEFT, a numbered list on horizontal rules
+ *               RIGHT — not cards.
+ *   03 · PEACH  copy LEFT, three frames RIGHT at three heights under one rule.
+ *   04 · WHITE  four editorial columns divided by thin vertical rules.
+ *   05 · IVORY  copy LEFT, a vertical subject list RIGHT threaded on one orange
+ *               line.
+ *   06 · WHITE  photograph LEFT, copy RIGHT, a four-cell data rail beneath.
+ *   07 · SAND   a typographic achievement panel — no photograph exists.
+ *   08 · PEACH  the drawn journey rail, four stages.  09 · PHOTO  the close.
+ */
+import { Picture } from 'astro:assets';
+
+/* ── PHOTOGRAPHY — ten genuine Sunbeam Ballia frames, each used ONCE. Every
+   alt below is the description already published against that file in
+   data/academics.ts, so no caption here invents what a photograph shows. */
+import pMicro from '../../../assets/photos/sb-sci-lab.jpg';
+import pMaking from '../../../assets/School Activity in Uniform/Embriodery.jpg';
+import pJunior from '../../../assets/photos/sb-comp-lab-2.jpg';
+import pLibrary from '../../../assets/photos/sb-library.jpg';
+import pMachines from '../../../assets/computer lab/it-3.jpeg';
+import pBench from '../../../assets/photos/sb-chem-lab.jpg';
+import pGlass from '../../../assets/photos/sb-bio-lab.jpg';
+import pFloor from '../../../assets/photos/sb-maths-lab.jpg';
+import pChem from '../../../assets/chem lab/DSC_1262 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+const LABS = '/academics/teaching-learning/laboratories-clubs/';
+const STEM = '/academics/teaching-learning/stem-robotics/';
+const SUCCESS = '/academics/student-success/';
+const CURRICULUM = '/academics/philosophy/curriculum/';
+const CAREERS = '/career/';
+
+/* ── THE MARKS — 24-unit box, 1.5 stroke, round caps, no fill ─────────────── */
+const MARK: Record<string, string> = {
+  venture: `<path d="M3.4 20.6h17.2"/><path d="M6 20.6v-7.2M11 20.6V8.4M16 20.6v-9.6"/><path d="m4.6 8 5.2-4.4 4 2.6 5.6-3.4"/><path d="M19.4 2.8v3.8h-3.8"/>`,
+  microscope: `<path d="M8.6 20.6h11.8"/><path d="M12.4 20.6a6 6 0 0 0 5.4-8.6"/><path d="m9 6.6 4.2 6.6-3.4 2.2-4.2-6.6Z"/><path d="m10.6 4 2.6 1.6"/><path d="M6.2 16.4h5.4"/>`,
+  hand: `<path d="M9.4 11.2V6a1.9 1.9 0 1 1 3.8 0v7.4"/><path d="M13.2 10.4a1.7 1.7 0 0 1 3.4 0v1M16.6 11.6a1.7 1.7 0 0 1 3.4 0v3.2a6 6 0 0 1-6 6h-1.6c-2 0-3-1-4.2-2.4l-3-3.6a1.8 1.8 0 0 1 2.6-2.4l1.6 1.6"/>`,
+  team: `<circle cx="8.4" cy="8" r="2.8"/><circle cx="16.6" cy="9.4" r="2.2"/><path d="M2.8 19.4a5.6 5.6 0 0 1 11.2 0"/><path d="M15 15.2a4.4 4.4 0 0 1 6.2 4.2"/>`,
+  bulb: `<path d="M9.2 17.6h5.6"/><path d="M10 20.4h4"/><path d="M12 2.8a6.4 6.4 0 0 0-3.6 11.7c.5.4.8 1 .8 1.6h5.6c0-.6.3-1.2.8-1.6A6.4 6.4 0 0 0 12 2.8Z"/>`,
+  flask: `<path d="M9.6 3.4h4.8M10.6 3.4v5.2L6.9 17a2 2 0 0 0 1.8 2.8h6.6a2 2 0 0 0 1.8-2.8l-3.7-8.4V3.4"/><path d="M8.2 14.4h7.6"/>`,
+  make: `<path d="M14.6 4.4a4 4 0 0 1 5.1 5.1l-9.4 9.4-5.1-5.1Z"/><path d="m12.6 6.4 5.1 5.1"/><path d="M5.2 13.8 3.6 20.4l6.6-1.6"/>`,
+  speech: `<path d="M20.4 13.4a2.6 2.6 0 0 1-2.6 2.6H9.4l-4.6 3.6v-3.6a2.6 2.6 0 0 1-2.6-2.6V6.6A2.6 2.6 0 0 1 4.8 4h13a2.6 2.6 0 0 1 2.6 2.6Z"/><path d="M7.6 9.6h8.8M7.6 12.4h5.6"/>`,
+  book: `<path d="M4 4.4h5.2A2.8 2.8 0 0 1 12 7.2v12.4a2.4 2.4 0 0 0-2.4-2.4H4Z"/><path d="M20 4.4h-5.2A2.8 2.8 0 0 0 12 7.2v12.4a2.4 2.4 0 0 1 2.4-2.4H20Z"/>`,
+  atom: `<circle cx="12" cy="12" r="1.9"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7" transform="rotate(120 12 12)"/>`,
+  globe: `<circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.2 2.4 3.4 5.4 3.4 8.6S14.2 18.2 12 20.6c-2.2-2.4-3.4-5.4-3.4-8.6S9.8 5.8 12 3.4Z"/>`,
+  sigma: `<path d="M17.4 5.2H6.8l5 6.8-5 6.8h10.6"/><path d="M17.4 5.2V3.6M17.4 18.8v1.6"/>`,
+  langue: `<path d="M2.8 6.2h9.6M7.6 4v2.2"/><path d="M10 6.2c0 4-3.2 7.2-7.2 7.2"/><path d="M5.2 9c0 2.2 2.8 4.4 6.2 4.4"/><path d="m12.4 20.4 4-9.6 4 9.6M13.8 17.4h5.2"/>`,
+  screen: `<rect x="2.6" y="4.4" width="18.8" height="12.4" rx="1.8"/><path d="M8.4 20.4h7.2M12 16.8v3.6"/>`,
+  ball: `<circle cx="12" cy="12" r="9.2"/><path d="M12 2.8v18.4M2.8 12h18.4"/><path d="M5.4 5.4c3.6 3.6 3.6 9.6 0 13.2M18.6 5.4c-3.6 3.6-3.6 9.6 0 13.2"/>`,
+  brush: `<path d="M14.6 4.4a4 4 0 0 1 5.1 5.1l-9.4 9.4-5.1-5.1Z"/><path d="m12.6 6.4 5.1 5.1"/><path d="M5.2 13.8 3.6 20.4l6.6-1.6"/>`,
+  chip: `<rect x="6.4" y="6.4" width="11.2" height="11.2" rx="1.6"/><rect x="9.8" y="9.8" width="4.4" height="4.4" rx=".8"/><path d="M9.6 2.8v3.6M14.4 2.8v3.6M9.6 17.6v3.6M14.4 17.6v3.6M2.8 9.6h3.6M2.8 14.4h3.6M17.6 9.6h3.6M17.6 14.4h3.6"/>`,
+  spark: `<path d="M12 1.8c.7 5.2 4.2 8.7 9.4 9.4-5.2.7-8.7 4.2-9.4 9.4-.7-5.2-4.2-8.7-9.4-9.4 5.2-.7 8.7-4.2 9.4-9.4z"/>`,
+  ask: `<circle cx="12" cy="12" r="9.2"/><path d="M9.4 9.4a2.6 2.6 0 1 1 3.4 2.5c-.6.2-1 .8-1 1.5v.6"/><circle cx="11.8" cy="17" r=".9"/>`,
+  compass: `<circle cx="12" cy="12" r="9.2"/><path d="m15.4 8.6-2 5.4-5.4 2 2-5.4Z"/>`,
+  target: `<circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.2"/>`,
+  present: `<path d="M3.6 4.4h16.8v10.2H3.6Z"/><path d="M12 14.6v3.4M8.4 20.4h7.2"/><path d="m7.6 11.4 2.6-3 2.4 2 3.8-4.4"/>`,
+};
+
+/* ── SECTION 01 — the four the school names for this stage ─────────────────
+   Three come from the published focus list; the fourth is the milestone. */
+const marks = [
+  { n: '01', mark: 'venture', k: 'A real venture', v: 'KIDS Entrepreneurship, Class VII.' },
+  { n: '02', mark: 'microscope', k: 'Practical science', v: 'The general science laboratory opens.' },
+  { n: '03', mark: 'hand', k: 'Independent projects', v: 'Work carried without being carried.' },
+  { n: '04', mark: 'team', k: 'Specialist teaching', v: 'One subject, one specialist.' },
+] as const;
+
+/* ── SECTION 02 — four numbered lines on horizontal rules, not cards ─────── */
+const shifts = [
+  { n: '01', k: 'Specialist teaching', v: 'A subject taught by somebody who teaches only that subject — the change that defines this stage.' },
+  { n: '02', k: 'Practical learning', v: 'The general science laboratory is the middle-school room specifically, and it opens before the board syllabus starts.' },
+  { n: '03', k: 'Laboratory work', v: 'Twelve laboratories, four of them inquiry rooms, and two computer labs with 40+ machines each.' },
+  { n: '04', k: 'A venture of their own', v: 'Class VII runs KIDS Entrepreneurship — not a simulation, not a case study, but a real venture end to end.' },
+] as const;
+
+/* ── SECTION 04 — four directions ─────────────────────────────────────────
+   Each is anchored to something the school publishes for this stage, so none of
+   the four is a generic verb wearing a number. */
+const directions = [
+  { n: '01', mark: 'bulb', k: 'Understand', v: 'Specialist teaching begins, and a subject stops being one strand of a general lesson.' },
+  { n: '02', mark: 'flask', k: 'Experiment', v: 'The general science laboratory is the middle-school room, used before the board years need it.' },
+  { n: '03', mark: 'make', k: 'Create', v: 'Class VII carries a real venture from start to finish under the KIDS programme.' },
+  { n: '04', mark: 'speech', k: 'Communicate', v: 'Four inquiry rooms — debate, committee procedure, making and open-ended work.' },
+] as const;
+
+/* ── SECTION 05 — SUBJECTS ────────────────────────────────────────────────
+   ⚠ `hired: true` marks the five the school recruits middle-school teachers for,
+   naming grades 6 to 8. The last three are ROOMS on the facilities inventory,
+   not subjects the school has named for this stage, and the list says so. */
+const subjects = [
+  { n: '01', mark: 'langue', k: 'English', v: 'Named on both published recruitment notices.', hired: true },
+  { n: '02', mark: 'atom', k: 'Science', v: 'With the general science laboratory alongside it.', hired: true },
+  { n: '03', mark: 'globe', k: 'Social Science', v: 'Named on both published recruitment notices.', hired: true },
+  { n: '04', mark: 'sigma', k: 'Mathematics', v: 'And a mathematics laboratory — the room most schools skip.', hired: true },
+  { n: '05', mark: 'speech', k: 'French', v: 'Added to the middle-school list on the 2024-25 notice.', hired: true },
+  { n: '06', mark: 'screen', k: 'Computing', v: 'Two laboratories, 40+ machines each — a room, not a stated subject.', hired: false },
+  { n: '07', mark: 'ball', k: 'Physical education', v: 'Fifteen sports across the indoor and outdoor programme.', hired: false },
+  { n: '08', mark: 'brush', k: 'Art & activities', v: 'A dedicated art room, a dance room and the music programme.', hired: false },
+] as const;
+
+/* ── SECTION 06 — the data rail under the laboratories copy ───────────────── */
+const rail = [
+  { mark: 'flask', k: 'Science', v: 'Twelve laboratories in all.' },
+  { mark: 'chip', k: 'Robotics', v: 'Drone · 3-D printer · telescope.' },
+  { mark: 'screen', k: 'Computing', v: 'Junior and senior labs.' },
+  { mark: 'spark', k: 'Inquiry rooms', v: 'Four of the twelve.' },
+] as const;
+
+/* ── SECTION 08 — four stages, each anchored to something published ──────── */
+const journey = [
+  { n: '01', mark: 'ask', k: 'Question', v: 'Four inquiry rooms for the work that has no single right answer.' },
+  { n: '02', mark: 'compass', k: 'Explore', v: 'The laboratories open up, and specialist teaching begins.' },
+  { n: '03', mark: 'target', k: 'Apply', v: 'Class VII runs a real venture, end to end.' },
+  { n: '04', mark: 'present', k: 'Present', v: 'Debate, committee procedure and position papers in the MUN room.' },
+] as const;
+---
+
+{/* ══ 01 · THE TRANSITION ════════════════════════════════════════════════════
+    Ground: warm ivory. Copy LEFT, a three-frame collage RIGHT, and "VI–VIII"
+    set oversized and outlined behind the headline — heavy enough type to carry a
+    watermark without losing a word of it. */}
+<section class="ms-open" aria-labelledby="ms-open-t">
+  <span class="ms-open__warm" aria-hidden="true"></span>
+  <span class="ms-grid" aria-hidden="true"></span>
+  <span class="ms-dots ms-open__dots" aria-hidden="true"></span>
+
+  <div class="u-container ms-open__grid">
+    <div class="ms-open__copy">
+      {/* ⚠ BEHIND THE HEADLINE, NOT BEHIND THE SECTION. Centred on the section a
+          ghost word runs straight through the paragraphs. */}
+      <span class="ms-open__ghost" aria-hidden="true" data-drift>VI–VIII</span>
+
+      <p class="ms-kicker" data-reveal>Classes VI – VIII</p>
+      <h2 class="ms-h ms-open__h" id="ms-open-t">
+        <span data-clip data-clip-delay="0">A real venture,</span>
+        <span data-clip data-clip-delay="150"><em>end to end.</em></span>
+      </h2>
+
+      <p class="ms-body" data-reveal data-reveal-delay="200">
+        The school’s description of <strong>KIDS Entrepreneurship</strong> is six words long and does
+        the whole job: <em>“a Class 7 programme that runs a real venture end to end.”</em> Not a
+        simulation and not a case study — a venture, carried from start to finish by twelve-year-olds.
+      </p>
+      <p class="ms-body" data-reveal data-reveal-delay="260">
+        Around it the stage turns academic. <strong>Specialist teaching begins</strong>, and the
+        general science laboratory — the middle-school room specifically — opens for practical work
+        well before the board syllabus needs it.
+      </p>
+
+      <ul class="ms-marks">
+        {marks.map((m, i) => (
+          <li class="ms-mark" data-reveal data-reveal-delay={300 + i * 70}>
+            <span class="ms-mark__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[m.mark]} />
+              </svg>
+            </span>
+            <span class="ms-mark__n t-tabular">{m.n}</span>
+            <span class="ms-mark__k">{m.k}</span>
+            <span class="ms-mark__v">{m.v}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="ms-open__stage">
+      <div class="ms-open__lead" data-mask>
+        <Picture src={pMicro} alt={`A student of ${S} using a microscope beside plant specimens in flasks`} formats={['webp']} widths={[520, 880, 1200]} sizes="(max-width: 1023px) 92vw, 42vw" loading="eager" decoding="async" />
+      </div>
+      <div class="ms-open__sm" data-pop data-pop-delay="180">
+        <Picture src={pMaking} alt={`Students of ${S} working together on embroidery from one shared basket of thread`} formats={['webp']} widths={[320, 560]} sizes="(max-width: 1023px) 46vw, 18vw" loading="lazy" decoding="async" />
+      </div>
+      <div class="ms-open__cir" data-pop data-pop-delay="300">
+        <Picture src={pJunior} alt={`Younger students of ${S} working at desktop computers in the junior computer laboratory`} formats={['webp']} widths={[220, 400]} sizes="(max-width: 1023px) 30vw, 12vw" loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · THE MIDDLE SCHOOL EXPERIENCE ══════════════════════════════════════
+    Ground: white. The collage crosses LEFT — the opposite of section 01 — and
+    the four changes are set as numbered lines on horizontal rules. Not cards:
+    the brief rules them out in as many words. */}
+<section class="ms-exp" aria-labelledby="ms-exp-t">
+  <span class="ms-grid ms-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container ms-exp__grid">
+    <div class="ms-exp__stage">
+      <div class="ms-exp__lead" data-zoom data-zoom-to="1.04">
+        <Picture src={pLibrary} alt={`Students of ${S} reading and working at tables in the Nalanda Library`} formats={['webp']} widths={[520, 880, 1200]} sizes="(max-width: 1023px) 92vw, 42vw" loading="lazy" decoding="async" />
+      </div>
+      <div class="ms-exp__sm" data-pop data-pop-delay="200">
+        <Picture src={pMachines} alt={`A class at ${S} at work in the computer laboratory, a teacher standing at the back of the room`} formats={['webp']} widths={[320, 560]} sizes="(max-width: 1023px) 52vw, 20vw" loading="lazy" decoding="async" />
+      </div>
+    </div>
+
+    <div class="ms-exp__copy">
+      <p class="ms-kicker" data-reveal>Beyond the timetable</p>
+      <h2 class="ms-h ms-exp__h" id="ms-exp-t">
+        <span data-clip data-clip-delay="0">Learning becomes</span>
+        <span data-clip data-clip-delay="150"><em>more independent.</em></span>
+      </h2>
+      <p class="ms-body" data-reveal data-reveal-delay="200">
+        Four things change between Class V and Class VI, and the school publishes all four. None of
+        them is a promise about attitude — each is a room, a post or a programme with a name.
+      </p>
+
+      <ol class="ms-shifts">
+        {shifts.map((s, i) => (
+          <li class="ms-shift" data-reveal data-reveal-delay={250 + i * 80}>
+            <p class="ms-shift__n t-tabular">{s.n}</p>
+            <div class="ms-shift__t">
+              <p class="ms-shift__k">{s.k}</p>
+              <p class="ms-shift__v">{s.v}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · LEARNING BY DOING ═════════════════════════════════════════════════
+    Ground: soft warm peach. Copy LEFT in a narrow column, three frames RIGHT at
+    three heights, hung under one dotted rule with nodes on it. */}
+<section class="ms-doing" aria-labelledby="ms-doing-t">
+  <span class="ms-doing__warm" aria-hidden="true"></span>
+
+  <div class="u-container ms-doing__grid">
+    <div class="ms-doing__copy">
+      <p class="ms-kicker" data-reveal>When the lesson leaves the page</p>
+      <h2 class="ms-h ms-doing__h" id="ms-doing-t">
+        <span data-clip data-clip-delay="0">Ideas become</span>
+        <span data-clip data-clip-delay="150"><em>something you can do.</em></span>
+      </h2>
+      <p class="ms-body" data-reveal data-reveal-delay="200">
+        The laboratories are the visible half of this stage. The school runs twelve of them, and the
+        photographs below are the three rooms in which a middle-school class most often ends up.
+      </p>
+      <span class="ms-doing__rule" aria-hidden="true" data-reveal data-reveal-delay="270"></span>
+      <p class="ms-note" data-reveal data-reveal-delay="320">
+        The full inventory — and which four of the twelve are inquiry rooms rather than subject
+        laboratories — is on {' '}<a class="ms-link" href={LABS}>Laboratories &amp; Academic Clubs</a>.
+      </p>
+    </div>
+
+    <div class="ms-doing__stage">
+      <svg class="ms-doing__arc" viewBox="0 0 1000 60" fill="none" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M-40 42C50 42 92 16 166 16s194 28 334 28 214-28 334-28c74 0 116 12 206 26"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 9" />
+      </svg>
+      <span class="ms-doing__nodes" aria-hidden="true">
+        <i style="--nx: 16.6%; --ny: 26.7%;" data-pop data-pop-delay="120"></i>
+        <i style="--nx: 50%; --ny: 73.3%;" data-pop data-pop-delay="210"></i>
+        <i style="--nx: 83.4%; --ny: 26.7%;" data-pop data-pop-delay="300"></i>
+      </span>
+
+      <ol class="ms-frames">
+        <li class="ms-frame" data-reveal data-reveal-delay="160">
+          <div class="ms-frame__pic" data-zoom data-zoom-to="1.05">
+            <Picture src={pBench} alt={`Students of ${S} at the bench in the chemistry laboratory`} formats={['webp']} widths={[340, 600, 860]} sizes="(max-width: 767px) 92vw, 20vw" loading="lazy" decoding="async" />
+          </div>
+          <p class="ms-frame__k">Chemistry</p>
+          <p class="ms-frame__v">Students at the bench, not watching one.</p>
+        </li>
+        <li class="ms-frame" data-reveal data-reveal-delay="270">
+          <div class="ms-frame__pic" data-zoom data-zoom-to="1.05">
+            <Picture src={pGlass} alt={`Two students of ${S} handling glassware in the biology laboratory`} formats={['webp']} widths={[340, 600, 860]} sizes="(max-width: 767px) 92vw, 20vw" loading="lazy" decoding="async" />
+          </div>
+          <p class="ms-frame__k">Biology</p>
+          <p class="ms-frame__v">Glassware in hand, at twelve years old.</p>
+        </li>
+        <li class="ms-frame" data-reveal data-reveal-delay="380">
+          <div class="ms-frame__pic" data-zoom data-zoom-to="1.05">
+            <Picture src={pFloor} alt={`Students of ${S} seated on the floor of a decorated activity room during a lesson`} formats={['webp']} widths={[340, 600, 860]} sizes="(max-width: 767px) 92vw, 20vw" loading="lazy" decoding="async" />
+          </div>
+          <p class="ms-frame__k">Activity room</p>
+          <p class="ms-frame__v">A lesson that does not need desks.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+{/* ══ 04 · FOUR DIRECTIONS ═══════════════════════════════════════════════════
+    Ground: white. Headline anchored left, four columns divided by thin vertical
+    rules. No background, no radius, no shadow. */}
+<section class="ms-four" aria-labelledby="ms-four-t">
+  <div class="u-container ms-four__grid">
+    <div class="ms-four__head">
+      <p class="ms-kicker" data-reveal>The middle school mix</p>
+      <h2 class="ms-h ms-four__h" id="ms-four-t">
+        <span data-clip data-clip-delay="0">Four ways</span>
+        <span data-clip data-clip-delay="150"><em>students grow.</em></span>
+      </h2>
+    </div>
+
+    <ol class="ms-cols">
+      {directions.map((d, i) => (
+        <li class="ms-col" data-reveal data-reveal-delay={140 + i * 90}>
+          <span class="ms-col__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[d.mark]} />
+            </svg>
+          </span>
+          <p class="ms-col__n t-tabular">{d.n}</p>
+          <h3 class="ms-col__k">{d.k}</h3>
+          <p class="ms-col__v">{d.v}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 05 · SUBJECTS ══════════════════════════════════════════════════════════
+    Ground: warm ivory. Copy LEFT, and a vertical list RIGHT threaded on one thin
+    orange line. The five the school hires for are marked; the three that are
+    rooms rather than stated subjects are set apart and labelled. */}
+<section class="ms-subj" aria-labelledby="ms-subj-t">
+  <span class="ms-subj__warm" aria-hidden="true"></span>
+
+  <div class="u-container ms-subj__grid">
+    <div class="ms-subj__copy">
+      <p class="ms-kicker" data-reveal>More to learn</p>
+      <h2 class="ms-h ms-subj__h" id="ms-subj-t">
+        <span data-clip data-clip-delay="0">More subjects.</span>
+        <span data-clip data-clip-delay="150">More <em>ways to think.</em></span>
+      </h2>
+      <p class="ms-body" data-reveal data-reveal-delay="200">
+        The school does not publish a middle-school subject scheme. What it publishes twice — on its
+        own recruitment notices, naming <strong>grades 6 to 8</strong> — is the list of subjects it
+        hires middle-school teachers for. Those five are marked below.
+      </p>
+      <p class="ms-note" data-reveal data-reveal-delay="270">
+        The last three are rooms on the facilities inventory rather than subjects the school has
+        named for this stage, and are set apart as that. Curriculum documents are published class by
+        class as {' '}<a class="ms-link" href={CURRICULUM}>PRECEPT</a>; the notices themselves are on
+        {' '}<a class="ms-link" href={CAREERS}>Career</a>.
+      </p>
+    </div>
+
+    {/* ⚠ ONE ORANGE THREAD RUNS THE FULL LIST and every marker sits on it. */}
+    {/* ⚠ THE THREAD IS DRAWN PER ITEM, NOT AS ONE ABSOLUTE LINE. The list is two
+        columns, so a single positioned rule would only run down the first of
+        them; and `data-draw` scales X, which is the wrong axis for a vertical
+        rule. Each item carries the segment from its own disc to the next. */}
+    <ol class="ms-list">
+      {subjects.map((s, i) => (
+        <li class={`ms-subject${s.hired ? ' ms-subject--hired' : ''}`} data-reveal data-reveal-delay={140 + i * 55}>
+          <span class="ms-subject__node" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[s.mark]} />
+            </svg>
+          </span>
+          <span class="ms-subject__n t-tabular">{s.n}</span>
+          <span class="ms-subject__t">
+            <span class="ms-subject__k">
+              {s.k}
+              {!s.hired && <i class="ms-subject__flag">Room</i>}
+            </span>
+            <span class="ms-subject__v">{s.v}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 06 · FROM CLASSROOM TO LAB ═════════════════════════════════════════════
+    Ground: white. Photograph LEFT, copy RIGHT, and a four-cell data rail beneath
+    the copy rather than four more cards. */}
+<section class="ms-lab" aria-labelledby="ms-lab-t">
+  <span class="ms-dots ms-lab__dots" aria-hidden="true"></span>
+
+  <div class="u-container ms-lab__grid">
+    <div class="ms-lab__pic" data-mask data-mask-from="left">
+      <Picture src={pChem} alt={`The chemistry laboratory at ${S}, benches laid out with reagent shelves and gas taps`} formats={['webp']} widths={[560, 900, 1280]} sizes="(max-width: 1023px) 92vw, 46vw" loading="lazy" decoding="async" />
+    </div>
+
+    <div class="ms-lab__copy">
+      <p class="ms-kicker" data-reveal>From classroom to lab</p>
+      <h2 class="ms-h ms-lab__h" id="ms-lab-t">
+        <span data-clip data-clip-delay="0">The room changes.</span>
+        <span data-clip data-clip-delay="150"><em>The question stays.</em></span>
+      </h2>
+      <p class="ms-body" data-reveal data-reveal-delay="200">
+        Twelve laboratories, and the school’s own count puts <strong>four of them</strong> outside
+        the subject list altogether — Geography, Srijan, Model United Nations and Active Learning.
+        They are inside the twelve, not added to it, and they are where a middle-school question goes
+        when it has no single right answer.
+      </p>
+
+      <ul class="ms-rail">
+        {rail.map((r, i) => (
+          <li class="ms-rcell" data-reveal data-reveal-delay={260 + i * 80}>
+            <span class="ms-rcell__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[r.mark]} />
+              </svg>
+            </span>
+            <span class="ms-rcell__k">{r.k}</span>
+            <span class="ms-rcell__v">{r.v}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="ms-note" data-reveal data-reveal-delay="600">
+        What the Robotics Lab holds is set out on
+        {' '}<a class="ms-link" href={STEM}>STEM, Robotics &amp; Enrichment</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 07 · STUDENT ACHIEVEMENT ═══════════════════════════════════════════════
+    Ground: sand.
+
+    ⚠ NO PHOTOGRAPH, ON PURPOSE. The achievement is verified, named and dated;
+    the school has published no image of it. The brief's own fallback applies, so
+    the section is typographic — a record card, not a picture pretending to be
+    one. ASSET REQUEST: photography of the Shining Star Kids Fashion Show. */}
+<section class="ms-ach" aria-labelledby="ms-ach-t">
+  <span class="ms-ach__warm" aria-hidden="true"></span>
+  <span class="ms-ach__ghost" aria-hidden="true" data-drift>Class VIII</span>
+
+  <div class="u-container ms-ach__inner">
+    <div class="ms-ach__head">
+      <p class="ms-kicker" data-reveal>Learning worth remembering</p>
+      <h2 class="ms-h ms-ach__h" id="ms-ach-t">
+        <span data-clip data-clip-delay="0">Miss Ayana Pandey,</span>
+        <span data-clip data-clip-delay="150"><em>Class VIII.</em></span>
+      </h2>
+      <p class="ms-body" data-reveal data-reveal-delay="200">
+        This stage’s published achievement belongs to a named student. Ayana Pandey of Class VIII won
+        the <strong>Shining Star Kids Fashion Show</strong> in 2025 — a contest of more than seventy
+        entrants, with the award presented by <strong>Miss Universe India 2024, Riya Singha</strong>.
+      </p>
+    </div>
+
+    <dl class="ms-facts">
+      <div class="ms-fact" data-reveal data-reveal-delay="240">
+        <dt>Contest</dt>
+        <dd>Shining Star Kids Fashion Show</dd>
+      </div>
+      <div class="ms-fact" data-reveal data-reveal-delay="300">
+        <dt>Result</dt>
+        <dd>Winner, from over 70 entrants</dd>
+      </div>
+      <div class="ms-fact" data-reveal data-reveal-delay="360">
+        <dt>Presented by</dt>
+        <dd>Miss Universe India 2024, Riya Singha</dd>
+      </div>
+      <div class="ms-fact" data-reveal data-reveal-delay="420">
+        <dt>Year</dt>
+        <dd>2025</dd>
+      </div>
+    </dl>
+
+    <p class="ms-note ms-ach__note" data-reveal data-reveal-delay="480">
+      No photograph of the contest has been published, so none is shown. The rest of the record, year
+      group by year group, is on {' '}<a class="ms-link" href={SUCCESS}>Student Success</a>.
+    </p>
+  </div>
+</section>
+
+{/* ══ 08 · THE MIDDLE SCHOOL JOURNEY ═════════════════════════════════════════ */}
+<section class="ms-jrn" aria-labelledby="ms-jrn-t">
+  <span class="ms-jrn__warm" aria-hidden="true"></span>
+
+  <div class="u-container ms-jrn__inner">
+    <p class="ms-kicker ms-jrn__kicker" data-reveal>The middle school journey</p>
+    <h2 class="ms-h ms-jrn__h" id="ms-jrn-t">
+      <span data-clip data-clip-delay="0">From guided learning</span>
+      <span data-clip data-clip-delay="150">to <em>independent thinking.</em></span>
+    </h2>
+
+    <div class="ms-jrn__track">
+      <span class="ms-jrn__rule" aria-hidden="true">
+        <i class="ms-jrn__dash"></i>
+        <svg class="ms-jrn__svg" viewBox="0 0 1000 2" fill="none" preserveAspectRatio="none">
+          <path class="ms-jrn__draw" pathLength="1" d="M0 1H1000" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </span>
+
+      <ol class="ms-steps">
+        {journey.map((j, i) => (
+          <li class="ms-step" data-reveal data-reveal-delay={140 + i * 120}>
+            <span class="ms-step__node" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[j.mark]} />
+              </svg>
+            </span>
+            <p class="ms-step__n t-tabular">{j.n}</p>
+            <h3 class="ms-step__k">{j.k}</h3>
+            <p class="ms-step__v">{j.v}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  /* THE JOURNEY RULE DRAWS ITSELF. Decoration only — the dashed rule underneath
+     is always painted, so with this script absent nothing is lost but the
+     travelling line. `pathLength="1"` keeps the maths in fractions. */
+  const msTrack = document.querySelector('.ms-jrn__track');
+  const msRule = document.querySelector('.ms-jrn__draw');
+
+  if (msTrack instanceof HTMLElement && msRule instanceof SVGPathElement
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let queued = false;
+
+    const paint = () => {
+      queued = false;
+      const r = msTrack.getBoundingClientRect();
+      const travelled = window.innerHeight * 0.86 - r.top;
+      const p = Math.min(1, Math.max(0, travelled / Math.max(1, r.height * 0.85)));
+      msRule.style.strokeDashoffset = String(1 - p);
+    };
+
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    paint();
+  }
+</script>
+
+{/* ══ 09 · THE CLOSE ═════════════════════════════════════════════════════════ */}
+<section class="ms-close" aria-labelledby="ms-close-t">
+  <div class="ms-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture src={pCohort} alt="" formats={['webp']} widths={[1024, 1600, 2000]} sizes="100vw" loading="lazy" decoding="async" />
+  </div>
+  <span class="ms-close__scrim" aria-hidden="true"></span>
+  <span class="ms-close__grain" aria-hidden="true"></span>
+
+  <div class="u-container ms-close__inner">
+    <p class="ms-kicker ms-kicker--dark" data-reveal>A strong beginning</p>
+    <h2 class="ms-h ms-close__h" id="ms-close-t">
+      <span data-clip data-clip-delay="0">Twelve years old,</span>
+      <span data-clip data-clip-delay="150"><em>and already building.</em></span>
+    </h2>
+    <p class="ms-close__b" data-reveal data-reveal-delay="180">
+      The school names the KIDS programme, its class, the rooms that open at this stage and the one
+      published achievement that belongs to it. What KIDS runs week to week — and photography of it —
+      are not published, and are not invented here.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .ms-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .ms-kicker--dark { color: var(--sb-lime); }
+
+  .ms-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .ms-h span { display: block; }
+  .ms-h em { font-style: normal; color: var(--sb-violet); }
+
+  .ms-body {
+    max-width: 47ch;
+    margin: clamp(13px, 1.6vw, 19px) 0 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .ms-body strong { font-weight: 700; color: var(--sb-charcoal); }
+  .ms-body em { font-style: italic; color: var(--sb-charcoal); }
+
+  .ms-note {
+    max-width: 56ch;
+    margin: clamp(12px, 1.4vw, 17px) 0 0;
+    font-size: clamp(10px, 0.74vw, 11.5px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+
+  .ms-link {
+    color: var(--sb-violet);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .ms-link:hover { color: var(--sb-orange-bright); }
+
+  .ms-grid {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(28, 14, 8, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(28, 14, 8, 0.05) 1px, transparent 1px);
+    background-size: 88px 88px;
+    mask-image: radial-gradient(72% 78% at 50% 44%, #000 0%, transparent 82%);
+  }
+  .ms-grid--fine { background-size: 52px 52px; opacity: 0.7; }
+
+  .ms-dots {
+    position: absolute;
+    z-index: -1;
+    width: clamp(92px, 10vw, 160px);
+    aspect-ratio: 1 / 1;
+    background-image: radial-gradient(rgba(201, 60, 10, 0.32) 1.5px, transparent 1.6px);
+    background-size: 17px 17px;
+    mask-image: radial-gradient(closest-side, #000 20%, transparent 100%);
+  }
+
+  /* One radius, one crop rule, one shadow across every frame on the page. */
+  .ms-open__lead,
+  .ms-open__sm,
+  .ms-open__cir,
+  .ms-exp__lead,
+  .ms-exp__sm,
+  .ms-frame__pic,
+  .ms-lab__pic {
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-sand);
+  }
+  .ms-open__lead :global(picture),
+  .ms-open__sm :global(picture),
+  .ms-open__cir :global(picture),
+  .ms-exp__lead :global(picture),
+  .ms-exp__sm :global(picture) { display: block; height: 100%; }
+  .ms-open__lead :global(img),
+  .ms-open__sm :global(img),
+  .ms-open__cir :global(img),
+  .ms-exp__lead :global(img),
+  .ms-exp__sm :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ═══ 01 · THE TRANSITION ═════════════════════════════════════════════════ */
+  .ms-open {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #f7f1eb;
+    padding-block: clamp(38px, 4.4vw, 72px);
+  }
+  .ms-open__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 62% at 6% 8%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(56% 62% at 96% 90%, rgba(255, 138, 92, 0.1) 0%, rgba(255, 138, 92, 0) 74%);
+  }
+  .ms-open__dots { top: 9%; right: 2%; }
+  .ms-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.98fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .ms-open__copy { position: relative; }
+  .ms-open__ghost {
+    position: absolute;
+    z-index: -1;
+    top: clamp(0px, 0.4vw, 8px);
+    left: clamp(-24px, -1.5vw, -8px);
+    width: max-content;
+    font-family: var(--sb-font-display);
+    font-size: clamp(72px, 10.5vw, 158px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201, 60, 10, 0.12);
+    pointer-events: none;
+    user-select: none;
+  }
+  .ms-open__h { font-size: clamp(28px, 3.3vw, 46px); }
+
+  .ms-open__stage { position: relative; padding-bottom: clamp(24px, 2.8vw, 42px); }
+  .ms-open__lead { width: 86%; aspect-ratio: 16 / 11; box-shadow: var(--sb-shadow-card); }
+  .ms-open__sm {
+    position: absolute;
+    right: 0;
+    bottom: clamp(24px, 2.8vw, 42px);
+    width: 37%;
+    aspect-ratio: 4 / 5;
+    border: 5px solid #f7f1eb;
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .ms-open__cir {
+    position: absolute;
+    left: 7%;
+    bottom: 0;
+    width: clamp(86px, 9.4vw, 138px);
+    aspect-ratio: 1 / 1;
+    border: 5px solid #f7f1eb;
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+
+  .ms-marks {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: clamp(20px, 2.4vw, 32px) 0 0;
+    padding: clamp(14px, 1.6vw, 20px) 0 0;
+    border-top: 1px solid var(--sb-border);
+    list-style: none;
+  }
+  .ms-mark {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 4px;
+    padding: 0 clamp(7px, 0.9vw, 13px);
+  }
+  .ms-mark + .ms-mark { border-left: 1px solid var(--sb-border); }
+  .ms-mark:first-child { padding-left: 0; }
+  .ms-mark__m { display: block; width: clamp(19px, 1.8vw, 24px); color: var(--sb-violet); }
+  .ms-mark__m svg { display: block; width: 100%; height: auto; }
+  .ms-mark__n {
+    margin-top: 2px;
+    font-size: clamp(8.5px, 0.62vw, 10px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-orange-bright);
+  }
+  .ms-mark__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(11px, 0.84vw, 13px);
+    font-weight: 700;
+    line-height: 1.26;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .ms-mark__v { font-size: clamp(9.5px, 0.68vw, 10.8px); line-height: 1.5; color: var(--sb-text-muted); }
+
+  /* ═══ 02 · THE MIDDLE SCHOOL EXPERIENCE ═══════════════════════════════════ */
+  .ms-exp {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(36px, 4.2vw, 68px);
+  }
+  .ms-exp__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .ms-exp__stage { position: relative; padding-bottom: clamp(22px, 2.6vw, 40px); }
+  .ms-exp__lead { width: 82%; aspect-ratio: 5 / 4; box-shadow: var(--sb-shadow-card); }
+  .ms-exp__sm {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 46%;
+    aspect-ratio: 16 / 11;
+    border: 5px solid var(--sb-paper);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .ms-exp__h { font-size: clamp(27px, 3.1vw, 44px); }
+
+  /* ⚠ HORIZONTAL RULES, NOT CARDS. */
+  .ms-shifts { margin: clamp(18px, 2.2vw, 28px) 0 0; padding: 0; list-style: none; }
+  .ms-shift {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(11px, 1.3vw, 17px);
+    padding: clamp(9px, 1.05vw, 13px) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .ms-shift:first-child { border-top: 1px solid var(--sb-border); }
+  .ms-shift__n {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12px, 0.96vw, 15px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .ms-shift__t { display: grid; gap: 3px; }
+  .ms-shift__k {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 0.98vw, 15px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .ms-shift__v { margin: 0; font-size: clamp(10.5px, 0.76vw, 12.2px); line-height: 1.64; color: var(--sb-text-muted); }
+
+  /* ═══ 03 · LEARNING BY DOING ══════════════════════════════════════════════ */
+  .ms-doing {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #fff5ef;
+    padding-block: clamp(38px, 4.4vw, 70px);
+  }
+  .ms-doing__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(60% 66% at 92% 6%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 72%),
+      radial-gradient(52% 58% at 4% 96%, rgba(201, 60, 10, 0.07) 0%, rgba(201, 60, 10, 0) 74%);
+  }
+  .ms-doing__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.44fr) minmax(0, 1fr);
+    gap: clamp(24px, 3.2vw, 52px);
+    align-items: center;
+  }
+  .ms-doing__h { font-size: clamp(25px, 2.8vw, 38px); }
+  .ms-doing__rule {
+    display: block;
+    width: clamp(56px, 6vw, 92px);
+    height: 2px;
+    margin: clamp(16px, 2vw, 24px) 0 0;
+    background: var(--sb-orange-bright);
+  }
+
+  .ms-doing__stage { position: relative; padding-top: clamp(26px, 3vw, 46px); }
+  .ms-doing__arc {
+    position: absolute;
+    z-index: 0;
+    inset-inline: 0;
+    top: 0;
+    width: 100%;
+    height: clamp(26px, 3vw, 46px);
+    color: rgba(201, 60, 10, 0.38);
+  }
+  .ms-doing__nodes { position: absolute; inset-inline: 0; top: 0; height: clamp(26px, 3vw, 46px); }
+  .ms-doing__nodes i {
+    position: absolute;
+    top: var(--ny);
+    left: var(--nx);
+    translate: -50% -50%;
+    width: clamp(8px, 0.82vw, 11px);
+    aspect-ratio: 1 / 1;
+    border: 1.6px solid var(--sb-orange-bright);
+    border-radius: 50%;
+    background: #fff5ef;
+  }
+
+  .ms-frames {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.8vw, 28px);
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ms-frame:nth-child(2) { margin-top: clamp(18px, 2.2vw, 38px); }
+  .ms-frame:nth-child(3) { margin-top: clamp(6px, 0.8vw, 14px); }
+  .ms-frame__pic { box-shadow: var(--sb-shadow-card); }
+  .ms-frame__pic :global(picture) { display: block; }
+  .ms-frame__pic :global(img) { display: block; width: 100%; height: auto; object-fit: cover; }
+  .ms-frame:nth-child(1) .ms-frame__pic :global(img) { aspect-ratio: 4 / 5; }
+  .ms-frame:nth-child(2) .ms-frame__pic :global(img) { aspect-ratio: 1 / 1; }
+  .ms-frame:nth-child(3) .ms-frame__pic :global(img) { aspect-ratio: 5 / 6; }
+  .ms-frame__k {
+    margin: clamp(9px, 1.1vw, 13px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.2vw, 19px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ms-frame__v { margin: 4px 0 0; font-size: clamp(10px, 0.74vw, 11.8px); line-height: 1.6; color: var(--sb-text-muted); }
+
+  /* ═══ 04 · FOUR DIRECTIONS ════════════════════════════════════════════════ */
+  .ms-four {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(32px, 3.8vw, 58px);
+  }
+  .ms-four__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+    gap: clamp(24px, 3.2vw, 50px);
+    align-items: center;
+  }
+  .ms-four__h { font-size: clamp(24px, 2.6vw, 36px); }
+
+  .ms-cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ms-col { padding: 0 clamp(10px, 1.3vw, 20px); }
+  .ms-col:first-child { padding-left: 0; }
+  .ms-col:last-child { padding-right: 0; }
+  .ms-col + .ms-col { border-left: 1px solid color-mix(in srgb, var(--sb-violet) 28%, transparent); }
+  .ms-col__m { display: block; width: clamp(22px, 2.1vw, 28px); color: var(--sb-violet); }
+  .ms-col__m svg { display: block; width: 100%; height: auto; }
+  .ms-col__n {
+    margin: clamp(9px, 1.1vw, 14px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.05vw, 16px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .ms-col__k {
+    margin: clamp(3px, 0.4vw, 5px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ms-col__v { margin: clamp(5px, 0.7vw, 9px) 0 0; font-size: clamp(10.5px, 0.78vw, 12.4px); line-height: 1.66; color: var(--sb-text-muted); }
+
+  /* ═══ 05 · SUBJECTS ═══════════════════════════════════════════════════════ */
+  .ms-subj {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #f7f1eb;
+    padding-block: clamp(36px, 4.2vw, 66px);
+  }
+  .ms-subj__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background: radial-gradient(58% 64% at 6% 8%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0) 72%);
+  }
+  .ms-subj__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    gap: clamp(24px, 3.2vw, 52px);
+    align-items: center;
+  }
+  .ms-subj__h { font-size: clamp(25px, 2.8vw, 38px); }
+
+  /* ⚠ TWO COLUMNS OF FOUR, ONE THREAD DOWN EACH. The thread is a single element
+     spanning the list, drawn on scroll; every marker's disc sits on it. */
+  .ms-list {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(20px, 2.6vw, 42px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* The connecting segment: from this item's disc down through the row gap to
+     the next disc. The last item in each column has nothing to connect to. */
+  .ms-subject::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    left: calc(clamp(26px, 2.5vw, 34px) / 2 - 0.75px);
+    top: calc(clamp(8px, 0.95vw, 12px) + clamp(26px, 2.5vw, 34px));
+    bottom: 0;
+    width: 1.5px;
+    background: color-mix(in srgb, var(--sb-violet) 26%, transparent);
+  }
+  .ms-subject:nth-last-child(-n + 2)::before { content: none; }
+  .ms-subject {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: clamp(8px, 0.95vw, 12px);
+    align-items: start;
+    padding: clamp(8px, 0.95vw, 12px) 0;
+  }
+  .ms-subject__node {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: clamp(26px, 2.5vw, 34px);
+    aspect-ratio: 1 / 1;
+    border: 1.4px solid color-mix(in srgb, var(--sb-violet) 34%, transparent);
+    border-radius: 50%;
+    background: #f7f1eb;
+    color: var(--sb-violet);
+  }
+  .ms-subject__node svg { width: 54%; height: auto; }
+  .ms-subject__n {
+    margin-top: clamp(6px, 0.7vw, 9px);
+    font-size: clamp(8.5px, 0.62vw, 10px);
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    color: var(--sb-orange-bright);
+  }
+  .ms-subject__t { display: grid; gap: 2px; margin-top: clamp(2px, 0.3vw, 4px); }
+  .ms-subject__k {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 1vw, 15.5px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  /* The three that are rooms rather than stated subjects carry a flag. */
+  .ms-subject__flag {
+    padding: 2px 7px;
+    border-radius: var(--sb-r-1);
+    background: var(--sb-violet-wash);
+    font-family: var(--sb-font-body, inherit);
+    font-size: clamp(7.5px, 0.55vw, 9px);
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .ms-subject__v { font-size: clamp(9.5px, 0.7vw, 11.2px); line-height: 1.56; color: var(--sb-text-muted); }
+  .ms-subject--hired .ms-subject__node { border-color: var(--sb-orange-bright); }
+
+  /* ═══ 06 · FROM CLASSROOM TO LAB ══════════════════════════════════════════ */
+  .ms-lab {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(36px, 4.2vw, 66px);
+  }
+  .ms-lab__dots { top: 10%; left: 1%; }
+  .ms-lab__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    gap: clamp(26px, 3.6vw, 54px);
+    align-items: center;
+  }
+  .ms-lab__pic { box-shadow: var(--sb-shadow-card); }
+  .ms-lab__pic :global(picture) { display: block; }
+  .ms-lab__pic :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 11;
+    object-fit: cover;
+    object-position: 50% 52%;
+  }
+  .ms-lab__h { font-size: clamp(26px, 3vw, 42px); }
+
+  .ms-rail {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: clamp(18px, 2.2vw, 28px) 0 0;
+    padding: clamp(14px, 1.6vw, 20px) 0 0;
+    border-top: 1px solid var(--sb-border);
+    list-style: none;
+  }
+  .ms-rcell {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 4px;
+    padding: 0 clamp(7px, 0.9vw, 13px);
+  }
+  .ms-rcell + .ms-rcell { border-left: 1px solid var(--sb-border); }
+  .ms-rcell:first-child { padding-left: 0; }
+  .ms-rcell__m { display: block; width: clamp(19px, 1.8vw, 24px); color: var(--sb-violet); }
+  .ms-rcell__m svg { display: block; width: 100%; height: auto; }
+  .ms-rcell__k {
+    margin-top: 3px;
+    font-family: var(--sb-font-display);
+    font-size: clamp(11px, 0.86vw, 13.5px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .ms-rcell__v { font-size: clamp(9.5px, 0.68vw, 10.8px); line-height: 1.5; color: var(--sb-text-muted); }
+
+  /* ═══ 07 · STUDENT ACHIEVEMENT ════════════════════════════════════════════ */
+  .ms-ach {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #f3e8dd;
+    padding-block: clamp(34px, 4vw, 62px);
+  }
+  .ms-ach__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background: radial-gradient(62% 68% at 50% 6%, rgba(255, 255, 255, 0.68) 0%, rgba(255, 255, 255, 0) 74%);
+  }
+  .ms-ach__ghost {
+    position: absolute;
+    z-index: -2;
+    right: clamp(-16px, -1vw, -4px);
+    bottom: clamp(-18px, -1.2vw, -6px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(72px, 10.5vw, 158px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201, 60, 10, 0.1);
+    pointer-events: none;
+    user-select: none;
+  }
+  .ms-ach__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+    gap: clamp(24px, 3.2vw, 50px);
+    align-items: center;
+  }
+  .ms-ach__h { font-size: clamp(25px, 2.8vw, 38px); }
+
+  .ms-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(12px, 1.5vw, 20px);
+    margin: 0;
+  }
+  .ms-fact {
+    padding: clamp(11px, 1.3vw, 16px) 0 0;
+    border-top: 2px solid var(--sb-orange-bright);
+  }
+  .ms-fact dt {
+    font-size: clamp(9px, 0.66vw, 10.5px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  .ms-fact dd {
+    margin: clamp(5px, 0.6vw, 8px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 1vw, 16px);
+    font-weight: 700;
+    line-height: 1.32;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .ms-ach__note { grid-column: 1 / -1; max-width: none; }
+
+  /* ═══ 08 · THE JOURNEY ════════════════════════════════════════════════════ */
+  .ms-jrn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #fff5ef;
+    padding-block: clamp(34px, 4vw, 62px);
+  }
+  .ms-jrn__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background: radial-gradient(62% 68% at 50% 4%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 74%);
+  }
+  /* ⚠ minmax(0, 1fr), NOT THE DEFAULT auto COLUMN — an auto column sizes to the
+     widest child's max-content and the rail ends up narrower than its stops. */
+  .ms-jrn__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+  .ms-jrn__kicker { text-align: center; }
+  .ms-jrn__h { max-width: 22ch; font-size: clamp(25px, 2.9vw, 40px); }
+
+  .ms-jrn__track { position: relative; width: 100%; margin: clamp(24px, 3vw, 42px) 0 0; }
+  .ms-jrn__rule {
+    position: absolute;
+    z-index: 0;
+    top: calc(clamp(38px, 3.6vw, 50px) / 2 - 1px);
+    inset-inline: 12.5%;
+    height: 2px;
+    color: var(--sb-orange-bright);
+  }
+  .ms-jrn__dash {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(to right, rgba(201, 60, 10, 0.42) 0 4px, transparent 4px 12px);
+  }
+  .ms-jrn__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .ms-jrn__draw { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0.9; }
+
+  .ms-steps {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 26px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ms-step { display: grid; justify-items: center; text-align: center; }
+  .ms-step__node {
+    display: grid;
+    place-items: center;
+    width: clamp(38px, 3.6vw, 50px);
+    aspect-ratio: 1 / 1;
+    border: 1.6px solid color-mix(in srgb, var(--sb-violet) 42%, transparent);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-violet);
+  }
+  .ms-step__node svg { width: 52%; height: auto; }
+  .ms-step__n {
+    margin: clamp(9px, 1.1vw, 14px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12px, 0.96vw, 15px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .ms-step__k {
+    margin: clamp(2px, 0.3vw, 4px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.35vw, 22px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ms-step__v {
+    max-width: 26ch;
+    margin: clamp(5px, 0.65vw, 9px) 0 0;
+    font-size: clamp(10px, 0.74vw, 11.8px);
+    line-height: 1.62;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 09 · THE CLOSE ══════════════════════════════════════════════════════ */
+  .ms-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(44px, 5.4vw, 86px);
+  }
+  .ms-close__media { position: absolute; z-index: -3; inset: -12% 0; }
+  .ms-close__media :global(picture),
+  .ms-close__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+  .ms-close__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(23, 18, 15, 0.86) 0%, rgba(23, 18, 15, 0.74) 46%, rgba(23, 18, 15, 0.9) 100%),
+      radial-gradient(66% 76% at 50% 42%, rgba(255, 92, 53, 0.16) 0%, transparent 72%);
+  }
+  .ms-close__grain {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    opacity: 0.26;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+  .ms-close__inner { position: relative; display: grid; justify-items: center; text-align: center; }
+  .ms-close__h { max-width: 20ch; font-size: clamp(26px, 3.2vw, 46px); color: #fff; }
+  .ms-close__h em { color: var(--sb-lime); font-style: italic; }
+  .ms-close__b {
+    max-width: 66ch;
+    margin: clamp(14px, 1.7vw, 21px) 0 0;
+    font-size: clamp(12px, 0.88vw, 14px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .ms-doing__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(22px, 3vw, 32px); }
+    .ms-four__grid,
+    .ms-ach__inner { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 2.8vw, 30px); }
+    .ms-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 1023px) {
+    .ms-open__grid,
+    .ms-exp__grid,
+    .ms-subj__grid,
+    .ms-lab__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(28px, 4vw, 40px);
+    }
+    .ms-open__stage,
+    .ms-exp__stage,
+    .ms-lab__pic { order: -1; }
+    .ms-body { max-width: 62ch; }
+    .ms-open__h,
+    .ms-exp__h,
+    .ms-lab__h { font-size: clamp(27px, 4.8vw, 38px); }
+    .ms-marks { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(16px, 2.2vw, 22px); }
+    .ms-mark:nth-child(3) { padding-left: 0; border-left: 0; }
+    .ms-open__ghost { font-size: clamp(64px, 11vw, 110px); }
+    .ms-ach__ghost { font-size: clamp(60px, 11vw, 110px); }
+    .ms-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(24px, 3.4vw, 34px); }
+    .ms-jrn__rule { display: none; }
+  }
+
+  @media (max-width: 767px) {
+    .ms-open,
+    .ms-exp,
+    .ms-doing,
+    .ms-subj,
+    .ms-lab { padding-block: clamp(32px, 7vw, 44px); }
+    .ms-four,
+    .ms-ach,
+    .ms-jrn { padding-block: clamp(30px, 6.6vw, 42px); }
+
+    .ms-open__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .ms-open__sm { width: 44%; bottom: 0; }
+    .ms-open__stage { padding-bottom: clamp(30px, 8vw, 42px); }
+    .ms-open__cir { display: none; }
+
+    .ms-exp__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .ms-exp__sm { width: 50%; }
+    .ms-exp__stage { padding-bottom: clamp(26px, 7vw, 38px); }
+
+    .ms-frames { grid-template-columns: minmax(0, 1fr); gap: clamp(22px, 6vw, 30px); }
+    .ms-frame:nth-child(n) { margin-top: 0; }
+    .ms-frame:nth-child(1) .ms-frame__pic :global(img),
+    .ms-frame:nth-child(2) .ms-frame__pic :global(img),
+    .ms-frame:nth-child(3) .ms-frame__pic :global(img) { aspect-ratio: 16 / 11; }
+    .ms-doing__stage { padding-top: 0; }
+    .ms-doing__arc,
+    .ms-doing__nodes { display: none; }
+
+    .ms-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(20px, 5vw, 26px); }
+    .ms-col { padding: 0; }
+    .ms-col + .ms-col { border-left: 0; }
+    .ms-col:nth-child(even) { padding-left: clamp(14px, 4.4vw, 20px); border-left: 1px solid color-mix(in srgb, var(--sb-violet) 28%, transparent); }
+
+    .ms-list { grid-template-columns: minmax(0, 1fr); }
+    .ms-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(16px, 4.4vw, 22px); }
+    .ms-rcell:nth-child(3) { padding-left: 0; border-left: 0; }
+
+    .ms-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .ms-steps { grid-template-columns: minmax(0, 1fr); row-gap: clamp(20px, 5.4vw, 26px); }
+    .ms-step { grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; column-gap: clamp(12px, 3.6vw, 16px); }
+    .ms-step__node { grid-row: 1 / 4; }
+    .ms-step__n,
+    .ms-step__k,
+    .ms-step__v { margin-top: 0; }
+    .ms-step__v { max-width: none; }
+  }
+</style>

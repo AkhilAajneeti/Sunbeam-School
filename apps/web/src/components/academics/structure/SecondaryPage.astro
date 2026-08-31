@@ -1,0 +1,998 @@
+---
+/**
+ * ACADEMIC STRUCTURE · SECONDARY — Classes IX and X, in six sections.
+ *
+ * ═══ SOURCE OF TRUTH — every line traces to this repository ════════════════
+ *   data/newsPages.ts
+ *     "Guiding Futures, Shaping Lives" — Mr. Ashutosh Kumar Pandey, IRS, Deputy
+ *     Commissioner of Income Tax · Classes IX–XII: "a career-guidance session in
+ *     which the officer shared his own educational journey."
+ *   data/facilities.ts
+ *     Physics · Chemistry · Biology — "Board practicals, Classes IX–XII."
+ *     Twelve laboratories, four of them inquiry rooms (Geography, Srijan, Model
+ *     United Nations, Active Learning) · two computer labs, 40+ machines each ·
+ *     Robotics Lab (drone, 3-D printer, telescope) · Language Lab · Nalanda
+ *     Library, 17,574 books · fifteen sports · career counselling.
+ *   data/academics.ts
+ *     PRECEPT — a published syllabus document per class, session 2026-27.
+ *     Stage focus — Full laboratory programme · Board preparation · Subject
+ *     choice ahead.  Milestone — the CBSE Class X board examination.
+ *
+ * ⚠ SECTION 01 IS LIGHT, NOT DARK, AND THAT IS THE REFERENCE'S DECISION.
+ * The written brief calls for "very dark brown / almost black" here; the
+ * attached mockup — which the same brief names "the visual source of truth" —
+ * shows a warm peach panel with the copy left and one large rounded photograph
+ * right. Where the two disagree the image wins, because the image is what the
+ * client has seen and signed off. The page's one dark section is the close, as
+ * in the mockup.
+ *
+ * ⚠ THE FOUR CELLS UNDER SECTION 01 ARE FACTS, NOT SLOGANS. The mockup labels
+ * them "Real Conversations from Real People", "Careers that Open Minds",
+ * "Learning that Connects Dots", "Confidence that Travels Far". None of the four
+ * is published and none is checkable. They carry the guest's name, his office,
+ * the year groups he addressed and what the school says he gave them — which is
+ * the same composition and an actual claim.
+ *
+ * ⚠ NO BOARD RESULTS ARE CLAIMED HERE. Results have their own published page.
+ * ⚠ THE LABORATORIES ARE PHOTOGRAPHED EMPTY except sb-chem-lab.jpg, which does
+ * show students at the bench and is captioned as that. The Guiding Futures frame
+ * shows visiting guests being shown the library and is captioned as that rather
+ * than as the session itself.
+ *
+ * ═══ COMPOSITION — six sections, six different builds ══════════════════════
+ *   01 · PEACH  copy LEFT, one large photograph RIGHT, four named cells beneath.
+ *   02 · WHITE  a two-frame collage crosses LEFT, a vertical information list on
+ *               horizontal rules RIGHT — not cards.
+ *   03 · IVORY  copy LEFT, four compact columns RIGHT on thin vertical rules.
+ *   04 · WHITE  a checked list LEFT, a deliberately unequal 2×2 gallery RIGHT.
+ *   05 · PEACH  a rounded container holding the drawn journey rail.
+ *   06 · PHOTO  the dark close.
+ */
+import { Picture } from 'astro:assets';
+
+/* ── PHOTOGRAPHY — eight genuine Sunbeam Ballia frames, each used ONCE. Every
+   alt is the description already published against that file in data/, so no
+   caption here invents what a photograph shows. */
+import pGuest from '../../../assets/school-event/Guiding-Futures/Guiding-Futures-01.jpg';
+import pRoom from '../../../assets/bio lab/DSC_1274 copy.jpg';
+import pBench from '../../../assets/photos/sb-chem-lab.jpg';
+import pMachines from '../../../assets/photos/sb-comp-lab-2.jpg';
+import pLibrary from '../../../assets/photos/sb-library.jpg';
+import pMicro from '../../../assets/photos/sb-sci-lab.jpg';
+import pCourt from '../../../assets/basket ball/DSC_1280 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+const LABS = '/academics/teaching-learning/laboratories-clubs/';
+const CURRICULUM = '/academics/philosophy/curriculum/';
+const RESULTS = '/academics/board-results/';
+const FACILITIES = '/campus/facilities-infrastructure/';
+
+/* ── THE MARKS — 24-unit box, 1.5 stroke, round caps, no fill ─────────────── */
+const MARK: Record<string, string> = {
+  person: `<circle cx="12" cy="7.6" r="3.6"/><path d="M4.8 20.6a7.2 7.2 0 0 1 14.4 0"/>`,
+  badge: `<path d="M12 2.8 4.6 6v6c0 4.6 3.1 8.2 7.4 9.2 4.3-1 7.4-4.6 7.4-9.2V6z"/><path d="m8.8 12 2.4 2.4 4-4.6"/>`,
+  group: `<circle cx="8.4" cy="8" r="2.8"/><circle cx="16.6" cy="9.4" r="2.2"/><path d="M2.8 19.4a5.6 5.6 0 0 1 11.2 0"/><path d="M15 15.2a4.4 4.4 0 0 1 6.2 4.2"/>`,
+  path: `<circle cx="6" cy="18.4" r="2.6"/><circle cx="18" cy="5.6" r="2.6"/><path d="M8.4 17.2c4.4-1 6.6-3.4 7.6-8"/><path d="M13.4 4.4h4.6v4.6"/>`,
+  flask: `<path d="M9.6 3.4h4.8M10.6 3.4v5.2L6.9 17a2 2 0 0 0 1.8 2.8h6.6a2 2 0 0 0 1.8-2.8l-3.7-8.4V3.4"/><path d="M8.2 14.4h7.6"/>`,
+  book: `<path d="M4 4.4h5.2A2.8 2.8 0 0 1 12 7.2v12.4a2.4 2.4 0 0 0-2.4-2.4H4Z"/><path d="M20 4.4h-5.2A2.8 2.8 0 0 0 12 7.2v12.4a2.4 2.4 0 0 1 2.4-2.4H20Z"/>`,
+  doc: `<path d="M13.4 2.8H6.6a1.8 1.8 0 0 0-1.8 1.8v14.8a1.8 1.8 0 0 0 1.8 1.8h10.8a1.8 1.8 0 0 0 1.8-1.8V8.4Z"/><path d="M13.4 2.8v5.6h5.8"/><path d="M8.4 13h7.2M8.4 16.4h5"/>`,
+  flag: `<path d="M5.6 21V3.4"/><path d="M5.6 4.4h11.2l-2.2 3.8 2.2 3.8H5.6Z"/>`,
+  layers: `<path d="m12 2.8 9 4.6-9 4.6-9-4.6Z"/><path d="m3 12 9 4.6 9-4.6"/><path d="m3 16.4 9 4.6 9-4.6"/>`,
+  hand: `<path d="M9.4 11.2V6a1.9 1.9 0 1 1 3.8 0v7.4"/><path d="M13.2 10.4a1.7 1.7 0 0 1 3.4 0v1M16.6 11.6a1.7 1.7 0 0 1 3.4 0v3.2a6 6 0 0 1-6 6h-1.6c-2 0-3-1-4.2-2.4l-3-3.6a1.8 1.8 0 0 1 2.6-2.4l1.6 1.6"/>`,
+  ask: `<circle cx="12" cy="12" r="9.2"/><path d="M9.4 9.4a2.6 2.6 0 1 1 3.4 2.5c-.6.2-1 .8-1 1.5v.6"/><circle cx="11.8" cy="17" r=".9"/>`,
+  speech: `<path d="M20.4 13.4a2.6 2.6 0 0 1-2.6 2.6H9.4l-4.6 3.6v-3.6a2.6 2.6 0 0 1-2.6-2.6V6.6A2.6 2.6 0 0 1 4.8 4h13a2.6 2.6 0 0 1 2.6 2.6Z"/><path d="M7.6 9.6h8.8M7.6 12.4h5.6"/>`,
+  target: `<circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.2"/>`,
+  lens: `<circle cx="10.8" cy="10.8" r="6.8"/><path d="m15.8 15.8 4.8 4.8"/>`,
+  crown: `<path d="M3.6 7.4 7 12l5-6.6L17 12l3.4-4.6v10.2H3.6Z"/><path d="M3.6 20.6h16.8"/>`,
+};
+
+/* ── SECTION 01 — four cells, four published facts ────────────────────────
+   ⚠ NOT THE MOCKUP'S FOUR SLOGANS. See the header note. */
+const guest = [
+  { n: '01', mark: 'person', k: 'A named guest', v: 'Mr. Ashutosh Kumar Pandey, IRS.' },
+  { n: '02', mark: 'badge', k: 'His office', v: 'Deputy Commissioner of Income Tax.' },
+  { n: '03', mark: 'group', k: 'The audience', v: 'Classes IX to XII, together.' },
+  { n: '04', mark: 'path', k: 'What he brought', v: 'His own educational journey.' },
+] as const;
+
+/* ── SECTION 02 — the vertical information list, on rules ─────────────────── */
+const rooms = [
+  { mark: 'flask', k: 'Physics · Chemistry · Biology', v: 'Board practicals, Classes IX–XII — one room built for each subject.' },
+  { mark: 'person', k: 'Guiding Futures · IX–XII', v: 'Mr. Ashutosh Kumar Pandey, IRS, Deputy Commissioner of Income Tax.' },
+  { mark: 'doc', k: 'PRECEPT syllabus', v: 'A published document per class, session 2026-27.' },
+  { mark: 'flag', k: 'Milestone', v: 'The CBSE Class X board examination.' },
+] as const;
+
+/* ── SECTION 03 — four compact columns ────────────────────────────────────
+   Each is anchored to a published room or programme rather than to an adjective,
+   so none of the four is a generic promise wearing a number. */
+const deeper = [
+  { n: '01', mark: 'layers', k: 'Conceptual depth', v: 'Class IX is the year the laboratory programme stops being introductory.' },
+  { n: '02', mark: 'hand', k: 'Practical work', v: 'Board practicals in three rooms, carried from Class IX to Class XII.' },
+  { n: '03', mark: 'ask', k: 'Independent thinking', v: 'Four inquiry rooms among the twelve — Geography, Srijan, MUN and Active Learning.' },
+  { n: '04', mark: 'speech', k: 'Communication', v: 'Model United Nations: debate, committee procedure and position papers.' },
+] as const;
+
+/* ── SECTION 04 — the checked list. Every line is a published facility. ───── */
+const beyond = [
+  'Science laboratories — one room for each subject',
+  'Computer laboratories, junior and senior — 40+ machines each',
+  'Robotics Lab — drone, 3-D printer and telescope',
+  'Four inquiry rooms among the twelve laboratories',
+  'Nalanda Library — 17,574 books — and the language laboratory',
+  'Fifteen sports, indoor and outdoor',
+  'Guiding Futures, Shaping Lives — Classes IX to XII',
+] as const;
+
+/* ── SECTION 05 — four stages, each anchored to something published ──────── */
+const journey = [
+  { n: '01', mark: 'book', k: 'Learn', v: 'A syllabus document published for every class, as PRECEPT.' },
+  { n: '02', mark: 'flask', k: 'Practise', v: 'Board practicals in Physics, Chemistry and Biology, from Class IX.' },
+  { n: '03', mark: 'lens', k: 'Analyse', v: 'Four inquiry rooms for the work that has no single right answer.' },
+  { n: '04', mark: 'crown', k: 'Lead', v: 'Committee procedure and position papers in the Model UN room.' },
+] as const;
+---
+
+{/* ══ 01 · SOMEONE WHO ACTUALLY DID IT ═══════════════════════════════════════
+    Ground: warm peach. Copy LEFT, one large rounded photograph RIGHT at roughly
+    half the section, and four named cells beneath the copy. Orange dot fields
+    sit at both outer corners. Not a card — no border, no panel, no box. */}
+<section class="sc-open" aria-labelledby="sc-open-t">
+  <span class="sc-open__warm" aria-hidden="true"></span>
+  <span class="sc-dots sc-open__dots" aria-hidden="true"></span>
+  <span class="sc-open__ghost" aria-hidden="true" data-drift>IX–X</span>
+
+  <div class="u-container sc-open__grid">
+    <div class="sc-open__copy">
+      <p class="sc-kicker" data-reveal>Classes IX – X</p>
+      <h2 class="sc-h sc-open__h" id="sc-open-t">
+        <span data-clip data-clip-delay="0">Someone who</span>
+        <span data-clip data-clip-delay="150"><em>actually did it.</em></span>
+      </h2>
+
+      <p class="sc-body" data-reveal data-reveal-delay="200">
+        The school runs <strong>Guiding Futures, Shaping Lives</strong> for Classes IX to XII. The
+        2025 session was taken by <strong>Mr. Ashutosh Kumar Pandey, IRS, Deputy Commissioner of
+        Income Tax</strong>, who shared his own educational journey rather than a careers slide deck.
+      </p>
+      <p class="sc-body" data-reveal data-reveal-delay="260">
+        The measure of a programme like this is who agrees to come and speak as it is — and the
+        school names its guests, with their office, every time.
+      </p>
+
+      <ul class="sc-cells">
+        {guest.map((g, i) => (
+          <li class="sc-cell" data-reveal data-reveal-delay={300 + i * 70}>
+            <span class="sc-cell__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[g.mark]} />
+              </svg>
+            </span>
+            <span class="sc-cell__n t-tabular">{g.n}</span>
+            <span class="sc-cell__k">{g.k}</span>
+            <span class="sc-cell__v">{g.v}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <figure class="sc-open__fig">
+      <div class="sc-open__pic" data-mask data-mask-from="left">
+        <Picture
+          src={pGuest}
+          alt={`Guests at the Guiding Futures session being shown the Nalanda Library at ${S}`}
+          formats={['webp']}
+          widths={[560, 900, 1280]}
+          sizes="(max-width: 1023px) 92vw, 46vw"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      <figcaption class="sc-open__cap">
+        Guests being shown the library at a Guiding Futures session. The school has published no
+        photograph of the address itself.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+{/* ══ 02 · BOARD PRACTICALS ══════════════════════════════════════════════════
+    Ground: white. The collage crosses LEFT — a main laboratory frame with a
+    second overlapping it — and the copy sits right above a vertical information
+    list divided by thin horizontal rules. */}
+<section class="sc-board" aria-labelledby="sc-board-t">
+  <span class="sc-grid sc-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container sc-board__grid">
+    <div class="sc-board__stage">
+      <div class="sc-board__lead" data-zoom data-zoom-to="1.04">
+        <Picture src={pRoom} alt={`A subject laboratory at ${S}, benches and apparatus laid out along the room`} formats={['webp']} widths={[520, 880, 1200]} sizes="(max-width: 1023px) 92vw, 42vw" loading="lazy" decoding="async" />
+      </div>
+      <div class="sc-board__sm" data-pop data-pop-delay="200">
+        <Picture src={pBench} alt={`Students of ${S} at the bench in the chemistry laboratory`} formats={['webp']} widths={[320, 560]} sizes="(max-width: 1023px) 52vw, 20vw" loading="lazy" decoding="async" />
+      </div>
+    </div>
+
+    <div class="sc-board__copy">
+      <p class="sc-kicker" data-reveal>And the reason for the rooms</p>
+      <h2 class="sc-h sc-board__h" id="sc-board-t">
+        <span data-clip data-clip-delay="0">Board practicals</span>
+        <span data-clip data-clip-delay="150"><em>start here</em></span>
+      </h2>
+      <p class="sc-body" data-reveal data-reveal-delay="200">
+        Class IX is the year the laboratory programme stops being introductory. Physics, Chemistry
+        and Biology each carry <strong>board practicals from Class IX to Class XII</strong> — the
+        same practicals a board expects a candidate to have done, in rooms built for one subject
+        each.
+      </p>
+
+      <ol class="sc-rooms">
+        {rooms.map((r, i) => (
+          <li class="sc-room" data-reveal data-reveal-delay={250 + i * 80}>
+            <span class="sc-room__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[r.mark]} />
+              </svg>
+            </span>
+            <div class="sc-room__t">
+              <p class="sc-room__k">{r.k}</p>
+              <p class="sc-room__v">{r.v}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="sc-note" data-reveal data-reveal-delay="580">
+        The syllabus itself is published class by class as
+        {' '}<a class="sc-link" href={CURRICULUM}>PRECEPT</a>; board outcomes have their own page,
+        {' '}<a class="sc-link" href={RESULTS}>Board Results</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · DEEPER LEARNING ═══════════════════════════════════════════════════
+    Ground: warm ivory. Copy anchored left, four compact columns to the right,
+    divided by thin vertical rules. No cards, no shadows, no boxes. */}
+<section class="sc-deep" aria-labelledby="sc-deep-t">
+  <span class="sc-deep__warm" aria-hidden="true"></span>
+
+  <div class="u-container sc-deep__grid">
+    <div class="sc-deep__head">
+      <p class="sc-kicker" data-reveal>Learning that stands on practice</p>
+      <h2 class="sc-h sc-deep__h" id="sc-deep-t">
+        <span data-clip data-clip-delay="0">Deeper questions.</span>
+        <span data-clip data-clip-delay="150"><em>Stronger answers.</em></span>
+      </h2>
+      <p class="sc-body sc-deep__b" data-reveal data-reveal-delay="200">
+        Secondary is where understanding deepens, experiments become evidence and ideas take shape —
+        and each of the four below names a room or a programme rather than a promise.
+      </p>
+    </div>
+
+    <ol class="sc-cols">
+      {deeper.map((d, i) => (
+        <li class="sc-col" data-reveal data-reveal-delay={140 + i * 90}>
+          <span class="sc-col__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[d.mark]} />
+            </svg>
+          </span>
+          <p class="sc-col__n t-tabular">{d.n}</p>
+          <h3 class="sc-col__k">{d.k}</h3>
+          <p class="sc-col__v">{d.v}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 04 · BEYOND THE CLASSROOM ══════════════════════════════════════════════
+    Ground: white. A checked list LEFT, a 2×2 gallery RIGHT in which no two
+    frames share a shape — the brief rules out a generic image grid. */}
+<section class="sc-beyond" aria-labelledby="sc-beyond-t">
+  <span class="sc-dots sc-beyond__dots" aria-hidden="true"></span>
+
+  <div class="u-container sc-beyond__grid">
+    <div class="sc-beyond__copy">
+      <p class="sc-kicker" data-reveal>Opportunities that stay with you</p>
+      <h2 class="sc-h sc-beyond__h" id="sc-beyond-t">
+        <span data-clip data-clip-delay="0">Beyond the classroom,</span>
+        <span data-clip data-clip-delay="150"><em>inside the school.</em></span>
+      </h2>
+      <p class="sc-body" data-reveal data-reveal-delay="200">
+        None of the rooms below is added for the board years — they are already there, and Class IX
+        is simply the point at which a student is expected to use all of them.
+      </p>
+
+      <ul class="sc-checks">
+        {beyond.map((b, i) => (
+          <li class="sc-check" data-reveal data-reveal-delay={250 + i * 55}>
+            <span class="sc-check__i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9.4" stroke="currentColor" stroke-width="1.4" />
+                <path d="m8 12.2 2.8 2.8 5.4-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            {b}
+          </li>
+        ))}
+      </ul>
+      <p class="sc-note" data-reveal data-reveal-delay="620">
+        Every room above is on the school’s own
+        {' '}<a class="sc-link" href={FACILITIES}>facilities</a> inventory; the twelve laboratories
+        are set out on {' '}<a class="sc-link" href={LABS}>Laboratories &amp; Academic Clubs</a>.
+      </p>
+    </div>
+
+    <div class="sc-quad">
+      <figure class="sc-q sc-q--a" data-pop data-pop-delay="120">
+        <Picture src={pMicro} alt={`A student of ${S} using a microscope beside plant specimens in flasks`} formats={['webp']} widths={[340, 620]} sizes="(max-width: 767px) 46vw, 22vw" loading="lazy" decoding="async" />
+        <figcaption>Practical work</figcaption>
+      </figure>
+      <figure class="sc-q sc-q--b" data-pop data-pop-delay="200">
+        <Picture src={pMachines} alt={`Younger students of ${S} working at desktop computers in the junior computer laboratory`} formats={['webp']} widths={[340, 620]} sizes="(max-width: 767px) 46vw, 22vw" loading="lazy" decoding="async" />
+        <figcaption>Computer laboratories</figcaption>
+      </figure>
+      <figure class="sc-q sc-q--c" data-pop data-pop-delay="280">
+        <Picture src={pLibrary} alt={`Students of ${S} reading and working at tables in the Nalanda Library`} formats={['webp']} widths={[340, 620]} sizes="(max-width: 767px) 46vw, 22vw" loading="lazy" decoding="async" />
+        <figcaption>Reading and language</figcaption>
+      </figure>
+      <figure class="sc-q sc-q--d" data-pop data-pop-delay="360">
+        <Picture src={pCourt} alt={`The basketball court at ${S}, the hoop set against the school block`} formats={['webp']} widths={[340, 620]} sizes="(max-width: 767px) 46vw, 22vw" loading="lazy" decoding="async" />
+        <figcaption>Sport and co-curricular</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+{/* ══ 05 · THE SECONDARY JOURNEY ═════════════════════════════════════════════
+    A soft peach container with rounded corners, holding the four stages on one
+    thin orange rail that draws itself as the section arrives. */}
+<section class="sc-jrn" aria-labelledby="sc-jrn-t">
+  <div class="u-container">
+    <div class="sc-jrn__box">
+      <p class="sc-kicker sc-jrn__kicker" data-reveal>The secondary journey</p>
+      <h2 class="sc-h sc-jrn__h" id="sc-jrn-t">
+        <span data-clip data-clip-delay="0">From learning</span>
+        <span data-clip data-clip-delay="150">to <em>leadership.</em></span>
+      </h2>
+
+      <div class="sc-jrn__track">
+        <span class="sc-jrn__rule" aria-hidden="true">
+          <i class="sc-jrn__dash"></i>
+          <svg class="sc-jrn__svg" viewBox="0 0 1000 2" fill="none" preserveAspectRatio="none">
+            <path class="sc-jrn__draw" pathLength="1" d="M0 1H1000" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </span>
+
+        <ol class="sc-steps">
+          {journey.map((j, i) => (
+            <li class="sc-step" data-reveal data-reveal-delay={140 + i * 120}>
+              <span class="sc-step__node" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[j.mark]} />
+                </svg>
+              </span>
+              <p class="sc-step__n t-tabular">{j.n}</p>
+              <h3 class="sc-step__k">{j.k}</h3>
+              <p class="sc-step__v">{j.v}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  /* THE JOURNEY RULE DRAWS ITSELF. Decoration only — the dashed rule beneath is
+     always painted, so with this script absent nothing is lost but the
+     travelling line. `pathLength="1"` keeps the maths in fractions. */
+  const scTrack = document.querySelector('.sc-jrn__track');
+  const scRule = document.querySelector('.sc-jrn__draw');
+
+  if (scTrack instanceof HTMLElement && scRule instanceof SVGPathElement
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let queued = false;
+
+    const paint = () => {
+      queued = false;
+      const r = scTrack.getBoundingClientRect();
+      const travelled = window.innerHeight * 0.86 - r.top;
+      const p = Math.min(1, Math.max(0, travelled / Math.max(1, r.height * 0.85)));
+      scRule.style.strokeDashoffset = String(1 - p);
+    };
+
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    paint();
+  }
+</script>
+
+{/* ══ 06 · THE CLOSE ═════════════════════════════════════════════════════════ */}
+<section class="sc-close" aria-labelledby="sc-close-t">
+  <div class="sc-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture src={pCohort} alt="" formats={['webp']} widths={[1024, 1600, 2000]} sizes="100vw" loading="lazy" decoding="async" />
+  </div>
+  <span class="sc-close__scrim" aria-hidden="true"></span>
+  <span class="sc-close__grain" aria-hidden="true"></span>
+
+  <div class="u-container sc-close__inner">
+    <p class="sc-kicker sc-kicker--dark" data-reveal>Two years, and a first board</p>
+    <h2 class="sc-h sc-close__h" id="sc-close-t">
+      <span data-clip data-clip-delay="0">Board practicals,</span>
+      <span data-clip data-clip-delay="150"><em>and a clearer direction.</em></span>
+    </h2>
+    <p class="sc-close__b" data-reveal data-reveal-delay="180">
+      Secondary is where preparation meets purpose: three laboratories carrying board practicals from
+      Class IX, a syllabus published class by class, and a serving IRS officer in the hall telling
+      four year groups how he got there. Board outcomes are published separately, and are not
+      restated here.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .sc-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .sc-kicker--dark { color: var(--sb-lime); }
+
+  .sc-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .sc-h span { display: block; }
+  .sc-h em { font-style: normal; color: var(--sb-violet); }
+
+  .sc-body {
+    max-width: 47ch;
+    margin: clamp(13px, 1.6vw, 19px) 0 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .sc-body strong { font-weight: 700; color: var(--sb-charcoal); }
+
+  .sc-note {
+    max-width: 56ch;
+    margin: clamp(12px, 1.4vw, 17px) 0 0;
+    font-size: clamp(10px, 0.74vw, 11.5px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+
+  .sc-link {
+    color: var(--sb-violet);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .sc-link:hover { color: var(--sb-orange-bright); }
+
+  .sc-grid {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(28, 14, 8, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(28, 14, 8, 0.05) 1px, transparent 1px);
+    background-size: 88px 88px;
+    mask-image: radial-gradient(72% 78% at 50% 44%, #000 0%, transparent 82%);
+  }
+  .sc-grid--fine { background-size: 52px 52px; opacity: 0.7; }
+
+  .sc-dots {
+    position: absolute;
+    z-index: -1;
+    width: clamp(92px, 10vw, 160px);
+    aspect-ratio: 1 / 1;
+    background-image: radial-gradient(rgba(201, 60, 10, 0.32) 1.5px, transparent 1.6px);
+    background-size: 17px 17px;
+    mask-image: radial-gradient(closest-side, #000 20%, transparent 100%);
+  }
+
+  /* ═══ 01 · SOMEONE WHO ACTUALLY DID IT ════════════════════════════════════ */
+  .sc-open {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #fdf1e9;
+    padding-block: clamp(38px, 4.4vw, 72px);
+  }
+  .sc-open__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 62% at 6% 8%, rgba(255, 255, 255, 0.76) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(56% 62% at 96% 92%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 74%);
+  }
+  .sc-open__dots { top: 12%; right: 1.5%; }
+  .sc-open__ghost {
+    position: absolute;
+    z-index: -2;
+    left: clamp(-22px, -1.4vw, -6px);
+    bottom: clamp(-18px, -1.2vw, -6px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(76px, 11vw, 168px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201, 60, 10, 0.1);
+    pointer-events: none;
+    user-select: none;
+  }
+  .sc-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .sc-open__h { font-size: clamp(28px, 3.3vw, 46px); }
+
+  .sc-open__fig { margin: 0; }
+  .sc-open__pic {
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-sand);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .sc-open__pic :global(picture) { display: block; }
+  .sc-open__pic :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 11;
+    object-fit: cover;
+    object-position: 50% 44%;
+  }
+  .sc-open__cap {
+    max-width: 52ch;
+    margin: clamp(9px, 1vw, 12px) 0 0;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    color: var(--sb-text-muted);
+  }
+
+  .sc-cells {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: clamp(20px, 2.4vw, 32px) 0 0;
+    padding: clamp(14px, 1.6vw, 20px) 0 0;
+    border-top: 1px solid color-mix(in srgb, var(--sb-charcoal) 14%, transparent);
+    list-style: none;
+  }
+  .sc-cell {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 4px;
+    padding: 0 clamp(7px, 0.9vw, 13px);
+  }
+  .sc-cell + .sc-cell { border-left: 1px solid color-mix(in srgb, var(--sb-charcoal) 14%, transparent); }
+  .sc-cell:first-child { padding-left: 0; }
+  .sc-cell__m { display: block; width: clamp(19px, 1.8vw, 24px); color: var(--sb-violet); }
+  .sc-cell__m svg { display: block; width: 100%; height: auto; }
+  .sc-cell__n {
+    margin-top: 2px;
+    font-size: clamp(8.5px, 0.62vw, 10px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-orange-bright);
+  }
+  .sc-cell__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(11px, 0.84vw, 13px);
+    font-weight: 700;
+    line-height: 1.26;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .sc-cell__v { font-size: clamp(9.5px, 0.68vw, 10.8px); line-height: 1.5; color: var(--sb-text-muted); }
+
+  /* ═══ 02 · BOARD PRACTICALS ═══════════════════════════════════════════════ */
+  .sc-board {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(36px, 4.2vw, 68px);
+  }
+  .sc-board__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .sc-board__stage { position: relative; padding-bottom: clamp(24px, 2.8vw, 44px); }
+  .sc-board__lead {
+    width: 80%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-sand);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .sc-board__sm {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 48%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 5px solid var(--sb-paper);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .sc-board__lead :global(picture),
+  .sc-board__sm :global(picture) { display: block; height: 100%; }
+  .sc-board__lead :global(img),
+  .sc-board__sm :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .sc-board__h { font-size: clamp(27px, 3.1vw, 44px); }
+
+  /* ⚠ THIN HORIZONTAL RULES, NOT CARDS. */
+  .sc-rooms { margin: clamp(18px, 2.2vw, 28px) 0 0; padding: 0; list-style: none; }
+  .sc-room {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(10px, 1.2vw, 15px);
+    align-items: start;
+    padding: clamp(9px, 1.05vw, 13px) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .sc-room:first-child { border-top: 1px solid var(--sb-border); }
+  .sc-room__m { display: block; width: clamp(19px, 1.7vw, 23px); margin-top: 1px; color: var(--sb-violet); }
+  .sc-room__m svg { display: block; width: 100%; height: auto; }
+  .sc-room__t { display: grid; gap: 3px; }
+  .sc-room__k {
+    margin: 0;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .sc-room__v { margin: 0; font-size: clamp(11px, 0.8vw, 12.8px); line-height: 1.64; color: var(--sb-text-secondary); }
+
+  /* ═══ 03 · DEEPER LEARNING ════════════════════════════════════════════════ */
+  .sc-deep {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #f7f1eb;
+    padding-block: clamp(32px, 3.8vw, 58px);
+  }
+  .sc-deep__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background: radial-gradient(60% 66% at 6% 8%, rgba(255, 255, 255, 0.74) 0%, rgba(255, 255, 255, 0) 72%);
+  }
+  .sc-deep__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.68fr) minmax(0, 1.32fr);
+    gap: clamp(24px, 3.2vw, 50px);
+    align-items: center;
+  }
+  .sc-deep__h { font-size: clamp(24px, 2.6vw, 36px); }
+  .sc-deep__b { max-width: 34ch; }
+
+  .sc-cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sc-col { padding: 0 clamp(10px, 1.3vw, 20px); }
+  .sc-col:first-child { padding-left: 0; }
+  .sc-col:last-child { padding-right: 0; }
+  .sc-col + .sc-col { border-left: 1px solid color-mix(in srgb, var(--sb-violet) 28%, transparent); }
+  .sc-col__m { display: block; width: clamp(22px, 2.1vw, 28px); color: var(--sb-violet); }
+  .sc-col__m svg { display: block; width: 100%; height: auto; }
+  .sc-col__n {
+    margin: clamp(9px, 1.1vw, 14px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.05vw, 16px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .sc-col__k {
+    margin: clamp(3px, 0.4vw, 5px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.22vw, 19px);
+    font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .sc-col__v { margin: clamp(5px, 0.7vw, 9px) 0 0; font-size: clamp(10.5px, 0.78vw, 12.4px); line-height: 1.66; color: var(--sb-text-muted); }
+
+  /* ═══ 04 · BEYOND THE CLASSROOM ═══════════════════════════════════════════ */
+  .sc-beyond {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(36px, 4.2vw, 66px);
+  }
+  .sc-beyond__dots { top: 8%; right: 1%; }
+  .sc-beyond__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(26px, 3.6vw, 54px);
+    align-items: center;
+  }
+  .sc-beyond__h { font-size: clamp(26px, 3vw, 42px); }
+
+  .sc-checks {
+    display: grid;
+    gap: clamp(7px, 0.85vw, 11px);
+    margin: clamp(17px, 2vw, 26px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sc-check {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(8px, 0.9vw, 12px);
+    align-items: start;
+    font-size: clamp(11px, 0.8vw, 12.8px);
+    line-height: 1.62;
+    color: var(--sb-text-secondary);
+  }
+  .sc-check__i { display: block; width: clamp(15px, 1.35vw, 19px); margin-top: 2px; color: var(--sb-violet); }
+  .sc-check__i svg { display: block; width: 100%; height: auto; }
+
+  /* ⚠ NO TWO FRAMES THE SAME SHAPE, and the right column drops a half-step. */
+  .sc-quad {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(10px, 1.2vw, 18px);
+    align-items: start;
+  }
+  .sc-q {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-sand);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .sc-q :global(picture) { display: block; }
+  .sc-q :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: scale var(--sb-dur-image) var(--sb-ease);
+  }
+  .sc-q:hover :global(img) { scale: 1.05; }
+  .sc-q--a :global(img) { aspect-ratio: 3 / 2; }
+  .sc-q--b :global(img) { aspect-ratio: 5 / 4; }
+  .sc-q--c :global(img) { aspect-ratio: 4 / 3; }
+  .sc-q--d :global(img) { aspect-ratio: 3 / 2; }
+  .sc-q--b,
+  .sc-q--d { margin-top: clamp(14px, 1.8vw, 28px); }
+  .sc-q figcaption {
+    padding: clamp(7px, 0.85vw, 10px) clamp(9px, 1vw, 13px) clamp(9px, 1vw, 12px);
+    background: var(--sb-paper);
+    font-size: clamp(9px, 0.66vw, 10.5px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 05 · THE SECONDARY JOURNEY ══════════════════════════════════════════ */
+  .sc-jrn {
+    position: relative;
+    isolation: isolate;
+    background: var(--sb-paper);
+    padding-block: clamp(22px, 2.6vw, 40px);
+  }
+  /* The rounded container the reference sets this section inside. */
+  .sc-jrn__box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    padding: clamp(26px, 3.2vw, 46px) clamp(18px, 2.4vw, 40px) clamp(28px, 3.4vw, 48px);
+    border-radius: var(--sb-r-3);
+    background: #fdf1e9;
+    text-align: center;
+  }
+  .sc-jrn__kicker { text-align: center; }
+  .sc-jrn__h { max-width: 20ch; font-size: clamp(25px, 2.9vw, 40px); }
+
+  .sc-jrn__track { position: relative; width: 100%; margin: clamp(22px, 2.8vw, 38px) 0 0; }
+  .sc-jrn__rule {
+    position: absolute;
+    z-index: 0;
+    top: calc(clamp(38px, 3.6vw, 50px) / 2 - 1px);
+    inset-inline: 12.5%;
+    height: 2px;
+    color: var(--sb-orange-bright);
+  }
+  .sc-jrn__dash {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(to right, rgba(201, 60, 10, 0.42) 0 4px, transparent 4px 12px);
+  }
+  .sc-jrn__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .sc-jrn__draw { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0.9; }
+
+  .sc-steps {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 26px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sc-step { display: grid; justify-items: center; text-align: center; }
+  .sc-step__node {
+    display: grid;
+    place-items: center;
+    width: clamp(38px, 3.6vw, 50px);
+    aspect-ratio: 1 / 1;
+    border: 1.6px solid color-mix(in srgb, var(--sb-violet) 42%, transparent);
+    border-radius: 50%;
+    background: #fdf1e9;
+    color: var(--sb-violet);
+  }
+  .sc-step__node svg { width: 52%; height: auto; }
+  .sc-step__n {
+    margin: clamp(9px, 1.1vw, 14px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12px, 0.96vw, 15px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .sc-step__k {
+    margin: clamp(2px, 0.3vw, 4px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.35vw, 22px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .sc-step__v {
+    max-width: 26ch;
+    margin: clamp(5px, 0.65vw, 9px) 0 0;
+    font-size: clamp(10px, 0.74vw, 11.8px);
+    line-height: 1.62;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 06 · THE CLOSE ══════════════════════════════════════════════════════ */
+  .sc-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(44px, 5.4vw, 86px);
+  }
+  .sc-close__media { position: absolute; z-index: -3; inset: -12% 0; }
+  .sc-close__media :global(picture),
+  .sc-close__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+  .sc-close__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(23, 18, 15, 0.86) 0%, rgba(23, 18, 15, 0.74) 46%, rgba(23, 18, 15, 0.9) 100%),
+      radial-gradient(66% 76% at 50% 42%, rgba(255, 92, 53, 0.16) 0%, transparent 72%);
+  }
+  .sc-close__grain {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    opacity: 0.26;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+  .sc-close__inner { position: relative; display: grid; justify-items: center; text-align: center; }
+  .sc-close__h { max-width: 22ch; font-size: clamp(26px, 3.2vw, 46px); color: #fff; }
+  .sc-close__h em { color: var(--sb-lime); font-style: italic; }
+  .sc-close__b {
+    max-width: 66ch;
+    margin: clamp(14px, 1.7vw, 21px) 0 0;
+    font-size: clamp(12px, 0.88vw, 14px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .sc-deep__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 2.8vw, 30px); }
+    .sc-deep__b { max-width: 62ch; }
+  }
+
+  @media (max-width: 1023px) {
+    .sc-open__grid,
+    .sc-board__grid,
+    .sc-beyond__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(28px, 4vw, 40px);
+    }
+    .sc-open__fig,
+    .sc-board__stage { order: -1; }
+    .sc-body { max-width: 62ch; }
+    .sc-open__h,
+    .sc-board__h,
+    .sc-beyond__h { font-size: clamp(27px, 4.8vw, 38px); }
+    .sc-cells { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(16px, 2.2vw, 22px); }
+    .sc-cell:nth-child(3) { padding-left: 0; border-left: 0; }
+    .sc-open__ghost { font-size: clamp(64px, 11vw, 110px); }
+    .sc-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(24px, 3.4vw, 34px); }
+    .sc-jrn__rule { display: none; }
+  }
+
+  @media (max-width: 767px) {
+    .sc-open,
+    .sc-board,
+    .sc-beyond { padding-block: clamp(32px, 7vw, 44px); }
+    .sc-deep,
+    .sc-jrn { padding-block: clamp(26px, 5.6vw, 36px); }
+
+    .sc-board__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .sc-board__sm { width: 50%; }
+    .sc-board__stage { padding-bottom: clamp(28px, 7.4vw, 40px); }
+
+    .sc-cells { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sc-cell { padding: 0; }
+    .sc-cell + .sc-cell { border-left: 0; }
+    .sc-cell:nth-child(even) { padding-left: clamp(13px, 4vw, 18px); border-left: 1px solid color-mix(in srgb, var(--sb-charcoal) 14%, transparent); }
+
+    .sc-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(20px, 5vw, 26px); }
+    .sc-col { padding: 0; }
+    .sc-col + .sc-col { border-left: 0; }
+    .sc-col:nth-child(even) { padding-left: clamp(14px, 4.4vw, 20px); border-left: 1px solid color-mix(in srgb, var(--sb-violet) 28%, transparent); }
+
+    .sc-quad { gap: clamp(9px, 2.6vw, 13px); }
+    .sc-q--b,
+    .sc-q--d { margin-top: 0; }
+
+    .sc-jrn__box { padding: clamp(24px, 6.4vw, 32px) clamp(16px, 4.6vw, 22px) clamp(26px, 7vw, 34px); }
+    .sc-steps { grid-template-columns: minmax(0, 1fr); row-gap: clamp(20px, 5.4vw, 26px); }
+    .sc-step { grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; column-gap: clamp(12px, 3.6vw, 16px); }
+    .sc-step__node { grid-row: 1 / 4; }
+    .sc-step__n,
+    .sc-step__k,
+    .sc-step__v { margin-top: 0; }
+    .sc-step__v { max-width: none; }
+  }
+</style>

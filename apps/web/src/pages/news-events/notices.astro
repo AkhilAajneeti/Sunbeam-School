@@ -1,0 +1,37 @@
+---
+/**
+ * NEWS & EVENTS · SCHOOL NOTICES.
+ *
+ * The school's Notice page is a bare image gallery — 24 posters, no titles, no
+ * dates, no categories, no PDFs. Every title and date on this page was read off
+ * the poster artwork itself; the sourcing, and why there is no category filter,
+ * are in data/notices.ts.
+ *
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import NoticePage from '../../components/notices/NoticePage.astro';
+
+import banner from '../../assets/photos/sunbeem-1.jpg';
+---
+
+<BaseLayout
+  title="School Notices — Sunbeam School Ballia"
+  description="Official notices from Sunbeam School Ballia — the school's own published notice posters, searchable by title and filterable by year."
+>
+  <PageHero
+    title="School Notices"
+    standfirst="Important announcements, circulars and updates from Sunbeam School Ballia."
+    crumbs={[{ label: 'Home', href: '/' }]}
+    src={banner}
+    alt="The main building of Sunbeam School Ballia at Agarsanda, seen across its front lawn."
+    position="50% 46%"
+  />
+
+  <div class="u-page-panel" style="padding-block: 0;">
+    <NoticePage step={10} />
+  </div>
+</BaseLayout>

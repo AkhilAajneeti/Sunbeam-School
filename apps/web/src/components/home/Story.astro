@@ -1,0 +1,290 @@
+---
+/**
+ * §05 · THE SUNBEAM STORY — docs/06 §05
+ *
+ * Audit 1.6, 1.7, 1.8: the About section must lead with history and
+ * establishment, vision and mission, and the legacy of the institution.
+ *
+ * Rebuilt on the reference's About structure — pill eyebrow, heading with a
+ * hand-drawn accent, body, a verified checklist and a pill CTA on the left;
+ * a bento image grid carrying a violet stat card on the right.
+ *
+ * This replaces the earlier editorial split, whose floating archival inset
+ * overlapped the stat row and left a dead field beneath the photograph.
+ */
+import { story } from '../../data/home';
+import Photo from '../ui/Photo.astro';
+import farewell from '../../assets/photos/sunbeem-3.jpg';
+import council from '../../assets/photos/sunbeem-5.jpg';
+---
+
+<section class="story" aria-labelledby="story-heading">
+  <div class="u-container">
+    <div class="story__grid">
+      <div class="story__copy" data-reveal>
+        <p class="story__eyebrow pill pill--violet">{story.eyebrow}</p>
+
+        {/* The squiggle span is inline-block, which creates a line-break
+            opportunity after it — the full stop was being orphaned onto the
+            next line. Binding the two in a nowrap wrapper keeps them together. */}
+        <h2 class="story__heading t-h2" data-split id="story-heading">
+          Fifty years of <span class="story__nb"><span class="t-squiggle">Sunbeam</span>.</span>
+          Thirteen in Ballia.
+        </h2>
+
+        <div class="story__body">
+          {story.paragraphs.slice(0, 2).map((p) => <p>{p}</p>)}
+        </div>
+
+        <ul class="story__checks">
+          {story.checks.map((c) => (
+            <li>
+              <span class="story__check" aria-hidden="true">
+                <svg width="11" height="9" viewBox="0 0 12 10" fill="none">
+                  <path d="M1 5.2 4.3 8.5 11 1.5" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+              <span>{c}</span>
+            </li>
+          ))}
+        </ul>
+
+        <blockquote class="story__quote">
+          <p class="story__quote-text">“{story.quote}”</p>
+          <cite class="story__quote-cite">{story.quoteAttribution}</cite>
+        </blockquote>
+
+        <a class="btn btn--primary story__cta" href={story.cta.href}>{story.cta.label}</a>
+      </div>
+
+      <div class="story__bento" data-reveal data-reveal-delay="120">
+        <p class="story__bento-label">{story.bentoLabel}</p>
+
+        <div class="story__bento-grid">
+          <figure class="story__tile story__tile--wide">
+            <Photo
+              src={farewell}
+              alt="Students and staff of Sunbeam School Ballia at the 2024-25 farewell ceremony."
+              brief={story.media.primary}
+              ratio="16 / 9"
+              position="50% 42%"
+              sizes="(max-width: 1023px) 100vw, 55vw"
+            />
+          </figure>
+
+          {/* Violet stat card — the reference's device, carrying the single
+              strongest verified proof the school has. */}
+          <div class="story__stat">
+            <span class="story__stat-value">{story.stat.value}</span>
+            <span class="story__stat-title">{story.stat.title}</span>
+            <span class="story__stat-detail">{story.stat.detail}</span>
+          </div>
+
+          <figure class="story__tile story__tile--small">
+            <Photo
+              src={council}
+              alt="Student council office-bearers and NCC cadets of Sunbeam School Ballia."
+              brief="Early Sunbeam Ballia photograph, 2013–2015"
+              ratio="1 / 1"
+              position="48% 38%"
+              sizes="(max-width: 1023px) 50vw, 26vw"
+            />
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story {
+    background: var(--sb-paper);
+    padding-block: var(--sb-section-y);
+  }
+
+  .story__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: var(--sb-11);
+    align-items: center;
+  }
+
+  /* --- Copy --------------------------------------------------------------- */
+
+  .story__eyebrow {
+    margin-bottom: var(--sb-6);
+  }
+
+  .story__nb { white-space: nowrap; }
+
+  .story__heading {
+    color: var(--sb-charcoal);
+    max-width: 18ch;
+    margin-bottom: var(--sb-heading-gap);
+    text-wrap: balance;
+  }
+
+  .story__body p {
+    color: var(--sb-text-secondary);
+    max-width: 58ch;
+  }
+
+  .story__body p + p { margin-top: var(--sb-para-gap); }
+
+  /* Checklist — the reference's device, with verified facts. */
+  .story__checks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-4);
+    margin: var(--sb-8) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .story__checks li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    font-weight: 500;
+    color: var(--sb-charcoal);
+  }
+
+  .story__check {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet-dark);
+  }
+
+  .story__quote {
+    margin: var(--sb-8) 0 0;
+    padding-left: var(--sb-6);
+    border-left: 3px solid var(--sb-lime);
+  }
+
+  .story__quote-text {
+    font-family: var(--sb-font-serif);
+    font-size: var(--sb-h4);
+    line-height: 1.35;
+    color: var(--sb-charcoal);
+  }
+
+  .story__quote-cite {
+    display: block;
+    margin-top: var(--sb-2);
+    font-size: var(--sb-caption);
+    font-style: normal;
+    color: var(--sb-text-muted);
+  }
+
+  .story__cta { margin-top: var(--sb-8); }
+
+  /* --- Bento -------------------------------------------------------------- */
+
+  .story__bento-label {
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    color: var(--sb-text-muted);
+    margin-bottom: var(--sb-5);
+  }
+
+  .story__bento-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-areas:
+      'wide wide'
+      'stat small';
+    gap: var(--sb-5);
+  }
+
+  .story__tile--wide { grid-area: wide; }
+  .story__tile--small { grid-area: small; }
+
+  .story__tile {
+    margin: 0;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .story__tile :global(.ph),
+  .story__tile :global(.photo) {
+    transition: transform var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .story__tile:hover :global(.ph),
+  .story__tile:hover :global(.photo) {
+    transform: scale(1.03);
+  }
+
+  .story__stat {
+    grid-area: stat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sb-2);
+    padding: var(--sb-7);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet);
+    color: #fff;
+    box-shadow: 0 16px 36px -18px rgba(201, 60, 10, 0.9);
+  }
+
+  .story__stat-value {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .story__stat-title {
+    font-weight: 600;
+    font-size: var(--sb-body-sm);
+    line-height: 1.35;
+  }
+
+  .story__stat-detail {
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: var(--sb-on-violet-muted);
+  }
+
+  /* --- Tablet -------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .story__grid {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: var(--sb-9);
+    }
+
+    .story__copy { order: 2; }
+    .story__bento { order: 1; }
+
+    .story__heading,
+    .story__body p { max-width: none; }
+  }
+
+  /* --- Mobile -------------------------------------------------------------- */
+
+  @media (max-width: 767px) {
+    .story__bento-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        'wide'
+        'stat'
+        'small';
+    }
+
+    .story__stat { padding: var(--sb-6); }
+    .story__stat-value { font-size: 38px; }
+    .story__cta { width: 100%; }
+  }
+</style>

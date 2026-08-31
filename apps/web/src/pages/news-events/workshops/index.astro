@@ -1,0 +1,83 @@
+---
+/**
+ * WORKSHOPS — the index. A card per session; the facts live on the detail page.
+ *
+ * Content: the school's own /workshops/ page, verbatim as to names, institutions
+ * and dates. See data/newsPages.ts.
+ *
+ * ⚠ THIS REPLACES A LEDGER, AND THE MOVE WAS THE RIGHT ONE. Every fact about
+ * all thirteen sessions used to sit on this one screen — trainer, institution,
+ * date, description — which made the page long and made no single workshop
+ * findable or linkable. Now the index is scannable and each session has a URL
+ * the school can share.
+ *
+ * ⚠ THE FILE MOVED FROM workshops.astro TO workshops/index.astro. The route is
+ * unchanged — /news-events/workshops/ — but the directory is what lets
+ * [slug].astro sit beside it.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import SectionRail from '../../../components/academics/SectionRail.astro';
+import IndexIntro from '../../../components/news/IndexIntro.astro';
+import CardGrid from '../../../components/news/CardGrid.astro';
+
+import { workshops } from '../../../data/newsPages';
+import heroPhoto from '../../../assets/photos/sb-library.jpg';
+
+/**
+ * ⚠ THE FIGURES ARE COUNTED FROM THE DATA, NEVER TYPED. The line this replaced
+ * claimed the page "names the trainer, the institution and the date" — true of
+ * four sessions out of fourteen. Counting instead of asserting means the copy
+ * cannot drift away from the content as sessions are added or corrected, and it
+ * makes the modest number visible rather than hidden behind a boast.
+ */
+const items = workshops.groups.flatMap((g) => g.items);
+const count = items.length;
+
+const NAMED = /\b(Mr|Mrs|Ms|Dr|Prof)\b/;
+const INSTITUTION = /\b(IIT|University|College|School|Eduserve|Consulting|Group|Foundation|Services)\b/i;
+
+const figures = [
+  { n: count, k: 'sessions on record' },
+  { n: items.filter((i) => NAMED.test(i.meta)).length, k: 'name the person who led it' },
+  { n: items.filter((i) => INSTITUTION.test(i.meta)).length, k: 'name the institution' },
+];
+---
+
+<BaseLayout
+  title={`${workshops.title} — Sunbeam School Ballia`}
+  description={workshops.standfirst}
+>
+  <PageHero
+    title={workshops.title}
+    standfirst={workshops.standfirst}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'News & Events', href: '/news-events/' },
+    ]}
+    src={heroPhoto}
+    alt="The library at Sunbeam School Ballia, where staff training sessions are held"
+    position="50% 45%"
+  />
+
+  <SectionRail items={workshops.groups.map((g) => ({ id: g.id, label: g.label }))} />
+
+  <div class="u-page-panel wk-panel">
+    <IndexIntro
+      eyebrow={workshops.eyebrow}
+      heading={workshops.heading}
+      stand={workshops.stand}
+      figures={figures}
+    />
+
+    <CardGrid page={workshops} base="/news-events/workshops/" />
+  </div>
+</BaseLayout>
+
+<style>
+  div.wk-panel { padding-block: 0; }
+
+  .wk-panel :global(section[id]) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
+  }
+</style>

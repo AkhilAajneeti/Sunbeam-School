@@ -1,0 +1,43 @@
+---
+/**
+ * ONE CELEBRATION — routing only. The page is components/news/DetailPage.
+ *
+ * Same component as the workshops and school-events detail routes; only `page`
+ * and `base` differ.
+ */
+import DetailPage from '../../../components/news/DetailPage.astro';
+import { celebrations, type ChronicleItem } from '../../../data/newsPages';
+
+/* The index's own banner — see DetailPage's `fallbackHero`. */
+import heroPhoto from '../../../assets/photos/sunbeem-2.jpg';
+
+export async function getStaticPaths() {
+  const { celebrations: c } = await import('../../../data/newsPages');
+  return c.groups.flatMap((g) =>
+    g.items
+      .filter((i) => i.slug)
+      .map((item) => ({
+        params: { slug: item.slug! },
+        props: { item, group: g.label },
+      })),
+  );
+}
+
+interface Props {
+  item: ChronicleItem;
+  group: string;
+}
+
+const { item, group } = Astro.props;
+---
+
+<DetailPage
+  item={item}
+  group={group}
+  page={celebrations}
+  base="/news-events/celebrations/"
+  unit="day"
+  fallbackHero={heroPhoto}
+  fallbackAlt="A cultural programme on stage at Sunbeam School Ballia"
+  metaLabel="Marked by"
+/>

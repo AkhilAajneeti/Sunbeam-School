@@ -1,0 +1,255 @@
+---
+/**
+ * §09 · BEYOND ACADEMICS — docs/06 §09, audit 4.3–4.7
+ *
+ * The audit is explicit that facilities, participation, inter-house and
+ * coaching come BEFORE achievements. The live site leads with medals; this
+ * deliberately inverts that and holds the medal record back for §14.
+ *
+ * Layout is an uneven 2:1 editorial grid — sport dominant, arts and leadership
+ * stacked beside it. Explicitly not three equal cards.
+ */
+import { beyond } from '../../data/home';
+import Photo from '../ui/Photo.astro';
+import council from '../../assets/photos/sunbeem-5.jpg';
+
+/** Only the leadership strand has a photograph so far. */
+const strandPhotos = [
+  { src: undefined, alt: undefined },
+  {
+    src: council,
+    alt: 'Student council office-bearers and NCC cadets of Sunbeam School Ballia at an investiture ceremony.',
+  },
+];
+---
+
+<section class="beyond" aria-labelledby="beyond-heading">
+  <div class="u-container">
+    <div class="beyond__head" data-reveal>
+      <p class="beyond__eyebrow t-label">{beyond.eyebrow}</p>
+      <h2 class="beyond__heading t-h2-sans" id="beyond-heading">
+        Every child plays. Every child <span class="t-squiggle">performs</span>.
+      </h2>
+      <p class="beyond__deck t-body-lg">{beyond.deck}</p>
+    </div>
+
+    <div class="beyond__grid">
+      <article class="beyond__sport" data-reveal>
+        <a class="beyond__sport-media" href={beyond.sport.href}>
+          <Photo ratio="3 / 2" tone="charcoal" brief={beyond.sport.brief} ref="A2" quiet />
+        </a>
+        <h3 class="beyond__sport-title t-h3">{beyond.sport.title}</h3>
+        <p class="beyond__sport-body">{beyond.sport.body}</p>
+
+        <dl class="beyond__lists">
+          <div class="beyond__list">
+            <dt class="t-label">Indoor</dt>
+            <dd class="t-body-sm">{beyond.sport.indoor}</dd>
+          </div>
+          <div class="beyond__list">
+            <dt class="t-label">Outdoor</dt>
+            <dd class="t-body-sm">{beyond.sport.outdoor}</dd>
+          </div>
+        </dl>
+      </article>
+
+      <div class="beyond__strands">
+        {beyond.strands.map((strand, i) => (
+          <article class="beyond__strand" data-reveal data-reveal-delay={(i + 1) * 60}>
+            <a class="beyond__strand-media" href={strand.href}>
+              <Photo
+                ratio="4 / 5"
+                tone={i === 0 ? 'sand' : 'ink'}
+                brief={strand.brief}
+                ref="A2"
+                quiet
+                src={strandPhotos[i]?.src}
+                alt={strandPhotos[i]?.alt}
+                position="46% 40%"
+                sizes="(max-width: 767px) 96px, (max-width: 1023px) 45vw, 200px"
+              />
+            </a>
+            <div class="beyond__strand-copy">
+              <h3 class="beyond__strand-title t-h4">{strand.title}</h3>
+              <p class="beyond__strand-body t-body-sm">{strand.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="beyond__foot">
+      {beyond.links.map((link) => (
+        <a class="link-tertiary" href={link.href}>
+          {link.label}
+          <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .beyond {
+    background: var(--sb-sand);
+    padding-block: var(--sb-section-y);
+  }
+
+  .beyond__head {
+    max-width: 60ch;
+    margin-bottom: var(--sb-10);
+  }
+
+  .beyond__eyebrow {
+    color: var(--sb-violet-dark);
+    margin-bottom: var(--sb-eyebrow-gap);
+  }
+
+  .beyond__heading {
+    color: var(--sb-charcoal);
+    max-width: 20ch;
+    margin-bottom: var(--sb-heading-gap);
+    text-wrap: balance;
+  }
+
+  .beyond__deck {
+    color: var(--sb-text-muted);
+    max-width: 52ch;
+  }
+
+  /* --- Uneven 2:1 grid ----------------------------------------------------- */
+
+  .beyond__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: var(--sb-9);
+    align-items: start;
+  }
+
+  .beyond__sport-media,
+  .beyond__strand-media {
+    display: block;
+    overflow: hidden;
+    margin-bottom: var(--sb-6);
+  }
+
+  .beyond__sport-media :global(.ph),
+  .beyond__strand-media :global(.ph) {
+    transition: transform var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .beyond__sport-media:hover :global(.ph),
+  .beyond__strand-media:hover :global(.ph) {
+    transform: scale(1.03);
+  }
+
+  .beyond__sport-title {
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-4);
+  }
+
+  .beyond__sport-body {
+    color: var(--sb-text-secondary);
+    max-width: 58ch;
+  }
+
+  /* Sport lists as inline running text — not chips, not pills. */
+  .beyond__lists {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-7);
+    margin: var(--sb-7) 0 0;
+    padding-top: var(--sb-6);
+    border-top: var(--sb-hairline);
+  }
+
+  .beyond__list dt {
+    color: var(--sb-violet-dark);
+    margin-bottom: var(--sb-3);
+  }
+
+  .beyond__list dd {
+    margin: 0;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Stacked strands ----------------------------------------------------- */
+
+  .beyond__strands {
+    display: grid;
+    gap: var(--sb-8);
+  }
+
+  .beyond__strand {
+    display: grid;
+    grid-template-columns: minmax(0, 100px) minmax(0, 1fr);
+    gap: var(--sb-5);
+    align-items: start;
+  }
+
+  .beyond__strand-media { margin-bottom: 0; }
+
+  .beyond__strand-title {
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-3);
+  }
+
+  .beyond__strand-body { color: var(--sb-text-secondary); }
+
+  .beyond__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-7);
+    margin-top: var(--sb-9);
+    padding-top: var(--sb-6);
+    border-top: var(--sb-hairline);
+  }
+
+  /* --- Tablet -------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .beyond__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-10);
+    }
+
+    .beyond__strands {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--sb-7);
+    }
+
+    .beyond__strand {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-5);
+    }
+
+    .beyond__heading, .beyond__deck { max-width: none; }
+  }
+
+  /* --- Mobile -------------------------------------------------------------- */
+
+  @media (max-width: 767px) {
+    .beyond__lists {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-6);
+    }
+
+    .beyond__strands {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-8);
+    }
+
+    .beyond__strand {
+      grid-template-columns: minmax(0, 96px) minmax(0, 1fr);
+      gap: var(--sb-5);
+      align-items: center;
+    }
+
+    .beyond__foot {
+      flex-direction: column;
+      gap: var(--sb-4);
+    }
+  }
+</style>

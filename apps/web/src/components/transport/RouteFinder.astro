@@ -1,0 +1,1353 @@
+---
+/**
+ * ROUTE FINDER — the search, the area chips and the route cards.
+ *
+ * ═══ WHY THIS REPLACES THE TABLE ═══════════════════════════════════════════
+ *
+ * The school publishes 28 route runs as one 5-column table. On a phone that
+ * table is either a horizontal scroll or a column of squeezed text, and either
+ * way a parent has to read all 28 rows to answer the only question they have:
+ * *does a bus come to my area?*
+ *
+ * So the table is inverted. The parent types their locality, and the page
+ * answers with the buses that stop there. The full list is still there,
+ * unfiltered, for anyone who wants to read it.
+ *
+ * ═══ THREE THINGS THAT MAKE IT WORK WITHOUT JAVASCRIPT ═════════════════════
+ *
+ * ⚠ THE CARDS ARE NATIVE `<details>`. Expanding a route needs no script, so a
+ * blocked or failed bundle still leaves 28 readable, expandable routes rather
+ * than 28 dead headings. The script only ever *hides* non-matching cards.
+ *
+ * ⚠ THE SEARCH FIELD SHIPS `hidden` AND THE SCRIPT REVEALS IT. A search box
+ * that does nothing is worse than no search box — same reasoning as the rail
+ * arrows in Stream.astro.
+ *
+ * ⚠ EVERY CHIP IS A REAL ELEMENT IN THE TEMPLATE, NOT BUILT IN JS. Three
+ * components on this site have shipped invisible controls because an element
+ * created with `document.createElement` carries no `data-astro-cid-*` attribute
+ * and therefore matches none of this scoped CSS. Nothing here is constructed at
+ * runtime; the script only toggles attributes on markup that already exists.
+ *
+ * ⚠ NO SYMBOL IN THE SCRIPT MAY COLLIDE WITH ANOTHER IN PAGE SCOPE. Two
+ * components have shipped a 500ing script over a helper named `wrap` or
+ * `frame`, and `npm run build` passed both times.
+ */
+import { routes, coverage, stopAliases, stats } from '../../data/transport';
+
+/* The search haystack is built at BUILD time, once per card, rather than being
+   recomputed in the browser on every keystroke. Aliases are folded in so a
+   parent searching "Tagore" matches the run that spells it "Taigor". */
+const haystack = (stops: string[]) =>
+  [...stops, ...stops.map((s) => stopAliases[s]).filter(Boolean)].join(' ').toLowerCase();
+
+/* Chips are capped on screen but not in the DOM — see the CSS note on why the
+   overflow is a class toggle rather than a slice. */
+const CHIP_LIMIT = 24;
+
+/**
+ * ⚠ THE A–Z INDEX EXISTS FOR ONE MEASURED REASON. Fully expanded on a 390px
+ * screen the chip grid ran to 2,314px — 52 rows, 2.7 whole screens of nothing
+ * but place names — because each chip carries a dot, a name and a count, so
+ * barely one and a half fit per row.
+ *
+ * The 91 stops fall into only 17 first letters and the largest group is 13, so
+ * a letter index caps the section at roughly 400px however the list grows. It
+ * keeps the thing the chips are actually for — SCANNING, "is my area covered" —
+ * which a search box cannot do for a reader who does not know the spelling.
+ *
+ * Desktop keeps the full grid: chips run four to five per row there and the
+ * whole list reads fine.
+ */
+const letterOf = (stop: string) => stop[0].toUpperCase();
+
+const letters = [...new Set(coverage.map((c) => letterOf(c.stop)))].sort();
+const letterCount = (L: string) => coverage.filter((c) => letterOf(c.stop) === L).length;
+
+/**
+ * ⚠ THE ENDPOINT TYPE SIZES ITSELF TO THE LONGEST WORD IN THE NAME.
+ *
+ * Shrinking every card until "Chandrashekhar" fits would punish the other 27
+ * for one outlier, and widening the endpoint columns until it fits costs the
+ * arc its sweep — measured, it fell from 39% of the card to 29%.
+ *
+ * A word cannot be hyphenated (these are place names, and a wrong break reads
+ * as a different word), so the only lever left is size. This grades it: the
+ * long names step down, the short ones keep the display size, and no name is
+ * ever broken mid-word. Computed here at build time from the string itself, so
+ * it costs no JavaScript and cannot drift from the data.
+ */
+const wordScale = (name: string) => {
+  const longest = Math.max(...name.split(/\s+/).map((w) => w.length));
+  if (longest >= 13) return 'xl';
+  if (longest >= 10) return 'lg';
+  return undefined;
+};
+---
+
+<section class="rf" id="routes" aria-labelledby="rf-t">
+  <div class="u-container">
+    <p class="rf__eyebrow t-label">Route finder</p>
+    <h2 class="rf__h" id="rf-t" data-split>Find the bus that stops near you</h2>
+    <p class="rf__stand">
+      Type a locality, or pick one below. {stats.stops} boarding points across {stats.runs} runs.
+    </p>
+
+    {/* --- Search ---------------------------------------------------------- */}
+    <div class="rf__search" data-rf-search hidden>
+      <label class="rf__label" for="rf-q">Search by area or boarding point</label>
+      <div class="rf__field">
+        <span class="rf__icon" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.7" />
+            <path d="M12.5 12.5L16 16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          </svg>
+        </span>
+        <input
+          class="rf__input"
+          id="rf-q"
+          type="search"
+          data-rf-input
+          placeholder="e.g. Bahadurpur, Town Hall, Bus Stand"
+          autocomplete="off"
+          enterkeyhint="search"
+        />
+        <button class="rf__clear" type="button" data-rf-clear hidden aria-label="Clear search">
+          <svg width="13" height="13" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M1.5 1.5l9 9m0-9l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Politely announced, so a screen-reader user hears the result count
+          change without the focus leaving the input. */}
+      <p class="rf__count" data-rf-count role="status" aria-live="polite"></p>
+    </div>
+
+    {/* --- Area chips ------------------------------------------------------ */}
+    <div class="rf__areas" data-rf-areas>
+      <p class="rf__areas-h">
+        Areas we cover
+        <span class="rf__areas-n">{coverage.length} boarding points</span>
+      </p>
+
+      {/* Mobile only — see the CSS. Rendered for every reader either way, so
+          the scoped styles apply and nothing is built at runtime. */}
+      <div class="rf__letters" role="group" aria-label="Jump to boarding points by first letter">
+        {letters.map((L) => (
+          <button class="lt" type="button" data-rf-letter={L} aria-pressed="false">
+            <span class="lt__l">{L}</span>
+            <span class="lt__n">{letterCount(L)}</span>
+          </button>
+        ))}
+      </div>
+      <ul class="rf__chips" data-rf-chiplist>
+        {
+          coverage.map((c, i) => (
+            <li
+              class:list={['rf__chipwrap', i >= CHIP_LIMIT && 'rf__chipwrap--extra']}
+              data-letter={letterOf(c.stop)}
+            >
+              <button class="chip" type="button" data-rf-chip={c.stop}>
+                <span class="chip__dot" aria-hidden="true" />
+                <span class="chip__t">{c.stop}</span>
+                {/* ⚠ HIDDEN TEXT, NOT `aria-label` ON THE SPAN. ARIA forbids
+                    `aria-label` on a generic element, so the badge announced a
+                    bare number — "Bahadurpur 3" — with nothing saying what the
+                    3 counted. Real text is announced by every reader and passes
+                    `aria-prohibited-attr`. */}
+                <span class="chip__n">
+                  {c.runs.length}
+                  <span class="u-visually-hidden">
+                    {c.runs.length === 1 ? ' run' : ' runs'}
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+      <button class="rf__more" type="button" data-rf-more hidden>
+        <span data-rf-more-label>Show all {coverage.length} boarding points</span>
+        <svg width="13" height="8" viewBox="0 0 12 7" fill="none" aria-hidden="true">
+          <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    {/* --- Route cards ----------------------------------------------------- */}
+    <ul class="rf__grid" data-rf-grid>
+      {
+        routes.map((r) => (
+          <li class="rcard" data-rf-card data-haystack={haystack(r.stops)} data-staff={r.staffOnly ? 'true' : undefined}>
+            <details class="rcard__d">
+              {/* ⚠ THE SUMMARY HOLDS NO LINK OR BUTTON, DELIBERATELY. A <summary>
+                  is itself the control that opens the card, so an <a> inside it
+                  gets two conflicting jobs from one tap — follow, and toggle.
+                  The driver's tel: link therefore lives in the opened body, not
+                  in this preview. */}
+              <summary class="rcard__sum">
+                {/* ── Band 1 · operator and vehicle ───────────────────────── */}
+                <span class="rc__top">
+                  <span class="rc__logo" aria-hidden="true">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                      <rect x="4" y="4" width="16" height="12" rx="2.5" stroke="currentColor" stroke-width="1.7" />
+                      <path d="M4 11h16M8 20v-2M16 20v-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                      <circle cx="8" cy="14" r="1.1" fill="currentColor" />
+                      <circle cx="16" cy="14" r="1.1" fill="currentColor" />
+                    </svg>
+                  </span>
+                  <span class="rc__operator">{r.driver}</span>
+                  <span class="rc__vehicle">
+                    <span class="rc__vehicle-k">Bus</span>
+                    <span class="rc__vehicle-v">No. {r.vehicle}</span>
+                  </span>
+                </span>
+
+                {r.staffOnly ? (
+                  /* The school's Route column for this vehicle reads exactly
+                     "ONLY STAFF". That is what it says here — not a rewritten
+                     version of it. */
+                  <span class="rc__staff">
+                    <span class="rc__staff-t">Only staff</span>
+                    <span class="rc__staff-b">As published in the school’s route list.</span>
+                  </span>
+                ) : r.stops.length === 1 ? (
+                  /* ⚠ ONE STOP MEANS ONE ENDPOINT. Bus No. 1's published route
+                     is the single entry "Reoti Bus Stand"; running it through
+                     the two-ended journey band would print that name twice with
+                     an arc between it and itself. */
+                  <span class="rc__solo">
+                    <span class="rc__place" data-long={wordScale(r.stops[0])}>{r.stops[0]}</span>
+                    <span class="rc__role">The only stop on this route</span>
+                  </span>
+                ) : (
+                  <>
+                    {/* ── Band 2 · the journey ────────────────────────────── */}
+                    <span class="rc__journey">
+                      <span class="rc__end">
+                        {/* ⚠ A STOP NAME IS NOT A 3-LETTER AIRPORT CODE.
+                            "Bahadurpur Awasiya Colony" is 25 characters where
+                            "JFK" is three, so this cannot be set at the airline
+                            card's display size — it clamps and is allowed to
+                            wrap to two lines rather than being truncated. A
+                            parent must be able to read their own stop. */}
+                        <span class="rc__place" data-long={wordScale(r.stops[0])}>{r.stops[0]}</span>
+                        <span class="rc__role">First stop</span>
+                      </span>
+
+                      <span class="rc__arc" aria-hidden="true">
+                        {/* ⚠ THE CURVE IS THE WHOLE POINT OF THIS BAND, so it is
+                            drawn long and shallow rather than short and domed.
+                            A stubby arc reads as a decorative squiggle between
+                            two labels; a long one reads as a route. The dash
+                            gaps widen towards the apex, which is what stops a
+                            uniformly dashed line from looking like a border. */}
+                        <svg class="rc__arc-svg" viewBox="0 0 180 30" fill="none" preserveAspectRatio="none">
+                          <path
+                            d="M2 27C34 6 146 6 178 27"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-dasharray="2.5 5"
+                          />
+                        </svg>
+                        <span class="rc__arc-icon">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <rect x="4" y="4" width="16" height="12" rx="2.5" stroke="currentColor" stroke-width="1.9" />
+                            <path d="M4 11h16M8 20v-2M16 20v-2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" />
+                          </svg>
+                        </span>
+                      </span>
+
+                      <span class="rc__end rc__end--to">
+                        {/* ⚠ THIS WAS "School / Sunbeam Ballia" AND THAT WAS AN
+                            INFERENCE, NOT THE SCHOOL'S DATA. The reasoning was
+                            that a school bus obviously ends at the school — true,
+                            probably, but the published Route column names a list
+                            of stops and does not say it. It also gave every one
+                            of the 28 cards the same right-hand value, which is a
+                            lot of screen space spent on something the source
+                            never claimed.
+
+                            Both ends are now the first and last entries of the
+                            published list, exactly as the school prints them. */}
+                        <span class="rc__place" data-long={wordScale(r.stops[r.stops.length - 1])}>{r.stops[r.stops.length - 1]}</span>
+                        <span class="rc__role">Last stop</span>
+                      </span>
+                    </span>
+
+                    {/* ⚠ THERE IS NO LEG BAR HERE, AND THAT IS THE FIX FOR A REAL
+                        FAULT. The reference card carries one — 8h32m · 1 stop in
+                        FCO · 3h07m — but those are DIFFERENT data from the
+                        11h39m above them: the bar decomposes the total into
+                        legs. We have no leg data, so copying the shape meant
+                        filling it with what was already on the card. Measured on
+                        the built page, every card printed its stop count THREE
+                        times (under the arc, as a derived "N between" pill, and
+                        as the footer figure) and its first stop name TWICE.
+
+                        Borrowing a layout means borrowing its information
+                        structure, not just its boxes. Each fact now appears
+                        exactly once: first pickup and destination in the journey
+                        band, the run in the footer tag, the count as the footer
+                        figure. */}
+                  </>
+                )}
+
+                {/* ── Band 4 · run and headline figure ────────────────────── */}
+                <span class="rc__foot">
+                  <span class="rc__tag">
+                    <span class="rc__tag-icon" aria-hidden="true">
+                      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                        <circle cx="7" cy="7" r="5.4" stroke="currentColor" stroke-width="1.4" />
+                        <path d="M7 4v3.2l2.1 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                      </svg>
+                    </span>
+                    {r.leg ?? 'Single run'}
+                  </span>
+
+                  <span class="rc__figure">
+                    {r.staffOnly ? (
+                      <span class="rc__figure-n rc__figure-n--muted">—</span>
+                    ) : (
+                      <>
+                        <span class="rc__figure-n">{r.stops.length}</span>
+                        <span class="rc__figure-u">{r.stops.length === 1 ? '/stop' : '/stops'}</span>
+                      </>
+                    )}
+                    <span class="rc__chev" aria-hidden="true">
+                      <svg width="12" height="8" viewBox="0 0 12 7" fill="none">
+                        <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" />
+                      </svg>
+                    </span>
+                  </span>
+                </span>
+              </summary>
+
+              <div class="rcard__body">
+                {r.staffOnly ? (
+                  <p class="rcard__note">
+                    The number below still reaches this vehicle’s driver.
+                  </p>
+                ) : (
+                  <>
+                    {/* The stop list is an ordered list because the school
+                        publishes the stops in route order, and that order is
+                        information — it is roughly where the bus goes. */}
+                    <ol class="rcard__stoplist">
+                      {r.stops.map((s) => (
+                        <li class="stop" data-rf-stop={s.toLowerCase()}>
+                          {/* Decorative: the stop name beside it carries the
+                              meaning, so the tick is aria-hidden and never
+                              announced 9 times per route. */}
+                          <span class="stop__mark" aria-hidden="true">
+                            <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+                              <path
+                                d="M1.6 6.3l2.9 2.9L10.4 3.3"
+                                stroke="currentColor"
+                                stroke-width="2.4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                          <span class="stop__t">{s}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </>
+                )}
+
+                <p class="rcard__contact">
+                  <span class="rcard__contact-k">Driver</span>
+                  <a class="rcard__tel" href={`tel:+91${r.phone}`}>
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <path
+                        d="M2 3.2c0-.7.5-1.2 1.2-1.2h1.3c.5 0 1 .4 1.1.9l.4 1.8c.1.4 0 .8-.3 1l-.9.8c.8 1.5 2 2.7 3.5 3.5l.8-.9c.3-.3.7-.4 1.1-.3l1.8.4c.5.1.9.6.9 1.1v1.3c0 .7-.6 1.2-1.2 1.2A10.7 10.7 0 0 1 2 3.2Z"
+                        stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"
+                      />
+                    </svg>
+                    +91 {r.phone}
+                  </a>
+                </p>
+              </div>
+            </details>
+          </li>
+        ))
+      }
+    </ul>
+
+    {/* Shown only when a search matches nothing. Rendered here, not built in
+        JS — see the header note on the scoped-CSS trap. */}
+    <div class="rf__empty" data-rf-empty hidden>
+      <p class="rf__empty-h">No published stop matches <span data-rf-empty-q></span>.</p>
+      <p class="rf__empty-b">
+        Routes are set each session and the published list may not name every
+        pick-up point. Speak to the transport in-charge before assuming your
+        area is not covered.
+      </p>
+      <a class="rf__empty-cta" href="#transport-contact">Contact the transport in-charge</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rf {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .rf__eyebrow { color: var(--sb-violet-dark); }
+
+  h2.rf__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(26px, 3vw, 42px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.034em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .rf__stand {
+    max-width: 54ch;
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Search -------------------------------------------------------------- */
+
+  .rf__search { margin-top: clamp(24px, 3vh, 36px); }
+  .rf__search[hidden] { display: none; }
+
+  .rf__label {
+    display: block;
+    margin-bottom: var(--sb-3);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .rf__field {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    max-width: 520px;
+    padding: 4px 6px 4px 16px;
+    border: 1px solid var(--sb-border-strong);
+    border-radius: var(--sb-r-full);
+    background: var(--sb-paper);
+    transition: border-color var(--sb-dur-btn) ease, box-shadow var(--sb-dur-btn) ease;
+  }
+
+  /* The RING IS ON THE WRAPPER, not the input — the input's own outline would
+     draw inside the pill and clip against the border radius. */
+  .rf__field:focus-within {
+    border-color: var(--sb-violet);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sb-violet) 22%, transparent);
+  }
+
+  .rf__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    color: var(--sb-text-secondary);
+  }
+
+  .rf__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-block: 12px;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--sb-body);
+    color: var(--sb-charcoal);
+  }
+
+  .rf__input:focus { outline: none; }
+  .rf__input::-webkit-search-cancel-button { display: none; }
+
+  .rf__clear {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 32px;
+    aspect-ratio: 1;
+    border: 0;
+    border-radius: 50%;
+    background: var(--sb-sand);
+    color: var(--sb-charcoal);
+    cursor: pointer;
+    transition: background var(--sb-dur-btn) ease;
+  }
+
+  .rf__clear[hidden] { display: none; }
+  .rf__clear:hover { background: var(--sb-violet); color: #fff; }
+  .rf__clear:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 2px; }
+
+  .rf__count {
+    margin-top: var(--sb-4);
+    min-height: 1.2em;
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-violet-dark);
+  }
+
+  /* --- Area chips ---------------------------------------------------------- */
+
+  .rf__areas { margin-top: clamp(26px, 3.2vh, 40px); }
+
+  .rf__areas-h {
+    margin-bottom: var(--sb-4);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .rf__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ⚠ THE OVERFLOW CHIPS ARE HIDDEN, NOT ABSENT. Slicing the array server-side
+     would keep them out of the DOM entirely — and then a search for one of
+     those 40-odd localities would find the ROUTE but not light up its chip, and
+     "Areas we cover" would silently under-report what the school covers. They
+     are rendered and hidden, so the script can reveal any that match. */
+  .rf__areas-n {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- The A–Z index (mobile) --------------------------------------------- */
+
+  .rf__letters {
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: var(--sb-5);
+  }
+
+  .lt {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    min-width: 38px;
+    min-height: 34px;
+    padding: 4px 9px;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    color: var(--sb-charcoal);
+    font-family: var(--sb-font-display);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    /* State flip is instant — the same reasoning as the chips: a background
+       that animates while the colour snaps spends 200ms at low contrast. */
+    transition: border-color var(--sb-dur-btn) ease;
+  }
+
+  .lt__n {
+    font-family: var(--sb-font-body, inherit);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--sb-text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lt:hover { border-color: var(--sb-violet); }
+  .lt:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 2px; }
+
+  .lt[aria-pressed='true'] {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+  }
+
+  .lt[aria-pressed='true'] .lt__n { color: rgba(255, 255, 255, 0.78); }
+
+  /* --- Desktop: the full grid, unchanged ----------------------------------- */
+
+  @media (min-width: 701px) {
+    .rf__chipwrap--extra { display: none; }
+    .rf__areas[data-open] .rf__chipwrap--extra { display: block; }
+    .rf__chipwrap--extra[data-hit] { display: block; }
+  }
+
+  /* --- Mobile: one letter at a time ---------------------------------------- */
+
+  @media (max-width: 700px) {
+    .rf__letters { display: flex; }
+
+    /* The show-all button belongs to the desktop overflow behaviour; here the
+       letter row IS the way to reach everything. */
+    .rf__more { display: none !important; }
+
+    .rf__chipwrap { display: none; }
+    .rf__chipwrap[data-on] { display: block; }
+
+    /* A search result outranks the letter filter — a reader who typed a name
+       must see it whichever letter happens to be selected. */
+    .rf__chipwrap[data-hit] { display: block; }
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    min-height: 32px;
+    padding: 5px 12px 5px 10px;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-full);
+    background: var(--sb-paper);
+    color: var(--sb-charcoal);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    cursor: pointer;
+    /* ⚠ `background` IS DELIBERATELY NOT TRANSITIONED, and `color` is not
+       either. Selecting a chip flips it to white-on-violet (5.05:1). With the
+       background animating and the colour snapping — which is what happens when
+       only one of the pair is in the transition list — there are ~200ms of
+       charcoal text on a violet ground at 3.56:1, measured. Adding `color` to
+       the list does not fix it, it makes it worse: both then interpolate and
+       the midpoint is roughly 1.6:1.
+
+       A pressed/unpressed flip is a STATE CHANGE, not a hover affordance, and
+       state changes should be instant. The hover feel is carried by
+       `border-color` and the lift, which have no contrast role. */
+    transition: border-color var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  .chip__dot {
+    width: 6px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--sb-violet);
+    opacity: 0.55;
+    transition: opacity var(--sb-dur-btn) ease, transform var(--sb-dur-btn) ease;
+  }
+
+  .chip__n {
+    padding: 1px 6px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-sand);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sb-text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chip:hover {
+    border-color: var(--sb-violet);
+    transform: translateY(-1px);
+  }
+
+  .chip:hover .chip__dot { opacity: 1; transform: scale(1.25); }
+  .chip:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 2px; }
+
+  .chip[aria-pressed='true'] {
+    border-color: var(--sb-violet);
+    background: var(--sb-violet);
+    color: #fff;
+  }
+
+  .chip[aria-pressed='true'] .chip__dot { background: #fff; opacity: 1; }
+  .chip[aria-pressed='true'] .chip__n { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+  .rf__more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    min-height: 24px;
+    margin-top: var(--sb-5);
+    padding: 6px 2px;
+    border: 0;
+    background: none;
+    color: var(--sb-violet-dark);
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .rf__more[hidden] { display: none; }
+  .rf__more:hover { text-decoration: underline; }
+  .rf__more:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+  .rf__more svg { transition: transform var(--sb-dur-btn) var(--sb-ease); }
+  .rf__areas[data-open] .rf__more svg { transform: rotate(180deg); }
+
+  /* --- Route cards --------------------------------------------------------- */
+
+  .rf__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sb-4);
+    margin: clamp(28px, 3.6vh, 44px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ⚠ THE CARD IS THE QUERY CONTAINER, because the card is what the layout
+     actually depends on — and viewport width is a poor proxy for it here. At
+     390px the grid is 1 column and a card is ~350px; at 768px it is 2 columns
+     and a card is ~350px too; at 1440px, 3 columns and ~419px. A viewport-keyed
+     rule tuned on the phone therefore MISSED the tablet entirely, and 768 was
+     the one width still breaking "Chandrashekhar" mid-word after two passes. */
+  .rcard { container-type: inline-size; }
+
+  .rcard[hidden] { display: none; }
+
+  .rcard__d {
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    overflow: hidden;
+    transition: border-color var(--sb-dur-link) ease, box-shadow var(--sb-dur-link) ease;
+  }
+
+  .rcard__d:hover { border-color: var(--sb-border-strong); box-shadow: var(--sb-shadow-card-hover); }
+  .rcard__d[open] { border-color: var(--sb-violet); }
+
+  /* ═══ THE FOUR BANDS ═════════════════════════════════════════════════════
+     Modelled on the flight-search card the client supplied. Its four bands map
+     onto a bus route almost exactly, and the mapping is the design:
+
+        airline + logo      →  driver + bus glyph      (who operates it)
+        aircraft model      →  bus number             (which vehicle)
+        JFK ✈ ZRH + duration →  first pickup 🚌 school (the journey)
+        leg bar with stop   →  first · N between · last
+        class + 560$/pax    →  run + N /stops         (the headline figure)
+
+     ⚠ ONE THING DOES NOT TRANSFER, AND IT DRIVES THE TYPOGRAPHY. An airport is
+     a three-letter code, so that card can set it at 30px+ and never wrap. A
+     boarding point is "Bahadurpur Awasiya Colony" — 25 characters. Set at the
+     reference's display size it would either overflow the column or need
+     truncating, and a parent who cannot read their own stop has been given
+     nothing. So the endpoint type clamps smaller and is allowed two lines. */
+  .rcard__sum {
+    display: grid;
+    gap: var(--sb-5);
+    padding: clamp(14px, 1.5vw, 18px);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  /* Safari draws its own disclosure triangle unless this is removed. */
+  .rcard__sum::-webkit-details-marker { display: none; }
+  .rcard__sum:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: -2px; }
+
+  /* --- Band 1 · operator and vehicle --- */
+
+  .rc__top {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sb-4);
+  }
+
+  .rc__logo {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--sb-violet) 12%, var(--sb-paper));
+    color: var(--sb-violet);
+  }
+
+  .rc__operator {
+    min-width: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.15vw, 17px);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    overflow-wrap: anywhere;
+  }
+
+  .rc__vehicle { text-align: right; }
+
+  .rc__vehicle-k {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--sb-text-secondary);
+  }
+
+  .rc__vehicle-v {
+    display: block;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.2vw, 18px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--sb-violet-dark);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Band 2 · the journey --- */
+
+  /* ⚠ THE MIDDLE COLUMN IS THE WIDEST, and that inversion is the reference's
+     actual proportion — measured off the supplied card, the flight path takes
+     roughly 45% of the width and the two codes about 18% each. An earlier pass
+     gave the middle `1.1fr` against `1fr` sides, which produced a ~110px arc
+     and a band that read as three labels in a row rather than a journey.
+
+     The endpoints can afford to give up the width because their names are
+     allowed to wrap to two lines — a three-letter airport code cannot wrap and
+     a place name can. */
+  /* ⚠ THE SPLIT WAS REBALANCED WHEN BOTH ENDS BECAME REAL PLACE NAMES. While
+     the right-hand endpoint was always the word "School", the sides needed
+     almost no width and the arc could take 45%. Now that it is "Sapa Karyalaya"
+     or "Baleshwar Mandir Japlingganj", 0.95fr sides forced words to break
+     mid-syllable — "Tikhampu / r", "Polytech / nic" — which is worse than a
+     shorter arc by a wide margin: a parent has to recognise their own stop. */
+  .rc__journey {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(96px, 1.4fr) minmax(0, 1.05fr);
+    align-items: start;
+    gap: var(--sb-3);
+    padding-top: var(--sb-3);
+  }
+
+  .rc__end { min-width: 0; }
+  .rc__end--to { text-align: right; }
+
+  .rc__place {
+    display: block;
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.3vw, 21px);
+    font-weight: 700;
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+    /* ⚠ `break-word`, NOT `anywhere`. They look interchangeable and are not:
+       `anywhere` also lowers the element's min-content width, which tells the
+       grid it may shrink this column as far as a single character — so the
+       browser breaks words that would have fitted if the column had held its
+       ground. `break-word` breaks only a word that genuinely cannot fit on a
+       line by itself, and leaves intrinsic sizing alone. */
+    overflow-wrap: break-word;
+  }
+
+  /* Graded by the longest word — see wordScale() in the frontmatter. */
+  .rc__place[data-long='lg'] { font-size: clamp(15px, 1.15vw, 18px); }
+  /* ⚠ 14 CHARACTERS IS THE CASE THIS TIER EXISTS FOR. "Chandrashekhar" still
+     broke at 16px — the step has to clear the longest single word on the
+     published list, not merely be smaller than the one above it. */
+  .rc__place[data-long='xl'] { font-size: clamp(11.5px, 0.86vw, 14px); letter-spacing: -0.018em; }
+
+  .rc__role {
+    display: block;
+    margin-top: 3px;
+    font-size: 11.5px;
+    line-height: 1.35;
+    color: var(--sb-text-secondary);
+  }
+
+  .rc__arc {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    padding-top: 4px;
+  }
+
+  .rc__arc-svg {
+    width: 100%;
+    height: 26px;
+    color: color-mix(in srgb, var(--sb-violet) 52%, transparent);
+  }
+
+  /* The vehicle sits ON the arc's apex, the way the reference's plane does —
+     and the disc behind it is `--sb-paper`, not transparent, so the dashes are
+     masked out from under the glyph instead of showing through it. */
+  .rc__arc-icon {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    translate: -50% 0;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-violet);
+  }
+
+  /* --- Band 4 · run and headline figure --- */
+
+  .rc__foot {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sb-4);
+    padding-top: var(--sb-4);
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .rc__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    justify-self: start;
+    padding: 5px 12px;
+    border-radius: var(--sb-r-full);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--sb-text-secondary);
+    white-space: nowrap;
+  }
+
+  .rc__tag-icon { display: grid; place-items: center; color: var(--sb-violet-dark); }
+
+  .rc__figure {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+
+  .rc__figure-n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(22px, 1.9vw, 28px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--sb-violet-dark);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rc__figure-n--muted { color: var(--sb-text-secondary); }
+
+  .rc__figure-u {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--sb-text-secondary);
+  }
+
+  .rc__chev {
+    align-self: center;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    aspect-ratio: 1;
+    margin-left: var(--sb-3);
+    border-radius: 50%;
+    background: var(--sb-sand);
+    color: var(--sb-charcoal);
+    transition: transform var(--sb-dur-btn) var(--sb-ease), background var(--sb-dur-btn) ease;
+  }
+
+  .rcard__d[open] .rc__chev { transform: rotate(180deg); background: var(--sb-violet); color: #fff; }
+
+  /* --- The staff vehicle --- */
+
+  .rc__solo,
+  .rc__staff {
+    display: grid;
+    gap: 3px;
+    padding: var(--sb-4) 0;
+  }
+
+  .rc__staff-t {
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.35vw, 20px);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+
+  .rc__staff-b {
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: var(--sb-text-secondary);
+  }
+
+  .rcard__body {
+    padding: 0 clamp(12px, 1.4vw, 18px) clamp(14px, 1.6vw, 20px);
+    border-top: 1px solid var(--sb-border);
+    padding-top: var(--sb-5);
+    margin-top: 2px;
+  }
+
+  /* THE ROUTE AS A CHECKLIST. Each stop is a served, published boarding point,
+     so a tick states something true about it — where a hollow dot only said
+     "item". Threading the ticks on a connecting rule keeps the other half of
+     the meaning: the school publishes these in route order, so the list is
+     roughly where the bus goes, and a plain checklist would throw that away. */
+  .rcard__stoplist {
+    display: grid;
+    gap: var(--sb-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stop {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--stop-dot) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--sb-charcoal);
+
+    --stop-dot: 24px;
+  }
+
+  /* ⚠ THE CONNECTOR IS DRAWN PER STOP, NOT AS ONE RULE DOWN THE LIST. A single
+     absolutely-positioned rule on the <ol> has to guess where the first and
+     last tick centres are — and that guess breaks the moment a stop name wraps
+     to two lines, which "Baleshwar Mandir Japlingganj" does at 390px. Each
+     segment instead spans its own gap: from the bottom of this tick to the top
+     of the next, whatever height either row turns out to be. */
+  .stop:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: var(--stop-dot);
+    left: calc(var(--stop-dot) / 2 - 1px);
+    width: 2px;
+    height: calc(100% - var(--stop-dot) + var(--sb-4));
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--sb-violet) 34%, transparent);
+  }
+
+  /* ⚠ THE BADGE HAS TO CARRY THE TICK, NOT JUST CONTAIN IT. A first pass put an
+     11px glyph inside a 20px pale-sand disc — the tick was there, the markup was
+     correct, and at normal viewing distance the whole unit still scanned as a
+     bullet. The client's report was "no change", and they were right about what
+     they saw even though the change had shipped.
+
+     Three things fix it together and none of them alone: the disc is TINTED
+     rather than neutral, so it belongs to the tick instead of being a grey
+     container; it carries a violet ring, which is what makes a circle read as a
+     checkbox; and the glyph is 13px at 2.4 stroke inside 24px, so the tick fills
+     its disc instead of floating in the middle of one. */
+  .stop__mark {
+    display: grid;
+    place-items: center;
+    width: var(--stop-dot);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--sb-violet) 12%, var(--sb-paper));
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--sb-violet) 34%, transparent);
+    color: var(--sb-violet);
+    transition: background var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease,
+      box-shadow var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  /* The matched stop, marked so the parent's eye lands on the reason this card
+     survived the filter. The tick fills in — it is the same glyph, so the row
+     does not move; only its weight changes. */
+  .stop[data-hit] .stop__t {
+    font-weight: 700;
+    color: var(--sb-violet-dark);
+  }
+
+  .stop[data-hit] .stop__mark {
+    background: var(--sb-violet);
+    box-shadow: inset 0 0 0 1.5px var(--sb-violet),
+      0 0 0 4px color-mix(in srgb, var(--sb-violet) 16%, transparent);
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  .rcard__note {
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  .rcard__contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sb-3) var(--sb-4);
+    margin-top: var(--sb-5);
+    padding-top: var(--sb-5);
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .rcard__contact-k {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .rcard__tel {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    min-height: 24px;
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    color: var(--sb-violet-dark);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rcard__tel:hover { text-decoration: underline; }
+  .rcard__tel:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+
+  /* --- Empty state --------------------------------------------------------- */
+
+  .rf__empty {
+    margin-top: clamp(24px, 3vh, 36px);
+    padding: clamp(20px, 2.4vw, 30px);
+    border: 1px dashed var(--sb-border-strong);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+  }
+
+  .rf__empty[hidden] { display: none; }
+
+  .rf__empty-h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.4vw, 21px);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .rf__empty-b {
+    max-width: 60ch;
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .rf__empty-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    color: var(--sb-violet-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* --- Breakpoints --------------------------------------------------------- */
+
+  @media (min-width: 760px) {
+    .rf__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (min-width: 1180px) {
+    .rf__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 420px) {
+    /* The leg bar is the first thing to go. It is a restatement of the journey
+       band directly above it, so losing it costs no information — where losing
+       an endpoint name would. */
+  }
+
+  /* Narrow CARD — the arc yields width to the endpoints. On a 350px card the
+     names have nowhere else to go, and a readable stop name beats a longer
+     curve every time. */
+  @container (max-width: 400px) {
+    .rc__journey { grid-template-columns: minmax(0, 1.1fr) minmax(64px, 0.85fr) minmax(0, 1.1fr); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chip,
+    .chip__dot,
+    .rcard__d,
+    .rc__chev,
+    .stop__mark,
+    .rf__more svg { transition-duration: 1ms; }
+    .chip:hover { transform: none; }
+    /* The filled tick still marks the match; only the pop goes. */
+    .stop[data-hit] .stop__mark { transform: none; }
+  }
+</style>
+
+<script>
+  /**
+   * The filter. Everything it touches already exists in the markup.
+   *
+   * ⚠ IT ONLY EVER SETS `hidden` AND `data-hit`. It never creates a node, never
+   * writes innerHTML, and never rebuilds the grid — so the scoped styles above
+   * always apply, and a card that was expanded stays expanded through a search.
+   */
+  const finder = document.querySelector<HTMLElement>('[data-rf-grid]');
+  const box = document.querySelector<HTMLElement>('[data-rf-search]');
+  const field = document.querySelector<HTMLInputElement>('[data-rf-input]');
+  const tally = document.querySelector<HTMLElement>('[data-rf-count]');
+  const wipe = document.querySelector<HTMLButtonElement>('[data-rf-clear]');
+  const blank = document.querySelector<HTMLElement>('[data-rf-empty]');
+  const blankQ = document.querySelector<HTMLElement>('[data-rf-empty-q]');
+  const areas = document.querySelector<HTMLElement>('[data-rf-areas]');
+  const moreBtn = document.querySelector<HTMLButtonElement>('[data-rf-more]');
+  const moreLbl = document.querySelector<HTMLElement>('[data-rf-more-label]');
+
+  if (finder && box && field && tally) {
+    const cards = [...finder.querySelectorAll<HTMLElement>('[data-rf-card]')];
+    const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-rf-chip]')];
+    /* ⚠ EVERY chipwrap, NOT ONLY THE OVERFLOW ONES. Search used to reveal just
+       the hidden tail of the desktop grid; with the mobile letter index every
+       chip starts hidden, so a match has to be able to reveal any of them. */
+    const spare = [...document.querySelectorAll<HTMLElement>('.rf__chipwrap')];
+    const letterBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-rf-letter]')];
+    const narrow = window.matchMedia('(max-width: 700px)');
+
+    /** Show one letter's chips. Mobile only; desktop shows the grid. */
+    const showLetter = (L: string) => {
+      letterBtns.forEach((btn) =>
+        btn.setAttribute('aria-pressed', String(btn.dataset.rfLetter === L)),
+      );
+      spare.forEach((li) => {
+        if (li.dataset.letter === L) li.dataset.on = '';
+        else delete li.dataset.on;
+      });
+    };
+
+    /* Open on the first letter so the section is never an empty row of
+       buttons — and so the shape of the list is obvious without a tap. */
+    const firstLetter = letterBtns[0]?.dataset.rfLetter ?? '';
+    if (firstLetter) showLetter(firstLetter);
+
+    letterBtns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const L = btn.dataset.rfLetter ?? '';
+        /* Selecting a letter clears any search, or the two filters fight and
+           the reader sees a letter highlighted with nothing under it. */
+        if (field.value) {
+          field.value = '';
+          apply('');
+        }
+        showLetter(L);
+      }),
+    );
+
+    /* A letter chosen before the viewport widened must not leave the desktop
+       grid showing a single letter. */
+    narrow.addEventListener('change', (e) => {
+      if (!e.matches) spare.forEach((li) => delete li.dataset.on);
+      else if (firstLetter) showLetter(firstLetter);
+    });
+
+    box.hidden = false;
+    if (moreBtn && spare.length) moreBtn.hidden = false;
+
+    chips.forEach((c) => c.setAttribute('aria-pressed', 'false'));
+
+    const total = cards.filter((c) => c.dataset.staff !== 'true').length;
+
+    const apply = (raw: string) => {
+      const q = raw.trim().toLowerCase();
+
+      let shown = 0;
+      cards.forEach((card) => {
+        const hit = !q || (card.dataset.haystack ?? '').includes(q);
+        card.hidden = !hit;
+        if (hit && card.dataset.staff !== 'true') shown++;
+
+        /* Mark the individual stops that matched, and clear stale marks. */
+        card.querySelectorAll<HTMLElement>('[data-rf-stop]').forEach((s) => {
+          if (q && hit && (s.dataset.rfStop ?? '').includes(q)) s.dataset.hit = '';
+          else delete s.dataset.hit;
+        });
+
+        /* A matched card opens itself so the reason is visible without a
+           second click; clearing the search closes it again. */
+        const panel = card.querySelector('details');
+        if (panel && q) panel.open = hit;
+        else if (panel && !q) panel.open = false;
+      });
+
+      /* Reveal any overflow chip that matches, so the chip row never contradicts
+         the results below it. */
+      spare.forEach((li) => {
+        const name = li.querySelector<HTMLElement>('[data-rf-chip]')?.dataset.rfChip ?? '';
+        if (q && name.toLowerCase().includes(q)) li.dataset.hit = '';
+        else delete li.dataset.hit;
+      });
+
+      chips.forEach((c) =>
+        c.setAttribute('aria-pressed', String(!!q && (c.dataset.rfChip ?? '').toLowerCase() === q)),
+      );
+
+      if (wipe) wipe.hidden = !q;
+      if (blank) blank.hidden = !(q && shown === 0);
+      if (blankQ && q) blankQ.textContent = `"${raw.trim()}"`;
+
+      tally.textContent = q
+        ? shown === 0
+          ? ''
+          : `${shown} of ${total} runs stop near "${raw.trim()}"`
+        : '';
+    };
+
+    let idle: number | undefined;
+    field.addEventListener('input', () => {
+      window.clearTimeout(idle);
+      idle = window.setTimeout(() => apply(field.value), 90);
+    });
+
+    /* Escape clears, which is what a search field is expected to do. */
+    field.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        field.value = '';
+        apply('');
+      }
+    });
+
+    wipe?.addEventListener('click', () => {
+      field.value = '';
+      apply('');
+      field.focus();
+    });
+
+    chips.forEach((c) => {
+      c.addEventListener('click', () => {
+        const name = c.dataset.rfChip ?? '';
+        /* A pressed chip toggles off — otherwise the only way back to the full
+           list is to find the clear button. */
+        const same = field.value.trim().toLowerCase() === name.toLowerCase();
+        field.value = same ? '' : name;
+        apply(field.value);
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+
+    if (moreBtn && moreLbl && areas) {
+      moreBtn.addEventListener('click', () => {
+        const open = areas.hasAttribute('data-open');
+        if (open) areas.removeAttribute('data-open');
+        else areas.setAttribute('data-open', '');
+        moreLbl.textContent = open
+          ? `Show all ${chips.length} boarding points`
+          : 'Show fewer boarding points';
+      });
+    }
+  }
+</script>

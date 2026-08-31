@@ -1,0 +1,381 @@
+---
+/**
+ * JOURNEY ROAD — a sequence as a zigzag path: numbered badges, a title that
+ * rolls on hover, and hand-drawn dotted arcs pointing at the next step.
+ *
+ * ⚠ EXTRACTED, NOT INVENTED. Every part of this was already built and shipped —
+ * as page-local CSS inside about/history-legacy.astro, which is exactly why it
+ * never got reused. Three separate sequence treatments grew up on this site
+ * (this one, the Parent Partnership timeline, the Academic Structure stack) and
+ * the connector on one of them was a 40×2px hairline while THIS was sitting a
+ * page away. The layout that was not extractable did not travel; the year-roll
+ * from the same section, which was a shared idiom, is in five files.
+ *
+ * ═══ WHY A ZIGZAG AND NOT A LADDER ══════════════════════════════════════════
+ *
+ * Three items can indent progressively and still hold a readable measure. A
+ * fourth cannot — it ends so far in that its text runs to four words a line.
+ * Alternating sides keeps every step the same width and still reads as a route.
+ *
+ * ═══ WHY A DOTTED ARC AND NOT A RULE ════════════════════════════════════════
+ *
+ * A straight rule between two steps implies the gap is to scale. Between 1972
+ * and 2013 that would be a lie, and between "Assessment" and "Feedback" it would
+ * be meaningless. A dotted arc reads as sequence rather than as distance, so
+ * nothing here claims the intervals are equal.
+ *
+ * ACCENT COMES IN AS A CUSTOM PROPERTY. The original hard-coded --sb-violet and
+ * one rgba() of it, which is what would have stopped it being usable on a page
+ * running a different palette. Both are props now with the original values as
+ * defaults, so the History page gets byte-identical output.
+ */
+interface Item {
+  /** The large line — a year, a step name. Rolls on hover. */
+  title: string;
+  /** Optional small-caps line under it: a place, a phase. */
+  kicker?: string | null;
+  body: string;
+}
+
+interface Props {
+  items: readonly Item[];
+  /** Spoken name for the list. */
+  label?: string;
+  /** The disc, the arcs and the mobile rail. */
+  accent?: string;
+  /** The soft shape offset behind the disc. Needs alpha — it sits on the band. */
+  accentSoft?: string;
+  /** The kicker's colour, which usually wants to be deeper than the accent. */
+  kickerColour?: string;
+  /**
+   * A closing line for a sequence that repeats rather than ends. Omit for a
+   * one-way journey — a history has an end, a school year does not.
+   */
+  loop?: string | null;
+}
+
+const {
+  items,
+  label,
+  accent = 'var(--sb-violet)',
+  accentSoft = 'rgba(201, 60, 10, 0.18)',
+  kickerColour = 'var(--sb-violet-dark)',
+  loop = null,
+} = Astro.props;
+---
+
+<ol
+  class="road"
+  aria-label={label}
+  style={`--road-acc: ${accent}; --road-soft: ${accentSoft}; --road-kicker: ${kickerColour};`}
+>
+  {
+    items.map((m, i) => (
+      <li
+        class:list={['road__step', i % 2 === 0 ? 'road__step--l' : 'road__step--r']}
+        data-reveal
+        data-reveal-delay={i * 110}
+      >
+        {/* aria-hidden: the <ol> already tells a screen reader this is step 3 of
+            6. Read aloud, the badge would say it twice. */}
+        <span class="road__badge" aria-hidden="true">
+          <span class="road__badge-num">{String(i + 1).padStart(2, '0')}</span>
+        </span>
+
+        <h3 class="road__head">
+          {/* Mask, moving copy, and a duplicate that rolls up behind. Both read
+              from the same string, so they cannot drift apart. */}
+          <span class="road__title" data-title={m.title}>
+            <span>{m.title}</span>
+          </span>
+          {m.kicker && <span class="road__kicker">{m.kicker}</span>}
+        </h3>
+
+        <p class="road__text">{m.body}</p>
+
+        {/* The connector to the NEXT step, so the last one has none.
+            Decorative: the order is already carried by the list. */}
+        {i < items.length - 1 && (
+          <svg class="road__link" viewBox="0 0 240 120" fill="none" aria-hidden="true" focusable="false">
+            <path
+              d="M4 12C110 6 168 34 196 92"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-dasharray="0.5 11"
+            />
+            {/* A plain filled triangle, not a <marker>: a marker needs an id, and
+                several of these are inlined per page — repeated ids are invalid
+                and per-instance ids are noise for something this small. Points
+                along the curve's end tangent, computed once. */}
+            <path d="M201.7 103.7 189.7 95 202.3 89Z" fill="currentColor" />
+          </svg>
+        )}
+      </li>
+    ))
+  }
+</ol>
+
+{
+  loop && (
+    <p class="road__loop" data-reveal style={`--road-acc: ${accent};`}>
+      <span aria-hidden="true">↻</span>
+      {loop}
+    </p>
+  )
+}
+
+<style>
+  .road {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .road__step {
+    position: relative;
+    display: grid;
+    /* badge · copy — the number sits beside the title, and the paragraph starts
+       at the title's left edge, not the badge's. */
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(16px, 1.6vw, 24px);
+    row-gap: var(--sb-4);
+    align-items: start;
+    width: min(48%, 540px);
+  }
+
+  .road__step--r { margin-left: auto; }
+
+  /* Deep enough to hold the connector, which is half as tall as it is wide. */
+  .road__step + .road__step { margin-top: clamp(120px, 13vh, 152px); }
+
+  /* --- Badge ---------------------------------------------------------------
+     Two shapes: a soft squircle offset behind, and the disc itself. Both are
+     pseudo-elements with EXPLICIT z-index inside an isolated context — the usual
+     `z-index: -1` trick would drop the blob behind the badge's own background
+     and, since this element paints none, behind the section instead. */
+  .road__badge {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: clamp(46px, 4vw, 56px);
+    height: clamp(46px, 4vw, 56px);
+    flex-shrink: 0;
+  }
+
+  .road__badge::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    /* Offset up and left — a hand-placed shape rather than a concentric ring. */
+    translate: -8px -8px;
+    border-radius: 42%;
+    background: var(--road-soft);
+  }
+
+  .road__badge::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: var(--sb-r-full);
+    background: var(--road-acc);
+  }
+
+  .road__badge-num {
+    position: relative;
+    z-index: 2;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Copy ----------------------------------------------------------------- */
+
+  .road__head {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* Optically centred against the badge: the title's cap-height sits a little
+       below the badge's midline without this. */
+    padding-top: 2px;
+  }
+
+  /* --- Title: roll-up swap --------------------------------------------------
+     The element is the mask, its inner span is the copy that leaves, and
+     ::before is an identical copy waiting below that arrives. Same duration and
+     easing on both — 1.05s on this curve, lifted unchanged from the homepage
+     cards, because a gesture that means "this item" should feel the same
+     wherever it appears.
+
+     THE PADDING IS NOT SPACING. `Six years` has a descender, and `overflow:
+     hidden` on a line-height of 1 slices the tail off the y. The padding gives
+     the mask room for it and the equal negative margin takes that room back out
+     of the layout, so nothing below moves. */
+  .road__title {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 2.6vw, 38px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .road__title > span {
+    display: inline-block;
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  .road__title::before {
+    content: attr(data-title);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(110%);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  /* The whole step is the trigger, not the title itself — a 38px word is a small
+     target, and sweeping the pointer down the page should turn each step as you
+     reach it. */
+  .road__step:hover .road__title > span { transform: translateY(-125%); }
+  .road__step:hover .road__title::before { transform: translateY(0); }
+
+  /* The badge answers at the same moment, so the pair reads as one response. */
+  .road__badge::before,
+  .road__badge::after {
+    transition: transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  .road__step:hover .road__badge::after { transform: scale(1.06); }
+  .road__step:hover .road__badge::before { transform: scale(1.12); }
+
+  .road__kicker {
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--road-kicker);
+  }
+
+  .road__text {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Connector ------------------------------------------------------------
+     Fixed aspect, deliberately. Stretching it with preserveAspectRatio="none"
+     would smear the dots unevenly and skew the arrowhead off the curve's
+     tangent. It is decoration pointing at the next step, not a join that has to
+     touch both ends, so a fixed 2:1 shape centred in the gap is both simpler and
+     correct at every width.
+
+     Sized and placed as PERCENTAGES OF THE STEP, not in vw. The step is
+     `min(48%, 540px)`, so a vw-based arc kept growing while the step stopped at
+     the cap, and the two drifted apart above 1120px. In step-relative units the
+     arc always leaves the step's right shoulder and always reaches the column
+     opposite. */
+  .road__link {
+    position: absolute;
+    top: calc(100% + 6px);
+    /* 96% + 42% = 138%: it starts at the step's edge and crosses the gutter. */
+    width: 42%;
+    height: auto;
+    color: var(--road-acc);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Left step: the arc leaves its right shoulder and sweeps down-right. */
+  .road__step--l .road__link { left: 96%; }
+
+  /* Right step: the same arc mirrored, sweeping down-LEFT. Flipping one path is
+     what keeps the two directions in sync — a hand-drawn mirror would drift. */
+  .road__step--r .road__link { right: 96%; scale: -1 1; }
+
+  /* --- The loop ------------------------------------------------------------
+     For a sequence that repeats. A history ends; a school year does not. */
+  .road__loop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sb-4);
+    margin-top: clamp(56px, 8vh, 96px);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--road-kicker, var(--sb-violet-dark));
+  }
+
+  .road__loop span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid color-mix(in srgb, var(--road-acc) 34%, transparent);
+    border-radius: var(--sb-r-full);
+    font-size: 17px;
+    line-height: 1;
+    color: var(--road-acc);
+  }
+
+  /* Decoration, so it stops entirely. The duplicate parks BELOW the mask rather
+     than mid-travel — otherwise a hovered step could rest showing half of each
+     copy at once. */
+  @media (prefers-reduced-motion: reduce) {
+    .road__title > span,
+    .road__title::before,
+    .road__badge::before,
+    .road__badge::after { transition: none; }
+
+    .road__step:hover .road__title > span,
+    .road__step:hover .road__badge::before,
+    .road__step:hover .road__badge::after { transform: none; }
+
+    .road__step:hover .road__title::before { transform: translateY(110%); }
+  }
+
+  /* --- Stacked --------------------------------------------------------------
+     Below this the zigzag has no room: two 48% columns leave a measure of about
+     30 characters. Everything goes full width and the arcs are replaced by a
+     dotted rail running down through the badges — same idea, one dimension. */
+  @media (max-width: 899px) {
+    .road__step {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .road__step + .road__step { margin-top: var(--sb-8); }
+
+    .road__link { display: none; }
+
+    /* The rail hangs from one badge's foot to the next. `bottom` is the negative
+       of the step gap, so the two stay tied to one number. */
+    .road__step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: calc(clamp(46px, 4vw, 56px) + 8px);
+      bottom: calc(var(--sb-8) * -1 + 8px);
+      left: calc(clamp(46px, 4vw, 56px) / 2 - 1px);
+      border-left: 3px dotted var(--road-acc);
+      opacity: 0.45;
+    }
+  }
+</style>

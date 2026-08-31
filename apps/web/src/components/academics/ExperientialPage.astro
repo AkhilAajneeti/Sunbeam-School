@@ -1,0 +1,724 @@
+---
+/**
+ * EXPERIENTIAL & INQUIRY-BASED LEARNING — four sections and a close.
+ *
+ * ═══ SOURCE OF TRUTH ═══════════════════════════════════════════════════════
+ *
+ *   sunbeamballia.edu.in — Gallery Walks
+ *     "students confidently presented their projects, charts, and models,
+ *      turning the classroom into a mini exhibition hall"   (Class IV, Science)
+ *     "colourful charts, models, and projects, making learning interactive and
+ *      fun"                                        (Classes III–V, Social Studies)
+ *     "reflecting a perfect blend of knowledge, expression, and experiential
+ *      learning"                                              (Grade 4, on India)
+ *
+ *   sunbeamballia.edu.in — Stargazing Activity
+ *     "the school campus transformed into a window to the universe"
+ *     "a breathtaking view of the Moon through a telescope — a first-time
+ *      experience for many"
+ *     "sparking curiosity, scientific thinking, and a deep appreciation for
+ *      space science"
+ *
+ *   Repository facts already verified for this project:
+ *     twelve laboratories · Little Agriculturists (published as "Little
+ *     Agriculturist") · Taramandal Show, a planetarium show, eleven photographs
+ *
+ * ⚠ CHANDRAYAAN-3 AND A "SCIENCE & MATHEMATICS EXHIBITION" ARE NOT HERE. The
+ * brief offers both as examples. Neither appears on the school's site or in this
+ * repository, so neither is claimed. The Gallery Walks and the Stargazing
+ * Activity are on the site and are quoted above; they carry the section instead.
+ *
+ * ⚠ THE LABORATORIES ARE PHOTOGRAPHED EMPTY. The DSC_12xx series is an
+ * empty-campus shoot — benches, reagent shelves, gas taps, no people. Captions
+ * describe the room, never students working in it. That mistake was made on
+ * another page in this project and had to be undone.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ *
+ *   EXPERIENCE  large frame with a smaller one overlapping its corner, copy in
+ *               a narrow column — asymmetric, ivory
+ *   PATH        EXPLORE → QUESTION → DISCOVER as one continuous line with three
+ *               frames hung off it. Horizontal on desktop, vertical on mobile.
+ *               NOT three cards — there is no card, only the line
+ *   REAL        an editorial collage on sand: one dominant frame, two smaller at
+ *               different sizes, overlapping, captions set bare
+ *   CLOSE       cinematic, full-bleed, dark
+ *
+ * Ground rhythm: ivory → paper → sand → ink. Four sections, four grounds.
+ *
+ * ⚠ MOTION IS THE SITE'S OWN CONTRACT — data-split, data-reveal(+delay),
+ * data-mask, data-parallax(+y), data-zoom(+to) — handled by
+ * scripts/motion-gsap.ts, already gated on prefers-reduced-motion and Save-Data.
+ */
+import { Image, Picture } from 'astro:assets';
+import { school } from '../../data/site';
+
+/* ─── Photography ────────────────────────────────────────────────────────────
+   Nine frames, every one opened and looked at before it was placed. No frame is
+   used twice, and each section gets a different treatment: overlap, path,
+   collage, full bleed. */
+import pChef from '../../assets/School Activity in Uniform/School Activity in Uniform (1).jpg';
+import pOwnWork from '../../assets/School Activity in Uniform/School Activity in Uniform (5).jpeg';
+import pThread from '../../assets/School Activity in Uniform/Embriodery.jpg';
+import pNightSky from '../../assets/school-activities/summer-camp/05.jpg';
+import pDome from '../../assets/school-activities/taramandal-show/01.jpg';
+import pStars from '../../assets/school-activities/taramandal-show/03.jpg';
+import pCompost from '../../assets/school-activities/little-agriculturists/02.jpg';
+import pStarSet from '../../assets/school-activities/summer-camp/02.jpg';
+import pHall from '../../assets/school-activities/josh-spring-camp/02.jpg';
+
+/* ─── Ornament ─────────────────────────────────────────────────────────────── */
+import dSaturn from '../../assets/icons/saturn.png';
+import dBulb from '../../assets/icons/bulb.png';
+import dQuestion from '../../assets/icons/questions.png';
+import dStar from '../../assets/icons/star.png';
+import dTwoStars from '../../assets/icons/two-stars.png';
+
+/** The three beats of the path. Data, so the markup stays one loop. */
+const path = [
+  {
+    k: 'Explore',
+    art: dSaturn,
+    photo: pThread,
+    alt: `Students of ${school.name} sitting together on the floor, working on embroidery from one shared basket of thread`,
+    body: 'A material, a tool, a problem that has not been explained yet.',
+  },
+  {
+    k: 'Question',
+    art: dQuestion,
+    photo: pNightSky,
+    alt: `A young student of ${school.name} holding a hand-made rocket cut-out at the Star Gazing session, the night sky on the board behind`,
+    body: 'The school calls it “sparking curiosity, scientific thinking” — the moment a child wants to know why.',
+  },
+  {
+    k: 'Discover',
+    art: dBulb,
+    photo: pDome,
+    alt: `Children of ${school.name} sitting in a ring inside the Taramandal planetarium dome, faces turned upward`,
+    body: 'The answer arrives having been looked for. That is what makes it stay.',
+  },
+];
+
+/** §04's collage. Each caption is the school's own record of the activity. */
+const real = [
+  {
+    k: 'Little Agriculturists',
+    note: 'A planting activity the youngest children dig, sow and water themselves.',
+  },
+  {
+    k: 'Taramandal Show',
+    note: 'A planetarium brought to the children — eleven photographs published.',
+  },
+  {
+    k: 'Star Gazing',
+    note: '“A breathtaking view of the Moon through a telescope — a first-time experience for many.”',
+  },
+];
+---
+
+<div class="ex">
+  {/* ═══ 02 · LEARNING BY EXPERIENCE ═════════════════════════════════════════
+      Asymmetric on ivory: one large frame, a smaller one overlapping its lower
+      corner, and the copy held to a narrow column with the rest left as air. */}
+  <section class="ex-exp" aria-labelledby="ex-exp-h">
+    <span class="ex__grid" aria-hidden="true"></span>
+    <span class="ex__wash" aria-hidden="true"></span>
+
+    <div class="u-container ex-exp__in">
+      <div class="ex-exp__copy">
+        <p class="ex__k t-label" data-reveal>Learning by experience</p>
+        <h2 class="ex-exp__h" id="ex-exp-h" data-split>
+          Experience first.<br /><em>Understanding follows.</em>
+        </h2>
+        <p class="ex__p" data-reveal data-reveal-delay="140">
+          Experiential and inquiry-based learning is the school's stated approach rather than an
+          enrichment attached to it: a topic is met in the hand before it is met in the exam. The
+          <strong>twelve laboratories</strong> are what make that possible in an ordinary week
+          rather than on a special day.
+        </p>
+        <p class="ex__p" data-reveal data-reveal-delay="220">
+          The school's own account of a Gallery Walk puts it plainly — children
+          <em>“confidently presented their projects, charts, and models, turning the classroom
+          into a mini exhibition hall.”</em> The work came first; the explaining came after it.
+        </p>
+      </div>
+
+      <div class="ex-exp__stage">
+        <figure class="ex-exp__a" data-mask data-zoom>
+          <Picture
+            src={pChef}
+            alt={`A teacher at ${school.name} demonstrating at the table during a cooking activity, her class in paper chef hats around her`}
+            formats={['webp']}
+            widths={[520, 900]}
+            sizes="(max-width: 900px) 92vw, 46vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+        <figure class="ex-exp__b" data-reveal data-reveal-delay="180" data-zoom data-zoom-to="1.16">
+          <Picture
+            src={pOwnWork}
+            alt={`Two students of ${school.name} sharing a desk, each working on her own drawing`}
+            formats={['webp']}
+            widths={[320, 640]}
+            sizes="(max-width: 900px) 44vw, 20vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+
+    <img class="ex__f ex__f--stars" src={dTwoStars.src} alt="" aria-hidden="true" data-parallax data-parallax-y="48" />
+  </section>
+
+  {/* ═══ 03 · EXPLORE → QUESTION → DISCOVER ══════════════════════════════════
+      ⚠ ONE LINE, NOT THREE CARDS. The rule IS the section: a single hairline
+      runs the width of the band and each beat hangs off it at a node. Nothing
+      sits in a box, nothing has a border, and on a phone the same line simply
+      turns vertical rather than the beats collapsing into stacked panels. */}
+  <section class="ex-path" aria-labelledby="ex-path-h">
+    <div class="u-container ex-path__head">
+      <p class="ex__k t-label" data-reveal>Inquiry, in three moves</p>
+      <h2 class="ex-path__h" id="ex-path-h" data-split>
+        Explore <span aria-hidden="true">→</span> Question <span aria-hidden="true">→</span>
+        <em>Discover</em>
+      </h2>
+    </div>
+
+    <div class="u-container">
+      <ol class="ex-path__set">
+      {
+        path.map((step, i) => (
+          <li class="beat" data-reveal data-reveal-delay={i * 160}>
+            <figure class="beat__art" data-zoom data-zoom-to="1.14">
+              <Picture
+                src={step.photo}
+                alt={step.alt}
+                formats={['webp']}
+                widths={[380, 760]}
+                sizes="(max-width: 900px) 86vw, 28vw"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+            <span class="beat__node" aria-hidden="true">
+              <Image src={step.art} alt="" width={72} />
+            </span>
+            <p class="beat__k">{step.k}</p>
+            <p class="beat__p">{step.body}</p>
+          </li>
+        ))
+      }
+      </ol>
+    </div>
+  </section>
+
+  {/* ═══ 04 · REAL LEARNING EXPERIENCES ══════════════════════════════════════
+      A collage on sand: one dominant frame, two smaller at different sizes,
+      overlapping, captions set bare on the ground. */}
+  <section class="ex-real" aria-labelledby="ex-real-h">
+    <div class="u-container ex-real__in">
+      <div class="ex-real__lede">
+        <p class="ex__k t-label" data-reveal>Real learning experiences</p>
+        <h2 class="ex-real__h" id="ex-real-h" data-split>Not a special day.<br /><em>An ordinary week.</em></h2>
+        <p class="ex__p" data-reveal data-reveal-delay="140">
+          A planting plot, a planetarium and a telescope are not the decoration around the
+          curriculum — they are where parts of it are taught. The school's record of the
+          stargazing evening is that the campus <em>“transformed into a window to the
+          universe.”</em>
+        </p>
+        <ul class="ex-real__list" data-reveal data-reveal-delay="220">
+          {real.map((r) => (
+            <li>
+              <span class="ex-real__t">{r.k}</span>
+              <span class="ex-real__n">{r.note}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="ex-real__collage">
+        <figure class="ex-real__a" data-mask data-zoom>
+          <Picture
+            src={pCompost}
+            alt={`A young student of ${school.name} adding kitchen scraps to the compost bin at the Little Agriculturists activity`}
+            formats={['webp']}
+            widths={[420, 719]}
+            sizes="(max-width: 900px) 86vw, 34vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <figure class="ex-real__b" data-reveal data-reveal-delay="150" data-zoom data-zoom-to="1.16">
+          <Picture
+            src={pStarSet}
+            alt={`A young student of ${school.name} with her teacher inside a hand-made Star Gazing display`}
+            formats={['webp']}
+            widths={[300, 620]}
+            sizes="(max-width: 900px) 46vw, 20vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <figure class="ex-real__c" data-reveal data-reveal-delay="230" data-zoom data-zoom-to="1.2">
+          <Picture
+            src={pStars}
+            alt={`The night sky projected onto the inside of the Taramandal dome at ${school.name}`}
+            formats={['webp']}
+            widths={[300, 620]}
+            sizes="(max-width: 900px) 42vw, 18vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+
+    <img class="ex__f ex__f--star" src={dStar.src} alt="" aria-hidden="true" />
+  </section>
+
+  {/* ═══ 05 · CLOSE ══════════════════════════════════════════════════════════ */}
+  <section class="ex-end" aria-labelledby="ex-end-h">
+    <figure class="ex-end__art" data-zoom data-zoom-to="1.1">
+      <Picture
+        src={pHall}
+        alt={`Students of ${school.name} seated together in the school hall`}
+        formats={['webp']}
+        widths={[900, 1400, 1600]}
+        sizes="100vw"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+    <span class="ex-end__scrim" aria-hidden="true"></span>
+
+    <div class="u-container ex-end__in">
+      <h2 class="ex-end__h" id="ex-end-h" data-split>
+        Experience it.<br />Question it.<br /><em>Discover it.</em>
+      </h2>
+      <p class="ex-end__p" data-reveal data-reveal-delay="140">
+        Twelve laboratories, a planting plot and a night sky — so that what a child learns has
+        been handled before it is answered.
+      </p>
+    </div>
+  </section>
+</div>
+
+<style>
+  .ex { position: relative; }
+
+  .ex__k { color: var(--sb-violet-dark); }
+
+  .ex__p {
+    max-width: 52ch;
+    margin-top: clamp(16px, 2vw, 22px);
+    font-size: clamp(15px, 1.1vw, 17px);
+    line-height: 1.76;
+    color: var(--sb-text-secondary);
+  }
+  .ex__p strong { font-weight: 700; color: var(--sb-charcoal); }
+  .ex__p em { font-style: italic; color: var(--sb-charcoal); }
+
+  .ex__f { position: absolute; z-index: 3; pointer-events: none; user-select: none; }
+
+  /* ⚠ EVERY FRAME STRETCHES ITS <picture>, NOT JUST ITS <img>. astro:assets emits
+     <picture><img></picture> and <picture> is an INLINE box, so it takes its
+     intrinsic height and an img's `height: 100%` resolves against that rather
+     than against the figure. */
+  .ex :global(figure > picture) { display: block; width: 100%; height: 100%; }
+
+  /* ═══ 02 · EXPERIENCE ══════════════════════════════════════════════════════ */
+  .ex-exp {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(56px, 8.5vw, 118px);
+    background: var(--sb-ivory);
+  }
+
+  .ex__grid,
+  .ex__wash { position: absolute; z-index: 0; pointer-events: none; }
+
+  .ex__grid {
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.045) 1px, transparent 1px);
+    background-size: 76px 76px;
+    -webkit-mask-image: radial-gradient(72% 66% at 22% 26%, #000, transparent 74%);
+    mask-image: radial-gradient(72% 66% at 22% 26%, #000, transparent 74%);
+  }
+
+  .ex__wash {
+    top: -16%;
+    right: -10%;
+    width: min(48vw, 640px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(22px);
+    background: radial-gradient(circle, rgba(201, 60, 10, 0.15) 0%, rgba(201, 60, 10, 0) 68%);
+  }
+
+  .ex-exp__in {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(30px, 4.4vw, 62px);
+    align-items: center;
+  }
+
+  .ex-exp__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(30px, 4.6vw, 60px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.042em;
+    color: var(--sb-charcoal);
+  }
+  .ex-exp__h em { font-style: normal; color: var(--sb-violet); }
+
+  .ex-exp__stage { position: relative; }
+
+  .ex-exp__a,
+  .ex-exp__b { margin: 0; overflow: hidden; }
+  .ex-exp__a :global(img),
+  .ex-exp__b :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .ex-exp__a {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--sb-r-3);
+    box-shadow: 0 44px 84px -46px rgba(27, 21, 18, 0.58);
+  }
+
+  /* Overlaps the large frame's lower-left corner and steps outside the column —
+     the asymmetry is the composition, not an accident of sizing. */
+  .ex-exp__b {
+    position: relative;
+    z-index: 2;
+    width: 46%;
+    margin: -16% auto 0 0;
+    aspect-ratio: 3 / 4;
+    border: 8px solid var(--sb-ivory);
+    border-radius: var(--sb-r-2);
+    box-shadow: 0 34px 66px -34px rgba(27, 21, 18, 0.55);
+  }
+
+  .ex__f--stars { top: 7%; right: 5%; width: clamp(38px, 4.4vw, 66px); opacity: 0.75; }
+
+  /* ═══ 03 · THE PATH ════════════════════════════════════════════════════════ */
+  .ex-path {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(56px, 8.5vw, 118px);
+    background: var(--sb-paper);
+  }
+
+  /* ⚠ THE MEASURE GOES ON THE HEADING, NOT ON THE CONTAINER. `.u-container`
+     centres with `margin-inline: auto`, so capping the container's width pulled
+     the whole head into the middle of the page while the frames below it stayed
+     flush left — two different left edges in one section. */
+  .ex-path__h { max-width: 22ch; }
+
+  .ex-path__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(26px, 4.2vw, 56px);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+  .ex-path__h em { font-style: normal; color: var(--sb-violet); }
+  .ex-path__h span { color: var(--sb-border-strong); }
+
+  .ex-path__set {
+    --ex-gap: clamp(30px, 4vw, 48px);
+    /* frame height + its bottom margin + half the node — the node's centre, and
+       therefore the line's. Declared once and used by both axes. */
+    --ex-line: calc(clamp(178px, 21vw, 292px) + clamp(14px, 2vw, 20px) + 14px);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ex-gap);
+    margin: clamp(34px, 5vw, 62px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .beat { position: relative; padding-left: 34px; }
+
+  /* THE LINE. On mobile it runs down the left of the whole set; on desktop it
+     turns and runs across. One rule moves it — see the ≥900 block. */
+  .ex-path__set::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    bottom: 12px;
+    left: 13px;
+    width: 2px;
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--sb-border-strong) 0 5px,
+      transparent 5px 13px
+    );
+  }
+
+  /* ⚠ A FIXED HEIGHT, NOT AN ASPECT-RATIO — and that is a layout decision, not
+     a styling one. The connecting line has to meet the centre of every node, and
+     with `aspect-ratio` the frame's height depends on a column width that CSS
+     cannot name, so the line's offset could only ever be guessed at. With the
+     height declared, the line is positioned by the same expression and meets the
+     nodes exactly, at every width. */
+  .beat__art {
+    margin: 0 0 clamp(14px, 2vw, 20px);
+    height: clamp(178px, 21vw, 292px);
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    box-shadow: 0 34px 66px -40px rgba(27, 21, 18, 0.5);
+  }
+  .beat__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* The node sits ON the line. A disc of page-coloured ground behind it is what
+     makes the line appear to pass behind rather than through. */
+  .beat__node {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--sb-paper);
+    box-shadow: 0 0 0 5px var(--sb-paper);
+  }
+  .beat__node :global(img) { display: block; width: 24px; height: 24px; object-fit: contain; }
+
+  .beat__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(19px, 1.9vw, 27px);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+
+  .beat__p {
+    max-width: 34ch;
+    margin-top: 8px;
+    font-size: clamp(14px, 1.02vw, 16px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+  .beat__p em { font-style: italic; color: var(--sb-charcoal); }
+
+  /* ═══ 04 · REAL ════════════════════════════════════════════════════════════ */
+  .ex-real {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(56px, 8.5vw, 118px);
+    background: var(--sb-sand);
+  }
+
+  .ex-real__in {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(32px, 4.6vw, 70px);
+    align-items: center;
+  }
+
+  .ex-real__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 4.4vw, 58px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.042em;
+    color: var(--sb-charcoal);
+  }
+  .ex-real__h em { font-style: normal; color: var(--sb-violet); }
+
+  /* Set bare on the ground with a hairline between — no chips, no cards. */
+  .ex-real__list { margin: clamp(22px, 3vw, 32px) 0 0; padding: 0; list-style: none; }
+  .ex-real__list li {
+    display: grid;
+    gap: 3px;
+    padding: 13px 0;
+    border-top: 1px solid var(--sb-border);
+  }
+  .ex-real__list li:last-child { border-bottom: 1px solid var(--sb-border); }
+
+  .ex-real__t {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+  }
+  .ex-real__n { font-size: 14.5px; line-height: 1.6; color: var(--sb-text-secondary); }
+
+  .ex-real__collage { position: relative; }
+
+  .ex-real__a,
+  .ex-real__b,
+  .ex-real__c { margin: 0; overflow: hidden; }
+  .ex-real__a :global(img),
+  .ex-real__b :global(img),
+  .ex-real__c :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .ex-real__a {
+    position: relative;
+    z-index: 1;
+    width: 76%;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--sb-r-3);
+    box-shadow: 0 44px 84px -44px rgba(27, 21, 18, 0.55);
+  }
+
+  /* Absolute, so neither of the small frames adds height and pushes the other
+     down — the collage's height comes from the dominant frame alone. */
+  .ex-real__b {
+    position: absolute;
+    right: 0;
+    top: 14%;
+    z-index: 2;
+    width: 44%;
+    aspect-ratio: 3 / 4;
+    border: 8px solid var(--sb-sand);
+    border-radius: var(--sb-r-2);
+    box-shadow: 0 34px 64px -34px rgba(27, 21, 18, 0.5);
+  }
+
+  .ex-real__c {
+    position: absolute;
+    right: 6%;
+    bottom: 0;
+    z-index: 3;
+    width: 38%;
+    aspect-ratio: 4 / 3;
+    border: 8px solid var(--sb-sand);
+    border-radius: var(--sb-r-2);
+    box-shadow: 0 30px 58px -32px rgba(27, 21, 18, 0.5);
+  }
+
+  .ex__f--star { bottom: 7%; left: 3%; width: clamp(34px, 4vw, 58px); opacity: 0.35; }
+
+  /* ═══ 05 · CLOSE ═══════════════════════════════════════════════════════════ */
+  .ex-end {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: clamp(380px, 54vw, 620px);
+    overflow: hidden;
+    padding-block: clamp(56px, 8vw, 110px);
+    background: var(--sb-violet-ink);
+  }
+
+  .ex-end__art { position: absolute; inset: 0; z-index: 0; margin: 0; overflow: hidden; }
+  .ex-end__art :global(picture) { position: absolute; inset: 0; }
+  .ex-end__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%; }
+
+  .ex-end__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(28, 14, 8, 0.7) 0%, rgba(28, 14, 8, 0.9) 100%);
+  }
+
+  .ex-end__in { position: relative; z-index: 2; text-align: center; }
+
+  .ex-end__h {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(30px, 5.2vw, 72px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    color: #fff;
+  }
+  .ex-end__h em { font-style: normal; color: var(--sb-lime); }
+
+  .ex-end__p {
+    max-width: 54ch;
+    margin: clamp(16px, 2.2vw, 24px) auto 0;
+    font-size: clamp(15px, 1.2vw, 18px);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  /* ═══ ≥900 ═════════════════════════════════════════════════════════════════ */
+  @media (min-width: 900px) {
+    .ex-exp__in { grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr); gap: clamp(40px, 5.6vw, 88px); }
+
+    /* THE LINE TURNS. Same rule, different axis: across the set rather than down
+       it, sitting at the height of the nodes. */
+    .ex-path__set {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(26px, 3.4vw, 52px);
+    }
+    .ex-path__set { --ex-gap: clamp(26px, 3.4vw, 52px); }
+
+    /* ⚠ ONE SEGMENT PER BEAT, NOT ONE LINE ACROSS THE SET. A single rule inset by
+       a percentage started to the RIGHT of the first node and stopped short of
+       the last — the nodes sit at the left edge of their columns, and a
+       percentage inset knows nothing about that. Each beat now draws from its own
+       node to the next one, so the joins are exact by construction, and the last
+       beat draws nothing because there is nothing after it to reach. */
+    .ex-path__set::before { display: none; }
+
+    .beat { padding-left: 0; }
+    .beat::after {
+      content: '';
+      position: absolute;
+      top: var(--ex-line);
+      left: 30px;
+      right: calc(-1 * var(--ex-gap) - 14px);
+      height: 2px;
+      background: repeating-linear-gradient(
+        to right,
+        var(--sb-border-strong) 0 5px,
+        transparent 5px 13px
+      );
+    }
+    .beat:last-child::after { display: none; }
+
+    .beat__node { position: relative; top: auto; left: 0; }
+    .beat__k { margin-top: clamp(12px, 1.6vw, 18px); }
+
+    .ex-real__in { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: clamp(40px, 5.6vw, 84px); }
+  }
+
+  /* ═══ ≤899 ═════════════════════════════════════════════════════════════════ */
+  @media (max-width: 899px) {
+    /* No gutter beside the copy for corner ornament to live in. */
+    .ex__f--stars,
+    .ex__f--star { display: none; }
+
+    .ex-exp__b { width: 52%; margin-top: -14%; }
+
+    /* The collage unstacks: the two small frames leave absolute placement and
+       sit in a row under the dominant one, which is legible on a phone in a way
+       three overlapping frames at 390px are not. */
+    .ex-real__a { width: 100%; aspect-ratio: 4 / 3; }
+    .ex-real__b,
+    .ex-real__c {
+      position: relative;
+      right: auto;
+      top: auto;
+      bottom: auto;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-width: 0;
+    }
+    .ex-real__collage {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(12px, 2.6vw, 18px);
+    }
+    .ex-real__a { grid-column: 1 / -1; }
+  }
+</style>

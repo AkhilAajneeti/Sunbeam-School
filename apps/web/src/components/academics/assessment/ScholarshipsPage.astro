@@ -1,0 +1,503 @@
+---
+/**
+ * STUDENT SUCCESS · SCHOLARSHIPS — five sections.
+ *
+ * ⚠⚠ THE SCHOOL PUBLISHES NO SCHOLARSHIP. No name, no eligibility, no value and
+ * no way to apply. The site audit records the subject as "not mentioned", and
+ * every attempt to fill it has to be an invention.
+ *
+ * ⚠⚠ THE REFERENCE ART FOR THIS PAGE IS FOUR INVENTED CARDS. It shows
+ * "Kaushal Scholarship Examination — Class XI Admission", "Academic Achievers",
+ * "Sports Scholarships 2025" and "Lang Wiz 2025". Not one of those is published.
+ * Worse, a "Kaushal scholarship" was ALREADY invented once in this codebase and
+ * removed: the only occurrences of the word anywhere were in our own copy,
+ * citing an activity record that carries no such line. Printing those four cards
+ * would reintroduce the exact fabrication this build exists to catch.
+ *
+ * WHY THIS MATTERS MORE THAN MOST GAPS. Fees are the one subject on a school
+ * website where a plausible guess does measurable harm. A family may choose this
+ * school partly because of a scholarship summary and discover at the fee counter
+ * that it was ours.
+ *
+ * ⚠ SO THE PAGE IS BUILT, NOT BLANK. Everything the brief asks for is here — the
+ * editorial opening, the slider, the recognition row, the contact panel, the
+ * cinematic close — and the slider renders its awaiting state because
+ * `scholarships` in data/studentSuccess.ts is legitimately empty. Adding a real
+ * record is one array entry and no component change.
+ *
+ * ⚠ SECTION 03 IS NOT FOUR SCHOLARSHIP CATEGORIES AND NEVER SAYS IT IS. The
+ * brief allows four category cards "ONLY if supported by the official content".
+ * None is supported as a scholarship. What IS supported is that the school
+ * publishes achievements of four kinds, so the row points at the pages carrying
+ * them and is headed accordingly.
+ *
+ * ⚠ THE CONTACT NUMBER IS THE SCHOOL'S OWN, from data/site.ts — the one piece of
+ * genuinely useful information this page can give.
+ *
+ * ═══ COMPOSITION — five sections, five different builds ════════════════════
+ *   01 · IVORY  copy left, a photograph right with a floating note over it.
+ *   02 · PAPER  the stories rail — awaiting state today, cards when supplied.
+ *   03 · CREAM  where recognition IS recorded — four columns on thin rules.
+ *   04 · PAPER  the contact panel, split.
+ *   05 · PHOTO  the cinematic close.
+ */
+import { Picture } from 'astro:assets';
+import '../../../styles/assessment.css';
+import { MARK } from './marks';
+import AsClose from './AsClose.astro';
+import AsRailSlider from './AsRailSlider.astro';
+import { scholarships, recognitionPaths } from '../../../data/studentSuccess';
+import { school } from '../../../data/site';
+
+import pAward from '../../../assets/school achivement/innoventure.jpg';
+import pCohort from '../../../assets/photos/sunbeem-5.jpg';
+
+const S = 'Sunbeam School Ballia';
+const CONTACT = '/contact-us/';
+/* The school's own admissions line — the one genuinely useful answer here. */
+const phoneHref = school.phone.admissions;
+const phoneShow = school.phone.admissionsDisplay;
+
+const hasScholarships = scholarships.length > 0;
+---
+
+{/* ══ 01 · WHAT IS PUBLISHED ═════════════════════════════════════════════════
+    Ground: warm ivory. Copy left, an award photograph right with a floating
+    note over its corner — the reference's composition, carrying an honest line
+    instead of a slogan. */}
+<section class="as-sec as-sec--ivory as-pad sc-open" aria-labelledby="sc-open-t">
+  <span class="as-warm" aria-hidden="true"></span>
+  <span class="as-grid" aria-hidden="true"></span>
+
+  <div class="u-container sc-open__grid">
+    <div>
+      <p class="as-kicker" data-reveal>What is published</p>
+      {/* ⚠ NOT "Scholarships that recognise more than marks." That headline
+          asserts the school runs scholarships, which is the one thing this page
+          cannot claim. The composition is the reference's; the sentence is
+          true. */}
+      <h2 class="as-h as-h--xl sc-open__h" id="sc-open-t">
+        <span data-clip data-clip-delay="0">Recognition, yes.</span>
+        <span data-clip data-clip-delay="150"><em>Terms, not yet.</em></span>
+      </h2>
+
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        Sunbeam School Ballia publishes no scholarship — <strong>no name, no eligibility, no value
+        and no way to apply</strong>. Every other page in this section is built from something the
+        school printed; on this subject there is nothing to build from.
+      </p>
+      <p class="as-body" data-reveal data-reveal-delay="260">
+        So this page does not describe one. A scholarship summary invented to fill the space would
+        read exactly like a real one, and a family could choose a school on the strength of it. Fees
+        are the subject where a plausible guess does the most damage, and the honest answer is the
+        short one.
+      </p>
+      <p class="as-body" data-reveal data-reveal-delay="320">
+        What the school <em>does</em> publish is recognition of another kind — named results, placings
+        and awards. Those are set out below, labelled as what they are.
+      </p>
+    </div>
+
+    <figure class="sc-open__stage">
+      <span class="as-dots sc-open__dots" aria-hidden="true"></span>
+      <div class="sc-open__art as-frame as-fit" data-pop>
+        <Picture
+          src={pAward}
+          alt={`${S}'s award graphic for securing second position in Uttar Pradesh at the National School Innovation Awards, showing the citation being presented on stage`}
+          formats={['webp']}
+          widths={[520, 880, 1200]}
+          sizes="(max-width: 1023px) 92vw, 44vw"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+
+      <div class="sc-note" data-pop data-pop-delay="220">
+        <span class="sc-note__m" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.cap} />
+          </svg>
+        </span>
+        <p class="sc-note__t">
+          Achievement is published<br />by name. A scholarship<br />has not been.
+        </p>
+      </div>
+
+      <figcaption class="sc-open__cap">
+        The school’s own award graphic for the National School Innovation Ranking — recognition it
+        publishes, and does not describe as a scholarship.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+{/* ══ 02 · SCHOLARSHIP RECORDS ═══════════════════════════════════════════════
+    Ground: white.
+
+    ⚠ THE RAIL IS BUILT AND EMPTY, WHICH IS NOT THE SAME AS ABSENT. When the
+    school publishes a record it appears here with an image, a category, a year
+    and a link — and nothing on this page has to be redesigned for it. */}
+<section class="as-sec as-sec--paper as-pad sc-stories" aria-labelledby="sc-stories-t">
+  <div class="u-container">
+    <div class="sc-stories__head">
+      <div>
+        <p class="as-kicker" data-reveal>Scholarship records</p>
+        <h2 class="as-h as-h--md" id="sc-stories-t">
+          <span data-clip data-clip-delay="0">Nothing to show</span>
+          <span data-clip data-clip-delay="150"><em>yet.</em></span>
+        </h2>
+      </div>
+      <p class="as-note sc-stories__b" data-reveal data-reveal-delay="180">
+        This section is the archive the school’s scholarship records will fill. It is built and
+        waiting rather than removed, because the page should be ready the day the terms are
+        published.
+      </p>
+    </div>
+
+    {hasScholarships ? (
+      <AsRailSlider
+        label="Scholarship and recognition records"
+        id="sc-rail"
+        total={scholarships.length}
+        per={4}
+        perMd={2}
+        perSm={1}
+        bleed
+      >
+        {scholarships.map((s) => (
+          <li class="sc-card">
+            <a class="sc-card__in" href={s.link}>
+              <span class="sc-card__pic">
+                <Picture src={s.image} alt={s.alt} formats={['webp']} widths={[340, 620]} sizes="(max-width: 767px) 84vw, 22vw" loading="lazy" decoding="async" />
+                <span class="sc-card__badge">{s.category}</span>
+              </span>
+              <span class="sc-card__body">
+                <span class="sc-card__k">{s.title}</span>
+                <span class="sc-card__year t-tabular">{s.year}</span>
+                <span class="sc-card__v">{s.description}</span>
+                <span class="sc-card__go">
+                  View achievement
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+                  </svg>
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </AsRailSlider>
+    ) : (
+      <div class="sl-empty" data-reveal data-reveal-delay="160">
+        <span class="sl-empty__m" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.bookmark} />
+          </svg>
+        </span>
+        <div>
+          <p class="sl-empty__k">No scholarship has been published by the school</p>
+          <p class="sl-empty__v">
+            The site audit records scholarships as not mentioned, and no name, value, eligibility or
+            application route appears anywhere on the school’s site. Rather than fill this row with
+            plausible examples, it stays empty until there is a record to put in it — at which point
+            each one appears here with its own image, category and year.
+          </p>
+          <p class="sl-empty__acts">
+            <a class="as-btn" href={CONTACT}>
+              Ask the school office
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+              </svg>
+            </a>
+          </p>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+{/* ══ 03 · WHERE RECOGNITION IS RECORDED ═════════════════════════════════════
+    Ground: soft cream.
+
+    ⚠ THESE ARE NOT SCHOLARSHIP CATEGORIES AND THE HEADING SAYS SO. Each column
+    points at a page that carries verified achievements of that kind. */}
+<section class="as-sec as-sec--cream as-pad--sm sc-paths" aria-labelledby="sc-paths-t">
+  <div class="u-container">
+    <div class="sc-paths__head">
+      <p class="as-kicker" data-reveal>What the school does record</p>
+      <h2 class="as-h as-h--md" id="sc-paths-t">
+        <span data-clip data-clip-delay="0">Four kinds of achievement,</span>
+        <span data-clip data-clip-delay="150"><em>all of them named.</em></span>
+      </h2>
+      <p class="as-note sc-paths__b" data-reveal data-reveal-delay="180">
+        None of these is described by the school as a scholarship. Each is a place on this site where
+        a published achievement is recorded with a name attached.
+      </p>
+    </div>
+
+    <ol class="as-cols sc-paths__cols" style="--n: 4;">
+      {recognitionPaths.map((p, i) => (
+        <li class="as-col" data-reveal data-reveal-delay={140 + i * 90}>
+          <a class="sc-path" href={p.href}>
+            <span class="as-col__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[p.mark]} />
+              </svg>
+            </span>
+            <span class="as-col__n t-tabular">{p.n}</span>
+            <span class="as-col__k">{p.k}</span>
+            <span class="as-col__v">{p.v}</span>
+            <span class="as-col__go" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+              </svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 04 · LOOKING FOR THE CURRENT TERMS? ════════════════════════════════════
+    Ground: white. The one genuinely useful thing this page can give a family. */}
+<section class="as-sec as-sec--paper as-pad--sm sc-terms" aria-labelledby="sc-terms-t">
+  <div class="u-container">
+    <div class="sc-terms__box">
+      <div class="sc-terms__copy">
+        <p class="as-kicker" data-reveal>Important to know</p>
+        <h2 class="as-h as-h--md" id="sc-terms-t">
+          <span data-clip data-clip-delay="0">Looking for the</span>
+          <span data-clip data-clip-delay="150"><em>current terms?</em></span>
+        </h2>
+        <p class="as-body" data-reveal data-reveal-delay="200">
+          Scholarship opportunities and eligibility can vary by programme, achievement and session.
+          The school has not published any general scholarship terms on its site, so this page cannot
+          set them out — and does not guess at them.
+        </p>
+        <p class="as-note" data-reveal data-reveal-delay="260">
+          <strong>For the latest applicable terms, please contact the school office.</strong>
+        </p>
+      </div>
+
+      <div class="sc-terms__cta" data-pop data-pop-delay="200">
+        <span class="sc-terms__m" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.phone} />
+          </svg>
+        </span>
+        <p class="sc-terms__lab">Admissions helpline</p>
+        <p class="sc-terms__num"><a href={`tel:${phoneHref}`}>{phoneShow}</a></p>
+        <p class="sc-terms__act">
+          <a class="as-btn" href={CONTACT}>
+            Contact school
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+            </svg>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<AsClose
+  id="sc-close-t"
+  kicker="Until the terms are published"
+  lead="Ask the office,"
+  accent="not this page."
+  body="Scholarships are recorded in the site audit as not mentioned by the school. Until it publishes terms, the office is the only reliable answer this site can give — and a plausible summary here would be worse than none."
+  photo={pCohort}
+  position="50% 38%"
+/>
+
+<style>
+  /* ═══ 01 · WHAT IS PUBLISHED ══════════════════════════════════════════════ */
+  .sc-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .sc-open__h { max-width: 13ch; }
+  .sc-open__stage { position: relative; margin: 0; padding-bottom: clamp(30px, 3.4vw, 50px); }
+  .sc-open__dots { top: 30%; left: -3%; }
+  .sc-open__art { display: block; }
+  .sc-open__art :global(img) { aspect-ratio: 4 / 3; object-position: 50% 40%; }
+  .sc-open__cap {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    max-width: 58ch;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* The floating note the reference sets over the image's lower-left corner. */
+  .sc-note {
+    position: absolute;
+    left: clamp(-14px, -1vw, -4px);
+    bottom: clamp(46px, 5vw, 76px);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(9px, 1.1vw, 13px);
+    align-items: center;
+    max-width: 62%;
+    padding: clamp(11px, 1.3vw, 16px) clamp(13px, 1.5vw, 18px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .sc-note__m {
+    display: grid;
+    place-items: center;
+    width: clamp(28px, 2.6vw, 36px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+  .sc-note__m svg { width: 54%; height: auto; }
+  .sc-note__t {
+    margin: 0;
+    font-size: clamp(10px, 0.76vw, 12px);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--sb-charcoal);
+  }
+
+  /* ═══ 02 · SCHOLARSHIP RECORDS ════════════════════════════════════════════ */
+  .sc-stories__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: clamp(16px, 2vw, 32px);
+    margin: 0 0 clamp(18px, 2.2vw, 28px);
+  }
+  .sc-stories__b { max-width: 50ch; margin: 0; }
+
+  .sc-card { display: flex; }
+  .sc-card__in {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 4px 16px -10px rgba(28, 14, 8, 0.14);
+    transition: transform var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .sc-card__in:hover { transform: translateY(-3px); box-shadow: var(--sb-shadow-card); }
+  .sc-card__pic { position: relative; display: block; overflow: hidden; background: var(--sb-sand); }
+  .sc-card__pic :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+  .sc-card__badge {
+    position: absolute;
+    left: clamp(8px, 0.9vw, 11px);
+    top: clamp(8px, 0.9vw, 11px);
+    padding: 4px clamp(8px, 0.9vw, 11px);
+    border-radius: var(--sb-r-1);
+    background: var(--sb-orange-bright);
+    font-size: clamp(8px, 0.6vw, 9.5px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .sc-card__body { display: grid; align-content: start; padding: clamp(12px, 1.4vw, 17px) clamp(13px, 1.5vw, 18px) clamp(14px, 1.7vw, 20px); }
+  .sc-card__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.05vw, 16.5px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+  .sc-card__year { margin-top: 4px; font-size: clamp(9.5px, 0.72vw, 11.2px); color: var(--sb-text-muted); }
+  .sc-card__v { margin-top: clamp(7px, 0.85vw, 11px); font-size: clamp(9.5px, 0.72vw, 11.2px); line-height: 1.6; color: var(--sb-text-muted); }
+  .sc-card__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: clamp(10px, 1.2vw, 15px);
+    font-size: clamp(10px, 0.74vw, 11.8px);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+  .sc-card__go svg { width: 14px; height: auto; }
+
+  /* ═══ 03 · WHERE RECOGNITION IS RECORDED ══════════════════════════════════ */
+  .sc-paths__head { display: grid; justify-items: start; }
+  .sc-paths__b { max-width: 58ch; }
+  .sc-paths__cols { margin-top: clamp(22px, 2.8vw, 36px); }
+  .sc-path { display: grid; align-content: start; height: 100%; }
+  .sc-path .as-col__k,
+  .sc-path .as-col__v { display: block; }
+
+  /* ═══ 04 · THE CONTACT PANEL ══════════════════════════════════════════════ */
+  .sc-terms__box {
+    display: grid;
+    grid-template-columns: minmax(0, 1.34fr) minmax(0, 0.66fr);
+    gap: clamp(22px, 3vw, 46px);
+    align-items: center;
+    padding: clamp(22px, 2.8vw, 40px) clamp(22px, 2.8vw, 42px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: #fdf1e9;
+  }
+  .sc-terms__cta {
+    display: grid;
+    justify-items: start;
+    padding: clamp(16px, 2vw, 26px) clamp(17px, 2.1vw, 28px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .sc-terms__m {
+    display: grid;
+    place-items: center;
+    width: clamp(34px, 3.2vw, 44px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+  .sc-terms__m svg { width: 52%; height: auto; }
+  .sc-terms__lab {
+    margin: clamp(10px, 1.2vw, 15px) 0 0;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  .sc-terms__num {
+    margin: 3px 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.35vw, 22px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .sc-terms__num a { color: inherit; }
+  .sc-terms__num a:hover { color: var(--sb-violet); }
+  .sc-terms__act { margin: clamp(12px, 1.5vw, 19px) 0 0; }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .sc-open__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 4vw, 40px); }
+    .sc-open__stage { order: -1; }
+    .sc-open__h { max-width: none; }
+    .sc-terms__box { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 3vw, 30px); }
+  }
+
+  @media (max-width: 767px) {
+    .sc-open__art :global(img) { aspect-ratio: 5 / 4; }
+    .sc-note { position: static; max-width: none; margin-top: clamp(12px, 3.4vw, 17px); }
+    .sc-open__stage { padding-bottom: clamp(46px, 13vw, 62px); }
+    .sc-open__dots { display: none; }
+  }
+</style>

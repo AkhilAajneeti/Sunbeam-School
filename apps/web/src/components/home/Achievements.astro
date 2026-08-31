@@ -1,0 +1,314 @@
+---
+/**
+ * §14 · ACHIEVEMENTS & RECOGNITION — audit 1.14 (and 1.5)
+ *
+ * Audit 1.5, verbatim: "Rather than a public review section, the homepage
+ * should highlight the school's achievements, results and recognitions,
+ * allowing the institution's performance to speak for itself."
+ *
+ * Audit 1.14 places this immediately after the affiliations row, so the two
+ * sections are ordered exactly that way in index.astro.
+ *
+ * EVERY figure here is verified from the school's own site (docs/01 § 5).
+ * Nothing is rounded up, inferred or invented.
+ */
+import Photo from '../ui/Photo.astro';
+import awards from '../../assets/photos/sunbeem-4.jpg';
+import trophy from '../../assets/school achivement/robo.jpg';
+
+const institutional = [
+  { title: 'Microsoft Showcase School', detail: '100 teachers certified as Microsoft Innovative Educator Experts' },
+  { title: 'Brainfeed School Excellence Award', detail: 'National recognition for school excellence' },
+  { title: 'Sunbeam Eduserve Award', detail: 'Best School of the Year' },
+  { title: 'Dr. Kalam Leadership Excellence Award', detail: 'For institutional leadership' },
+  { title: 'NCC ‘A’ and ‘B’ affiliations', detail: 'Two teachers promoted to officer rank' },
+];
+
+const student = [
+  { value: '1st', label: 'Handball', detail: 'Asmita Khelo India Women’s League' },
+  { value: '21', label: 'Taekwondo medallists', detail: 'Poomse Championship 2025 — 10 gold, 9 silver, 2 bronze' },
+  { value: '1st', label: 'AI Impact Festival', detail: 'Indian AI Impact Festival 2024' },
+  { value: '3', label: 'District handball titles', detail: 'Junior boys 1st · Senior boys 2nd · Girls 1st' },
+];
+---
+
+<section class="ach" aria-labelledby="ach-heading">
+  <div class="u-container">
+    <header class="ach__head" data-reveal>
+      <p class="ach__pill"><span class="pill pill--violet">Achievements &amp; Recognition</span></p>
+      <h2 class="ach__heading t-h2-sans" data-split id="ach-heading">
+        Six years at <span class="t-squiggle">number one</span>
+      </h2>
+      <p class="ach__sub t-body-lg">
+        Ranked Ballia’s #1 co-educational day school by Education World for six consecutive
+        years, 2019-20 through 2024-25 — alongside what our students have won.
+      </p>
+    </header>
+
+    <div class="ach__grid">
+      {/* Lead ranking */}
+      <article class="ach__lead" data-reveal>
+        <span class="ach__lead-rank">#1</span>
+        <p class="ach__lead-title">Co-educational day school in Ballia</p>
+        <p class="ach__lead-detail">Education World · six consecutive years, 2019-20 to 2024-25</p>
+        <a class="btn btn--secondary ach__lead-cta" href="/academics/board-results/">Board results</a>
+      </article>
+
+      <figure class="ach__photo" data-reveal data-reveal-delay="80">
+        <Photo
+          src={awards}
+          alt="Staff of Sunbeam School Ballia receiving awards on stage."
+          brief="Award ceremony, high resolution — audit 4.8"
+          ratio="4 / 3"
+          position="50% 40%"
+          sizes="(max-width: 1023px) 100vw, 34vw"
+        />
+      </figure>
+
+      {/* Student achievement — made the hero, per the brief */}
+      <ul class="ach__stats" data-reveal data-reveal-delay="140">
+        {student.map((s) => (
+          <li class="ach__stat">
+            <span class="ach__stat-value">{s.value}</span>
+            <span class="ach__stat-label">{s.label}</span>
+            <span class="ach__stat-detail">{s.detail}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Institutional honours */}
+      <div class="ach__honours" data-reveal data-reveal-delay="200">
+        <p class="ach__honours-head">Institutional recognition</p>
+        <ul>
+          {institutional.map((h) => (
+            <li>
+              <span class="ach__tick" aria-hidden="true">
+                <svg width="11" height="9" viewBox="0 0 12 10" fill="none">
+                  <path d="M1 5.2 4.3 8.5 11 1.5" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+              <span>
+                <strong>{h.title}</strong>
+                <em>{h.detail}</em>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <figure class="ach__photo ach__photo--wide" data-reveal data-reveal-delay="120">
+        <Photo
+          src={trophy}
+          alt="The school’s award graphic for the RoboWunder International Robotics Championship in Kuala Lumpur, showing Deepak Kumar with his drone and the team receiving the award."
+          brief="The RoboWunder international robotics award"
+          ratio="16 / 9"
+          position="58% 42%"
+          sizes="(max-width: 1023px) 100vw, 40vw"
+        />
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ach {
+    background: linear-gradient(180deg, var(--sb-ivory) 0%, #fff4ee 55%, var(--sb-ivory) 100%);
+    padding-block: var(--sb-section-y);
+  }
+
+  .ach__head {
+    text-align: center;
+    max-width: 64ch;
+    margin-inline: auto;
+    margin-bottom: var(--sb-9);
+  }
+
+  .ach__pill { margin-bottom: var(--sb-5); }
+  .ach__heading { color: var(--sb-charcoal); margin-bottom: var(--sb-5); }
+  .ach__sub { color: var(--sb-text-muted); max-width: 58ch; margin-inline: auto; }
+
+  /* --- Bento ---------------------------------------------------------------- */
+
+  .ach__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--sb-5);
+  }
+
+  .ach__lead {
+    grid-column: span 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--sb-8);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet);
+    color: #fff;
+    box-shadow: 0 20px 44px -22px rgba(201, 60, 10, 0.85);
+  }
+
+  .ach__lead-rank {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: 72px;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+  }
+
+  .ach__lead-title {
+    font-weight: 600;
+    font-size: var(--sb-body);
+    margin-top: var(--sb-4);
+  }
+
+  .ach__lead-detail {
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-on-violet-muted);
+    margin-top: var(--sb-3);
+  }
+
+  .ach__lead-cta {
+    margin-top: var(--sb-6);
+    align-self: flex-start;
+    background: #fff;
+    border-color: #fff;
+    color: var(--sb-violet);
+  }
+
+  .ach__lead-cta:hover { background: rgba(255, 255, 255, 0.88); color: var(--sb-violet-dark); }
+
+  .ach__photo {
+    grid-column: span 4;
+    margin: 0;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .ach__photo--wide { grid-column: span 5; }
+
+  .ach__stats {
+    grid-column: span 4;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ach__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--sb-6);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .ach__stat-value {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sb-violet);
+  }
+
+  .ach__stat-label {
+    font-weight: 600;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-charcoal);
+    margin-top: var(--sb-3);
+  }
+
+  .ach__stat-detail {
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: var(--sb-text-muted);
+  }
+
+  .ach__honours {
+    grid-column: span 7;
+    padding: var(--sb-8);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .ach__honours-head {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-6);
+  }
+
+  .ach__honours ul {
+    display: grid;
+    gap: var(--sb-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ach__honours li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sb-4);
+  }
+
+  .ach__honours strong {
+    display: block;
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-charcoal);
+  }
+
+  .ach__honours em {
+    display: block;
+    font-style: normal;
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: var(--sb-text-muted);
+    margin-top: 1px;
+  }
+
+  .ach__tick {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet-dark);
+  }
+
+  /* --- Tablet & mobile -------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .ach__lead,
+    .ach__photo,
+    .ach__stats { grid-column: span 6; }
+    .ach__honours,
+    .ach__photo--wide { grid-column: span 12; }
+    .ach__lead-rank { font-size: 56px; }
+  }
+
+  @media (max-width: 639px) {
+    .ach__lead,
+    .ach__photo,
+    .ach__stats,
+    .ach__honours,
+    .ach__photo--wide { grid-column: span 12; }
+    .ach__stats { grid-template-columns: minmax(0, 1fr); }
+    .ach__lead,
+    .ach__honours { padding: var(--sb-6); }
+  }
+</style>

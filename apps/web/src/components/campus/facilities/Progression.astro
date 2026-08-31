@@ -1,0 +1,140 @@
+---
+/**
+ * §6 · STUDENT EXPERIENCE — arrival to graduation, as a horizontal run.
+ *
+ * HORIZONTAL, NOT VERTICAL, AND FOR A REASON. The Campus Tour page already
+ * carries a vertical zig-zag timeline of a single day. This one covers a whole
+ * school career, and running it left-to-right on a drawn track makes it read as
+ * a different kind of journey rather than the same component twice.
+ *
+ * It scrolls rather than shrinking to fit: eight stages squeezed into a desktop
+ * width would give each one about 140px, which is not enough for a sentence.
+ * The track is a scroll container with snap points, so it works by drag, by
+ * wheel, by keyboard and by touch — and it is a plain overflow container, so it
+ * needs no script at all.
+ */
+import { progression } from '../../../data/facilities';
+import SectionHead from '../../academics/SectionHead.astro';
+import FacIcon from './FacIcon.astro';
+---
+
+<section class="prg" aria-labelledby="prg-title">
+  <div class="u-container">
+    <SectionHead
+      id="prg-title"
+      eyebrow="Nursery to Class XII"
+      heading="How a student moves through it all"
+      stand="Eight stages, and the part of the campus that carries each one."
+      measure={20}
+    />
+  </div>
+
+  {/* tabindex makes the track focusable, so a keyboard user can scroll it with
+      the arrow keys — an overflow container is not focusable by default. */}
+  <ol class="prg__track" tabindex="0" role="list" aria-label="Stages from arrival to graduation">
+    {progression.map((s, i) => (
+      <li class="prg__stage" data-reveal data-reveal-delay={(i % 4) * 70}>
+        <div class="prg__node">
+          <span class="prg__icon"><FacIcon name={s.icon} size={22} /></span>
+          <span class="prg__n t-tabular">{String(i + 1).padStart(2, '0')}</span>
+        </div>
+        <h3 class="prg__label">{s.label}</h3>
+        <p class="prg__body">{s.body}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .prg {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .prg__track {
+    display: flex;
+    gap: var(--sb-6);
+    margin-top: var(--sb-10);
+    padding-inline: max(var(--sb-margin), calc((100vw - var(--sb-max-content)) / 2));
+    padding-bottom: var(--sb-6);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    /* Thin, and only on the platforms that draw one at all. */
+    scrollbar-width: thin;
+  }
+
+  .prg__track:focus-visible {
+    outline: 2px solid var(--sb-violet);
+    outline-offset: 4px;
+  }
+
+  .prg__stage {
+    position: relative;
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+    padding-top: var(--sb-8);
+  }
+
+  /* The connecting rule is generated per stage and stops at the last one, so the
+     track never ends in a line pointing at nothing. */
+  .prg__stage::before {
+    content: '';
+    position: absolute;
+    top: 21px;
+    left: 44px;
+    right: calc(var(--sb-6) * -1);
+    height: 2px;
+    background: linear-gradient(90deg, var(--sb-violet), var(--sb-sand));
+    opacity: 0.5;
+  }
+
+  .prg__stage:last-child::before { display: none; }
+
+  .prg__node {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--sb-3);
+  }
+
+  .prg__icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--sb-paper);
+    border: 2px solid var(--sb-violet);
+    color: var(--sb-violet);
+    box-shadow: 0 0 0 5px var(--sb-ivory);
+  }
+
+  .prg__n {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    color: var(--sb-text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .prg__label {
+    margin-top: var(--sb-6);
+    font-family: var(--sb-font-display);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .prg__body {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  @media (max-width: 600px) {
+    .prg__stage { flex-basis: 224px; }
+  }
+</style>

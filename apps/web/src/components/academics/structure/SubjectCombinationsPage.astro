@@ -1,0 +1,1350 @@
+---
+/**
+ * ACADEMIC STRUCTURE · SUBJECT COMBINATIONS — the four sections below the banner.
+ *
+ * ═══ WHAT IS VERIFIED, AND WHAT IS NOT ═════════════════════════════════════
+ * Every subject list on this page is read from `streamDetail` in
+ * data/academics.ts — the same four objects Combinations.astro renders on
+ * /academics/structure/, so the two pages cannot drift apart. That file records
+ * the confidence of each list, and exactly one thing on it is still owed:
+ *
+ *   · CORE, PCM and PCB — definitional. The abbreviation IS the subject list,
+ *     and English is compulsory in CBSE Classes XI–XII.
+ *   · CORE, Commerce — the CBSE commerce structure, standard almost everywhere
+ *     it is taught. The school has not published a core of its own.
+ *   · CORE, Humanities — `coreUnverified: true`. INDICATIVE, not confirmed.
+ *   · OPTIONAL and ADDITIONAL, all four streams — `unverified: false`. The
+ *     school supplied these lists; they are its own.
+ *
+ * ⚠ THE "TO BE CONFIRMED" STAMPS WERE REMOVED AT THE CLIENT'S INSTRUCTION, and
+ * with them the confidence ladder that used to be section 04. THE CAVEAT ITSELF
+ * SURVIVES, in full, as the note under the panel grid: "The Humanities core
+ * above is indicative and awaiting confirmation from the school. Every other
+ * subject list on this page is the school's own." That sentence is the page's
+ * whole remaining guard against publishing an unconfirmed combination as fact —
+ * it is wired to nothing, so nothing will restore it if it is deleted. Leave it.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ *   01 · CREAM — the opening statement, one large photograph with a smaller
+ *        crop breaking its corner. Never two equal images.
+ *   02 · CREAM, CONTINUOUS — the four subject worlds. Same ground as 01 on
+ *        purpose: one cream field runs from the banner to the dark band, and a
+ *        seam between them reads as two pages.
+ *   03 · INK   — the four as four OVERLAPPING CIRCLES, not boxes. Copy sits
+ *        beside the diagram rather than above it. The page's ONE dark band.
+ *   04 · CREAM — a light close, with the checked-document mark as its picture.
+ *
+ * ⚠ THE CLOSE IS LIGHT, NOT A PHOTOGRAPH. It was a full-bleed dark plate under
+ * the dark map, which flattened the contrast the map was carrying. It now holds
+ * the wash, grid, hairlines, arcs and illustration the removed section 04 had,
+ * so the page lost a band and not its texture.
+ *
+ * ⚠ THE FOUR PANELS CARRY NO PHOTOGRAPHS. Each is a typographic world: number
+ * and name on one line, a line on what the stream is for, the core as a stacked
+ * list with a mark each, the optional and additional lists as chips, and the
+ * stream's own mark set large in a soft disc with a ghost of it bleeding off the
+ * corner behind.
+ *
+ * ⚠ EVERY SECTION IS `overflow: hidden`. The ghost words, the drawn rules and
+ * the inset photograph all run off their section by design.
+ *
+ * ⚠ THE ACCENTS ARE THE SECTION'S OWN. --as-blue, --as-teal and --as-indigo are
+ * declared on pages/academics/structure.astro and already carry PCM, PCB and
+ * Commerce on Combinations.astro; every value is measured AA against white.
+ * HUMANITIES IS THE ONE DEPARTURE: that file gives it --as-violet, which fights
+ * the peach ground its panel takes, so it uses --sb-urgent (#8a4b00, 7.0:1).
+ *
+ * MOTION is the project's own attribute set — data-clip, data-reveal, data-pop,
+ * data-drift, data-parallax, data-draw, data-mask, data-zoom. With the motion
+ * chunk absent every section is complete and readable.
+ */
+import { Image, Picture } from 'astro:assets';
+import { school } from '../../../data/site';
+/* ⚠ THE SUBJECT LISTS COME FROM THE DATA FILE, NOT FROM THIS PAGE. Same source
+   as Combinations.astro on /academics/structure/, so the two can never disagree
+   about what the school teaches. */
+import { streamDetail, combinationsFootnote } from '../../../data/academics';
+
+/* ── PHOTOGRAPHY — three frames, all genuine Sunbeam Ballia. No stock, per
+   docs/07, and none of the four subject panels carries one. */
+import pLead from '../../../assets/photos/sb-phy-lab.jpg';    /* seniors at the benches, subject portraits behind */
+import pCampus from '../../../assets/photos/sunbeem-1.jpg';   /* the teaching blocks — the small breaking crop */
+
+/* Two raster accents, both from the project's hand-drawn set. */
+import oBooks from '../../../assets/icons/booksparkel.png';
+import oTick from '../../../assets/icons/booktick.png';
+
+/* ── THE MARKS ──────────────────────────────────────────────────────────────
+   24-unit box, 1.5 stroke, round caps and joins, no fill, `currentColor`. Same
+   specification as AcademicGlyph; drawn here because the subject set it needs
+   (ledger, briefcase, globe) is not in that file and the whole set has to read
+   as one hand. */
+const MARK: Record<string, string> = {
+  atom: `<circle cx="12" cy="12" r="1.9"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.4" ry="3.7" transform="rotate(120 12 12)"/>`,
+  flask: `<path d="M9.6 3.4h4.8M10.6 3.4v5.2L6.9 17a2 2 0 0 0 1.8 2.8h6.6a2 2 0 0 0 1.8-2.8l-3.7-8.4V3.4"/><path d="M8.2 14.4h7.6"/>`,
+  sigma: `<path d="M17.4 5.2H6.8l5 6.8-5 6.8h10.6"/><path d="M17.4 5.2V3.6M17.4 18.8v1.6"/>`,
+  leaf: `<path d="M19.4 4.6c1 6.9-2.2 11.7-7.5 12.4-3 .4-5.4-1-6-3.4-.7-2.9 1.3-5.3 4.6-6"/><path d="M4.6 20.2c1.6-4.6 5.4-8.6 9.8-10.8"/>`,
+  book: `<path d="M12 6.6C10.4 5.1 8 4.6 4 5.1v13c4-.5 6.4 0 8 1.5 1.6-1.5 4-2 8-1.5v-13c-4-.5-6.4 0-8 1.5zM12 6.6v13"/>`,
+  ledger: `<rect x="4.6" y="3.4" width="14.8" height="17.2" rx="1.8"/><path d="M8.2 8h7.6M8.2 12h7.6M8.2 16h4.4"/>`,
+  case: `<rect x="3" y="7.4" width="18" height="12.2" rx="1.8"/><path d="M8.8 7.4V5.6a1.8 1.8 0 0 1 1.8-1.8h2.8a1.8 1.8 0 0 1 1.8 1.8v1.8"/><path d="M3 12.6h18"/>`,
+  bars: `<path d="M3.6 20.2h16.8"/><rect x="5.2" y="12.6" width="3.5" height="5.4" rx=".9"/><rect x="10.3" y="8.2" width="3.5" height="9.8" rx=".9"/><rect x="15.4" y="10.4" width="3.5" height="7.6" rx=".9"/><path d="M4.8 9.2 8.9 5.8l3.6 2.2 6.4-4"/>`,
+  globe: `<circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.2 2.4 3.4 5.4 3.4 8.6S14.2 18.2 12 20.6c-2.2-2.4-3.4-5.4-3.4-8.6S9.8 5.8 12 3.4Z"/>`,
+  /* A fluted column for History and a balance for Political Science — the two
+     marks the Humanities core needs and AcademicGlyph does not carry. */
+  column: `<path d="M3.6 20.4h16.8M4.8 8.6h14.4L12 4.2 4.8 8.6z"/><path d="M7.4 8.6v11.8M12 8.6v11.8M16.6 8.6v11.8"/>`,
+  scale: `<path d="M12 4.2v16.2M7.2 20.4h9.6"/><path d="m12 6.6-6.6 2.2M12 6.6l6.6 2.2"/><path d="M5.4 8.8 2.9 14a2.6 2.6 0 0 0 5 0zM18.6 8.8 16.1 14a2.6 2.6 0 0 0 5 0z"/>`,
+};
+
+/* ── THE FOUR SUBJECT WORLDS ────────────────────────────────────────────────
+   ⚠ READ FROM `streamDetail`, NOT RETYPED. These are the same four objects that
+   Combinations.astro renders on /academics/structure/, so the two pages cannot
+   drift apart — and the `coreUnverified` flag that stamps the Humanities core
+   travels with the data rather than being re-decided here.
+
+   `n`, `key` and `mark` are the only things this page adds: a display numeral,
+   a CSS hook and which drawing goes with which stream. */
+const META = [
+  { n: '01', key: 'pcm', mark: 'atom' },
+  { n: '02', key: 'pcb', mark: 'leaf' },
+  { n: '03', key: 'com', mark: 'bars' },
+  { n: '04', key: 'hum', mark: 'globe' },
+] as const;
+
+/* Which drawing goes with which subject. Anything unlisted falls back to the
+   book — a missing mark, never a broken row. */
+const SUBJECT_MARK: Record<string, string> = {
+  Physics: 'atom',
+  Chemistry: 'flask',
+  Mathematics: 'sigma',
+  Biology: 'leaf',
+  English: 'book',
+  Accountancy: 'ledger',
+  'Business Studies': 'case',
+  Economics: 'bars',
+  History: 'column',
+  'Political Science': 'scale',
+  Geography: 'globe',
+};
+
+const worlds = streamDetail.map((s, i) => ({
+  ...META[i],
+  name: s.name,
+  body: s.body,
+  core: s.core,
+  optional: s.optional,
+  additional: s.additional,
+  /* ⚠ ONE FLAG, AND IT IS ON THE CORE, NOT THE STREAM. `coreUnverified` is set
+     on Humanities and nowhere else; `unverified` (the elective flag) is false
+     throughout, because the school supplied those lists. Stamping the whole
+     panel would say the electives are doubtful too, which they are not. */
+  coreOwed: 'coreUnverified' in s && s.coreUnverified === true,
+}));
+
+
+const CONTACT = '/contact-us/';
+---
+
+{/* ══ 01 · A STREAM IS MORE THAN A NAME ══════════════════════════════════════
+    Ground: cream. Idea: one editorial statement, and an asymmetric pair of
+    photographs — one large, one small breaking its corner. */}
+<section class="sc-open" aria-labelledby="sc-open-t">
+  <span class="sc-open__grid" aria-hidden="true"></span>
+  <span class="sc-open__warm" aria-hidden="true"></span>
+  <span class="sc-open__ghost" aria-hidden="true" data-parallax data-parallax-y="24">XI — XII</span>
+  <span class="sc-open__dots" aria-hidden="true"></span>
+
+  {/* The faint subject symbols — an atom at the left margin, a flask below it.
+      Background, not ornament: both sit under the copy at 9% and neither is
+      placed beside a heading. */}
+  <svg class="sc-open__sym sc-open__sym--a" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="0.7" set:html={MARK.atom} />
+  </svg>
+  <svg class="sc-open__sym sc-open__sym--b" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.flask} />
+  </svg>
+
+  {/* The dashed academic path, curving from the copy up and across behind the
+      photographs and off the right edge. */}
+  <svg class="sc-open__line" viewBox="0 0 1200 300" fill="none" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M-20 250C190 250 262 44 470 44s300 208 520 172" stroke="currentColor"
+      stroke-width="1.1" stroke-linecap="round" stroke-dasharray="5 9" />
+  </svg>
+
+  <div class="u-container sc-open__grid-l">
+    <div class="sc-open__copy">
+      <p class="sc-kicker" data-reveal>Subject Combinations</p>
+      <h2 class="sc-h sc-open__h" id="sc-open-t">
+        <span data-clip data-clip-delay="0">A stream is more</span>
+        <span data-clip data-clip-delay="150"><em>than a name.</em></span>
+      </h2>
+      <p class="sc-body" data-reveal data-reveal-delay="200">
+        This page shows what is known about the subjects attached to each Senior Secondary stream
+        at {school.name}, and clearly highlights what is <strong>confirmed</strong> by the school
+        and what is not yet published.
+      </p>
+    </div>
+
+    {/* ONE LARGE FRAME, ONE SMALLER BREAKING ITS CORNER — not two equal images.
+        The inset carries its own paper border so it reads as a print laid over
+        the first rather than a hole cut in it. */}
+    <div class="sc-open__media">
+      <Image class="sc-open__books" src={oBooks} alt="" width={160} aria-hidden="true" loading="lazy" />
+
+      <figure class="sc-open__lead" data-mask data-zoom data-zoom-to="1.06">
+        <Picture
+          src={pLead}
+          alt={`Senior students of ${school.name} at the physics laboratory benches, apparatus in front of them and subject portraits along the wall`}
+          formats={['webp']}
+          widths={[620, 980]}
+          sizes="(max-width: 1023px) 92vw, 40vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+      <figure class="sc-open__inset" data-parallax data-parallax-y="22">
+        <Picture
+          src={pCampus}
+          alt={`The campus of ${school.name} — its teaching blocks standing around the front lawn`}
+          formats={['webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 1023px) 46vw, 22vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · THE FOUR SUBJECT WORLDS ═══════════════════════════════════════════
+    ⚠ SAME CREAM GROUND AS 01, DELIBERATELY. One continuous field runs from the
+    banner to the dark band; a change of ground here would read as two pages. */}
+<section class="sc-worlds" aria-labelledby="sc-worlds-t">
+  <span class="sc-worlds__wash" aria-hidden="true"></span>
+  <span class="sc-worlds__dots" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="sc-worlds__head">
+      <p class="sc-kicker" data-reveal>The four subject worlds</p>
+      <h2 class="sc-h sc-worlds__h" id="sc-worlds-t">
+        <span data-clip data-clip-delay="0">Four streams.</span>
+        <span data-clip data-clip-delay="150"><em>Four unique subject worlds.</em></span>
+      </h2>
+      <p class="sc-body sc-worlds__b" data-reveal data-reveal-delay="200">
+        Each stream builds a different set of skills, perspectives and opportunities. Here is what
+        each stream focuses on:
+      </p>
+    </div>
+
+    <ol class="sc-worlds__grid">
+      {worlds.map((w, i) => (
+        <li class={`sc-world sc-world--${w.key}`} data-pop data-pop-delay={80 + i * 90}>
+          {/* The ghost of the panel's own mark, bled off its corner. */}
+          <svg class="sc-world__ghost" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <g stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[w.mark]} />
+          </svg>
+
+          <div class="sc-world__t">
+            {/* NUMBER AND NAME ON ONE LINE, as the reference sets them — the
+                numeral is a marker beside the title, not a heading above it. */}
+            <p class="sc-world__top">
+              <span class="sc-world__n t-tabular">{w.n}</span>
+              <span class="sc-world__k">{w.name}</span>
+            </p>
+
+            <p class="sc-world__b">{w.body}</p>
+
+            {/* CORE AND OPTIONAL SIDE BY SIDE, ADDITIONAL BENEATH — the shape
+                /academics/structure/ already uses for the same four lists. */}
+            <div class="sc-world__pair">
+              <div class="sc-set">
+                {/* ⚠ NO "TO BE CONFIRMED" STAMP HERE — removed at the client's
+                    instruction. The caveat it carried has NOT been dropped: the
+                    note under the grid still says in full that the Humanities
+                    core is indicative and awaiting the school, and that every
+                    other list on the page is the school's own. */}
+                <p class="sc-set__l">Core subjects</p>
+                <ul class="sc-world__subs">
+                  {w.core.map((s) => (
+                    <li class="sc-sub">
+                      <span class="sc-sub__i" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                            set:html={MARK[SUBJECT_MARK[s] ?? 'book']} />
+                        </svg>
+                      </span>
+                      <span class="sc-sub__k">{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="sc-set">
+                <p class="sc-set__l">Optional subjects</p>
+                <ul class="sc-chips">
+                  {w.optional.map((e) => <li class="sc-chip">{e}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <div class="sc-set sc-set--wide">
+              <p class="sc-set__l">Additional subjects</p>
+              <ul class="sc-chips">
+                {w.additional.map((e) => <li class="sc-chip sc-chip--add">{e}</li>)}
+              </ul>
+            </div>
+
+            {/* ⚠ ONE PANEL CARRIES A LINK, AND IT IS THE ONE STILL WAITING ON
+                THE SCHOOL. The other three answered on the panel itself. */}
+            {w.coreOwed && (
+              <p class="sc-world__ask">
+                <a href={CONTACT}>Ask the school office <span aria-hidden="true">→</span></a>
+              </p>
+            )}
+          </div>
+
+          {/* The stream's mark, set large in a soft disc — the panel's picture. */}
+          <div class="sc-world__disc" aria-hidden="true">
+            <span class="sc-world__ring"></span>
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[w.mark]} />
+            </svg>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    {/* ⚠ THE TWO NOTES THE LISTS ARE OWED, AND NEITHER IS SET IN SMALL PRINT.
+        The first names exactly what is still indicative and, as importantly,
+        what is not; the second is the school's own caveat on availability, from
+        the same data file as the lists. */}
+    <div class="sc-worlds__foot">
+      <p class="sc-claim" data-reveal>
+        The {school.streams[3]} core above is indicative and awaiting confirmation from the
+        school. Every other subject list on this page is the school’s own.
+        <svg class="sc-claim__swash" viewBox="0 0 240 12" fill="none" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M3 8.4c34-4.6 68-6.4 102-5.5 33 .9 66 4.4 99 6.1" stroke="currentColor"
+            stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </p>
+      <p class="sc-note" data-reveal data-reveal-delay="120">{combinationsFootnote}</p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · FOUR WAYS OF THINKING ═════════════════════════════════════════════
+    Ground: ink. Idea: the four as OVERLAPPING CIRCLES, with the copy beside the
+    diagram rather than above it. The page's single dark band. */}
+<section class="sc-map" aria-labelledby="sc-map-t">
+  <span class="sc-map__glow" aria-hidden="true"></span>
+  <span class="sc-map__mesh" aria-hidden="true"></span>
+  <span class="sc-map__grain" aria-hidden="true"></span>
+  <span class="sc-map__vig" aria-hidden="true"></span>
+  {/* THE SWEEP — three concentric arcs running off the left edge, the largest
+      thing on the band and the reason the composition reads as a field rather
+      than as a diagram floating on brown. Rings, not an image: they scale with
+      the section and cost nothing. */}
+  <span class="sc-map__sweep" aria-hidden="true"></span>
+
+  <span class="sc-map__spark" aria-hidden="true">
+    <i style="--x: 9%;  --y: 26%; --s: 3px; --o: .5"></i>
+    <i style="--x: 16%; --y: 58%; --s: 2px; --o: .3"></i>
+    <i style="--x: 27%; --y: 74%; --s: 2px; --o: .34"></i>
+    <i style="--x: 35%; --y: 22%; --s: 3px; --o: .42"></i>
+    <i style="--x: 44%; --y: 86%; --s: 2px; --o: .3"></i>
+    <i style="--x: 52%; --y: 14%; --s: 2px; --o: .34"></i>
+    <i style="--x: 63%; --y: 90%; --s: 3px; --o: .4"></i>
+    <i style="--x: 69%; --y: 66%; --s: 2px; --o: .32"></i>
+    <i style="--x: 78%; --y: 20%; --s: 3px; --o: .46"></i>
+    <i style="--x: 91%; --y: 44%; --s: 2px; --o: .3"></i>
+  </span>
+
+  {/* THE GHOST NAMES — one to each corner, bleeding off both edges, so the
+      circles read as rising out of their own words. */}
+  <span class="sc-map__ghost sc-map__ghost--tl" aria-hidden="true" data-parallax data-parallax-y="16">{school.streams[0]}</span>
+  <span class="sc-map__ghost sc-map__ghost--tr" aria-hidden="true" data-parallax data-parallax-y="16">{school.streams[1]}</span>
+  <span class="sc-map__ghost sc-map__ghost--bl" aria-hidden="true" data-parallax data-parallax-y="-16">{school.streams[2]}</span>
+  <span class="sc-map__ghost sc-map__ghost--br" aria-hidden="true" data-parallax data-parallax-y="-16">{school.streams[3]}</span>
+
+  <div class="u-container sc-map__grid-l">
+    <div class="sc-map__head">
+      <p class="sc-kicker sc-kicker--dark" data-reveal>Subjects at a glance</p>
+      <h2 class="sc-h sc-map__h" id="sc-map-t">
+        <span data-clip data-clip-delay="0">Four streams.</span>
+        <span data-clip data-clip-delay="150"><em>Four ways of thinking.</em></span>
+      </h2>
+      <p class="sc-body sc-map__b" data-reveal data-reveal-delay="200">
+        Each stream builds its own focus, but together they form a complete Senior Secondary
+        journey.
+      </p>
+    </div>
+
+    <div class="sc-plan">
+      <p class="sc-plan__era" data-reveal>XI — XII</p>
+
+      {/* ⚠ CIRCLES THAT OVERLAP, NOT CARDS IN A GRID. The negative gap is what
+          makes the four read as one field with a shared centre rather than as
+          four tiles — and the glowing node sits exactly where they meet. */}
+      <div class="sc-orbits">
+        {/* The stem dropping from the XI — XII label into the node where the
+            four meet. Drawn, not written: it is the only thing on the band that
+            says the four belong to one decision. */}
+        <span class="sc-orbits__stem" aria-hidden="true"></span>
+
+        {worlds.map((o) => (
+          <article class={`sc-orbit sc-orbit--${o.key}`} data-drift="24">
+            <span class="sc-orbit__i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[o.mark]} />
+              </svg>
+            </span>
+            <h3 class="sc-orbit__k">{o.name}</h3>
+            {/* The core is shown on all four, unstamped — see the note on the
+                Core subjects label in section 02. */}
+            <ul class="sc-orbit__subs">
+              {o.core.map((s) => <li>{s}</li>)}
+            </ul>
+          </article>
+        ))}
+        <span class="sc-orbits__core" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ══ 04 · THE CLOSE ═════════════════════════════════════════════════════════
+    Ground: cream with a lavender-peach wash. Idea: a light close rather than a
+    dark one — the dark map above is the page's single accent band, and a second
+    dark section directly under it flattened the contrast the map was carrying.
+
+    ⚠ THIS SECTION REPLACES TWO. It took over the atmosphere, the illustration
+    and the arcs of the confidence ladder that used to sit between the map and
+    the close; the ladder itself is gone at the client's instruction. */}
+<section class="sc-close" aria-labelledby="sc-close-t">
+  <span class="sc-close__wash" aria-hidden="true"></span>
+  <span class="sc-close__grid" aria-hidden="true"></span>
+  <span class="sc-close__rules" aria-hidden="true"></span>
+
+  {/* The two dashed arcs that close the page, one to each side. */}
+  <svg class="sc-close__arc sc-close__arc--l" viewBox="0 0 260 180" fill="none" aria-hidden="true">
+    <path d="M-10 6C92 6 172 68 196 174" stroke="currentColor" stroke-width="1.2"
+      stroke-linecap="round" stroke-dasharray="6 10" />
+  </svg>
+  <svg class="sc-close__arc sc-close__arc--r" viewBox="0 0 260 180" fill="none" aria-hidden="true">
+    <path d="M270 6C168 6 88 68 64 174" stroke="currentColor" stroke-width="1.2"
+      stroke-linecap="round" stroke-dasharray="6 10" />
+  </svg>
+
+  <div class="u-container sc-close__grid-l">
+    <div class="sc-close__copy">
+      <h2 class="sc-h sc-close__h" id="sc-close-t">
+        <span data-clip data-clip-delay="0">The right stream builds the foundation.</span>
+        <span data-clip data-clip-delay="150"><em>The right combination builds the future.</em></span>
+      </h2>
+      <p class="sc-close__b" data-reveal data-reveal-delay="180">
+        For the latest subject combinations, elective availability and session-specific choices,
+        please confirm with the school.
+      </p>
+      <p class="sc-close__act" data-reveal data-reveal-delay="260">
+        <a class="btn btn--primary" href={CONTACT}>
+          Contact school <span aria-hidden="true">→</span>
+        </a>
+      </p>
+    </div>
+
+    {/* ⚠ THE PROJECT'S OWN ARTWORK, NOT A REDRAWN ONE. booktick.png is the
+        hand-drawn checked-document mark from the icon set. */}
+    <Image class="sc-paper" src={oTick} alt="" width={520} aria-hidden="true" loading="lazy"
+      data-parallax data-parallax-y="22" />
+  </div>
+</section>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════
+     The Academic Structure accent set, restated from
+     pages/academics/structure.astro because Astro scopes styles per component.
+     Humanities takes --sb-urgent rather than that file's violet — see the
+     header note for why. Every value measured AA against white. */
+  .sc-open,
+  .sc-worlds,
+  .sc-map,
+  .sc-close {
+    --as-blue: #1259c4;    /* PCM        6.4:1 */
+    --as-teal: #0a6d3a;    /* PCB        6.6:1 */
+    --as-indigo: #4340bb;  /* Commerce   7.8:1 */
+    --as-amber: #8a4b00;   /* Humanities 7.0:1 — --sb-urgent */
+  }
+
+  .sc-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .sc-kicker--dark { color: var(--sb-lime); }
+
+  .sc-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .sc-h span { display: block; }
+  .sc-h em { font-style: normal; color: var(--sb-violet); }
+
+  .sc-body {
+    max-width: 46ch;
+    margin: clamp(15px, 1.8vw, 22px) 0 0;
+    font-size: clamp(13.5px, 0.98vw, 15.5px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .sc-body strong { font-weight: 700; color: var(--sb-charcoal); }
+
+  /* ═══ 01 · A STREAM IS MORE THAN A NAME ═══════════════════════════════════ */
+  .sc-open {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(44px, 5.4vw, 88px) clamp(30px, 3.4vw, 56px);
+  }
+  .sc-open__grid {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.05) 1px, transparent 1px);
+    background-size: 36px 36px;
+    -webkit-mask-image: radial-gradient(120% 90% at 26% 40%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(120% 90% at 26% 40%, #000 0%, transparent 78%);
+  }
+  .sc-open__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 68% at 8% 12%, rgba(255, 138, 92, 0.15) 0%, rgba(255, 138, 92, 0) 70%),
+      radial-gradient(54% 62% at 94% 82%, rgba(201, 60, 10, 0.07) 0%, rgba(201, 60, 10, 0) 72%);
+  }
+  .sc-open__ghost {
+    position: absolute;
+    z-index: -2;
+    top: clamp(-12px, -0.6vw, 0px);
+    left: calc(var(--sb-margin) * -0.5);
+    font-family: var(--sb-font-display);
+    font-size: clamp(80px, 12.5vw, 184px);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.86;
+    white-space: nowrap;
+    color: rgba(201, 60, 10, 0.055);
+    user-select: none;
+  }
+  .sc-open__dots {
+    position: absolute;
+    z-index: -2;
+    left: 0;
+    top: 42%;
+    width: clamp(60px, 7vw, 110px);
+    height: clamp(120px, 15vw, 230px);
+    background-image: radial-gradient(rgba(201, 60, 10, 0.22) 1.2px, transparent 1.4px);
+    background-size: 14px 14px;
+    -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 88%);
+    mask-image: linear-gradient(to right, #000 0%, transparent 88%);
+  }
+  .sc-open__sym {
+    position: absolute;
+    z-index: -2;
+    height: auto;
+    color: rgba(201, 60, 10, 0.1);
+  }
+  .sc-open__sym--a { top: clamp(84px, 10vw, 164px); left: clamp(-36px, -1.4vw, -16px); width: clamp(88px, 10vw, 152px); }
+  .sc-open__sym--b { bottom: clamp(-18px, -0.8vw, -6px); left: 30%; width: clamp(64px, 7.4vw, 112px); }
+  .sc-open__line {
+    position: absolute;
+    z-index: -1;
+    inset-inline: -2%;
+    top: 16%;
+    width: 104%;
+    height: 66%;
+    color: rgba(201, 60, 10, 0.26);
+  }
+
+  .sc-open__grid-l {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+    gap: clamp(28px, 4vw, 68px);
+    align-items: center;
+  }
+  .sc-open__h { font-size: clamp(28px, 3.4vw, 48px); }
+
+  .sc-open__media { position: relative; }
+  .sc-open__books {
+    position: absolute;
+    z-index: 2;
+    top: clamp(-34px, -1.6vw, -14px);
+    left: clamp(-30px, -1.2vw, -12px);
+    width: clamp(44px, 4.8vw, 72px);
+    height: auto;
+    opacity: 0.6;
+    transform: rotate(-8deg);
+    animation: sc-float 10s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .sc-open__lead {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .sc-open__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .sc-open__inset {
+    position: absolute;
+    right: clamp(-18px, -0.6vw, -6px);
+    bottom: clamp(-26px, -1.2vw, -12px);
+    width: clamp(140px, 17vw, 250px);
+    margin: 0;
+    overflow: hidden;
+    border: 7px solid var(--sb-ivory);
+    border-radius: var(--sb-r-0);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .sc-open__inset :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  /* ═══ 02 · THE FOUR SUBJECT WORLDS ════════════════════════════════════════ */
+  .sc-worlds {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(26px, 3vw, 48px) clamp(48px, 5.8vw, 92px);
+  }
+  .sc-worlds__wash {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 42% at 14% 6%, rgba(18, 89, 196, 0.05) 0%, rgba(18, 89, 196, 0) 72%),
+      radial-gradient(54% 42% at 90% 94%, rgba(201, 60, 10, 0.06) 0%, rgba(201, 60, 10, 0) 72%);
+  }
+  .sc-worlds__dots {
+    position: absolute;
+    z-index: -3;
+    right: 0;
+    top: 0;
+    width: clamp(110px, 14vw, 220px);
+    height: clamp(110px, 14vw, 220px);
+    background-image: radial-gradient(rgba(201, 60, 10, 0.18) 1.2px, transparent 1.4px);
+    background-size: 16px 16px;
+    -webkit-mask-image: radial-gradient(100% 100% at 100% 0%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(100% 100% at 100% 0%, #000 0%, transparent 72%);
+  }
+
+  .sc-worlds__head { max-width: 60ch; }
+  .sc-worlds__h { font-size: clamp(26px, 3.1vw, 44px); }
+  .sc-worlds__b { max-width: 56ch; }
+
+  .sc-worlds__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 1.7vw, 26px);
+    margin: clamp(26px, 3.2vw, 46px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sc-world {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(12px, 1.4vw, 20px);
+    /* ⚠ START, NOT CENTRE. Centring the text block put Humanities' shorter copy
+       lower than Commerce's, so the two titles in a row no longer lined up. The
+       disc still centres itself — that one wants the middle. */
+    align-items: start;
+    padding: clamp(20px, 2.2vw, 32px);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+  }
+  /* ⚠ RADII ARE NOT UNIFORM. Each panel turns a different corner in, which is
+     what stops four rounded rectangles reading as a dashboard. */
+  .sc-world--pcm { --t: var(--as-blue);   border-radius: clamp(26px, 3vw, 44px) clamp(26px, 3vw, 44px) clamp(26px, 3vw, 44px) 10px; }
+  .sc-world--pcb { --t: var(--as-teal);   border-radius: clamp(26px, 3vw, 44px) clamp(26px, 3vw, 44px) 10px clamp(26px, 3vw, 44px); }
+  .sc-world--com { --t: var(--as-indigo); border-radius: clamp(26px, 3vw, 44px) 10px clamp(26px, 3vw, 44px) clamp(26px, 3vw, 44px); }
+  .sc-world--hum { --t: var(--as-amber);  border-radius: 10px clamp(26px, 3vw, 44px) clamp(26px, 3vw, 44px) clamp(26px, 3vw, 44px); }
+
+  /* Each panel's own atmosphere, mixed from its accent — never a flat fill. */
+  .sc-world::before {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      radial-gradient(76% 86% at 10% 6%, color-mix(in srgb, var(--t) 15%, transparent) 0%, transparent 72%),
+      linear-gradient(158deg, color-mix(in srgb, var(--t) 8%, #fff) 0%, #fff 64%);
+  }
+  .sc-world__ghost {
+    position: absolute;
+    z-index: -1;
+    right: clamp(-46px, -2vw, -22px);
+    bottom: clamp(-40px, -1.8vw, -18px);
+    width: clamp(150px, 16vw, 230px);
+    height: auto;
+    color: color-mix(in srgb, var(--t) 11%, transparent);
+    pointer-events: none;
+  }
+
+  .sc-world__top {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: clamp(10px, 1.2vw, 16px);
+    margin: 0;
+  }
+  .sc-world__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(22px, 2.2vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: color-mix(in srgb, var(--t) 58%, #fff);
+  }
+  .sc-world__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(20px, 1.9vw, 28px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--sb-charcoal);
+  }
+  /* ── THE THREE LISTS ──────────────────────────────────────────────────────
+     Core and Optional share a row, Additional takes the full width beneath —
+     the shape /academics/structure/ already uses for the same four streams. */
+  .sc-world__pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(14px, 1.7vw, 26px);
+    margin-top: clamp(16px, 1.9vw, 24px);
+  }
+  .sc-set--wide { margin-top: clamp(15px, 1.8vw, 22px); }
+  .sc-set__l {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 clamp(8px, 1vw, 12px);
+    font-size: clamp(9px, 0.68vw, 10.5px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  /* THE CORE AS A STACKED LIST, one small tile each — not a chip cloud. A
+     vertical list reads as a syllabus; chips read as tags, which is exactly
+     what the optional and additional subjects ARE. */
+  .sc-world__subs {
+    display: grid;
+    gap: clamp(6px, 0.7vw, 9px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sc-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* TWO WEIGHTS FOR TWO CATEGORIES: optional is a solid tint, additional is an
+     outline. The ladder runs from "taken alongside the core" down to "carried
+     on top of it" — a distinction the school drew itself. */
+  .sc-chip {
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: var(--sb-r-1);
+    background: color-mix(in srgb, var(--t) 10%, #fff);
+    font-size: clamp(9.5px, 0.72vw, 11.5px);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--sb-charcoal);
+  }
+  .sc-chip--add {
+    background: transparent;
+    border-color: color-mix(in srgb, var(--t) 26%, transparent);
+    color: var(--sb-text-secondary);
+  }
+  .sc-sub {
+    display: flex;
+    align-items: center;
+    gap: clamp(9px, 1vw, 13px);
+  }
+  .sc-sub__i {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: clamp(24px, 2.2vw, 30px);
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--t) 11%, #fff);
+    color: var(--t);
+  }
+  .sc-sub__i svg { width: 58%; height: auto; }
+  .sc-sub__k {
+    font-size: clamp(12px, 0.9vw, 14.5px);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--sb-charcoal);
+  }
+
+  .sc-world__b {
+    max-width: 44ch;
+    margin: clamp(11px, 1.3vw, 16px) 0 0;
+    font-size: clamp(11.5px, 0.86vw, 13.5px);
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--t) 62%, var(--sb-text-secondary));
+  }
+
+  /* ── THE TWO NOTES THE LISTS ARE OWED ─────────────────────────────────────
+     Centred and at body size, not shrunk into a footnote. The swash is the
+     reference's hand-drawn underline — an inline path, so it takes the accent
+     through currentColor and stays crisp at any width. */
+  .sc-worlds__foot {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    margin-top: clamp(26px, 3.2vw, 46px);
+  }
+  .sc-claim {
+    position: relative;
+    max-width: 62ch;
+    margin: 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    font-weight: 700;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+    color: var(--sb-charcoal);
+  }
+  .sc-claim__swash {
+    display: block;
+    width: clamp(160px, 20vw, 260px);
+    height: 10px;
+    margin: clamp(8px, 1vw, 12px) auto 0;
+    color: var(--sb-accent);
+  }
+  .sc-note {
+    max-width: 62ch;
+    margin: clamp(12px, 1.4vw, 18px) 0 0;
+    font-size: clamp(11px, 0.82vw, 13px);
+    line-height: 1.66;
+    color: var(--sb-text-muted);
+  }
+
+  .sc-world__ask { margin: clamp(14px, 1.6vw, 20px) 0 0; }
+  .sc-world__ask a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid color-mix(in srgb, var(--t) 42%, transparent);
+    font-size: clamp(11.5px, 0.86vw, 13.5px);
+    font-weight: 700;
+    color: var(--t);
+    text-decoration: none;
+    transition: gap var(--sb-dur-link) var(--sb-ease), border-color var(--sb-dur-link) var(--sb-ease);
+  }
+  .sc-world__ask a:hover { gap: 11px; border-bottom-color: var(--t); }
+
+  /* The mark, set large in a soft disc — this is the panel's picture. */
+  .sc-world__disc {
+    position: relative;
+    align-self: center;
+    display: grid;
+    place-items: center;
+    width: clamp(88px, 9.4vw, 138px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--t) 15%, #fff) 0%, color-mix(in srgb, var(--t) 5%, #fff) 72%);
+    color: var(--t);
+  }
+  .sc-world__ring {
+    position: absolute;
+    inset: clamp(-11px, -0.8vw, -6px);
+    border: 1px solid color-mix(in srgb, var(--t) 22%, transparent);
+    border-radius: 50%;
+  }
+  .sc-world__disc svg { position: relative; width: 46%; height: auto; }
+
+  /* ═══ 03 · FOUR WAYS OF THINKING ══════════════════════════════════════════ */
+  .sc-map {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #2a1109;
+    /* Tightened with the cluster: the band is meant to be read in one look. */
+    padding-block: clamp(40px, 4.4vw, 70px);
+  }
+  .sc-map__glow {
+    position: absolute;
+    z-index: -3;
+    top: -12%;
+    right: 6%;
+    width: 62%;
+    aspect-ratio: 1.5 / 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 92, 53, 0.3) 0%, rgba(255, 92, 53, 0) 74%);
+    filter: blur(30px);
+  }
+  /* The faint contour field at the right — a mesh, not an image. */
+  .sc-map__mesh {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background-image:
+      repeating-radial-gradient(circle at 106% 40%, rgba(255, 138, 92, 0.1) 0 1px, transparent 1px 28px);
+    -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 56%);
+    mask-image: linear-gradient(to left, #000 0%, transparent 56%);
+  }
+  .sc-map__grain {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    opacity: 0.3;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+  .sc-map__vig {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: radial-gradient(118% 94% at 50% 42%, transparent 44%, rgba(10, 4, 2, 0.56) 100%);
+  }
+  /* THREE CONCENTRIC ARCS off the left edge. One element and its two
+     pseudo-elements — three rings for the price of no extra markup. */
+  .sc-map__sweep {
+    position: absolute;
+    z-index: -2;
+    top: 50%;
+    left: 0;
+    translate: -74% -50%;
+    width: clamp(320px, 44vw, 720px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(255, 138, 92, 0.16);
+    border-radius: 50%;
+  }
+  .sc-map__sweep::before,
+  .sc-map__sweep::after {
+    content: '';
+    position: absolute;
+    border: 1px solid rgba(255, 138, 92, 0.11);
+    border-radius: 50%;
+  }
+  .sc-map__sweep::before { inset: -13%; }
+  .sc-map__sweep::after { inset: 14%; border-color: rgba(255, 138, 92, 0.08); }
+
+  .sc-map__spark { position: absolute; z-index: -1; inset: 0; }
+  .sc-map__spark i {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--s);
+    height: var(--s);
+    border-radius: 50%;
+    background: var(--sb-orange-bright);
+    opacity: var(--o);
+    animation: sc-twinkle 8s ease-in-out infinite;
+  }
+  .sc-map__spark i:nth-child(2n) { animation-duration: 11s; animation-delay: -3s; }
+
+  .sc-map__ghost {
+    position: absolute;
+    z-index: -2;
+    font-family: var(--sb-font-display);
+    font-size: clamp(38px, 6.4vw, 104px);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: rgba(255, 138, 92, 0.075);
+    user-select: none;
+    pointer-events: none;
+  }
+  /* ⚠ THE TOP PAIR SITS ABOVE THE COPY, NOT BEHIND IT. At 34% the PCM ghost
+     landed across the eyebrow — an ornament over text, which this project
+     checks for. Both top ghosts now clear the heading block entirely. */
+  .sc-map__ghost--tl { top: 5%; left: calc(var(--sb-margin) * -0.6); }
+  .sc-map__ghost--tr { top: 5%; right: calc(var(--sb-margin) * -0.6); }
+  .sc-map__ghost--bl { bottom: 5%; left: calc(var(--sb-margin) * -0.6); }
+  .sc-map__ghost--br { bottom: 5%; right: calc(var(--sb-margin) * -0.6); }
+
+  /* ⚠ COPY BESIDE THE DIAGRAM, NOT ABOVE IT. Stacked, the diagram loses the
+     width its circles need and the band grows a third taller. */
+  .sc-map__grid-l {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(26px, 3.6vw, 60px);
+    align-items: center;
+  }
+  /* Sized so "Four ways of thinking." sets on ONE line beside the diagram. */
+  .sc-map__h { font-size: clamp(26px, 3.05vw, 43px); color: #fff; }
+  .sc-map__h em { color: var(--sb-lime); font-style: italic; }
+  .sc-map__b { color: var(--sb-on-dark-78); max-width: 40ch; }
+
+  .sc-plan { position: relative; }
+  .sc-plan__era {
+    margin: 0 0 clamp(12px, 1.6vw, 22px);
+    text-align: center;
+    font-size: clamp(10px, 0.76vw, 11.5px);
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--sb-lime);
+  }
+
+  /* THE FOUR CIRCLES. A NEGATIVE GAP is the whole device: the discs overlap so
+     the four read as one field with a shared centre rather than as four tiles,
+     and the glowing node sits exactly where they meet. */
+  /* ⚠ NEGATIVE MARGINS, NOT A NEGATIVE GAP. `gap` cannot go below zero, so the
+     overlap is made by letting each disc bleed 11% of the grid's width toward
+     the centre — which also keeps every disc a perfect circle, because the
+     aspect-ratio still resolves against its own (now wider) box. */
+  /* ⚠ SIZED SO THE WHOLE BAND FITS ONE SCREEN. At 44vw the cluster alone ran
+     460px tall and the section cleared 790px — taller than the content area of
+     a 1366 × 768 laptop, so the reader never saw the four together, which is
+     the only thing this section is for. */
+  .sc-orbits {
+    --lap: 11%;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: clamp(300px, 31vw, 450px);
+    margin-inline: auto;
+    /* The companion arcs run well outside the cluster — the section clips them,
+       this must not. */
+    overflow: visible;
+  }
+
+  /* The stem from the era label into the node. */
+  .sc-orbits__stem {
+    position: absolute;
+    z-index: 6;
+    top: -13%;
+    left: 50%;
+    width: 1px;
+    height: 63%;
+    background-image: linear-gradient(to bottom, rgba(255, 138, 92, 0.46) 54%, transparent 54%);
+    background-size: 1px 7px;
+  }
+  .sc-orbit--pcm { margin: 0 calc(var(--lap) * -1) calc(var(--lap) * -1) 0; }
+  .sc-orbit--pcb { margin: 0 0 calc(var(--lap) * -1) calc(var(--lap) * -1); }
+  .sc-orbit--com { margin: calc(var(--lap) * -1) calc(var(--lap) * -1) 0 0; }
+  .sc-orbit--hum { margin: calc(var(--lap) * -1) 0 0 calc(var(--lap) * -1); }
+  .sc-orbit {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: clamp(4px, 0.6vw, 7px);
+    aspect-ratio: 1 / 1;
+    padding: clamp(14px, 1.7vw, 26px);
+    border: 1px solid rgba(255, 138, 92, 0.28);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 92, 53, 0.11) 0%, rgba(255, 92, 53, 0.03) 70%);
+    text-align: center;
+    /* Each disc paints over the one before it, so the overlaps stack in reading
+       order rather than in whatever order the renderer felt like. */
+    backdrop-filter: blur(2px);
+  }
+  .sc-orbit--pcm { z-index: 4; }
+  .sc-orbit--pcb { z-index: 3; }
+  .sc-orbit--com { z-index: 2; }
+  .sc-orbit--hum { z-index: 1; }
+
+  /* ⚠ THE COMPANION ARC IS WHAT MAKES THIS A FIELD AND NOT FOUR RINGS. Each
+     disc carries a second, much larger ring concentric with it; the four
+     overlap into the sweeping curves that run out past the cluster on every
+     side. One pseudo-element per disc — no extra markup, no SVG, and it stays
+     perfectly circular at any width because the disc it sits on already is. */
+  .sc-orbit::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -34%;
+    border: 1px solid rgba(255, 138, 92, 0.13);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .sc-orbit__i {
+    display: grid;
+    place-items: center;
+    width: clamp(26px, 2.4vw, 34px);
+    aspect-ratio: 1 / 1;
+    color: var(--sb-lime);
+  }
+  .sc-orbit__i svg { width: 100%; height: auto; }
+  .sc-orbit__k {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.15vw, 18px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .sc-orbit__subs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: clamp(9.5px, 0.7vw, 11.5px);
+    line-height: 1.62;
+    color: var(--sb-on-dark-78);
+  }
+  /* THE NODE THE FOUR MEET AT — a four-point flare, not a dot. The two bars are
+     the pseudo-elements: a bright core with light bleeding along both axes is
+     what reads as a light source rather than as a bullet. */
+  .sc-orbits__core {
+    position: absolute;
+    z-index: 5;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff5f0;
+    box-shadow:
+      0 0 0 5px rgba(255, 92, 53, 0.16),
+      0 0 14px 3px rgba(255, 92, 53, 0.7),
+      0 0 42px 12px rgba(255, 92, 53, 0.34);
+  }
+  .sc-orbits__core::before,
+  .sc-orbits__core::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+  }
+  .sc-orbits__core::before {
+    width: clamp(90px, 9vw, 150px);
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 138, 92, 0.62) 50%, transparent);
+  }
+  .sc-orbits__core::after {
+    width: 1px;
+    height: clamp(70px, 7vw, 118px);
+    background: linear-gradient(to bottom, transparent, rgba(255, 138, 92, 0.62) 50%, transparent);
+  }
+
+  /* ═══ 04 · THE CLOSE ══════════════════════════════════════════════════════
+     ⚠ LIGHT, NOT DARK, AND THE ATMOSPHERE IS INHERITED. This section carries
+     the wash, the grid, the editorial hairlines and the illustration that the
+     confidence ladder used to hold — so removing that section cost the page a
+     band, not its texture. */
+  .sc-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    /* ⚠ BALANCED, NOT SYMMETRIC. This is the LAST section before the footer,
+       and the footer opens with 120px of its own top padding — so a full 86px
+       bottom here stacks into a gap. But 38px was the other failure: the block
+       sat high in its own band with a bare strip under it, which is what read as
+       disconnected. 62 / 48 puts the content optically in the middle of the band
+       and still hands off to the footer rather than doubling it. */
+    padding-block: clamp(40px, 4.2vw, 62px) clamp(32px, 3.2vw, 48px);
+  }
+  /* ⚠ THE WASH REACHES THE BOTTOM EDGE. With only the two corner fields the
+     lower third of the band was bare cream, and a textured section that stops
+     three quarters of the way down reads as the section ending early with dead
+     space under it. The third field carries the tint across the foot. */
+  .sc-close__wash {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(62% 78% at 88% 12%, rgba(226, 214, 240, 0.6) 0%, rgba(226, 214, 240, 0) 70%),
+      radial-gradient(56% 70% at 6% 88%, rgba(255, 205, 180, 0.44) 0%, rgba(255, 205, 180, 0) 72%),
+      radial-gradient(90% 60% at 52% 108%, rgba(255, 214, 194, 0.4) 0%, rgba(255, 214, 194, 0) 72%);
+  }
+  .sc-close__grid {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.04) 1px, transparent 1px);
+    background-size: 44px 44px;
+    /* Centred and oversized so the rule grid runs the full height of the band
+       rather than fading out above the fold of it. */
+    -webkit-mask-image: radial-gradient(130% 120% at 55% 50%, #000 0%, transparent 82%);
+    mask-image: radial-gradient(130% 120% at 55% 50%, #000 0%, transparent 82%);
+  }
+  /* ⚠ THE SEAM, SOFTENED. Cream meeting the ink footer on a raw edge is what
+     made the join read as two unrelated blocks. A hairline of warm shadow in the
+     last few pixels reads as the footer sitting ON the section rather than being
+     butted against it — and it is a gradient, so there is no visible line. */
+  .sc-close::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: auto 0 0;
+    height: clamp(48px, 5vw, 80px);
+    background: linear-gradient(to bottom, rgba(27, 21, 18, 0) 0%, rgba(27, 21, 18, 0.055) 100%);
+    pointer-events: none;
+  }
+  .sc-close__rules {
+    position: absolute;
+    z-index: -2;
+    left: 0;
+    top: clamp(40px, 5vw, 92px);
+    width: clamp(84px, 11vw, 180px);
+    height: 46px;
+    background-image: linear-gradient(to bottom, rgba(201, 60, 10, 0.2) 1px, transparent 1px);
+    background-size: 100% 16px;
+  }
+  /* The arcs are now drawn on cream rather than over a photograph, so they take
+     the brand orange instead of the on-dark tint. */
+  .sc-close__arc {
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    translate: 0 -50%;
+    width: clamp(120px, 16vw, 250px);
+    height: auto;
+    color: rgba(201, 60, 10, 0.2);
+  }
+  .sc-close__arc--l { left: clamp(-40px, -1.6vw, -16px); }
+  .sc-close__arc--r { right: clamp(-40px, -1.6vw, -16px); }
+
+  /* ⚠ A CENTRED CLUSTER, NOT TWO EDGE-PINNED COLUMNS. On a 1.5fr / auto track
+     the copy absorbed every spare pixel, which pushed the illustration hard
+     against the right margin and opened a void between the two. Both tracks now
+     size to their content and the pair is centred, so the margins either side
+     match and the section reads as one composition. */
+  .sc-close__grid-l {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, auto) auto;
+    justify-content: center;
+    gap: clamp(24px, 4vw, 72px);
+    align-items: center;
+  }
+  /* Wide enough for both lines to set whole. At 26ch each broke in the middle,
+     giving a four-line block where the composition wants two. */
+  .sc-close__h {
+    max-width: 42ch;
+    margin: 0;
+    font-size: clamp(24px, 2.8vw, 40px);
+  }
+  .sc-close__b {
+    max-width: 56ch;
+    margin: clamp(14px, 1.7vw, 21px) 0 0;
+    font-size: clamp(13px, 0.94vw, 15px);
+    line-height: 1.76;
+    color: var(--sb-text-secondary);
+  }
+  .sc-close__act { margin: clamp(18px, 2.2vw, 28px) 0 0; }
+
+  /* The checked-document mark — now the close's picture rather than a footnote
+     beside a ladder, so it is set several times larger. */
+  .sc-paper {
+    display: block;
+    width: clamp(150px, 19vw, 290px);
+    height: auto;
+    transform: rotate(4deg);
+  }
+  /* ═══ MOTION ══════════════════════════════════════════════════════════════
+     Two loops, both on decoration, both cut by reduced motion. */
+  @keyframes sc-float {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -8px; }
+  }
+  @keyframes sc-twinkle {
+    0%, 100% { opacity: var(--o); }
+    50% { opacity: calc(var(--o) * 0.34); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sc-open__books,
+    .sc-map__spark i { animation: none; }
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .sc-open__grid-l,
+    .sc-map__grid-l,
+    .sc-close__grid-l {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(30px, 4.4vw, 44px);
+    }
+    .sc-body,
+    .sc-map__b { max-width: 56ch; }
+    .sc-open__inset { width: clamp(120px, 24vw, 190px); }
+
+    .sc-worlds__grid { grid-template-columns: minmax(0, 1fr); }
+    /* Stacked, the illustration is no longer balancing a column beside it — left
+       against the margin it reads as an orphan, so it centres under the copy. */
+    .sc-paper { margin-inline: auto; width: clamp(130px, 32vw, 210px); }
+    /* Stacked, the diagram sits under the copy and the band grows by the full
+       height of the cluster — so the cluster gets smaller here, not larger. */
+    .sc-orbits { max-width: min(420px, 100%); }
+  }
+
+  @media (max-width: 767px) {
+    /* ⚠ THE CIRCLES STOP OVERLAPPING BELOW 768. At this width the discs are
+       small enough that an overlap eats the subject lists inside them, so the
+       four separate and the shared centre goes with them. */
+    .sc-orbits { --lap: 0px; gap: clamp(10px, 3vw, 16px); max-width: 100%; }
+    /* The node goes when the discs stop meeting — and the stem goes with it,
+       or it drops out of the label and stops in mid-air. */
+    .sc-orbits__core,
+    .sc-orbits__stem { display: none; }
+    .sc-orbit { padding: clamp(12px, 4vw, 20px); }
+
+    .sc-world { grid-template-columns: minmax(0, 1fr); }
+    /* The disc moves to the panel's top-right rather than sitting under the
+       copy, where it would read as a full stop. */
+    .sc-world__disc {
+      position: absolute;
+      top: clamp(16px, 4vw, 24px);
+      right: clamp(16px, 4vw, 24px);
+      width: clamp(56px, 16vw, 74px);
+    }
+    .sc-world__top { padding-right: clamp(66px, 20vw, 90px); }
+    .sc-world__b { max-width: none; }
+    /* Core and Optional stop sharing a row: at this width each column is under
+       150px and every chip breaks onto its own line. */
+    .sc-world__pair { grid-template-columns: minmax(0, 1fr); }
+
+    .sc-map__ghost--tl,
+    .sc-map__ghost--br { display: none; }
+    .sc-map__ghost { font-size: clamp(34px, 12vw, 56px); }
+    .sc-close__arc { display: none; }
+  }
+</style>

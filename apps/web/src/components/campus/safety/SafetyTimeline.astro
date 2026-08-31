@@ -1,0 +1,278 @@
+---
+/**
+ * §1 · SAFETY TIMELINE — the measures as a walked spine, not a card grid.
+ *
+ * WHY A TIMELINE AND NOT TILES. The brief asked for one, and the content wants
+ * it: eleven measures presented as eleven equal tiles read as an inventory, and
+ * an inventory invites counting rather than reading. Grouped on a spine they
+ * read as three arguments — who watches the campus, what stops a fire, who holds
+ * a younger child's hand — and a parent can stop after the one they came for.
+ *
+ * The spine is a real element rather than a border, because it carries a
+ * scroll-linked fill: `--fill` is driven from the section's own progress through
+ * the viewport, so the line draws itself as you read down it. That is CSS custom
+ * property + one IntersectionObserver-free scroll handler; if the script never
+ * runs the line is simply fully drawn, which is the correct resting state.
+ */
+import { safetyGroups } from '../../../data/campus';
+import { showBuildNotes } from '../../../data/site';
+import SectionHead from '../../academics/SectionHead.astro';
+import SafetyIcon from './SafetyIcon.astro';
+
+/** Label → icon. Kept here rather than in the data so the content file stays
+    about content and knows nothing about how a measure is drawn. */
+const icons: Record<string, string> = {
+  '24×7 security guards': 'shield',
+  'Full CCTV coverage': 'camera',
+  'Controlled main gate': 'gate',
+  '15,000-litre fire hose reel': 'hose',
+  'Extinguishers in all corridors': 'flame',
+  'Marked exit routes': 'exit',
+  'Attendants in junior classes': 'hand',
+  'Elevator access': 'lift',
+  'Supervised movement': 'walk',
+};
+---
+
+<section class="stl" aria-labelledby="stl-title">
+  <div class="u-container">
+    <SectionHead
+      id="stl-title"
+      eyebrow="What is in place"
+      heading="Eleven measures, in three groups"
+      stand="The school publishes five of these. The rest are marked, because a safety page is the last place to guess."
+      measure={20}
+    />
+
+    <ol class="stl__spine" data-stl-spine>
+      {/* The drawn line. Split in two so the unfilled remainder stays visible as
+          a hairline rather than the track vanishing ahead of the reader. */}
+      <div class="stl__rail" aria-hidden="true"><i class="stl__rail-fill"></i></div>
+
+      {safetyGroups.map((group) => (
+        <li class="stl__group" id={group.id}>
+          <div class="stl__marker" aria-hidden="true">
+            <span class="stl__numeral">{group.numeral}</span>
+          </div>
+
+          <div class="stl__body">
+            <h3 class="stl__h" data-reveal>{group.title}</h3>
+            <p class="stl__stand" data-reveal data-reveal-delay="60">{group.stand}</p>
+
+            <ul class="stl__list">
+              {group.measures.map((m, i) => (
+                <li
+                  class:list={['stl__item', !m.verified && 'stl__item--pending']}
+                  data-reveal
+                  data-reveal-delay={120 + i * 70}
+                >
+                  <span class="stl__icon"><SafetyIcon name={icons[m.label] ?? 'shield'} size={20} /></span>
+                  <div>
+                    <p class="stl__label">
+                      {m.label}
+                      {!m.verified && showBuildNotes && <span class="stl__chip">to confirm</span>}
+                    </p>
+                    <p class="stl__copy">{m.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .stl {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .stl__spine {
+    position: relative;
+    list-style: none;
+    margin: var(--sb-10) 0 0;
+    padding: 0;
+    /* The rail sits in this gutter; the body clears it. */
+    --stl-gutter: 84px;
+  }
+
+  /* --- The drawn line ------------------------------------------------------ */
+
+  .stl__rail {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 27px;
+    width: 2px;
+    background: var(--sb-sand);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .stl__rail-fill {
+    display: block;
+    width: 100%;
+    /* Fully drawn by default — the resting state if the script never runs. */
+    height: calc(var(--stl-fill, 1) * 100%);
+    background: linear-gradient(180deg, var(--sb-violet), var(--sb-lime));
+    transition: height 120ms linear;
+  }
+
+  /* --- Groups -------------------------------------------------------------- */
+
+  .stl__group {
+    position: relative;
+    padding-left: var(--stl-gutter);
+  }
+
+  .stl__group + .stl__group { margin-top: var(--sb-11); }
+
+  .stl__marker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--sb-paper);
+    border: 2px solid var(--sb-violet);
+    box-shadow: 0 0 0 6px var(--sb-ivory);
+  }
+
+  .stl__numeral {
+    font-family: var(--sb-font-display);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--sb-violet);
+    letter-spacing: 0.02em;
+  }
+
+  .stl__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(24px, 2.6vw, 34px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    padding-top: 8px;
+  }
+
+  .stl__stand {
+    margin-top: var(--sb-3);
+    max-width: 56ch;
+    color: var(--sb-text-secondary);
+    font-size: var(--sb-body);
+    line-height: 1.6;
+  }
+
+  /* --- Measures ------------------------------------------------------------ */
+
+  .stl__list {
+    list-style: none;
+    margin: var(--sb-7) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--sb-6);
+  }
+
+  .stl__item {
+    display: flex;
+    gap: var(--sb-4);
+    padding: var(--sb-5) var(--sb-5) var(--sb-6);
+    background: var(--sb-paper);
+    border: var(--sb-hairline);
+    border-top: 2px solid var(--sb-violet);
+  }
+
+  /* Unconfirmed measures read one step back — present in the composition, but
+     not asserting themselves as hard as the published ones. */
+  .stl__item--pending {
+    background: transparent;
+    border-top-color: var(--sb-sand);
+  }
+
+  .stl__icon {
+    color: var(--sb-violet);
+    padding-top: 2px;
+  }
+
+  .stl__item--pending .stl__icon { color: var(--sb-text-muted); }
+
+  .stl__label {
+    font-weight: 650;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-charcoal);
+    letter-spacing: -0.01em;
+  }
+
+  .stl__chip {
+    display: inline-block;
+    margin-left: var(--sb-3);
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--sb-lime-wash);
+    color: var(--sb-lime-deep);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: 2px;
+  }
+
+  .stl__copy {
+    margin-top: var(--sb-2);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Narrow -------------------------------------------------------------- */
+
+  @media (max-width: 767px) {
+    .stl__spine { --stl-gutter: 60px; }
+    .stl__rail { left: 19px; }
+    .stl__marker { width: 40px; height: 40px; }
+    .stl__numeral { font-size: 15px; }
+    .stl__group + .stl__group { margin-top: var(--sb-10); }
+  }
+</style>
+
+<script>
+  /* Scroll-linked rail fill. No library: one rAF-throttled handler reading a
+     single getBoundingClientRect. Reduced-motion users get the line fully drawn
+     and no listener at all — the fill is decoration, and the content beside it
+     is already complete. */
+  const spine = document.querySelector<HTMLElement>('[data-stl-spine]');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (spine && !reduced) {
+    let ticking = false;
+
+    const update = () => {
+      const r = spine.getBoundingClientRect();
+      const anchor = window.innerHeight * 0.62;
+      // 0 when the spine's top reaches the anchor, 1 when its bottom does.
+      const progress = (anchor - r.top) / Math.max(r.height, 1);
+      spine.style.setProperty('--stl-fill', String(Math.min(1, Math.max(0, progress))));
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    // Start empty only once the script is confirmed running, so a failed script
+    // never leaves an undrawn line.
+    spine.style.setProperty('--stl-fill', '0');
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+  }
+</script>

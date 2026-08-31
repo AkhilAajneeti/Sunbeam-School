@@ -1,0 +1,181 @@
+---
+/**
+ * HERO TITLE — a page banner's headline, split into words that rise into place.
+ *
+ * ═══ WHY THIS IS CSS AND NOT GSAP ════════════════════════════════════════════
+ *
+ * The site already has a word-rise entrance: `data-split` in motion-gsap.ts. It
+ * deliberately refuses to touch anything above the fold, and rule 2 of that file
+ * says why — the motion chunk arrives AFTER first paint, so arming a heading the
+ * reader is already looking at produces a visible → hidden → animate flicker.
+ * A banner headline is always above the fold. That is the whole reason these
+ * headlines have never animated and read as static.
+ *
+ * Splitting on the SERVER and animating in CSS removes the problem rather than
+ * working around it: the words are in the markup, the stylesheet is render
+ * blocking, so the first frame the reader sees is already the first frame of the
+ * animation. No flicker is possible because there is no moment where the text is
+ * visible un-animated.
+ *
+ * It also means the entrance survives everything JavaScript does not: the chunk
+ * being blocked, Save-Data, a slow phone, a script error elsewhere on the page.
+ *
+ * ═══ THE PLATE IS NOT MASKED ═════════════════════════════════════════════════
+ *
+ * `mark` renders inside `.t-squiggle`, which is a rotated, padded, rounded plate.
+ * Masking one slices its corners — the same reason the GSAP splitter marks
+ * element children `free`. It gets an unmasked lift-and-settle instead, and its
+ * keyframes carry the plate's own `rotate(-1.4deg)` through, because an animated
+ * transform would otherwise drop the rotation base.css gives it.
+ *
+ * Reuses `.sp-mask` / `.sp-word` from base.css so a server-split heading and a
+ * GSAP-split one are the same construction — including the padding that stops
+ * `overflow: hidden` slicing the descenders off every g, y and p.
+ */
+interface Props {
+  /** Words before the plate. */
+  lead: string;
+  /** The emphasised word, set on the brand plate. Optional. */
+  mark?: string;
+  /** Words after the plate. Optional. */
+  tail?: string;
+  /** `lime` for the light plate used on dark photography (docs/05 § I1). */
+  markTone?: 'violet' | 'lime';
+  /**
+   * Heading level. 1 for a page banner; 2 when the banner above already owns the
+   * <h1> and this is a lede introducing the page. A second <h1> on a page is a
+   * real outline problem, not a style preference — hence a prop rather than a
+   * caller wrapping this in their own heading.
+   */
+  level?: 1 | 2;
+  id?: string;
+  class?: string;
+}
+
+const {
+  lead,
+  mark,
+  tail,
+  markTone = 'violet',
+  level = 1,
+  id,
+  class: className = '',
+} = Astro.props;
+
+const Heading = `h${level}` as 'h1' | 'h2';
+
+const words = (s?: string) => (s ? s.trim().split(/\s+/).filter(Boolean) : []);
+
+/**
+ * One flat list, built here rather than as three maps in the template, so the
+ * stagger index is continuous and — more importantly — so the SPACES BETWEEN
+ * WORDS can be emitted outside the masks.
+ *
+ * That is not a detail. `.sp-mask` is `overflow: hidden`, so a space sitting
+ * inside one is clipped: the first draft rendered "Ninelaboratories,anda" on
+ * screen while `textContent` still read correctly, which is the worst kind of
+ * bug — invisible to markup inspection, invisible to a screen reader, and
+ * obvious to everyone looking at the page.
+ */
+const units = [
+  ...words(lead).map((w) => ({ w, mark: false })),
+  ...(mark ? [{ w: mark, mark: true }] : []),
+  ...words(tail).map((w) => ({ w, mark: false })),
+];
+---
+
+<Heading class:list={['htitle', className]} id={id}>
+  {
+    units.map((u, i) => (
+      <Fragment>
+        <span class:list={['sp-mask', u.mark && 'sp-mask--free']}><span
+          class:list={[
+            'sp-word',
+            u.mark && 'htitle__mark',
+            u.mark && 't-squiggle',
+            u.mark && markTone === 'lime' && 't-squiggle--lime',
+          ]}
+          style={`--i: ${i}`}
+        >{u.w}</span></span>{' '}
+      </Fragment>
+    ))
+  }
+</Heading>
+
+<style>
+  /* ═══ THE COMPONENT OWNS ITS TYPE ═══════════════════════════════════════════
+     A parent CANNOT style this element with an ordinary scoped rule. Astro passes
+     the `class` string down but NOT its scoping attribute, so a page writing
+     `.thero__title { color: #fff; font-size: … }` in its own <style> compiles to
+     `.thero__title[data-astro-cid-PAGE]` and matches nothing — the heading
+     silently fell back to the UA default, 34px in charcoal on a dark photograph.
+     It looked like a colour bug and was a scoping bug.
+
+     The fix is not `:global()`, which would leak. The type lives here, and the
+     three things a caller legitimately varies are read from CUSTOM PROPERTIES —
+     those inherit through the component boundary, so a page sets them on any
+     ancestor it does own (`.thero__inner`) with a perfectly normal scoped rule.
+
+     Defaults suit a photographic banner, which is what every caller is so far. */
+  h1.htitle,
+  h2.htitle {
+    max-width: var(--htitle-measure, 24ch);
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: var(--htitle-size, clamp(34px, 5.6vw, 80px));
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    color: var(--htitle-color, #fff);
+  }
+
+  /* The mask and word primitives come from base.css; only the motion is local. */
+
+  .htitle :global(.sp-word) {
+    animation: htitle-rise 940ms var(--sb-ease) backwards;
+    /* A short lead-in so the banner photograph is established before the words
+       arrive, then 68ms a word — fast enough that a nine-word headline finishes
+       inside a second. */
+    animation-delay: calc(var(--i, 0) * 68ms + 140ms);
+  }
+
+  @keyframes htitle-rise {
+    from {
+      transform: translateY(112%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* The plate has no mask to rise out of, so it lifts and settles instead —
+     and every frame carries the -1.4deg base.css gives it, or the rotation would
+     be dropped for the duration of the animation and snap back at the end. */
+  .htitle :global(.htitle__mark) {
+    animation-name: htitle-plate;
+  }
+
+  @keyframes htitle-plate {
+    from {
+      transform: rotate(-1.4deg) translateY(26px) scale(0.94);
+      opacity: 0;
+    }
+    to {
+      transform: rotate(-1.4deg) translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* `animation: none`, not a shorter duration.
+     base.css's reduced-motion rule collapses every animation to 0.01ms but leaves
+     DELAYS alone — and with `backwards` fill that means each word would sit in its
+     hidden `from` state for its full delay and then pop in. Nine words would flash
+     in over 750ms, which is more motion than the animation it was meant to remove.
+     Switching it off entirely renders the headline plainly, immediately. */
+  @media (prefers-reduced-motion: reduce) {
+    .htitle :global(.sp-word) {
+      animation: none;
+    }
+  }
+</style>

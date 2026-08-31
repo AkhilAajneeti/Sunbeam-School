@@ -1,0 +1,1087 @@
+---
+/**
+ * TEACHING & LEARNING · SMART CLASSROOMS & DIGITAL LITERACY — the five sections
+ * below the banner.
+ *
+ * ⚠ COMBINED PAGE — two of the brief's fourteen bullets: Smart Classrooms and
+ * AI & Digital Literacy. The standalone /ai-digital-literacy/ route was an
+ * implementation experiment; its verified content is merged here.
+ *
+ * ═══ THE NUMBERS, AND WHY THEY ARE THESE NUMBERS ═══════════════════════════
+ * ⚠⚠ READ THIS BEFORE CHANGING ANY FIGURE ON THIS PAGE.
+ *
+ * The school publishes 75+ digitally smart classrooms and 49+ interactive flat
+ * panels. Those exact figures appear in THREE data files that all have to agree:
+ *   data/facilities.ts   counters, and the Learning Environment group
+ *   data/home.ts         the campus card and its qualifier
+ *   data/academics.ts    `room.stats` and the `panels` beat
+ *
+ * "30+" HAS BEEN WRONG ON THIS SITE ONCE ALREADY. data/facilities.ts still
+ * carries the correction note — "WAS 'Thirty-plus classrooms wired for
+ * teaching' — a figure matching nothing the school publishes, and one the very
+ * next item contradicted with the real 75+". A second reintroduction would put
+ * this page in direct conflict with the home page and the facilities page.
+ * If the school has since republished 30+, change the DATA FILES first and let
+ * every page follow; do not special-case this one.
+ *
+ * ⚠ AND THE TWO FIGURES ARE PRINTED TOGETHER ON PURPOSE. 49 is FEWER than 75,
+ * so the panels do not yet reach every smart classroom. The school publishes
+ * both numbers, which means a reader can already work that out — writing past it
+ * would be the one thing worse than not mentioning it. Section 03 says it
+ * plainly. An earlier build of the retired split page claimed "MORE PANELS THAN
+ * ROOMS", which is the arithmetic backwards.
+ *
+ * ═══ EVERY OTHER CLAIM, AND WHERE IT COMES FROM ════════════════════════════
+ *   Junior and senior computer laboratories, 40+ machines each.
+ *   100 Microsoft Innovative Educator Experts → a Microsoft Showcase School.
+ *   Indian AI Impact Festival, 2024 — Ayushi, of Class VII, placed first.
+ *   The Reading Carnival photograph shows the school's own wall of "Microsoft
+ *     Innovative Educator Expert 2024" posters — the certification is displayed
+ *     in the building, not only stated on a website.
+ *
+ * ⚠ NOT CLAIMED, BECAUSE IT IS NOT PUBLISHED: a device-per-child ratio, a
+ * rollout date for the remaining rooms, an AI syllabus, which classes take
+ * digital literacy, any software platform, any named capability of a panel, or
+ * any outcome attributed to the equipment.
+ *
+ * ⚠ SCOPE BOUNDARY — the METHOD that runs on this equipment is Teaching
+ * Methodology's; the Robotics Lab, its drone, 3-D printer and telescope belong
+ * to STEM, Robotics & Enrichment. This page is the room and the subject, and it
+ * links out rather than restating either.
+ *
+ * ═══ COMPOSITION — one story, not five sections ════════════════════════════
+ *   01 · CREAM  the room        → what a smart classroom actually is here
+ *   02 · SAND   the system      → the infrastructure, as connected figures
+ *   03 · CREAM  the point       → why the equipment is not the story
+ *   04 · SAND   in practice     → the same technology inside ordinary days
+ *   05 · PHOTO  the close       → what is still changing, and what is not said
+ *
+ * ⚠ THE DECORATION IS CIRCUITRY, AND IT IS THE ONE THING THAT MAKES THIS PAGE
+ * ITS OWN. Teaching Methodology uses dot fields and dashed arcs; this page uses
+ * right-angled trace lines with terminal nodes, a fine technical grid and small
+ * `+` register marks. Same hand, different subject — which is the whole point.
+ * Kept at 6–14% opacity so it never reads as a technology brand.
+ *
+ * PHOTOGRAPHY is six genuine Sunbeam Ballia frames. No stock, per docs/07, and
+ * every caption says what its picture actually shows.
+ *
+ * MOTION is the project's own attribute set — data-clip, data-reveal, data-pop,
+ * data-drift, data-count, data-parallax, data-draw, data-mask, data-zoom.
+ */
+import { Picture } from 'astro:assets';
+
+/* ── PHOTOGRAPHY ────────────────────────────────────────────────────────────
+   ⚠ SIX DISTINCT FRAMES, and the banner is a seventh. A page about one subject
+   is the easiest place on the site to end up showing the same room five times. */
+import pLabBusy from '../../../assets/computer lab/it-3.jpeg';       /* senior lab in use, teacher supervising */
+import pCanva from '../../../assets/school-event/Impetus—ClassesIII-V/Impetus—ClassesIII-V-02.jpg';
+import pLabRow from '../../../assets/computer lab/it-8.jpeg';        /* the same lab down the row */
+import pLabEmpty from '../../../assets/computer lab/DSC_1206 copy.jpg';
+import pLabTaught from '../../../assets/computer lab/it-10.jpeg';    /* the room with the shortcut charts */
+import pCarnival from '../../../assets/school-event/Reading-Carnival/Reading-Carnival-02.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/* ── THE MARKS ──────────────────────────────────────────────────────────────
+   24-unit box, 1.5 stroke, round caps and joins, no fill, `currentColor`. */
+const MARK: Record<string, string> = {
+  panel: `<rect x="2.6" y="4.4" width="18.8" height="12.4" rx="1.8"/><path d="M8.4 20.4h7.2M12 16.8v3.6"/><path d="M6.6 12.4l3-3.2 2.4 2 4.4-4.6"/>`,
+  spark: `<rect x="3.4" y="3.4" width="17.2" height="17.2" rx="2.4"/><path d="M12 7.6v8.8M7.6 12h8.8"/>`,
+  chipJr: `<rect x="5.4" y="5.4" width="13.2" height="13.2" rx="1.8"/><rect x="9.2" y="9.2" width="5.6" height="5.6" rx=".8"/><path d="M9.4 2.6v2.8M14.6 2.6v2.8M9.4 18.6v2.8M14.6 18.6v2.8M2.6 9.4h2.8M2.6 14.6h2.8M18.6 9.4h2.8M18.6 14.6h2.8"/>`,
+  tower: `<rect x="6.4" y="2.8" width="11.2" height="18.4" rx="1.8"/><path d="M9.6 6.6h4.8M9.6 9.8h4.8"/><circle cx="12" cy="16.4" r="1.9"/>`,
+  touch: `<path d="M9.4 11.2V6a1.9 1.9 0 1 1 3.8 0v7.4"/><path d="M13.2 10.4a1.7 1.7 0 0 1 3.4 0v1M16.6 11.6a1.7 1.7 0 0 1 3.4 0v3.2a6 6 0 0 1-6 6h-1.6c-2 0-3-1-4.2-2.4l-3-3.6a1.8 1.8 0 0 1 2.6-2.4l1.6 1.6"/>`,
+  book: `<path d="M12 6.6C10.4 5.1 8 4.6 4 5.1v13c4-.5 6.4 0 8 1.5 1.6-1.5 4-2 8-1.5v-13c-4-.5-6.4 0-8 1.5zM12 6.6v13"/>`,
+  rocket: `<path d="M13.6 3.8c3.4 2 5.4 5.8 5.2 9.8l-3.6 3.4-5.6-5.6 3.4-3.6c.2-1.4.4-2.7.6-4Z"/><path d="M9.6 11.4 6 12.6l-1.6-1.6 3.4-3.4 2.4.6"/><path d="m12.6 14.4 1.2 3.6-1.6 1.6-3.4-3.4.6-2.4"/><path d="M7.4 16.6 4.2 19.8"/>`,
+};
+
+/* ── THE INFRASTRUCTURE ─────────────────────────────────────────────────────
+   ⚠ FOUR PUBLISHED QUANTITIES AND NOTHING ELSE. No derived figure, no ratio, no
+   total. See the header note before touching any value. */
+const system = [
+  { n: 75, suffix: '+', mark: 'panel', k: 'Digitally smart classes', dur: 1.5 },
+  { n: 49, suffix: '+', mark: 'spark', k: 'Interactive flat panels', dur: 1.2 },
+  { n: 40, suffix: '+', mark: 'chipJr', k: 'Junior computer lab computers', dur: 1.35 },
+  { n: 40, suffix: '+', mark: 'tower', k: 'Senior computer lab computers', dur: 1.6 },
+] as const;
+
+/* ── THE THREE CONCEPTS ─────────────────────────────────────────────────────
+   ⚠ THE LABELS ARE DESIGN, THE LINES UNDER THEM ARE EVIDENCE. Each `body` is a
+   published fact and nothing more — no capability, no outcome, no percentage. */
+const beyond = [
+  {
+    n: '01',
+    mark: 'touch',
+    k: 'Interactive',
+    body: '49+ interactive flat panels, in the rooms classes already sit in — not a suite a teacher has to book.',
+  },
+  {
+    n: '02',
+    mark: 'book',
+    k: 'Digital Literacy',
+    body: '100 teachers hold Microsoft Innovative Educator Expert certification — the credential behind Microsoft Showcase School status.',
+  },
+  {
+    n: '03',
+    mark: 'rocket',
+    k: 'Future Skills',
+    body: 'Ayushi, of Class VII, placed first at the Indian AI Impact Festival in 2024.',
+  },
+] as const;
+
+const STEM = '/academics/teaching-learning/stem-robotics/';
+---
+
+{/* ══ 01 · THE ROOM ══════════════════════════════════════════════════════════
+    Ground: cream. Idea: the statement, with an asymmetric photo pair breaking
+    the grid at the right, over a fine technical grid and a ghost 75. */}
+<section class="sc-room" aria-labelledby="sc-room-t">
+  <span class="sc-room__warm" aria-hidden="true"></span>
+  <span class="sc-grid" aria-hidden="true"></span>
+  <span class="sc-room__ghost" aria-hidden="true" data-parallax data-parallax-y="26">75<i>+</i></span>
+
+  {/* ⚠ THE TRACE, NOT AN ARC. Right angles with terminal nodes — the page's own
+      decorative language, and the thing that separates it from the dashed arcs
+      on Teaching Methodology. */}
+  <svg class="sc-trace sc-room__trace" viewBox="0 0 260 300" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M254 22h-58a12 12 0 0 0-12 12v52a12 12 0 0 1-12 12h-38" />
+      <path d="M254 92h-30a12 12 0 0 0-12 12v96a12 12 0 0 1-12 12h-60" />
+      <path d="M254 176h-84" />
+    </g>
+    <circle cx="134" cy="98" r="3.4" fill="currentColor" />
+    <circle cx="140" cy="212" r="3.4" fill="currentColor" />
+    <circle cx="170" cy="176" r="3.4" fill="currentColor" />
+  </svg>
+
+  <div class="u-container sc-room__grid">
+    <div class="sc-room__copy">
+      <p class="sc-kicker" data-reveal>The room</p>
+      <h2 class="sc-h sc-room__h" id="sc-room-t">
+        <span data-clip data-clip-delay="0">A smart classroom</span>
+        <span data-clip data-clip-delay="130">is more than</span>
+        <span data-clip data-clip-delay="240"><em>a screen.</em></span>
+      </h2>
+      <p class="sc-body" data-reveal data-reveal-delay="200">
+        The useful question about a smart classroom is not whether a school has one. It is whether
+        a teacher can <strong>assume</strong> it.
+      </p>
+      <p class="sc-body" data-reveal data-reveal-delay="270">
+        {S} publishes <strong>75+ digitally smart classrooms</strong> and
+        {' '}<strong>49+ interactive flat panels</strong> — figures at the scale of the whole
+        school rather than of a demonstration suite booked by rotation.
+      </p>
+      <p class="sc-body" data-reveal data-reveal-delay="340">
+        Alongside them it runs <strong>two computer laboratories</strong>, junior and senior,
+        carrying <strong>40+ machines each</strong>.
+      </p>
+    </div>
+
+    <div class="sc-room__media">
+      <span class="sc-dots" aria-hidden="true"></span>
+
+      <figure class="sc-room__lead" data-mask data-zoom data-zoom-to="1.06">
+        <Picture
+          src={pLabBusy}
+          alt={`The senior computer laboratory at ${S} in use — students at the machines along both benches with a teacher standing at the back of the room`}
+          formats={['webp']}
+          widths={[560, 900, 1200]}
+          sizes="(max-width: 1023px) 92vw, 46vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="sc-room__inset" data-parallax data-parallax-y="24">
+        <Picture
+          src={pCanva}
+          alt={`A class at ${S} during the Canva Presentation activity of the Impetus programme, seated at their desks with the activity poster on the teacher's table`}
+          formats={['webp']}
+          widths={[340, 560]}
+          sizes="(max-width: 1023px) 44vw, 20vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <svg class="sc-plus sc-room__plus" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · THE DIGITAL CLASSROOM SYSTEM ══════════════════════════════════════
+    Ground: sand. Idea: four published quantities wired together on one rule
+    that draws itself — infrastructure as a circuit, not as four cards. */}
+<section class="sc-sys" aria-labelledby="sc-sys-t">
+  <span class="sc-sys__warm" aria-hidden="true"></span>
+  <span class="sc-grid sc-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container" data-draw-scope>
+    <div class="sc-sys__head">
+      <p class="sc-kicker" data-reveal>The digital classroom system</p>
+      <h2 class="sc-h sc-sys__h" id="sc-sys-t">
+        <span data-clip data-clip-delay="0">Four numbers,</span>
+        <span data-clip data-clip-delay="150"><em>and one of them is a gap.</em></span>
+      </h2>
+    </div>
+
+    <ol class="sc-sys__list">
+      {system.map((s, i) => (
+        <li class="sc-stat" data-reveal data-reveal-delay={100 + i * 110}>
+          {/* ⚠ A WIRE ON BOTH SIDES OF THE NODE, not a trailing one. With the
+              wire only to the right every icon sat off-centre above its own
+              figure; flanking it centres the node and still draws one
+              continuous dashed run across the four. The outer two stubs are
+              hidden, so the trace begins and ends at a node. */}
+          <div class="sc-stat__rail">
+            <span class="sc-stat__wire sc-stat__wire--in" aria-hidden="true"><span data-draw></span></span>
+            <span class="sc-stat__i" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[s.mark]} />
+              </svg>
+            </span>
+            <span class="sc-stat__wire sc-stat__wire--out" aria-hidden="true">
+              <span data-draw></span>
+              <i></i>
+            </span>
+          </div>
+
+          <p class="sc-stat__n t-tabular">
+            <span data-count={s.n} data-count-suffix={s.suffix} data-count-dur={s.dur}>{`${s.n}${s.suffix}`}</span>
+          </p>
+          <p class="sc-stat__k">{s.k}</p>
+        </li>
+      ))}
+    </ol>
+
+    {/* ⚠ THE HONEST LINE, AND IT IS NOT SET AS SMALL PRINT. 49 is fewer than 75.
+        The school publishes both figures, so a reader can already see it; saying
+        it plainly is what makes the rest of the page worth believing. */}
+    <p class="sc-sys__note" data-reveal data-reveal-delay="220">
+      Read together the first two say something a marketing sentence would not:
+      {' '}<strong>the panels do not yet reach every room.</strong> This is a rollout in progress
+      rather than a finished one — and a school that publishes both numbers has already given a
+      parent the means to work that out.
+    </p>
+  </div>
+</section>
+
+{/* ══ 03 · BEYOND THE SCREEN ═════════════════════════════════════════════════
+    Ground: cream. Idea: the conceptual turn — the equipment is not the story,
+    the people certified to use it are. Photo left, a wired path right. */}
+<section class="sc-beyond" aria-labelledby="sc-beyond-t">
+  <span class="sc-beyond__warm" aria-hidden="true"></span>
+
+  <div class="u-container sc-beyond__grid" data-draw-scope>
+    <div class="sc-beyond__media">
+      <figure class="sc-beyond__lead" data-mask data-zoom data-zoom-to="1.07">
+        <Picture
+          src={pLabRow}
+          alt={`Students of ${S} at work down the length of the senior computer laboratory, a teacher walking the row behind them`}
+          formats={['webp']}
+          widths={[560, 900, 1200]}
+          sizes="(max-width: 1023px) 92vw, 44vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+      <figure class="sc-beyond__disc" data-parallax data-parallax-y="22">
+        <Picture
+          src={pLabEmpty}
+          alt={`The computer laboratory at ${S} between classes, its machines set out along the benches`}
+          formats={['webp']}
+          widths={[300, 480]}
+          sizes="(max-width: 1023px) 34vw, 15vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+
+    <div class="sc-beyond__copy">
+      <p class="sc-kicker" data-reveal>Beyond the screen</p>
+      <h2 class="sc-h sc-beyond__h" id="sc-beyond-t">
+        <span data-clip data-clip-delay="0">Technology is the tool.</span>
+        <span data-clip data-clip-delay="150"><em>Learning</em> is the point.</span>
+      </h2>
+
+      <ol class="sc-path">
+        {beyond.map((b, i) => (
+          <li class="sc-step" data-reveal data-reveal-delay={140 + i * 130}>
+            <div class="sc-step__rail">
+              <span class="sc-step__n t-tabular">{b.n}</span>
+              <span class="sc-step__i" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[b.mark]} />
+                </svg>
+              </span>
+              <span class="sc-step__wire" aria-hidden="true"><span data-draw></span></span>
+            </div>
+            <h3 class="sc-step__k">{b.k}</h3>
+            <p class="sc-step__b">{b.body}</p>
+          </li>
+        ))}
+      </ol>
+
+      <p class="sc-beyond__link" data-reveal data-reveal-delay="520">
+        <a href={STEM}>Robotics, coding and the STEM rooms <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 04 · TECHNOLOGY IN PRACTICE ════════════════════════════════════════════
+    Ground: sand. Idea: the same equipment inside ordinary days — a collage,
+    with a caption on each frame saying what it actually shows. */}
+<section class="sc-prac" aria-labelledby="sc-prac-t">
+  <span class="sc-prac__warm" aria-hidden="true"></span>
+  <span class="sc-grid sc-grid--fine" aria-hidden="true"></span>
+
+  <svg class="sc-trace sc-prac__trace" viewBox="0 0 240 260" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 18h52a12 12 0 0 1 12 12v60a12 12 0 0 0 12 12h44" />
+      <path d="M6 96h28a12 12 0 0 1 12 12v104a12 12 0 0 0 12 12h60" />
+    </g>
+    <circle cx="126" cy="102" r="3.4" fill="currentColor" />
+    <circle cx="118" cy="236" r="3.4" fill="currentColor" />
+  </svg>
+
+  <div class="u-container sc-prac__grid">
+    <div class="sc-prac__copy">
+      <p class="sc-kicker" data-reveal>Technology in practice</p>
+      <h2 class="sc-h sc-prac__h" id="sc-prac-t">
+        <span data-clip data-clip-delay="0">Real rooms.</span>
+        <span data-clip data-clip-delay="130">Real lessons.</span>
+        <span data-clip data-clip-delay="240"><em>Nothing staged.</em></span>
+      </h2>
+      <p class="sc-body" data-reveal data-reveal-delay="200">
+        Every photograph below is the school's own, and each caption says what is actually in it.
+        None of them is a stock picture of somebody else's laboratory.
+      </p>
+    </div>
+
+    {/* ONE DOMINANT FRAME, TWO SMALLER ONES BREAKING ITS EDGES. */}
+    <div class="sc-prac__stage">
+      <figure class="sc-frame sc-frame--lead" data-mask data-zoom data-zoom-to="1.06">
+        <Picture
+          src={pLabTaught}
+          alt={`A computer room at ${S} during a lesson — a teacher at the front and wall charts of keyboard keys and PC shortcuts behind the machines`}
+          formats={['webp']}
+          widths={[620, 1000, 1320]}
+          sizes="(max-width: 1023px) 92vw, 54vw"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>Taught, not just equipped — the shortcut charts are on the wall of the room itself.</figcaption>
+      </figure>
+
+      <figure class="sc-frame sc-frame--side" data-parallax data-parallax-y="-24">
+        <Picture
+          src={pCarnival}
+          alt={`A corridor at ${S} during the Reading Carnival, with the school's Microsoft Innovative Educator Expert 2024 posters displayed on the wall behind the book racks`}
+          formats={['webp']}
+          widths={[380, 640]}
+          sizes="(max-width: 1023px) 46vw, 24vw"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>The MIE Expert 2024 posters, up on a corridor wall where parents walk past them.</figcaption>
+      </figure>
+
+      <figure class="sc-frame sc-frame--disc" data-parallax data-parallax-y="20">
+        <Picture
+          src={pLabEmpty}
+          alt={`The computer laboratory at ${S}, its machines set out along the benches`}
+          formats={['webp']}
+          widths={[280, 440]}
+          sizes="(max-width: 1023px) 32vw, 14vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <svg class="sc-plus sc-prac__plus" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+    </div>
+  </div>
+</section>
+
+{/* ══ 05 · THE CLOSE ═════════════════════════════════════════════════════════ */}
+<section class="sc-close" aria-labelledby="sc-close-t">
+  <div class="sc-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pCohort}
+      alt=""
+      formats={['webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <span class="sc-close__scrim" aria-hidden="true"></span>
+  <span class="sc-close__nodes" aria-hidden="true">
+    <i style="--x: 11%; --y: 26%; --s: 3px; --o: .5"></i>
+    <i style="--x: 24%; --y: 70%; --s: 2px; --o: .32"></i>
+    <i style="--x: 48%; --y: 16%; --s: 2px; --o: .34"></i>
+    <i style="--x: 71%; --y: 66%; --s: 3px; --o: .44"></i>
+    <i style="--x: 89%; --y: 32%; --s: 2px; --o: .3"></i>
+  </span>
+
+  <div class="u-container sc-close__inner">
+    <svg class="sc-plus sc-close__plus" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+    </svg>
+
+    <h2 class="sc-h sc-close__h" id="sc-close-t">
+      <span data-clip data-clip-delay="0">The classroom</span>
+      <span data-clip data-clip-delay="150"><em>keeps changing.</em></span>
+    </h2>
+    <p class="sc-close__b" data-reveal data-reveal-delay="180">
+      The school publishes its room counts, its panel count and the certification behind them. It
+      does not publish a device-per-child ratio, a rollout schedule for the remaining rooms, or
+      which classes take digital literacy and for how long — so none of those is described here.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .sc-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .sc-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .sc-h span { display: block; }
+  .sc-h em { font-style: normal; color: var(--sb-violet); }
+
+  .sc-body {
+    max-width: 44ch;
+    margin: clamp(13px, 1.6vw, 19px) 0 0;
+    font-size: clamp(13px, 0.95vw, 15px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .sc-body strong { font-weight: 700; color: var(--sb-charcoal); }
+
+  /* ── THE PAGE'S OWN DECORATIVE LANGUAGE ───────────────────────────────────
+     A fine technical grid, right-angled traces with terminal nodes, small `+`
+     register marks and a dot field. Kept faint enough that none of it competes
+     with a photograph or a figure. */
+  .sc-grid {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.05) 1px, transparent 1px);
+    background-size: 38px 38px;
+    -webkit-mask-image: radial-gradient(120% 92% at 28% 42%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(120% 92% at 28% 42%, #000 0%, transparent 78%);
+  }
+  .sc-grid--fine {
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(110% 96% at 66% 46%, #000 0%, transparent 80%);
+    mask-image: radial-gradient(110% 96% at 66% 46%, #000 0%, transparent 80%);
+  }
+  .sc-trace {
+    position: absolute;
+    z-index: -2;
+    height: auto;
+    color: rgba(201, 60, 10, 0.24);
+  }
+  .sc-plus {
+    position: absolute;
+    z-index: 3;
+    width: clamp(11px, 1.1vw, 16px);
+    height: auto;
+    color: var(--sb-violet);
+    opacity: 0.66;
+    animation: sc-blink 6s ease-in-out infinite;
+  }
+  .sc-dots {
+    position: absolute;
+    z-index: 0;
+    left: clamp(-36px, -1.6vw, -14px);
+    top: 8%;
+    width: clamp(66px, 7.6vw, 112px);
+    height: clamp(76px, 8.6vw, 126px);
+    background-image: radial-gradient(rgba(201, 60, 10, 0.34) 1.6px, transparent 1.8px);
+    background-size: 17px 17px;
+    -webkit-mask-image: linear-gradient(115deg, #000 0%, transparent 92%);
+    mask-image: linear-gradient(115deg, #000 0%, transparent 92%);
+  }
+
+  /* ═══ 01 · THE ROOM ═══════════════════════════════════════════════════════ */
+  .sc-room {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .sc-room__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 66% at 6% 10%, rgba(255, 138, 92, 0.13) 0%, rgba(255, 138, 92, 0) 70%),
+      radial-gradient(54% 64% at 96% 84%, rgba(201, 60, 10, 0.06) 0%, rgba(201, 60, 10, 0) 72%);
+  }
+  /* The published room count, set as the page's watermark. */
+  .sc-room__ghost {
+    position: absolute;
+    z-index: -2;
+    top: clamp(-40px, -2.4vw, -16px);
+    right: clamp(16px, 3vw, 84px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(150px, 20vw, 320px);
+    font-weight: 700;
+    line-height: 0.78;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1.6px rgba(201, 60, 10, 0.18);
+    user-select: none;
+  }
+  .sc-room__ghost i { font-style: normal; font-size: 0.5em; }
+  .sc-room__trace { top: 3%; right: clamp(-26px, -0.8vw, -6px); width: clamp(130px, 16vw, 260px); }
+
+  .sc-room__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(28px, 4vw, 66px);
+    align-items: center;
+  }
+  .sc-room__h { font-size: clamp(28px, 3.4vw, 48px); }
+
+  .sc-room__media { position: relative; }
+  .sc-room__lead {
+    position: relative;
+    z-index: 1;
+    /* Off-centre in its own column — the picture BREAKS the grid rather than
+       filling a cell. */
+    width: min(100%, 88%);
+    margin: 0 0 0 auto;
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .sc-room__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 50% 46%;
+  }
+  .sc-room__inset {
+    position: absolute;
+    z-index: 2;
+    left: clamp(-18px, -0.6vw, 2px);
+    bottom: clamp(12px, 2.2vw, 40px);
+    width: clamp(128px, 15vw, 232px);
+    margin: 0;
+    overflow: hidden;
+    border: 7px solid var(--sb-ivory);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .sc-room__inset :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .sc-room__plus { top: -2%; left: 8%; }
+
+  /* ═══ 02 · THE DIGITAL CLASSROOM SYSTEM ═══════════════════════════════════ */
+  .sc-sys {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: clamp(44px, 5.2vw, 82px);
+  }
+  .sc-sys__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(62% 70% at 50% 4%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(50% 60% at 6% 94%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 72%);
+  }
+  .sc-sys__head { text-align: center; }
+  .sc-sys__h { font-size: clamp(24px, 2.7vw, 38px); }
+  .sc-sys__head .sc-h span { display: inline; }
+
+  .sc-sys__list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 26px);
+    margin: clamp(28px, 3.4vw, 50px) 0 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+  }
+  /* ⚠ NO CARD, NO PLATE. The wire between the nodes is what groups the four —
+     four boxes would say they are four separate facilities. */
+  .sc-stat { position: relative; }
+  .sc-stat__rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(6px, 0.8vw, 12px);
+  }
+  .sc-stat__i {
+    display: grid;
+    place-items: center;
+    width: clamp(44px, 4.2vw, 60px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(201, 60, 10, 0.24);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-violet);
+  }
+  .sc-stat__i svg { width: 50%; height: auto; }
+  .sc-stat__wire {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    height: 1px;
+    color: rgba(201, 60, 10, 0.45);
+  }
+  .sc-stat__wire > span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-image: linear-gradient(to right, currentColor 52%, transparent 52%);
+    background-size: 7px 1px;
+    transform-origin: left center;
+  }
+  /* The terminal node the trace runs into, sat on the gap between two cells. */
+  .sc-stat__wire i {
+    position: absolute;
+    right: calc(clamp(6px, 0.8vw, 12px) * -0.5 - 3px);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sb-orange-bright);
+  }
+  /* The run begins and ends at a node, so the two outer stubs go. */
+  .sc-stat:first-child .sc-stat__wire--in,
+  .sc-stat:last-child .sc-stat__wire--out { visibility: hidden; }
+
+  .sc-stat__n {
+    margin: clamp(14px, 1.7vw, 22px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(34px, 4vw, 58px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sb-violet);
+  }
+  .sc-stat__k {
+    max-width: 22ch;
+    margin: clamp(8px, 1vw, 12px) auto 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .sc-sys__note {
+    max-width: 78ch;
+    margin: clamp(26px, 3.2vw, 44px) auto 0;
+    padding-top: clamp(18px, 2.2vw, 28px);
+    border-top: 1px solid var(--sb-border-strong);
+    text-align: center;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .sc-sys__note strong { font-weight: 700; color: var(--sb-charcoal); }
+
+  /* ═══ 03 · BEYOND THE SCREEN ══════════════════════════════════════════════ */
+  .sc-beyond {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .sc-beyond__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 68% at 92% 10%, rgba(255, 205, 180, 0.38) 0%, rgba(255, 205, 180, 0) 70%),
+      radial-gradient(52% 62% at 4% 90%, rgba(226, 214, 240, 0.4) 0%, rgba(226, 214, 240, 0) 72%);
+  }
+
+  /* ⚠ PHOTO LEFT HERE, PHOTO RIGHT IN SECTION 01. The page alternates so the
+     reader's eye crosses the spread rather than running down one gutter. */
+  .sc-beyond__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.14fr);
+    gap: clamp(28px, 4vw, 62px);
+    align-items: center;
+  }
+  .sc-beyond__h { font-size: clamp(25px, 2.9vw, 40px); }
+
+  .sc-beyond__media { position: relative; }
+  .sc-beyond__lead {
+    margin: 0;
+    width: min(100%, 92%);
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .sc-beyond__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .sc-beyond__disc {
+    position: absolute;
+    z-index: 2;
+    right: clamp(-10px, 0.6vw, 18px);
+    bottom: clamp(-24px, -1vw, -8px);
+    width: clamp(92px, 10.5vw, 158px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-ivory);
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card);
+  }
+  .sc-beyond__disc :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sc-path {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 24px);
+    margin: clamp(24px, 3vw, 40px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sc-step__rail {
+    display: flex;
+    align-items: center;
+    gap: clamp(7px, 0.9vw, 11px);
+  }
+  .sc-step__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.4vw, 22px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--sb-orange-bright);
+  }
+  .sc-step__i {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: clamp(34px, 3.2vw, 44px);
+    aspect-ratio: 1 / 1;
+    border-radius: clamp(10px, 1vw, 14px);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+    color: var(--sb-violet);
+  }
+  .sc-step__i svg { width: 52%; height: auto; }
+  .sc-step__wire {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 1px;
+    overflow: hidden;
+    color: rgba(201, 60, 10, 0.42);
+  }
+  .sc-step__wire span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-image: linear-gradient(to right, currentColor 52%, transparent 52%);
+    background-size: 7px 1px;
+    transform-origin: left center;
+  }
+
+  .sc-step__k {
+    margin: clamp(12px, 1.4vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.2vw, 18px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .sc-step__b {
+    margin: clamp(7px, 0.9vw, 11px) 0 0;
+    font-size: clamp(11px, 0.82vw, 13px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+
+  .sc-beyond__link { margin: clamp(20px, 2.4vw, 30px) 0 0; }
+  .sc-beyond__link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgba(201, 60, 10, 0.38);
+    font-size: clamp(11.5px, 0.86vw, 13.5px);
+    font-weight: 700;
+    color: var(--sb-violet);
+    text-decoration: none;
+    transition: gap var(--sb-dur-link) var(--sb-ease), border-color var(--sb-dur-link) var(--sb-ease);
+  }
+  .sc-beyond__link a:hover { gap: 12px; border-bottom-color: var(--sb-violet); }
+
+  /* ═══ 04 · TECHNOLOGY IN PRACTICE ═════════════════════════════════════════ */
+  .sc-prac {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .sc-prac__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 66% at 8% 6%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(56% 62% at 94% 94%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 72%);
+  }
+  .sc-prac__trace { top: 12%; left: clamp(-30px, -1vw, -8px); width: clamp(110px, 14vw, 240px); }
+
+  .sc-prac__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.6fr);
+    gap: clamp(28px, 3.6vw, 58px);
+    align-items: center;
+  }
+  .sc-prac__h { font-size: clamp(25px, 2.9vw, 40px); }
+  .sc-prac__copy .sc-body { max-width: 34ch; }
+
+  .sc-prac__stage { position: relative; }
+  .sc-frame {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .sc-frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  /* ⚠ CAPTIONS, NOT DECORATION. Each says what its photograph actually shows —
+     the difference between a collage and a claim. */
+  .sc-frame figcaption {
+    padding: clamp(9px, 1vw, 13px) clamp(11px, 1.2vw, 16px);
+    font-size: clamp(10.5px, 0.76vw, 12px);
+    line-height: 1.56;
+    color: var(--sb-text-muted);
+  }
+  /* ⚠ THE LEAD FRAME RESERVES ITS OWN CAPTION. The two floating frames used to
+     sit over the bottom of the lead and swallowed the caption whole; the lead is
+     now narrower and set to the LEFT, and the pair overlaps only its right edge
+     and its corner — never the text under the picture. */
+  .sc-frame--lead {
+    width: min(100%, 74%);
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .sc-frame--lead :global(img) { aspect-ratio: 3 / 2; }
+  .sc-frame--lead figcaption { padding-right: clamp(14px, 1.6vw, 22px); }
+
+  .sc-frame--side {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    top: clamp(24px, 4vw, 68px);
+    width: clamp(150px, 19vw, 280px);
+    border: 6px solid var(--sb-sand);
+  }
+  .sc-frame--side :global(img) { aspect-ratio: 4 / 3; }
+  .sc-frame--disc {
+    position: absolute;
+    z-index: 3;
+    /* ⚠ ANCHORED TO THE LEAD FRAME'S RIGHT EDGE, NOT TO THE STAGE'S. Measured
+       from the right it landed on the side frame's caption and cut the sentence
+       in half. It now breaks the lead photograph's corner and nothing else. */
+    left: 52%;
+    bottom: clamp(16px, 3vw, 54px);
+    width: clamp(88px, 10vw, 148px);
+    aspect-ratio: 1 / 1;
+    border: 6px solid var(--sb-sand);
+    border-radius: 50%;
+  }
+  /* ⚠ THE <picture> HAS TO BE A BLOCK. It is inline by default, so the image's
+     `height: 100%` resolved against the inline box rather than the circle and
+     left the bottom of the disc empty. */
+  .sc-frame--disc :global(picture) { display: block; width: 100%; height: 100%; }
+  .sc-frame--disc :global(img) { height: 100%; }
+  .sc-prac__plus { top: -3%; left: 6%; }
+
+  /* ═══ 05 · THE CLOSE ══════════════════════════════════════════════════════ */
+  .sc-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(50px, 6vw, 96px);
+  }
+  /* Oversized because it carries a parallax drift — a box sized exactly to the
+     section would show the ground at one end of the travel. */
+  .sc-close__media { position: absolute; z-index: -3; inset: -12% 0; }
+  .sc-close__media :global(picture),
+  .sc-close__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+  .sc-close__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(28, 14, 8, 0.82) 0%, rgba(28, 14, 8, 0.7) 46%, rgba(28, 14, 8, 0.86) 100%),
+      radial-gradient(66% 76% at 50% 40%, rgba(255, 92, 53, 0.18) 0%, transparent 72%);
+  }
+  .sc-close__nodes { position: absolute; z-index: -1; inset: 0; }
+  .sc-close__nodes i {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--s);
+    height: var(--s);
+    border-radius: 50%;
+    background: var(--sb-orange-bright);
+    opacity: var(--o);
+    animation: sc-blink 8s ease-in-out infinite;
+  }
+  .sc-close__nodes i:nth-child(2n) { animation-duration: 11s; animation-delay: -3s; }
+
+  .sc-close__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+  .sc-close__plus {
+    position: static;
+    margin-bottom: clamp(10px, 1.2vw, 16px);
+    color: var(--sb-lime);
+    opacity: 0.9;
+  }
+  .sc-close__h {
+    max-width: 20ch;
+    margin: 0;
+    font-size: clamp(28px, 3.4vw, 48px);
+    color: #fff;
+  }
+  .sc-close__h em { color: var(--sb-lime); font-style: italic; }
+  .sc-close__b {
+    max-width: 66ch;
+    margin: clamp(15px, 1.8vw, 22px) 0 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+
+  /* ═══ MOTION ══════════════════════════════════════════════════════════════ */
+  @keyframes sc-blink {
+    0%, 100% { opacity: var(--o, 0.66); }
+    50% { opacity: calc(var(--o, 0.66) * 0.36); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sc-plus,
+    .sc-close__nodes i { animation: none; }
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .sc-room__grid,
+    .sc-beyond__grid,
+    .sc-prac__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(32px, 4.6vw, 48px);
+    }
+    .sc-body,
+    .sc-prac__copy .sc-body { max-width: 58ch; }
+
+    .sc-room__lead,
+    .sc-beyond__lead,
+    .sc-frame--lead { width: 100%; }
+    .sc-room__inset { width: clamp(112px, 22vw, 170px); }
+    .sc-beyond__disc { width: clamp(84px, 16vw, 130px); }
+
+    /* ⚠ THE PHOTO GOES BACK ABOVE THE COPY IN SECTION 03. Source order puts it
+       first so the alternation works on desktop; stacked, a reader meeting the
+       picture before the heading has no idea what they are looking at. */
+    .sc-beyond__media { order: 2; }
+    .sc-beyond__copy { order: 1; }
+
+    .sc-sys__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(26px, 4vw, 38px); }
+    /* Two across, so the run restarts on each row: the wire leaving the right
+       node and the one entering the left node both point at nothing. */
+    .sc-stat:nth-child(2n) .sc-stat__wire--out,
+    .sc-stat:nth-child(2n + 1) .sc-stat__wire--in { visibility: hidden; }
+
+    .sc-path { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .sc-prac__trace { display: none; }
+  }
+
+  @media (max-width: 767px) {
+    .sc-sys__list { grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 6vw, 32px); }
+    .sc-stat__i { margin-inline: 0; }
+    .sc-stat { text-align: left; }
+    .sc-stat__k { margin-inline: 0; max-width: none; }
+
+    .sc-path { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 5vw, 26px); }
+    /* Stacked, a wire pointing right leads nowhere — it becomes a short stub. */
+    .sc-step__wire { flex: 0 0 clamp(26px, 11vw, 52px); }
+
+    /* The collage keeps its overlaps; only the scale comes down. Flattening it
+       into three stacked boxes is what the brief rules out. */
+    .sc-frame--side { width: clamp(118px, 34vw, 170px); top: clamp(14px, 5vw, 30px); }
+    .sc-frame--disc { width: clamp(66px, 20vw, 100px); left: 46%; }
+    .sc-frame figcaption { font-size: 10.5px; }
+
+    .sc-room__ghost { font-size: clamp(120px, 36vw, 200px); }
+    .sc-room__trace { display: none; }
+  }
+</style>

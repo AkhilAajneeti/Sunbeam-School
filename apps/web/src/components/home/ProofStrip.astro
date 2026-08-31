@@ -1,0 +1,210 @@
+---
+/**
+ * §03b · HERITAGE LEDE — the band directly under the banner
+ *
+ * Built to the client's reference: an oversized serif figure on the left, a
+ * hairline-and-small-caps eyebrow, a serif heading that completes the figure as
+ * one sentence, and the crest inside a faint tinted panel at the top right.
+ *
+ * WHAT MOVED — this slot used to carry the four recognition proofs. None of
+ * them left the page: the #1 ranking leads both the Story stat card and the
+ * Achievements section, CBSE and Microsoft appear in Affiliations with their
+ * actual marks, and 2,700-from-456 is in the Story checklist.
+ *
+ * ⚠ The heading here is the same sentence as §05 Story's ("Fifty years of
+ * Sunbeam. Thirteen in Ballia."). Two sections apart, that reads as a mistake.
+ * Story's heading should change — see the note in the handover.
+ *
+ * TYPE — this is the one band on the page set in the serif. docs/05 D9 reserves
+ * Source Serif for the school's institutional voice, and a fifty-year founding
+ * statement is exactly that. Everything else stays on Bricolage.
+ *
+ * COLOUR — the reference sets the eyebrow in gold. Gold on a light ground
+ * measures 2.4:1 and docs/05 § I1 rules it out as text; that rule was already
+ * broken once across five components (D17) and is not being broken again. The
+ * gold survives as the RULE, which is decoration, and the eyebrow text takes
+ * the deep orange, which also keeps the band inside the current palette.
+ */
+import { Image } from 'astro:assets';
+import { heritageLede } from '../../data/site';
+import crest from '../../assets/icons/logos/sunbeam.png';
+---
+
+<section class="proof" aria-labelledby="proof-heading">
+  {/* Tinted panel, flush to the top and right edges, holding the crest. In the
+      reference this is a distinct block rather than a floating watermark — it
+      gives the composition a right-hand edge to sit against. */}
+  <span class="proof__panel" aria-hidden="true">
+    <Image class="proof__crest" src={crest} alt="" widths={[420, 840]} sizes="420px"
+      loading="lazy" />
+  </span>
+
+  <div class="u-container">
+    <div class="proof__lead">
+      {/* Hidden from assistive tech: it is announced as part of the heading
+          below, so exposing it here would read "50" twice. */}
+      <p class="proof__figure t-tabular" aria-hidden="true" data-count={heritageLede.figure}>{heritageLede.figure}</p>
+
+      <div class="proof__copy">
+        <p class="proof__eyebrow">
+          <span class="proof__rule" aria-hidden="true"></span>
+          {heritageLede.eyebrow}
+        </p>
+
+        <h2 class="proof__heading" data-split id="proof-heading">
+          <span class="u-visually-hidden">{heritageLede.figure} </span>{heritageLede.heading}
+        </h2>
+
+        <p class="proof__body">{heritageLede.body}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .proof {
+    position: relative;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: var(--sb-section-y);
+  }
+
+  /* --- Crest panel ----------------------------------------------------------
+     Top-aligned and bled off the right edge, not vertically centred: in the
+     reference it reads as a block the composition sits against, and centring it
+     left the crest floating in the middle of nothing. */
+  .proof__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: clamp(24px, 7%, 80px);
+    width: clamp(210px, 27vw, 440px);
+    display: grid;
+    place-items: center;
+    background: rgba(28, 14, 8, 0.032);
+    pointer-events: none;
+    height:100%;
+  }
+
+  .proof__crest {
+    width: 76%;
+    height: auto;
+    opacity: 0.11;
+    user-select: none;
+  }
+
+  /* --- Lead ------------------------------------------------------------------ */
+
+  .proof__lead {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: clamp(28px, 4vw, 72px);
+  }
+
+  .proof__figure {
+    font-family: var(--sb-font-serif);
+    font-weight: 600;
+    font-size: clamp(88px, 12.5vw, 184px);
+    line-height: 0.82;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+
+  .proof__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    font-size: var(--sb-label);
+    font-weight: 600;
+    letter-spacing: var(--sb-track-label);
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+    margin-bottom: var(--sb-5);
+  }
+
+  /* Gold as decoration only — see the colour note in the header comment. */
+  .proof__rule {
+    flex: 0 0 auto;
+    width: clamp(24px, 3vw, 44px);
+    height: 2px;
+    background: var(--sb-gold);
+  }
+
+  .proof__heading {
+    font-family: var(--sb-font-serif);
+    font-weight: 600;
+    font-size: clamp(26px, 3vw, 42px);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+    color: var(--sb-charcoal);
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+
+  .proof__body {
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+    max-width: 46ch;
+  }
+
+  /* --- Tablet ---------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .proof__heading { max-width: none; }
+    .proof__panel { width: clamp(180px, 30vw, 300px); }
+
+    /* The copy column is `1fr` of the container, so without this it runs on
+       underneath the panel — measured at 768, the heading crossed the panel's
+       left edge by ~200px. Reserving slightly more than the panel's own width
+       keeps the two apart at every size in the band. */
+    .proof__lead { padding-right: clamp(196px, 32vw, 320px); }
+  }
+
+  /* --- Mobile: the panel steps aside ---------------------------------------- */
+
+  @media (max-width: 639px) {
+    /* The crest stops being a block beside the copy and becomes the band's
+       background — centred behind everything, at a size that reads as a
+       watermark rather than an image someone forgot to place. */
+    .proof__panel {
+      inset: 0;
+      width: auto;
+      background: none;
+    }
+
+    .proof__crest {
+      width: min(78vw, 340px);
+      opacity: 0.08;
+    }
+
+    /* Centred on a phone: the figure, the rule, the heading and the body all
+       share one axis, which is the only arrangement that holds together once
+       the two-column split is gone.
+
+       `padding-right: 0` is the important line. The tablet rule above reserves
+       room for the side panel, and it was still applying here — at 390 that is
+       196px of a ~350px measure handed to a panel no longer sitting there, so
+       the heading was breaking into four short lines. */
+    .proof__lead {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+      text-align: center;
+      padding-right: 0;
+      row-gap: var(--sb-4);
+    }
+
+    .proof__eyebrow { justify-content: center; }
+
+    .proof__heading,
+    .proof__body {
+      max-width: none;
+      margin-inline: auto;
+    }
+
+    .proof__figure { line-height: 0.9; }
+  }
+</style>

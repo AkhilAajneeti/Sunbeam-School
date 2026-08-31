@@ -1,0 +1,904 @@
+---
+/**
+ * ABOUT → VISION & VALUES — closes asset request A3.
+ *
+ * COPY — every word on this page is the school's own, transcribed from the
+ * three Sunbeam identity panels supplied by the client: the Vision panel, the
+ * "Jai Hind — our Greeting at Sunbeam" panel, and "The Story of The Sunbeam
+ * Identity (The Sunbeam Cipher)". Nothing is paraphrased and nothing is added.
+ * The only editorial act is emphasis: three phrases in the Vision statement are
+ * set in the brand colour, and the three motto words are picked out where the
+ * Cipher already names them. No word is moved.
+ *
+ * ⚠ THERE IS STILL NO MISSION STATEMENT IN THE SUPPLIED MATERIAL. The panels
+ * carry a Vision, a greeting and an identity story — no Mission. The page was
+ * titled "Vision & Values" for that reason; the client has since asked for
+ * "Vision and Mission", which is their call to make and is what it now reads.
+ *
+ * The heading therefore names something the page does not yet contain. Nothing
+ * on the page pretends otherwise — no Mission section has been invented to fill
+ * it, and none will be. When the school sends a Mission statement it becomes a
+ * fourth movement here and the title stops writing a cheque the content cannot
+ * cash.
+ *
+ * ⚠ THE VISION IS THE GROUP'S, NOT BALLIA'S. The Vision panel is signed
+ * "Sunbeam Group of Educational Institutions, Varanasi · Estd. 1972", and the
+ * crest on it reads Estd. 1972 where the Ballia crest reads Estd. 2013. The
+ * attribution block says so rather than presenting it as written in Ballia.
+ *
+ * THREE MOVEMENTS, THREE DIFFERENT ROOMS — the brief asked that no two sections
+ * repeat a layout:
+ *   1 · Vision  — ink ground, the statement as a monument, lit by real rays
+ *   2 · Jai Hind — ivory, the greeting at poster scale, copy set asymmetrically
+ *   3 · Cipher  — sand, the emblem speaking in the first person, then its own
+ *                 three colours as keys you can read one at a time
+ *
+ * Every effect here is earned by the content. The rays exist because the school
+ * is called Sunbeam and its emblem is a sunrise over an open book. The colour
+ * keys exist because the crest's three colours ARE the text. Nothing is a
+ * gradient for the sake of a gradient.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import { Image } from 'astro:assets';
+import { school } from '../../data/site';
+
+import banner from '../../assets/photos/sunbeem-5.jpg';
+import crest from '../../assets/icons/logos/sunbeam.png';
+import wave from '../../assets/icons/bg-2.png';
+
+/**
+ * The three colours, keyed to the crest.
+ *
+ * The hexes are chosen to sit in the emblem's family and to hold AA against
+ * the text that names them — sampling the PNG directly returns washed-out
+ * averages, because the mark is small and every edge is antialiased, so the
+ * measured "red" came back a dusty pink at #d6866c.
+ *
+ * Text NEVER sits on these colours. The disc carries the colour; the sentence
+ * stays on the card and the card fills with a light tint of that same colour on
+ * hover. That keeps every word at full contrast in either state.
+ *
+ * `fill` is a SOLID hex, not an alpha over white. The homepage cards learned
+ * this the hard way: an rgba fill resolves against whatever is behind the card,
+ * so the measured contrast stops being a property of the card and starts being
+ * a property of the section it happens to sit in. These are the same three
+ * colours composited once, at build time, and they cannot drift.
+ */
+const keys = [
+  {
+    name: 'Red',
+    hex: '#c8281f',
+    fill: '#f8e5e4',
+    text: 'The RED in me is the youthful energy and vigor that I channelize into substantial output.',
+  },
+  {
+    name: 'Blue',
+    hex: '#17529b',
+    fill: '#e3eaf3',
+    text: 'The BLUE symbolizes trust, loyalty, wisdom, confidence, intelligence, faith and a never ending quest for perfection and excellence.',
+  },
+  {
+    name: 'Yellow',
+    hex: '#e8a800',
+    fill: '#fbf1d6',
+    text: 'YELLOW, the color of sunshine, hope, and happiness which Sunbeam spread all over.',
+  },
+];
+
+/** The Cipher, in the emblem's own first-person voice. */
+const cipher = [
+  'I become your thought and your vision the moment you embrace me. I illuminate your path and guide you on your onward Journey. I was conceptualized and put into my form in the year 1972, when Sunbeam was established and the journey there on has been tremendous.',
+  'All Sunbeams are open books with transparency in thought and action and an honest affirmation. They are learners and keep their slates clean to constantly learn and evolve.',
+];
+
+const greeting = [
+  'Sunbeam schools not only use this as a greeting but also a way of life where all aspects of patriotism are nurtured and felt to be visible in every little act of Sunbeams. Sunbeams feel strongly for their nation and stand up proudly for it in all their acts.',
+  'Jai Hind, is more than a salutation from Sunbeams to others reiterating the pride they take of being an Indian and everything that comes along with that identity.',
+];
+---
+
+<BaseLayout
+  title="Vision and Mission — Sunbeam School Ballia"
+  description="The Sunbeam vision, the Jai Hind greeting, and the story of the Sunbeam identity — Duty, Devotion, Discipline, in the school's own words."
+>
+  <PageHero
+    title="Vision and Mission"
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'About', href: '/about/' }]}
+    src={banner}
+    alt="Student council office-bearers and NCC cadets of Sunbeam School Ballia on stage with members of staff."
+    position="50% 42%"
+  />
+
+  <div class="u-page-panel u-page-panel--flush">
+    {/* ==== 1 · VISION ===================================================== */}
+    <section class="vis" aria-labelledby="vis-heading">
+      {/* Real rays, drawn with a repeating conic gradient and faded out with a
+          radial mask. The school is called Sunbeam and its emblem is a sunrise
+          over an open book — this is the mark's own geometry, not decoration
+          borrowed from a template. */}
+      <div class="vis__rays" aria-hidden="true"></div>
+
+      <div class="u-container vis__inner">
+        {/* --solid, not --violet. The default pill fills with --sb-violet-wash
+            (#ffede6), which on this peach sunrise ground is four points away
+            from the section behind it — the pill disappeared and left orange
+            text floating. The solid variant is the same component, and it is
+            the only one that stays a pill on a warm ground. */}
+        <p class="vis__pill"><span class="pill pill--solid">Our Vision</span></p>
+
+        <h2 class="u-visually-hidden" id="vis-heading">Our Vision</h2>
+
+        <p class="vis__words" data-split>
+          Ongoing consolidation, growth and collaboration within and across
+          institutions that are instrumental in <em>holistic growth of students</em>,
+          in a conducive environment, that promotes <em>excellence</em> and the
+          students further move on to <em>refine the social fabric</em>.
+        </p>
+
+        {/* NO CREST HERE, deliberately. The only mark in the repository is the
+            Ballia crest, which is stamped Estd. 2013 — setting it beside an
+            attribution that reads "Established 1972" would put a visible
+            contradiction on the page. The Vision panel carries the GROUP's
+            crest and wordmark; those are asset request B2. Text alone until
+            they arrive. */}
+        <div class="vis__from" data-reveal data-reveal-delay="200">
+          <p class="vis__from-text">
+            <span>Sunbeam Group of Educational Institutions</span>
+            <span class="vis__from-sub">Varanasi · Established 1972</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* ==== 2 · JAI HIND ==================================================== */}
+    <section class="hail" aria-labelledby="hail-heading">
+      {/* The wave sits BEHIND the greeting, blended rather than pasted — see
+          the note on multiply in the stylesheet. Decorative, so it is out of
+          the accessibility tree entirely. */}
+      <Image
+        class="hail__bg"
+        src={wave}
+        alt=""
+        aria-hidden="true"
+        widths={[1280, 1920]}
+        sizes="100vw"
+        loading="lazy"
+      />
+
+      <div class="u-container">
+        <p class="hail__eyebrow">…our greeting at Sunbeam</p>
+
+        <h2 class="hail__title" id="hail-heading" data-split>Jai Hind</h2>
+
+        {/* Three abstract bars in saffron, ivory and green. Deliberately NOT a
+            flag: no chakra, no flag proportion, no rectangle — a rule made of
+            three segments, which is a reference rather than a depiction. The
+            middle bar carries a hairline because ivory on ivory would vanish. */}
+        <div class="hail__rule" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+
+        <div class="hail__grid">
+          <div class="hail__lead" data-reveal>
+            <p class="hail__gloss">Victory be to my India</p>
+            <p class="hail__oath">
+              All Sunbeams live and abide by the ethos of Jai Hind.
+            </p>
+          </div>
+
+          <div class="hail__body" data-reveal data-reveal-delay="140">
+            {greeting.map((p) => <p>{p}</p>)}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ==== 3 · THE SUNBEAM CIPHER ========================================== */}
+    <section class="ciph" aria-labelledby="ciph-heading">
+      <div class="u-container">
+        <div class="ciph__head" data-reveal>
+          <p class="ciph__pill"><span class="pill pill--violet">The Sunbeam Cipher</span></p>
+          <h2 class="ciph__heading t-h2-sans" id="ciph-heading" data-split>
+            The story of the Sunbeam <span class="t-squiggle">identity</span>
+          </h2>
+        </div>
+
+        <div class="ciph__grid">
+          {/* The emblem, held in its own ring of light — it is the thing
+              speaking in the paragraphs beside it. */}
+          <figure class="ciph__mark" data-reveal>
+            <Image
+              src={crest}
+              alt="The Sunbeam crest — a rising sun over an open book, ringed by the words Duty, Devotion, Discipline."
+              title="Sunbeam School Ballia crest"
+              widths={[280, 560]}
+              sizes="(max-width: 899px) 180px, 260px"
+              loading="lazy"
+            />
+          </figure>
+
+          <div class="ciph__letter" data-reveal data-reveal-delay="120">
+            <p class="ciph__salute">Jai Hind !!<br />I am Sunbeam !!</p>
+
+            <p class="ciph__para">{cipher[0]}</p>
+
+            <blockquote class="ciph__quote">
+              <p>A single sunbeam is enough to drive away many shadows.</p>
+            </blockquote>
+
+            {/* The motto words are the school's own, already in this sentence.
+                Picking them out is emphasis, not editing. */}
+            <p class="ciph__para">
+              My innumerable rays or Sunbeams* are shaping the destiny of mankind
+              through their diverse capabilities steeped into the spirit of
+              <strong>Duty</strong> towards self, society and nation,
+              <strong>Devotion</strong> towards righteous work and
+              <strong>Discipline</strong> to walk down the right path, not
+              getting swayed by temptations.
+            </p>
+
+            <p class="ciph__para">{cipher[1]}</p>
+          </div>
+        </div>
+
+        {/* --- The three colours ------------------------------------------- */}
+        <ul class="keys">
+          {keys.map((k, i) => (
+            <li
+              class="key"
+              style={`--key: ${k.hex}; --key-fill: ${k.fill};`}
+              data-reveal
+              data-reveal-delay={i * 110}
+            >
+              <span class="key__disc" aria-hidden="true"></span>
+
+              {/* The <p> is the MASK; the inner span is the copy that rolls out
+                  and ::before is the duplicate that rolls up behind it. Both
+                  read from the same `k.name`, so the two lines cannot drift
+                  apart. Same construction as the homepage cards. */}
+              <p class="key__name" data-title={k.name}><span>{k.name}</span></p>
+
+              <p class="key__text">{k.text}</p>
+            </li>
+          ))}
+        </ul>
+
+        <div class="ciph__close" data-reveal>
+          <p class="ciph__closing">
+            So … come be the Sunbeam and take forward my legacy … Shine each day
+            and let the world shine in your reflected glory…
+          </p>
+          <p class="ciph__note">
+            * A student studying in any Sunbeam Institution, or an alumnus, is
+            called a <strong>Sunbeam</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  /* BOTH ends zeroed. Every one of the three movements paints its own
+     full-bleed ground and carries its own padding, so the panel has no ivory of
+     its own left to show — its default padding put a bare strip above the ink
+     section and another between the sand section and the footer. */
+  .u-page-panel--flush { padding-block: 0; }
+
+  /* ===== 1 · VISION ========================================================
+     An ink room. The page is pale either side of it, so this section reads as
+     somewhere you have walked into rather than another band scrolled past. */
+
+  /* DAYBREAK, not a spotlight.
+     This section was ink first, and it sat directly under a dark photographic
+     banner — two dark blocks stacked, with the banner's lower edge dissolving
+     into the section below it and no line for the eye to land on. Lightening it
+     is not only the fix, it is the truer reading: the school is called Sunbeam,
+     its mark is a sunrise, and the page should open INTO light rather than
+     further into shadow. The ink moved to Jai Hind, where it now falls between
+     two pale sections and reads as deliberate.
+
+     Two layers: a warm sun low on the horizon at the top edge, over a peach
+     wash beneath it.
+
+     THE FLOOR IS #fbefe4, NOT --sb-ivory. Jai Hind below is ivory, so ending
+     this gradient on the same token made the two sections merge into one long
+     pale field with no edge between them — the exact complaint raised about the
+     homepage bands on mobile. A few points warmer and the step is legible
+     without needing a rule drawn across the page. */
+  .vis {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(124% 82% at 50% -8%, #ffe6cc 0%, rgba(255, 230, 204, 0) 66%),
+      linear-gradient(180deg, #fdf3ea 0%, #fbefe4 100%);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  /* THE RAYS. A repeating conic gradient from a point above the section, faded
+     out with a radial mask so the fan dissolves instead of ending on a hard
+     circle. Both mask properties are declared — Safari still wants the prefix,
+     and without it the whole fan renders as an opaque disc.
+
+     Warm brand tint now, not white — on a cream ground a white ray is invisible
+     and a grey one reads as dirt. Alpha stays low for the same reason it did on
+     ink: any higher and the stripes cross the statement and the type looks
+     printed on corrugation. */
+  .vis__rays {
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    width: 180%;
+    height: 170%;
+    translate: -50% 0;
+    background: repeating-conic-gradient(
+      from 196deg at 50% 0%,
+      rgba(201, 60, 10, 0.07) 0deg 2.4deg,
+      transparent 2.4deg 8deg
+    );
+    -webkit-mask-image: radial-gradient(58% 62% at 50% 6%, #000 0%, transparent 74%);
+    mask-image: radial-gradient(58% 62% at 50% 6%, #000 0%, transparent 74%);
+    pointer-events: none;
+    transform-origin: 50% 0%;
+    animation: vis-drift 26s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  /* A 1.2 degree sweep over 26 seconds — slow enough that you notice light has
+     moved rather than that something is animating. */
+  @keyframes vis-drift {
+    0%, 100% { transform: rotate(-0.6deg); }
+    50%      { transform: rotate(0.6deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vis__rays { animation: none; }
+  }
+
+  .vis__inner { position: relative; z-index: 1; }
+
+  .vis__pill { margin-bottom: var(--sb-7); }
+
+  /* THE MONUMENT. 42ch, so the statement breaks into seven or eight short
+     lines and reads as an inscription rather than a paragraph. */
+  .vis__words {
+    max-width: 42ch;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 3.5vw, 48px);
+    line-height: 1.22;
+    letter-spacing: -0.025em;
+    color: var(--sb-charcoal);
+  }
+
+  /* Not italic. The brand colour alone carries the emphasis — italicising a
+     display face this heavy makes it look like a different font.
+     --sb-violet, not --sb-lime: lime is a 3:1 tint built to sit on ink, and on
+     cream it drops to roughly 2.5:1. The primary holds. */
+  .vis__words em {
+    font-style: normal;
+    color: var(--sb-violet);
+  }
+
+  .vis__from {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-5);
+    margin-top: clamp(40px, 6vh, 72px);
+    padding-top: var(--sb-6);
+    border-top: var(--sb-hairline);
+    max-width: 42ch;
+  }
+
+  .vis__from-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .vis__from-text > span:first-child {
+    font-weight: 600;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-charcoal);
+  }
+
+  /* A solid token, not white-at-72%. An alpha tuned for ink turns to paste on
+     cream — the supporting line takes its hierarchy from size and tracking. */
+  .vis__from-sub {
+    font-size: var(--sb-caption);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+
+  /* ===== 2 · JAI HIND =======================================================
+     A poster. The greeting is two words and they are the whole composition —
+     everything else is set small and pushed to one side of them. */
+
+  /* `isolation: isolate` is what makes the blend work AND keeps it contained.
+     mix-blend-mode composites against everything behind it in the nearest
+     stacking context — without this the wave would reach past the section and
+     multiply against the sunrise above it. Isolated, it blends against exactly
+     one thing: this section's own ivory. */
+  .hail {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  /* MULTIPLY, not opacity alone. The artwork is drawn on WHITE, and this
+     section is ivory — dropped in as an ordinary image it would show as a
+     slightly cooler rectangle with visible edges. Under multiply, white is the
+     identity: it leaves the ivory exactly as it was, and only the wave strokes
+     darken it. The graphic stops being a pasted panel and becomes ink on the
+     page.
+
+     The mask fades it out before it reaches the body copy. The waves are grey,
+     and grey behind 17px text is where a decorative background starts costing
+     legibility — the giant heading can carry it, the paragraphs cannot. */
+  .hail__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: 74%;
+    object-fit: cover;
+    object-position: 50% 46%;
+    mix-blend-mode: multiply;
+    opacity: 0.62;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 54%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 54%, transparent 100%);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .hail > .u-container { position: relative; z-index: 1; }
+
+  .hail__eyebrow {
+    font-family: var(--sb-font-serif);
+    font-style: italic;
+    font-size: clamp(16px, 1.6vw, 21px);
+    color: var(--sb-text-muted);
+    margin-bottom: var(--sb-3);
+  }
+
+  /* Poster scale. `vw` rather than a token: this line exists to be the largest
+     thing on the page at every width, which a fixed ramp cannot promise. */
+  .hail__title {
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: clamp(58px, 11.5vw, 168px);
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+    color: var(--sb-charcoal);
+  }
+
+  /* ONE continuous rule, not three separated bars. With a 6px gap between them
+     the white middle segment simply disappeared into the ivory ground and the
+     rule read as two bars with a hole. Butted together inside a single outlined
+     track, the middle segment is defined by its neighbours and needs no fill of
+     its own to be seen. */
+  .hail__rule {
+    display: flex;
+    margin-top: var(--sb-6);
+    width: clamp(160px, 22vw, 260px);
+    height: 9px;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(22, 16, 12, 0.16);
+  }
+
+  .hail__rule span { flex: 1; }
+
+  .hail__rule span:nth-child(1) { background: #ff9933; }
+  .hail__rule span:nth-child(2) { background: #fff; }
+  .hail__rule span:nth-child(3) { background: #138808; }
+
+  /* Asymmetric on purpose — 5 : 7, so the two halves cannot be mistaken for a
+     pair of equal columns. */
+  .hail__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+    margin-top: clamp(36px, 5vh, 64px);
+  }
+
+  .hail__gloss {
+    font-family: var(--sb-font-serif);
+    font-style: italic;
+    font-size: clamp(24px, 2.6vw, 38px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--sb-violet);
+  }
+
+  .hail__oath {
+    margin-top: var(--sb-5);
+    padding-top: var(--sb-5);
+    border-top: var(--sb-hairline);
+    font-size: var(--sb-body);
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--sb-charcoal);
+  }
+
+  .hail__body p {
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    max-width: 54ch;
+  }
+
+  .hail__body p + p { margin-top: var(--sb-5); }
+
+  /* ===== 3 · THE SUNBEAM CIPHER ============================================= */
+
+  .ciph {
+    background: var(--sb-sand);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  .ciph__head { margin-bottom: var(--sb-9); }
+  /* Its own class, not the one from History & Legacy — Astro scopes styles per
+     file, so borrowing that page's `hist__pill` here would have matched nothing
+     and the pill would have sat flush against the heading. */
+  .ciph__pill { margin-bottom: var(--sb-6); }
+  .ciph__heading { color: var(--sb-charcoal); }
+
+  .ciph__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 76px);
+    align-items: start;
+  }
+
+  /* The mark sits in its own ring of light — a soft radial behind it, echoing
+     the ray fan in movement 1 without repeating the device outright. */
+  .ciph__mark {
+    position: relative;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: var(--sb-8);
+  }
+
+  .ciph__mark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--sb-r-full);
+    background: radial-gradient(
+      circle at 50% 44%,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.55) 46%,
+      transparent 72%
+    );
+  }
+
+  .ciph__mark :global(img) {
+    position: relative;
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+  }
+
+  /* The salute is the emblem introducing itself, so it is set as speech: the
+     serif, italic, at display size. */
+  .ciph__salute {
+    font-family: var(--sb-font-serif);
+    font-style: italic;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-6);
+  }
+
+  .ciph__para {
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    max-width: 62ch;
+  }
+
+  .ciph__para + .ciph__para { margin-top: var(--sb-5); }
+
+  .ciph__para strong {
+    font-weight: 700;
+    color: var(--sb-charcoal);
+  }
+
+  .ciph__quote {
+    margin: var(--sb-7) 0;
+    padding-left: var(--sb-7);
+    border-left: 3px solid var(--sb-violet);
+    max-width: 62ch;
+  }
+
+  .ciph__quote p {
+    font-family: var(--sb-font-serif);
+    font-style: italic;
+    font-size: clamp(19px, 1.9vw, 27px);
+    line-height: 1.42;
+    letter-spacing: -0.01em;
+    color: var(--sb-charcoal);
+  }
+
+  /* --- The three colour keys -------------------------------------------------
+     The crest's own colours, and the text that explains them.
+
+     NOT interactive in the keyboard sense, and deliberately so: nothing is
+     hidden behind the hover. Every sentence is fully readable at rest, so the
+     wash is enhancement rather than a disclosure control — which means these
+     need no tabindex, no role, and no keyboard handler to be complete. Giving
+     a static definition list a tab stop would be a worse outcome, not a
+     better one. */
+  .keys {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sb-6);
+    list-style: none;
+    margin: clamp(48px, 7vh, 88px) 0 0;
+    padding: 0;
+  }
+
+  .key {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: var(--sb-7);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    box-shadow: var(--sb-shadow-card);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+
+  /* PART A — the fill wipes DOWN from the top edge. 0.4s, deliberately quicker
+     than the 1.05s title roll: the offset between the two is the effect. Both
+     numbers are lifted from the homepage cards unchanged, because a gesture
+     that means "this card" should feel identical wherever it appears. */
+  .key::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--key-fill);
+    border-radius: inherit;
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    -webkit-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+    -webkit-transition: -webkit-transform 0.4s ease-out;
+    transition: transform 0.4s ease-out;
+  }
+
+  .key:hover { transform: translateY(-6px); box-shadow: var(--sb-shadow-card-hover); }
+
+  .key:hover::before {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+
+  /* Everything the card holds rides above the fill. */
+  .key > * { position: relative; z-index: 1; }
+
+  /* The ring is not decoration. Yellow on white measures about 1.9:1 and on its
+     own hover tint less than that — without an outline the disc would have no
+     perceivable edge on the one card that most needs it. */
+  .key__disc {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--sb-r-full);
+    background: var(--key);
+    box-shadow: inset 0 0 0 1px rgba(22, 16, 12, 0.14);
+    margin-bottom: var(--sb-5);
+    transition: transform var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .key:hover .key__disc { transform: scale(1.14); }
+
+  /* PART B — the roll-up swap. The element is the mask, its inner span is the
+     copy that leaves, and ::before is an identical copy waiting below that
+     arrives. Same duration and easing on both, so they travel as one piece of
+     type rather than two things that happen to animate at once.
+
+     ::before inherits every typographic property from this element, so the two
+     copies cannot diverge. */
+  .key__name {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-4);
+  }
+
+  .key__name > span {
+    display: inline-block;
+    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  .key__name::before {
+    content: attr(data-title);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-transform: translateY(110%);
+    transform: translateY(110%);
+    -webkit-transition: -webkit-transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+    transition: transform 1.05s cubic-bezier(0.3, 0.86, 0.36, 0.95);
+  }
+
+  /* Triggered by the whole card, not by the text. These cards hold nothing
+     focusable — they are a definition list, not links — so :hover is the only
+     trigger there is to bind. Nothing is hidden behind it, so no keyboard user
+     loses anything. */
+  .key:hover .key__name > span {
+    -webkit-transform: translateY(-125%);
+    transform: translateY(-125%);
+  }
+
+  .key:hover .key__name::before {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  .key__text {
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  /* The fill still ARRIVES — it carries the hover state, which is information —
+     but it fades instead of wiping, and neither copy of the name moves. The
+     duplicate is parked below the mask rather than left mid-travel, so a card
+     can never come to rest showing half of each line. */
+  @media (prefers-reduced-motion: reduce) {
+    .key::before {
+      -webkit-transform: scaleY(1);
+      transform: scaleY(1);
+      opacity: 0;
+      -webkit-transition: opacity 0.15s linear;
+      transition: opacity 0.15s linear;
+    }
+
+    .key:hover::before { opacity: 1; }
+
+    .key,
+    .key__disc,
+    .key__name > span,
+    .key__name::before { transition: none; }
+
+    .key:hover,
+    .key:hover .key__disc,
+    .key:hover .key__name > span { transform: none; }
+
+    .key:hover .key__name::before {
+      -webkit-transform: translateY(110%);
+      transform: translateY(110%);
+    }
+  }
+
+  /* --- Sign-off ------------------------------------------------------------- */
+
+  .ciph__close {
+    max-width: 46ch;
+    margin: clamp(48px, 7vh, 88px) auto 0;
+    text-align: center;
+  }
+
+  .ciph__closing {
+    font-family: var(--sb-font-serif);
+    font-style: italic;
+    font-size: clamp(19px, 2vw, 28px);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    color: var(--sb-charcoal);
+  }
+
+  .ciph__note {
+    margin-top: var(--sb-6);
+    padding-top: var(--sb-5);
+    border-top: var(--sb-hairline);
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  .ciph__note strong { color: var(--sb-violet-dark); font-weight: 700; }
+
+  /* ===== Tablet ============================================================= */
+
+  @media (max-width: 1023px) {
+    .keys { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 899px) {
+    .hail__grid,
+    .ciph__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* THE MARK STOPS BEING A ROW AND BECOMES A WATERMARK.
+       Stacked above the letter it cost about 240px of a 390px screen — a
+       quarter of the first view given to an image the reader has already met in
+       the masthead. Behind the text it costs nothing and still does its job:
+       the paragraphs are the emblem talking, so the emblem sitting behind them
+       is the more honest arrangement anyway.
+
+       Absolute, so it contributes no height at all. `.ciph__grid` becomes the
+       containing block. */
+    .ciph__grid { position: relative; }
+
+    .ciph__mark {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      display: block;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* The white halo goes. Behind type it stops reading as light around a mark
+       and starts reading as a smudge on the page. */
+    .ciph__mark::before { display: none; }
+
+    .ciph__mark :global(img) {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      width: min(76%, 300px);
+      max-width: none;
+      /* Faint enough that the body text keeps its contrast — verified against
+         rendered pixels, since a watermark is invisible to a DOM-based audit. */
+      opacity: 0.08;
+    }
+
+    .ciph__letter { position: relative; z-index: 1; }
+  }
+
+  /* ===== Mobile ============================================================= */
+
+  @media (max-width: 639px) {
+    .vis,
+    .hail,
+    .ciph {
+      padding-block: var(--sb-section-y);
+    }
+
+    .vis__from { flex-direction: column; align-items: flex-start; gap: var(--sb-4); }
+
+    /* THE WAVE WAS INVISIBLE HERE. The artwork is 2.49:1 and mostly empty
+       white through the middle; `cover` on a narrow, tall box scales to the
+       HEIGHT, so a 390px viewport was showing the blank centre of the image and
+       nothing else — a decoration that silently rendered as nothing.
+
+       Two changes: pan right to where the orange actually is, and keep the
+       layer shallow so the wave stays behind the heading and never reaches the
+       violet gloss beneath it. */
+    .hail__bg {
+      height: 42%;
+      object-position: 82% 46%;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 46%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 0%, #000 46%, transparent 100%);
+    }
+
+    .key { padding: var(--sb-6); }
+  }
+</style>

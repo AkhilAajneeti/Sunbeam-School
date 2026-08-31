@@ -1,0 +1,1319 @@
+---
+/**
+ * TEACHING & LEARNING · EXPERIENTIAL & PROJECT-BASED LEARNING — four sections.
+ *
+ * ⚠ COMBINED PAGE — two of the brief's fourteen bullets: Experiential Learning
+ * and Project-Based Learning. The standalone /project-based-learning/ route was
+ * an implementation experiment; its verified content is merged here.
+ *
+ * ═══ SOURCE — every claim, and where it comes from ═════════════════════════
+ *   The school's own framing: a topic "met in the hand before it is met in the
+ *     exam".
+ *   CBSE Capacity Building Programme on Experiential Learning — hosted at
+ *     Ballia, 20–21 September 2025, two days, taken by two visiting principals.
+ *   Little Agriculture Land — "a planting plot the youngest children actually
+ *     dig, sow and water", published as the Little Agriculturists activity.
+ *   Gallery Walks, the school's own words — "students confidently presented
+ *     their projects, charts, and models, turning the classroom into a mini
+ *     exhibition hall" (Class IV, Science).
+ *   Stargazing Activity, the school's own words — "a breathtaking view of the
+ *     Moon through a telescope — a first-time experience for many".
+ *   Taramandal — a planetarium show, published in eleven photographs.
+ *   Impetus — the activity programme for Classes III–V, including the Indian
+ *     Folk Painting competition and a Canva presentation session.
+ *   KIDS Entrepreneurship — "a Class 7 programme that runs a real venture end
+ *     to end."
+ *   Monash University, Australia — students travelled to Delhi for an
+ *     international innovation project on entrepreneurship, at K.R. Mangalam
+ *     World School, G.K-II.
+ *
+ * ⚠⚠ CHANDRAYAAN-3 AND A "SCIENCE & MATHEMATICS EXHIBITION" ARE NOT ON THIS
+ * PAGE, AND THAT IS DELIBERATE. Both were offered in the brief. Neither appears
+ * on the school's site or in this repository — the finding is recorded in
+ * components/academics/ExperientialPage.astro and is the most recent judgement
+ * in the repo (19 Aug), newer than the list in PhilosophyStory.astro (13 Aug)
+ * that still carries them. "Living Newspaper" is in that same older list with no
+ * source note and no photography, so it is out for the same reason. Four
+ * sourced activities beat six where two cannot be checked.
+ *
+ * ⚠ NOT CLAIMED: what KIDS runs week to week, how many students went to Delhi,
+ * or where the planetarium show was held. None is published, and no photography
+ * of KIDS in progress exists.
+ *
+ * ⚠ SCOPE BOUNDARY — the national science programmes (VVM, NCSC, Inspire MANAK)
+ * belong to STEM, Robotics & Enrichment; the laboratory inventory belongs to
+ * Laboratories & Academic Clubs; the smart-classroom and computer-lab counts
+ * belong to Smart Classrooms & Digital Literacy. This page is about work that
+ * produces an object, a venture or a plot.
+ *
+ * ═══ COMPOSITION — four sections, four different builds ════════════════════
+ *   01 · SAND   the claim, and the two-day fact that tests it. Photo cluster
+ *               right, ghost "DO" behind it.
+ *   02 · PAPER  THE PATH — a drawn curve with five photographed stops alternating
+ *               above and below it, and a sixth terminal node with no photograph
+ *               because none exists. Every stop opens the shared Lightbox, so
+ *               the five are one viewer set with prev/next and keyboard nav.
+ *   03 · IVORY  the projects that left the building — a documentary stack, each
+ *               frame captioned with what it actually shows.
+ *   04 · PHOTO  the dark close.
+ *
+ * ⚠ THE STATS BAND FROM THE REFERENCE ART IS NOT HERE. It carried 30+ smart
+ * classes, 49+ panels and the two computer labs — which is Smart Classrooms &
+ * Digital Literacy's content, on a page about digging a plot, and its first
+ * figure contradicts the 75+ that three data files publish. The brief also asked
+ * for four sections. Both reasons point the same way.
+ *
+ * MOTION is the project's own attribute set — data-clip, data-reveal, data-pop,
+ * data-drift, data-parallax, data-draw, data-mask, data-zoom.
+ */
+import { Picture } from 'astro:assets';
+import Lightbox from '../../ui/Lightbox.astro';
+
+/* ── PHOTOGRAPHY — every frame is a genuine Sunbeam Ballia photograph, and each
+   alt says what is IN it rather than what the section is about. */
+import pCompost from '../../../assets/school-activities/little-agriculturists/03.jpg';
+import pOwnWork from '../../../assets/School Activity in Uniform/School Activity in Uniform (5).jpeg';
+import pCanva from '../../../assets/school-event/Impetus—ClassesIII-V/Impetus—ClassesIII-V-02.jpg';
+import pRocket from '../../../assets/school-activities/summer-camp/05.jpg';
+import pDome from '../../../assets/school-activities/taramandal-show/01.jpg';
+import pMonash from '../../../assets/school-event/Monash-Innovation/Monash-Innovation-01.jpg';
+import pChef from '../../../assets/School Activity in Uniform/School Activity in Uniform (1).jpg';
+import pThread from '../../../assets/School Activity in Uniform/Embriodery.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/* ── THE MARKS ──────────────────────────────────────────────────────────────
+   24-unit box, 1.5 stroke, round caps and joins, no fill, `currentColor`. */
+const MARK: Record<string, string> = {
+  hand: `<path d="M9.4 11.2V6a1.9 1.9 0 1 1 3.8 0v7.4"/><path d="M13.2 10.4a1.7 1.7 0 0 1 3.4 0v1M16.6 11.6a1.7 1.7 0 0 1 3.4 0v3.2a6 6 0 0 1-6 6h-1.6c-2 0-3-1-4.2-2.4l-3-3.6a1.8 1.8 0 0 1 2.6-2.4l1.6 1.6"/>`,
+  build: `<path d="M12 3.4 4.6 7.2v9.6L12 20.6l7.4-3.8V7.2z"/><path d="M4.6 7.2 12 11l7.4-3.8M12 11v9.6"/>`,
+  seed: `<path d="M20 4.6c.8 6.2-2.6 10.6-7.6 11.2-2.9.3-5.2-1-5.7-3.3-.6-2.7 1.3-4.9 4.4-5.5"/><path d="M4.4 20.4c1.5-4.4 5-8.2 9.4-10.4"/>`,
+  eye: `<path d="M2.4 12S6 5.6 12 5.6 21.6 12 21.6 12 18 18.4 12 18.4 2.4 12 2.4 12Z"/><circle cx="12" cy="12" r="2.9"/>`,
+  spark: `<path d="M12 1.8c.7 5.2 4.2 8.7 9.4 9.4-5.2.7-8.7 4.2-9.4 9.4-.7-5.2-4.2-8.7-9.4-9.4 5.2-.7 8.7-4.2 9.4-9.4z"/>`,
+};
+
+/* ── THE PATH ───────────────────────────────────────────────────────────────
+   ⚠ FIVE PHOTOGRAPHED STOPS AND ONE THAT IS NOT. Every `body` is the school's
+   own account; `alt` describes the photograph itself, which is not always the
+   same thing — a stop about Gallery Walks captioned "students at their desks
+   with their own drawings" is honest, a stop captioned "a gallery walk" would
+   not be. `owed: true` marks the stop with no photograph rather than borrowing
+   one from another activity. */
+const stops = [
+  {
+    n: '01',
+    k: 'Little Agriculturists',
+    body: 'A planting plot the youngest children dig, sow and water themselves.',
+    photo: pCompost,
+    alt: `Children of ${S} and their teacher, in gloves, sorting kitchen peelings into compost trays beneath a hand-painted “Little Agriculturist — Compost making” sign`,
+    owed: false,
+  },
+  {
+    n: '02',
+    k: 'Gallery Walks',
+    body: 'The school’s words — work “turning the classroom into a mini exhibition hall.”',
+    photo: pOwnWork,
+    alt: `Two students of ${S} sharing a desk, each working on her own drawing with the colour pencils open between them`,
+    owed: false,
+  },
+  {
+    n: '03',
+    k: 'Impetus · Classes III–V',
+    body: 'The school’s own programme: folk painting, presentation software, heritage week.',
+    photo: pCanva,
+    alt: `A class at ${S} during the Canva Presentation session of the Impetus programme, the activity poster standing on the teacher’s table`,
+    owed: false,
+  },
+  {
+    n: '04',
+    k: 'Stargazing',
+    body: 'The school’s words — “a breathtaking view of the Moon through a telescope.”',
+    photo: pRocket,
+    alt: `A young student of ${S} holding up a hand-made rocket cut-out at the Star Gazing session, the night-sky board behind him`,
+    owed: false,
+  },
+  {
+    n: '05',
+    k: 'Taramandal',
+    body: 'A planetarium show, published in eleven photographs — the school did not say where.',
+    photo: pDome,
+    alt: `Students of ${S} seated inside the Taramandal planetarium dome, the projected sky above them`,
+    owed: false,
+  },
+  {
+    n: '06',
+    k: 'CBSE Capacity Building',
+    body: 'Experiential Learning, two days, hosted at Ballia · 20–21 September 2025.',
+    photo: null,
+    alt: '',
+    owed: true,
+  },
+] as const;
+
+/* The three design labels on the dark close. */
+const beats = [
+  { mark: 'eye', k: 'Observe' },
+  { mark: 'hand', k: 'Create' },
+  { mark: 'spark', k: 'Reflect' },
+] as const;
+---
+
+{/* ══ 01 · IN THE HAND BEFORE THE EXAM ═══════════════════════════════════════
+    Ground: sand. Idea: the claim every school makes, and the one dated fact that
+    tests it — set against a photo cluster and a ghost "DO". */}
+<section class="ex-open" aria-labelledby="ex-open-t">
+  <span class="ex-open__warm" aria-hidden="true"></span>
+  <span class="ex-grid" aria-hidden="true"></span>
+  <span class="ex-open__ghost" aria-hidden="true" data-parallax data-parallax-y="26">Do</span>
+
+  <div class="u-container ex-open__grid">
+    <div class="ex-open__copy">
+      <p class="ex-kicker" data-reveal>The claim, and the test of it</p>
+      <h2 class="ex-h ex-open__h" id="ex-open-t">
+        <span data-clip data-clip-delay="0">In the hand</span>
+        <span data-clip data-clip-delay="150"><em>before the exam.</em></span>
+      </h2>
+      <p class="ex-body" data-reveal data-reveal-delay="200">
+        Sunbeam’s stated approach is that a topic is <strong>met in the hand before it is met in
+        the exam</strong>. Every school says something like it, so the only useful question is
+        what a reader can check.
+      </p>
+      <p class="ex-body" data-reveal data-reveal-delay="270">
+        Here the check is unusually strong. In September 2025 the school
+        {' '}<strong>hosted the CBSE Capacity Building Programme on Experiential Learning</strong> —
+        two days, taken by two visiting principals. Sunbeam Ballia was the venue other schools came
+        to. Running experiential learning is a claim; being the place it is taught is a fact with a
+        date on it.
+      </p>
+
+      <ul class="ex-open__tags">
+        <li data-reveal data-reveal-delay="340">
+          <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.hand} /></svg></span>
+          Learn by doing
+        </li>
+        <li data-reveal data-reveal-delay="390">
+          <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.build} /></svg></span>
+          Think by making
+        </li>
+        <li data-reveal data-reveal-delay="440">
+          <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.seed} /></svg></span>
+          Understand for life
+        </li>
+      </ul>
+    </div>
+
+    {/* THE CLUSTER — one large frame, one smaller breaking its corner, one
+        circular detail, and a drawn line tying the three together. */}
+    <div class="ex-open__media">
+      <svg class="ex-open__tie" viewBox="0 0 300 200" fill="none" aria-hidden="true">
+        <path d="M14 150c58 34 108 22 150-6 34-22 62-34 122-40" stroke="currentColor"
+          stroke-width="1.3" stroke-linecap="round" stroke-dasharray="5 9" />
+      </svg>
+
+      <figure class="ex-open__lead" data-mask data-zoom data-zoom-to="1.06">
+        <Picture
+          src={pCanva}
+          alt={`A class at ${S} during the Canva Presentation session of the Impetus programme`}
+          formats={['webp']}
+          widths={[560, 900, 1200]}
+          sizes="(max-width: 1023px) 92vw, 44vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="ex-open__mid" data-parallax data-parallax-y="26">
+        <Picture
+          src={pOwnWork}
+          alt={`Two students of ${S} sharing a desk, each working on her own drawing`}
+          formats={['webp']}
+          widths={[320, 540]}
+          sizes="(max-width: 1023px) 42vw, 19vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+
+      <figure class="ex-open__disc" data-parallax data-parallax-y="-20">
+        <Picture
+          src={pCompost}
+          alt={`A child of ${S} in gloves at the Little Agriculturists compost activity`}
+          formats={['webp']}
+          widths={[260, 420]}
+          sizes="(max-width: 1023px) 30vw, 13vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · EXPERIENCES THAT BECOME LEARNING ══════════════════════════════════
+    Ground: paper. Idea: ONE journey, six stops, built to the approved reference
+    composition — six columns, alternating high and low, a dashed route weaving
+    behind all of it with a numbered node on the route at every stop.
+
+    ⚠ THE TWO ROWS INTERLEAVE, THEY DO NOT STACK. Earlier builds gave the upper
+    stops one grid row and the lower stops another, so every upper description
+    had to finish before any lower stop could begin and the band grew past
+    1100px. Here each stop carries its OWN `--k` offset, so a lower stop starts
+    beside the upper one's description rather than under it. Same six items, a
+    little over half the height, and the compact editorial rhythm the reference
+    has. */}
+<section class="ex-path" aria-labelledby="ex-path-t">
+  <span class="ex-path__warm" aria-hidden="true"></span>
+
+  {/* Four drawn marks, all subject-specific: a flask over the science end, a
+      star over the stargazing end, a seedling under Little Agriculturists, a
+      node cluster closing the right edge. */}
+  <svg class="ex-deco ex-deco--flask" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9.6 3.4h4.8M10.6 3.4v5.2L6.9 17a2 2 0 0 0 1.8 2.8h6.6a2 2 0 0 0 1.8-2.8l-3.7-8.4V3.4" />
+      <path d="M8.2 14.4h7.6" />
+    </g>
+  </svg>
+  <svg class="ex-deco ex-deco--star" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z"
+      stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" />
+  </svg>
+  <svg class="ex-deco ex-deco--seed" viewBox="0 0 60 70" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+      <path d="M30 66V26" />
+      <path d="M30 40c-11 0-17-7-17-16 10 0 17 6 17 16z" />
+      <path d="M30 32c9 0 15-6 15-14-9 0-15 5-15 14z" />
+      <circle cx="12" cy="12" r="2.2" />
+      <circle cx="49" cy="19" r="1.6" />
+    </g>
+  </svg>
+  <svg class="ex-deco ex-deco--nodes" viewBox="0 0 80 60" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 30h22a8 8 0 0 0 8-8v-8a8 8 0 0 1 8-8h38" />
+      <path d="M2 44h34a8 8 0 0 1 8 8v6" />
+    </g>
+    <circle cx="78" cy="6" r="2.6" fill="currentColor" />
+    <circle cx="44" cy="58" r="2.6" fill="currentColor" />
+  </svg>
+
+  <div class="u-container">
+    <h2 class="ex-kicker ex-path__eyebrow" id="ex-path-t" data-reveal>
+      Experiences that become learning
+    </h2>
+
+    <div class="ex-path__scroller">
+      <div class="ex-path__stage">
+        {/* ⚠ TWO PATHS ON ONE GEOMETRY. The dashed one is the route and is
+            always painted; the solid one is the same shape drawn on scroll via
+            stroke-dashoffset, so the journey travels as the reader does. With
+            no JavaScript the route still reads — only the travelling line is
+            missing, which is the right thing to lose. `pathLength="1"` lets the
+            script work in fractions and never measure the DOM.
+
+            ⚠ THE CROSSINGS ARE CALCULATED. The wave returns to the node band
+            (y = 189 of 460, i.e. 41%) at x = 183, 383, 583 … — the middle of the
+            gutter to the RIGHT of each stop, which is where the badges sit and
+            where the reference puts them. Anchored to a column’s LEFT edge they
+            landed on top of that stop’s own title. */}
+        <svg class="ex-path__curve" viewBox="0 0 1200 460" fill="none"
+          preserveAspectRatio="none" aria-hidden="true">
+          <path class="ex-path__route"
+            d="M-320 256 C-190 256 -40 242 100 242 C180 242 220 212 300 212 C380 212 420 242 500 242 C580 242 620 212 700 212 C780 212 820 242 900 242 C980 242 1020 212 1100 212 C1220 212 1360 238 1520 254"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="7 11" />
+          <path class="ex-path__draw" pathLength="1"
+            d="M-320 256 C-190 256 -40 242 100 242 C180 242 220 212 300 212 C380 212 420 242 500 242 C580 242 620 212 700 212 C780 212 820 242 900 242 C980 242 1020 212 1100 212 C1220 212 1360 238 1520 254"
+            stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+        </svg>
+
+        {/* ⚠ THE NODES ARE THEIR OWN LAYER, not children of the stops. A badge
+            inside a stop would be positioned against that stop's box, and the
+            stops sit at six different heights — the route's nodes all belong on
+            one band. Placed in percentages of the stage so they land on the
+            curve's crossings at every width. */}
+        <span class="ex-path__nodes" aria-hidden="true">
+          {stops.map((s, i) => (
+            <i class="t-tabular" style={`--n: ${i}; --ny: ${i % 2 === 0 ? '52.56%' : '46.09%'};`}
+              data-pop data-pop-delay={i * 90}>{s.n}</i>
+          ))}
+        </span>
+
+        <ol class="ex-path__list">
+          {stops.map((s, i) => (
+            <li class={`ex-stop ex-stop--${i % 2 === 0 ? 'up' : 'down'}${s.owed ? ' ex-stop--owed' : ''}`}
+              style={`--c: ${i + 1}; --k: ${[0, 0.96, 0.04, 1, 0.02, 0.94][i]};`}>
+              <p class="ex-stop__n t-tabular" data-pop data-pop-delay={i * 90}>{s.n}</p>
+
+              {s.photo ? (
+                <a class="ex-stop__shot" href={s.photo.src} data-lb-open
+                  data-lb-alt={s.alt} data-lb-cap={s.k} data-drift="26">
+                  <Picture
+                    src={s.photo}
+                    alt={s.alt}
+                    formats={['webp']}
+                    widths={[240, 420]}
+                    sizes="(max-width: 767px) 40vw, 16vw"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="ex-stop__zoom" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <circle cx="10.6" cy="10.6" r="6.4" stroke="currentColor" stroke-width="1.7" />
+                      <path d="M15.4 15.4 20.4 20.4M10.6 8v5.2M8 10.6h5.2" stroke="currentColor"
+                        stroke-width="1.7" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                </a>
+              ) : (
+                <span class="ex-stop__owed" aria-hidden="true" data-drift="26">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3.4" y="5.6" width="17.2" height="13.2" rx="2" />
+                      <path d="M3.4 15.2 8.6 10l4.4 4.2 3-2.6 4.6 4" />
+                      <circle cx="9" cy="9.6" r="1.4" />
+                    </g>
+                  </svg>
+                </span>
+              )}
+
+              <h3 class="ex-stop__k" data-reveal data-reveal-delay={120 + i * 60}>{s.k}</h3>
+              <p class="ex-stop__b" data-reveal data-reveal-delay={200 + i * 60}>{s.body}</p>
+              {s.owed && <p class="ex-stop__flag">No photography published</p>}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  /* THE ROUTE DRAWS ITSELF as the section travels through the viewport.
+
+     ⚠ DECORATION ONLY. The dashed route underneath is always painted, so with
+     this script absent the reader loses the travelling line and nothing else —
+     which is what makes it safe for the drawn path to start at zero length.
+     `pathLength="1"` normalises the geometry, so nothing has to measure the DOM
+     and the maths cannot drift when the curve is edited. */
+  const exStage = document.querySelector('.ex-path');
+  const exRoute = document.querySelector('.ex-path__draw');
+
+  if (exStage instanceof HTMLElement && exRoute instanceof SVGPathElement
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let queued = false;
+
+    const paint = () => {
+      queued = false;
+      const r = exStage.getBoundingClientRect();
+      /* Starts when the section's top passes 85% of the viewport and finishes
+         once it has travelled three quarters of its own height past that. */
+      const travelled = window.innerHeight * 0.85 - r.top;
+      const p = Math.min(1, Math.max(0, travelled / (r.height * 0.75)));
+      exRoute.style.strokeDashoffset = String(1 - p);
+    };
+
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    paint();
+  }
+</script>
+
+{/* ══ 03 · PROJECTS LEAVE THE CLASSROOM ══════════════════════════════════════
+    Ground: ivory. Idea: the two endpoints that are worth more than any
+    description of the method — told as a documentary stack, each frame
+    captioned with what it actually shows. */}
+<section class="ex-proj" aria-labelledby="ex-proj-t">
+  <span class="ex-proj__warm" aria-hidden="true"></span>
+  <span class="ex-dots" aria-hidden="true"></span>
+
+  <div class="u-container ex-proj__grid">
+    <div class="ex-proj__copy">
+      <p class="ex-kicker" data-reveal>Projects leave the classroom</p>
+      <h2 class="ex-h ex-proj__h" id="ex-proj-t">
+        <span data-clip data-clip-delay="0">From making</span>
+        <span data-clip data-clip-delay="150">to <em>understanding.</em></span>
+      </h2>
+      <p class="ex-body" data-reveal data-reveal-delay="200">
+        Project work here has two published endpoints, and both are worth more than any account of
+        the method.
+      </p>
+      <p class="ex-body" data-reveal data-reveal-delay="270">
+        The first is <strong>KIDS Entrepreneurship</strong>, and the school’s description of it is
+        six words long: <em>“a Class 7 programme that runs a real venture end to end.”</em> Not a
+        simulation and not a case study — a venture, carried from start to finish by
+        twelve-year-olds.
+      </p>
+      <p class="ex-body" data-reveal data-reveal-delay="340">
+        The second left the state. Students travelled to Delhi for an
+        {' '}<strong>international innovation project on entrepreneurship run with Monash
+        University, Australia</strong>, held at K.R. Mangalam World School, G.K-II. A project
+        judged outside the building is judged by people who owe the school nothing.
+      </p>
+      <p class="ex-body ex-proj__pt" data-reveal data-reveal-delay="410">
+        Neither is an extra activity bolted onto the timetable. They are how the school says it
+        teaches.
+      </p>
+    </div>
+
+    <div class="ex-proj__stack">
+      <figure class="ex-proj__lead" data-mask data-zoom data-zoom-to="1.06">
+        <Picture
+          src={pMonash}
+          alt={`A student of ${S} standing beside the Monash University “Innovation Guarantee” banner at the outreach session in Delhi`}
+          formats={['webp']}
+          widths={[480, 800, 1100]}
+          sizes="(max-width: 1023px) 84vw, 34vw"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>The Monash University innovation session — the project that left the state.</figcaption>
+      </figure>
+
+      <figure class="ex-proj__side" data-parallax data-parallax-y="-30">
+        <Picture
+          src={pChef}
+          alt={`A teacher at ${S} demonstrating at the table during the papadi chaat activity, her class in paper chef hats around her`}
+          formats={['webp']}
+          widths={[340, 560]}
+          sizes="(max-width: 1023px) 44vw, 20vw"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>One demonstration table, and no version of the task that can be done alone.</figcaption>
+      </figure>
+
+      <figure class="ex-proj__disc" data-parallax data-parallax-y="22">
+        <Picture
+          src={pThread}
+          alt={`Students of ${S} embroidering from one shared basket of thread`}
+          formats={['webp']}
+          widths={[240, 400]}
+          sizes="(max-width: 1023px) 28vw, 12vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </div>
+</section>
+
+{/* ══ 04 · THE SCHOOL IN PRACTICE ════════════════════════════════════════════ */}
+<section class="ex-close" aria-labelledby="ex-close-t">
+  <div class="ex-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pCohort}
+      alt=""
+      formats={['webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <span class="ex-close__scrim" aria-hidden="true"></span>
+  <span class="ex-close__glow" aria-hidden="true"></span>
+
+  <div class="u-container ex-close__inner">
+    <p class="ex-kicker ex-kicker--dark" data-reveal>Experiential learning in practice</p>
+    <h2 class="ex-h ex-close__h" id="ex-close-t">
+      <span data-clip data-clip-delay="0">See it. Make it.</span>
+      <span data-clip data-clip-delay="150"><em>Understand it.</em></span>
+    </h2>
+    <p class="ex-close__b" data-reveal data-reveal-delay="180">
+      The school publishes the plot, the programme, the Monash project and the CBSE programme it
+      hosted. What KIDS runs week to week, how many students travelled to Delhi, and where the
+      planetarium show was held are not published — so none of those is described here.
+    </p>
+
+    {/* ⚠ DESIGN LABELS, NOT A QUOTED FRAMEWORK. The school does not publish a
+        three-step model, so these are set as marks rather than as its words. */}
+    <ul class="ex-close__beats">
+      {beats.map((b, i) => (
+        <li data-reveal data-reveal-delay={260 + i * 90}>
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[b.mark]} />
+            </svg>
+          </span>
+          {b.k}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+{/* The shared viewer, bound to the five photographed stops above. */}
+<Lightbox />
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .ex-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .ex-kicker--dark { color: var(--sb-lime); }
+
+  .ex-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .ex-h span { display: block; }
+  .ex-h em { font-style: normal; color: var(--sb-violet); }
+
+  .ex-body {
+    max-width: 44ch;
+    margin: clamp(13px, 1.6vw, 19px) 0 0;
+    font-size: clamp(13px, 0.95vw, 15px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .ex-body strong { font-weight: 700; color: var(--sb-charcoal); }
+  .ex-body em { font-style: italic; color: var(--sb-charcoal); }
+
+  .ex-grid {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.045) 1px, transparent 1px);
+    background-size: 40px 40px;
+    -webkit-mask-image: radial-gradient(120% 92% at 26% 40%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(120% 92% at 26% 40%, #000 0%, transparent 78%);
+  }
+  .ex-dots {
+    position: absolute;
+    z-index: -2;
+    left: clamp(-10px, 1vw, 24px);
+    top: 12%;
+    width: clamp(70px, 8vw, 120px);
+    height: clamp(80px, 9vw, 134px);
+    background-image: radial-gradient(rgba(201, 60, 10, 0.3) 1.6px, transparent 1.8px);
+    background-size: 17px 17px;
+    -webkit-mask-image: linear-gradient(120deg, #000 0%, transparent 92%);
+    mask-image: linear-gradient(120deg, #000 0%, transparent 92%);
+  }
+
+  /* ═══ 01 · IN THE HAND BEFORE THE EXAM ════════════════════════════════════ */
+  .ex-open {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-sand);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .ex-open__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 68% at 8% 8%, rgba(255, 255, 255, 0.66) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(54% 64% at 96% 86%, rgba(255, 138, 92, 0.14) 0%, rgba(255, 138, 92, 0) 72%);
+  }
+  /* The school's own verb, set as the page's watermark. */
+  .ex-open__ghost {
+    position: absolute;
+    z-index: -2;
+    right: clamp(-14px, 1vw, 56px);
+    bottom: clamp(-30px, -1.6vw, -10px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(150px, 21vw, 340px);
+    font-weight: 700;
+    line-height: 0.76;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1.6px rgba(201, 60, 10, 0.16);
+    user-select: none;
+  }
+
+  .ex-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+  }
+  .ex-open__h { font-size: clamp(28px, 3.4vw, 48px); }
+
+  .ex-open__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(14px, 2vw, 30px);
+    margin: clamp(22px, 2.6vw, 34px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ex-open__tags li {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    color: var(--sb-charcoal);
+  }
+  .ex-open__tags span {
+    display: grid;
+    place-items: center;
+    width: clamp(30px, 2.8vw, 38px);
+    aspect-ratio: 1 / 1;
+    color: var(--sb-violet);
+  }
+  .ex-open__tags svg { width: 100%; height: auto; }
+
+  .ex-open__media { position: relative; }
+  .ex-open__tie {
+    position: absolute;
+    z-index: 0;
+    inset-inline: -6%;
+    bottom: 2%;
+    width: 112%;
+    height: auto;
+    color: rgba(201, 60, 10, 0.4);
+  }
+  .ex-open__lead {
+    position: relative;
+    z-index: 1;
+    /* Rotated a degree and set off-centre: the cluster reads as prints laid
+       down, not as a figure filling a cell. */
+    width: min(100%, 84%);
+    margin: 0 0 0 auto;
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card-hover);
+    rotate: -0.8deg;
+  }
+  .ex-open__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .ex-open__mid {
+    position: absolute;
+    z-index: 2;
+    left: clamp(-16px, -0.4vw, 6px);
+    bottom: clamp(-18px, -0.6vw, 8px);
+    width: clamp(132px, 16vw, 236px);
+    margin: 0;
+    overflow: hidden;
+    border: 7px solid var(--sb-sand);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+    rotate: 1.4deg;
+  }
+  .ex-open__mid :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .ex-open__disc {
+    position: absolute;
+    z-index: 3;
+    right: clamp(2px, 2vw, 40px);
+    bottom: clamp(-34px, -1.6vw, -14px);
+    width: clamp(92px, 10.5vw, 158px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-sand);
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card);
+  }
+  .ex-open__disc :global(picture) { display: block; width: 100%; height: 100%; }
+  .ex-open__disc :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ═══ 02 · THE PATH ═══════════════════════════════════════════════════════ */
+  .ex-path {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(30px, 3.4vw, 50px);
+  }
+  .ex-path__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(60% 60% at 14% 6%, rgba(255, 138, 92, 0.1) 0%, rgba(255, 138, 92, 0) 72%),
+      radial-gradient(56% 60% at 90% 96%, rgba(201, 60, 10, 0.055) 0%, rgba(201, 60, 10, 0) 72%);
+  }
+  /* The eyebrow IS the section heading — centred, and the only type above the
+     journey, as the reference sets it. */
+  .ex-path__eyebrow {
+    text-align: center;
+    font-family: inherit;
+  }
+
+  /* The four drawn marks. All outline, all low contrast, each placed against
+     what it belongs to rather than dropped in a corner. */
+  .ex-deco {
+    position: absolute;
+    z-index: 0;
+    height: auto;
+    /* ⚠ VISIBLE, NOT CLIPPED. The SVG box is the content column; with the
+       default `hidden` the route began and ended ON the column edges instead of
+       arriving from off-page and leaving the same way, which left two stub ends
+       in mid-air. The path is drawn from x = -320 to 1520 in a 1200 viewBox, so
+       it clears the widest margin the container ever has. */
+    overflow: visible;
+    color: rgba(201, 60, 10, 0.34);
+    pointer-events: none;
+  }
+  .ex-deco--flask { top: 30%; left: 27%; width: clamp(20px, 2.2vw, 32px); }
+  .ex-deco--star { top: 24%; right: 5%; width: clamp(20px, 2.2vw, 32px); }
+  .ex-deco--seed { bottom: 6%; left: 2%; width: clamp(34px, 4vw, 58px); opacity: 0.8; }
+  /* ⚠ BELOW THE ROUTE BAND, NOT ON IT. At 34% it sat in the route’s own band
+     immediately after the last node and read as the line carrying on. */
+  .ex-deco--nodes { bottom: 10%; right: 2%; width: clamp(48px, 6vw, 86px); opacity: 0.6; }
+
+  .ex-path__scroller { margin-top: clamp(16px, 2vw, 28px); }
+
+  /* ⚠ THE STAGE IS THE POSITIONING CONTEXT FOR ALL THREE LAYERS — the route,
+     the node band and the stops — so all three are measured against the same
+     box and cannot drift apart. */
+  .ex-path__stage {
+    /* One drop distance, and every stop's offset is a multiple of it. Changing
+       the rhythm is one number, not six. */
+    --drop: clamp(214px, 22.2vw, 320px);
+    position: relative;
+  }
+
+  .ex-path__curve {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: rgba(201, 60, 10, 0.34);
+    pointer-events: none;
+  }
+  /* The travelling line, drawn over the dashed route. Starts at zero length and
+     is advanced by the scroll handler; brighter and a touch heavier than the
+     route so the drawn part reads as progress rather than as a second line. */
+  .ex-path__draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    color: var(--sb-orange-bright);
+    opacity: 0.6;
+  }
+
+  /* ⚠ THE NODE BAND. `top: 38%` is not a guess — it is y = 189 of the curve's
+     460-unit viewBox, and each badge's `left` is the same 33 + n × 200 the wave
+     returns to. Both are percentages of the same stage, so a badge sits on its
+     crossing at every width. */
+  .ex-path__nodes {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    pointer-events: none;
+  }
+  .ex-path__nodes i {
+    position: absolute;
+    top: 0;
+    left: calc((var(--n) + 0.5) * 16.6667%);
+    top: var(--ny);
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: clamp(22px, 2vw, 28px);
+    aspect-ratio: 1 / 1;
+    border: 1.4px solid var(--sb-orange-bright);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    font-size: clamp(8.5px, 0.64vw, 10px);
+    font-weight: 700;
+    font-style: normal;
+    color: var(--sb-violet);
+    animation: ex-pulse 4.5s ease-in-out infinite;
+    animation-delay: calc(var(--n) * 0.45s);
+  }
+
+  /* ⚠ ONE ROW, SIX COLUMNS, AND THE OFFSET IS A MARGIN. Not two grid rows: with
+     rows, an upper stop's description had to clear the row before a lower stop
+     could start, which is what made the band twice as tall as the reference.
+     A margin lets a lower stop begin BESIDE the upper one's text. */
+  .ex-path__list {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ex-stop {
+    position: relative;
+    grid-column: var(--c);
+    margin-top: calc(var(--drop) * var(--k));
+    padding-right: clamp(16px, 2.7vw, 38px);
+    display: grid;
+    justify-items: start;
+    align-content: start;
+    gap: clamp(4px, 0.5vw, 7px);
+  }
+
+  /* The item's own numeral — display scale, orange, above its photograph. */
+  .ex-stop__n {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(18px, 1.9vw, 28px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sb-orange-bright);
+  }
+
+  /* A white mount, as the reference frames every photograph — which is what
+     lifts the stops off the cream and lets the route pass behind them. */
+  .ex-stop__shot {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: clamp(4px, 0.45vw, 6px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+    transition: transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .ex-stop__shot :global(picture) {
+    display: block;
+    overflow: hidden;
+    border-radius: calc(var(--sb-r-2) - 6px);
+  }
+  .ex-stop__shot :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* ⚠ ONE CROP FOR ALL SIX, AND THAT IS A CORRECTION. Cycling the ratio for
+       variety gave stop 03 a 1:1 frame — 176px against 135–142px for every
+       other stop, 30% taller — and it was the one image the route ran across.
+       The variety in this row comes from the six different Y offsets, which is
+       where the reference puts it too; six matched crops travelling at six
+       heights read as a journey, six mismatched ones read as a mistake. */
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    transition: scale var(--sb-dur-image) var(--sb-ease);
+  }
+  .ex-stop__shot:hover { transform: translateY(-4px); box-shadow: var(--sb-shadow-card-hover); }
+  .ex-stop__shot:hover :global(img) { scale: 1.05; }
+  .ex-stop__zoom {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--sb-violet);
+    opacity: 0;
+    transition: opacity var(--sb-dur-link) var(--sb-ease);
+  }
+  .ex-stop__zoom svg { width: 60%; height: auto; }
+  .ex-stop__shot:hover .ex-stop__zoom,
+  .ex-stop__shot:focus-visible .ex-stop__zoom { opacity: 1; }
+
+  /* The stop with no photograph — an outlined plate, visibly not a picture. */
+  /* ⚠ SHALLOWER AND LIGHTER THAN A PHOTOGRAPH, ON PURPOSE. At the same 5:4 as
+     the real frames it was the largest and emptiest object in the composition
+     and read as a broken image rather than as a stated absence. */
+  .ex-stop__owed {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border: 1px dashed rgba(201, 60, 10, 0.32);
+    border-radius: var(--sb-r-2);
+    background: rgba(255, 237, 230, 0.5);
+    color: rgba(201, 60, 10, 0.4);
+  }
+  .ex-stop__owed svg { width: 24%; height: auto; }
+
+  /* ⚠ THE HALO IS LOAD-BEARING, NOT A GLOW. The route runs behind the copy by
+     design and no band exists that clears all six interleaved stops; without a
+     paper halo the dashes cut through glyphs and read as a strikethrough. Four
+     stacked shadows in the section's own background colour erase the line
+     around the letterforms, so it passes UNDER the text. Matches --sb-paper,
+     the ground this section is painted on — change one and change the other.
+
+     ⚠ THE NUMERALS NEED IT TOO, and chasing that with geometry is a dead end.
+     A stop's content height does not scale with `--drop`, so any route band
+     expressed as a fraction of either one drifts across the other at some
+     width: measured, the wave cleared the lower numerals at 1440 and clipped
+     them at 1024. The halo is width-independent, which the geometry cannot be.
+     Photographs are left crossed on purpose — a 1px dashed line at 34% over a
+     photograph already reads as behind it; over a glyph it reads as a strike. */
+  .ex-stop__n,
+  .ex-stop__k,
+  .ex-stop__b {
+    text-shadow:
+      0 0 6px var(--sb-paper), 0 0 6px var(--sb-paper),
+      0 0 3px var(--sb-paper), 0 0 3px var(--sb-paper);
+  }
+
+  .ex-stop__k {
+    margin: clamp(6px, 0.7vw, 9px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 1vw, 15.5px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .ex-stop__b {
+    margin: 4px 0 0;
+    font-size: clamp(10px, 0.74vw, 12px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+  .ex-stop__flag {
+    margin: 6px 0 0;
+    /* Sized to sit on ONE line inside a column — at the old tracking it broke
+       after "NO PHOTOGRAPHY" and read as an error message. */
+    font-size: clamp(8px, 0.58vw, 9px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+
+  /* The node's soft orange breath. Opacity and a ring only — no transform, so
+     it cannot fight the pop entrance that lands it. */
+  @keyframes ex-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 92, 53, 0.28); }
+    50% { box-shadow: 0 0 0 5px rgba(255, 92, 53, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ex-path__nodes i { animation: none; }
+  }
+
+  /* ═══ 03 · PROJECTS LEAVE THE CLASSROOM ═══════════════════════════════════ */
+  .ex-proj {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .ex-proj__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 68% at 90% 10%, rgba(226, 214, 240, 0.42) 0%, rgba(226, 214, 240, 0) 70%),
+      radial-gradient(52% 62% at 6% 92%, rgba(255, 205, 180, 0.42) 0%, rgba(255, 205, 180, 0) 72%);
+  }
+
+  .ex-proj__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+    gap: clamp(28px, 4vw, 66px);
+    align-items: center;
+  }
+  .ex-proj__h { font-size: clamp(28px, 3.4vw, 48px); }
+  .ex-proj__pt {
+    margin-top: clamp(16px, 1.9vw, 24px);
+    padding-top: clamp(14px, 1.6vw, 20px);
+    border-top: 1px solid var(--sb-border);
+    color: var(--sb-charcoal);
+  }
+
+  /* THE DOCUMENTARY STACK — portrait lead, a landscape frame breaking its right
+     edge, a circular detail at the foot. Captions set bare under each. */
+  .ex-proj__stack { position: relative; }
+  .ex-proj__lead {
+    margin: 0;
+    width: min(100%, 74%);
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .ex-proj__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .ex-proj__side {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    top: clamp(30px, 5vw, 84px);
+    width: clamp(150px, 18vw, 260px);
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-ivory);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .ex-proj__side :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: 50% 38%;
+  }
+  .ex-proj__lead figcaption,
+  .ex-proj__side figcaption {
+    padding: clamp(9px, 1vw, 13px) clamp(11px, 1.2vw, 16px);
+    font-size: clamp(10px, 0.74vw, 11.5px);
+    line-height: 1.56;
+    color: var(--sb-text-muted);
+  }
+  .ex-proj__disc {
+    position: absolute;
+    z-index: 3;
+    right: clamp(96px, 13vw, 210px);
+    bottom: clamp(-22px, -0.8vw, -4px);
+    width: clamp(86px, 9.6vw, 140px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    border: 6px solid var(--sb-ivory);
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card);
+  }
+  .ex-proj__disc :global(picture) { display: block; width: 100%; height: 100%; }
+  .ex-proj__disc :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ═══ 04 · THE SCHOOL IN PRACTICE ═════════════════════════════════════════ */
+  .ex-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(50px, 6vw, 96px);
+  }
+  .ex-close__media { position: absolute; z-index: -3; inset: -12% 0; }
+  .ex-close__media :global(picture),
+  .ex-close__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+  .ex-close__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(28, 14, 8, 0.84) 0%, rgba(28, 14, 8, 0.72) 46%, rgba(28, 14, 8, 0.88) 100%);
+  }
+  .ex-close__glow {
+    position: absolute;
+    z-index: -1;
+    top: 46%;
+    left: 50%;
+    translate: -50% -50%;
+    width: min(70%, 760px);
+    aspect-ratio: 1.7 / 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 92, 53, 0.3) 0%, rgba(255, 92, 53, 0) 74%);
+    filter: blur(24px);
+  }
+
+  .ex-close__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+  .ex-close__h {
+    max-width: 20ch;
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-size: clamp(28px, 3.4vw, 48px);
+    color: #fff;
+  }
+  .ex-close__h em { color: var(--sb-lime); font-style: normal; }
+  .ex-close__b {
+    max-width: 64ch;
+    margin: clamp(15px, 1.8vw, 22px) 0 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+
+  .ex-close__beats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(16px, 2.4vw, 40px);
+    margin: clamp(24px, 3vw, 38px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ex-close__beats li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: clamp(10px, 0.76vw, 11.5px);
+    font-weight: 700;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  /* The rule between the three, drawn on the gap rather than on the items. */
+  .ex-close__beats li + li::before {
+    content: '';
+    width: clamp(20px, 3vw, 52px);
+    height: 1px;
+    margin-right: clamp(16px, 2.4vw, 40px);
+    background-image: linear-gradient(to right, rgba(255, 138, 92, 0.6) 52%, transparent 52%);
+    background-size: 7px 1px;
+  }
+  .ex-close__beats span {
+    display: grid;
+    place-items: center;
+    width: clamp(28px, 2.6vw, 36px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(255, 138, 92, 0.34);
+    border-radius: 50%;
+    color: var(--sb-lime);
+  }
+  .ex-close__beats svg { width: 52%; height: auto; }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1279px) {
+    /* Six stops need more width than a 1280 container gives them: the path
+       becomes a real horizontal scroller with the curve travelling under it. */
+    .ex-path__scroller {
+      overflow-x: auto;
+      overflow-y: hidden;
+      margin-inline: calc(var(--sb-margin) * -1);
+      padding-inline: var(--sb-margin);
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+    }
+    /* ⚠ THE STAGE SCROLLS, NOT THE LIST. The route, the node band and the stops
+       all measure against `.ex-path__stage`, so it is the stage that must take
+       the wider width — moving it to the list alone would leave the curve and
+       the badges laid out to the container while the stops travelled past. */
+    /* ⚠ AND --drop HAS TO BE PINNED WITH THEM. The columns become a fixed
+       width here, so a stop's height stops tracking the viewport — but a vw
+       drop keeps shrinking, which closed the corridor the route travels in and
+       put the line back through the lower numerals at 1024. Measured: with the
+       columns pinned, the drop has to be pinned too. */
+    .ex-path__stage { width: max-content; --drop: 340px; }
+    .ex-path__list { grid-template-columns: repeat(6, clamp(184px, 24vw, 230px)); }
+    .ex-stop { scroll-snap-align: start; }
+  }
+
+  @media (max-width: 1023px) {
+    .ex-open__grid,
+    .ex-proj__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(34px, 5vw, 52px);
+    }
+    .ex-body { max-width: 58ch; }
+    .ex-open__lead,
+    .ex-proj__lead { width: 100%; }
+    .ex-open__mid { width: clamp(118px, 26vw, 180px); }
+    .ex-open__disc { width: clamp(80px, 18vw, 130px); }
+    .ex-proj__side { width: clamp(130px, 30vw, 190px); }
+    .ex-proj__disc { width: clamp(74px, 17vw, 110px); right: clamp(80px, 24vw, 150px); }
+  }
+
+  @media (max-width: 767px) {
+    /* ⚠ THE SAME VISUAL LANGUAGE, TURNED VERTICAL — not six generic cards. The
+       route becomes a dashed rail down the left with the SAME numbered nodes on
+       it, and each stop still hangs off its own node. The horizontal wave goes
+       because a wave cannot weave columns that no longer exist. */
+    /* ⚠ THE ≤1279 SCROLLER HAS TO BE UNDONE HERE, ALL THREE PARTS OF IT. The
+       stage keeps `width: max-content` and the scroller keeps `overflow-x` all
+       the way down otherwise — which is how the stacked list ended up wider than
+       the phone with its own text running off the right edge. */
+    .ex-path__scroller {
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+    }
+    .ex-path__stage { --drop: 0px; width: auto; }
+    .ex-path__curve { display: none; }
+
+    .ex-path__list {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(20px, 5.5vw, 28px);
+      padding-left: clamp(30px, 9vw, 44px);
+    }
+    /* The rail the stops hang off, in place of the wave. */
+    .ex-path__list::before {
+      content: '';
+      position: absolute;
+      left: clamp(6px, 1.8vw, 10px);
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background-image: linear-gradient(to bottom, rgba(201, 60, 10, 0.45) 52%, transparent 52%);
+      background-size: 1px 8px;
+    }
+
+    .ex-stop {
+      grid-column: 1;
+      margin-top: 0;
+      padding-right: 0;
+      grid-template-columns: clamp(92px, 27vw, 124px) minmax(0, 1fr);
+      grid-template-areas: 'shot n' 'shot k' 'shot b' 'shot f';
+      align-items: start;
+      gap: 0 clamp(12px, 3.5vw, 18px);
+    }
+    .ex-stop__shot,
+    .ex-stop__owed { grid-area: shot; }
+    .ex-stop__n { grid-area: n; }
+    .ex-stop__k { grid-area: k; margin-top: 4px; }
+    .ex-stop__b { grid-area: b; }
+    .ex-stop__flag { grid-area: f; }
+
+    /* ⚠ THE NODE LAYER STOPS BEING A BAND AND BECOMES A COLUMN. Its badges are
+       absolutely placed against the stage, so on mobile they are laid out down
+       the rail instead — one per stop, evenly divided by count. */
+    .ex-path__nodes {
+      inset: 0;
+      top: 0;
+      height: auto;
+    }
+    .ex-path__nodes i {
+      left: clamp(6px, 1.8vw, 10px);
+      top: calc((var(--n) + 0.5) * (100% / 6));
+      width: clamp(20px, 5.4vw, 24px);
+      font-size: clamp(8px, 2.2vw, 9.5px);
+    }
+
+    .ex-close__beats { gap: clamp(10px, 3vw, 16px); }
+    .ex-close__beats li + li::before { display: none; }
+  }
+</style>

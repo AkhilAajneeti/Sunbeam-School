@@ -1,0 +1,297 @@
+---
+/**
+ * THE CHRONICLE — one group of a News & Events sub-page, set as a ledger.
+ *
+ * ═══ WHY A LEDGER AND NOT MORE CARDS ═══════════════════════════════════════
+ *
+ * The News & Events index is rails of cards. These four sub-pages are NOT, and
+ * the reason is the content, not variety for its own sake.
+ *
+ * A card is a photograph with a caption. There is no photography in the
+ * repository for any of this — fourteen workshops, thirty-five events — and a
+ * card without art is a grey box with a headline in it (Stream.astro already
+ * carries a `--text` fallback for exactly that, and it is a fallback, not a
+ * design). Meanwhile the CONTENT here is dense and specific: a trainer's name,
+ * their institution, a date, a placing. That is a record, and records are set
+ * as records.
+ *
+ * So: a sticky group label on the left, ruled rows on the right, and the one
+ * thing a parent is scanning for — the result — printed as a receipt at the end
+ * of the row. Scanning a ruled column of thirty-five items is fast. Scanning
+ * thirty-five cards is not, which is the whole complaint about the school's own
+ * 148-heading activities page.
+ *
+ * ═══ THE STICKY LABEL ══════════════════════════════════════════════════════
+ *
+ * On desktop the group's name stays with you while its rows scroll past, so you
+ * never lose which of the three groups you are inside. It is `position: sticky`
+ * on a grid column — which needs the column to be the sticky element's
+ * containing block and needs the ROW to stretch, so `align-self: start` on the
+ * inner box rather than on the cell.
+ *
+ * ⚠ IT IS DISABLED BELOW 900px, and that is deliberate. Stacked, the label sits
+ * above the rows, and a sticky element in a single-column flow pins to the top
+ * of the viewport and covers the first row it passes — under a masthead that is
+ * already fixed.
+ *
+ * ⚠ NO PHOTOGRAPH MEANS NO `loading="lazy"` DECISION AND NO CLS. This component
+ * ships zero images and zero JavaScript. The hover rule is a `scaleY` on a
+ * pseudo-element, which composites; nothing here reflows.
+ */
+import type { ChronicleGroup } from '../../data/newsPages';
+
+interface Props {
+  group: ChronicleGroup;
+  /** Alternating ground, so no two adjacent groups share a treatment. */
+  tone?: 'ivory' | 'sand' | 'paper';
+  /** 1-based, printed beside the group label as a ledger index. */
+  index: number;
+}
+
+const { group: g, tone = 'ivory', index } = Astro.props;
+const num = String(index).padStart(2, '0');
+---
+
+<section class:list={['chron', `chron--${tone}`]} id={g.id} aria-labelledby={`${g.id}-t`}>
+  <div class="u-container chron__grid">
+    <div class="chron__label">
+      <div class="chron__labelbox">
+        <p class="chron__num" aria-hidden="true">{num}</p>
+        <h2 class="chron__h" id={`${g.id}-t`} data-split>{g.label}</h2>
+        <p class="chron__note">{g.note}</p>
+        <p class="chron__count">
+          {g.items.length}
+          {g.items.length === 1 ? ' entry' : ' entries'}
+        </p>
+      </div>
+    </div>
+
+    <ol class="chron__list">
+      {
+        g.items.map((item) => (
+          <li class="entry">
+            <div class="entry__head">
+              <h3 class="entry__t">{item.title}</h3>
+              {/* Absent rather than estimated — see the header of data/newsPages.ts. */}
+              {item.when && <p class="entry__when">{item.when}</p>}
+            </div>
+
+            <p class="entry__meta">{item.meta}</p>
+            <p class="entry__body">{item.body}</p>
+
+            {item.result && (
+              <p class="entry__result">
+                <span class="entry__mark" aria-hidden="true">
+                  <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+                    <path d="M1 6.4l3.1 3.1L11 2.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                <span>{item.result}</span>
+              </p>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .chron { padding-block: var(--sb-section-y); }
+
+  .chron--ivory { background: var(--sb-ivory); }
+  .chron--sand { background: var(--sb-sand); }
+  .chron--paper { background: var(--sb-paper); }
+
+  /* ⚠ minmax(0, …) ON BOTH TRACKS. A long unbroken institution name in the meta
+     line ("Sunbeam Group of Educational Institutions") sets a min-content floor
+     that inflates the column past its fr share and steals width from the other
+     — the exact failure measured on the excursions split at 47fr/53fr. */
+  .chron__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(24px, 3vh, 40px);
+  }
+
+  /* --- The sticky label ---------------------------------------------------- */
+
+  .chron__num {
+    font-family: var(--sb-font-display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-violet-dark);
+  }
+
+  h2.chron__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(24px, 2.6vw, 36px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.032em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .chron__note {
+    max-width: 40ch;
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  .chron__count {
+    margin-top: var(--sb-5);
+    padding-top: var(--sb-4);
+    border-top: 1px solid var(--sb-border);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- The rows ------------------------------------------------------------ */
+
+  .chron__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .entry {
+    position: relative;
+    padding: clamp(20px, 2.4vw, 30px) 0 clamp(20px, 2.4vw, 30px) clamp(16px, 1.8vw, 26px);
+    border-bottom: 1px solid var(--sb-border);
+  }
+
+  /* THE RULE THAT GROWS. A row is not a link, so it must not pretend to be one
+     with a lift or a shadow — but a reader running down thirty-five rows still
+     wants to know which one their eye is on. A hairline that grows from the top
+     is the smallest possible answer and it composites. */
+  .entry::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 2px;
+    background: var(--sb-violet);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 320ms var(--sb-ease);
+  }
+
+  .entry:hover::before { transform: scaleY(1); }
+
+  .entry__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sb-3) var(--sb-5);
+  }
+
+  .entry__t {
+    flex: 1 1 22ch;
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.45vw, 22px);
+    font-weight: 650;
+    line-height: 1.22;
+    letter-spacing: -0.022em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .entry__when {
+    flex: 0 0 auto;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--sb-text-secondary);
+  }
+
+  /* The credibility line — who ran it, where. Set apart from the prose because
+     it is the part a parent checks, not the part they read. */
+  .entry__meta {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--sb-violet-dark);
+  }
+
+  .entry__body {
+    max-width: 68ch;
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  /* THE RECEIPT. --sb-violet-dark, NOT --sb-violet: the lighter violet measures
+     4.35:1 on sand and fails AA for text at this size. Documented once already
+     in JourneyCarousel and repeated here because this component renders on a
+     sand ground every third group. */
+  .entry__result {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--sb-3);
+    max-width: 68ch;
+    margin-top: var(--sb-5);
+    padding: 10px 18px 10px 15px;
+    border: 1px solid var(--sb-border-strong);
+    /* ⚠ NOT --sb-r-full, AND THIS IS NOT A PREFERENCE. A pill radius is half the
+       element's height, so a one-line receipt is a tag and a FIVE-line one — the
+       volleyball placings run to five lines at 390px — becomes a lozenge whose
+       curve cuts into the first and last lines of text. 24px holds the tag look
+       at one line and reads as a callout when it wraps. */
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    font-size: var(--sb-body-sm);
+    font-weight: 650;
+    line-height: 1.5;
+    color: var(--sb-violet-dark);
+  }
+
+  .entry__mark {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    /* Optical alignment with the cap-height of the first line, not its box. */
+    margin-top: 2px;
+  }
+
+  /* --- Breakpoints --------------------------------------------------------- */
+
+  @media (min-width: 900px) {
+    .chron__grid {
+      grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+      gap: clamp(36px, 5vw, 84px);
+    }
+
+    /* Sticky needs the CELL to be full height and the BOX to be the thing that
+       sticks — putting `sticky` on the cell itself does nothing, because a grid
+       item stretched to the row height has nowhere to travel. */
+    .chron__labelbox {
+      position: sticky;
+      top: calc(var(--sb-masthead-h) + 28px);
+    }
+  }
+
+  /* Stacked, the group label sits at the container edge and the indent that
+     makes room for the hover rule pushes every row 16px off it — a misalignment
+     you can see. There is no hover on a touch device to make room FOR, so the
+     indent and the rule both go. */
+  @media (max-width: 899px) {
+    .entry { padding-left: 0; }
+    .entry::before { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .entry::before { transition-duration: 1ms; }
+  }
+</style>

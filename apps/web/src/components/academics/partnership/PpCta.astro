@@ -1,0 +1,177 @@
+---
+/**
+ * THE PARENT CTA — the horizontal contact panel all three partnership pages end
+ * on, one component so the three cannot drift apart.
+ *
+ * ⚠ THE NUMBER IS THE SCHOOL'S ADMISSIONS LINE AND IT IS NEVER A PROP. Every
+ * consumer gets the same one out of data/site.ts, so a page cannot be given a
+ * number by hand and cannot therefore be given a wrong one.
+ *
+ * ⚠ NOTHING HERE PROMISES A REPLY. No office hours, no response time, no "we
+ * answer within a day" — none of it is published by the school, and a CTA is
+ * exactly where an invented service promise would do the most damage.
+ *
+ * Composition: icon tile · headline and copy · rule · the line and the button ·
+ * a photograph of the school. On tablet the photograph drops below; on mobile
+ * the whole panel becomes one column.
+ */
+import { Picture } from 'astro:assets';
+import '../../../styles/assessment.css';
+import { MARK } from '../assessment/marks';
+import { school } from '../../../data/site';
+
+import pCampus from '../../../assets/photos/sunbeem-1.jpg';
+
+interface Props {
+  /** First line of the headline. */
+  lead: string;
+  /** Second line. */
+  tail: string;
+  /** A trailing word of `tail` set in the brand orange. Optional. */
+  accent?: string;
+  /** Two short lines of parent-facing copy. */
+  body: string;
+  /** Section id for the heading. */
+  id: string;
+}
+
+const { lead, tail, accent, body, id } = Astro.props;
+
+const CONTACT = '/contact-us/';
+const S = 'Sunbeam School Ballia';
+---
+
+<section class="as-sec as-sec--cream as-pad--sm pp-cta" aria-labelledby={id}>
+  <div class="u-container">
+    <div class="pp-cta__box">
+      <span class="pp-cta__m" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.phone} />
+        </svg>
+      </span>
+
+      <div class="pp-cta__copy">
+        <h2 class="as-h as-h--md pp-cta__h" id={id}>
+          <span data-clip data-clip-delay="0">{lead}</span>
+          <span data-clip data-clip-delay="140">{tail}{accent && <em> {accent}</em>}</span>
+        </h2>
+        <p class="pp-cta__b" data-reveal data-reveal-delay="180">{body}</p>
+      </div>
+
+      <div class="pp-cta__line">
+        <p class="pp-cta__lab">Admissions helpline</p>
+        <p class="pp-cta__num t-tabular">
+          <a href={`tel:${school.phone.admissions}`}>{school.phone.admissionsDisplay}</a>
+        </p>
+        <p class="pp-cta__act">
+          <a class="as-btn as-btn--solid" href={CONTACT}>
+            Contact school
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+            </svg>
+          </a>
+        </p>
+      </div>
+
+      <div class="pp-cta__pic as-frame as-frame--round" data-pop data-pop-delay="220">
+        <Picture
+          src={pCampus}
+          alt={`The main building of ${S} at Agarsanda, its name across the front elevation.`}
+          formats={['webp']}
+          widths={[420, 720]}
+          sizes="(max-width: 1023px) 92vw, 22vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pp-cta__box {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1.15fr) auto minmax(0, 0.82fr);
+    gap: clamp(16px, 2.2vw, 34px);
+    align-items: center;
+    padding: clamp(16px, 2vw, 26px) clamp(18px, 2.2vw, 30px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  /* A white tile rather than a wash circle — it is the one element on the panel
+     that has to read as a button-like affordance without being a button. */
+  .pp-cta__m {
+    display: grid;
+    place-items: center;
+    width: clamp(46px, 4.4vw, 64px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 6px 18px -12px rgba(28, 14, 8, 0.4);
+    color: var(--sb-orange-bright);
+  }
+  .pp-cta__m svg { width: 52%; height: auto; }
+
+  .pp-cta__h { margin-top: 0; max-width: 18ch; }
+  .pp-cta__h em { color: var(--sb-orange-bright); font-style: normal; }
+  .pp-cta__b {
+    margin: clamp(7px, 0.9vw, 11px) 0 0;
+    max-width: 44ch;
+    font-size: clamp(10px, 0.74vw, 11.6px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+
+  .pp-cta__line {
+    display: grid;
+    justify-items: start;
+    padding-left: clamp(16px, 2.2vw, 34px);
+    border-left: 1px solid var(--sb-border);
+  }
+  .pp-cta__lab {
+    margin: 0;
+    font-size: clamp(9px, 0.68vw, 10.6px);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--sb-charcoal);
+  }
+  .pp-cta__num {
+    margin: 3px 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.45vw, 24px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-orange-bright);
+  }
+  .pp-cta__num a { color: inherit; }
+  .pp-cta__num a:hover { color: var(--sb-violet); }
+  .pp-cta__act { margin: clamp(10px, 1.3vw, 16px) 0 0; }
+
+  .pp-cta__pic { overflow: hidden; border-radius: var(--sb-r-2); }
+  .pp-cta__pic :global(picture) { display: block; }
+  .pp-cta__pic :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 8.4;
+    object-fit: cover;
+  }
+
+  @media (max-width: 1179px) {
+    .pp-cta__box { grid-template-columns: auto minmax(0, 1fr) auto; row-gap: clamp(16px, 2.4vw, 24px); }
+    .pp-cta__pic { grid-column: 1 / -1; }
+    .pp-cta__pic :global(img) { aspect-ratio: 16 / 5.4; }
+  }
+
+  @media (max-width: 767px) {
+    .pp-cta__box { grid-template-columns: minmax(0, 1fr); }
+    .pp-cta__m { grid-row: 1; }
+    .pp-cta__h { max-width: none; }
+    .pp-cta__line { padding-left: 0; padding-top: clamp(14px, 3vw, 20px); border-left: 0; border-top: 1px solid var(--sb-border); }
+    .pp-cta__pic :global(img) { aspect-ratio: 16 / 9; }
+  }
+</style>

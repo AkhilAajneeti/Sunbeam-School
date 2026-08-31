@@ -1,0 +1,180 @@
+---
+/**
+ * TOPIC NOTES — the detail a sub-topic page carries BEYOND the movement it
+ * lifts from the overview.
+ *
+ * ⚠ THIS IS WHAT MAKES A SUB-TOPIC PAGE WORTH ITS URL. Each child page renders
+ * the overview's own movement — identical composition, imagery and motion — and
+ * then this block underneath it. Without the block the child would be a strict
+ * subset of the overview, which is the duplication the client spotted: the same
+ * material at two addresses, with the deeper-sounding one thinner.
+ *
+ * Movement = what the overview shows. Notes = what only this page says.
+ *
+ * ⚠ `owed` IS PRINTED, NOT HIDDEN. Where the school has published no detail on a
+ * topic, the note says so and points at the office rather than padding to
+ * length. A parent planning around a fee, a combination or a scholarship needs
+ * the real terms, and a plausible-sounding invention is the most damaging thing
+ * this site could print.
+ */
+import type { AssessmentTopic } from '../../data/academics';
+import { school } from '../../data/site';
+
+interface Props {
+  topic: AssessmentTopic;
+}
+const { topic: t } = Astro.props;
+
+const hasNotes = Boolean(t.body?.length || t.points?.length || t.owed);
+---
+
+{
+  hasNotes && (
+    <section class="tn" aria-labelledby="tn-h">
+      <div class="u-container tn__in">
+        <div class="tn__lede">
+          <p class="tn__k t-label" data-reveal>In more detail</p>
+          <h2 class="tn__h" id="tn-h" data-split>{t.label}</h2>
+        </div>
+
+        <div class="tn__body">
+          {t.body?.map((p, i) => (
+            <p class="tn__p" data-reveal data-reveal-delay={i * 80}>
+              {p}
+            </p>
+          ))}
+
+          {t.points && (
+            <dl class="tn__dl" data-reveal>
+              {t.points.map((p) => (
+                <div class="tn__row">
+                  <dt>{p.k}</dt>
+                  <dd>{p.v}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+
+          {t.owed && (
+            <aside class="tn__owed" data-reveal>
+              <p class="tn__owed-h">The school has not published the rest</p>
+              <p>
+                What is above is what Sunbeam Ballia states. Anything beyond it — and anything
+                that changes from one session to the next — is confirmed by the school office
+                rather than guessed at here.
+              </p>
+              <a class="tn__call" href={`tel:${school.phone.office}`}>
+                Call the office · {school.phone.officeDisplay}
+              </a>
+            </aside>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .tn {
+    position: relative;
+    padding-block: clamp(48px, 7vw, 92px);
+    background: var(--sb-ivory);
+  }
+
+  .tn__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(22px, 3.4vw, 48px);
+    align-items: start;
+  }
+
+  .tn__k { color: var(--sb-violet-dark); }
+
+  .tn__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(24px, 3vw, 40px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.034em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .tn__body { max-width: 62ch; }
+
+  .tn__p {
+    font-size: clamp(16px, 1.2vw, 18.5px);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+  }
+
+  .tn__p + .tn__p { margin-top: var(--sb-4); }
+
+  .tn__dl { margin: clamp(22px, 2.8vw, 32px) 0 0; }
+
+  .tn__row {
+    display: grid;
+    grid-template-columns: minmax(150px, auto) minmax(0, 1fr);
+    gap: 6px 22px;
+    padding: 13px 0;
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .tn__row:last-child { border-bottom: 1px solid var(--sb-border); }
+
+  .tn__row dt {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-text-secondary);
+  }
+
+  .tn__row dd { margin: 0; font-size: 15.5px; font-weight: 600; color: var(--sb-charcoal); }
+
+  /* The gap, stated. A tinted plate rather than a warning — it is a normal state
+     for a school that publishes less than a website would like, not an error. */
+  .tn__owed {
+    margin-top: clamp(24px, 3vw, 34px);
+    padding: clamp(20px, 2.4vw, 28px);
+    border-left: 3px solid var(--sb-violet);
+    border-radius: 0 var(--sb-r-2) var(--sb-r-2) 0;
+    background: var(--sb-violet-wash);
+  }
+
+  .tn__owed-h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.3vw, 19px);
+    font-weight: 700;
+    color: var(--sb-charcoal);
+  }
+
+  .tn__owed p:not(.tn__owed-h) {
+    margin-top: 8px;
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  .tn__call {
+    display: inline-block;
+    min-height: 24px;
+    margin-top: 14px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--sb-violet-dark);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .tn__call:hover { color: var(--sb-charcoal); }
+  .tn__call:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+
+  @media (min-width: 900px) {
+    .tn__in { grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 76px); }
+    /* The lede sticks while the prose scrolls past it — the page has one subject,
+       so its name should stay in view rather than scroll away at the top. */
+    .tn__lede { position: sticky; top: calc(var(--sb-masthead-h) + 28px); }
+  }
+</style>

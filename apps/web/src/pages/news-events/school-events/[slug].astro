@@ -1,0 +1,30 @@
+---
+/**
+ * ONE SCHOOL EVENT — routing only. The page is components/news/DetailPage.
+ *
+ * Same component as the workshops detail route; only `page` and `base` differ.
+ */
+import DetailPage from '../../../components/news/DetailPage.astro';
+import { schoolEvents, type ChronicleItem } from '../../../data/newsPages';
+
+export async function getStaticPaths() {
+  const { schoolEvents: se } = await import('../../../data/newsPages');
+  return se.groups.flatMap((g) =>
+    g.items
+      .filter((i) => i.slug)
+      .map((item) => ({
+        params: { slug: item.slug! },
+        props: { item, group: g.label },
+      })),
+  );
+}
+
+interface Props {
+  item: ChronicleItem;
+  group: string;
+}
+
+const { item, group } = Astro.props;
+---
+
+<DetailPage item={item} group={group} page={schoolEvents} base="/news-events/school-events/" unit="event" />

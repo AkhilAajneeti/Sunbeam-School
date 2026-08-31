@@ -1,0 +1,85 @@
+---
+/**
+ * ACADEMIC PHILOSOPHY · CURRICULUM — audit §2A.
+ *
+ * ⚠ REBUILT. The previous version rendered PhilosophyStory with `only` set —
+ * the same component, imagery and motion the overview composes — and appended
+ * TopicNotes underneath. It was the overview's movement plus a footnote, which
+ * is the pattern the client stopped: parent = overview, child = deep-dive.
+ *
+ * The deep-dive this page can honestly make is about the DOCUMENT. Most schools
+ * say "we follow CBSE". Sunbeam publishes the syllabus class by class, and that
+ * is a materially different claim — it can be counted, and it can be questioned
+ * at a forum where "Syllabi" is a numbered agenda item.
+ *
+ * ═══ SOURCE — verified in this repository ══════════════════════════════════
+ *   PRECEPT — the school's own name for its published syllabus. A document per
+ *     class, Nursery to Class XII, session 2026-27 (data/academics.ts, cited on
+ *     four separate pages). Fifteen year groups; fifteen documents.
+ *   Twelve laboratories, enumerated by the school itself (data/academics.ts:770):
+ *     Physics · Chemistry · Biology · Mathematics · Language · Geography ·
+ *     Srijan · Model UN · Active Learning · Robotics · two computer labs.
+ *     ⚠ THE FOUR INQUIRY ROOMS ARE INSIDE THAT TWELVE, not additional to it —
+ *     eight subject rooms + four inquiry rooms = twelve. The `index` block
+ *     groups them as 9 + 4, which totals thirteen because it also lists a
+ *     General Science lab that the school’s own enumeration of twelve omits.
+ *     This page follows the enumeration, not the grouping.
+ *   Impetus — the school's activity programme for Classes III–V.
+ *   KIDS Entrepreneurship — a Class 7 programme running a real venture.
+ *   Four streams at senior secondary, each to board level.
+ *   "Syllabi" is item 2 of 12 on the school's own Parents' Forum agenda, read
+ *     off its published photograph — so the syllabus is a standing item parents
+ *     may raise, not a document filed away.
+ *
+ * ⚠ WHAT NO PRECEPT DOCUMENT'S CONTENTS ARE CLAIMED. The school publishes that
+ * the documents exist, one per class. It does not publish what is in them, and
+ * no subject list, period allocation or assessment weighting appears here.
+ *
+ * Composition: statement (paper, ghost) → collage (sand, LEFT — what the
+ * curriculum is delivered through) → close.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import CurriculumPage from '../../../components/academics/CurriculumPage.astro';
+import AcClose from '../../../components/academics/system/AcClose.astro';
+
+import banner from '../../../assets/library/DSC_1225 copy.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const school = 'Sunbeam School Ballia';
+---
+
+<BaseLayout
+  title="Curriculum — Sunbeam School Ballia"
+  description="The CBSE curriculum at Sunbeam School Ballia, published class by class as its PRECEPT syllabus for session 2026-27 — one document for every year from Nursery to Class XII."
+>
+  <PageHero
+    title="Curriculum"
+    standfirst="CBSE, published class by class — fifteen year groups, fifteen syllabus documents."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Philosophy', href: '/academics/philosophy/' },
+    ]}
+    src={banner}
+    alt="The Nalanda Library at Sunbeam School Ballia, its shelves signed by subject."
+    position="50% 48%"
+  />
+
+  <div class="u-page-panel ac-panel">
+    <CurriculumPage />
+
+    <AcClose
+      owed={true}
+      statement="Published,<br /><em>class by class.</em>"
+      body="The school publishes that a PRECEPT document exists for every class and names the rooms and programmes around it. What is inside any one document — the subject list, the period allocation, the assessment weighting — is not published, and none is stated here."
+      photo={pCohort}
+      alt={`Students and staff of ${school} gathered on the hall stage`}
+      position="50% 42%"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ac-panel { padding-block: 0; }
+</style>

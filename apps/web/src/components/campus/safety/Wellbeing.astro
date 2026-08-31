@@ -1,0 +1,140 @@
+---
+/**
+ * §5 · STUDENT WELLBEING — the warm band.
+ *
+ * Deliberately the softest section on the page: a wash ground rather than white,
+ * rounded icon plates rather than square-cornered tiles, and copy written to a
+ * parent rather than to an inspector. Everything either side of it is about
+ * equipment and procedure; this one is about a person noticing a child.
+ *
+ * Only the junior-class attendants are published. The other three cards are the
+ * brief's, not the school's, and say so.
+ */
+import { wellbeingCards } from '../../../data/campus';
+import { showBuildNotes } from '../../../data/site';
+import SectionHead from '../../academics/SectionHead.astro';
+import BurstCard from '../../ui/BurstCard.astro';
+import SafetyIcon from './SafetyIcon.astro';
+
+const icons: Record<string, string> = {
+  'Junior assistance': 'hand',
+  'Medical support': 'cross',
+  Counselling: 'heart',
+  Hygiene: 'droplet',
+};
+---
+
+<section class="wlb" aria-labelledby="wlb-title">
+  <div class="u-container">
+    <SectionHead
+      id="wlb-title"
+      eyebrow="Looking after the child"
+      heading="Someone notices"
+      stand="Equipment keeps a building safe. People are what keep a child feeling safe in it."
+      measure={16}
+    />
+
+    {/* The KPI band's card, from ui/BurstCard — flipping numeral/icon disc,
+        pointer-tracked bloom and the corner ribbon. Same component, so the two
+        cannot drift apart. */}
+    <ol class="wlb__cards">
+      {wellbeingCards.map((c, i) => (
+        <BurstCard
+          index={i + 1}
+          class:list={['wlb__card', !c.verified && 'wlb__card--pending']}
+          minHeight="clamp(214px, 19vw, 262px)"
+          data-pop
+          data-pop-delay={(i % 4) * 90}
+        >
+          <SafetyIcon slot="icon" name={icons[c.label] ?? 'heart'} size={26} />
+
+          <h3 class="wlb__h">
+            {c.label}
+            {!c.verified && showBuildNotes && <span class="wlb__chip">to confirm</span>}
+          </h3>
+          <p class="wlb__body">{c.body}</p>
+        </BurstCard>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .wlb {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-violet-wash);
+  }
+
+  /* Four across, matching the KPI band this card comes from. */
+  .wlb__cards {
+    list-style: none;
+    margin: clamp(38px, 5.6vh, 68px) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 30px);
+  }
+
+  /* The chrome is BurstCard's. Everything below is content only. */
+
+  h3.wlb__h {
+    margin-top: clamp(20px, 2.4vw, 32px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.4vw, 21px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .wlb__chip {
+    display: inline-block;
+    margin-left: var(--sb-2);
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--sb-lime-wash);
+    color: var(--sb-lime-deep);
+    font-family: var(--sb-font-body);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: 3px;
+  }
+
+  /* margin-top:auto pins the body to the foot, so the copy lines up across a
+     row however long the titles above it run. */
+  .wlb__body {
+    margin-top: auto;
+    padding-top: var(--sb-4);
+    font-size: var(--sb-caption);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  /* UNVERIFIED ITEMS STILL READ ONE STEP BACK. Only the junior-class attendants
+     are a fact the school publishes; the other three are the brief's. The card
+     keeps its full chrome — the page should not look broken — but its disc is
+     outlined rather than solid and its ribbon is halved, which is the quietest
+     signal that still survives being seen next to a verified card. */
+  .wlb__card--pending :global(.bcard__face--i) {
+    background: transparent;
+    border-color: var(--sb-border);
+    color: var(--sb-text-muted);
+  }
+
+  .wlb__card--pending :global(.bcard__face--n) { color: var(--sb-text-muted); }
+  .wlb__card--pending::after { opacity: 0.09; }
+
+  @media (max-width: 1023px) {
+    .wlb__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 560px) {
+    .wlb__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .wlb__cards :global(.bcard) { --bcard-min: 190px; padding: 16px 14px; }
+    h3.wlb__h { font-size: 15px; margin-top: 14px; }
+    .wlb__body { font-size: 11px; padding-top: 10px; }
+  }
+</style>

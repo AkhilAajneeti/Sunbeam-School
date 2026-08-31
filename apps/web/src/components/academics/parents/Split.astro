@@ -1,0 +1,248 @@
+---
+/**
+ * PARENT PARTNERSHIP — the two-column section, and its mirror.
+ *
+ * Copy on one side, imagery on the other. Orientation, Communication and
+ * Engagement are all this shape; Engagement is the same component with `reverse`,
+ * which is what stops three near-identical sections reading as a template.
+ *
+ * NOT A NEW SITE-WIDE ABSTRACTION — it lives in `parents/` and exists so the same
+ * grid, the same measure and the same rhythm are not typed out three times and
+ * then drift apart. The media is a SLOT rather than a prop because the three
+ * differ: one takes a cluster of three photographs, the others take one.
+ *
+ * THE MIRROR IS A TEMPLATE CHANGE, NOT `order`. Swapping items with `order` alone
+ * leaves the COLUMNS where they were, so on the reversed section the wide copy
+ * column would land in the narrow media slot and the type would set at a
+ * different measure — the exact bug that once made the leadership portraits on
+ * History read as though they were in a smaller face. Both the template and the
+ * placements flip together.
+ */
+import AcademicGlyph from '../AcademicGlyph.astro';
+
+interface Item {
+  label: string;
+  body: string;
+  glyph?: string;
+}
+
+interface Props {
+  n: string;
+  eyebrow: string;
+  heading: string;
+  paragraphs: readonly string[];
+  items?: readonly Item[];
+  cta?: { label: string; href: string; external?: boolean } | null;
+  /** Media on the left, copy on the right. */
+  reverse?: boolean;
+  id: string;
+  anchor?: string;
+  /** Section ground. `sand` alternates the bands so three splits do not stack flat. */
+  tone?: 'ivory' | 'sand';
+}
+
+const {
+  n,
+  eyebrow,
+  heading,
+  paragraphs,
+  items = [],
+  cta = null,
+  reverse = false,
+  id,
+  anchor,
+  tone = 'ivory',
+} = Astro.props;
+---
+
+<section
+  class:list={['psp', reverse && 'psp--rev', `psp--${tone}`]}
+  id={anchor}
+  aria-labelledby={id}
+>
+  <div class="u-container">
+    <div class="psp__grid">
+      <div class="psp__copy">
+        <p class="psp__eyebrow">
+          <span class="psp__n t-tabular" aria-hidden="true">{n}</span>
+          <span class="pill pill--violet">{eyebrow}</span>
+        </p>
+
+        <h2 class="psp__h" id={id} data-split>{heading}</h2>
+
+        <div class="psp__prose">
+          {paragraphs.map((p) => <p>{p}</p>)}
+        </div>
+
+        {
+          items.length > 0 && (
+            <dl class="psp__items">
+              {items.map((it, i) => (
+                <div class="psp__item" data-reveal data-reveal-delay={i * 70}>
+                  <dt class="psp__item-l">
+                    {it.glyph && <AcademicGlyph name={it.glyph} size={22} class="psp__glyph" />}
+                    {it.label}
+                  </dt>
+                  <dd class:list={['psp__item-b', it.glyph && 'psp__item-b--indent']}>{it.body}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+
+        {
+          cta && (
+            <a
+              class="btn btn--primary psp__cta"
+              href={cta.href}
+              {...(cta.external ? { target: '_blank', rel: 'noopener' } : {})}
+            >
+              {cta.label}
+              {cta.external && <span class="u-visually-hidden">(opens in a new tab)</span>}
+            </a>
+          )
+        }
+      </div>
+
+      <div class="psp__media">
+        <slot name="media" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .psp {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(64px, 9vh, 108px);
+  }
+
+  .psp--ivory {
+    background:
+      radial-gradient(66% 44% at 96% 6%, #fff2e9 0%, rgba(255, 242, 233, 0) 62%),
+      var(--sb-ivory);
+  }
+
+  .psp--sand {
+    background:
+      radial-gradient(66% 44% at 4% 6%, #fff6f0 0%, rgba(255, 246, 240, 0) 62%),
+      var(--sb-sand);
+  }
+
+  .psp__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: clamp(32px, 5vw, 84px);
+    align-items: center;
+  }
+
+  .psp__copy { grid-column: 1; grid-row: 1; }
+  .psp__media { grid-column: 2; grid-row: 1; }
+
+  /* Template AND placements, together — see the header. */
+  .psp--rev .psp__grid { grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr); }
+  .psp--rev .psp__copy { grid-column: 2; grid-row: 1; }
+  .psp--rev .psp__media { grid-column: 1; grid-row: 1; }
+
+  /* --- Copy ---------------------------------------------------------------- */
+
+  .psp__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    margin-bottom: var(--sb-5);
+  }
+
+  .psp__n {
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--sb-violet-dark);
+  }
+
+  .psp__eyebrow .pill {
+    font-size: var(--sb-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* h2.psp__h, not .psp__h: base.css sets `h2:has(.t-squiggle)` to a 1.3
+     line-height, and a bare scoped class only matches it rather than beating it. */
+  h2.psp__h {
+    max-width: 19ch;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(27px, 3.2vw, 46px);
+    line-height: 1.12;
+    letter-spacing: -0.034em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .psp__prose { margin-top: clamp(20px, 2.8vh, 32px); }
+
+  .psp__prose p {
+    max-width: 52ch;
+    font-size: var(--sb-body);
+    line-height: 1.76;
+    color: var(--sb-text-secondary);
+  }
+
+  .psp__prose p + p { margin-top: var(--sb-5); }
+
+  /* --- The point list ------------------------------------------------------
+     Hairline between only: the rule sits on each item's top edge, so the first
+     has none and there is no trailing rule to suppress. */
+  .psp__items { margin: clamp(28px, 4vh, 44px) 0 0; }
+
+  .psp__item { padding-block: clamp(14px, 1.8vh, 20px); }
+  .psp__item + .psp__item { border-top: var(--sb-hairline); }
+
+  .psp__item-l {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .psp__glyph { color: var(--sb-violet); }
+
+  .psp__item-b {
+    max-width: 50ch;
+    margin: 6px 0 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.68;
+    color: var(--sb-text-secondary);
+  }
+
+  /* Aligned under the label's text rather than under its glyph. */
+  .psp__item-b--indent { margin-left: calc(22px + var(--sb-4)); }
+
+  .psp__cta { margin-top: clamp(28px, 4vh, 40px); }
+
+  /* --- Media --------------------------------------------------------------- */
+
+  .psp__media { position: relative; }
+
+  @media (max-width: 1023px) {
+    .psp__grid,
+    .psp--rev .psp__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(32px, 5vh, 48px); }
+
+    /* Stacked, the copy always leads. Alternation is a wide-screen device — on a
+       phone a mirrored section just puts the picture first for no reason. */
+    .psp__copy,
+    .psp--rev .psp__copy { grid-column: 1; grid-row: 1; }
+    .psp__media,
+    .psp--rev .psp__media { grid-column: 1; grid-row: 2; }
+  }
+
+  @media (max-width: 639px) {
+    .psp { padding-block: var(--sb-9); }
+  }
+</style>

@@ -1,0 +1,1125 @@
+---
+/**
+ * ACADEMIC PHILOSOPHY — the signature section.
+ *
+ * ═══ WHERE THE WORDS COME FROM ═════════════════════════════════════════════
+ *
+ * Fetched from the school's own site, and quoted rather than paraphrased where
+ * the sentence is theirs:
+ *
+ *   /about-us/   — "Incorporate Technology, a theory of Multiple Intelligence
+ *                  and Collaborative learning in all areas of teaching."
+ *                  "Learn effectively and develop their full potential."
+ *                  "Acquire the attitudes, skills, and knowledge that will form
+ *                  the basis for their future living and learning."
+ *                  "Develop in children a degree of independence and
+ *                  self-motivation."
+ *                  "Provide all children with a secure, caring, friendly and
+ *                  well-organized environment where discipline is consistent."
+ *                  "Encourage behavior that is tolerant, sensitive to others and
+ *                  reflects good manners and moral awareness."
+ *                  Memberships: NPSC, AFS, FICCI. Microsoft Showcase School.
+ *   /            — Principal Mrs. Arpita Singh: "education is not merely about
+ *                  imparting knowledge, but about nurturing character";
+ *                  "empower students with 21st-century skills while staying
+ *                  rooted in Indian culture"; "Our classrooms are places of
+ *                  curiosity and collaboration"; "innovative teaching methods
+ *                  meet modern technology".
+ *   /school-activities/ — the named activities used as evidence below.
+ *
+ * ⚠ THE EVIDENCE IS NAMED, NEVER GENERIC. "Experiential learning" is a claim
+ * any school can print; Little Agriculturists, the Chandrayaan-3 live show and
+ * the Science & Mathematics exhibition are checkable. Every example below is an
+ * activity heading the school published, so a parent can go and find it.
+ *
+ * ⚠ NOTHING IS INVENTED. No statistic, ranking or programme appears here that
+ * the school has not itself published. Where the site says nothing — a stated
+ * "21st-century skills framework", for instance — nothing is written.
+ *
+ * ═══ WHY SEVEN COMPOSITIONS AND NOT SEVEN CARDS ════════════════════════════
+ *
+ * Seven identical cards would say these seven things are the same kind of thing.
+ * They are not: one is an aim, one is a method, one is a set of rooms, one is a
+ * journey through years, one is a registration number. Each movement below is
+ * built differently on purpose — an editorial opener, a triad, a portrait with a
+ * pulled quote, an overlapping collage, a numbered field, a timeline, and a
+ * document panel.
+ *
+ * ⚠ IT USES THE SITE'S OWN MOTION CONTRACT, not a new one. `data-split`,
+ * `data-reveal`, `data-pop`, `data-parallax` and `data-mask` are handled by
+ * scripts/motion-gsap.ts, which is already gated on prefers-reduced-motion and
+ * Save-Data — those readers never download the library at all. No new JS ships
+ * for this page.
+ */
+import { Picture } from 'astro:assets';
+import { school } from '../../data/site';
+
+/**
+ * ⚠ ONE COMPONENT, SEVEN MOVEMENTS, TWO KINDS OF CALLER — AND THAT IS THE POINT.
+ *
+ * The overview page renders all seven. Each of the six sub-topic pages renders
+ * exactly ONE, by name. So the design a reader sees on
+ * /academics/philosophy/teaching-philosophy/ is not a copy of the movement on
+ * the overview — it IS that movement, from this file.
+ *
+ * The alternative was to write the composition twice, which is what produced the
+ * problem this fixes: the six children had been built as thin TopicPage stubs
+ * averaging 172 words while the overview covered the same seven subjects in 533,
+ * so the same material lived at two URLs in two different states. Every edit was
+ * two edits, Google had two pages competing for one set of words, and clicking a
+ * menu item took a reader from a rich section to a poorer one.
+ *
+ * Movement keys: opener · triad · child · hands · think · way · reg.
+ */
+interface Props {
+  /** Render a single movement. Omit for the full sequence. */
+  only?: 'opener' | 'triad' | 'child' | 'hands' | 'think' | 'way' | 'reg';
+}
+
+const { only } = Astro.props;
+const show = (k: NonNullable<Props['only']>) => !only || only === k;
+
+/* ── photography: verified Ballia frames only ───────────────────────────── */
+import campus from '../../assets/photos/sunbeem-1.jpg';
+import library from '../../assets/library/DSC_1224 copy.jpg';
+import lab from '../../assets/chem lab/DSC_1262 copy.jpg';
+import computers from '../../assets/computer lab/DSC_1204 copy.jpg';
+import activity from '../../assets/activity learning lab/DSC_1215 copy.jpg';
+import assembly from '../../assets/photos/sunbeem-5.jpg';
+import ceremony from '../../assets/photos/sunbeem-4.jpg';
+
+/* ── decorative, transparent PNGs from assets/icons ─────────────────────── */
+import dKite from '../../assets/icons/kite.png';
+import dSaturn from '../../assets/icons/saturn.png';
+import dBulb from '../../assets/icons/bulb.png';
+import dRocket from '../../assets/icons/rocketpaper.png';
+import dBrush from '../../assets/icons/paintbrush.png';
+import dBooks from '../../assets/icons/books.png';
+import dCap from '../../assets/icons/graduate-cap.png';
+import dStars from '../../assets/icons/two-stars.png';
+import dStar from '../../assets/icons/star.png';
+import dShape from '../../assets/icons/shape-2.png';
+import cbse from '../../assets/icons/cbse_v2.webp';
+
+/**
+ * The school's stated aims, quoted. These are the four that describe the
+ * learner rather than the institution.
+ */
+const aims = [
+  { n: '01', t: 'Learn effectively', v: 'Learn effectively and develop their full potential.' },
+  { n: '02', t: 'Carry it forward', v: 'Acquire the attitudes, skills, and knowledge that will form the basis for their future living and learning.' },
+  { n: '03', t: 'Stand on their own', v: 'Develop in children a degree of independence and self-motivation.' },
+  { n: '04', t: 'Treat others well', v: 'Encourage behavior that is tolerant, sensitive to others and reflects good manners and moral awareness.' },
+];
+
+/** The three the school names in one sentence about all its teaching. */
+const triad = [
+  { k: 'Technology', v: 'Interactive panels in every room, and Microsoft-certified teachers behind them.', art: computers, alt: 'A computer laboratory at Sunbeam School Ballia' },
+  { k: 'Multiple Intelligence', v: 'A theory the school names outright — that a class does not have one kind of mind in it.', art: activity, alt: 'The activity learning lab at Sunbeam School Ballia' },
+  { k: 'Collaborative learning', v: 'Findings compared and defended in the group, in every subject.', art: library, alt: 'The Nalanda Library at Sunbeam School Ballia' },
+];
+
+/** Named activities the school published — the evidence for "experiential". */
+const evidence = [
+  { k: 'Little Agriculturists', v: 'Sowing seeds, in the ground.' },
+  { k: 'Chandrayaan-3', v: 'The soft landing, watched live.' },
+  { k: 'Science & Mathematics exhibition', v: 'Built, then explained to a visitor.' },
+  { k: 'Gallery walks', v: 'Work on the wall, defended out loud.' },
+  { k: 'Living Newspaper', v: 'The week, performed.' },
+  { k: 'Taramandal', v: 'The sky, in a planetarium.' },
+];
+
+/** The journey, from data/site.ts and the school's own stages. */
+const journey = [
+  { s: 'Pre-Primary', v: 'School becomes a place a child knows.' },
+  { s: 'Primary', v: 'Reading, number, and the habits of a working week.' },
+  { s: 'Middle', v: 'Subjects separate; the laboratories open up.' },
+  { s: 'Secondary', v: 'Classes IX–X, and the first board year.' },
+  { s: 'Senior Secondary', v: 'Classes XI–XII, in one of four streams.' },
+];
+
+const facts = [
+  { k: 'Affiliating board', v: school.boardFull },
+  { k: 'Affiliation number', v: school.affiliationNo },
+  { k: 'School code', v: school.schoolCode },
+  { k: 'Classes', v: school.classRange },
+  { k: 'Streams', v: school.streams.join(' · ') },
+];
+
+/** Bodies the school states it belongs to. */
+const bodies = ['National Progressive Schools Conference', 'American Field Service', 'FICCI', 'Microsoft Showcase School'];
+---
+
+<div class="ph">
+  {/* ═══ 1 · THE OPENER ═══════════════════════════════════════════════════
+      Editorial, asymmetric: an oversized statement crossing over a photograph
+      that runs past the container on one side, with decorative PNGs floating
+      free of both. */}
+{show('opener') && (
+    <section class="ph-open" aria-labelledby="ph-open-h">
+      <span class="ph__grid" aria-hidden="true"></span>
+      <span class="ph__wash ph__wash--a" aria-hidden="true"></span>
+
+      <div class="u-container ph-open__in">
+        <div class="ph-open__copy">
+          <p class="ph__eyebrow t-label" data-reveal>Academic philosophy</p>
+          <h2 class="ph-open__h" id="ph-open-h" data-split>
+            Learn effectively, and develop <em>their full potential</em>.
+          </h2>
+          <p class="ph-open__stand" data-reveal data-reveal-delay="120">
+            That is the school's own first aim, in its own words — and everything on this page is
+            the arrangement it has built to keep it.
+          </p>
+
+          <ul class="ph-aims">
+            {aims.map((a, i) => (
+              <li class="aim" data-reveal data-reveal-delay={140 + i * 80}>
+                <span class="aim__n t-tabular">{a.n}</span>
+                <div>
+                  <p class="aim__t">{a.t}</p>
+                  <p class="aim__v">{a.v}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <figure class="ph-open__art" data-mask>
+          <Picture
+            src={campus}
+            alt={`The main building of ${school.name} seen across its ground`}
+            formats={['webp']}
+            widths={[560, 900, 1200]}
+            sizes="(max-width: 900px) 92vw, 46vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <figcaption class="ph-open__cap">
+            <span class="t-label">Agarsanda, Ballia</span>
+            <span>{school.classRange}</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      {/* Floating, transparent, and deliberately crossing the section edges. */}
+      <img class="ph__float ph__float--kite" src={dKite.src} alt="" aria-hidden="true" data-parallax data-parallax-y="60" />
+      <img class="ph__float ph__float--saturn" src={dSaturn.src} alt="" aria-hidden="true" data-parallax data-parallax-y="-40" />
+      <img class="ph__float ph__float--stars" src={dStars.src} alt="" aria-hidden="true" />
+    </section>
+  )}
+
+  {/* ═══ 2 · THE TRIAD ════════════════════════════════════════════════════
+      The school names three things in one sentence about ALL its teaching, so
+      the three are shown as one sentence broken across three stepped panels
+      rather than as three cards in a row. */}
+{show('triad') && (
+    <section class="ph-triad" aria-labelledby="ph-triad-h">
+      <span class="ph__dots" aria-hidden="true"></span>
+
+      <div class="u-container">
+        <header class="ph__head">
+          <p class="ph__eyebrow ph__eyebrow--light t-label" data-reveal>Teaching philosophy</p>
+          <h2 class="ph-triad__h" id="ph-triad-h" data-split>
+            One sentence governs every lesson
+          </h2>
+          <blockquote class="ph-quote" data-reveal data-reveal-delay="120">
+            <p>“Incorporate Technology, a theory of Multiple Intelligence and Collaborative learning in all areas of teaching.”</p>
+            <cite>Sunbeam School Ballia, on its own teaching</cite>
+          </blockquote>
+        </header>
+
+        <ul class="ph-triad__set">
+          {triad.map((t, i) => (
+            <li class="tri" data-reveal data-reveal-delay={i * 110}>
+              <figure class="tri__art">
+                <Picture
+                  src={t.art}
+                  alt={t.alt}
+                  formats={['webp']}
+                  widths={[420, 760]}
+                  sizes="(max-width: 780px) 88vw, 30vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+              <p class="tri__k">{t.k}</p>
+              <p class="tri__v">{t.v}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <img class="ph__float ph__float--bulb" src={dBulb.src} alt="" aria-hidden="true" data-parallax data-parallax-y="-50" />
+    </section>
+  )}
+
+  {/* ═══ 3 · THE PORTRAIT ═════════════════════════════════════════════════
+      A single tall photograph with the Principal's own line pulled out of it on
+      a glass plate that overlaps the frame — not an icon beside a paragraph. */}
+{show('child') && (
+    <section class="ph-child" aria-labelledby="ph-child-h">
+      <span class="ph__wash ph__wash--b" aria-hidden="true"></span>
+
+      <div class="u-container ph-child__in">
+        <figure class="ph-child__art" data-mask data-mask-from="left">
+          <Picture
+            src={assembly}
+            alt={`Students and staff at an assembly at ${school.name}`}
+            formats={['webp']}
+            widths={[520, 860]}
+            sizes="(max-width: 900px) 92vw, 42vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+
+        <div class="ph-child__copy">
+          <p class="ph__eyebrow t-label" data-reveal>Student-centred learning</p>
+          <h2 class="ph-child__h" id="ph-child-h" data-split>
+            Classrooms are places of <em>curiosity and collaboration</em>
+          </h2>
+          <p class="ph-child__stand" data-reveal data-reveal-delay="110">
+            The Principal's phrase, not ours. What sits behind it is a stated commitment to a
+            secure, caring, friendly and well-organised environment — and to children who can
+            work without being driven.
+          </p>
+
+          <div class="ph-plate" data-pop>
+            <p class="ph-plate__q">“Every child feels valued, safe, and inspired to achieve their full potential.”</p>
+            <p class="ph-plate__by">{school.principal} · Principal</p>
+          </div>
+        </div>
+      </div>
+
+      <img class="ph__float ph__float--star" src={dStar.src} alt="" aria-hidden="true" />
+    </section>
+  )}
+
+  {/* ═══ 4 · THE EVIDENCE ═════════════════════════════════════════════════
+      Overlapping photographs at two depths, with the named activities as a
+      loose field rather than a list — the claim and its receipts together. */}
+{show('hands') && (
+    <section class="ph-hands" aria-labelledby="ph-hands-h">
+      <span class="ph__grid ph__grid--soft" aria-hidden="true"></span>
+
+      <div class="u-container ph-hands__in">
+        <div class="ph-hands__copy">
+          <p class="ph__eyebrow t-label" data-reveal>Experiential &amp; inquiry-based</p>
+          <h2 class="ph-hands__h" id="ph-hands-h" data-split>Met in the hand before it is met in the exam</h2>
+          <p class="ph-hands__stand" data-reveal data-reveal-delay="110">
+            The school does not only say this. These are activities it has run and published —
+            each one a thing done rather than a topic covered.
+          </p>
+
+          <ul class="ph-ev">
+            {evidence.map((e, i) => (
+              <li class="ev" data-reveal data-reveal-delay={i * 70}>
+                <span class="ev__k">{e.k}</span>
+                <span class="ev__v">{e.v}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="ph-hands__stack">
+          <figure class="ph-hands__a" data-parallax data-parallax-y="42">
+            <Picture src={lab} alt={`A subject laboratory at ${school.name}`} formats={['webp']} widths={[420, 760]} sizes="(max-width: 900px) 60vw, 26vw" loading="lazy" decoding="async" />
+          </figure>
+          <figure class="ph-hands__b" data-parallax data-parallax-y="-38">
+            <Picture src={activity} alt={`The activity learning lab at ${school.name}`} formats={['webp']} widths={[420, 760]} sizes="(max-width: 900px) 52vw, 22vw" loading="lazy" decoding="async" />
+          </figure>
+          <img class="ph__float ph__float--rocket" src={dRocket.src} alt="" aria-hidden="true" />
+        </div>
+      </div>
+    </section>
+  )}
+
+  {/* ═══ 5 · THE FIELD ════════════════════════════════════════════════════
+      Oversized numerals and a loose scatter, dark ground — the change of key
+      that stops the page reading as one long band of cream. */}
+{show('think') && (
+    <section class="ph-think" aria-labelledby="ph-think-h">
+      <span class="ph__orb" aria-hidden="true"></span>
+      <span class="ph__dots ph__dots--dark" aria-hidden="true"></span>
+
+      <div class="u-container ph-think__in">
+        <p class="ph__eyebrow ph__eyebrow--onink t-label" data-reveal>Critical thinking &amp; creativity</p>
+        <h2 class="ph-think__h" id="ph-think-h" data-split>
+          Nurturing character, not only<br />imparting knowledge
+        </h2>
+        <p class="ph-think__stand" data-reveal data-reveal-delay="120">
+          The Principal's distinction. The school's own examples of it are competitive and
+          creative in equal measure — a national AI festival, an annual production, an award for
+          reading.
+        </p>
+
+        <ul class="ph-think__set">
+          <li data-pop><span class="tk__n t-tabular">01</span><p class="tk__k">Indian AI Impact Festival</p><p class="tk__v">Entered nationally, from the school's own robotics and computing rooms.</p></li>
+          <li data-pop data-pop-delay="90"><span class="tk__n t-tabular">02</span><p class="tk__k">Genesis</p><p class="tk__v">The annual production — “Voyages of Discovery”, and before it “The Shades of Progressive Society”.</p></li>
+          <li data-pop data-pop-delay="180"><span class="tk__n t-tabular">03</span><p class="tk__k">Ardent Reader Award</p><p class="tk__v">Reading recognised as an achievement in its own right.</p></li>
+        </ul>
+      </div>
+
+      <img class="ph__float ph__float--brush" src={dBrush.src} alt="" aria-hidden="true" data-parallax data-parallax-y="-46" />
+      <img class="ph__float ph__float--books" src={dBooks.src} alt="" aria-hidden="true" data-parallax data-parallax-y="52" />
+    </section>
+  )}
+
+  {/* ═══ 6 · THE JOURNEY ══════════════════════════════════════════════════
+      A timeline, because this theme IS a sequence — the one place on the page
+      where a repeating rhythm is the right answer rather than a lazy one. */}
+{show('way') && (
+    <section class="ph-way" aria-labelledby="ph-way-h">
+      <div class="u-container">
+        <header class="ph__head ph__head--centre">
+          <p class="ph__eyebrow t-label" data-reveal>Curriculum</p>
+          <h2 class="ph-way__h" id="ph-way-h" data-split>Nursery to Class XII, in five stages</h2>
+          <p class="ph-way__stand" data-reveal data-reveal-delay="110">
+            One CBSE curriculum, followed the whole way — with the provision around it changing
+            as the years do.
+          </p>
+        </header>
+
+        <ol class="ph-way__line">
+          {journey.map((j, i) => (
+            <li class="way" data-reveal data-reveal-delay={i * 90}>
+              <span class="way__dot" aria-hidden="true"></span>
+              <p class="way__s">{j.s}</p>
+              <p class="way__v">{j.v}</p>
+            </li>
+          ))}
+        </ol>
+
+        <p class="ph-way__foot" data-reveal>
+          Four streams at senior secondary — <strong>{school.streams.join(', ')}</strong>.
+        </p>
+      </div>
+
+      <img class="ph__float ph__float--cap" src={dCap.src} alt="" aria-hidden="true" data-parallax data-parallax-y="-34" />
+      <img class="ph__float ph__float--shape" src={dShape.src} alt="" aria-hidden="true" />
+    </section>
+  )}
+
+  {/* ═══ 7 · THE RECORD ═══════════════════════════════════════════════════
+      Document-style: a ruled plate with the registration facts, treated as a
+      certificate rather than as prose. */}
+{show('reg') && (
+    <section class="ph-reg" aria-labelledby="ph-reg-h">
+      <div class="u-container ph-reg__in">
+        <div class="ph-reg__plate" data-reveal>
+          <div class="ph-reg__top">
+            <img class="ph-reg__seal" src={cbse.src} alt="" aria-hidden="true" width="72" height="72" />
+            <div>
+              <p class="ph__eyebrow t-label">Affiliation</p>
+              <h2 class="ph-reg__h" id="ph-reg-h">On the record</h2>
+            </div>
+          </div>
+
+          <dl class="ph-reg__dl">
+            {facts.map((f) => (
+              <div class="reg">
+                <dt>{f.k}</dt>
+                <dd class="t-tabular">{f.v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <aside class="ph-reg__side">
+          <figure class="ph-reg__art">
+            <Picture src={ceremony} alt={`An award ceremony in the hall at ${school.name}`} formats={['webp']} widths={[420, 760]} sizes="(max-width: 900px) 90vw, 34vw" loading="lazy" decoding="async" />
+          </figure>
+
+          <p class="ph-reg__k t-label">Also a member of</p>
+          <ul class="ph-reg__bodies">
+            {bodies.map((bd, i) => <li data-reveal data-reveal-delay={i * 70}>{bd}</li>)}
+          </ul>
+        </aside>
+      </div>
+    </section>
+  )}
+</div>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════
+     Everything below leans on the existing tokens — --sb-violet (#c93c0a),
+     --sb-ivory, --sb-sand, --sb-charcoal, --sb-violet-ink, the r-scale and the
+     display face. No new palette is introduced. */
+  .ph { position: relative; }
+
+  .ph section { position: relative; isolation: isolate; overflow: hidden; }
+
+  .ph__eyebrow { color: var(--sb-violet-dark); }
+  .ph__eyebrow--light,
+  .ph__eyebrow--onink { color: var(--sb-lime); }
+
+  /* Backgrounds: a ruled grid, a dot field and two soft washes, all drawn. */
+  .ph__grid,
+  .ph__dots,
+  .ph__wash,
+  .ph__orb {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .ph__grid {
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.045) 1px, transparent 1px);
+    background-size: 78px 78px;
+    -webkit-mask-image: radial-gradient(80% 70% at 30% 20%, #000, transparent 76%);
+    mask-image: radial-gradient(80% 70% at 30% 20%, #000, transparent 76%);
+  }
+
+  .ph__grid--soft { background-size: 54px 54px; opacity: 0.7; }
+
+  .ph__dots {
+    inset: 0;
+    background-image: radial-gradient(currentColor 1.2px, transparent 1.2px);
+    background-size: 26px 26px;
+    color: rgba(201, 60, 10, 0.16);
+    -webkit-mask-image: radial-gradient(70% 60% at 70% 40%, #000, transparent 74%);
+    mask-image: radial-gradient(70% 60% at 70% 40%, #000, transparent 74%);
+  }
+
+  .ph__dots--dark { color: rgba(255, 255, 255, 0.14); }
+
+  .ph__wash { border-radius: 50%; filter: blur(20px); }
+
+  .ph__wash--a {
+    top: -14%;
+    right: -8%;
+    width: min(48vw, 640px);
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(201, 60, 10, 0.16) 0%, rgba(201, 60, 10, 0) 68%);
+  }
+
+  .ph__wash--b {
+    bottom: -20%;
+    left: -12%;
+    width: min(42vw, 560px);
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(255, 138, 92, 0.2) 0%, rgba(255, 138, 92, 0) 68%);
+  }
+
+  .ph__orb {
+    top: 50%;
+    left: 50%;
+    width: min(80vw, 820px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 60, 10, 0.5) 0%, rgba(255, 138, 92, 0.18) 40%, rgba(201, 60, 10, 0) 70%);
+    filter: blur(30px);
+    animation: ph-breathe 16s ease-in-out infinite;
+  }
+
+  @keyframes ph-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+
+  /* ⚠ THE FLOATING PNGs ARE DECORATION AND MUST NEVER BLOCK ANYTHING. They sit
+     over headings and images by design, so `pointer-events: none` is
+     load-bearing, and every one carries alt="" + aria-hidden. */
+  .ph__float {
+    position: absolute;
+    z-index: 1;
+    display: block;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ⚠ EVERY POSITION BELOW IS MEASURED, NOT EYEBALLED. A first pass put six of
+     these on top of live copy — Saturn across the fourth aim, the bulb over the
+     "Teaching philosophy" eyebrow, the brush over an award card.
+     `pointer-events: none` meant nothing became unclickable, so a link check
+     could never have caught it; the only symptom was text that had got hard to
+     read. They now sit in the gutters and corners the copy does not reach,
+     checked with a Range-based overlap test at 1440, 1024, 768 and 390. */
+  .ph__float--kite { top: 6%; right: 4%; width: clamp(56px, 7vw, 104px); animation: ph-bob 12s ease-in-out infinite; }
+  .ph__float--saturn { right: 2%; bottom: 4%; width: clamp(52px, 6vw, 96px); opacity: 0.9; animation: ph-bob 15s ease-in-out infinite reverse; }
+  /* ⚠ PINNED TO THE RIGHT GUTTER, NOT TO A PERCENTAGE ACROSS THE PAGE. At 43%
+     it cleared the heading at 1440 and landed on it at 1024, because the copy
+     column grows as a share of the page while the decoration does not. Anchored
+     to an edge it behaves the same at every width. */
+  .ph__float--stars { top: 12%; right: 16%; width: clamp(34px, 4vw, 62px); opacity: 0.8; }
+  .ph__float--bulb { top: 3%; right: 4%; width: clamp(46px, 5.5vw, 88px); animation: ph-bob 14s ease-in-out infinite; }
+  .ph__float--star { top: 4%; right: 3%; width: clamp(30px, 3.4vw, 54px); animation: ph-spin 26s linear infinite; }
+  .ph__float--rocket { top: -7%; right: -5%; width: clamp(56px, 7vw, 112px); animation: ph-bob 13s ease-in-out infinite; }
+  .ph__float--brush { top: 5%; left: 3%; width: clamp(50px, 6vw, 96px); }
+  .ph__float--books { top: 5%; right: 4%; width: clamp(52px, 6.5vw, 100px); }
+  .ph__float--cap { top: 4%; right: 4%; width: clamp(48px, 5.6vw, 92px); animation: ph-bob 16s ease-in-out infinite; }
+  .ph__float--shape { bottom: 3%; left: 2%; width: clamp(60px, 8vw, 130px); opacity: 0.55; }
+
+  @keyframes ph-bob {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -16px, 0); }
+  }
+
+  @keyframes ph-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .ph__head { max-width: 54ch; }
+  .ph__head--centre { max-width: 46ch; margin-inline: auto; text-align: center; }
+
+  /* ═══ 1 · OPENER ══════════════════════════════════════════════════════════ */
+  .ph-open { padding-block: clamp(56px, 8vw, 116px); background: var(--sb-ivory); }
+
+  .ph-open__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 68px);
+    align-items: center;
+  }
+
+  .ph-open__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(34px, 5.2vw, 68px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .ph-open__h em { font-style: normal; color: var(--sb-violet); }
+
+  .ph-open__stand {
+    max-width: 46ch;
+    margin-top: clamp(14px, 1.8vw, 20px);
+    font-size: clamp(16px, 1.2vw, 19px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .ph-aims {
+    display: grid;
+    gap: 0;
+    margin: clamp(26px, 3.4vw, 40px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .aim {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--sb-4) clamp(14px, 1.8vw, 22px);
+    padding: clamp(14px, 1.8vw, 18px) 0;
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .aim:last-child { border-bottom: 1px solid var(--sb-border); }
+
+  .aim__n {
+    font-family: var(--sb-font-display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--sb-violet);
+  }
+
+  .aim__t { font-size: 15.5px; font-weight: 700; color: var(--sb-charcoal); }
+  .aim__v { margin-top: 4px; font-size: var(--sb-body-sm); line-height: 1.6; color: var(--sb-text-secondary); }
+
+  .ph-open__art {
+    position: relative;
+    margin: 0;
+    border-radius: var(--sb-r-3);
+    overflow: hidden;
+    box-shadow: 0 40px 80px -44px rgba(27, 21, 18, 0.6);
+  }
+
+  .ph-open__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .ph-open__cap {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: var(--sb-r-0);
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sb-charcoal);
+  }
+
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .ph-open__cap { background: #fff; }
+  }
+
+  /* ═══ 2 · TRIAD ═══════════════════════════════════════════════════════════ */
+  .ph-triad { padding-block: clamp(56px, 8vw, 108px); background: var(--sb-sand); }
+
+  .ph-triad__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 4vw, 50px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.036em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .ph-quote {
+    margin: clamp(18px, 2.4vw, 26px) 0 0;
+    padding-left: clamp(16px, 2vw, 22px);
+    border-left: 3px solid var(--sb-violet);
+  }
+
+  .ph-quote p {
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.6vw, 22px);
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: -0.018em;
+    color: var(--sb-charcoal);
+  }
+
+  .ph-quote cite {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    font-style: normal;
+    color: var(--sb-text-secondary);
+  }
+
+  .ph-triad__set {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(16px, 2vw, 26px);
+    margin: clamp(34px, 4.4vw, 56px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ⚠ THE THREE ARE STEPPED, NOT LEVEL. Three identical panels in a row is the
+     card grid this section exists to avoid; a small vertical offset reads as one
+     idea unfolding rather than three equivalents. Removed below 780, where the
+     stack makes an offset meaningless. */
+  .tri {
+    padding: clamp(16px, 1.8vw, 22px);
+    border-radius: var(--sb-r-2);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 24px 48px -34px rgba(27, 21, 18, 0.45);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    transition: transform 420ms var(--sb-ease), box-shadow 420ms ease;
+  }
+
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .tri { background: #fff; }
+  }
+
+  .tri:hover { transform: translateY(-6px); box-shadow: 0 30px 60px -30px rgba(201, 60, 10, 0.42); }
+
+  .tri__art {
+    margin: 0 0 clamp(14px, 1.6vw, 18px);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--sb-r-0);
+  }
+
+  .tri__art :global(picture) { display: block; width: 100%; height: 100%; }
+  .tri__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 640ms var(--sb-ease); }
+  .tri:hover .tri__art :global(img) { transform: scale(1.06); }
+
+  .tri__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.4vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .tri__v { margin-top: 7px; font-size: var(--sb-body-sm); line-height: 1.6; color: var(--sb-text-secondary); }
+
+  /* ═══ 3 · PORTRAIT ════════════════════════════════════════════════════════ */
+  .ph-child { padding-block: clamp(56px, 8vw, 108px); background: var(--sb-ivory); }
+
+  .ph-child__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(30px, 4.4vw, 62px);
+    align-items: center;
+  }
+
+  .ph-child__art {
+    position: relative;
+    margin: 0;
+    border-radius: var(--sb-r-3);
+    overflow: hidden;
+    box-shadow: 0 40px 80px -46px rgba(27, 21, 18, 0.6);
+  }
+
+  .ph-child__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .ph-child__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(30px, 4.2vw, 54px);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.038em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .ph-child__h em { font-style: normal; color: var(--sb-violet); }
+
+  .ph-child__stand {
+    max-width: 48ch;
+    margin-top: clamp(14px, 1.8vw, 20px);
+    font-size: clamp(15.5px, 1.15vw, 18px);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+
+  .ph-plate {
+    margin-top: clamp(20px, 2.6vw, 30px);
+    padding: clamp(20px, 2.4vw, 28px);
+    border-radius: var(--sb-r-2);
+    background: rgba(255, 255, 255, 0.74);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 26px 54px -34px rgba(27, 21, 18, 0.5);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+  }
+
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .ph-plate { background: #fff; }
+  }
+
+  .ph-plate__q {
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.4vw, 20px);
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--sb-charcoal);
+  }
+
+  .ph-plate__by { margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--sb-violet-dark); }
+
+  /* ═══ 4 · EVIDENCE ════════════════════════════════════════════════════════ */
+  .ph-hands { padding-block: clamp(56px, 8vw, 108px); background: var(--sb-sand); }
+
+  .ph-hands__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(34px, 5vw, 70px);
+    align-items: center;
+  }
+
+  .ph-hands__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.038em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .ph-hands__stand {
+    max-width: 46ch;
+    margin-top: clamp(14px, 1.8vw, 20px);
+    font-size: clamp(15.5px, 1.15vw, 18px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .ph-ev {
+    display: grid;
+    gap: 10px;
+    margin: clamp(24px, 3vw, 34px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ev {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    padding: 11px 16px;
+    border-radius: var(--sb-r-full);
+    background: rgba(255, 255, 255, 0.66);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  }
+
+  .ev__k { font-size: 14.5px; font-weight: 700; color: var(--sb-charcoal); }
+  .ev__v { font-size: 13.5px; color: var(--sb-text-secondary); }
+
+  /* Two frames at different depths, the smaller one overlapping the larger. */
+  .ph-hands__stack { position: relative; }
+
+  .ph-hands__a,
+  .ph-hands__b {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: 0 34px 70px -42px rgba(27, 21, 18, 0.62);
+  }
+
+  .ph-hands__a :global(img),
+  .ph-hands__b :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .ph-hands__b {
+    position: absolute;
+    right: -6%;
+    bottom: -12%;
+    width: 58%;
+    border: 6px solid var(--sb-sand);
+  }
+
+  /* ═══ 5 · FIELD ═══════════════════════════════════════════════════════════ */
+  .ph-think {
+    padding-block: clamp(64px, 9vw, 126px);
+    background: var(--sb-violet-ink);
+    color: var(--sb-on-dark-78, rgba(255, 255, 255, 0.78));
+  }
+
+  .ph-think__in { position: relative; z-index: 1; text-align: center; }
+
+  .ph-think__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(30px, 4.6vw, 62px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.042em;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .ph-think__stand {
+    max-width: 52ch;
+    margin: clamp(14px, 1.8vw, 20px) auto 0;
+    font-size: clamp(15.5px, 1.15vw, 18px);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .ph-think__set {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(16px, 2vw, 26px);
+    margin: clamp(32px, 4.4vw, 56px) 0 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+  }
+
+  .ph-think__set li {
+    padding: clamp(20px, 2.4vw, 28px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: var(--sb-r-2);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .tk__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(30px, 3.4vw, 46px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sb-lime);
+  }
+
+  .tk__k { margin-top: 12px; font-family: var(--sb-font-display); font-size: clamp(17px, 1.4vw, 21px); font-weight: 700; color: #fff; }
+  .tk__v { margin-top: 7px; font-size: var(--sb-body-sm); line-height: 1.6; color: rgba(255, 255, 255, 0.78); }
+
+  /* ═══ 6 · JOURNEY ═════════════════════════════════════════════════════════ */
+  .ph-way { padding-block: clamp(56px, 8vw, 108px); background: var(--sb-ivory); }
+
+  .ph-way__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.038em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .ph-way__stand { margin-top: var(--sb-4); font-size: clamp(15.5px, 1.15vw, 18px); line-height: 1.7; color: var(--sb-text-secondary); }
+
+  .ph-way__line {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(18px, 2.4vw, 28px);
+    margin: clamp(34px, 4.4vw, 58px) 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: way;
+  }
+
+  .way { position: relative; padding-top: 26px; }
+
+  .way__dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 13px;
+    height: 13px;
+    border: 3px solid var(--sb-violet);
+    border-radius: 50%;
+    background: var(--sb-ivory);
+  }
+
+  .way__s { font-family: var(--sb-font-display); font-size: clamp(16px, 1.3vw, 20px); font-weight: 700; color: var(--sb-charcoal); }
+  .way__v { margin-top: 6px; font-size: var(--sb-body-sm); line-height: 1.6; color: var(--sb-text-secondary); }
+
+  .ph-way__foot {
+    margin-top: clamp(26px, 3.4vw, 40px);
+    text-align: center;
+    font-size: clamp(15px, 1.15vw, 18px);
+    color: var(--sb-text-secondary);
+  }
+
+  .ph-way__foot strong { color: var(--sb-violet-dark); }
+
+  /* ═══ 7 · RECORD ══════════════════════════════════════════════════════════ */
+  .ph-reg { padding-block: clamp(56px, 8vw, 108px); background: var(--sb-sand); }
+
+  .ph-reg__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(24px, 3.4vw, 44px);
+    align-items: start;
+  }
+
+  .ph-reg__plate {
+    padding: clamp(24px, 3vw, 40px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    box-shadow: 0 30px 60px -40px rgba(27, 21, 18, 0.5);
+  }
+
+  .ph-reg__top { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 20px); }
+  .ph-reg__seal { display: block; width: clamp(52px, 6vw, 72px); height: auto; }
+
+  .ph-reg__h {
+    margin-top: 2px;
+    font-family: var(--sb-font-display);
+    font-size: clamp(24px, 2.8vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+
+  .ph-reg__dl { margin: clamp(20px, 2.6vw, 30px) 0 0; }
+
+  .reg {
+    display: grid;
+    grid-template-columns: minmax(140px, auto) minmax(0, 1fr);
+    gap: 6px 20px;
+    padding: 13px 0;
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .reg:last-child { border-bottom: 1px solid var(--sb-border); }
+  .reg dt { font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sb-text-secondary); }
+  .reg dd { margin: 0; font-size: 15px; font-weight: 600; color: var(--sb-charcoal); }
+
+  .ph-reg__art { margin: 0 0 clamp(18px, 2.2vw, 24px); overflow: hidden; border-radius: var(--sb-r-2); }
+  .ph-reg__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .ph-reg__k { color: var(--sb-violet-dark); }
+
+  .ph-reg__bodies { display: grid; gap: 8px; margin: var(--sb-4) 0 0; padding: 0; list-style: none; }
+
+  .ph-reg__bodies li {
+    padding: 11px 16px;
+    border-radius: var(--sb-r-full);
+    background: rgba(255, 255, 255, 0.72);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--sb-charcoal);
+  }
+
+  /* ═══ LAYOUT ══════════════════════════════════════════════════════════════
+     ⚠ THE COMPOSITIONS ARE RE-THOUGHT, NOT STACKED. Below 900 the overlapping
+     frame in §4 comes out of the overlap and sits in flow, the stepped triad
+     goes level, and the timeline turns from horizontal to vertical — each of
+     those is a different arrangement rather than the desktop one squashed. */
+  @media (min-width: 780px) {
+    .ph-triad__set { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+    .tri:nth-child(2) { transform: translateY(clamp(18px, 2.4vw, 34px)); }
+    .tri:nth-child(3) { transform: translateY(clamp(36px, 4.8vw, 68px)); }
+    .tri:nth-child(2):hover { transform: translateY(calc(clamp(18px, 2.4vw, 34px) - 6px)); }
+    .tri:nth-child(3):hover { transform: translateY(calc(clamp(36px, 4.8vw, 68px) - 6px)); }
+    .ph-think__set { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .ph-ev { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (min-width: 900px) {
+    .ph-open__in { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
+    .ph-child__in { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+    .ph-hands__in { grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); }
+    .ph-reg__in { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); }
+
+    /* The timeline becomes a rule with the stages hung off it. */
+    .ph-way__line { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 22px); }
+    .ph-way__line::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      right: 6%;
+      left: 6%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--sb-violet) 12%, var(--sb-violet) 88%, transparent);
+      opacity: 0.45;
+    }
+  }
+
+  /* The overlap only exists where there is room for it. */
+  @media (max-width: 899px) {
+    .ph-hands__b { position: static; width: 100%; margin-top: clamp(14px, 2vw, 20px); border-width: 0; }
+    .ph__float--stars,
+    .ph__float--shape { display: none; }
+  }
+
+  @media (max-width: 900px) {
+    /* ⚠ THE COPY FILLS THE WIDTH HERE, so there is no gutter left for corner
+       decoration to occupy — measured, the brush and the cap landed on the cards
+       below 900. Framing only works where there is a frame. */
+    .ph__float--brush,
+    .ph__float--cap,
+    .ph__float--bulb { display: none; }
+  }
+
+  @media (max-width: 560px) {
+    .ph__float--rocket,
+    .ph__float--books,
+    .ph__float--saturn,
+    .ph__float--star { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ph__float,
+    .ph__orb { animation: none; }
+    .tri,
+    .tri__art :global(img) { transition-duration: 1ms; }
+    .tri:hover { transform: none; }
+    .tri:nth-child(2):hover { transform: translateY(clamp(18px, 2.4vw, 34px)); }
+    .tri:nth-child(3):hover { transform: translateY(clamp(36px, 4.8vw, 68px)); }
+  }
+</style>

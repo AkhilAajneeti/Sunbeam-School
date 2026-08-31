@@ -1,0 +1,814 @@
+---
+/**
+ * TEACHING PHILOSOPHY — how Sunbeam believes teaching should happen.
+ *
+ * ═══ SOURCE OF TRUTH ═══════════════════════════════════════════════════════
+ *
+ * Fetched from the school's own site. Every claim below traces to one of these
+ * sentences, and where the school's wording carries the idea better than a
+ * rewrite would, it is quoted rather than paraphrased:
+ *
+ *   /principals-message/
+ *     "all the students do not have the same talents and so each one will
+ *      achieve success differently"
+ *     "We, educators being as a facilitators should always encourage our child
+ *      to develop in their specific field of interest"
+ *     "incorporate such activities that help the all-round development of each
+ *      child"
+ *
+ *   /about-us/
+ *     "Incorporate Technology, a theory of Multiple Intelligence and
+ *      Collaborative learning in all areas of teaching."
+ *     "Develop in children a degree of independence and self-motivation."
+ *     "Provide all children with a secure, caring, friendly and well-organized
+ *      environment where discipline is consistent."
+ *
+ *   /  (Principal Speak)
+ *     "education is not merely about imparting knowledge, but about nurturing
+ *      character"
+ *     "innovative teaching methods meet modern technology"
+ *     "Our classrooms are places of curiosity and collaboration"
+ *     "every child feels valued, safe, and inspired to achieve their full
+ *      potential"
+ *
+ * ⚠ NOTHING ELSE IS CLAIMED. No pedagogy, framework or method appears here that
+ * the school has not published. Three of the brief's ideas — individual
+ * potential, independence, collaboration — are NOT in the Principal's Message;
+ * they come from About Us, and the attributions below say so rather than
+ * crediting the Principal with words she did not write.
+ *
+ * ═══ SCOPE ═════════════════════════════════════════════════════════════════
+ *
+ * ⚠ THIS PAGE STOPS AT TEACHING. Curriculum, experiential and project work,
+ * STEM, robotics, AI, smart classrooms, assessment, careers, structure and
+ * parent partnership each have their own page, and §05 in particular is written
+ * to stay on the PHILOSOPHY of teaching with technology rather than drifting
+ * into the rooms and equipment that belong to Smart Classrooms.
+ *
+ * ⚠ IT USES THE SITE'S OWN MOTION CONTRACT — data-split, data-reveal(+delay),
+ * data-pop, data-parallax, data-mask — handled by scripts/motion-gsap.ts, which
+ * is already gated on prefers-reduced-motion and Save-Data. No new JS ships.
+ */
+import { Picture } from 'astro:assets';
+import { school } from '../../data/site';
+
+/* Photography — verified Ballia frames only. */
+import pStudents from '../../assets/photos/sunbeem-3.jpg';
+import pComputers from '../../assets/computer lab/DSC_1204 copy.jpg';
+import pGround from '../../assets/photos/sunbeem-1.jpg';
+import pCeremony from '../../assets/photos/sunbeem-4.jpg';
+/* The constellation's core. A wide ceremony frame was here first and read as
+   noise once cropped to a 200px circle — this one holds two faces and a pair of
+   working hands at that size, and it is a making intelligence in the middle of a
+   diagram about there being more than one. */
+import pMaking from '../../assets/School Activity in Uniform/Embriodery.jpg';
+/**
+ * §02's pair. The section draws a teacher and a learner joined by a connector,
+ * so both ends have to actually BE that.
+ *
+ * ⚠ THE FRAMES THAT WERE HERE FIRST SHOWED NOBODY. §02 used the activity-lab and
+ * library shots with alt text reading "a teacher working with a group" and "a
+ * student reading in the Nalanda Library" — and both of those files, along with
+ * the computer-lab frame, are from an empty-campus shoot: no people, chairs
+ * stacked, machines under dust covers. The alt text described a scene that did
+ * not exist, which is an invented claim a screen-reader user has no way to
+ * check. These two are people actually teaching and actually working.
+ */
+import pChef from '../../assets/School Activity in Uniform/School Activity in Uniform (1).jpg';
+import pPair from '../../assets/School Activity in Uniform/School Activity in Uniform (5).jpeg';
+
+/* Decorative transparent PNGs — used as ornament, never as bullet glyphs. */
+import dBulb from '../../assets/icons/bulb.png';
+import dBooks from '../../assets/icons/books.png';
+import dBrush from '../../assets/icons/paintbrush.png';
+import dSaturn from '../../assets/icons/saturn.png';
+import dRocket from '../../assets/icons/rocketpaper.png';
+import dCap from '../../assets/icons/graduate-cap.png';
+import dStars from '../../assets/icons/two-stars.png';
+import dKite from '../../assets/icons/kite.png';
+import dPencil from '../../assets/icons/pencill.webp';
+/* The four the client supplied for this constellation. Named for the nodes
+   they belong to, so a future swap is obvious. */
+import iWords from '../../assets/icons/Words.png';
+import iEnquiry from '../../assets/icons/enquire.png';
+import iInvention from '../../assets/icons/Invention.png';
+import iAmbition from '../../assets/icons/Ambition.png';
+import dShape from '../../assets/icons/shape-2.png';
+
+/**
+ * The constellation for §03. Each node is an ABILITY, and each carries a real
+ * asset rather than a drawn icon — the brief's instruction, and the reason the
+ * set reads as the school's own rather than as stock.
+ */
+/**
+ * Ring radius as a percentage of the square stage.
+ *
+ * ⚠ NODES ARE PLACED BY PERCENTAGE, NOT BY A ROTATE→TRANSLATE TRANSFORM. The
+ * first build used `transform: rotate(var(--a)) translate(clamp(...))` with a
+ * counter-rotation on the inner span. The rule shipped intact — it is in the
+ * built CSS — but `transform` computed to `none` on every node, so all seven
+ * collapsed onto the centre and sat on top of the learner's portrait. Measured,
+ * not assumed: getComputedStyle reported "none" while the child's standalone
+ * `rotate`/`translate` in the same file applied fine.
+ *
+ * Trigonometry at build time sidesteps it entirely: each node gets a plain
+ * left/top percentage, which needs no rotation and therefore no counter-rotation
+ * to keep the label upright. 36% clears the 19% core and the ~9% node half-width
+ * with room either side.
+ */
+const R = 40;
+
+/* ⚠ FOUR OF THE SEVEN CARRY THE CLIENT’S OWN ICONS; the other three keep the
+   ornament set this page was built with. Nothing else about the constellation
+   changed — the angles are still evenly spaced and still derived from R. */
+const abilities = [
+  { k: 'Words', art: iWords, a: 0 },
+  { k: 'Number', art: dPencil, a: 51 },
+  { k: 'Making', art: dBrush, a: 103 },
+  { k: 'Enquiry', art: iEnquiry, a: 154 },
+  { k: 'Invention', art: iInvention, a: 206 },
+  { k: 'Ambition', art: iAmbition, a: 257 },
+  { k: 'Insight', art: dBulb, a: 309 },
+];
+---
+
+<div class="tp">
+  {/* ═══ 01 · EVERY CHILD IS DIFFERENT ══════════════════════════════════════
+      A single large frame with the statement crossing it, and the number set
+      oversized behind the copy — the page's loudest idea, stated once. */}
+  <section class="tp-one" aria-labelledby="tp-one-h">
+    <span class="tp__grid" aria-hidden="true"></span>
+    <span class="tp__wash tp__wash--a" aria-hidden="true"></span>
+
+    <div class="u-container tp-one__in">
+      <div class="tp-one__copy">
+        <p class="tp__n" aria-hidden="true">01</p>
+        <p class="tp__k t-label" data-reveal>Every child is different</p>
+        <h2 class="tp-one__h" id="tp-one-h" data-split>
+          Recognising <em>individual potential</em>
+        </h2>
+
+        <blockquote class="tp-quote" data-reveal data-reveal-delay="110">
+          <p>“All the students do not have the same talents and so each one will achieve success differently.”</p>
+          <cite>{school.principal} · Principal</cite>
+        </blockquote>
+
+        <p class="tp__p" data-reveal data-reveal-delay="200">
+          That sentence is where the school's teaching begins. If success is not one shape, a
+          lesson cannot be one shape either — and a class is not a room of the same child
+          repeated.
+        </p>
+      </div>
+
+      <figure class="tp-one__art" data-mask>
+        <Picture
+          src={pStudents}
+          alt={`Students at ${school.name}`}
+          formats={['webp']}
+          widths={[520, 900, 1200]}
+          sizes="(max-width: 900px) 92vw, 46vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </figure>
+    </div>
+
+    <img class="tp__f tp__f--kite" src={dKite.src} alt="" aria-hidden="true" data-parallax data-parallax-y="56" />
+    <img class="tp__f tp__f--stars" src={dStars.src} alt="" aria-hidden="true" />
+  </section>
+
+  {/* ═══ 02 · TEACHERS AS FACILITATORS ══════════════════════════════════════
+      Two frames on a diagonal with a drawn connector between them — the
+      teacher→student relationship shown as a relationship, not as two columns. */}
+  <section class="tp-two" aria-labelledby="tp-two-h">
+    <span class="tp__dots" aria-hidden="true"></span>
+
+    <div class="u-container tp-two__in">
+      <div class="tp-two__stage">
+        <figure class="tp-two__a" data-parallax data-parallax-y="38">
+          <Picture src={pChef} alt={`A teacher at ${school.name} demonstrating at the table during a cooking activity, her class in paper chef hats around her`} formats={['webp']} widths={[420, 780]} sizes="(max-width: 900px) 88vw, 30vw" loading="lazy" decoding="async" />
+        </figure>
+
+        {/* The connector. Drawn, decorative, and the reason this reads as one
+            gesture rather than two pictures. */}
+        <svg class="tp-two__link" viewBox="0 0 240 160" fill="none" aria-hidden="true">
+          <path d="M8 22C86 22 150 74 232 138" stroke="currentColor" stroke-width="2" stroke-dasharray="7 9" stroke-linecap="round" />
+          <circle cx="8" cy="22" r="5" fill="currentColor" />
+          <circle cx="232" cy="138" r="5" fill="currentColor" />
+        </svg>
+
+        <figure class="tp-two__b" data-parallax data-parallax-y="-34">
+          <Picture src={pPair} alt={`Two students of ${school.name} at one desk, each working on her own drawing`} formats={['webp']} widths={[420, 780]} sizes="(max-width: 900px) 74vw, 26vw" loading="lazy" decoding="async" />
+        </figure>
+      </div>
+
+      <div class="tp-two__copy">
+        <p class="tp__n" aria-hidden="true">02</p>
+        <p class="tp__k t-label" data-reveal>Teachers as facilitators</p>
+        <h2 class="tp-two__h" id="tp-two-h" data-split>Guiding every learner towards their strengths</h2>
+
+        <blockquote class="tp-quote" data-reveal data-reveal-delay="110">
+          <p>“We, educators being as a facilitators should always encourage our child to develop in their specific field of interest.”</p>
+          <cite>{school.principal} · Principal</cite>
+        </blockquote>
+
+        <p class="tp__p" data-reveal data-reveal-delay="190">
+          A facilitator does not hand down the subject. The word the school chose puts the
+          teacher beside the learner rather than in front of them — encouraging the direction a
+          child is already leaning in, rather than correcting it towards an average.
+        </p>
+      </div>
+    </div>
+
+    <img class="tp__f tp__f--bulb" src={dBulb.src} alt="" aria-hidden="true" data-parallax data-parallax-y="-44" />
+  </section>
+
+  {/* ═══ 03 · MULTIPLE INTELLIGENCES ════════════════════════════════════════
+      A constellation: the learner at the centre, abilities orbiting on real
+      assets, joined by drawn rays. Deliberately NOT a grid of icon cards. */}
+  <section class="tp-three" aria-labelledby="tp-three-h">
+    <span class="tp__orb" aria-hidden="true"></span>
+    <span class="tp__dots tp__dots--dark" aria-hidden="true"></span>
+
+    <div class="u-container tp-three__in">
+      <header class="tp-three__head">
+        <p class="tp__n tp__n--onink" aria-hidden="true">03</p>
+        <p class="tp__k tp__k--onink t-label" data-reveal>Multiple intelligences</p>
+        <h2 class="tp-three__h" id="tp-three-h" data-split>More than one way to learn</h2>
+        <p class="tp__p tp__p--onink" data-reveal data-reveal-delay="110">
+          The school names the theory outright — <em>“a theory of Multiple Intelligence”</em> — as
+          one of the three things it says it incorporates in all areas of teaching. What follows
+          from it is simple: a class does not hold one kind of mind, so it should not be offered
+          one kind of route in.
+        </p>
+      </header>
+
+      <div class="tp-const" data-reveal>
+        <div class="tp-const__core">
+          <Picture src={pMaking} alt={`Students of ${school.name} working on embroidery together`} formats={['webp']} widths={[320, 560]} sizes="(max-width: 700px) 46vw, 260px" loading="lazy" decoding="async" />
+        </div>
+
+        {/* ⚠ THE RINGS ARE ONE SVG, NOT SEVEN BORDERED DIVS. Concentric rings
+            drawn as elements would each need their own box and would round
+            differently at each breakpoint; one viewBox scales exactly. */}
+        <svg class="tp-const__rings" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+          {/* r IS DERIVED, NOT CHOSEN. The viewBox is 400 wide, so a percentage of
+              the stage is 4× its number: the dashed ring is R (40 → 160) and
+              therefore runs exactly through the node centres, and the solid one
+              sits at 92, a hair outside the 64-radius core. Hard-coded 128/170
+              were here first and matched neither, which is why the nodes looked
+              scattered between two unrelated circles rather than placed on one. */}
+          <circle cx="200" cy="200" r="92" stroke="currentColor" stroke-width="1" />
+          <circle class="tp-const__dash" cx="200" cy="200" r={R * 4} stroke="currentColor" stroke-width="1" stroke-dasharray="4 10" />
+        </svg>
+
+        <ul class="tp-const__set">
+          {
+            abilities.map((ab, i) => (
+              <li
+                class="node"
+                style={`--x: ${(50 + R * Math.cos((ab.a * Math.PI) / 180)).toFixed(2)}%; --y: ${(50 + R * Math.sin((ab.a * Math.PI) / 180)).toFixed(2)}%;`}
+                data-pop
+                data-pop-delay={i * 70}
+              >
+                <span class="node__in">
+                  <img src={ab.art.src} alt="" aria-hidden="true" />
+                  <span class="node__k">{ab.k}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {/* ═══ 04 · COLLABORATIVE LEARNING ════════════════════════════════════════
+      One wide editorial frame that bleeds past the container, with the copy
+      inset over it on glass — no columns, no cards. */}
+  <section class="tp-four" aria-labelledby="tp-four-h">
+    <figure class="tp-four__art" data-mask data-mask-from="left">
+      <Picture
+        src={pGround}
+        alt={`Students together on the ground at ${school.name}`}
+        formats={['webp']}
+        widths={[900, 1400, 1920]}
+        sizes="100vw"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+
+    <div class="u-container tp-four__in">
+      <div class="tp-four__plate" data-reveal>
+        <p class="tp__n" aria-hidden="true">04</p>
+        <p class="tp__k t-label">Collaborative learning</p>
+        <h2 class="tp-four__h" id="tp-four-h" data-split>Learning through interaction</h2>
+        <p class="tp__p">
+          Collaborative learning is the third of the three the school says it incorporates
+          <em>in all areas of teaching</em> — not in a timetabled slot. The Principal's own
+          description of the result is a room where children are talking to each other:
+          <strong>“classrooms are places of curiosity and collaboration”</strong>.
+        </p>
+      </div>
+    </div>
+
+    <img class="tp__f tp__f--shape" src={dShape.src} alt="" aria-hidden="true" />
+  </section>
+
+  {/* ═══ 05 · INNOVATIVE & TECHNOLOGY-ENABLED ═══════════════════════════════
+      Layered: a frame, a soft glow, and the copy stepped off it. Kept on the
+      PHILOSOPHY — the rooms and the equipment belong to Smart Classrooms. */}
+  <section class="tp-five" aria-labelledby="tp-five-h">
+    <span class="tp__wash tp__wash--b" aria-hidden="true"></span>
+
+    <div class="u-container tp-five__in">
+      <div class="tp-five__copy">
+        <p class="tp__n" aria-hidden="true">05</p>
+        <p class="tp__k t-label" data-reveal>Innovative &amp; technology-enabled</p>
+        <h2 class="tp-five__h" id="tp-five-h" data-split>Teaching that evolves with the learner</h2>
+        <p class="tp__p" data-reveal data-reveal-delay="110">
+          Technology is the first of the three the school names, and the Principal describes the
+          intent rather than the hardware: a school where
+          <strong>“innovative teaching methods meet modern technology”</strong>.
+        </p>
+        <p class="tp__p" data-reveal data-reveal-delay="180">
+          The philosophy is that teaching should keep moving — that a method earns its place by
+          making a subject more reachable, not by being new. What that looks like in a room is a
+          separate page.
+        </p>
+      </div>
+
+      <figure class="tp-five__art" data-parallax data-parallax-y="44">
+        <Picture src={pComputers} alt={`The computer laboratory at ${school.name}, rows of workstations facing an interactive board`} formats={['webp']} widths={[480, 860]} sizes="(max-width: 900px) 92vw, 40vw" loading="lazy" decoding="async" />
+      </figure>
+    </div>
+
+    <img class="tp__f tp__f--rocket" src={dRocket.src} alt="" aria-hidden="true" data-parallax data-parallax-y="-40" />
+  </section>
+
+  {/* ═══ CLOSING ════════════════════════════════════════════════════════════ */}
+  <section class="tp-end" aria-labelledby="tp-end-h">
+    <figure class="tp-end__art">
+      <Picture src={pCeremony} alt={`Students of ${school.name}`} formats={['webp']} widths={[900, 1400, 1920]} sizes="100vw" loading="lazy" decoding="async" />
+    </figure>
+    <span class="tp-end__scrim" aria-hidden="true"></span>
+
+    <div class="u-container tp-end__in">
+      <h2 class="tp-end__h" id="tp-end-h" data-split>
+        Teaching with purpose.<br /><em>Empowering every learner.</em>
+      </h2>
+      <p class="tp-end__p" data-reveal data-reveal-delay="140">
+        “Every child feels valued, safe, and inspired to achieve their full potential.”
+      </p>
+      <p class="tp-end__by" data-reveal data-reveal-delay="220">{school.principal} · Principal</p>
+    </div>
+
+    <img class="tp__f tp__f--books" src={dBooks.src} alt="" aria-hidden="true" data-parallax data-parallax-y="-36" />
+  </section>
+</div>
+
+<style>
+  .tp { position: relative; }
+  .tp section { position: relative; isolation: isolate; overflow: hidden; }
+
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .tp__k { color: var(--sb-violet-dark); }
+  .tp__k--onink { color: var(--sb-lime); }
+
+  /* ⚠ THE NUMERAL IS ORNAMENT, SO IT IS aria-hidden AND NOT A HEADING. A screen
+     reader announcing "zero one" before every section adds nothing a heading
+     level does not already carry. */
+  .tp__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(44px, 6vw, 92px);
+    font-weight: 700;
+    line-height: 0.82;
+    letter-spacing: -0.05em;
+    color: rgba(201, 60, 10, 0.16);
+  }
+
+  .tp__n--onink { color: rgba(255, 255, 255, 0.16); }
+
+  .tp__p {
+    max-width: 52ch;
+    margin-top: var(--sb-4);
+    font-size: clamp(15.5px, 1.15vw, 18px);
+    line-height: 1.74;
+    color: var(--sb-text-secondary);
+  }
+
+  .tp__p em { font-style: italic; color: var(--sb-charcoal); }
+  .tp__p strong { font-weight: 700; color: var(--sb-charcoal); }
+  .tp__p--onink { color: rgba(255, 255, 255, 0.82); }
+  .tp__p--onink em,
+  .tp__p--onink strong { color: #fff; }
+
+  .tp-quote {
+    margin: clamp(16px, 2vw, 22px) 0 0;
+    padding-left: clamp(16px, 2vw, 22px);
+    border-left: 3px solid var(--sb-violet);
+  }
+
+  .tp-quote p {
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.7vw, 24px);
+    font-weight: 600;
+    line-height: 1.42;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .tp-quote cite { display: block; margin-top: 9px; font-size: 13px; font-style: normal; font-weight: 700; color: var(--sb-violet-dark); }
+
+  /* Backgrounds — drawn, never downloaded. */
+  .tp__grid, .tp__dots, .tp__wash, .tp__orb { position: absolute; z-index: -1; pointer-events: none; }
+
+  .tp__grid {
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.045) 1px, transparent 1px);
+    background-size: 76px 76px;
+    -webkit-mask-image: radial-gradient(78% 70% at 26% 22%, #000, transparent 76%);
+    mask-image: radial-gradient(78% 70% at 26% 22%, #000, transparent 76%);
+  }
+
+  .tp__dots {
+    inset: 0;
+    background-image: radial-gradient(currentColor 1.2px, transparent 1.2px);
+    background-size: 26px 26px;
+    color: rgba(201, 60, 10, 0.15);
+    -webkit-mask-image: radial-gradient(70% 62% at 72% 40%, #000, transparent 74%);
+    mask-image: radial-gradient(70% 62% at 72% 40%, #000, transparent 74%);
+  }
+
+  .tp__dots--dark { color: rgba(255, 255, 255, 0.13); }
+
+  .tp__wash { border-radius: 50%; filter: blur(20px); }
+  .tp__wash--a { top: -14%; right: -8%; width: min(46vw, 620px); aspect-ratio: 1; background: radial-gradient(circle, rgba(201, 60, 10, 0.16) 0%, rgba(201, 60, 10, 0) 68%); }
+  .tp__wash--b { bottom: -18%; left: -10%; width: min(40vw, 540px); aspect-ratio: 1; background: radial-gradient(circle, rgba(255, 138, 92, 0.2) 0%, rgba(255, 138, 92, 0) 68%); }
+
+  .tp__orb {
+    top: 50%; left: 50%;
+    width: min(86vw, 900px); aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 60, 10, 0.46) 0%, rgba(255, 138, 92, 0.16) 42%, rgba(201, 60, 10, 0) 70%);
+    filter: blur(30px);
+    animation: tp-breathe 17s ease-in-out infinite;
+  }
+
+  @keyframes tp-breathe { 0%,100% { transform: scale(1); opacity: .85 } 50% { transform: scale(1.1); opacity: 1 } }
+
+  /* ⚠ DECORATION IS INERT AND SITS IN GUTTERS. Every float is aria-hidden with
+     alt="", and pointer-events: none is load-bearing — these cross headings and
+     images by design. Positions are anchored to an edge rather than to a
+     percentage across the page, because a copy column grows as a share of the
+     viewport while a 90px PNG does not: that is exactly how the philosophy page
+     ended up with an ornament sitting on a heading at 1024 only. */
+  .tp__f { position: absolute; z-index: 1; display: block; height: auto; pointer-events: none; user-select: none; }
+  .tp__f--kite { top: 5%; right: 4%; width: clamp(52px, 6.5vw, 100px); animation: tp-bob 13s ease-in-out infinite; }
+  .tp__f--stars { top: 8%; right: 22%; width: clamp(30px, 3.6vw, 56px); opacity: .8; }
+  .tp__f--bulb { top: 4%; right: 4%; width: clamp(44px, 5.2vw, 84px); animation: tp-bob 15s ease-in-out infinite; }
+  /* ⚠ RIGHT, NOT LEFT. On the left it landed square on §05's oversized "05" —
+     the numeral opens the copy column, and the copy column is the left half at
+     900+. Measured, not guessed. */
+  .tp__f--rocket { top: 4%; right: 3%; width: clamp(50px, 6vw, 96px); animation: tp-bob 14s ease-in-out infinite; }
+  .tp__f--star { top: 6%; right: 5%; width: clamp(28px, 3.2vw, 50px); animation: tp-spin 30s linear infinite; }
+  .tp__f--shape { bottom: 4%; left: 2%; width: clamp(56px, 7vw, 118px); opacity: .5; }
+  .tp__f--books { top: 6%; right: 4%; width: clamp(48px, 6vw, 92px); }
+
+  @keyframes tp-bob { 0%,100% { transform: translate3d(0,0,0) } 50% { transform: translate3d(0,-15px,0) } }
+  @keyframes tp-spin { to { transform: rotate(360deg) } }
+
+  /* ═══ 01 ══════════════════════════════════════════════════════════════════ */
+  .tp-one { padding-block: clamp(52px, 8vw, 108px); background: var(--sb-ivory); }
+  .tp-one__in { display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(30px, 4.6vw, 66px); align-items: center; }
+
+  .tp-one__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(32px, 4.8vw, 62px);
+    font-weight: 700; line-height: 1.02; letter-spacing: -.04em;
+    color: var(--sb-charcoal); text-wrap: balance;
+  }
+
+  .tp-one__h em { font-style: normal; color: var(--sb-violet); }
+
+  .tp-one__art { margin: 0; overflow: hidden; border-radius: var(--sb-r-3); box-shadow: 0 40px 80px -46px rgba(27,21,18,.6); }
+  .tp-one__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* ═══ 02 ══════════════════════════════════════════════════════════════════ */
+  .tp-two { padding-block: clamp(52px, 8vw, 108px); background: var(--sb-sand); }
+  .tp-two__in { display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(34px, 5vw, 70px); align-items: center; }
+
+  .tp-two__stage { position: relative; padding-bottom: clamp(40px, 8vw, 90px); }
+
+  .tp-two__a, .tp-two__b { margin: 0; overflow: hidden; border-radius: var(--sb-r-3); box-shadow: 0 34px 70px -42px rgba(27,21,18,.6); }
+  .tp-two__a :global(img), .tp-two__b :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .tp-two__b { position: absolute; right: 0; bottom: 0; width: 56%; border: 6px solid var(--sb-sand); }
+
+  .tp-two__link { position: absolute; inset: 34% 8% 12% 12%; width: auto; height: auto; color: var(--sb-violet); opacity: .5; }
+
+  .tp-two__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 700; line-height: 1.04; letter-spacing: -.038em;
+    color: var(--sb-charcoal); text-wrap: balance;
+  }
+
+  /* ═══ 03 ══════════════════════════════════════════════════════════════════ */
+  /* Asymmetric on purpose: the head needs far less room above it than the
+     constellation needs below, and 122px of empty ink above the "03" was reading
+     as a gap rather than as breathing room. */
+  .tp-three { padding: clamp(26px, 3.4vw, 52px) 0 clamp(60px, 9vw, 122px); background: var(--sb-violet-ink); }
+  .tp-three__in { position: relative; z-index: 1; }
+
+  /* Full container width, not 56ch. At the old measure the heading broke across
+     two lines and the standfirst ran to four, so the widest section on the page
+     was introduced by the narrowest column on it. */
+  .tp-three__head { max-width: none; margin-inline: auto; text-align: center; }
+
+  /* ⚠ SCOPED, NOT A CHANGE TO .tp__p. That rule is a 52ch column with no auto
+     margin, which is exactly right for the left-aligned movements that share it.
+     Inside 03's now-full-width centred head it kept hugging the left edge, so the
+     standfirst sat in the left half of the section under a centred heading. */
+  .tp-three__head .tp__p { max-width: 92ch; margin-inline: auto; }
+
+  .tp-three__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(30px, 4.4vw, 58px);
+    font-weight: 700; line-height: 1.02; letter-spacing: -.042em;
+    color: #fff; text-wrap: balance;
+  }
+
+  /* The constellation. A square stage; nodes are placed by angle on a CSS
+     custom property, so adding an ability is one array entry. */
+  .tp-const {
+    position: relative;
+    width: min(100%, 620px);
+    margin: clamp(38px, 5vw, 66px) auto 0;
+    aspect-ratio: 1;
+  }
+
+  .tp-const__rings { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(255,255,255,.22); }
+
+  .tp-const__core {
+    position: absolute; top: 50%; left: 50%;
+    width: 32%; aspect-ratio: 1;
+    translate: -50% -50%;
+    overflow: hidden; border-radius: 50%;
+    box-shadow: 0 0 0 6px rgba(255,255,255,.1), 0 30px 60px -28px rgba(0,0,0,.7);
+  }
+
+  /* ⚠ THE <picture> HAS TO BE STRETCHED, NOT JUST THE <img>. `astro:assets`
+     emits <picture><img></picture>, and <picture> is an INLINE box: it takes its
+     intrinsic height, so the img's `height: 100%` resolved against that instead
+     of against the circle. The photo rendered as a rectangle sitting inside a
+     visible circular outline. Pinning the picture to the frame's inset is what
+     makes the round crop real. */
+  .tp-const__core :global(picture) { position: absolute; inset: 0; display: block; }
+
+  /* 42%, not 50% — the frame's true centre is the thread basket, and lifting the
+     crop brings two faces into a circle this small. */
+  .tp-const__core :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+
+  .tp-const__set { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+
+  /* Placed by percentage — see the note on `R` in the frontmatter for why this
+     is not a rotate→translate transform. */
+  .node {
+    position: absolute;
+    top: var(--y);
+    left: var(--x);
+    width: 0;
+    height: 0;
+  }
+
+  .node__in {
+    display: grid; place-items: center; gap: 6px;
+    width: clamp(76px, 12vw, 108px);
+    padding: 10px 6px;
+    /* The only transform needed now: centre the box on its point. */
+    translate: -50% -50%;
+    border-radius: var(--sb-r-2);
+    /* A LIGHT plate on a near-black section, which is the opposite of the first
+       build. The tiles were rgba(255,255,255,.08) and the ornament PNGs — cap,
+       bulb, saturn, brush — are dark artwork drawn for light ground, so four of
+       the seven nodes were all but invisible in the render. Nothing about the
+       icons changed; the plate under them did. */
+    background: rgba(251, 247, 244, .95);
+    box-shadow: 0 18px 34px -22px rgba(0,0,0,.9), inset 0 0 0 1px rgba(28,14,8,.08);
+  }
+
+  /* A FIXED SLOT, not `height: auto`. The ornament PNGs have wildly different
+     intrinsic ratios — the pencil is tall, the brush is wide — so an auto height
+     made every tile a different height and the labels sat at seven different
+     baselines. Squaring the slot and letting `contain` letterbox inside it lines
+     the labels up without cropping any artwork. */
+  .node__in img {
+    display: block;
+    width: clamp(28px, 3.6vw, 40px);
+    height: clamp(28px, 3.6vw, 40px);
+    object-fit: contain;
+  }
+  .node__k { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; color: var(--sb-violet-ink); }
+
+  /* ═══ 04 ══════════════════════════════════════════════════════════════════ */
+  .tp-four { padding-block: clamp(56px, 9vw, 120px); background: var(--sb-charcoal); }
+
+  .tp-four__art { position: absolute; inset: 0; z-index: -2; margin: 0; }
+  .tp-four__art :global(picture) { display: block; width: 100%; height: 100%; }
+  .tp-four__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .tp-four__in { position: relative; z-index: 1; }
+
+  /* ⚠ THE PLATE CARRIES ITS OWN GROUND. White copy over an unmodified
+     photograph is only safe if the plate alone can hold it — this frame is a
+     sunlit ground, so the plate is 0.82 rather than a light tint. */
+  .tp-four__plate {
+    max-width: 640px;
+    padding: clamp(24px, 3vw, 40px);
+    border-radius: var(--sb-r-3);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 40px 80px -40px rgba(0,0,0,.7);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+  }
+
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .tp-four__plate { background: #fff; }
+  }
+
+  .tp-four__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3.8vw, 48px);
+    font-weight: 700; line-height: 1.04; letter-spacing: -.036em;
+    color: var(--sb-charcoal);
+  }
+
+  /* ═══ 05 ══════════════════════════════════════════════════════════════════ */
+  .tp-five { padding-block: clamp(52px, 8vw, 108px); background: var(--sb-ivory); }
+  .tp-five__in { display: grid; grid-template-columns: minmax(0,1fr); gap: clamp(30px, 4.6vw, 66px); align-items: center; }
+
+  .tp-five__h {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 700; line-height: 1.04; letter-spacing: -.038em;
+    color: var(--sb-charcoal); text-wrap: balance;
+  }
+
+  .tp-five__art { margin: 0; overflow: hidden; border-radius: var(--sb-r-3); box-shadow: 0 36px 74px -44px rgba(27,21,18,.6); }
+  .tp-five__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* ═══ 06 ══════════════════════════════════════════════════════════════════ */
+
+  /* ═══ CLOSING ═════════════════════════════════════════════════════════════ */
+  .tp-end { padding-block: clamp(76px, 12vw, 156px); background: var(--sb-violet-ink); }
+
+  .tp-end__art { position: absolute; inset: 0; z-index: -2; margin: 0; }
+  .tp-end__art :global(picture) { display: block; width: 100%; height: 100%; }
+  .tp-end__art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .tp-end__scrim {
+    position: absolute; inset: 0; z-index: -1;
+    background:
+      radial-gradient(70% 60% at 30% 40%, rgba(28,14,8,.6) 0%, rgba(28,14,8,0) 70%),
+      linear-gradient(180deg, rgba(28,14,8,.72) 0%, rgba(28,14,8,.56) 42%, rgba(28,14,8,.86) 100%);
+  }
+
+  .tp-end__in { position: relative; z-index: 1; text-align: center; }
+
+  .tp-end__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(32px, 5.4vw, 76px);
+    font-weight: 700; line-height: 1.02; letter-spacing: -.044em;
+    color: #fff; text-wrap: balance;
+  }
+
+  .tp-end__h em { font-style: normal; color: var(--sb-lime); }
+
+  .tp-end__p {
+    max-width: 48ch;
+    margin: clamp(18px, 2.4vw, 28px) auto 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.6vw, 23px);
+    font-weight: 600; line-height: 1.5;
+    color: rgba(255,255,255,.92);
+  }
+
+  .tp-end__by { margin-top: 12px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sb-lime); }
+
+  /* ═══ LAYOUT ══════════════════════════════════════════════════════════════
+     ⚠ MOBILE IS RE-COMPOSED, NOT STACKED. The diagonal pair in §02 comes out of
+     its overlap and the connector goes with it — a dashed line between two
+     frames that are no longer diagonal is a line to nowhere. The constellation
+     keeps its geometry because it is angular rather than columnar, but its
+     radius and node size shrink together so the ring never collides with the
+     core. */
+  /* ═══ THE CONSTELLATION TURNS ═══════════════════════════════════
+     ⚠⚠ THE SET ROTATES AND EACH PLATE COUNTER-ROTATES BY THE SAME AMOUNT, which
+     is the only way the nodes can travel a circle while their labels stay
+     upright. Both use the same duration and linear timing, or the two stop
+     cancelling and the words wobble.
+
+     ⚠ THE rotate PROPERTY, NOT transform. .node__in already carries
+     translate: -50% -50% to centre itself on its point; animating transform
+     would overwrite that and every plate would jump down-right by half its own
+     size. The independent transform properties compose instead of colliding.
+
+     ⚠ EVERY WIDTH, now that the ring survives on phones too. It was scoped to
+     >=701px when the mobile layout was a flat grid, where rotating would have
+     sent the tiles round the page.
+
+     ⚠ SLOW. 90s for a full turn is about 4° a second: the eye reads it as alive
+     rather than as something spinning. The dashed ring runs the other way at 60s
+     so the two motions are distinguishable. */
+  @media (min-width: 0px) {
+    .tp-const__set { animation: tp-orbit 90s linear infinite; }
+    .node__in { animation: tp-orbit-counter 90s linear infinite; }
+    .tp-const__dash {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: tp-orbit-counter 60s linear infinite;
+    }
+
+    /* Pointing at it stops the drift, so a reader can look at one node without
+       it walking away from the cursor. */
+    .tp-const:hover .tp-const__set,
+    .tp-const:hover .node__in,
+    .tp-const:focus-within .tp-const__set,
+    .tp-const:focus-within .node__in { animation-play-state: paused; }
+  }
+
+  @keyframes tp-orbit {
+    from { rotate: 0deg; }
+    to { rotate: 360deg; }
+  }
+  @keyframes tp-orbit-counter {
+    from { rotate: 0deg; }
+    to { rotate: -360deg; }
+  }
+
+  @media (min-width: 900px) {
+    .tp-one__in { grid-template-columns: minmax(0,1.02fr) minmax(0,.98fr); }
+    .tp-two__in { grid-template-columns: minmax(0,.95fr) minmax(0,1.05fr); }
+    .tp-five__in { grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr); }
+  }
+
+  @media (max-width: 899px) {
+    .tp-two__b { position: static; width: 100%; margin-top: clamp(14px, 2.4vw, 20px); border-width: 0; }
+    .tp-two__link { display: none; }
+    .tp-two__stage { padding-bottom: 0; }
+    /* Below the two-column breakpoints the copy fills the width, so there is no
+       gutter left for corner ornament to sit in without landing on it. */
+    .tp__f--stars,
+    .tp__f--rocket { display: none; }
+  }
+
+  @media (max-width: 700px) {
+    /* ⚠⚠ THE RING IS KEPT ON PHONES NOW. It used to unwind here into a chip
+       grid — same content, different shape — and the section then looked like a
+       different design on a phone than on a laptop. It turns out the ring did
+       not need abandoning: --x/--y are PERCENTAGES of the stage, so the geometry
+       already scales on its own. The only thing that did not scale was the plate,
+       which is sized in px.
+
+       ⚠ THE PLATES OVERHANG THE CONTAINER GUTTER, AND THAT IS FINE. What must
+       not be exceeded is the VIEWPORT, not the 24px container padding — the
+       section ground is full-bleed, so a plate reaching into the gutter still
+       sits on the same dark field. At 390px the outermost edge lands at 175px
+       from centre against a 195px half-viewport; at 320px, 147px against 160px.
+
+       ⚠ CHECKED FOR THE TWO WAYS A SMALL RING BREAKS: adjacent plates colliding
+       (centres are 123px apart at 390px, plates are 74px — 49px of air) and
+       plates swallowing the centre portrait (inner edge 100px out, core radius
+       55px). An earlier build hid the seventh node to buy room, which quietly
+       deleted an intelligence from the one section arguing there is more than
+       one. Nothing is hidden here. */
+    .node__in {
+      width: clamp(68px, 19vw, 108px);
+      padding: 8px 5px;
+      gap: 4px;
+    }
+    .node__in img { width: 26px; height: 26px; }
+    /* 10.5px, not the desktop 11.5 — “Invention” is the longest label and has to
+       clear the narrower plate on one line. Letter-spacing goes too; at this size
+       it buys nothing and costs 3px. */
+    .node__k { font-size: 10.5px; letter-spacing: 0; }
+
+    .tp__f--rocket, .tp__f--shape { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tp__f, .tp__orb { animation: none; }
+    /* The constellation is still readable standing still — it just stops. */
+    .tp-const__set, .node__in, .tp-const__dash { animation: none; }
+  }
+</style>

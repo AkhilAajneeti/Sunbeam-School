@@ -1,0 +1,65 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# SUNBEAM SCHOOL BALLIA — LOCAL DEVELOPMENT STACK
+#
+# This file is DEVELOPMENT ONLY. Production is docker-compose.prod.yml, which
+# differs in two ways that matter and are called out below.
+#
+# ⚠ THE POSTGRES PORT IS BOUND TO 127.0.0.1, NOT 0.0.0.0.
+#   Written as "127.0.0.1:5432:5432" rather than "5432:5432" on purpose. The
+#   short form publishes on every interface, which on a machine with a public
+#   IP means the database is reachable from the internet the moment the stack
+#   is up. Bound to loopback it is reachable from this machine only — which is
+#   all that Strapi-running-on-the-host and pgAdmin need in development.
+#
+#   In production the port is not published AT ALL: Strapi runs as a container
+#   on the same private network and reaches Postgres by service name. pgAdmin
+#   connects through an SSH tunnel instead:
+#
+#       ssh -L 5433:localhost:5432 user@vps
+#
+#   then point pgAdmin at localhost:5433. Full GUI, zero public surface.
+#
+# ⚠ THE POSTGRES MAJOR VERSION IS PINNED — postgres:17-alpine, never :latest.
+#   A data directory written by one major version is not readable by the next,
+#   so an unpinned tag turns an unrelated `docker compose pull` into a database
+#   that will not start and a restore-from-backup afternoon.
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: sunbeam
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: sunbeam-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-sunbeam}
+      POSTGRES_USER: ${DATABASE_USERNAME:-sunbeam}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD is required — copy .env.example to .env}
+      # Deterministic collation. Without this the image takes the host locale,
+      # and an index built under one collation misbehaves under another after a
+      # restore onto a differently-configured machine.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+
+    ports:
+      # ⚠ loopback only — see the header.
+      - "127.0.0.1:${DATABASE_PORT:-5432}:5432"
+
+    volumes:
+      # Named volume, not a bind mount: bind-mounting a Postgres data directory
+      # into a OneDrive-synced folder corrupts it, and this project lives in one.
+      - postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      # Strapi's first migration fails if it connects before Postgres finishes
+      # its own init pass, so anything depending on this waits for healthy.
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-sunbeam} -d ${DATABASE_NAME:-sunbeam}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  postgres-data:
+    name: sunbeam-postgres-data

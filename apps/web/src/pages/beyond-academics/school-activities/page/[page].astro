@@ -1,0 +1,40 @@
+---
+/**
+ * SCHOOL ACTIVITIES — pages 2 and up.
+ *
+ * ⚠ THE ROUTE IS `/page/2/`, NOT `/2/`, AND THE EXTRA SEGMENT IS LOAD-BEARING.
+ * A bare `[page].astro` beside `[slug].astro` in the same directory would give
+ * two dynamic routes the same shape: `/school-activities/2/` and
+ * `/school-activities/summer-camp/` are both one segment, so the paging pages
+ * and the detail pages would compete for every URL. The extra `page/` segment
+ * separates them completely and makes the URL read as what it is.
+ *
+ * ⚠ PAGE 1 IS NOT GENERATED HERE. getStaticPaths starts at 2, so `/page/1/`
+ * simply does not exist — page one is the bare index route and there is only
+ * ever one URL for it.
+ */
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import ActivityIndex from '../../../../components/news/ActivityIndex.astro';
+import { schoolActivities } from '../../../../data/schoolActivities';
+
+export async function getStaticPaths() {
+  const { pageCount } = await import('../../../../data/schoolActivities');
+  return Array.from({ length: Math.max(0, pageCount - 1) }, (_, i) => ({
+    params: { page: String(i + 2) },
+    props: { current: i + 2 },
+  }));
+}
+
+interface Props {
+  current: number;
+}
+
+const { current } = Astro.props;
+---
+
+<BaseLayout
+  title={`${schoolActivities.title} — page ${current} — Sunbeam School Ballia`}
+  description={schoolActivities.standfirst}
+>
+  <ActivityIndex current={current} />
+</BaseLayout>

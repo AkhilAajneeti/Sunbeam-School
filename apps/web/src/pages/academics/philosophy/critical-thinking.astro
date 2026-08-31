@@ -1,0 +1,57 @@
+---
+/**
+ * ACADEMIC PHILOSOPHY · CRITICAL THINKING & CREATIVITY — audit §2A.
+ *
+ * ⚠ FOUR SECTIONS UNDER THE SHARED BANNER, not the movement-plus-notes pattern
+ * this page used to carry. It rendered PhilosophyStory's `think` movement with
+ * TopicNotes under it and came to 136 words — a strict subset of the overview at
+ * a deeper-sounding URL. Nothing was removed from /academics/philosophy/.
+ *
+ * ⚠ THE BANNER IS THE SHARED PageHero, DELIBERATELY. The brief asks for an
+ * editorial hero rather than a standard banner; the client's standing
+ * instruction on this project, given after a bespoke hero was built and rejected
+ * on the Student-Centred page, is that the banner stays consistent with every
+ * other page. That instruction wins, so the hero's typographic job is done by
+ * the first section instead — "Think critically. Dream fearlessly." at poster
+ * scale, immediately under the banner.
+ *
+ * ⚠ WHAT IS AND IS NOT CLAIMED is documented at the top of CriticalThinkingPage:
+ * Pratidhwani, Maths Arena, a science-innovation award and several IMPETUS
+ * activities named in the brief do not appear on the school's site and are not
+ * on the page. CMSMUN, SUNBEAM INNOVX, the TED Talk, the staff Critical Thinking
+ * workshop and Impetus are, and each is quoted.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import CriticalThinkingPage from '../../../components/academics/CriticalThinkingPage.astro';
+import banner from '../../../assets/excursions/imun-3.jpg';
+---
+
+<BaseLayout
+  title="Critical Thinking & Creativity — Sunbeam School Ballia"
+  description="How Sunbeam School Ballia builds critical thinking and creativity: CMSMUN and the Model United Nations Lab, SUNBEAM INNOVX, a TED Talk, and a staff workshop on teaching critical thinking in the classroom."
+>
+  <PageHero
+    title="Critical Thinking & Creativity"
+    standfirst="A student who, in the Principal's words, thinks critically, acts responsibly and dreams fearlessly."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Philosophy', href: '/academics/philosophy/' },
+    ]}
+    src={banner}
+    alt="Delegates from Sunbeam School Ballia holding their Model United Nations certificates in front of the national flags."
+    position="50% 44%"
+  />
+
+  {/* padding-block: 0 — every section carries its own rhythm, and the panel
+      adding its own on top is what put a 183px void under the hero on three
+      earlier pages. */}
+  <div class="u-page-panel ct-panel">
+    <CriticalThinkingPage />
+  </div>
+</BaseLayout>
+
+<style>
+  div.ct-panel { padding-block: 0; }
+</style>
