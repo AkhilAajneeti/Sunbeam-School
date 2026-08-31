@@ -1,0 +1,600 @@
+---
+/**
+ * LEGACY TIMELINE — the four milestones of Sunbeam Ballia, as alternating cards
+ * on a stepped dotted path.
+ *
+ * ═══ WHY THIS EXISTS WHEN JourneyRoad ALREADY DID ═══════════════════════════
+ *
+ * JourneyRoad is a zigzag of TEXT: a numbered disc, a rolling title and a
+ * paragraph, with dotted arcs between. It is still the right component for the
+ * sequences it serves — Assessment & Support runs on it and nothing here
+ * replaces it.
+ *
+ * What it cannot do is carry a picture, and that is the whole brief for this
+ * page. A legacy read as four paragraphs in a row is an argument; read as four
+ * illustrated cards it is a school. So this is a card component with an image
+ * bonded to it, not a variant of the road — a `picture?` prop bolted onto
+ * JourneyRoad would have put an optional 40%-width media column into a layout
+ * whose three consumers do not want one, and every one of them would then be
+ * paying for the branch.
+ *
+ * ⚠ IT REPLACES THE ROAD ON THIS PAGE ONLY. about/history-legacy.astro no longer
+ * imports JourneyRoad; every other consumer is untouched.
+ *
+ * ═══ THE HEADING THIS REPLACED WAS ALSO WRONG ═══════════════════════════════
+ *
+ * ⚠ "Fifty years, and thirteen in Ballia" IS GONE, AND NOT ONLY BECAUSE THE
+ * CLIENT SUPPLIED A NEW HEADING. 1972 to 2026 is fifty-FOUR years. The line was
+ * written when the site was, and it aged into a false claim sitting directly
+ * above a timeline that starts with the correct year — a reader could do the
+ * subtraction from the card underneath it. The replacement, "An Unchallenged
+ * Legacy of Excellence", carries no arithmetic and so cannot go stale.
+ *
+ * ⚠ AND THAT IS WHY NOTHING BELOW COUNTS YEARS EITHER. The four cards state
+ * 1972, 2013, "Today" and "Six years" — every one of them either a fixed date or
+ * a figure the school itself publishes and maintains. No elapsed total is
+ * computed, printed, or implied.
+ *
+ * ═══ THE ARTWORK ═══════════════════════════════════════════════════════════
+ *
+ * The four sepia pencil drawings — Varanasi ghats, campus, students, trophy —
+ * live in src/assets/icons/ and are passed in by the page, not imported here.
+ * That is what keeps this component a layout rather than this page's timeline.
+ *
+ * ⚠⚠ THERE IS NO `filter: sepia()` ANYWHERE IN THIS FILE AND THERE MUST NOT BE.
+ * The drawings ARE sepia — ink and wash on cream, already the finished
+ * treatment. A CSS filter on top would apply it twice and turn all four orange.
+ * The tone in the cards comes from the artwork itself; nothing here touches it.
+ *
+ * ⚠ AND THE MEDIA PANEL'S BACKGROUND IS CREAM, NOT GREY, FOR THE SAME REASON.
+ * The drawings' own ground is a warm cream, so any strip of panel showing beyond
+ * the artwork at an unexpected aspect ratio has to be that cream or the card
+ * grows a visible seam down the middle of its own picture.
+ *
+ * ═══ LAYOUT ════════════════════════════════════════════════════════════════
+ *
+ * Alternating left/right. The illustration is FLUSH TO THE CARD EDGE — no inner
+ * padding, no gap, no inset radius on the bonded corners — so the picture reads
+ * as part of the card rather than as a picture placed on one. The number badge
+ * floats on the seam between the two halves, which is what visually stitches
+ * them; that is why it is positioned against the seam and not against the card.
+ *
+ * ⚠ THE MEDIA COLUMN'S WIDTH IS ONE CUSTOM PROPERTY, `--lg-media`, AND IT HAS TO
+ * BE. It sets the grid track AND the badge's offset from the seam, and those two
+ * are the same measurement — hard-code the number twice and the next person to
+ * widen the picture leaves the badge floating in the middle of it.
+ *
+ * The connectors are STEPPED, not arcs: each leaves the lower corner of one card,
+ * runs out into the gutter, drops, and runs on into the top corner of the next.
+ * An arc implies a smooth interval; between 1972 and 2013 there is nothing
+ * smooth. Dotted, for the reason JourneyRoad gives — a solid rule implies the
+ * gaps are to scale, and these are forty-one years, thirteen years and six.
+ *
+ * ⚠ THE CONNECTOR PAINTS UNDER THE CARDS, AND THAT IS WHAT MAKES IT LOOK DRAWN
+ * TO THE EDGES. It is wider than the gutter it crosses, so its ends run beneath
+ * the two cards and the dots simply emerge from under each card's edge. Trying
+ * to size it to the gutter exactly instead means re-deriving that width at every
+ * breakpoint and shipping a one-pixel gap between the line and the card at most
+ * of them.
+ *
+ * ⚠ THE CONNECTORS ARE INLINE SVG AND ARE `aria-hidden`, AND THEY ARE ALSO NOT
+ * IN THE MOBILE LAYOUT. Under 900px the cards stack, so a stepped path between
+ * them would have to be redrawn at every width; the mobile treatment is a single
+ * vertical dotted rail with the badges sitting ON it, which needs no geometry.
+ * The SVGs are `display: none` there rather than rendered and hidden, so they
+ * cost nothing.
+ *
+ * ⚠ THE BACKGROUND IS DRAWN IN CSS, NOT LOADED. A heritage ground at under 10%
+ * opacity is one repeating linear-gradient; shipping an image for something
+ * invisible at full strength is bytes spent on nothing, and a texture PNG cannot
+ * follow the section's own colour tokens the way a gradient can.
+ *
+ * ⚠ THE WATERMARK IS REAL TEXT WITH aria-hidden, NOT AN <img> AND NOT A
+ * PSEUDO-ELEMENT'S content STRING. As text it scales with the viewport and
+ * inherits the display face; aria-hidden because "SUNBEAM BALLIA" read aloud
+ * between two milestones is noise, and the school's name is already the <h1> of
+ * every page on the site.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+export interface Milestone {
+  /** The large line — a year, or a span. */
+  year: string;
+  /** The small-caps line under it. */
+  kicker: string;
+  body: string;
+  /** Flush to the card edge. Omitted renders a text-only card, not a hole. */
+  art?: ImageMetadata;
+  /** Required whenever `art` is given. */
+  artAlt?: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  /** The word inside `heading` that takes the accent plate. Must occur in it. */
+  headingAccent?: string;
+  standfirst?: string;
+  items: readonly Milestone[];
+  /** Spoken name for the list. */
+  label?: string;
+  watermark?: string;
+}
+
+const {
+  eyebrow = 'Our Legacy',
+  heading,
+  headingAccent,
+  standfirst,
+  items,
+  label = 'Milestones',
+  watermark = 'Sunbeam Ballia',
+} = Astro.props as Props;
+
+/**
+ * The heading is split around the accented word rather than being passed in as
+ * markup, so the page states its copy as a plain string and cannot ship an
+ * unbalanced tag. If `headingAccent` is absent or is not in the heading, the
+ * whole line renders unaccented — a missing plate, never a missing heading.
+ */
+const cut = headingAccent ? heading.indexOf(headingAccent) : -1;
+const head =
+  cut === -1
+    ? { before: heading, accent: '', after: '' }
+    : {
+        before: heading.slice(0, cut),
+        accent: headingAccent!,
+        after: heading.slice(cut + headingAccent!.length),
+      };
+---
+
+<section class="lg" aria-labelledby="lg-heading">
+  {/* The heritage ground and the watermark. Both decorative, both out of the
+      accessibility tree, both behind everything via z-index on the content. */}
+  <span class="lg__ground" aria-hidden="true"></span>
+  <span class="lg__watermark" aria-hidden="true">{watermark}</span>
+
+  {/* ⚠ u-container-WIDE (1440), NOT u-container (1280). Two cards side by side
+      with a gutter between them is the widest thing on this page — at 1280 each
+      card is 614px and the four-line paragraphs inside them run to six lines,
+      which is what makes the column look cramped next to its own picture. The
+      wide container is an existing token, not a number invented here. */}
+  <div class="u-container-wide lg__inner">
+    <header class="lg__head" data-reveal>
+      {eyebrow && <p class="lg__eyebrow t-label">{eyebrow}</p>}
+      <h2 class="lg__heading t-h2-sans" id="lg-heading" data-split>
+        {head.before}{head.accent && <span class="t-squiggle">{head.accent}</span>}{head.after}
+      </h2>
+      {standfirst && <p class="lg__stand">{standfirst}</p>}
+    </header>
+
+    <ol class="lg__list" aria-label={label}>
+      {items.map((m, i) => (
+        <li class:list={['lg__step', i % 2 === 1 && 'lg__step--right']} data-reveal>
+          <article class="lg__card">
+            {m.art && (
+              <div class="lg__media">
+                <Picture
+                  src={m.art}
+                  alt={m.artAlt ?? ''}
+                  formats={['avif', 'webp']}
+                  widths={[360, 560, 720]}
+                  sizes="(max-width: 899px) 100vw, 300px"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            )}
+
+            {/* ⚠ THE BADGE IS A CHILD OF THE CARD, NOT OF THE MEDIA. On the
+                seam it must sit above both halves; inside .lg__media it would be
+                clipped by that element's overflow:hidden, which is what keeps
+                the picture inside the bonded corners. */}
+            <span class="lg__badge" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+
+            <div class="lg__body">
+              <p class="lg__year">{m.year}</p>
+              <p class="lg__kicker">{m.kicker}</p>
+              <p class="lg__text">{m.body}</p>
+            </div>
+          </article>
+
+          {/* Stepped dotted connector into the next card. The last step has
+              none — a path leading out of the final milestone would promise a
+              fifth.
+
+              ⚠ preserveAspectRatio="none" IS DELIBERATE. The box stretches to
+              whatever the gutter is at this width, so the two horizontal runs
+              stretch with it while the drop does not — which is the behaviour
+              wanted, since the hop gets wider on a wide screen and no taller.
+              Uniform scaling would shrink the whole step instead and leave both
+              ends short of the cards they are supposed to run under.
+
+              ⚠ ONE PATH, NOT THREE SEGMENTS. Three would restart the dash
+              pattern at each corner and put a double-length gap on the inside of
+              both bends. */}
+          {i < items.length - 1 && (
+            <svg
+              class="lg__link"
+              viewBox="0 0 160 116"
+              fill="none"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M0 14 H68 Q80 14 80 26 V90 Q80 102 92 102 H160"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-dasharray="1 10"
+              />
+            </svg>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .lg {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  /* --- Heritage ground -------------------------------------------------------
+     Two layers: a wide dot field and a fine grid, both at a fraction of full
+     strength. `opacity` on the layer rather than alpha in each gradient, so the
+     whole ground has ONE number to turn down and it is visibly under 10%. */
+  .lg__ground {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.075;
+    pointer-events: none;
+    /* ⚠ VERTICAL RULES ONLY, NOT A GRID. A full grid put a horizontal line
+       across the gutter at the exact height the dotted connectors cross it, and
+       at 7% the two were indistinguishable — the path read as broken. Uprights
+       alone give the ground its texture and never run parallel to a connector. */
+    background-image: linear-gradient(90deg, var(--sb-violet) 1px, transparent 1px);
+    background-size: 46px 100%;
+  }
+
+  /* Sits behind the cards and above the ground. `clamp` on a vw-driven size so
+     it is a watermark at every width rather than a headline on a phone. */
+  /* ⚠ BOTTOM-LEFT AND DELIBERATELY RUNNING OFF THE EDGE. A watermark centred and
+     fully legible is a heading nobody asked for; cropped by the section's own
+     `overflow: hidden` it reads as a ground the cards are sitting on. The
+     negative offset is what does the cropping, and it is safe precisely because
+     the section clips — remove that `overflow: hidden` and this gives the page a
+     horizontal scrollbar.
+
+     ⚠ IT WRAPS ONTO TWO LINES BY MEASURE, NOT BY A <br>. `max-width: 5.2em` at
+     this size breaks it after "SUNBEAM" whatever the viewport is doing, and the
+     prop stays a plain string the page can change to anything. */
+  .lg__watermark {
+    position: absolute;
+    /* Far enough left that the first letter of each line is cut by the
+       section's own clip — a watermark that is fully legible has stopped being
+       a watermark and started being a heading nobody asked for. */
+    left: clamp(-80px, -4.5vw, -24px);
+    bottom: clamp(-20px, -1.2vw, 0px);
+    z-index: 0;
+    max-width: 5.2em;
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: clamp(52px, 8.5vw, 150px);
+    line-height: 0.84;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    color: var(--sb-charcoal);
+    opacity: 0.055;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .lg__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* --- Head ---------------------------------------------------------------- */
+
+  .lg__head {
+    max-width: 62ch;
+    margin: 0 auto clamp(48px, 7vh, 84px);
+    text-align: center;
+  }
+
+  .lg__eyebrow {
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-4);
+  }
+
+  .lg__heading {
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .lg__stand {
+    margin-top: var(--sb-6);
+    font-size: var(--sb-body-lg, 17px);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+    text-wrap: pretty;
+  }
+
+  /* --- The path ------------------------------------------------------------- */
+
+  .lg__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Each step is a full-width row holding a half-width card. The card takes the
+     left half or the right half; the centre line the connectors run down is the
+     row's own midpoint, so no absolute rail element is needed. */
+  .lg__step {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    /* The width of the picture panel, and therefore the badge's distance from
+       the card's outer edge. One number, two rules — see the header. */
+    --lg-media: clamp(140px, 13vw, 200px);
+  }
+
+  .lg__step--right {
+    justify-content: flex-end;
+  }
+
+  /* --- The card ------------------------------------------------------------- */
+
+  .lg__card {
+    position: relative;
+    /* Above the connectors, which is what hides their overhanging ends. */
+    z-index: 1;
+    display: grid;
+    grid-template-columns: var(--lg-media) minmax(0, 1fr);
+    align-items: stretch;
+    /* 48%, not a pixel width: the 4% left over IS the gutter the connectors
+       cross, so it stays proportional at every width instead of collapsing to
+       nothing on a small laptop and yawning open on a wide monitor. */
+    width: 48%;
+    background: var(--sb-paper);
+    border: var(--sb-hairline);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+    /* ⚠ THE CLIP IS WHAT MAKES THE PICTURE "FLUSH". The media has no radius of
+       its own; the CARD's radius crops it. Give .lg__media its own corners
+       instead and the two curves disagree by a pixel at every zoom level. */
+    overflow: hidden;
+  }
+
+  /* Odd steps put the picture on the outside edge, so the two columns mirror. */
+  .lg__step--right .lg__card {
+    grid-template-columns: minmax(0, 1fr) var(--lg-media);
+  }
+
+  .lg__step--right .lg__media {
+    order: 2;
+  }
+
+  /* Cream, not grey — the drawings' own ground, so no seam shows where the
+     artwork ends. See the header. */
+  .lg__media {
+    position: relative;
+    overflow: hidden;
+    background: #f7efe4;
+  }
+
+  /* Stretched to the card's full height — the picture is bonded to the card, so
+     it ends where the card ends and not where the photograph would prefer to. */
+  /* ⚠⚠ THE <picture> WRAPPER HAS TO BE SIZED TOO, NOT JUST THE <img> INSIDE IT.
+     <Picture> emits `<picture><source…><img></picture>`, and <picture> is an
+     INLINE box that shrinks to its image's natural aspect. So `height: 100%` on
+     the img resolved against a wrapper that was only as tall as the drawing, the
+     grid stretched the cream panel to the card's full height underneath it, and
+     every card carried a block of empty cream below its artwork. The img rule
+     was doing exactly what it said; it was measuring against the wrong box.
+
+     ⚠ BOTH RULES, AND BOTH `height: 100%`. Dropping either one brings the gap
+     straight back. */
+  .lg__media :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .lg__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 50% 50%: these are drawn illustrations with their subject centred, not
+       photographs with a face to keep out of the crop. */
+    object-position: 50% 50%;
+  }
+
+  /* --- The badge on the seam ------------------------------------------------ */
+
+  .lg__badge {
+    position: absolute;
+    /* The seam is the media column's inner edge — `--lg-media` in from the left
+       on an even step, the same distance from the right on an odd one. Half the
+       badge overhangs onto each side, which is what stitches them. */
+    left: var(--lg-media);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    color: #fff;
+    border: 3px solid var(--sb-paper);
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lg__step--right .lg__badge {
+    left: auto;
+    right: var(--lg-media);
+    transform: translate(50%, -50%);
+  }
+
+  /* --- The words ------------------------------------------------------------ */
+
+  .lg__body {
+    padding: clamp(22px, 2vw, 32px);
+    /* Room for the badge's overhang, on whichever side it lands. */
+    padding-left: clamp(40px, 3.4vw, 50px);
+  }
+
+  .lg__step--right .lg__body {
+    padding-left: clamp(22px, 2vw, 32px);
+    padding-right: clamp(40px, 3.4vw, 50px);
+  }
+
+  .lg__year {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 2vw, 30px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+
+  .lg__kicker {
+    margin-top: var(--sb-2, 6px);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .lg__text {
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- The connectors ------------------------------------------------------- */
+
+  /* Spans from inside this card's lower edge to inside the next card's upper
+     one, crossing the gutter between them. Both ends run UNDER a card — see the
+     header — so what a reader sees is a dotted step in the gap, drawn edge to
+     edge, with no join to notice. */
+  .lg__link {
+    position: absolute;
+    left: 50%;
+    top: calc(100% - 52px);
+    transform: translateX(-50%);
+    width: clamp(120px, 16%, 200px);
+    height: 116px;
+    color: var(--sb-violet);
+    opacity: 0.5;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ⚠ SMALL, ON PURPOSE. The cards alternate sides, so consecutive rows barely
+     overlap horizontally and a large gap here reads as four unrelated cards
+     rather than as one path. The connector is what carries the eye across, and
+     it needs a short hop to cross, not a chasm. */
+  .lg__step + .lg__step {
+    margin-top: clamp(14px, 1.6vh, 22px);
+  }
+
+  /* ⚠ THE STEP MIRRORS ON ODD ROWS. Card 1 sits left and card 2 right, so that
+     hop runs down-and-RIGHT; card 2 to card 3 runs down-and-LEFT. One path,
+     flipped, rather than a second <path> to keep in sync with it. */
+  .lg__step--right .lg__link {
+    transform: translateX(-50%) scaleX(-1);
+  }
+
+  /* --- Under 900: one column, one rail --------------------------------------
+     The stepped connector is a two-column device and there is nothing left for
+     it to step between, so it goes and a single dotted rail takes over. The rail
+     is a border on the LIST, not an element, and the badges sit on it. */
+  @media (max-width: 899px) {
+    .lg__link {
+      display: none;
+    }
+
+    .lg__list {
+      position: relative;
+      padding-left: 34px;
+      /* The rail. Dotted for the same reason the connectors were: it is a
+         sequence, not a scale. */
+      border-left: 2px dotted color-mix(in srgb, var(--sb-violet) 55%, transparent);
+      margin-left: 22px;
+    }
+
+    .lg__step,
+    .lg__step--right {
+      justify-content: flex-start;
+    }
+
+    .lg__card,
+    .lg__step--right .lg__card {
+      width: 100%;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lg__step--right .lg__media {
+      order: 0;
+    }
+
+    .lg__media {
+      aspect-ratio: 16 / 9;
+    }
+
+    /* On the rail, level with the top of the card — not the middle, because a
+       badge centred on a tall stacked card floats away from the thing it
+       numbers. */
+    .lg__badge,
+    .lg__step--right .lg__badge {
+      left: -34px;
+      right: auto;
+      top: 26px;
+      transform: translate(-50%, 0);
+    }
+
+    .lg__body,
+    .lg__step--right .lg__body {
+      padding: clamp(20px, 5vw, 28px);
+    }
+
+    .lg__step + .lg__step {
+      margin-top: clamp(32px, 5vh, 48px);
+    }
+  }
+
+  @media (max-width: 479px) {
+    /* At this width the watermark is wider than the phone and its overflow is
+       what would give the page a horizontal scrollbar. */
+    .lg__watermark {
+      font-size: 56px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lg__card {
+      transition: none;
+    }
+  }
+</style>

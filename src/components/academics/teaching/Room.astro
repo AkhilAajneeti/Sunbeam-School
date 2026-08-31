@@ -1,0 +1,275 @@
+---
+/**
+ * TEACHING & LEARNING · CHAPTER 2 — SMART CLASSROOMS + AI & DIGITAL LITERACY
+ *
+ * COMPOSITION: sticky scroll. A dark full-bleed band; the stat stage pins itself
+ * on the left while three beats of copy scroll past it on the right. The Apple /
+ * Stripe device, and the reason it earns its place here is that all three beats
+ * argue about the SAME three numbers — so the numbers should stay on screen while
+ * the argument runs.
+ *
+ * CSS `position: sticky`, NOT ScrollTrigger's `pin`. Pinning injects spacer
+ * elements and recalculates on every refresh, and this page already has a sticky
+ * masthead to interact with. Sticky is one line, cannot desynchronise, and works
+ * with JavaScript off — the same reasoning as PageHero's pinned banner.
+ *
+ * THE COUNTERS ARE THE EXISTING `data-count` WIRING. Server-rendered at their
+ * final value, so the numbers are correct before any script arrives; the count-up
+ * only overwrites them once the motion chunk loads and the stage scrolls in.
+ */
+import SectionHead from '../SectionHead.astro';
+import { teachingLearning } from '../../../data/academics';
+
+const { room } = teachingLearning;
+---
+
+<section class="room u-on-dark" id="smart-classrooms" aria-labelledby="room-title">
+  <div class="u-container">
+    <SectionHead
+      eyebrow={room.eyebrow}
+      heading={room.heading}
+      align="center"
+      tone="dark"
+      id="room-title"
+      class="room__head"
+      measure={26}
+    />
+
+    <div class="room__grid">
+      {/* --- The pinned stage --- */}
+      <div class="room__stage">
+        <div class="room__panel" data-pop>
+          <span class="room__glow" aria-hidden="true"></span>
+
+          <dl class="room__stats">
+            {
+              room.stats.map((s) => (
+                <div class="room__stat">
+                  {/* One expression: adjacent expressions on separate lines keep
+                      the newline between them as a space — "30 +". */}
+                  <dt class="room__stat-n t-tabular">
+                    <span data-count={s.n} data-count-suffix={s.suffix}>{`${s.n.toLocaleString('en-IN')}${s.suffix}`}</span>
+                  </dt>
+                  <dd class="room__stat-l">{s.label}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+
+      {/* --- The beats --- */}
+      <ol class="room__beats">
+        {
+          room.beats.map((b, i) => (
+            <li class="room__beat" data-reveal data-reveal-delay={i * 80}>
+              <span class="room__beat-n t-tabular" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="room__beat-h">{b.title}</h3>
+              <p class="room__beat-b">{b.body}</p>
+              <p class="room__beat-a">{b.anchor}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .room {
+    position: relative;
+    overflow: hidden;
+    /* Top lighter than the foot. The head sits at the TOP of a band the reader
+       has just crossed into, so it needs less lead-in than the section needs
+       run-out before the next one begins. Measured before this change: 160px
+       above the eyebrow against 0 below the heading. */
+    padding-block: clamp(64px, 9vh, 104px) var(--sb-section-y-major);
+    /* Read by SectionHead — see the note on --shead-gap in that component. */
+    --shead-gap: clamp(36px, 5.5vh, 72px);
+    background: var(--sb-ink);
+    /* A faint mesh, at the weight the homepage's Learning panel uses — the two
+       dark panels on this site should feel like the same material. */
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .room__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    gap: clamp(32px, 5vw, 84px);
+    align-items: start;
+  }
+
+  /* --- Stage ---------------------------------------------------------------
+     The wrapper is what sticks; the panel inside it is what is painted. Two
+     elements because a sticky element cannot also be the thing a transform
+     entrance is applied to — GSAP's inline transform on a sticky box makes it
+     jitter against its own offset as it sticks. */
+  .room__stage {
+    position: sticky;
+    top: calc(var(--sb-masthead-h) + 40px);
+  }
+
+  .room__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(28px, 3vw, 44px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--sb-r-3);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  /* One warm bloom behind the figures, so the panel reads as lit rather than as
+     a flat swatch. Behind the content in an isolated context. */
+  .room__glow {
+    position: absolute;
+    z-index: -1;
+    top: -30%;
+    right: -20%;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 92, 53, 0.32), rgba(255, 92, 53, 0) 68%);
+    pointer-events: none;
+  }
+
+  .room__stats { display: grid; gap: clamp(20px, 2.6vh, 32px); margin: 0; }
+
+  /* Hairline BETWEEN only: it sits on each stat's top edge, so the first has
+     none and there is no trailing rule to suppress. */
+  .room__stat + .room__stat {
+    padding-top: clamp(20px, 2.6vh, 32px);
+    border-top: 1px solid var(--sb-on-dark-rule);
+  }
+
+  .room__stat-n {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(40px, 5vw, 72px);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    /* The bright reference orange, which measures 6.1:1 on ink — the deep primary
+       would go muddy against this ground. */
+    color: var(--sb-lime);
+  }
+
+  .room__stat-l {
+    margin: var(--sb-3) 0 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    color: var(--sb-on-dark-78);
+  }
+
+  /* --- Beats -------------------------------------------------------------- */
+
+  .room__beats { list-style: none; margin: 0; padding: 0; }
+
+  .room__beat {
+    position: relative;
+    padding: 0 0 clamp(36px, 5vh, 60px) clamp(44px, 4.4vw, 72px);
+  }
+
+  .room__beat:last-child { padding-bottom: 0; }
+
+  /* The rail runs from each numeral to the next, so the last beat has no tail
+     hanging off the bottom of the list. */
+  .room__beat:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: clamp(15px, 1.5vw, 24px);
+    top: clamp(34px, 3.4vw, 46px);
+    bottom: clamp(10px, 1.4vh, 18px);
+    border-left: 1px dashed rgba(255, 255, 255, 0.22);
+  }
+
+  .room__beat-n {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    display: grid;
+    place-items: center;
+    width: clamp(30px, 3vw, 48px);
+    height: clamp(30px, 3vw, 48px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--sb-r-full);
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    color: var(--sb-lime);
+    transition: background-color var(--sb-dur-link) ease, border-color var(--sb-dur-link) ease;
+  }
+
+  .room__beat:hover .room__beat-n {
+    background: rgba(255, 138, 92, 0.16);
+    border-color: var(--sb-lime);
+  }
+
+  .room__beat-h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 2.1vw, 30px);
+    line-height: 1.18;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+
+  .room__beat-b {
+    max-width: 52ch;
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: var(--sb-on-dark-78);
+  }
+
+  /* The verified fact, on a rule of its own — it is evidence, not another
+     sentence of the paragraph. */
+  .room__beat-a {
+    margin-top: var(--sb-5);
+    padding-left: var(--sb-5);
+    border-left: 2px solid var(--sb-lime);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--sb-lime);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .room__beat-n { transition: none; }
+  }
+
+  /* --- Tablet + mobile -----------------------------------------------------
+     Stacked, the stage cannot stick: it would pin a 300px panel to the top of the
+     viewport for the whole chapter and push the beats out of view. It becomes an
+     ordinary header for the list, and the three figures go side by side. */
+  @media (max-width: 1023px) {
+    .room__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(32px, 5vh, 48px); }
+    .room__stage { position: static; }
+
+    .room__stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 3vw, 28px); }
+    .room__stat + .room__stat {
+      padding-top: 0;
+      border-top: 0;
+      padding-left: clamp(16px, 3vw, 28px);
+      border-left: 1px solid var(--sb-on-dark-rule);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .room { padding-block: var(--sb-section-y); }
+    .room__stats { grid-template-columns: minmax(0, 1fr); }
+    .room__stat + .room__stat {
+      padding-left: 0;
+      border-left: 0;
+      padding-top: var(--sb-5);
+      border-top: 1px solid var(--sb-on-dark-rule);
+    }
+  }
+</style>

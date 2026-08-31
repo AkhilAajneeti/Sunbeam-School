@@ -1,0 +1,54 @@
+---
+/**
+ * ACADEMIC PHILOSOPHY · AFFILIATION DETAILS — audit §2A.
+ *
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height as every
+ * other Academics page. All of the redesign is below it.
+ *
+ * ⚠ ONE BANNER PROP DID CHANGE, AND DELIBERATELY: the standfirst. It read "the
+ * board, the numbers — and the six other bodies whose word does not belong to
+ * the school", which promised a section of third-party awards. Those awards are
+ * a recognition story, not an affiliation record, and they already have three
+ * homes — /beyond-academics/achievements/, /about/history-legacy/ and the home
+ * page. Leaving a subtitle advertising content the page no longer carries would
+ * be a defect, not fidelity, so it now describes what is actually here.
+ *
+ * The four sections live in components/academics/AffiliationDetailsPage.astro,
+ * with every fact sourced in its frontmatter.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import AffiliationDetailsPage from '../../../components/academics/AffiliationDetailsPage.astro';
+import { school as sb } from '../../../data/site';
+
+import banner from '../../../assets/corridor and stairs/DSC_1240 copy.jpg';
+---
+
+<BaseLayout
+  title="Affiliation Details — Sunbeam School Ballia"
+  description={`Sunbeam School Ballia is affiliated to CBSE Delhi — affiliation number ${sb.affiliationNo}, school code ${sb.schoolCode}, UDISE code ${sb.udise}. The board's letter records affiliation up to senior secondary level for ${sb.affiliationPeriod}.`}
+>
+  <PageHero
+    title="Affiliation Details"
+    standfirst="The board, the two numbers every form asks for — and the letter they are printed on."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Philosophy', href: '/academics/philosophy/' },
+    ]}
+    src={banner}
+    alt="A corridor at Sunbeam School Ballia, its classroom doors and landings running the length of the block."
+    position="50% 50%"
+  />
+
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer. */}
+  <div class="u-page-panel af-panel">
+    <AffiliationDetailsPage />
+  </div>
+</BaseLayout>
+
+<style>
+  div.af-panel { padding-block: 0; }
+</style>

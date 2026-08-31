@@ -1,0 +1,111 @@
+---
+/**
+ * ASSESSMENT & SUPPORT · THE DRAWN RAIL — the horizontal step process shared by
+ * five of the seven pages.
+ *
+ * ⚠ ONE COMPONENT, NOT FIVE COPIES. Assessment & Support runs six steps,
+ * Homework Policy four, Remedial Support four, Mentoring four, Academic Calendar
+ * four. Copied, the rail's geometry would have drifted five ways and the one
+ * genuinely fiddly part — putting the rule exactly on the node centres — would
+ * have had to be got right five times.
+ *
+ * ⚠ THE RULE IS PINNED TO THE NODE CENTRE. The nodes are the first row of the
+ * grid and the rule is absolutely positioned to their vertical centre, computed
+ * from the node's own clamp; and it spans from the FIRST node's centre to the
+ * LAST one's, which for n equal columns is 100/(2n)% in from each edge. Both
+ * numbers therefore follow the step count instead of being typed per page.
+ *
+ * ⚠ DECORATION ONLY. The dashed rule underneath is always painted, so with the
+ * script absent the reader loses the travelling line and nothing else. That is
+ * what makes it safe for the drawn path to start at zero length.
+ */
+import { MARK } from './marks';
+
+export interface RailStep {
+  n: string;
+  mark: string;
+  k: string;
+  v: string;
+}
+
+interface Props {
+  steps: readonly RailStep[];
+  /** Ground the node discs sit on, so a disc never reads as a hole. */
+  ground?: 'paper' | 'cream' | 'peach' | 'ivory';
+  /** Accessible name for the ordered list. */
+  label: string;
+  class?: string;
+}
+
+const { steps, ground = 'paper', label, class: extra = '' } = Astro.props;
+
+/* The rule's inset: half a column, so it starts and ends on a node centre. */
+const inset = (100 / (steps.length * 2)).toFixed(4);
+---
+
+<div class:list={['as-rail', `as-rail--${ground}`, extra]} data-as-rail>
+  <span class="as-rail__rule" style={`inset-inline: ${inset}%;`} aria-hidden="true">
+    <i class="as-rail__dash"></i>
+    <svg class="as-rail__svg" viewBox="0 0 1000 2" fill="none" preserveAspectRatio="none">
+      <path
+        class="as-rail__draw"
+        pathLength="1"
+        d="M0 1H1000"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    </svg>
+  </span>
+
+  <ol class="as-steps" style={`--n: ${steps.length};`} aria-label={label}>
+    {steps.map((s, i) => (
+      <li class="as-step" data-reveal data-reveal-delay={120 + i * 90}>
+        <span class="as-step__node" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[s.mark]} />
+          </svg>
+        </span>
+        <p class="as-step__n t-tabular">{s.n}</p>
+        <h3 class="as-step__k">{s.k}</h3>
+        <p class="as-step__v">{s.v}</p>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<script>
+  /* EVERY RAIL ON THE PAGE DRAWS ITSELF as it travels through the viewport.
+
+     ⚠ IT WALKS ALL RAILS, not one. A page may carry two — Homework Policy does
+     — and a querySelector for the first would have left the second unpainted.
+     `pathLength="1"` normalises the geometry, so nothing measures the DOM and
+     the maths cannot drift when a step is added. */
+  const rails = Array.from(document.querySelectorAll<HTMLElement>('[data-as-rail]'))
+    .map((el) => ({ el, path: el.querySelector<SVGPathElement>('.as-rail__draw') }))
+    .filter((r): r is { el: HTMLElement; path: SVGPathElement } => r.path instanceof SVGPathElement);
+
+  if (rails.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let queued = false;
+
+    const paint = () => {
+      queued = false;
+      for (const { el, path } of rails) {
+        const r = el.getBoundingClientRect();
+        const travelled = window.innerHeight * 0.86 - r.top;
+        const p = Math.min(1, Math.max(0, travelled / Math.max(1, r.height * 0.8)));
+        path.style.strokeDashoffset = String(1 - p);
+      }
+    };
+
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    paint();
+  }
+</script>

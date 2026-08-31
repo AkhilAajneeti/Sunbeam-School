@@ -1,0 +1,441 @@
+---
+/**
+ * THE SUPPORTING BANDS — overview, safety, contact and questions.
+ *
+ * These four are one file because they are one argument in four movements, and
+ * splitting them would spread a single spacing rhythm across four places to
+ * break it. The route finder is separate because it is the only part carrying
+ * behaviour.
+ *
+ * ⚠ THE SAFETY BAND CARRIES ONLY WHAT THE SCHOOL HAS PUBLISHED. An earlier
+ * version added a second, plainly-marked group for things told to us but not
+ * printed anywhere. That was honest, and it was still this site making claims
+ * the school had not made. Removed on the client’s instruction that the page
+ * mirror the parent page and design it.
+ */
+import { stats, transportContact, safety } from '../../data/transport';
+
+const shown = safety;
+
+/* One glyph per feature. Inline because six 24px icons as files would be six
+   requests on a page whose whole point is loading fast on a phone. */
+const ICON: Record<string, string> = {
+  gps: '<path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/>',
+  speed: '<path d="M4 17a8 8 0 1 1 16 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="m12 15 4-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="16" r="1.4" fill="currentColor"/>',
+  badge: '<circle cx="12" cy="9" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  bus: '<rect x="4" y="4" width="16" height="12" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M4 11h16M8 20v-2M16 20v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="14" r="1" fill="currentColor"/><circle cx="16" cy="14" r="1" fill="currentColor"/>',
+  person: '<circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M6 20a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  message: '<path d="M4.5 6.5A2 2 0 0 1 6.5 5h11a2 2 0 0 1 2 1.5v8a2 2 0 0 1-2 1.5H9l-4 3v-3a2 2 0 0 1-.5-1.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',
+};
+
+const figures = [
+  { n: String(stats.buses), k: 'Buses on published routes', note: 'From a stated fleet of 29 and more' },
+  { n: String(stats.runs), k: 'Route runs', note: 'Several buses make two trips' },
+  { n: String(stats.stops), k: 'Boarding points', note: 'Across Ballia and the surrounding blocks' },
+];
+---
+
+{/* ═══ OVERVIEW ═══════════════════════════════════════════════════════════ */}
+<section class="tov" id="overview" aria-labelledby="tov-t">
+  <div class="u-container tov__in">
+    <div class="tov__copy">
+      <p class="tov__eyebrow t-label">Transport</p>
+      <h2 class="tov__h" id="tov-t" data-split>A bus from most of Ballia</h2>
+      <p class="tov__b" data-reveal>
+        The school runs {stats.buses} buses over {stats.runs} route runs, calling at
+        {stats.stops} published boarding points. Every route names its driver and
+        prints a direct mobile number for them — so the person driving your child
+        is someone you can reach.
+      </p>
+      <a class="tov__cta" href="#routes">
+        <span>Find your route</span>
+        <svg width="16" height="11" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.7" />
+        </svg>
+      </a>
+    </div>
+
+    <ul class="tov__figs">
+      {
+        figures.map((f) => (
+          <li class="fig">
+            <p class="fig__n">{f.n}</p>
+            <p class="fig__k">{f.k}</p>
+            <p class="fig__note">{f.note}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+{/* ⚠ THE ROUTE FINDER LANDS HERE, IN THE DOM, VIA A SLOT — not via CSS `order`
+    on the page. A parent's first question is "is my area covered", so the
+    search has to come second, before the safety copy. An earlier pass did that
+    with grid `order`, which moves the PAINT order and leaves the DOM order
+    alone: a keyboard user would have tabbed overview → safety → contact →
+    questions → routes while seeing routes in second place. That is WCAG 2.4.3
+    (Focus Order) and 1.3.2 (Meaningful Sequence) both. A slot puts it in the
+    right place in the markup, so reading order, tab order and paint order are
+    the same one order. */}
+<slot />
+
+{/* ═══ SAFETY ═════════════════════════════════════════════════════════════ */}
+<section class="tsf" id="safety" aria-labelledby="tsf-t">
+  <div class="u-container">
+    <p class="tsf__eyebrow t-label">Safety</p>
+    <h2 class="tsf__h" id="tsf-t" data-split>What is fitted, and what we can confirm</h2>
+    <p class="tsf__stand">
+      Every line below is stated on the school’s own pages.
+    </p>
+
+    <ul class="tsf__grid">
+      {
+        shown.map((s) => (
+          <li class="sfc">
+            <span class="sfc__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" set:html={ICON[s.icon]} />
+            </span>
+            <div>
+              <h3 class="sfc__h">{s.label}</h3>
+              <p class="sfc__b">{s.body}</p>
+            </div>
+            {/* ⚠ A VISUALLY-HIDDEN LABEL, NOT `aria-label` ON THE SPAN. ARIA
+                prohibits `aria-label` on a generic element — a <span> with no
+                role — so it is invalid markup and assistive tech is free to
+                ignore it, which means the tick's meaning was reaching nobody.
+                Lighthouse flags this as `aria-prohibited-attr`; real text inside
+                the span is announced by everything. */}
+            <span class="sfc__tick">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M1 6.4l3.1 3.1L11 2.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="u-visually-hidden">Published by the school</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+
+  </div>
+</section>
+
+{/* ═══ CONTACT ════════════════════════════════════════════════════════════ */}
+<section class="tct" id="transport-contact" aria-labelledby="tct-t">
+  <div class="u-container tct__in">
+    <div>
+      <p class="tct__eyebrow t-label">Contact</p>
+      <h2 class="tct__h" id="tct-t">Anything the routes don’t answer</h2>
+      <p class="tct__b">
+        Allocation, stop changes, timings, charges and complaints all go to the
+        transport in-charge — not to the driver.
+      </p>
+    </div>
+
+    <div class="tcard">
+      <p class="tcard__role">{transportContact.role}</p>
+      <p class="tcard__name">{transportContact.name}</p>
+      <a class="tcard__tel" href={`tel:+91${transportContact.phone}`}>
+        <span class="tcard__tel-icon" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M2 3.2c0-.7.5-1.2 1.2-1.2h1.3c.5 0 1 .4 1.1.9l.4 1.8c.1.4 0 .8-.3 1l-.9.8c.8 1.5 2 2.7 3.5 3.5l.8-.9c.3-.3.7-.4 1.1-.3l1.8.4c.5.1.9.6.9 1.1v1.3c0 .7-.6 1.2-1.2 1.2A10.7 10.7 0 0 1 2 3.2Z"
+              stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        {transportContact.display}
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<style>
+  /* --- Overview ------------------------------------------------------------ */
+
+  .tov {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-paper);
+  }
+
+  .tov__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 4vh, 48px);
+    align-items: center;
+  }
+
+  .tov__eyebrow { color: var(--sb-violet-dark); }
+
+  .tov__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3.4vw, 46px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .tov__b {
+    max-width: 52ch;
+    margin-top: var(--sb-5);
+    font-size: clamp(16px, 1.2vw, 18px);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+
+  .tov__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-4);
+    min-height: 24px;
+    margin-top: var(--sb-6);
+    padding: 13px 24px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    color: #fff;
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    text-decoration: none;
+    transition: background var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  .tov__cta:hover { transform: translateY(-2px); }
+  .tov__cta svg { transition: transform var(--sb-dur-btn) var(--sb-ease); }
+  .tov__cta:hover svg { transform: translateX(4px); }
+  .tov__cta:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+
+  .tov__figs {
+    display: grid;
+    gap: var(--sb-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fig {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--sb-3) var(--sb-5);
+    padding: clamp(16px, 1.8vw, 22px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-ivory);
+  }
+
+  .fig__n {
+    grid-row: 1 / span 2;
+    font-family: var(--sb-font-display);
+    font-size: clamp(34px, 3.6vw, 48px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--sb-violet-dark);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fig__k {
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    color: var(--sb-charcoal);
+  }
+
+  .fig__note {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Safety -------------------------------------------------------------- */
+
+  .tsf {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  .tsf__eyebrow { color: var(--sb-violet-dark); }
+
+  .tsf__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(26px, 3vw, 42px);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.034em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .tsf__stand {
+    max-width: 58ch;
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .tsf__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sb-4);
+    margin: clamp(26px, 3.2vh, 40px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sfc {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--sb-5);
+    padding: clamp(16px, 1.8vw, 22px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .sfc:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 0 0 0 1px transparent, var(--sb-shadow-card-hover);
+  }
+
+  .sfc__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    aspect-ratio: 1;
+    border-radius: var(--sb-r-1);
+    background: var(--sb-sand);
+    color: var(--sb-violet-dark);
+  }
+
+  .sfc__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.2vw, 18px);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .sfc__b {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  .sfc__tick {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--sb-violet);
+    color: #fff;
+  }
+
+  /* --- Contact ------------------------------------------------------------- */
+
+  .tct {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-charcoal);
+  }
+
+  .tct__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(24px, 3.4vh, 40px);
+    align-items: center;
+  }
+
+  .tct__eyebrow { color: var(--sb-lime); }
+
+  .tct__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(24px, 2.8vw, 38px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.032em;
+    color: var(--sb-ivory);
+    text-wrap: balance;
+  }
+
+  .tct__b {
+    max-width: 48ch;
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    /* On charcoal — --sb-text-secondary is a light-ground token and drops under
+       4.5:1 here. */
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .tcard {
+    padding: clamp(22px, 2.6vw, 32px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--sb-r-2);
+  }
+
+  .tcard__role {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-lime);
+  }
+
+  .tcard__name {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(20px, 1.9vw, 26px);
+    font-weight: 650;
+    letter-spacing: -0.024em;
+    color: var(--sb-ivory);
+  }
+
+  .tcard__tel {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-4);
+    min-height: 24px;
+    margin-top: var(--sb-5);
+    padding: 12px 22px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-ivory);
+    color: var(--sb-charcoal);
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+    transition: background var(--sb-dur-btn) ease, transform var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  .tcard__tel:hover { background: var(--sb-lime); transform: translateY(-2px); }
+  .tcard__tel:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+  .tcard__tel-icon { display: grid; place-items: center; }
+
+  /* --- Breakpoints --------------------------------------------------------- */
+
+  @media (min-width: 900px) {
+    .tov__in { grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr); }
+    .tct__in { grid-template-columns: minmax(0, 1fr) minmax(0, 0.7fr); }
+    .tsf__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sfc,
+    .tov__cta,
+    .tov__cta svg,
+    .tcard__tel { transition-duration: 1ms; }
+    .sfc:hover,
+    .tov__cta:hover,
+    .tcard__tel:hover { transform: none; }
+    .tov__cta:hover svg { transform: none; }
+  }
+</style>

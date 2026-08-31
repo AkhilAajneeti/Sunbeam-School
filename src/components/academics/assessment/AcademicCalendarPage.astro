@@ -1,0 +1,698 @@
+---
+/**
+ * ACADEMICS · ACADEMIC CALENDAR — four sections and the close.
+ *
+ * ⚠⚠ THE ARCHIVE IS REAL NOW. This page used to render an awaiting state because
+ * no calendar document existed in the repository. Three do: the Sunbeam Calendar
+ * & Monthly Planner 2026-27 (13 pages), the Sunbeam Calendar 2025 (7 pages) and
+ * the seven published sheets of 2024. Every cover on this page is a page of the
+ * document it links to, rendered from that file — not a photograph of a calendar
+ * and not an illustration.
+ *
+ * ⚠⚠ AND THE PAGE STILL PRINTS NO DATE. That is not caution left over from the
+ * empty version, it is what the documents themselves require: they are group
+ * publications whose dated lines are tagged by branch — @ SCT, @ BGN, @ VRN and
+ * the rest — and Ballia is named on the group's knowledge-partner list rather
+ * than against those entries. Lifting "2nd term begins 3rd October" onto a
+ * Ballia page would print another campus's date under this school's name. So
+ * the page hands over the document whole and sends dates to the office. The
+ * headline says exactly that, and it is the honest reading of the record rather
+ * than a stylish line. Sourcing in full: data/academicCalendar.ts.
+ *
+ * ═══ COMPOSITION — four sections, four different builds ════════════════════
+ *   01 · IVORY  copy left, two planner sheets layered right under a ghost year.
+ *   02 · CREAM  four columns on hairlines — what the calendar carries.
+ *   03 · PAPER  narrow copy left, the document cards right, one row.
+ *   04 · IVORY  a single ruled panel, four reasons across it.
+ *   05 · PHOTO  the cinematic close.
+ *
+ * ⚠ EVERY COVER AND SHEET IS A LIGHTBOX LINK, so the 2024 set — which the school
+ * published as images and not as a PDF — can be read without a download. Its
+ * card carries "View sheets" where the other two carry "Download".
+ */
+import { Picture } from 'astro:assets';
+import '../../../styles/assessment.css';
+import { MARK } from './marks';
+import AsClose from './AsClose.astro';
+import Lightbox from '../../ui/Lightbox.astro';
+import { calendars, calendarSource, calendarCarries, calendarPlanning } from '../../../data/academicCalendar';
+
+import pMarch from '../../../assets/calender/planner-2026-march.jpg';
+import pApril from '../../../assets/calender/planner-2026-april.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+const CONTACT = '/contact-us/';
+const PTM = '/academics/assessment/parent-teacher-meetings/';
+
+/** The ghost year is the session on the newest document, never a hardcoded one. */
+const ghost = calendars[0]?.year ?? '';
+const has = calendars.length > 0;
+---
+
+{/* ══ 01 · A CALENDAR, WITHOUT DATES ═════════════════════════════════════════
+    Ground: warm ivory. Copy left; right, two sheets of the current planner laid
+    one over the other, with the session set enormous and pale behind them.
+
+    ⚠ THE TWO SHEETS ARE THE DOCUMENT ITSELF, rendered from the PDF this page
+    links to — so the reader sees what they are about to download rather than a
+    picture of a calendar standing in for one. */}
+<section class="as-sec as-sec--ivory as-pad ac-open" aria-labelledby="ac-open-t">
+  <span class="as-warm" aria-hidden="true"></span>
+
+  <div class="u-container ac-open__grid">
+    <div class="ac-open__copy">
+      <p class="as-kicker" data-reveal>We follow, you plan</p>
+      <h2 class="as-h as-h--xl ac-open__h" id="ac-open-t">
+        <span data-clip data-clip-delay="0">A calendar,</span>
+        <span data-clip data-clip-delay="150"><em>without dates.</em></span>
+      </h2>
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        The school publishes its calendar as a document, and this page hands you that document whole
+        — the planner for the current session and the two before it, exactly as the school issued
+        them. What it does not do is retype a date out of one of them.
+      </p>
+      <p class="as-body" data-reveal data-reveal-delay="260">
+        These are <strong>Sunbeam group publications</strong>, and their dated lines are marked
+        campus by campus. A term start copied out of one and printed here would be another school's
+        date under Ballia's name — so the file is offered whole, and anything you need confirmed
+        goes to {' '}<a class="as-link" href={CONTACT}>the school office</a>.
+      </p>
+      <p class="as-note" data-reveal data-reveal-delay="320">
+        Meeting dates are set out separately on {' '}
+        <a class="as-link" href={PTM}>Parent–Teacher Meetings</a>.
+      </p>
+    </div>
+
+    <div class="ac-open__media">
+      <div class="ac-open__stack">
+        {ghost && <span class="ac-open__ghost t-tabular" aria-hidden="true">{ghost}</span>}
+        <span class="as-dots ac-open__dots" aria-hidden="true"></span>
+
+        <a
+          class="ac-sheet ac-sheet--back"
+          data-lb-open
+          href={pMarch.src}
+          data-lb-alt={`A month page of the Sunbeam School Calendar & Monthly Planner 2026-27, the calendar ${S} publishes for the current session`}
+          data-lb-cap="Calendar & Monthly Planner 2026–27 · a month page"
+          data-parallax
+          data-parallax-y="-26"
+        >
+          <Picture
+            src={pMarch}
+            alt={`A month page of the Sunbeam School Calendar & Monthly Planner 2026-27, ruled into weeks with the month's observances printed in each cell`}
+            formats={['avif', 'webp']}
+            widths={[420, 720, 1000]}
+            sizes="(max-width: 1023px) 62vw, 30vw"
+            loading="eager"
+            decoding="async"
+          />
+        </a>
+
+        <a
+          class="ac-sheet ac-sheet--front"
+          data-lb-open
+          href={pApril.src}
+          data-lb-alt={`A second month page of the Sunbeam School Calendar & Monthly Planner 2026-27, the month in which the session begins`}
+          data-lb-cap="Calendar & Monthly Planner 2026–27 · the month the session begins"
+          data-pop
+          data-pop-delay="220"
+        >
+          <Picture
+            src={pApril}
+            alt={`A second month page of the same planner, the month in which the session begins`}
+            formats={['avif', 'webp']}
+            widths={[360, 620, 900]}
+            sizes="(max-width: 1023px) 46vw, 22vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </div>
+
+      <p class="ac-open__cap">
+        Pages of the planner for {calendars[0]?.year ?? 'the current session'} — the file itself,
+        below.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · FOUR THINGS ═══════════════════════════════════════════════════════
+    Ground: cream. Four columns divided by hairlines rather than boxed as cards —
+    the reference's own construction, and the reason the section reads as one
+    statement instead of four tiles. */}
+<section class="as-sec as-sec--cream as-pad--sm ac-four" aria-labelledby="ac-four-t">
+  <div class="u-container">
+    <p class="as-kicker" data-reveal>What you will find</p>
+    <h2 class="as-h as-h--md ac-four__h" id="ac-four-t">
+      <span data-clip data-clip-delay="0">Four things,</span>
+      <span data-clip data-clip-delay="150"><em>and the reason for each</em></span>
+    </h2>
+
+    <ul class="ac-four__list">
+      {calendarCarries.map((c, i) => (
+        <li class="ac-item" data-reveal data-reveal-delay={140 + i * 90}>
+          <span class="ac-item__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[c.mark]} />
+            </svg>
+          </span>
+          <span class="ac-item__n t-tabular">{c.n}</span>
+          <h3 class="ac-item__k">{c.k}</h3>
+          <p class="ac-item__v">{c.v}</p>
+          <span class="ac-item__a" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+            </svg>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+{/* ══ 03 · THE ARCHIVE ═══════════════════════════════════════════════════════
+    Ground: white. Narrow copy left, the documents right in one row.
+
+    ⚠ THE ROW IS DATA-DRIVEN AND HAS NO CEILING. Three cards today; a fourth
+    session is one entry in academicCalendar.ts and nothing here changes.
+    ⚠ A CARD'S ACTION FOLLOWS ITS FORMAT — the two PDFs download, the 2024 sheets
+    open in the viewer, because the school never published them as a file. */}
+<section class="as-sec as-sec--paper as-pad ac-arch" aria-labelledby="ac-arch-t">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container ac-arch__grid">
+    <div class="ac-arch__copy">
+      <p class="as-kicker" data-reveal>Academic calendar</p>
+      <h2 class="as-h as-h--lg" id="ac-arch-t">
+        <span data-clip data-clip-delay="0">Our academic calendar</span>
+        <span data-clip data-clip-delay="150"><em>at a glance.</em></span>
+      </h2>
+      <p class="as-body ac-arch__b" data-reveal data-reveal-delay="200">
+        {has
+          ? 'Official calendars are published by session. View or download the latest to stay informed — every file below is the school’s own, and every size is the size of the file it names.'
+          : 'The school publishes its calendar by session. None is available here yet; the school’s own page carries the current one.'}
+      </p>
+    </div>
+
+    {has ? (
+      <ul class="ac-docs">
+        {calendars.map((d, i) => (
+          <li class="ac-doc" data-pop data-pop-delay={120 + i * 90}>
+            <article class="ac-doc__in">
+              {/* ⚠ A SHEET SET OPENS AT ITS OWN FIRST SHEET, NOT AT THE COVER.
+                  For 2024 the cover IS sheet one, so pointing the frame at the
+                  cover and then listing all seven sheets behind it put the same
+                  image into the viewer twice in a row. The frame is sheet one;
+                  the hidden list starts at sheet two. */}
+              <a
+                class="ac-doc__art"
+                data-lb-open
+                href={(d.sheets?.[0]?.image ?? d.image).src}
+                data-lb-alt={d.sheets?.[0]?.alt ?? d.alt}
+                data-lb-cap={d.sheets ? `${d.type} ${d.year} · sheet 1 of ${d.sheets.length}` : `${d.type} ${d.year}`}
+              >
+                <Picture
+                  src={d.image}
+                  alt={d.alt}
+                  formats={['avif', 'webp']}
+                  widths={[320, 560]}
+                  sizes="(max-width: 767px) 74vw, 20vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+                {d.current && <span class="ac-doc__now">Current session</span>}
+              </a>
+
+              <div class="ac-doc__body">
+                <h3 class="ac-doc__k">{d.type} <span class="t-tabular">{d.year}</span></h3>
+
+                <p class="ac-doc__meta">
+                  <span class="t-tabular">{d.kind}</span>
+                  {d.size && <><span class="ac-doc__dot" aria-hidden="true">·</span><span class="t-tabular">{d.size}</span></>}
+                  {d.extent && <><span class="ac-doc__dot" aria-hidden="true">·</span><span class="t-tabular">{d.extent}</span></>}
+                </p>
+
+                {d.href ? (
+                  <a class="ac-doc__get" href={d.href} download>
+                    <span class="u-visually-hidden">Download the {d.type} {d.year}, {d.kind} {d.size}</span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.download} />
+                    </svg>
+                  </a>
+                ) : (
+                  <button type="button" class="ac-doc__get" data-ac-sheets={d.year}>
+                    <span class="u-visually-hidden">View the {d.extent} of the {d.type} {d.year}</span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.eye} />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </article>
+
+            {/* Sheets two onward join the viewer's set without appearing in the
+                layout, so the reader can page through the year from the frame.
+                ⚠ THEY MUST STAY RENDERED, NOT `display: none` — the viewer builds
+                its set from triggers with a live box, and a hidden one drops out
+                of the sequence it is supposed to continue. */}
+            {d.sheets && d.sheets.length > 1 && (
+              <span class="ac-doc__hidden" aria-hidden="true">
+                {d.sheets.slice(1).map((s, k) => (
+                  <a
+                    data-lb-open
+                    href={s.image.src}
+                    data-lb-alt={s.alt}
+                    data-lb-cap={`${d.type} ${d.year} · sheet ${k + 2} of ${d.sheets?.length}`}
+                    tabindex="-1"
+                  >
+                    <img src={s.image.src} alt="" width="1" height="1" loading="lazy" decoding="async" />
+                  </a>
+                ))}
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="ac-arch__wait">
+        <p class="ac-arch__wait-k">No calendar published here yet</p>
+        <p class="ac-arch__wait-v">
+          The school’s own Calendar page carries the current session’s document.
+        </p>
+      </div>
+    )}
+  </div>
+
+  <p class="ac-arch__all">
+    <a class="as-btn" href={calendarSource} target="_blank" rel="noopener noreferrer">
+      View all calendars
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.external} />
+      </svg>
+    </a>
+    <span class="ac-arch__all-n">on the school’s own Calendar page</span>
+  </p>
+</section>
+
+{/* ══ 04 · WHY IT MATTERS ════════════════════════════════════════════════════
+    Ground: ivory. One ruled panel, four reasons across it — deliberately the
+    quietest section on the page, because it is the one making no claim. */}
+<section class="as-sec as-sec--ivory as-pad--sm ac-plan" aria-label="Why the calendar matters">
+  <div class="u-container">
+    <ul class="ac-plan__box">
+      {calendarPlanning.map((p, i) => (
+        <li class="ac-why" data-reveal data-reveal-delay={120 + i * 80}>
+          <span class="ac-why__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[p.mark]} />
+            </svg>
+          </span>
+          <h3 class="ac-why__k">{p.k}</h3>
+          <p class="ac-why__v">{p.v}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<AsClose
+  id="ac-close-t"
+  kicker="A year you can plan against"
+  lead="Planned well,"
+  accent="lives better."
+  body="A clear academic plan helps your child stay prepared, confident and ready for what matters. The school's own calendar is the one to plan against — which is why this page gives you the document rather than a summary of it."
+  photo={pCohort}
+  position="50% 42%"
+/>
+
+<Lightbox />
+
+<script>
+  /* THE SHEET SETS OPEN FROM THEIR OWN CARD.
+     A year the school published as images and never as a file cannot offer a
+     download, so its card offers the viewer instead. The button forwards to its
+     own card's frame — `closest`, never a document-wide lookup, so a second
+     image-only year added later opens its own sheets and not the first one's. */
+  document.querySelectorAll<HTMLButtonElement>('[data-ac-sheets]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      btn.closest('.ac-doc')?.querySelector<HTMLAnchorElement>('.ac-doc__art')?.click();
+    });
+  });
+</script>
+
+<style>
+  /* ═══ 01 · A CALENDAR, WITHOUT DATES ══════════════════════════════════════ */
+  .ac-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+    gap: clamp(28px, 4vw, 68px);
+    align-items: center;
+  }
+  .ac-open__h { max-width: 12ch; }
+  .ac-open__copy .as-body { max-width: 46ch; }
+
+  .ac-open__media { position: relative; display: grid; justify-items: center; }
+  /* Anchored to the stack, not to the column — otherwise the field drifts to the
+     far right of a wide grid track and stops reading as part of the picture. */
+  .ac-open__dots { top: -5%; right: -7%; z-index: 0; }
+
+  /* ⚠ THE GHOST YEAR IS OUTLINE ONLY. Filled, it competes with the sheets in
+     front of it; hollow, it reads as a watermark and lets them stay the
+     subject. It is also `aria-hidden` — it is texture, not information.
+     ⚠ IT IS ANCHORED TO THE SHEETS, NOT TO THE COLUMN. Anchored to the bottom of
+     the column it ran straight through the caption's line of type and both
+     became unreadable; anchored to the stack it fills the empty lower-left the
+     two sheets leave between them, which is the one place on this composition
+     that wanted something in it. */
+  .ac-open__ghost {
+    position: absolute;
+    left: 50%;
+    bottom: 3%;
+    z-index: 0;
+    transform: translateX(-50%);
+    font-family: var(--sb-font-display);
+    font-size: clamp(72px, 10.5vw, 168px);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1.5px color-mix(in srgb, var(--sb-orange-bright) 26%, transparent);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .ac-open__stack {
+    position: relative;
+    width: min(100%, 500px);
+    aspect-ratio: 1 / 0.94;
+  }
+  .ac-sheet {
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+    cursor: zoom-in;
+    transition: transform var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .ac-sheet :global(picture) { display: block; }
+  .ac-sheet :global(img) { display: block; width: 100%; height: auto; }
+  .ac-sheet--back {
+    top: 0;
+    left: 0;
+    width: 64%;
+    rotate: -3.2deg;
+    z-index: 1;
+  }
+  .ac-sheet--front {
+    right: 0;
+    bottom: 0;
+    width: 55%;
+    rotate: 3.6deg;
+    z-index: 2;
+    border: 1px solid var(--sb-border);
+  }
+  .ac-sheet:hover { rotate: 0deg; box-shadow: var(--sb-shadow-card-hover); z-index: 3; }
+
+  .ac-open__cap {
+    position: relative;
+    z-index: 2;
+    margin: clamp(12px, 1.6vw, 20px) 0 0;
+    max-width: 34ch;
+    text-align: center;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 02 · FOUR THINGS ════════════════════════════════════════════════════ */
+  .ac-four__h { max-width: 24ch; }
+  .ac-four__list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin: clamp(24px, 3vw, 44px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* ⚠ HAIRLINES, NOT CARDS. The dividers sit between the columns and never
+     outside them, so the row reads as one ruled sheet. */
+  /* ⚠ THE ARROWS SHARE A BASELINE. The four descriptions are different lengths,
+     so an arrow that simply follows its paragraph lands at four different
+     heights and the row stops reading as a row. `1fr` before it puts every
+     arrow on the bottom edge of the tallest column. */
+  .ac-item {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto auto auto 1fr;
+    align-content: stretch;
+    padding: clamp(4px, 0.6vw, 8px) clamp(16px, 2vw, 30px) clamp(4px, 0.6vw, 8px);
+  }
+  .ac-item:first-child { padding-left: 0; }
+  .ac-item:last-child { padding-right: 0; }
+  .ac-item + .ac-item { border-left: 1px solid var(--sb-border); }
+  .ac-item__m {
+    display: block;
+    width: clamp(26px, 2.4vw, 34px);
+    color: var(--sb-orange-bright);
+  }
+  .ac-item__m svg { display: block; width: 100%; height: auto; }
+  .ac-item__n {
+    margin-top: clamp(12px, 1.6vw, 20px);
+    font-size: clamp(9px, 0.68vw, 10.6px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-orange-bright);
+  }
+  .ac-item__k {
+    margin: 5px 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.18vw, 19px);
+    font-weight: 700;
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ac-item__v {
+    margin: clamp(7px, 0.9vw, 11px) 0 0;
+    font-size: clamp(9.5px, 0.72vw, 11.4px);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+  .ac-item__a {
+    display: block;
+    align-self: end;
+    width: clamp(18px, 1.6vw, 23px);
+    margin-top: clamp(12px, 1.6vw, 20px);
+    color: var(--sb-orange-bright);
+    transition: transform var(--sb-dur-image) var(--sb-ease);
+  }
+  .ac-item__a svg { display: block; width: 100%; height: auto; }
+  .ac-item:hover .ac-item__a { transform: translateX(4px); }
+
+  /* ═══ 03 · THE ARCHIVE ════════════════════════════════════════════════════ */
+  .ac-arch__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.74fr) minmax(0, 2.26fr);
+    gap: clamp(24px, 3.4vw, 56px);
+    align-items: center;
+  }
+  .ac-arch__b { max-width: 34ch; }
+
+  .ac-docs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.8vw, 26px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ac-doc { display: flex; }
+  .ac-doc__in {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 4px 16px -10px rgba(28, 14, 8, 0.14);
+    transition: transform var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease), border-color var(--sb-dur-image) var(--sb-ease);
+  }
+  .ac-doc__in:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--sb-violet) 32%, transparent);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  /* ⚠ contain, NOT cover. These are document covers; cropping one to fill a
+     frame cuts off the year, which is the only thing the thumbnail is for. */
+  .ac-doc__art {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3.1;
+    overflow: hidden;
+    background: #f3ece5;
+    cursor: zoom-in;
+  }
+  .ac-doc__art :global(picture) { position: absolute; inset: 0; display: block; }
+  .ac-doc__art :global(img) { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .ac-doc__now {
+    position: absolute;
+    top: clamp(8px, 0.9vw, 11px);
+    left: clamp(8px, 0.9vw, 11px);
+    padding: 4px clamp(8px, 0.9vw, 11px);
+    border-radius: var(--sb-r-1);
+    background: var(--sb-orange-bright);
+    font-size: clamp(8px, 0.6vw, 9.5px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .ac-doc__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(8px, 1vw, 14px);
+    padding: clamp(12px, 1.5vw, 18px) clamp(13px, 1.6vw, 19px);
+  }
+  .ac-doc__k {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 1vw, 15.5px);
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ac-doc__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    margin: clamp(6px, 0.8vw, 9px) 0 0;
+    font-size: clamp(9px, 0.68vw, 10.6px);
+    letter-spacing: 0.05em;
+    color: var(--sb-text-muted);
+  }
+  .ac-doc__dot { color: var(--sb-border-strong); }
+  .ac-doc__get {
+    display: grid;
+    place-items: center;
+    width: clamp(30px, 2.7vw, 38px);
+    aspect-ratio: 1 / 1;
+    margin: clamp(6px, 0.8vw, 9px) 0 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+    cursor: pointer;
+    transition: background var(--sb-dur-image) var(--sb-ease), color var(--sb-dur-image) var(--sb-ease);
+  }
+  .ac-doc__get svg { width: 46%; height: auto; }
+  .ac-doc__get:hover { background: var(--sb-orange-bright); color: #fff; }
+  .ac-doc__hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+  .ac-arch__wait {
+    display: grid;
+    align-content: center;
+    gap: 6px;
+    padding: clamp(28px, 4vw, 52px);
+    border: 1px dashed var(--sb-border-strong);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-ivory);
+    text-align: center;
+  }
+  .ac-arch__wait-k {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ac-arch__wait-v { margin: 0; font-size: clamp(10px, 0.76vw, 12px); color: var(--sb-text-muted); }
+
+  .ac-arch__all {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: clamp(7px, 0.9vw, 11px);
+    margin: clamp(26px, 3.4vw, 48px) 0 0;
+    text-align: center;
+  }
+  .ac-arch__all-n { font-size: clamp(9px, 0.68vw, 10.6px); letter-spacing: 0.05em; color: var(--sb-text-muted); }
+
+  /* ═══ 04 · WHY IT MATTERS ═════════════════════════════════════════════════ */
+  .ac-plan__box {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(18px, 2.4vw, 40px);
+    margin: 0;
+    padding: clamp(20px, 2.6vw, 34px) clamp(22px, 2.8vw, 40px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    list-style: none;
+  }
+  .ac-why { display: grid; align-content: start; }
+  .ac-why__m { display: block; width: clamp(22px, 2vw, 28px); color: var(--sb-orange-bright); }
+  .ac-why__m svg { display: block; width: 100%; height: auto; }
+  .ac-why__k {
+    margin: clamp(10px, 1.2vw, 15px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 1vw, 15.5px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ac-why__v {
+    margin: 5px 0 0;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .ac-arch__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 3vw, 30px); }
+    .ac-arch__b { max-width: 62ch; }
+  }
+
+  @media (max-width: 1023px) {
+    .ac-open__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 4vw, 36px); }
+    .ac-open__h { max-width: none; }
+    .ac-open__copy .as-body { max-width: 62ch; }
+    .ac-four__list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(22px, 3vw, 32px); }
+    .ac-item { padding-left: clamp(16px, 2.6vw, 26px); padding-right: clamp(16px, 2.6vw, 26px); }
+    .ac-item:nth-child(odd) { padding-left: 0; }
+    .ac-item:nth-child(even) { padding-right: 0; }
+    .ac-item:nth-child(odd) { border-left: 0; }
+    .ac-plan__box { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(20px, 3vw, 28px); }
+  }
+
+  @media (max-width: 767px) {
+    .ac-open__stack { width: min(100%, 380px); aspect-ratio: 1 / 1.02; }
+    .ac-open__ghost { bottom: -6%; }
+    .ac-docs { grid-template-columns: minmax(0, 1fr); gap: clamp(14px, 3vw, 20px); }
+    .ac-doc__art { aspect-ratio: 4 / 2.6; }
+  }
+
+  @media (max-width: 559px) {
+    .ac-four__list { grid-template-columns: minmax(0, 1fr); }
+    .ac-item { padding-left: 0; padding-right: 0; border-left: 0; }
+    .ac-item + .ac-item { padding-top: clamp(18px, 4vw, 24px); border-top: 1px solid var(--sb-border); }
+    .ac-plan__box { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

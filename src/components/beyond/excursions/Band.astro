@@ -1,0 +1,953 @@
+---
+/**
+ * EXCURSIONS — ONE BAND PER SECTION, and the page is nothing but these.
+ *
+ * ═══ LAYOUT — TO THE CLIENT'S WIREFRAME ════════════════════════════════════
+ *
+ *   ┌─────────────┐   ┌───────────────────────┐
+ *   │             │   │        STAGE          │   copy one side,
+ *   │   CONTENT   │   └───────────────────────┘   stage + thumbnails
+ *   │             │    ▢  ▢  ▢   thumbnails      the other
+ *   └─────────────┘
+ *
+ * Sides swap every section. Two earlier passes are folded into this one:
+ *
+ * · CENTRED EVERYTHING (first pass) — read "heading and content at center"
+ *   literally and centred four-paragraph accounts. docs/05 § I2 warns against
+ *   centring anything over two lines; the client's "current design looks not
+ *   good" was that.
+ * · THREE SMALL SLIDES IN A ROW (second pass) — each photograph rendered at
+ *   ~300px, which is a thumbnail grid, and thumbnail grids are the specific
+ *   thing the audit objects to on the live site. The client's "sections look
+ *   simple" was that.
+ *
+ * The stage is ~660 × 440 at 1440 — 2.2× the area of the old slide — while the
+ * thumbnails keep every photograph in the section reachable in one tap.
+ *
+ * ⚠ THE STAGE STAYS INSIDE ITS COLUMN rather than spanning the container. A
+ * container-width image cannot have text beside it, so it would have undone the
+ * left/right arrangement in the same breath as improving the photography, and
+ * it put the page back over 15,000px. Discussed and chosen deliberately.
+ *
+ * ═══ IT IS A TABLIST, NOT A CAROUSEL ═══════════════════════════════════════
+ *
+ * Thumbnails are tabs, stage frames are tabpanels — the same mechanism as the
+ * homepage Campus browser (docs/08 D16), so the two behave identically and the
+ * keyboard contract is one the site already has: arrow keys move, Home/End jump,
+ * roving tabindex keeps one stop in the tab order.
+ *
+ * A cross-fade also removes the reason the previous carousel had to ping-pong.
+ * Nothing scrolls, so returning from the last frame to the first is seamless
+ * rather than a hard jump backwards.
+ *
+ * ⚠ CADENCE. `STEP_MS` is 2000 because that is what was asked for. Worth
+ * knowing: the site's own hero cross-fades at 6s (docs/05 § N), and a stage this
+ * size changing every 2s is a far bigger event than the 300px slide the number
+ * was originally chosen for. One constant, one line, if it reads as too fast.
+ *
+ * ═══ WHAT SURVIVES UNCHANGED ═══════════════════════════════════════════════
+ *
+ * · NOTHING CUT — no `line-clamp`, no `text-overflow`, no character budget
+ *   anywhere in this file. A longer account simply makes its band taller.
+ * · VERBATIM COPY — every string comes from data/excursions.ts exactly as the
+ *   school published it, typos included.
+ * · SPLIT TEXT — `data-split` on the h2, except Devanagari; see below.
+ */
+import { Picture } from 'astro:assets';
+import AssetPlaceholder from '../../ui/AssetPlaceholder.astro';
+
+interface Slide {
+  src: ImageMetadata;
+  alt: string;
+}
+
+interface Props {
+  id: string;
+  /** 1-based position on the page. Printed as the index numeral. */
+  index: number;
+  /** Where it was — the first half of the eyebrow. */
+  place?: string;
+  /** ⚠ Printed, never hidden. Every dated trip is 2023 and the school needs to
+      see that (audit 4.2); a page that drops the year reads as current. */
+  year?: string;
+  /** The pill under the heading. Omitted where the school names no year group. */
+  who?: string;
+  /** ⚠ VERBATIM from the live page, typos included — see data/excursions.ts. */
+  title: string;
+  /** BCP-47 tag for the title where it is not English. See the Devanagari note. */
+  lang?: string;
+  /**
+   * One string per paragraph, VERBATIM. An array rather than one blob because
+   * the IMUN section alone runs to twelve paragraphs on the live page, and
+   * joining them would collapse a programme listing into a wall.
+   */
+  body: readonly string[];
+  /** Real photographs. Drives the stage and the thumbnail rail. */
+  slides?: readonly Slide[];
+  /**
+   * A DESIGNED POSTER COLLAGE, shown whole and never cropped — cropping a poster
+   * cuts off its own headline. Mutually exclusive with `slides`, and it gets no
+   * stage: it is one graphic, and a one-frame gallery is a lie.
+   */
+  poster?: { src: ImageMetadata; alt: string };
+  /**
+   * The shot this section is owed, where no usable photograph exists. Renders a
+   * labelled placeholder at the stage's ratio, so the band keeps the same
+   * two-column shape as its neighbours instead of falling back to `--solo`.
+   * See the note in data/excursions.ts on why this exists rather than borrowing
+   * another section's photographs.
+   */
+  needs?: string;
+  tone?: 'ivory' | 'sand' | 'paper';
+}
+
+const {
+  id,
+  index,
+  place,
+  year,
+  who,
+  title,
+  lang,
+  body,
+  slides = [],
+  poster,
+  needs,
+  tone = 'ivory',
+} = Astro.props;
+
+const hasGallery = !poster && slides.length > 0;
+const hasThumbs = hasGallery && slides.length > 1;
+/* A labelled placeholder counts as media: it holds the column, so the band
+   keeps its two-column shape rather than collapsing to the `--solo` variant. */
+const showsPlaceholder = Boolean(needs) && !poster && slides.length === 0;
+const hasMedia = Boolean(poster) || slides.length > 0 || showsPlaceholder;
+/* Sides swap every section. Even indices put the copy on the right. */
+const flip = index % 2 === 0;
+const eyebrow = [place, year].filter(Boolean).join(' · ');
+
+/**
+ * ⚠ DEVANAGARI HEADINGS ARE NOT SPLIT-ANIMATED, and this is not a shortcut.
+ * `.sp-mask` in base.css is `overflow: hidden` with `padding-bottom: 0.18em`
+ * — headroom for Latin DESCENDERS and nothing above the line. Devanagari
+ * carries its matras ABOVE the line, so masking a Hindi word slices the vowel
+ * marks straight off. Adding top headroom to `.sp-mask` would change the
+ * entrance of every heading on the site to fix two of them here.
+ */
+const splitSafe = !lang;
+
+/**
+ * ═══ LONG ACCOUNTS RUN ON UNDER THE FULL SECTION ═══════════════════════════
+ *
+ * Client: "in some cases the content is a lot — fill the section, then put the
+ * rest of the paragraphs at the bottom of the section."
+ *
+ * The problem is real and measurable. The media column is a fixed height — a
+ * 3:2 stage plus the thumbnail rail, about 540px at 1440. A two-paragraph
+ * account sits comfortably beside it; IMUN's TWELVE paragraphs run some 600px
+ * past it, leaving half a section of dead ivory beside the tail of the copy.
+ *
+ * So the body splits: enough beside the photographs to balance them, and the
+ * remainder as a full-width run-on beneath both columns, set in columns like a
+ * printed page. Nothing is hidden, truncated or reordered — every paragraph
+ * still renders, in the order the school published it.
+ *
+ * ⚠ THE SPLIT IS AUTOMATIC, NOT HAND-TUNED PER SECTION. A budget somebody has
+ * to set for each new trip is a curator, and this page was built specifically
+ * so it would not need one. The budget is a character count because that is
+ * what predicts height, and it is measured against the media column's real
+ * height rather than guessed: ~500 characters is about eight lines at this
+ * measure, which lands the copy within ~40px of the stage.
+ *
+ * The first paragraph is always kept beside the photographs, however long it
+ * runs — a section whose copy column holds nothing but a heading looks broken,
+ * and one 700-character opening paragraph would otherwise do exactly that.
+ *
+ * On today's content this splits IMUN (5 above, 7 below) and SAIMUN (2 above,
+ * 7 below), and nothing else — which is precisely the two sections that look
+ * unbalanced.
+ */
+const LEAD_CHARS = 500;
+const lead: string[] = [];
+const tail: string[] = [];
+let used = 0;
+
+body.forEach((para, i) => {
+  if (i === 0 || (tail.length === 0 && used + para.length <= LEAD_CHARS)) {
+    lead.push(para);
+    used += para.length;
+  } else {
+    tail.push(para);
+  }
+});
+
+/**
+ * ═══ PARAGRAPHS THAT FINISH EACH OTHER'S SENTENCES STAY TOGETHER ═══════════
+ *
+ * Reported by the client against SAIMUN. The school published one sentence as
+ * four paragraphs:
+ *
+ *     "…Shashank Singh and Diya Singh who went to represent UNESCO & DISEC AT
+ *      SAIMUN 2023 have grabbed"   /   "# Special Mention"
+ *      "# High Recommendations"    /   "in their committees."
+ *
+ * In a three-column run-on those landed in different columns, so the sentence
+ * broke mid-clause and "in their committees." read as a point of its own —
+ * with its own feather, which made it worse.
+ *
+ * ⚠ THE TEST IS THE SHAPE OF THE TEXT, NOT ITS MEANING. A paragraph continues
+ * into the next one when it does not end in sentence-final punctuation. That
+ * is a typographic fact about the string, not an interpretation of what it
+ * says, so it needs no per-section tuning and cannot be "wrong" about content.
+ *
+ * `:` counts as final — it closes an introducing clause, and treating it as
+ * open would swallow IMUN's five challenge lines into the sentence that
+ * introduces them.
+ *
+ * It fails SAFE. Over-grouping merely keeps two paragraphs in one column,
+ * which is harmless; under-grouping is the defect being fixed. On today's
+ * content it groups SAIMUN's four-paragraph sentence and joins IMUN's
+ * "Participants:" line to the one after it — the latter unnecessary, and
+ * invisible.
+ *
+ * One feather per GROUP, not per paragraph: the bullet now marks a complete
+ * thought, which is what it looked like it was marking all along.
+ */
+const ENDS_SENTENCE = /[.!?:]["'”’)\]]?\s*$/;
+
+const points: string[][] = [];
+tail.forEach((para, i) => {
+  const previous = tail[i - 1];
+  if (i > 0 && previous !== undefined && !ENDS_SENTENCE.test(previous)) {
+    points[points.length - 1].push(para);
+  } else {
+    points.push([para]);
+  }
+});
+---
+
+<section
+  class:list={['band', `band--${tone}`, flip && 'band--flip', !hasMedia && 'band--solo']}
+  id={id}
+  aria-labelledby={`${id}-t`}
+>
+  <div class="u-container band__grid">
+    <div class="band__copy">
+      <p class="band__n t-tabular" aria-hidden="true">{String(index).padStart(2, '0')}</p>
+
+      {eyebrow && <p class="band__eyebrow t-label">{eyebrow}</p>}
+
+      <h2 class="band__h" id={`${id}-t`} lang={lang} {...(splitSafe ? { 'data-split': true } : {})}>
+        {title}
+      </h2>
+
+      {who && <p class="band__who">{who}</p>}
+
+      {/* Every paragraph the live page carries, in order and in full. There is
+          no clamp and no truncation anywhere — a long account is redistributed
+          into `.band__tail` below, never shortened. */}
+      <div class="band__body" data-reveal>
+        {lead.map((para) => <p>{para}</p>)}
+      </div>
+    </div>
+
+    {/* ⚠ BEFORE .band__media IN THE DOM, deliberately. On a phone the grid is
+        one column and items stack in source order, which gives copy → rest of
+        copy → photographs. Putting it after the media instead would interrupt a
+        single continuous account with the gallery, and fixing that with `order`
+        would leave the visual sequence disagreeing with the reading order a
+        screen reader gets. Desktop places all three explicitly, so DOM order
+        costs nothing there. */}
+    {
+      tail.length > 0 && (
+        <div class="band__tail" data-reveal data-reveal-delay={80}>
+          {points.map((group) => (
+            /* ⚠ STILL A <p>, NOT A <li>. These are the school's own paragraphs;
+               marking them up as a list would assert a structure the source
+               does not have. The bullet is a decorative marker — `aria-hidden`,
+               so a screen reader hears the prose exactly as published.
+
+               ONE ICON FOR EVERY LINE, deliberately. A different glyph per
+               paragraph would mean reading meaning out of each one — which is
+               inference, and it would need doing again for every future trip.
+               A quill is a marker, not a claim.
+
+               ⚠ DRAWN, NOT THE 🪶 EMOJI. The client asked for the feather; this
+               is Feather Icons' own `feather` glyph rather than the character,
+               for three reasons that all matter here:
+                 · an emoji is a COLOUR glyph and cannot inherit `currentColor`,
+                   so the hover recolour — half of the effect that was asked for
+                   — would simply not happen;
+                 · it renders as a different drawing on Windows, Android, iOS
+                   and Linux, so no two visitors would see the same page;
+                 · at 16px beside 17px text it sits on the font's own baseline
+                   metrics and cannot be optically aligned the way a sized SVG
+                   can.
+               Same feather, same weight as the rest of the site's line work. */
+            <div class="band__point">
+              <span class="band__bullet" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
+                  <path d="M16 8 2 22" />
+                  <path d="M17.5 15H9" />
+                </svg>
+              </span>
+              {/* Every paragraph of the group, still separate <p> elements —
+                  the school's own breaks are preserved, they simply cannot be
+                  parted by a column boundary now. */}
+              <div class="band__lines">
+                {group.map((para) => <p>{para}</p>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      hasMedia && (
+        <div class="band__media">
+          {poster && (
+            /* Whole, on a mat. The mat is what stops a graphic carrying its own
+               white ground from floating unbounded on the section.
+
+               ⚠ <Picture>, NOT a raw <img src={meta.src}>. An earlier build did
+               the latter, which ships the ORIGINAL file — these posters are
+               3603×3603 — to be decoded into a 500px box, the exact waste
+               docs/08 D13 sizes the whole image pipeline to avoid. */
+            <figure class="band__poster">
+              <Picture
+                src={poster.src}
+                alt={poster.alt}
+                formats={['webp']}
+                widths={[420, 840]}
+                sizes="(max-width: 767px) 84vw, 46vw"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          )}
+
+          {showsPlaceholder && (
+            /* Same frame as the stage — radius, shadow, 3:2 — so the band reads
+               as finished while the missing photograph stays unmistakably
+               missing. It swaps for a <Picture> the day the shot arrives. */
+            <figure class="band__ph">
+              <AssetPlaceholder ratio="3 / 2" tone="sand" brief={needs!} ref="A2" />
+            </figure>
+          )}
+
+          {hasGallery && (
+            <div class="band__gal" data-gal>
+              {/* THE STAGE. Every frame is stacked and cross-faded on opacity —
+                  no layout property animates, so this runs on the compositor.
+                  The frames carry `inert` when hidden so a keyboard user cannot
+                  tab into an invisible one. */}
+              <div class="band__stage">
+                {slides.map((s, i) => (
+                  <figure
+                    class="band__frame"
+                    id={`${id}-p${i}`}
+                    role="tabpanel"
+                    aria-labelledby={`${id}-t${i}`}
+                    data-gal-frame
+                    data-on={i === 0 ? 'true' : 'false'}
+                  >
+                    <Picture
+                      src={s.src}
+                      alt={s.alt}
+                      formats={['webp']}
+                      widths={[560, 900, 1300]}
+                      sizes="(max-width: 767px) 88vw, 46vw"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </figure>
+                ))}
+              </div>
+
+              {hasThumbs && (
+                <ol
+                  class="band__thumbs"
+                  role="tablist"
+                  aria-label={`Photographs from ${title}`}
+                  data-gal-tabs
+                >
+                  {slides.map((s, i) => (
+                    <li>
+                      <button
+                        type="button"
+                        class="band__thumb"
+                        id={`${id}-t${i}`}
+                        role="tab"
+                        aria-controls={`${id}-p${i}`}
+                        aria-selected={i === 0 ? 'true' : 'false'}
+                        tabindex={i === 0 ? 0 : -1}
+                        data-gal-tab
+                      >
+                        <Picture
+                          src={s.src}
+                          alt=""
+                          formats={['webp']}
+                          widths={[200, 400]}
+                          sizes="120px"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <span class="u-visually-hidden">
+                          Photograph {i + 1} of {slides.length}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          )}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .band {
+    position: relative;
+    padding-block: var(--sb-section-y);
+    overflow: hidden;
+  }
+
+  .band--ivory { background: var(--sb-ivory); }
+  .band--sand { background: var(--sb-sand); }
+  .band--paper { background: var(--sb-paper); }
+
+  /* --- The split ----------------------------------------------------------- */
+
+  .band__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 68px);
+    align-items: center;
+  }
+
+  /* --- Copy ---------------------------------------------------------------- */
+
+  .band__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(34px, 3.6vw, 52px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    /* Outlined rather than filled: at this size a solid numeral competes with
+       the heading directly beneath it. */
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--sb-violet);
+    opacity: 0.55;
+  }
+
+  .band__eyebrow {
+    margin-top: var(--sb-4);
+    color: var(--sb-violet-dark);
+  }
+
+  h2.band__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(25px, 2.6vw, 38px);
+    line-height: 1.1;
+    letter-spacing: -0.032em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  /* DEVANAGARI NEEDS THE ROOM, and 1.1 is a Latin display setting. The matras
+     sit above the line and the conjuncts below it, so at the Latin leading the
+     marks of one line collided with the line above — measured, and visible at
+     1440 on both Hindi headings. Negative tracking comes off too: it pulls
+     conjunct clusters into each other. */
+  h2.band__h:lang(hi) {
+    font-size: clamp(21px, 2.1vw, 30px);
+    line-height: 1.45;
+    letter-spacing: normal;
+  }
+
+  .band__who {
+    margin-top: var(--sb-5);
+    display: inline-flex;
+    padding: 5px 14px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet-wash);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    color: var(--sb-violet-dark);
+  }
+
+  /* Left-aligned inside its column. Centring it here would reintroduce the
+     exact fault the split layout was built to fix, in half the width. */
+  .band__body {
+    max-width: 56ch;
+    margin-top: var(--sb-6);
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    text-wrap: pretty;
+  }
+
+  .band__body p + p { margin-top: var(--sb-para-gap); }
+
+  /* --- The run-on --------------------------------------------------------- */
+
+  /* Set in columns, like the foot of a printed page. Three at desktop puts the
+     measure at ~50ch — right for short parallel items such as IMUN's five
+     challenge lines, and it stops seven paragraphs adding 400px of height to
+     the section they were moved out of. */
+  .band__tail {
+    padding-top: clamp(22px, 2.6vh, 34px);
+    border-top: var(--sb-hairline);
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    text-wrap: pretty;
+    column-gap: clamp(28px, 3.4vw, 64px);
+  }
+
+  /* `break-inside: avoid` so a paragraph is never split across the column
+     boundary — a two-line item with one line stranded at the top of the next
+     column reads as a rendering fault rather than as a column. */
+  .band__point {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    break-inside: avoid;
+    /* The negative inline margin lets the swept ground reach past the text on
+       both sides without indenting the copy. It stays inside the container's
+       own padding (20px at the narrowest) so nothing can overflow. */
+    padding: 9px 13px;
+    margin: 0 -13px 10px;
+    border-radius: 12px;
+    transition: color 320ms ease;
+  }
+
+  .band__point:last-child { margin-bottom: 0; }
+
+  /* The school's own paragraph breaks inside a group, at a tighter rhythm than
+     the gap BETWEEN groups — so a continued sentence reads as one thought and
+     the separation between points still reads as a separation. */
+  .band__lines { min-width: 0; }
+  .band__lines p + p { margin-top: 9px; }
+
+  /* THE SWEEP, same mechanism as the expedition cards: a `::before` on scaleY
+     rather than a `background-color` transition. A colour crossfade reads as a
+     light going on; a wipe reads as a change of state — and it composites
+     instead of repainting the row. */
+  .band__point::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--sb-violet-wash);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 420ms var(--sb-ease);
+  }
+
+  .band__point:hover::before { transform: scaleY(1); }
+  .band__point:hover { color: var(--sb-charcoal); }
+
+  .band__bullet {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    /* A point larger than the arrow was: the feather carries three strokes and
+       a diagonal, and at 16px the quill line closed up against the vane. */
+    width: 18px;
+    height: 18px;
+    /* Rotating about the nib rather than the centre keeps the quill anchored. */
+    transform-origin: 30% 75%;
+    /* Optically aligned to the CAP of the first line rather than its box: at
+       17px/1.75 the line box is 30px tall, so a 16px mark centred in it floats
+       noticeably below the text it belongs to. */
+    margin-top: 6px;
+    color: var(--sb-violet);
+    transition: transform 420ms var(--sb-ease), color 320ms ease;
+  }
+
+  .band__bullet svg { width: 100%; height: 100%; }
+
+  /* A QUILL LIFTS AND TURNS; it does not slide. The arrow this replaced
+     travelled 4px on the x-axis, which was right for an arrow and reads as a
+     glitch on a feather. Rotation about the nib end, so the tip swings and the
+     quill stays put. */
+  .band__point:hover .band__bullet {
+    transform: rotate(-14deg) translateY(-2px) scale(1.06);
+    color: var(--sb-violet-dark);
+  }
+
+  /* --- Poster -------------------------------------------------------------- */
+
+  .band__poster {
+    margin: 0;
+    padding: clamp(10px, 1vw, 16px);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .band__poster :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--sb-r-0);
+  }
+
+  /* The placeholder wears the stage's frame, so a band awaiting photography
+     sits in the row at exactly the height its neighbours do. */
+  .band__ph {
+    margin: 0;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  /* --- Stage --------------------------------------------------------------- */
+
+  /* 3:2 rather than the wireframe's ~16:9. The photographs are 4:3 and 3:2
+     originals, and a 16:9 stage would crop a third off the top and bottom of
+     every group shot on this page — which is where the faces are. */
+  .band__stage {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    background: var(--sb-sand);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .band__frame {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transition: opacity var(--sb-dur-fade) var(--sb-ease);
+  }
+
+  .band__frame[data-on='true'] { opacity: 1; }
+
+  .band__frame :global(picture),
+  .band__frame :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+  }
+
+  /* --- Thumbnails ---------------------------------------------------------- */
+
+  /* CENTRED WHEN THEY FIT, SWIPEABLE WHEN THEY DO NOT.
+     `safe center` is doing real work here. Plain `center` in a scroll container
+     overflows equally in BOTH directions, and the overflow on the left is
+     unreachable — there is no negative scroll position — so the first thumbnail
+     of a long rail can never be scrolled back to. `safe` falls back to
+     flex-start the moment the content stops fitting, which is exactly the
+     behaviour wanted. The plain `center` beneath it is the fallback for engines
+     that do not know the keyword; they drop the whole second declaration.
+
+     At 648px the rail holds five thumbnails comfortably and overflows at six,
+     so SAIMUN is the one section that swipes today. */
+  .band__thumbs {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    justify-content: safe center;
+    gap: clamp(8px, 1vw, 14px);
+    list-style: none;
+    margin: clamp(10px, 1.5vh, 16px) 0 0;
+    /* Room for the selected thumbnail's outline, which `overflow` would
+       otherwise clip — `overflow-x: auto` forces overflow-y away from
+       `visible`, so the outline needs padding to live in rather than
+       transparency to bleed into. */
+    padding-block: 4px;
+    overflow-x: auto;
+    /* Explicit, so the 4px of headroom never grows a vertical scrollbar. */
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .band__thumbs::-webkit-scrollbar { display: none; }
+
+  /* `0 0 auto` because flex items shrink by default: without it a rail of six
+     would squeeze every thumbnail narrower instead of overflowing, and nothing
+     would ever scroll. */
+  .band__thumbs li {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+  }
+
+  .band__thumb {
+    display: block;
+    width: clamp(74px, 8vw, 118px);
+    aspect-ratio: 4 / 3;
+    padding: 0;
+    border: 0;
+    border-radius: var(--sb-r-0);
+    overflow: hidden;
+    background: var(--sb-sand);
+    cursor: pointer;
+    /* Dimmed at rest so the selected one reads without a border, which would
+       shift the row by 2px every time the selection moved. */
+    opacity: 0.5;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition: opacity var(--sb-dur-btn) ease, outline-color var(--sb-dur-btn) ease;
+  }
+
+  .band__thumb :global(picture),
+  .band__thumb :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .band__thumb:hover { opacity: 0.82; }
+
+  .band__thumb[aria-selected='true'] {
+    opacity: 1;
+    outline-color: var(--sb-violet);
+  }
+
+  .band__thumb:focus-visible {
+    outline: 2px solid var(--sb-focus);
+    outline-offset: 3px;
+  }
+
+  /* --- Two columns, from the tablet band up -------------------------------- */
+
+  @media (min-width: 768px) {
+    /* 47/53 rather than 50/50: the photographs carry the section and the copy
+       reads better a little narrower than half.
+
+       ⚠ `minmax(0, …)` IS LOAD-BEARING, and its absence produced a bug that
+       looked like two unrelated ones. A bare `fr` track is `minmax(auto, fr)`,
+       so it can never be narrower than its content's MIN-CONTENT — and the
+       min-content of a `flex-wrap: nowrap` rail is the sum of every thumbnail.
+       Measured on SAIMUN at 1440: six thumbnails plus gaps are 760px, so the
+       media column swelled from its 690px share to 761px, stole 71px from the
+       copy column, and — because the track had grown to fit — the rail never
+       overflowed and therefore never swiped. Two symptoms, one cause.
+
+       `min-width: 0` on the children is the same fix one level down: a grid
+       item's automatic minimum size is also min-content. */
+    .band__grid { grid-template-columns: minmax(0, 47fr) minmax(0, 53fr); }
+    .band__copy,
+    .band__media { min-width: 0; }
+
+    /* THE ALTERNATION. Placing both children explicitly rather than using
+       `order` keeps the DOM order — copy first — so the reading and tab order
+       are identical whichever side the photographs are on.
+
+       ⚠ THE TRACK SIZES HAVE TO SWAP WITH THEM. Moving the media into column 1
+       while column 1 stays the 47fr track hands the narrower half to the
+       photographs on every second section — the exact opposite of the 47/53
+       decision, applied to five of the eight galleries. It showed up as a
+       4px overflow on the four-thumbnail rails at 768: they fit in 53% and do
+       not fit in 47%, so those sections read as "swipeable" by a hairline while
+       their unflipped neighbours sat centred. */
+    /* All three placed explicitly, because the run-on sits between the copy and
+       the media in the DOM (see the note on that) and auto-placement would put
+       it in the middle of row one. */
+    .band__copy { grid-column: 1; grid-row: 1; }
+    .band__media { grid-column: 2; grid-row: 1; }
+    .band__tail { grid-column: 1 / -1; grid-row: 2; columns: 2; }
+
+    .band--flip .band__grid { grid-template-columns: minmax(0, 53fr) minmax(0, 47fr); }
+    .band--flip .band__copy { grid-column: 2; grid-row: 1; }
+    .band--flip .band__media { grid-column: 1; grid-row: 1; }
+
+    /* No media, so nothing to sit beside: the copy takes the middle instead of
+       leaving a bare half-band. */
+    .band--solo .band__grid { grid-template-columns: minmax(0, 1fr); }
+    .band--solo .band__copy { max-width: 74ch; margin-inline: auto; }
+    .band--solo .band__body { max-width: none; }
+  }
+
+  @media (min-width: 1024px) {
+    .band__tail { columns: 3; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .band__frame { transition: none; }
+
+    /* The colour change survives — it carries the state. The travel does not. */
+    .band__point::before,
+    .band__bullet { transition-duration: 1ms; }
+
+    .band__point:hover .band__bullet { transform: none; }
+  }
+</style>
+
+<script>
+  /**
+   * THE STAGE GALLERY — thumbnails as tabs, frames as tabpanels.
+   *
+   * ⚠ SCOPED PER SECTION. This page carries eleven bands; a
+   * `document.querySelector('[data-gal-tab]')` would drive the first one from
+   * every band's thumbnails.
+   *
+   * ═══ THREE GATES ON THE AUTO-ADVANCE, EACH FOR A DIFFERENT REASON ══════════
+   *
+   * 1 · ONLY WHEN ON SCREEN. docs/05 § N budgets ONE animated element per
+   *     viewport. Six galleries cross-fading at once would break that on every
+   *     count — visually, and on the mid-range Android over 4G docs/03 § D1
+   *     describes. An IntersectionObserver runs only the band in view.
+   * 2 · NOT UNDER REDUCED MOTION. The timer is never created, so the page is
+   *     completely still rather than merely slower.
+   * 3 · NOT WHILE THE READER IS THERE. Hover and focus pause; choosing a
+   *     thumbnail STOPS it for good on that band.
+   *
+   * ⚠ ON WCAG 2.2.2. Auto-updating content needs a mechanism to pause it. The
+   * thumbnails are that mechanism — first use halts the timer permanently — and
+   * hover, focus and reduced motion each cover a different reader on top. That
+   * is deliberately not a dedicated always-visible pause button, which was
+   * removed from the Voices marquee at the client's request (docs/08 D23). If
+   * an audit asks for one, it belongs beside the thumbnails.
+   *
+   * ═══ KEYBOARD — THE TABLIST CONTRACT, NOT AN APPROXIMATION ═════════════════
+   *
+   * Roving tabindex, so the rail is ONE tab stop rather than six. Arrow keys
+   * move and wrap, Home/End jump to the ends. That is the same contract as the
+   * homepage Campus browser, which is the point of building it the same way.
+   */
+  const STEP_MS = 2000;
+
+  document.querySelectorAll<HTMLElement>('[data-gal]').forEach((gal) => {
+    const frames = [...gal.querySelectorAll<HTMLElement>('[data-gal-frame]')];
+    const tabs = [...gal.querySelectorAll<HTMLButtonElement>('[data-gal-tab]')];
+    if (frames.length < 2) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    let current = 0;
+    let timer: number | undefined;
+    let onScreen = false;
+    let held = false;
+    let stopped = false;
+
+    const rail = gal.querySelector<HTMLElement>('[data-gal-tabs]');
+
+    /**
+     * Keep the selected thumbnail inside the rail's viewport.
+     *
+     * ⚠ SCROLLS THE RAIL ITSELF, NOT VIA `scrollIntoView`. That method walks up
+     * and scrolls every scrollable ancestor, so on a rail below the fold it
+     * yanks the PAGE to the gallery — while the reader is somewhere else
+     * entirely, once every two seconds. Adjusting `scrollLeft` on the one
+     * element can only ever move that element.
+     */
+    const keepVisible = (el: HTMLElement) => {
+      if (!rail || rail.scrollWidth <= rail.clientWidth) return;
+      const r = rail.getBoundingClientRect();
+      const e = el.getBoundingClientRect();
+      const pad = 12;
+      const behavior: ScrollBehavior = reduced.matches ? 'auto' : 'smooth';
+      if (e.left < r.left + pad) rail.scrollBy({ left: e.left - r.left - pad, behavior });
+      else if (e.right > r.right - pad) rail.scrollBy({ left: e.right - r.right + pad, behavior });
+    };
+
+    const show = (next: number, focusTab = false) => {
+      current = (next + frames.length) % frames.length;
+
+      frames.forEach((f, i) => {
+        const on = i === current;
+        f.dataset.on = String(on);
+        /* `inert` rather than `hidden`: the frame still has to be laid out and
+           painted for the cross-fade, but a keyboard user must not be able to
+           reach into one that is invisible. */
+        f.toggleAttribute('inert', !on);
+      });
+
+      tabs.forEach((t, i) => {
+        const on = i === current;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+      });
+
+      if (tabs[current]) {
+        /* `preventScroll` for the same reason as above: focusing an element
+           below the fold scrolls the page to it by default. */
+        if (focusTab) tabs[current].focus({ preventScroll: true });
+        keepVisible(tabs[current]);
+      }
+    };
+
+    // ── Controls ──────────────────────────────────────────────────────────
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        stop();
+        show(i);
+      });
+
+      tab.addEventListener('keydown', (e) => {
+        const keys: Record<string, number> = {
+          ArrowRight: current + 1,
+          ArrowDown: current + 1,
+          ArrowLeft: current - 1,
+          ArrowUp: current - 1,
+          Home: 0,
+          End: frames.length - 1,
+        };
+        if (!(e.key in keys)) return;
+        e.preventDefault();
+        stop();
+        show(keys[e.key], true);
+      });
+    });
+
+    // ── The timer ─────────────────────────────────────────────────────────
+    const run = () => {
+      if (timer || stopped || held || !onScreen || reduced.matches) return;
+      timer = window.setInterval(() => show(current + 1), STEP_MS);
+    };
+
+    const halt = () => {
+      window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    /** Permanent, for this band: the reader has taken control. */
+    function stop() {
+      stopped = true;
+      halt();
+    }
+
+    const hold = (on: boolean) => {
+      held = on;
+      on ? halt() : run();
+    };
+
+    gal.addEventListener('pointerenter', () => hold(true));
+    gal.addEventListener('pointerleave', () => hold(false));
+    gal.addEventListener('focusin', () => hold(true));
+    gal.addEventListener('focusout', () => hold(false));
+
+    new IntersectionObserver(
+      ([e]) => {
+        onScreen = e.isIntersecting;
+        onScreen ? run() : halt();
+      },
+      { threshold: 0.25 },
+    ).observe(gal);
+
+    reduced.addEventListener('change', () => (reduced.matches ? halt() : run()));
+
+    // Sets `inert` on the inactive frames without changing what is shown.
+    show(0);
+  });
+</script>

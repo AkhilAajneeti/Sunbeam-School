@@ -1,0 +1,540 @@
+---
+/**
+ * ONE CATEGORY OF THE NEWS & EVENTS PAGE — a rail of cards and a way out.
+ *
+ * ═══ WHY A RAIL AND NOT A GRID ═════════════════════════════════════════════
+ *
+ * Six categories stacked as grids would make a page five screens deep before a
+ * reader reached the sixth. A rail gives each category a fixed height whatever
+ * it holds, so the page stays scannable and the SIXTH category is as reachable
+ * as the first — which matters when audit §11's whole point is that all six stay
+ * current.
+ *
+ * The mechanics are the sports record's, deliberately: container-bound so the
+ * cards never touch the viewport edge, cards clipped at both edges so the row
+ * reads as continuing, a smooth continuous drift rather than a jump every two
+ * seconds, and arrows on the edges.
+ *
+ * ⚠ THE DRIFT HAS THE SAME THREE GATES AS EVERY OTHER RAIL ON THIS SITE. Six of
+ * them on one page would otherwise animate at once: docs/05 § N budgets ONE
+ * animated element per viewport, and this page has six rails. Only the one in
+ * view runs; reduced motion never starts one; hover, focus or any interaction
+ * stops it.
+ *
+ * ═══ THE WAY OUT IS THE POINT ══════════════════════════════════════════════
+ *
+ * Every category ends in a button to its permanent home — the sporting record,
+ * the achievements page, school activities, the notice board. This page is the
+ * RECENCY layer; the volume lives in those archives. Without the button each
+ * category would be a dead end that has to carry everything itself, which is
+ * exactly how a "latest" page stops being latest.
+ */
+import { Picture } from 'astro:assets';
+import type { Stream } from '../../data/newsEvents';
+
+interface Props {
+  stream: Stream;
+  /** Alternating ground, so no two adjacent categories share a treatment. */
+  tone?: 'ivory' | 'sand' | 'paper';
+}
+
+const { stream: s, tone = 'ivory' } = Astro.props;
+
+/* A card with no photograph is a text card, not a broken image card. The
+   announcements are text by law of the audit (10.2), and the workshops have no
+   photography in the repository at all. */
+const hasArt = s.items.some((i) => i.image);
+---
+
+<section class:list={['nstream', `nstream--${tone}`, !hasArt && 'nstream--text']} id={s.id} aria-labelledby={`${s.id}-t`}>
+  <div class="u-container nstream__head">
+    <p class="nstream__eyebrow t-label">{s.eyebrow}</p>
+    <h2 class="nstream__h" id={`${s.id}-t`} data-split>{s.heading}</h2>
+    <p class="nstream__stand">{s.stand}</p>
+  </div>
+
+  <div class="nstream__railwrap">
+    <div
+      class="nstream__rail"
+      data-news-rail
+      tabindex="0"
+      role="region"
+      aria-label={`${s.eyebrow} — scroll sideways for more`}
+    >
+      <ul class="nstream__track">
+        {s.items.map((item) => (
+          <li class="ncard">
+            {item.image && (
+              <div class:list={['ncard__media', item.fit === 'contain' && 'ncard__media--whole']}>
+                <Picture
+                  src={item.image}
+                  alt={item.alt ?? ''}
+                  formats={['webp']}
+                  widths={[420, 840]}
+                  sizes="(max-width: 700px) 78vw, 360px"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            )}
+            <div class="ncard__body">
+              <p class="ncard__meta">{item.meta}</p>
+              <h3 class="ncard__h">{item.title}</h3>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    {/* Ship hidden; the script reveals them. A blocked script leaves no dead
+        controls and the rail still drags, flicks and takes arrow keys. */}
+    <div class="nstream__nav" data-news-nav hidden>
+      <button class="nstream__arrow nstream__arrow--prev" type="button" data-news-prev aria-label={`Previous ${s.eyebrow.toLowerCase()}`}>
+        <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M5 1L1 5l4 4M1 5h13" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </button>
+      <button class="nstream__arrow nstream__arrow--next" type="button" data-news-next aria-label={`More ${s.eyebrow.toLowerCase()}`}>
+        <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="u-container nstream__out">
+    {/* THE SHOW-MORE. The sweep and the arrow are one gesture: the ground fills
+        from the left while the arrow travels, so the button reads as going
+        somewhere rather than as lighting up. */}
+    <a class="showmore" href={s.more.href}>
+      <span class="showmore__fill" aria-hidden="true"></span>
+      <span class="showmore__label">{s.more.label}</span>
+      <span class="showmore__arrow" aria-hidden="true">
+        <svg width="17" height="12" viewBox="0 0 14 10" fill="none">
+          <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.7" />
+        </svg>
+      </span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .nstream {
+    padding-block: var(--sb-section-y);
+
+    --n-per: 1.15;
+    --n-gap: clamp(12px, 1.2vw, 20px);
+    --n-w: min(100vw - 2 * var(--sb-margin), var(--sb-max-content));
+  }
+
+  .nstream--ivory { background: var(--sb-ivory); }
+  .nstream--sand { background: var(--sb-sand); }
+  .nstream--paper { background: var(--sb-paper); }
+
+  /* --- Head ---------------------------------------------------------------- */
+
+  .nstream__head { max-width: 62ch; }
+
+  .nstream__eyebrow { color: var(--sb-violet-dark); }
+
+  h2.nstream__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(25px, 2.8vw, 40px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.033em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .nstream__stand {
+    max-width: 56ch;
+    margin-top: var(--sb-5);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Rail ---------------------------------------------------------------- */
+
+  .nstream__railwrap {
+    position: relative;
+    width: var(--n-w);
+    margin: clamp(28px, 3.6vh, 46px) auto 0;
+  }
+
+  .nstream__rail {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    border-radius: var(--sb-r-2);
+  }
+
+  .nstream__rail::-webkit-scrollbar { display: none; }
+  .nstream__rail[data-loop] { scroll-snap-type: none; }
+
+  .nstream__rail:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+
+  .nstream__track {
+    display: flex;
+    gap: var(--n-gap);
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    justify-content: center;
+    justify-content: safe center;
+  }
+
+  /* --- Card ---------------------------------------------------------------- */
+
+  .ncard {
+    flex: 0 0 calc((var(--n-w) - (var(--n-per) - 1) * var(--n-gap)) / var(--n-per));
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    scroll-snap-align: start;
+    transition: box-shadow var(--sb-dur-link) ease, transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .ncard:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 0 1px transparent, var(--sb-shadow-card-hover);
+  }
+
+  .ncard__media {
+    aspect-ratio: 3 / 2;
+    background: var(--sb-sand);
+    overflow: hidden;
+  }
+
+  .ncard__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* The school's designed graphics carry their own headline and crest — cropping
+     one cuts its title off, so they sit whole on a mat instead. */
+  .ncard__media--whole { background: var(--sb-paper); }
+  .ncard__media--whole :global(img) { object-fit: contain; }
+
+  .ncard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-3);
+    padding: clamp(16px, 1.6vw, 22px);
+  }
+
+  .ncard__meta {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+  }
+
+  .ncard__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.3vw, 19px);
+    font-weight: 650;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  /* A text-only category — announcements and workshops — gets taller cards and a
+     rule instead of a photograph, rather than a grey box where an image failed. */
+  .nstream--text .ncard { min-height: 148px; justify-content: center; }
+  .nstream--text .ncard__body { gap: var(--sb-4); }
+
+  /* --- Arrows -------------------------------------------------------------- */
+
+  .nstream__nav[hidden] { display: none; }
+
+  .nstream__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    aspect-ratio: 1;
+    border: 1px solid var(--sb-border-strong);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-charcoal);
+    cursor: pointer;
+    box-shadow: 0 10px 26px -14px rgba(28, 14, 8, 0.5);
+    transition: background var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease,
+      transform var(--sb-dur-btn) var(--sb-ease), opacity var(--sb-dur-btn) ease;
+  }
+
+  .nstream__arrow--prev { left: clamp(8px, 1.2vw, 18px); }
+  .nstream__arrow--next { right: clamp(8px, 1.2vw, 18px); }
+
+  .nstream__arrow:hover:not(:disabled) {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+    transform: scale(1.06);
+  }
+
+  .nstream__arrow:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+  .nstream__arrow:disabled { opacity: 0.3; cursor: default; }
+
+  /* --- Show more ----------------------------------------------------------- */
+
+  .nstream__out { margin-top: clamp(24px, 3.2vh, 38px); }
+
+  .showmore {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-4);
+    padding: 14px 26px;
+    border: 1px solid var(--sb-violet);
+    border-radius: var(--sb-r-full);
+    overflow: hidden;
+    color: var(--sb-violet-dark);
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color var(--sb-dur-btn) ease;
+  }
+
+  /* THE FILL SWEEPS FROM THE LEFT rather than the background fading. A colour
+     crossfade reads as a light going on; a wipe reads as a movement, which is
+     what a button that takes you somewhere should read as — and it composites
+     instead of repainting. */
+  .showmore__fill {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--sb-violet);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 420ms var(--sb-ease);
+  }
+
+  .showmore:hover .showmore__fill,
+  .showmore:focus-visible .showmore__fill { transform: scaleX(1); }
+
+  .showmore:hover,
+  .showmore:focus-visible { color: #fff; }
+
+  .showmore:focus-visible { outline: 2px solid var(--sb-focus); outline-offset: 3px; }
+
+  /* The arrow travels with the fill — one gesture, not two. */
+  .showmore__arrow {
+    display: grid;
+    place-items: center;
+    transition: transform 420ms var(--sb-ease);
+  }
+
+  .showmore:hover .showmore__arrow,
+  .showmore:focus-visible .showmore__arrow { transform: translateX(5px); }
+
+  /* --- Breakpoints --------------------------------------------------------- */
+
+  @media (min-width: 700px) { .nstream { --n-per: 2.2; } }
+  @media (min-width: 1024px) { .nstream { --n-per: 3.3; } }
+
+  @media (max-width: 900px) {
+    /* No room for a 44px control without it landing on the card's subject. */
+    .nstream__nav { display: none !important; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ncard,
+    .showmore__fill,
+    .showmore__arrow,
+    .nstream__arrow { transition-duration: 1ms; }
+    .ncard:hover { transform: none; }
+    .showmore:hover .showmore__arrow { transform: none; }
+    .nstream__arrow:hover:not(:disabled) { transform: none; }
+  }
+</style>
+
+<script>
+  /**
+   * The rails: arrows, and a smooth continuous drift.
+   *
+   * ⚠ BOUND PER RAIL. There are six on this page. `document.querySelector`
+   * would wire the first and leave five sets of arrows inert — and they would
+   * look enabled, because `hidden` is removed per group.
+   *
+   * ⚠ NO SYMBOL HERE MAY COLLIDE WITH ANOTHER IN THIS SCOPE. Two components on
+   * this site have been shipped with a 500ing script because a helper was named
+   * `wrap` or `frame` and something above it already was — and the BUILD PASSED
+   * both times, because Astro compiles component scripts separately from the
+   * page. A green build is not proof a script runs.
+   */
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-news-rail]').forEach((rail) => {
+    const nav = rail.parentElement?.querySelector<HTMLElement>('[data-news-nav]');
+    const track = rail.querySelector<HTMLElement>('.nstream__track');
+    if (!nav || !track) return;
+
+    const prevBtn = nav.querySelector<HTMLButtonElement>('[data-news-prev]')!;
+    const nextBtn = nav.querySelector<HTMLButtonElement>('[data-news-next]')!;
+
+    const originals = [...track.querySelectorAll<HTMLElement>('.ncard')];
+    if (originals.length < 2) return;
+    nav.hidden = false;
+
+    const pitch = () =>
+      originals[1].getBoundingClientRect().left - originals[0].getBoundingClientRect().left;
+
+    /* Cloned into a loop only where the row actually overflows — a category with
+       three cards that fit needs no seam, and duplicating it would invent a
+       scroll that does not exist. Clones are inert: a screen reader must hear
+       each item once. */
+    let setWidth = 0;
+    let looping = false;
+
+    if (rail.scrollWidth > rail.clientWidth + 4) {
+      looping = true;
+      rail.dataset.loop = 'true';
+      originals.forEach((card) => {
+        const copy = card.cloneNode(true) as HTMLElement;
+        copy.setAttribute('aria-hidden', 'true');
+        copy.querySelectorAll('img').forEach((img) => img.setAttribute('alt', ''));
+        track.append(copy);
+      });
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      setWidth =
+        originals.reduce((w, c) => w + c.getBoundingClientRect().width, 0) + originals.length * gap;
+      rail.scrollLeft = setWidth - (originals[0]?.getBoundingClientRect().width ?? 0) / 3;
+    }
+
+    /** Keeps the rail inside the seam; returns the shift applied. */
+    const reseat = () => {
+      if (!looping || !setWidth) return 0;
+      if (rail.scrollLeft > setWidth * 1.5) {
+        rail.scrollLeft -= setWidth;
+        return -setWidth;
+      }
+      if (rail.scrollLeft < setWidth * 0.5) {
+        rail.scrollLeft += setWidth;
+        return setWidth;
+      }
+      return 0;
+    };
+
+    const sync = () => {
+      if (looping) {
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
+        return;
+      }
+      const max = rail.scrollWidth - rail.clientWidth;
+      prevBtn.disabled = rail.scrollLeft <= 2;
+      nextBtn.disabled = rail.scrollLeft >= max - 2;
+    };
+
+    const nudge = (dir: number) =>
+      rail.scrollBy({ left: dir * pitch(), behavior: reduced.matches ? 'auto' : 'smooth' });
+
+    /* ── The drift ────────────────────────────────────────────────────────
+       ⚠ `travelled` IS THE SOURCE OF TRUTH AND IS NEVER READ BACK FROM
+       scrollLeft. That value is quantised to the device pixel grid, so a
+       sub-pixel increment is rounded on write and re-reading it compounds the
+       rounding — measured on the sports rails at 61px/s against a 34px/s
+       setting. */
+    const SPEED = 30; // px per second
+    let ticker = 0;
+    let stamp = 0;
+    let travelled = 0;
+    let visible = false;
+    let paused = false;
+    let halted = false;
+
+    const advance = (now: number) => {
+      if (!stamp) stamp = now;
+      travelled += (SPEED * (now - stamp)) / 1000;
+      stamp = now;
+      rail.scrollLeft = travelled;
+      travelled += reseat();
+      ticker = requestAnimationFrame(advance);
+    };
+
+    const start = () => {
+      if (ticker || halted || paused || !visible || reduced.matches || !looping) return;
+      stamp = 0;
+      travelled = rail.scrollLeft;
+      ticker = requestAnimationFrame(advance);
+    };
+
+    const stopTicker = () => {
+      if (ticker) cancelAnimationFrame(ticker);
+      ticker = 0;
+      stamp = 0;
+    };
+
+    /** Permanent for this rail: the reader has taken control. */
+    const surrender = () => {
+      halted = true;
+      stopTicker();
+    };
+
+    const pause = (on: boolean) => {
+      paused = on;
+      on ? stopTicker() : start();
+    };
+
+    const holder = rail.parentElement!;
+    holder.addEventListener('pointerenter', () => pause(true));
+    holder.addEventListener('pointerleave', () => pause(false));
+    holder.addEventListener('focusin', () => pause(true));
+    holder.addEventListener('focusout', () => pause(false));
+    rail.addEventListener('pointerdown', surrender);
+    rail.addEventListener('wheel', surrender, { passive: true });
+
+    prevBtn.addEventListener('click', () => {
+      surrender();
+      reseat();
+      nudge(-1);
+    });
+    nextBtn.addEventListener('click', () => {
+      surrender();
+      reseat();
+      nudge(1);
+    });
+
+    new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        visible ? start() : stopTicker();
+      },
+      { threshold: 0.3 },
+    ).observe(holder);
+
+    rail.addEventListener('scroll', sync, { passive: true });
+    if ('onscrollend' in window) {
+      rail.addEventListener('scrollend', reseat);
+    } else {
+      let idle: number | undefined;
+      rail.addEventListener(
+        'scroll',
+        () => {
+          window.clearTimeout(idle);
+          idle = window.setTimeout(reseat, 140);
+        },
+        { passive: true },
+      );
+    }
+
+    reduced.addEventListener('change', () => (reduced.matches ? stopTicker() : start()));
+    sync();
+  });
+</script>

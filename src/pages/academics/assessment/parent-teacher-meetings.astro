@@ -1,0 +1,41 @@
+---
+/**
+ * ASSESSMENT & SUPPORT · PARENT–TEACHER MEETINGS.
+ *
+ * ⚠ THE BODY IS A BESPOKE COMPOSITION. Sourcing — including the twelve-item
+ * agenda read off the school's own projected slide — and the reason every
+ * photograph on the page is captioned as the Parents' Forum rather than as a PTM
+ * are in the component's header.
+ *
+ * ⚠ THE BANNER, NAVBAR AND FOOTER ARE UNTOUCHED.
+ * ⚠ THE PANEL'S padding-block IS AN INLINE STYLE — a scoped rule can skew
+ * against its build hash and reopen the white band above the footer.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import ParentTeacherPage from '../../../components/academics/assessment/ParentTeacherPage.astro';
+
+import banner from '../../../assets/parents forum/parents forum (2).jpg';
+---
+
+<BaseLayout
+  title="Parent–Teacher Meetings — Sunbeam School Ballia"
+  description="Parent–teacher meetings at Sunbeam School Ballia are placed on the session's academic calendar in advance, with the parent portal carrying term reports and results in between."
+>
+  <PageHero
+    title="Parent-Teacher Meetings"
+    standfirst="On the calendar before the session starts — so the date arrives before the problem does."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Assessment & Support', href: '/academics/assessment/' },
+    ]}
+    src={banner}
+    alt="Parents of Sunbeam School Ballia seated in the tiered rows of the hall during a Parents' Forum session."
+    position="50% 42%"
+  />
+
+  <div class="u-page-panel" style="padding-block: 0;">
+    <ParentTeacherPage />
+  </div>
+</BaseLayout>

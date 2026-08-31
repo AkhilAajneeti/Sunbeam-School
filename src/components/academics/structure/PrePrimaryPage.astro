@@ -1,0 +1,1541 @@
+---
+/**
+ * ACADEMIC STRUCTURE · PRE-PRIMARY — Nursery, LKG and UKG, in seven sections.
+ *
+ * ⚠ EVERY LINE IS A PUBLISHED FACT. The early years are the easiest stage in a
+ * school to write fiction about — ratios, hours, "milestones", "curriculum
+ * pillars" — so this page carries none of it. Its sources, all in this
+ * repository:
+ *
+ *   data/facilities.ts
+ *     Kids Park            "Swings and play equipment for the early years."
+ *     Water Pool           "A shallow water play area in the early-years zone."
+ *     Sand Pool            "Sand play alongside the water pool — messy, and
+ *                           deliberately so."
+ *     Little Agriculture   "A planting plot the youngest children actually dig,
+ *       Land                sow and water."
+ *     Abhayeti Prayer Gd.  "The junior block's own prayer ground."
+ *     Toy Library          "Borrowable toys for the early years — a first
+ *                           lending system, at four years old."
+ *     Junior Attendants    "A dedicated attendant with every junior class
+ *                           through the day."
+ *   data/academics.ts (stages[0])
+ *     classes  Nursery · LKG · UKG
+ *     body     "The first years on campus, in rooms and grounds built for them
+ *               — a kids park, a toy library, sand and water play, and a little
+ *               agriculture patch."
+ *     focus    Play-led routine · Early language · Number sense
+ *     milestone "School as a place you want to be"
+ *     PRECEPT  syllabus published class by class FROM NURSERY, session 2026-27.
+ *   data/schoolActivities.ts
+ *     Little Agriculturists — "A hands-on farming activity for the youngest
+ *     children, published as 'Little Agriculturist'."
+ *   data/newsPages.ts
+ *     SOF Olympiad — Nursery to Class II.
+ *
+ * ⚠ NOT CLAIMED, ANYWHERE ON THIS PAGE: admission ages, session hours, class
+ * size, staff ratios, per-class curriculum, or what any one of Nursery, LKG and
+ * UKG does differently from the other two. The school publishes the three years
+ * as ONE stage with one set of focuses, so section 06 does the same — the class
+ * names are stops on a path, not three different syllabuses.
+ *
+ * ⚠ THE FOUR-WORD LABEL "EXPLORE" IN SECTION 02 SITS OVER A KIDS PARK PHOTO.
+ * The sand pool and the water pool are published facilities the school has NOT
+ * photographed. Rather than let a playground frame pass as a water pool, each of
+ * the three frames carries a caption naming what it actually shows, and a
+ * footnote states the absence. Same rule in section 05: the school names
+ * Abhayeti but has published no photograph of it, so the frame there is captioned
+ * as the JOSH camp gathering it actually is.
+ * ASSET REQUEST: the sand pool, the water pool, the toy library in use, and
+ * Abhayeti.
+ *
+ * ═══ COMPOSITION — seven sections, seven different builds ═══════════════════
+ *   01 · IVORY  collage LEFT (lead + overhang + circle), copy RIGHT, and five
+ *               facilities as a hairline-divided editorial strip — not cards.
+ *   02 · CREAM  copy LEFT in a narrow column, three staggered frames RIGHT at
+ *               three different heights, under one dotted arc.
+ *   03 · WHITE  the photographs cross LEFT, a dotted path carries the eye into
+ *               the copy, and the lead frame scales 1 → 1.04 on scroll.
+ *   04 · PEACH  four editorial columns divided by thin orange rules, over an
+ *               oversized ghost word.
+ *   05 · IVORY  copy and photograph side by side over the ghost word ABHAYETI.
+ *   06 · WHITE  a drawn wave rail with three stops, then one shared band.
+ *   07 · PHOTO  the dark close — the KG-II convocation.
+ *
+ * MOTION is the project's own attribute set. The rail in 06 draws with the same
+ * scroll-driven stroke-dashoffset the Experiential page uses; it is decoration
+ * over an always-painted dashed route, so with the script absent nothing is lost
+ * but the travelling line.
+ */
+import { Picture } from 'astro:assets';
+
+/* ── PHOTOGRAPHY — eight genuine Sunbeam Ballia frames. No stock. ─────────── */
+import pRoom from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+import pPark from '../../../assets/play ground/DSC_1249 copy.jpg';
+import pCompost from '../../../assets/school-activities/little-agriculturists/02.jpg';
+import pTables from '../../../assets/activity learning lab/DSC_1216 copy.jpg';
+import pSwings from '../../../assets/play ground/DSC_1246 copy.jpg';
+import pSlide from '../../../assets/play ground/DSC_1248 copy.jpg';
+import pSort from '../../../assets/school-activities/little-agriculturists/03.jpg';
+import pBin from '../../../assets/school-activities/little-agriculturists/01.jpg';
+import pTrays from '../../../assets/school-activities/little-agriculturists/04.jpg';
+import pGather from '../../../assets/school-activities/josh-spring-camp/02.jpg';
+import pGown from '../../../assets/celebration/kg-convocation/kg-convocation-09.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/* Cross-links, so a fact lives on one page and is pointed at from the others. */
+const FACILITIES = '/campus/facilities-infrastructure/';
+const STRUCTURE = '/academics/structure/';
+const ACTIVITIES = '/beyond-academics/school-activities/little-agriculturists/';
+
+/* ── THE MARKS ──────────────────────────────────────────────────────────────
+   24-unit box, 1.5 stroke, round caps and joins, no fill, `currentColor`. Line
+   drawings, deliberately — a cartoon set would make this page a kindergarten
+   template, which is the one thing the brief rules out. */
+const MARK: Record<string, string> = {
+  swing: `<path d="M4.4 20.6 12 3.8l7.6 16.8"/><path d="M8.1 12.2h7.8"/><path d="M9.7 12.2v4.9M14.3 12.2v4.9"/><path d="M8.9 17.1h6.2"/>`,
+  sand: `<path d="M2.6 19.8h18.8"/><path d="M2.6 19.8c2.1-5 4.7-7.5 7.9-7.5 3.2 0 4.5 3 6.3 3 1.4 0 2.4-1 3-3"/><circle cx="17.4" cy="6.4" r="2.4"/>`,
+  water: `<path d="M2.7 8.2c1.9 0 1.9 1.7 3.9 1.7s1.9-1.7 3.9-1.7 1.9 1.7 3.8 1.7 1.9-1.7 3.9-1.7 1.9 1.7 3.9 1.7"/><path d="M2.7 13c1.9 0 1.9 1.7 3.9 1.7S8.5 13 10.5 13s1.9 1.7 3.8 1.7S16.2 13 18.2 13s1.9 1.7 3.9 1.7"/><path d="M2.7 17.8c1.9 0 1.9 1.7 3.9 1.7s1.9-1.7 3.9-1.7 1.9 1.7 3.8 1.7 1.9-1.7 3.9-1.7 1.9 1.7 3.9 1.7"/>`,
+  sprout: `<path d="M12 20.6v-7.8"/><path d="M12 12.8C12 9.3 9.5 6.8 6 6.8c0 3.5 2.5 6 6 6Z"/><path d="M12 12.8c0-3.5 2.5-6 6-6 0 3.5-2.5 6-6 6Z"/><path d="M7.6 20.6h8.8"/>`,
+  prayer: `<path d="M4.4 20.6h15.2"/><path d="M6.6 20.6v-7.9a5.4 5.4 0 0 1 10.8 0v7.9"/><path d="M12 7.3V4.9"/><circle cx="12" cy="3.4" r="1.2"/>`,
+  toy: `<rect x="3.2" y="12.6" width="7.6" height="7.6" rx="1.3"/><rect x="13.2" y="12.6" width="7.6" height="7.6" rx="1.3"/><rect x="8.2" y="3.9" width="7.6" height="7.6" rx="1.3"/>`,
+  hand: `<path d="M9.4 11.2V6a1.9 1.9 0 1 1 3.8 0v7.4"/><path d="M13.2 10.4a1.7 1.7 0 0 1 3.4 0v1M16.6 11.6a1.7 1.7 0 0 1 3.4 0v3.2a6 6 0 0 1-6 6h-1.6c-2 0-3-1-4.2-2.4l-3-3.6a1.8 1.8 0 0 1 2.6-2.4l1.6 1.6"/>`,
+  star: `<path d="M12 2.7 14.6 9l6.8.5-5.2 4.4 1.6 6.6L12 16.9l-5.8 3.6 1.6-6.6L2.6 9.5 9.4 9Z"/>`,
+  book: `<path d="M4 4.4h5.2A2.8 2.8 0 0 1 12 7.2v12.4a2.4 2.4 0 0 0-2.4-2.4H4Z"/><path d="M20 4.4h-5.2A2.8 2.8 0 0 0 12 7.2v12.4a2.4 2.4 0 0 1 2.4-2.4H20Z"/>`,
+};
+
+/* ── SECTION 01 — the five facilities, in the school's own order ───────────
+   The strip is an editorial list, not five cards. Every label is a facility the
+   school publishes by name. */
+const zone = [
+  { n: '01', mark: 'swing', k: 'Kids Park' },
+  { n: '02', mark: 'sand', k: 'Sand Pool' },
+  { n: '03', mark: 'water', k: 'Water Pool' },
+  { n: '04', mark: 'sprout', k: 'Little Agriculture Land' },
+  { n: '05', mark: 'prayer', k: 'Abhayeti Prayer Ground' },
+] as const;
+
+/* ── SECTION 02 — three activity areas ─────────────────────────────────────
+   `cap` is what the PHOTOGRAPH shows, which is not always what the beat is
+   named after. See the header note and the footnote under the row. */
+const doing = [
+  {
+    n: '01',
+    k: 'Play',
+    sub: 'Kids Park · swings',
+    v: 'Swings and play equipment, listed as the early years’ own — not a share of the senior field.',
+    photo: pSwings,
+    alt: `The swings in the early-years kids park at ${S}`,
+    cap: 'The swings, Kids Park',
+  },
+  {
+    n: '02',
+    k: 'Explore',
+    sub: 'Sand pool · water pool',
+    v: 'A shallow water play area, with sand play alongside it — “messy, and deliberately so.”',
+    photo: pSlide,
+    alt: `The slide, tunnel and climbing frames in the early-years kids park at ${S}`,
+    cap: 'The kids park slide and tunnel',
+  },
+  {
+    n: '03',
+    k: 'Grow',
+    sub: 'Little agriculture land',
+    v: 'A planting plot, and a hands-on farming activity the school runs under the name Little Agriculturist.',
+    photo: pSort,
+    alt: `Young students of ${S} in gloves sorting kitchen peel for compost at the Little Agriculturists activity`,
+    cap: 'Little Agriculturists · April 2024',
+  },
+] as const;
+
+/* ── SECTION 04 — four columns, four published facilities ──────────────────
+   The brief's fourth column was "Play". The school's own fourth early-years
+   provision is the Toy Library, which is published and specific, so that is what
+   the column carries. */
+const place = [
+  { n: '01', mark: 'swing', k: 'Swings', v: 'Swings and play equipment, in the early years’ own kids park.' },
+  { n: '02', mark: 'sand', k: 'Sand', v: 'Sand play alongside the water pool — messy, and deliberately so.' },
+  { n: '03', mark: 'water', k: 'Water', v: 'A shallow water play area, inside the early-years zone.' },
+  { n: '04', mark: 'toy', k: 'Toys', v: 'A toy library: borrowable toys, and a first lending system at four years old.' },
+] as const;
+
+/* ── SECTION 06 — three stops ──────────────────────────────────────────────
+   ⚠ THE LINES ARE STRUCTURAL, NOT CURRICULAR. "The middle year" is true of
+   three years in a row; "the last before Class I" is true of the stage boundary.
+   Neither claims a syllabus, because the school publishes none per class.
+   `nx`/`ny` are the node's position on the rail, and the rail's curve is drawn
+   to pass through exactly those points. */
+const first = [
+  { k: 'Nursery', v: 'Where it starts.', nx: '16.6%', ny: '34%' },
+  { k: 'LKG', v: 'The middle year.', nx: '50%', ny: '62%' },
+  { k: 'UKG', v: 'The last before Class I.', nx: '83.4%', ny: '34%' },
+] as const;
+
+/* The three things the school names for the stage — all three years, not one. */
+const focus = ['Play-led routine', 'Early language', 'Number sense'] as const;
+---
+
+{/* ══ 01 · A BEGINNING OF ITS OWN ════════════════════════════════════════════
+    Ground: warm ivory. Idea: the collage carries the left, the copy the right,
+    and the five facilities close the column as a hairline strip rather than as
+    five boxes — the brief is explicit that they must not become cards. */}
+<section class="pp-open" aria-labelledby="pp-open-t">
+  <span class="pp-open__warm" aria-hidden="true"></span>
+  <span class="pp-grid" aria-hidden="true"></span>
+  <span class="pp-dots pp-open__dots" aria-hidden="true"></span>
+
+  {/* A curved dotted trail entering from the left margin. Decoration only. */}
+  <svg class="pp-open__trail" viewBox="0 0 180 240" fill="none" aria-hidden="true">
+    <path d="M-14 26c46 0 58 34 96 34s52-30 92-30" stroke="currentColor" stroke-width="1.4"
+      stroke-linecap="round" stroke-dasharray="2 8" />
+    <path d="M-14 132c52 0 60 40 100 40s48-26 88-26" stroke="currentColor" stroke-width="1.4"
+      stroke-linecap="round" stroke-dasharray="2 8" />
+    <circle cx="110" cy="60" r="2.6" fill="currentColor" />
+    <circle cx="122" cy="172" r="2.6" fill="currentColor" />
+  </svg>
+
+  <div class="u-container pp-open__grid">
+    {/* ⚠ THE COLLAGE IS BUILT INSIDE ITS OWN COLUMN. The overhang frame stops at
+        the column's right edge and the circle at its left, so the composition
+        reads as overlapping without a single pixel of page overflow. */}
+    <div class="pp-open__stage">
+      <div class="pp-open__lead" data-mask>
+        <Picture
+          src={pPark}
+          alt={`The early-years kids park at ${S} — a merry-go-round, seesaw and climbing rails beside the junior block`}
+          formats={['avif', 'webp']}
+          widths={[520, 860, 1200]}
+          sizes="(max-width: 767px) 92vw, 40vw"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+
+      <div class="pp-open__sm" data-pop data-pop-delay="180">
+        <Picture
+          src={pCompost}
+          alt={`A young student of ${S} in the yellow junior uniform tipping kitchen peel into the compost bin at the Little Agriculturists activity`}
+          formats={['avif', 'webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 767px) 46vw, 18vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <div class="pp-open__cir" data-pop data-pop-delay="300">
+        <Picture
+          src={pTables}
+          alt={`The curved activity tables and toy shelves of the early-years activity room at ${S}`}
+          formats={['avif', 'webp']}
+          widths={[220, 400]}
+          sizes="(max-width: 767px) 30vw, 12vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div class="pp-open__copy">
+      <p class="pp-kicker" data-reveal>Nursery · LKG · UKG</p>
+      <h2 class="pp-h pp-open__h" id="pp-open-t">
+        <span data-clip data-clip-delay="0">A beginning</span>
+        <span data-clip data-clip-delay="150"><em>of its own.</em></span>
+      </h2>
+
+      <p class="pp-body" data-reveal data-reveal-delay="200">
+        The early years here are not a smaller version of the senior school. They are given their own
+        grounds and their own rooms — and the school’s published description of the stage says so in
+        one line: <em>“the first years on campus, in rooms and grounds built for them.”</em>
+      </p>
+      <p class="pp-body" data-reveal data-reveal-delay="260">
+        That includes a prayer ground of their own. <strong>Abhayeti</strong> belongs to the junior
+        block and is listed separately from Naman, the senior one, so the youngest children do not
+        begin the day at the back of somebody else’s assembly.
+      </p>
+
+      {/* ⚠ A STRIP, NOT FIVE CARDS. Hairline dividers, 20px marks, one line of
+          label each — the brief rules out large cards here explicitly. */}
+      <ul class="pp-zone" data-draw-scope>
+        {zone.map((z, i) => (
+          <li class="pp-zone__i" data-reveal data-reveal-delay={300 + i * 60}>
+            <span class="pp-zone__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[z.mark]} />
+              </svg>
+            </span>
+            <span class="pp-zone__n t-tabular">{z.n}</span>
+            <span class="pp-zone__k">{z.k}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="pp-note" data-reveal data-reveal-delay="620">
+        All five are listed on the school’s own <a class="pp-link" href={FACILITIES}>facilities</a>
+        {' '}inventory.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · LEARNING THROUGH DOING ════════════════════════════════════════════
+    Ground: soft warm cream. Idea: a narrow copy column on the left and three
+    frames on the right at three different heights, hung under one dotted arc so
+    they read as a single composition rather than three cards in a row. */}
+<section class="pp-doing" aria-labelledby="pp-doing-t">
+  <span class="pp-doing__warm" aria-hidden="true"></span>
+
+  <div class="u-container pp-doing__grid">
+    <div class="pp-doing__copy">
+      <p class="pp-kicker" data-reveal>Learning through doing</p>
+      <h2 class="pp-h pp-doing__h" id="pp-doing-t">
+        <span data-clip data-clip-delay="0">Little hands.</span>
+        <span data-clip data-clip-delay="150"><em>Big first experiences.</em></span>
+      </h2>
+      <p class="pp-body" data-reveal data-reveal-delay="200">
+        Almost everything the school lists for this stage is something a child does with their hands,
+        their feet and the ground under them. The learning is physical long before it is written
+        down.
+      </p>
+      <p class="pp-note pp-doing__note" data-reveal data-reveal-delay="270">
+        <strong>Photographs.</strong> The school’s kids park, and its Little Agriculturists session.
+        The sand pool and the water pool are published facilities it has not photographed.
+      </p>
+    </div>
+
+    <div class="pp-doing__stage">
+      {/* The arc the three frames hang from. Painted, not drawn — a half-drawn
+          decoration above three photographs reads as a rendering fault. */}
+      {/* ⚠ EACH CUBIC ENDS ON A NODE. The three dots sit at 16.6%, 50% and
+          83.4% of the row — the same fractions the three frames centre on — so
+          the curve is authored to pass through (166,16), (500,44) and (834,16)
+          in its own viewBox, and the nodes read those same numbers back as
+          percentages. Editing one means editing both. */}
+      <svg class="pp-doing__arc" viewBox="0 0 1000 60" fill="none" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M-40 42C50 42 92 16 166 16s194 28 334 28 214-28 334-28c74 0 116 12 206 26"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 9" />
+      </svg>
+      <span class="pp-doing__nodes" aria-hidden="true">
+        <i style="--nx: 16.6%; --ny: 26.7%;" data-pop data-pop-delay="120"></i>
+        <i style="--nx: 50%; --ny: 73.3%;" data-pop data-pop-delay="210"></i>
+        <i style="--nx: 83.4%; --ny: 26.7%;" data-pop data-pop-delay="300"></i>
+      </span>
+
+      <ol class="pp-acts">
+        {doing.map((d, i) => (
+          <li class="pp-act" data-reveal data-reveal-delay={160 + i * 110}>
+            <div class="pp-act__pic" data-zoom data-zoom-to="1.05">
+              <Picture
+                src={d.photo}
+                alt={d.alt}
+                formats={['avif', 'webp']}
+                widths={[340, 600, 860]}
+                sizes="(max-width: 767px) 92vw, 20vw"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <p class="pp-act__cap">{d.cap}</p>
+            <p class="pp-act__h">
+              <span class="pp-act__n t-tabular">{d.n}</span>
+              <span class="pp-act__k">{d.k}</span>
+            </p>
+            <p class="pp-act__s">{d.sub}</p>
+            <p class="pp-act__v">{d.v}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · THE LITTLE AGRICULTURE LAND ═══════════════════════════════════════
+    Ground: white. Idea: the photographs cross to the LEFT — the opposite of
+    section 01 — and a dotted path carries the eye from the frames up into the
+    eyebrow. The lead frame scales gently on scroll; nothing else moves. */}
+<section class="pp-land" aria-labelledby="pp-land-t">
+  <span class="pp-grid pp-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container pp-land__grid">
+    <div class="pp-land__stage">
+      <div class="pp-land__lead" data-zoom data-zoom-to="1.04">
+        <Picture
+          src={pBin}
+          alt={`A teacher and a young student of ${S} adding dry leaves to the compost bin under the hand-lettered Little Agriculturist sign`}
+          formats={['avif', 'webp']}
+          widths={[520, 880, 1200]}
+          sizes="(max-width: 767px) 92vw, 42vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="pp-land__sm" data-pop data-pop-delay="200">
+        <Picture
+          src={pTrays}
+          alt={`Trays of finished compost and kitchen peel on the ground beside young students of ${S}`}
+          formats={['avif', 'webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 767px) 52vw, 20vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div class="pp-land__copy">
+      {/* The dotted path from the frames into the copy. Decoration only. */}
+      <svg class="pp-land__thread" viewBox="0 0 200 120" fill="none" aria-hidden="true">
+        <path d="M-16 104C34 104 44 58 92 46s78 4 122-24" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-dasharray="2.5 8" />
+        <circle cx="196" cy="23" r="2.8" fill="currentColor" />
+      </svg>
+
+      <p class="pp-kicker" data-reveal>Learning with their hands</p>
+      <h2 class="pp-h pp-land__h" id="pp-land-t">
+        <span data-clip data-clip-delay="0">They don’t just learn</span>
+        <span data-clip data-clip-delay="150"><em>about the world.</em></span>
+      </h2>
+
+      <p class="pp-body" data-reveal data-reveal-delay="200">
+        The school’s description of the Little Agriculture Land is one sentence long, and every verb
+        in it belongs to the child: <em>“a planting plot the youngest children actually dig, sow and
+        water.”</em> Not a display bed at the gate — a plot they work.
+      </p>
+      <p class="pp-body" data-reveal data-reveal-delay="260">
+        It runs as a named activity too. <a class="pp-link" href={ACTIVITIES}>Little Agriculturist</a>
+        {' '}is published as a hands-on farming session for the youngest children, and the frames the
+        school released from it show composting — kitchen peel and dry leaf going into the bin,
+        gloves on, and the finished compost coming back out in a tray.
+      </p>
+
+      <p class="pp-land__pull" data-reveal data-reveal-delay="330">
+        <span>Dig.</span><span>Sow.</span><span>Water.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 04 · PLAY IS PART OF THE PLACE ═════════════════════════════════════════
+    Ground: very light peach. Idea: one wide horizontal band — headline anchored
+    left, four columns divided by thin orange rules to the right. No boxes, no
+    shadows, no cards. An oversized ghost word sits behind the whole band. */}
+<section class="pp-play" aria-labelledby="pp-play-t">
+  <span class="pp-play__warm" aria-hidden="true"></span>
+  <span class="pp-play__ghost" aria-hidden="true" data-drift>Play</span>
+
+  <div class="u-container pp-play__grid">
+    <div class="pp-play__head">
+      <p class="pp-kicker" data-reveal>Play is part of the place</p>
+      <h2 class="pp-h pp-play__h" id="pp-play-t">
+        <span data-clip data-clip-delay="0">A place to</span>
+        <span data-clip data-clip-delay="150">move, <em>play</em></span>
+        <span data-clip data-clip-delay="290">and <em>discover.</em></span>
+      </h2>
+    </div>
+
+    <ol class="pp-cols">
+      {place.map((p, i) => (
+        <li class="pp-col" data-reveal data-reveal-delay={140 + i * 90}>
+          <span class="pp-col__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[p.mark]} />
+            </svg>
+          </span>
+          <p class="pp-col__n t-tabular">{p.n}</p>
+          <h3 class="pp-col__k">{p.k}</h3>
+          <p class="pp-col__v">{p.v}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 05 · ABHAYETI ══════════════════════════════════════════════════════════
+    Ground: ivory, with the name itself set oversized and transparent behind the
+    whole section. Idea: large type on the left, one photograph on the right,
+    and the photograph captioned for exactly what it is. */}
+<section class="pp-abh" aria-labelledby="pp-abh-t">
+  <span class="pp-abh__warm" aria-hidden="true"></span>
+  <div class="u-container pp-abh__grid">
+    <div class="pp-abh__copy">
+      {/* ⚠ BEHIND THE HEADLINE, NOT BEHIND THE SECTION. Centred on the section
+          the name ran straight through three paragraphs and the footnote. The
+          headline is 48px display weight and carries a 1px outline behind it
+          without losing a thing. */}
+      <span class="pp-abh__ghost" aria-hidden="true" data-drift>Abhayeti</span>
+      <p class="pp-badge" data-reveal>Junior block · prayer ground</p>
+      <h2 class="pp-h pp-abh__h" id="pp-abh-t">
+        <span data-clip data-clip-delay="0">A space</span>
+        <span data-clip data-clip-delay="150">to <em>begin together.</em></span>
+      </h2>
+      <p class="pp-body" data-reveal data-reveal-delay="200">
+        The junior block has a prayer ground of its own, and the school gives it a name:
+        {' '}<strong>Abhayeti</strong>. It appears on the facilities list beside Naman, the senior
+        block’s ground, as a separate entry — which is the whole point of it.
+      </p>
+      <p class="pp-body" data-reveal data-reveal-delay="260">
+        A four-year-old’s first assembly is not held at the edge of a field built for
+        eighteen-year-olds. It is held on ground that belongs to their half of the school.
+      </p>
+      <p class="pp-note" data-reveal data-reveal-delay="330">
+        The school publishes the name and whose ground it is. It does not publish what happens there,
+        and it has released no photograph of Abhayeti itself.
+      </p>
+    </div>
+
+    <figure class="pp-abh__fig">
+      <div class="pp-abh__pic" data-mask data-mask-from="left">
+        <Picture
+          src={pGather}
+          alt={`Junior classes of ${S} seated together on the ground facing the stage at the JOSH Sports and Spring Camp`}
+          formats={['avif', 'webp']}
+          widths={[560, 900, 1280]}
+          sizes="(max-width: 767px) 92vw, 46vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <figcaption class="pp-abh__cap">
+        Junior classes gathered for the JOSH Sports &amp; Spring Camp.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+{/* ══ 06 · THE FIRST YEARS ═══════════════════════════════════════════════════
+    Ground: white. Idea: a shallow wave rail with three stops on it, and one band
+    beneath carrying what the school actually publishes about all three years.
+
+    ⚠ THE RAIL'S CURVE IS AUTHORED TO PASS THROUGH THE NODES. Each cubic in the
+    path ends exactly at a node's (x, y), so the dots sit on the line at every
+    width — preserveAspectRatio="none" scales x and y independently and the
+    percentages track it. Editing the path means re-checking `first[].nx/ny`. */}
+<section class="pp-first" aria-labelledby="pp-first-t">
+  <span class="pp-grid pp-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container pp-first__inner">
+    <p class="pp-kicker pp-first__kicker" data-reveal>The first years</p>
+    <h2 class="pp-h pp-first__h" id="pp-first-t">
+      <span data-clip data-clip-delay="0">Three years,</span>
+      <span data-clip data-clip-delay="150">counted as <em>one stage.</em></span>
+    </h2>
+
+    <div class="pp-first__track">
+      <div class="pp-rail">
+        <svg class="pp-rail__svg" viewBox="0 0 1000 100" fill="none" preserveAspectRatio="none" aria-hidden="true">
+          <path
+            d="M-40 62C60 62 90 34 166 34s194 28 334 28 220-28 333-28c77 0 127 14 207 22"
+            stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3 9" />
+          <path class="pp-rail__draw" pathLength="1"
+            d="M-40 62C60 62 90 34 166 34s194 28 334 28 220-28 333-28c77 0 127 14 207 22"
+            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+
+        {first.map((f, i) => (
+          <span class="pp-rail__node" style={`--nx: ${f.nx}; --ny: ${f.ny};`} aria-hidden="true">
+            <i style={`--d: ${i * 0.9}s;`}></i>
+          </span>
+        ))}
+      </div>
+
+      <ol class="pp-stops">
+        {first.map((f, i) => (
+          <li class="pp-stop" data-reveal data-reveal-delay={140 + i * 120}>
+            <p class="pp-stop__k">{f.k}</p>
+            <p class="pp-stop__v">{f.v}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    {/* ⚠ ONE BAND FOR ALL THREE. The school names three focuses and one milestone
+        for the stage as a whole and does not split them by class, so neither
+        does this page. */}
+    <div class="pp-band" data-reveal data-reveal-delay="440">
+      <div class="pp-band__focus">
+        <p class="pp-band__lab">Named for all three years</p>
+        <ul class="pp-band__list">
+          {focus.map((f) => <li>{f}</li>)}
+        </ul>
+      </div>
+      <div class="pp-band__mile">
+        <p class="pp-band__lab">And one milestone</p>
+        <p class="pp-band__q">“School as a place you want to be.”</p>
+      </div>
+      <div class="pp-band__facts">
+        <p class="pp-band__f">
+          <span class="pp-band__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.book} />
+            </svg>
+          </span>
+          <span>The syllabus is published class by class <strong>from Nursery</strong>, as the
+          school’s PRECEPT document.</span>
+        </p>
+        <p class="pp-band__f">
+          <span class="pp-band__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.star} />
+            </svg>
+          </span>
+          <span>The SOF olympiad is sat <strong>from Nursery to Class II</strong> — the first time
+          the work is measured from outside.</span>
+        </p>
+      </div>
+    </div>
+
+    <p class="pp-note pp-first__note" data-reveal data-reveal-delay="520">
+      The school publishes Nursery, LKG and UKG as one stage on its
+      {' '}<a class="pp-link" href={STRUCTURE}>academic structure</a>. Admission ages, session hours
+      and class sizes are not published, and are not estimated here.
+    </p>
+  </div>
+</section>
+
+<script>
+  /* THE RAIL DRAWS ITSELF as section 06 travels through the viewport.
+
+     ⚠ DECORATION ONLY. The dashed rail underneath is always painted, so with
+     this script absent the reader loses the travelling line and nothing else.
+     `pathLength="1"` normalises the geometry, so nothing measures the DOM and
+     the maths cannot drift when the curve is edited. */
+  const ppTrack = document.querySelector('.pp-first__track');
+  const ppRail = document.querySelector('.pp-rail__draw');
+
+  if (ppTrack instanceof HTMLElement && ppRail instanceof SVGPathElement
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let queued = false;
+
+    const paint = () => {
+      queued = false;
+      const r = ppTrack.getBoundingClientRect();
+      const travelled = window.innerHeight * 0.86 - r.top;
+      const p = Math.min(1, Math.max(0, travelled / Math.max(1, r.height * 0.9)));
+      ppRail.style.strokeDashoffset = String(1 - p);
+    };
+
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    paint();
+  }
+</script>
+
+{/* ══ 07 · THE CLOSE ═════════════════════════════════════════════════════════
+    A photograph, slowly drifting, and the one ceremony that marks the end of the
+    early years. */}
+<section class="pp-close" aria-labelledby="pp-close-t">
+  <div class="pp-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pGown}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <span class="pp-close__scrim" aria-hidden="true"></span>
+  <span class="pp-close__grain" aria-hidden="true"></span>
+
+  <div class="u-container pp-close__inner">
+    <p class="pp-kicker pp-kicker--dark" data-reveal>The end of the early years</p>
+    <h2 class="pp-h pp-close__h" id="pp-close-t">
+      <span data-clip data-clip-delay="0">Three years,</span>
+      <span data-clip data-clip-delay="150">and then <em>the gown.</em></span>
+    </h2>
+    <p class="pp-close__b" data-reveal data-reveal-delay="180">
+      The school holds a convocation for KG-II — a gown, a mortar board and a rolled scroll handed
+      over on stage. It marks the last day of the early years the way a university marks its last,
+      and it is the clearest statement the school makes about how seriously it takes this stage.
+    </p>
+    <p class="pp-close__cap" data-reveal data-reveal-delay="250">
+      Photograph: the KG-II convocation ceremony at {S}.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* ═══ SHARED ══════════════════════════════════════════════════════════════ */
+  .pp-kicker {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .pp-kicker--dark { color: var(--sb-lime); }
+
+  .pp-badge {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 6px clamp(10px, 1vw, 14px);
+    border-radius: var(--sb-r-1);
+    background: var(--sb-violet-wash);
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .pp-h {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--sb-charcoal);
+  }
+  .pp-h span { display: block; }
+  .pp-h em { font-style: normal; color: var(--sb-violet); }
+
+  .pp-body {
+    max-width: 47ch;
+    margin: clamp(13px, 1.6vw, 19px) 0 0;
+    font-size: clamp(12.5px, 0.92vw, 14.5px);
+    line-height: 1.78;
+    color: var(--sb-text-secondary);
+  }
+  .pp-body em { font-style: italic; color: var(--sb-charcoal); }
+  .pp-body strong { font-weight: 700; color: var(--sb-charcoal); }
+
+  .pp-note {
+    max-width: 52ch;
+    margin: clamp(12px, 1.4vw, 17px) 0 0;
+    font-size: clamp(10px, 0.74vw, 11.5px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+  .pp-note strong { font-weight: 700; color: var(--sb-charcoal); }
+
+  .pp-link {
+    color: var(--sb-violet);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .pp-link:hover { color: var(--sb-orange-bright); }
+
+  /* Decorative grounds, shared. Masked so they fade rather than stopping at an
+     edge, which is what makes them read as atmosphere rather than as a texture
+     tile. */
+  .pp-grid {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(28, 14, 8, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(28, 14, 8, 0.055) 1px, transparent 1px);
+    background-size: 88px 88px;
+    mask-image: radial-gradient(72% 78% at 50% 44%, #000 0%, transparent 82%);
+  }
+  .pp-grid--fine { background-size: 52px 52px; opacity: 0.72; }
+
+  .pp-dots {
+    position: absolute;
+    z-index: -1;
+    width: clamp(96px, 11vw, 172px);
+    aspect-ratio: 1 / 1;
+    background-image: radial-gradient(rgba(201, 60, 10, 0.34) 1.5px, transparent 1.6px);
+    background-size: 17px 17px;
+    mask-image: radial-gradient(closest-side, #000 20%, transparent 100%);
+  }
+
+  /* ═══ 01 · A BEGINNING OF ITS OWN ═════════════════════════════════════════ */
+  .pp-open {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(38px, 4.4vw, 72px);
+  }
+  .pp-open__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(56% 62% at 6% 10%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(58% 64% at 96% 88%, rgba(255, 138, 92, 0.11) 0%, rgba(255, 138, 92, 0) 74%);
+  }
+  .pp-open__dots { top: 8%; right: 3%; }
+  .pp-open__trail {
+    position: absolute;
+    z-index: -1;
+    top: 14%;
+    left: clamp(-18px, -0.6vw, -4px);
+    width: clamp(86px, 10vw, 172px);
+    height: auto;
+    color: rgba(201, 60, 10, 0.36);
+  }
+
+  .pp-open__grid {
+    position: relative;
+    display: grid;
+    /* The copy column is the wider of the two: it carries a five-item strip
+       whose last two labels are the longest facility names on the page. */
+    grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
+    gap: clamp(26px, 3.6vw, 58px);
+    align-items: center;
+  }
+
+  /* ⚠ THE COLLAGE. Three frames, all inside one column: a lead at 86% of the
+     column, an overhang frame flush to the right edge, and a circle dropped into
+     the reserved padding at the bottom. Nothing uses a negative offset, so the
+     page cannot gain horizontal scroll from this composition. */
+  .pp-open__stage {
+    position: relative;
+    padding-bottom: clamp(24px, 2.8vw, 44px);
+  }
+  .pp-open__lead {
+    width: 86%;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .pp-open__sm {
+    position: absolute;
+    right: 0;
+    bottom: clamp(24px, 2.8vw, 44px);
+    width: 36%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 5px solid var(--sb-ivory);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .pp-open__cir {
+    position: absolute;
+    left: 7%;
+    bottom: 0;
+    width: clamp(88px, 9.6vw, 142px);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border: 5px solid var(--sb-ivory);
+    border-radius: 50%;
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .pp-open__lead :global(picture),
+  .pp-open__sm :global(picture),
+  .pp-open__cir :global(picture) { display: block; height: 100%; }
+  .pp-open__lead :global(img),
+  .pp-open__sm :global(img),
+  .pp-open__cir :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pp-open__cir :global(img) { object-position: 54% 56%; }
+
+  .pp-open__h { font-size: clamp(29px, 3.5vw, 50px); }
+
+  /* ⚠ A HAIRLINE STRIP, NOT FIVE CARDS. */
+  .pp-zone {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin: clamp(20px, 2.4vw, 32px) 0 0;
+    padding: clamp(14px, 1.6vw, 20px) 0 0;
+    border-top: 1px solid var(--sb-border);
+    list-style: none;
+  }
+  .pp-zone__i {
+    display: grid;
+    /* ⚠ align-content: start, NOT the default stretch. Two of the five labels
+       wrap to three lines; stretch then pushed the shorter items' numbers and
+       marks apart to fill the row, and the strip lost its baseline. */
+    align-content: start;
+    justify-items: start;
+    gap: 5px;
+    padding: 0 clamp(6px, 0.8vw, 12px);
+  }
+  .pp-zone__i + .pp-zone__i { border-left: 1px solid var(--sb-border); }
+  .pp-zone__i:first-child { padding-left: 0; }
+  .pp-zone__m { display: block; width: clamp(19px, 1.8vw, 24px); color: var(--sb-violet); }
+  .pp-zone__m svg { display: block; width: 100%; height: auto; }
+  .pp-zone__n {
+    font-size: clamp(8.5px, 0.62vw, 10px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-orange-bright);
+  }
+  .pp-zone__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(11px, 0.84vw, 13px);
+    font-weight: 700;
+    line-height: 1.28;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  /* ═══ 02 · LEARNING THROUGH DOING ═════════════════════════════════════════ */
+  .pp-doing {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #faf2e9;
+    padding-block: clamp(38px, 4.4vw, 72px);
+  }
+  .pp-doing__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(60% 66% at 92% 6%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 72%),
+      radial-gradient(52% 58% at 4% 96%, rgba(201, 60, 10, 0.07) 0%, rgba(201, 60, 10, 0) 74%);
+  }
+  .pp-doing__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.44fr) minmax(0, 1fr);
+    gap: clamp(24px, 3.2vw, 52px);
+    /* Centred, not start-aligned: the copy column is roughly half the height of
+       the frames beside it, and start-alignment left a screen-wide hole under
+       it. */
+    align-items: center;
+  }
+  .pp-doing__h { font-size: clamp(26px, 2.9vw, 40px); }
+  .pp-doing__note {
+    max-width: 34ch;
+    padding-top: clamp(11px, 1.3vw, 15px);
+    border-top: 1px solid var(--sb-border);
+  }
+
+  .pp-doing__stage { position: relative; padding-top: clamp(26px, 3vw, 46px); }
+  .pp-doing__arc {
+    position: absolute;
+    z-index: 0;
+    inset-inline: 0;
+    top: 0;
+    width: 100%;
+    height: clamp(26px, 3vw, 46px);
+    color: rgba(201, 60, 10, 0.38);
+  }
+  .pp-doing__nodes { position: absolute; inset-inline: 0; top: 0; height: clamp(26px, 3vw, 46px); }
+  .pp-doing__nodes i {
+    position: absolute;
+    top: var(--ny);
+    left: var(--nx);
+    translate: -50% -50%;
+    width: clamp(8px, 0.82vw, 11px);
+    aspect-ratio: 1 / 1;
+    border: 1.6px solid var(--sb-orange-bright);
+    border-radius: 50%;
+    background: #faf2e9;
+  }
+
+  /* ⚠ THREE DIFFERENT HEIGHTS AND THREE DIFFERENT DROPS. Equal frames in a row
+     would be a card grid, which the brief rules out. */
+  .pp-acts {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.8vw, 28px);
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pp-act:nth-child(1) { margin-top: 0; }
+  .pp-act:nth-child(2) { margin-top: clamp(18px, 2.2vw, 38px); }
+  .pp-act:nth-child(3) { margin-top: clamp(6px, 0.8vw, 14px); }
+
+  .pp-act__pic {
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-sand);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .pp-act:nth-child(1) .pp-act__pic :global(img) { aspect-ratio: 4 / 5; }
+  .pp-act:nth-child(2) .pp-act__pic :global(img) { aspect-ratio: 1 / 1; }
+  .pp-act:nth-child(3) .pp-act__pic :global(img) { aspect-ratio: 5 / 6; }
+  .pp-act__pic :global(picture) { display: block; }
+  .pp-act__pic :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .pp-act__cap {
+    margin: clamp(8px, 0.9vw, 11px) 0 0;
+    font-size: clamp(9px, 0.66vw, 10.5px);
+    letter-spacing: 0.04em;
+    color: var(--sb-text-muted);
+  }
+  .pp-act__h {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(7px, 0.8vw, 10px);
+    margin: clamp(7px, 0.9vw, 11px) 0 0;
+  }
+  .pp-act__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.05vw, 16px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .pp-act__k {
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--sb-charcoal);
+  }
+  .pp-act__s {
+    margin: 3px 0 0;
+    font-size: clamp(10.5px, 0.76vw, 12px);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+  .pp-act__v {
+    margin: clamp(5px, 0.6vw, 8px) 0 0;
+    font-size: clamp(10.5px, 0.78vw, 12.4px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 03 · THE LITTLE AGRICULTURE LAND ════════════════════════════════════ */
+  .pp-land {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(36px, 4.2vw, 68px);
+  }
+  .pp-land__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    gap: clamp(26px, 3.6vw, 58px);
+    align-items: center;
+  }
+
+  .pp-land__stage {
+    position: relative;
+    padding-bottom: clamp(22px, 2.6vw, 40px);
+  }
+  .pp-land__lead {
+    width: 82%;
+    aspect-ratio: 5 / 4;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .pp-land__sm {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 46%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 5px solid var(--sb-paper);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .pp-land__lead :global(picture),
+  .pp-land__sm :global(picture) { display: block; height: 100%; }
+  .pp-land__lead :global(img),
+  .pp-land__sm :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pp-land__lead :global(img) { object-position: 50% 42%; }
+
+  .pp-land__copy { position: relative; }
+  /* ⚠ IT CROSSES THE GUTTER, IT DOES NOT SIT ABOVE THE COLUMN. Anchored to the
+     copy's top edge it was clipped by the section and read as a stray stroke. */
+  .pp-land__thread {
+    position: absolute;
+    z-index: -1;
+    top: clamp(-34px, -2.2vw, -12px);
+    left: clamp(-96px, -6vw, -34px);
+    width: clamp(120px, 14vw, 210px);
+    height: auto;
+    color: rgba(201, 60, 10, 0.4);
+  }
+  .pp-land__h { font-size: clamp(27px, 3.1vw, 44px); }
+
+  .pp-land__pull {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(10px, 1.4vw, 22px);
+    margin: clamp(18px, 2.2vw, 28px) 0 0;
+    padding-top: clamp(14px, 1.6vw, 20px);
+    border-top: 1px solid var(--sb-border);
+  }
+  .pp-land__pull span {
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.7vw, 26px);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    color: var(--sb-charcoal);
+  }
+  .pp-land__pull span:nth-child(2) { color: var(--sb-violet); }
+  .pp-land__pull span:nth-child(3) { color: var(--sb-orange-bright); }
+
+  /* ═══ 04 · PLAY IS PART OF THE PLACE ══════════════════════════════════════ */
+  .pp-play {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #fff5ef;
+    padding-block: clamp(34px, 4vw, 64px);
+  }
+  .pp-play__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background: radial-gradient(64% 70% at 50% 8%, rgba(255, 255, 255, 0.76) 0%, rgba(255, 255, 255, 0) 74%);
+  }
+  /* The oversized transparent word. Set once, very low contrast, and never over
+     a paragraph — it sits behind the headline column only. */
+  .pp-play__ghost {
+    position: absolute;
+    z-index: -2;
+    top: 50%;
+    left: clamp(-16px, -0.6vw, -4px);
+    translate: 0 -50%;
+    font-family: var(--sb-font-display);
+    font-size: clamp(120px, 17vw, 260px);
+    font-weight: 700;
+    line-height: 0.82;
+    letter-spacing: -0.06em;
+    color: rgba(201, 60, 10, 0.045);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .pp-play__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+    gap: clamp(24px, 3.2vw, 52px);
+    align-items: center;
+  }
+  .pp-play__h { font-size: clamp(26px, 2.9vw, 40px); }
+
+  /* ⚠ COLUMNS DIVIDED BY RULES, NOT FOUR BOOTSTRAP CARDS. No background, no
+     radius, no shadow — the only structure is a 1px orange hairline. */
+  .pp-cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pp-col { padding: 0 clamp(10px, 1.3vw, 20px); }
+  .pp-col:first-child { padding-left: 0; }
+  .pp-col:last-child { padding-right: 0; }
+  .pp-col + .pp-col { border-left: 1px solid color-mix(in srgb, var(--sb-violet) 28%, transparent); }
+  .pp-col__m { display: block; width: clamp(22px, 2.1vw, 28px); color: var(--sb-violet); }
+  .pp-col__m svg { display: block; width: 100%; height: auto; }
+  .pp-col__n {
+    margin: clamp(9px, 1.1vw, 14px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.05vw, 16px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .pp-col__k {
+    margin: clamp(3px, 0.4vw, 5px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .pp-col__v {
+    margin: clamp(5px, 0.7vw, 9px) 0 0;
+    font-size: clamp(10.5px, 0.78vw, 12.4px);
+    line-height: 1.68;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 05 · ABHAYETI ═══════════════════════════════════════════════════════ */
+  .pp-abh {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-ivory);
+    padding-block: clamp(38px, 4.4vw, 72px);
+  }
+  .pp-abh__warm {
+    position: absolute;
+    z-index: -3;
+    inset: 0;
+    background:
+      radial-gradient(58% 64% at 4% 6%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 72%),
+      radial-gradient(54% 60% at 98% 94%, rgba(255, 138, 92, 0.12) 0%, rgba(255, 138, 92, 0) 74%);
+  }
+  .pp-abh__ghost {
+    position: absolute;
+    z-index: -1;
+    top: clamp(2px, 0.6vw, 12px);
+    left: clamp(-26px, -1.6vw, -10px);
+    width: max-content;
+    font-family: var(--sb-font-display);
+    font-size: clamp(72px, 10.5vw, 158px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201, 60, 10, 0.13);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .pp-abh__copy { position: relative; }
+  .pp-abh__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .pp-abh__h { font-size: clamp(29px, 3.4vw, 48px); }
+
+  .pp-abh__fig { margin: 0; }
+  .pp-abh__pic {
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card-hover);
+  }
+  .pp-abh__pic :global(picture) { display: block; }
+  .pp-abh__pic :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: 50% 62%;
+  }
+  .pp-abh__cap {
+    margin: clamp(9px, 1vw, 12px) 0 0;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    letter-spacing: 0.04em;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 06 · THE FIRST YEARS ════════════════════════════════════════════════ */
+  .pp-first {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--sb-paper);
+    padding-block: clamp(38px, 4.4vw, 70px);
+  }
+  /* ⚠ minmax(0, 1fr), NOT THE DEFAULT auto COLUMN — see the note on the Primary
+     page's journey rail. An auto column sizes to max-content and the rail comes
+     out narrower than the stops it connects. */
+  .pp-first__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+  .pp-first__kicker { text-align: center; }
+  .pp-first__h { max-width: 20ch; font-size: clamp(26px, 3vw, 42px); }
+
+  .pp-first__track {
+    width: 100%;
+    margin: clamp(24px, 3vw, 44px) 0 0;
+  }
+  .pp-rail { position: relative; height: clamp(68px, 6.8vw, 100px); }
+  .pp-rail__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    color: rgba(201, 60, 10, 0.34);
+  }
+  .pp-rail__draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    color: var(--sb-orange-bright);
+    opacity: 0.85;
+  }
+  .pp-rail__node {
+    position: absolute;
+    top: var(--ny);
+    left: var(--nx);
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: clamp(13px, 1.2vw, 17px);
+    aspect-ratio: 1 / 1;
+    border: 1.8px solid var(--sb-orange-bright);
+    border-radius: 50%;
+    background: var(--sb-paper);
+  }
+  /* The small circle that travels on the spot. Subtle, and it stops for anyone
+     who has asked motion to stop. */
+  .pp-rail__node i {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sb-orange-bright);
+    opacity: 0.34;
+    animation: pp-pulse 3.4s var(--sb-ease) infinite;
+    animation-delay: var(--d);
+  }
+  @keyframes pp-pulse {
+    0%, 100% { scale: 0.4; opacity: 0.85; }
+    50% { scale: 1.15; opacity: 0.06; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pp-rail__node i { animation: none; scale: 0.5; opacity: 0.9; }
+  }
+
+  .pp-stops {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 26px);
+    margin: clamp(8px, 1vw, 14px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pp-stop { text-align: center; }
+  .pp-stop__k {
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .pp-stop__v {
+    margin: clamp(5px, 0.6vw, 8px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.4vw, 23px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+
+  .pp-band {
+    display: grid;
+    grid-template-columns: minmax(0, 0.76fr) minmax(0, 1.02fr) minmax(0, 1.42fr);
+    gap: clamp(18px, 2.4vw, 38px);
+    width: 100%;
+    margin: clamp(24px, 3vw, 42px) 0 0;
+    padding: clamp(18px, 2.2vw, 28px) 0 0;
+    border-top: 1px solid var(--sb-border);
+    text-align: left;
+  }
+  .pp-band__lab {
+    margin: 0;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+  .pp-band__list {
+    display: grid;
+    gap: 5px;
+    margin: clamp(9px, 1vw, 13px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pp-band__list li {
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 1vw, 15.5px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+  .pp-band__q {
+    max-width: 27ch;
+    margin: clamp(9px, 1vw, 13px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(13.5px, 1.15vw, 18px);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.34;
+    letter-spacing: -0.025em;
+    color: var(--sb-violet);
+  }
+  .pp-band__facts { display: grid; gap: clamp(10px, 1.2vw, 15px); align-content: start; }
+  .pp-band__f {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(8px, 0.9vw, 11px);
+    margin: 0;
+    font-size: clamp(10.5px, 0.78vw, 12.4px);
+    line-height: 1.7;
+    color: var(--sb-text-muted);
+  }
+  .pp-band__f strong { font-weight: 700; color: var(--sb-charcoal); }
+  .pp-band__m { display: block; width: clamp(17px, 1.5vw, 21px); margin-top: 2px; color: var(--sb-violet); }
+  .pp-band__m svg { display: block; width: 100%; height: auto; }
+
+  .pp-first__note { margin-top: clamp(15px, 1.8vw, 22px); text-align: center; }
+
+  /* ═══ 07 · THE CLOSE ══════════════════════════════════════════════════════ */
+  .pp-close {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(46px, 5.6vw, 90px);
+  }
+  .pp-close__media { position: absolute; z-index: -3; inset: -12% 0; }
+  .pp-close__media :global(picture),
+  .pp-close__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 46%;
+  }
+  .pp-close__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(24, 11, 5, 0.86) 0%, rgba(24, 11, 5, 0.74) 46%, rgba(24, 11, 5, 0.9) 100%),
+      radial-gradient(66% 76% at 50% 42%, rgba(255, 92, 53, 0.16) 0%, transparent 72%);
+  }
+  .pp-close__grain {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    opacity: 0.26;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+  .pp-close__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+  .pp-close__h {
+    max-width: 20ch;
+    font-size: clamp(26px, 3.2vw, 46px);
+    color: #fff;
+  }
+  .pp-close__h em { color: var(--sb-lime); font-style: italic; }
+  .pp-close__b {
+    max-width: 64ch;
+    margin: clamp(14px, 1.7vw, 21px) 0 0;
+    font-size: clamp(12px, 0.88vw, 14px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+  .pp-close__cap {
+    margin: clamp(11px, 1.3vw, 16px) 0 0;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    letter-spacing: 0.04em;
+    color: var(--sb-on-dark-66);
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════
+     ⚠ MOBILE IS RECOMPOSED, NOT STACKED. The collages keep their overlap at
+     tablet and become a deliberate two-frame pair on the phone; the strips and
+     column sets fold to two-up before they fold to one. */
+  @media (max-width: 1179px) {
+    .pp-doing__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 3.2vw, 36px); }
+    .pp-doing__note { max-width: 62ch; }
+    .pp-play__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(22px, 2.8vw, 34px); }
+    .pp-band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pp-band__facts { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 1023px) {
+    .pp-open__grid,
+    .pp-land__grid,
+    .pp-abh__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(28px, 4vw, 40px);
+    }
+    /* The picture leads on a narrow screen in 03, as it does everywhere else. */
+    .pp-land__stage { order: -1; }
+    .pp-land__thread { display: none; }
+    .pp-body { max-width: 62ch; }
+    .pp-open__h,
+    .pp-abh__h { font-size: clamp(28px, 5vw, 40px); }
+    .pp-zone { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: clamp(14px, 2vw, 20px); }
+    .pp-zone__i:nth-child(4) { border-left: 0; padding-left: 0; }
+    .pp-open__trail { display: none; }
+    .pp-abh__ghost { font-size: clamp(70px, 11vw, 120px); }
+  }
+
+  @media (max-width: 767px) {
+    .pp-open,
+    .pp-doing,
+    .pp-abh { padding-block: clamp(32px, 7vw, 44px); }
+    .pp-land,
+    .pp-play,
+    .pp-first { padding-block: clamp(30px, 6.6vw, 42px); }
+
+    /* The collages recompose: the lead takes the full width, the overhang frame
+       drops to a fixed fraction at the corner, and the circle is retired rather
+       than shrunk to an illegible dot. */
+    .pp-open__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .pp-open__sm { width: 44%; bottom: 0; }
+    .pp-open__stage { padding-bottom: clamp(30px, 8vw, 42px); }
+    .pp-open__cir { display: none; }
+
+    .pp-land__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .pp-land__sm { width: 50%; }
+    .pp-land__stage { padding-bottom: clamp(26px, 7vw, 38px); }
+
+    .pp-zone { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pp-zone__i { padding-left: 0; }
+    .pp-zone__i + .pp-zone__i { border-left: 0; }
+    .pp-zone__i:nth-child(even) { padding-left: clamp(12px, 4vw, 18px); border-left: 1px solid var(--sb-border); }
+
+    /* Three frames become one column, and the staggered drops go — a stagger
+       only reads across a row. */
+    .pp-acts { grid-template-columns: minmax(0, 1fr); gap: clamp(22px, 6vw, 30px); }
+    .pp-act:nth-child(n) { margin-top: 0; }
+    .pp-act:nth-child(1) .pp-act__pic :global(img),
+    .pp-act:nth-child(2) .pp-act__pic :global(img),
+    .pp-act:nth-child(3) .pp-act__pic :global(img) { aspect-ratio: 16 / 11; }
+    .pp-doing__stage { padding-top: 0; }
+    .pp-doing__arc,
+    .pp-doing__nodes { display: none; }
+
+    .pp-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(20px, 5vw, 26px); }
+    .pp-col { padding: 0; }
+    .pp-col + .pp-col { border-left: 0; }
+    .pp-col:nth-child(even) { padding-left: clamp(14px, 4.4vw, 20px); border-left: 1px solid color-mix(in srgb, var(--sb-violet) 28%, transparent); }
+    .pp-play__ghost { font-size: clamp(96px, 30vw, 150px); }
+
+    /* The rail keeps its three stops but flattens — a wave through three points
+       is unreadable at 390px. */
+    .pp-rail { height: clamp(44px, 12vw, 60px); }
+    .pp-rail__node { --ny: 50% !important; }
+    .pp-rail__svg { display: none; }
+    .pp-rail::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      inset-inline: 8%;
+      height: 1px;
+      background: repeating-linear-gradient(to right, rgba(201, 60, 10, 0.4) 0 3px, transparent 3px 12px);
+    }
+    .pp-stops { gap: clamp(6px, 2vw, 10px); }
+    .pp-stop__v { font-size: clamp(13px, 3.6vw, 16px); }
+
+    .pp-band { grid-template-columns: minmax(0, 1fr); gap: clamp(18px, 5vw, 24px); }
+    .pp-band__facts { grid-template-columns: minmax(0, 1fr); }
+
+  }
+</style>

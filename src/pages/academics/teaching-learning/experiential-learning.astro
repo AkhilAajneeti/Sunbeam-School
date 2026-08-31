@@ -1,0 +1,64 @@
+---
+/**
+ * TEACHING & LEARNING · EXPERIENTIAL & PROJECT-BASED LEARNING — audit §2C.
+ *
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height, same title
+ * and standfirst as before and as every other Academics page. All of the
+ * redesign is below it.
+ *
+ * ⚠ COMBINED PAGE — two of the brief's fourteen bullets: Experiential Learning
+ * and Project-Based Learning. The standalone /project-based-learning/ route was
+ * an implementation experiment; its verified content is merged here and the
+ * route is retired.
+ *
+ * The page was rebuilt off the generic AcStatement → AcCollage → AcSplit →
+ * AcClose system into a composed one: four sections, four different builds — a
+ * photo cluster, a drawn path with a real viewer on it, a documentary stack, and
+ * a dark close. Everything below the banner lives in
+ * components/academics/teaching/ExperientialLearningPage.astro, and that file's
+ * frontmatter carries the source for every claim, plus the note on the two
+ * activities that are deliberately absent because they cannot be checked.
+ *
+ * ⚠ SCOPE BOUNDARY — the national science programmes belong to STEM, Robotics &
+ * Enrichment; the laboratory inventory to Laboratories & Academic Clubs; the
+ * smart-classroom and computer-lab counts to Smart Classrooms & Digital
+ * Literacy. This page is about work that produces an object, a venture or a plot.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import ExperientialLearningPage from '../../../components/academics/teaching/ExperientialLearningPage.astro';
+
+import banner from '../../../assets/school-activities/little-agriculturists/02.jpg';
+---
+
+<BaseLayout
+  title="Experiential & Project-Based Learning — Sunbeam School Ballia"
+  description="Learning by doing at Sunbeam School Ballia: a planting plot the youngest children dig themselves, a Class 7 programme running a real venture, and an international innovation project with Monash University."
+>
+  <PageHero
+    title="Experiential & Project-Based Learning"
+    standfirst="Met in the hand before it is met in the exam — and the school now teaches other schools how."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Teaching & Learning', href: '/academics/teaching-learning/' },
+    ]}
+    src={banner}
+    alt="A young student of Sunbeam School Ballia adding kitchen scraps to the compost bin at the Little Agriculturists activity."
+    position="50% 40%"
+  />
+
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer.
+
+      ⚠ AND THE PADDING RESET IS AN INLINE STYLE, DELIBERATELY. `.u-page-panel`
+      in base.css carries `padding-bottom: var(--sb-section-y)` — 120px of empty
+      cream between the closing section and the footer. A stylesheet form of the
+      override can be served from a different build than the HTML that needs it,
+      and then it silently stops applying; an inline style travels IN the HTML,
+      so the two cannot skew. Same decision as the other redesigned pages. */}
+  <div class="u-page-panel" style="padding-block: 0;">
+    <ExperientialLearningPage />
+  </div>
+</BaseLayout>

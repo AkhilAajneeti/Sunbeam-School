@@ -1,0 +1,571 @@
+---
+/**
+ * C04 · MOBILE NAVIGATION — docs/06 §02, docs/05 § L
+ *
+ * Full-screen overlay, accordion, 56px rows, Apply pinned to the bottom.
+ * "Plan a proper mobile navigation rather than simply hiding desktop links
+ * behind a basic hamburger" — so section landing pages stay directly reachable
+ * from the accordion header, and the utility links that the top bar drops below
+ * 768px reappear here under Quick Links.
+ */
+/* ⚠ drawerQuickLinks, NOT utilityLinks. The two lists were the same until
+   Uniform Catalogue came off the main bar: it has to be HERE, because on a phone
+   this drawer IS the main bar, but it must not be pushed back into the top
+   utility bar, which already sheds links by tier because eight of them plus a
+   phone number do not fit a laptop. drawerQuickLinks is derived from
+   utilityLinks, so anything added to the bar still reaches this list. */
+import { mainNav, drawerQuickLinks } from '../../data/navigation';
+import { school } from '../../data/site';
+/* Same stroke set the desktop menu uses, so a link carries the same glyph in
+   both places — the drawer is the same navigation, not a second one. */
+import FacIcon from '../campus/facilities/FacIcon.astro';
+---
+
+<div class="drawer" id="mobile-nav" data-drawer hidden>
+  <div class="drawer__scrim" data-drawer-close aria-hidden="true"></div>
+
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Site menu">
+    <div class="drawer__head">
+      {/* ⚠ 190×144 IS THE FILE'S ACTUAL SIZE — read out of the PNG's IHDR, not
+          eyeballed. These attributes said 191×150, so the browser reserved a
+          1.27 box for a 1.32 image and squashed the crest very slightly on
+          every page of the site. Lighthouse reports it as `image-aspect-ratio`;
+          it is invisible until you know, and wrong everywhere. */}
+      <img
+        class="drawer__emblem"
+        src="/brand/sunbeam-emblem.png"
+        alt=""
+        width="190"
+        height="144"
+      />
+      <button class="drawer__close" type="button" aria-label="Close menu" data-drawer-close>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <path d="M1 1L17 17M17 1L1 17" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </button>
+    </div>
+
+    {/* Distinct from the desktop <nav aria-label="Main">: although the drawer is
+        `hidden` (and so out of the accessibility tree) when closed, two identically
+        labelled landmarks are ambiguous the moment it opens. */}
+    <nav class="drawer__nav" aria-label="Main, menu panel">
+      <ul>
+        {mainNav.map((item) => (
+          <li class="drawer__item">
+            {item.columns ? (
+              <>
+                {/* ⚠⚠ ONE CONTROL PER ROW, NOT TWO. This row used to hold a text
+                    LINK and a separate chevron BUTTON: tapping the words left the
+                    drawer for the parent page, tapping the 56px chevron expanded
+                    the section. Two targets, indistinguishable to look at, doing
+                    opposite things — and for “About Us” the text half landed on a
+                    placeholder page instead of revealing its six links. The whole
+                    row is now the toggle. */}
+                <button
+                  class="drawer__row drawer__row--toggle"
+                  type="button"
+                  aria-expanded="false"
+                  data-accordion
+                >
+                  <span class="drawer__row-link">{item.label}</span>
+                  <span class="drawer__expand" aria-hidden="true">
+                    <svg width="13" height="8" viewBox="0 0 13 8" fill="none" aria-hidden="true">
+                      <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.6" />
+                    </svg>
+                  </span>
+                </button>
+                {/* FLATTENED, like the desktop menu. The columns are a
+                    desktop layout device; rendered as separate groups here they
+                    put a rule and a gap in the middle of one list, which read
+                    as two unrelated sets. */}
+                <div class="drawer__sub" hidden>
+                  <ul>
+                    {item.columns.flat().map((child) => (
+                      <li>
+                        <a class="drawer__sub-link" href={child.href}>
+                          <span class="drawer__plate" aria-hidden="true">
+                            <FacIcon name={child.icon ?? 'dot'} size={16} />
+                          </span>
+                          <span>{child.label}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <div class="drawer__row">
+                <a class="drawer__row-link" href={item.href}>{item.label}</a>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="drawer__utility">
+      <p class="drawer__utility-head t-label">Quick Links</p>
+      <ul>
+        {drawerQuickLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              {...('external' in link && link.external
+                ? { target: '_blank', rel: 'noopener' }
+                : {})}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="drawer__foot">
+      {/* ⚠ THE SAME ADMISSIONS BUTTON AS THE MASTHEAD, PINNED. Same href, same
+          flag, same pulse — it is one action, rendered twice, and both read
+          school.external.applyFormNurseryToIX and school.admissionsOpen so they
+          cannot come to point at different things. The masthead pill hides below
+          560px; this is where it goes.
+
+          ⚠ PINNED, SO IT DOES NOT SCROLL AWAY UNDER ELEVEN ACCORDION SECTIONS.
+          .drawer__foot is already outside the scrolling region — that is why the
+          helpline was put here — and the button joins it rather than being
+          dropped at the end of the link list. */}
+      <a
+        class:list={['drawer__cta', school.admissionsOpen && 'is-open']}
+        href={school.external.applyFormNurseryToIX}
+        target="_blank"
+        rel="noopener noreferrer"
+      >Admissions</a>
+
+      <a class="drawer__phone" href={`tel:${school.phone.admissions}`}>
+        Admissions Helpline
+        <strong class="t-tabular">{school.phone.admissionsDisplay}</strong>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+  }
+
+  .drawer[hidden] { display: none; }
+
+  /* The drawer's lists are unclassed, so the global `ul[class]` reset in
+     base.css does not reach them — markers and the 40px indent would show. */
+  .drawer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .drawer__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(18, 16, 15, 0.5);
+    opacity: 0;
+    transition: opacity 260ms ease;
+  }
+
+  .drawer.is-open .drawer__scrim { opacity: 1; }
+
+  /* Starts below the masthead, whose real height the script measures on open —
+     the header stays visible and in charge, and the panel slides in underneath
+     it rather than burying it. `--drawer-top` falls back to the token so the
+     panel is still positioned correctly if the script never runs. */
+  .drawer__panel {
+    position: absolute;
+    inset-block: var(--drawer-top, var(--sb-masthead-h)) 0;
+    right: 0;
+    width: min(460px, 100%);
+    background: var(--sb-ivory);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    /* THE CURVED LEADING EDGE. Closed, the panel's left side is a deep ellipse;
+       open, it is flat. Because border-radius is animatable, the curve relaxes
+       as the panel travels, which reads as the sheet being pulled in and
+       settling rather than a rectangle sliding. The two-value syntax
+       (`46% / 50%`) makes the curve an ellipse the full height of the panel —
+       a single value would round the corners instead of bowing the edge.
+       Slightly slower than the slide so the shape is still easing when the
+       movement stops. */
+    border-radius: 46% 0 0 46% / 50% 0 0 50%;
+    transition:
+      transform 420ms var(--sb-ease),
+      border-radius 520ms var(--sb-ease);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-shadow: -18px 0 48px -24px rgba(28, 14, 8, 0.45);
+  }
+
+  .drawer.is-open .drawer__panel {
+    transform: translateX(0);
+    border-radius: 0;
+  }
+
+  .drawer__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sb-5) var(--sb-6);
+    border-bottom: var(--sb-hairline);
+    position: sticky;
+    top: 0;
+    background: var(--sb-ivory);
+    z-index: 2;
+  }
+
+  .drawer__emblem { height: 40px; width: auto; }
+
+  .drawer__close {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-right: calc(var(--sb-4) * -1);
+    color: var(--sb-charcoal);
+  }
+
+  /* --- Rows: 56px, full-width targets ------------------------------------ */
+
+  .drawer__row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: var(--sb-hairline);
+  }
+
+  /* ⚠ A <button> BRINGS ITS OWN BACKGROUND, BORDER, PADDING AND CENTRED TEXT.
+     All of it has to go, or the six parent rows sit differently from the four
+     leaf rows beside them. */
+  .drawer__row--toggle {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    border-bottom: var(--sb-hairline);
+    padding: 0;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .drawer__row-link {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+    padding: 0 var(--sb-6);
+    font-family: var(--sb-font-display);
+    font-size: 21px;
+    font-weight: 400;
+    color: var(--sb-charcoal);
+  }
+
+  .drawer__row-link:hover { color: var(--sb-violet); }
+
+  /* No dividing rule against the label: the chevron is a control, and a border
+     between it and the link it belongs to reads as two separate rows. */
+  .drawer__expand {
+    width: 56px;
+    display: grid;
+    place-items: center;
+    color: var(--sb-text-muted);
+  }
+
+  .drawer__expand svg {
+    padding: 7px;
+    box-sizing: content-box;
+    border-radius: 50%;
+    background: var(--sb-sand);
+    transition: background 180ms ease, transform var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  .drawer__expand[aria-expanded='true'] svg { background: var(--sb-violet-wash); }
+
+  .drawer__expand svg { transition: transform var(--sb-dur-nav) var(--sb-ease); }
+  .drawer__expand[aria-expanded='true'] svg { transform: rotate(180deg); }
+  .drawer__expand[aria-expanded='true'] { color: var(--sb-violet); }
+
+  /* Inset rather than full-bleed, so the open branch reads as a panel nested
+     inside its parent row instead of another slab of the same list. */
+  .drawer__sub {
+    margin: 0 var(--sb-5) var(--sb-4);
+    padding: 8px;
+    background: var(--sb-sand);
+    border-radius: 14px;
+  }
+
+  .drawer__sub[hidden] { display: none; }
+
+  /* `.drawer__group` and its separating rule are gone with the flattened
+     markup — one list needs no divider through its middle. */
+
+  .drawer__sub-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-height: 48px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    color: var(--sb-text-secondary);
+    font-size: var(--sb-body-sm);
+    font-weight: 500;
+    line-height: 1.35;
+    transition: background 180ms ease, color 180ms ease;
+  }
+
+  .drawer__sub-link:hover,
+  .drawer__sub-link:focus-visible {
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+
+  /* The same plate the desktop menu uses, one size down — it is the mark that
+     makes a row scannable at arm's length, which matters more on a phone than
+     it does on a pointer device. */
+  .drawer__plate {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px rgba(201, 60, 10, 0.12);
+    color: var(--sb-violet);
+    transition: background 180ms ease, color 180ms ease;
+  }
+
+  .drawer__sub-link:hover .drawer__plate,
+  .drawer__sub-link:focus-visible .drawer__plate {
+    background: var(--sb-violet);
+    color: #fff;
+  }
+
+  .drawer__sub-link:hover { color: var(--sb-violet); }
+
+  /* --- Utility ------------------------------------------------------------ */
+
+  .drawer__utility {
+    padding: var(--sb-7) var(--sb-6);
+    border-bottom: var(--sb-hairline);
+  }
+
+  .drawer__utility-head {
+    color: var(--sb-text-muted);
+    margin-bottom: var(--sb-4);
+  }
+
+  .drawer__utility ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-3) var(--sb-6);
+  }
+
+  .drawer__utility a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-text-secondary);
+  }
+
+  .drawer__utility a:hover { color: var(--sb-violet); }
+
+  /* --- Footer: Apply pinned ---------------------------------------------- */
+
+  .drawer__foot {
+    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+    background: var(--sb-ivory);
+    border-top: var(--sb-hairline);
+    padding: var(--sb-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-4);
+  }
+
+  /* --- The pinned admissions button -----------------------------------------
+     Full width, unlike the masthead pill: in a drawer the thumb is the pointer
+     and the row is the target, so a pill floating in the middle of a 44px band
+     is a smaller tap area for no gain.
+
+     ⚠ SAME PULSE, SAME KEYFRAMES, SAME FLAG as Masthead.astro — one action, and
+     it must not look like two. Astro scopes styles per component, so the
+     keyframes are declared in both files rather than shared; if the timing
+     changes in one, change it in the other. */
+  .drawer__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 var(--sb-6);
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    color: #fff;
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .drawer__cta:hover { background: var(--sb-violet-dark); }
+
+  .drawer__cta.is-open {
+    animation: drawer-pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes drawer-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(201, 60, 10, 0.42); }
+    55%  { box-shadow: 0 0 0 6px rgba(201, 60, 10, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(201, 60, 10, 0); }
+  }
+
+  /* The pulse is motion. The button keeps its colour and its place. */
+  @media (prefers-reduced-motion: reduce) {
+    .drawer__cta.is-open { animation: none; }
+  }
+
+  .drawer__phone {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sb-4);
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  .drawer__phone strong { color: var(--sb-violet); font-size: var(--sb-body-sm); }
+
+  /* The masthead now sits above the drawer and carries the crest and the
+     cross, so the panel's own header would be the same two things twice. */
+  .drawer__head { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* No slide and no curve — the panel is simply there. Snapping the radius to
+       0 as well matters: without it the sheet would sit permanently bowed. */
+    .drawer__panel { transition: none; border-radius: 0; }
+  }
+</style>
+
+<script>
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+
+  if (drawer && toggle) {
+    const panel = drawer.querySelector<HTMLElement>('.drawer__panel')!;
+    let lastFocused: HTMLElement | null = null;
+
+    const focusables = () =>
+      Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null);
+
+    const masthead = document.querySelector<HTMLElement>('[data-masthead]');
+
+    const open = () => {
+      lastFocused = document.activeElement as HTMLElement;
+      drawer.hidden = false;
+      /* BOTTOM, not height — the utility bar sits above the masthead when the
+         page is unscrolled, so the header's box starts at ~30px and its height
+         (65) is 30px short of where it actually ends. Using height tucked the
+         panel under the header and clipped its first row. `bottom` is correct
+         in every state: with the utility bar showing, without it, and when the
+         masthead has condensed on scroll. */
+      if (masthead) {
+        const bottom = Math.max(0, Math.round(masthead.getBoundingClientRect().bottom));
+        drawer.style.setProperty('--drawer-top', `${bottom}px`);
+      }
+      masthead?.classList.add('is-nav-open');
+      // next frame so the transition runs from the translated state
+      requestAnimationFrame(() => drawer.classList.add('is-open'));
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Close menu');
+      const label = toggle.querySelector('.masthead__toggle-text');
+      if (label) label.textContent = 'Close';
+      document.body.style.overflow = 'hidden';
+      focusables()[0]?.focus();
+    };
+
+    const close = () => {
+      drawer.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+      const label = toggle.querySelector('.masthead__toggle-text');
+      if (label) label.textContent = 'Menu';
+      document.body.style.overflow = '';
+      const done = () => {
+        drawer.hidden = true;
+        // Dropped only once the panel has left, or the header would fall back
+        // under the drawer mid-animation and the cross would blink out.
+        masthead?.classList.remove('is-nav-open');
+        panel.removeEventListener('transitionend', done);
+      };
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        drawer.hidden = true;
+        masthead?.classList.remove('is-nav-open');
+      } else {
+        panel.addEventListener('transitionend', done);
+      }
+      lastFocused?.focus();
+    };
+
+    /* A real toggle now. The button morphs into a cross and stays reachable
+       above the drawer, so pressing it again has to close — a cross that only
+       opens is the thing users tap twice and then give up on. */
+    toggle.addEventListener('click', () =>
+      toggle.getAttribute('aria-expanded') === 'true' ? close() : open()
+    );
+    drawer.querySelectorAll('[data-drawer-close]').forEach((el) =>
+      el.addEventListener('click', close)
+    );
+
+    // Focus trap + Escape.
+    drawer.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    // Accordion sections.
+    panel.querySelectorAll<HTMLButtonElement>('[data-accordion]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const expanded = button.getAttribute('aria-expanded') === 'true';
+        const sub = button.closest('.drawer__item')?.querySelector<HTMLElement>('.drawer__sub');
+        button.setAttribute('aria-expanded', String(!expanded));
+        if (sub) sub.hidden = expanded;
+      });
+    });
+
+    // Close if the viewport grows into the desktop nav. Must track the
+    // Masthead's 1360 threshold, or the drawer is left open behind it.
+    window.matchMedia('(min-width: 1360px)').addEventListener('change', (event) => {
+      if (event.matches && !drawer.hidden) close();
+    });
+  }
+</script>

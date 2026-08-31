@@ -1,0 +1,148 @@
+---
+/**
+ * CHAPTER PAGER — the foot of every Academics detail page.
+ *
+ * Six detail pages in a defined order, so each one should say where it sits and
+ * offer the next. This is the ONE layout deliberately repeated across the
+ * section: a reader who learns it on page two should not have to relearn it on
+ * page five. Everything above it differs per page.
+ *
+ * Derived from `chapters`, so adding a chapter to the data updates all six
+ * pagers and none of them can point at a stale neighbour.
+ */
+import { chapters } from '../../data/academics';
+
+interface Props {
+  /** Slug of the current chapter. */
+  current: string;
+}
+
+const { current } = Astro.props;
+const i = chapters.findIndex((c) => c.slug === current);
+const prev = i > 0 ? chapters[i - 1] : null;
+const next = i > -1 && i < chapters.length - 1 ? chapters[i + 1] : null;
+---
+
+<nav class="cnav" aria-label="Academics chapters">
+  <div class="u-container">
+    <p class="cnav__where">
+      Chapter {chapters[i]?.n} of {String(chapters.length).padStart(2, '0')} ·
+      <a href="/academics/">Academics overview</a>
+    </p>
+
+    <div class="cnav__pair">
+      {prev ? (
+        <a class="cnav__card cnav__card--prev" href={prev.href} rel="prev">
+          <span class="cnav__dir">
+            <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+              <path d="M5 1L1 5l4 4M1 5h13" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+            Previous
+          </span>
+          <span class="cnav__t">{prev.title}</span>
+        </a>
+      ) : (
+        <span class="cnav__card cnav__card--empty" aria-hidden="true"></span>
+      )}
+
+      {next && (
+        <a class="cnav__card cnav__card--next" href={next.href} rel="next">
+          <span class="cnav__dir">
+            Next
+            <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+              <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+          </span>
+          <span class="cnav__t">{next.title}</span>
+        </a>
+      )}
+    </div>
+  </div>
+</nav>
+
+<style>
+  .cnav {
+    background: var(--sb-ink);
+    padding-block: clamp(48px, 7vh, 80px);
+  }
+
+  .cnav__where {
+    margin-bottom: var(--sb-6);
+    font-size: var(--sb-caption);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.66);
+  }
+
+  .cnav__where a {
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .cnav__where a:hover { border-bottom-color: #fff; }
+
+  .cnav__pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-5);
+  }
+
+  .cnav__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-4);
+    padding: var(--sb-7);
+    border-radius: var(--sb-r-2);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    transition: border-color var(--sb-dur-link) ease, background-color var(--sb-dur-link) ease;
+  }
+
+  /* An invisible spacer on the first chapter, so "Next" stays in the right-hand
+     column rather than sliding under "Previous". A grid gap cannot do this —
+     the cell has to exist. */
+  .cnav__card--empty { border-color: transparent; }
+
+  a.cnav__card:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .cnav__card--next { text-align: right; }
+
+  .cnav__dir {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-lime);
+  }
+
+  .cnav__card--next .cnav__dir { justify-content: flex-end; }
+  .cnav__dir svg { transition: transform var(--sb-dur-link) var(--sb-ease); }
+  a.cnav__card--next:hover .cnav__dir svg { transform: translateX(4px); }
+  a.cnav__card--prev:hover .cnav__dir svg { transform: translateX(-4px); }
+
+  .cnav__t {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(19px, 1.9vw, 26px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cnav__dir svg { transition: none; }
+    a.cnav__card:hover .cnav__dir svg { transform: none; }
+  }
+
+  @media (max-width: 639px) {
+    .cnav__pair { grid-template-columns: minmax(0, 1fr); }
+    .cnav__card--empty { display: none; }
+    .cnav__card--next { text-align: left; }
+    .cnav__card--next .cnav__dir { justify-content: flex-start; }
+  }
+</style>

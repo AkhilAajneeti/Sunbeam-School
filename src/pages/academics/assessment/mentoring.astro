@@ -1,0 +1,42 @@
+---
+/**
+ * ASSESSMENT & SUPPORT · MENTORING.
+ *
+ * ⚠ THE BODY IS A BESPOKE COMPOSITION, and deliberately not the same one as
+ * Remedial Support or Homework Policy — mentoring is about people, so its image
+ * composition is portrait, its journey alternates, and it ends on a quiet cream
+ * callout rather than going straight from the dark statement to the footer.
+ * Sourcing, including the two recruitment posters, is in the component's header.
+ *
+ * ⚠ THE BANNER, NAVBAR AND FOOTER ARE UNTOUCHED.
+ * ⚠ THE PANEL'S padding-block IS AN INLINE STYLE — a scoped rule can skew
+ * against its build hash and reopen the white band above the footer.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import MentoringPage from '../../../components/academics/assessment/MentoringPage.astro';
+
+import banner from '../../../assets/library/DSC_1224 copy.jpg';
+---
+
+<BaseLayout
+  title="Mentoring — Sunbeam School Ballia"
+  description="Mentoring at Sunbeam School Ballia: every student has a member of staff who knows them, with trained BCS counsellors on campus and a school counsellor post advertised at master's level."
+>
+  <PageHero
+    title="Mentoring"
+    standfirst="What a school staffs for says more than what it says about itself."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Assessment & Support', href: '/academics/assessment/' },
+    ]}
+    src={banner}
+    alt="The Nalanda Library at Sunbeam School Ballia, its reading tables set out along the shelves."
+    position="50% 48%"
+  />
+
+  <div class="u-page-panel" style="padding-block: 0;">
+    <MentoringPage />
+  </div>
+</BaseLayout>

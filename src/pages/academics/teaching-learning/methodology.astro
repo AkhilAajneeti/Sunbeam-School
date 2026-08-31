@@ -1,0 +1,63 @@
+---
+/**
+ * TEACHING & LEARNING · TEACHING METHODOLOGY — audit §2C.
+ *
+ * ⚠ THE BANNER IS THE SHARED PageHero AND ITS TREATMENT IS UNTOUCHED — same
+ * component, same photograph, same crop, same crumbs, same height, same title
+ * and standfirst as before and as every other Academics page. All of the
+ * redesign is below it.
+ *
+ * ⚠ THIS IS A COMBINED PAGE, AND THE COMBINATION IS THE CLIENT'S IA.
+ * It carries TWO of the brief's fourteen bullets: Teaching Methodology and
+ * Collaborative Learning. They belong together because collaborative learning is
+ * not a separate programme at this school — it is the third of the three things
+ * the school names as its method. Splitting them produced two thin pages that
+ * each had to explain the other. A standalone /collaborative-learning/ route
+ * existed briefly as an implementation experiment; its verified content is
+ * merged here and the route is retired.
+ *
+ * The page was rebuilt off the generic AcStatement → AcCollage → AcSplit →
+ * AcPath → AcClose system into a composed one: five sections, five compositions,
+ * none of them the numeral + eyebrow + heading + paragraph + photo block the
+ * client rejected as "a repeated template". Everything below the banner lives in
+ * components/academics/teaching/MethodologyPage.astro, and every claim it makes
+ * — and every claim it deliberately does NOT make — is sourced in that file's
+ * frontmatter.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import MethodologyPage from '../../../components/academics/teaching/MethodologyPage.astro';
+
+import banner from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
+---
+
+<BaseLayout
+  title="Teaching Methodology — Sunbeam School Ballia"
+  description="The method Sunbeam School Ballia names as its own: technology, a theory of multiple intelligence and collaborative learning, built into all areas of teaching rather than run as separate programmes."
+>
+  <PageHero
+    title="Teaching Methodology"
+    standfirst="Three things, named by the school — and not one of them is a special lesson."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Teaching & Learning', href: '/academics/teaching-learning/' },
+    ]}
+    src={banner}
+    alt="The activity learning laboratory at Sunbeam School Ballia, its worktables set out for group work."
+    position="50% 50%"
+  />
+
+  {/* ⚠ THE PANEL IS REQUIRED. PageHero is sticky and this panel covers it as the
+      page scrolls; without it the banner hangs under the footer.
+
+      ⚠ AND THE PADDING RESET IS AN INLINE STYLE, DELIBERATELY. `.u-page-panel`
+      in base.css carries `padding-bottom: var(--sb-section-y)` — 120px of empty
+      cream between the closing section and the footer. A stylesheet form of the
+      override can be served from a different build than the HTML that needs it,
+      and then it silently stops applying; an inline style travels IN the HTML,
+      so the two cannot skew. Same decision as the Academic Structure pages. */}
+  <div class="u-page-panel" style="padding-block: 0;">
+    <MethodologyPage />
+  </div>
+</BaseLayout>

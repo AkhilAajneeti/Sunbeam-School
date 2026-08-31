@@ -1,0 +1,168 @@
+---
+/**
+ * ACADEMICS → 03 · TEACHING & LEARNING
+ *
+ * SIX CHAPTERS, EACH A DIFFERENT COMPOSITION. The brief for this section named
+ * fourteen topics; presented as fourteen tiles they are an inventory, and this
+ * page used to be exactly that — a nine-tile bento of the school's rooms. It has
+ * been rebuilt as an argument about how the school teaches, with the inventory
+ * kept but moved to the END, where a list belongs.
+ *
+ *   1 Method     components/academics/teaching/Method.astro    editorial cascade
+ *   2 Room       components/academics/teaching/Room.astro      sticky-scroll stage
+ *   3 HandsOn    components/academics/teaching/HandsOn.astro   overlapping collage
+ *   4 StemRail   components/academics/teaching/StemRail.astro  horizontal rail
+ *   5 Words      components/academics/teaching/Words.astro     masked figure + rail
+ *   6 LabIndex   components/academics/teaching/LabIndex.astro  blueprint index
+ *
+ * No two chapters share a layout, a ground or a device, and none of them is a
+ * card grid. Copy lives in `teachingLearning` in src/data/academics.ts.
+ *
+ * EVERY PHOTOGRAPH IS SUNBEAM BALLIA'S OWN. The repository holds stock imagery
+ * that would slot straight into these compositions — an empty Western lecture room
+ * named "Smart-classrooms.jpg", a consumer DJI product shot named
+ * "Robotics-drones.jpg" — and none of it is used. The Robotics Lab therefore
+ * appears twice without a photograph, and both times the page says why: a stock
+ * drone would be a plain lie about a room this school genuinely has. Request A2.
+ *
+ * THE BANNER IS PageHero — the same component every other inner page uses, and
+ * the same one Academic Philosophy opens on. This page had a bespoke hero of its
+ * own; the client asked for the shared one, so the bespoke markup, its scrim, its
+ * mesh, its settle and its scroll cue are all gone.
+ *
+ * ITS HEADLINE MOVED DOWN rather than being deleted. "Twelve laboratories, and a
+ * library" is the page's argument, not its label, and PageHero's title is the
+ * label — so the headline and its standfirst now open the page BODY as a lede,
+ * where they introduce the six chapters instead of competing with the breadcrumb.
+ * It still animates: HeroTitle splits it on the server and rises it in with CSS,
+ * which is what lets an above-the-fold heading animate at all (motion-gsap.ts
+ * refuses to touch anything already on screen — see that component's header).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import HeroTitle from '../../components/ui/HeroTitle.astro';
+import SectionRail from '../../components/academics/SectionRail.astro';
+
+import Method from '../../components/academics/teaching/Method.astro';
+import Room from '../../components/academics/teaching/Room.astro';
+import HandsOn from '../../components/academics/teaching/HandsOn.astro';
+import StemRail from '../../components/academics/teaching/StemRail.astro';
+import Words from '../../components/academics/teaching/Words.astro';
+import LabIndex from '../../components/academics/teaching/LabIndex.astro';
+
+import heroPhoto from '../../assets/photos/sb-comp-lab-2.jpg';
+---
+
+<BaseLayout
+  title="Teaching & Learning — Sunbeam School Ballia"
+  description="Twelve subject laboratories, a robotics lab, two computer labs, 75+ smart classrooms with 49+ interactive panels, and the 17,574-book Nalanda Library at Sunbeam School Ballia — a Microsoft Showcase School."
+>
+  <PageHero
+    title="Teaching & Learning"
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+    ]}
+    src={heroPhoto}
+    alt="Younger students of Sunbeam School Ballia working at desktop computers in the junior computer laboratory."
+    position="50% 45%"
+  />
+
+  {/* ══ THE SIX CHAPTERS ═══════════════════════════════════════════════════
+      Order is an argument: how a lesson is shaped, the room it happens in, what
+      students do with their hands, where the science lives, what they read — and
+      only then the list of rooms. */}
+  {/* A slim sticky index of the six chapters. It is also what replaces the
+      wayfinding the chapter pager used to provide at the foot of the page. */}
+  <SectionRail
+    items={[
+      { id: 'methodology', label: 'Teaching methodology' },
+      { id: 'smart-classrooms', label: 'Smart classrooms' },
+      { id: 'experiential', label: 'Experiential learning' },
+      { id: 'stem', label: 'STEM & robotics' },
+      { id: 'reading', label: 'Reading & language' },
+      { id: 'laboratories', label: 'Every room, listed' },
+    ]}
+  />
+
+  {/* padding-bottom: 0 — LabIndex closes on its own ivory ground and the panel's
+      120px would only add an empty band under it. */}
+  <div class="u-page-panel tl-panel">
+    {/* THE LEDE — the old banner headline, now introducing the page body.
+        No vertical padding of its own: the panel's top padding sits above it and
+        Method's own section padding provides the gap below, so the page keeps one
+        rhythm instead of stacking three sets of spacing. */}
+    <!-- <section class="lede" aria-labelledby="lede-title">
+      <div class="u-container">
+        <HeroTitle
+          level={2}
+          id="lede-title"
+          class="lede__h"
+          lead="Twelve laboratories, and a"
+          mark="library"
+        />
+        <p class="lede__stand">
+          A Microsoft Showcase School with 100 teachers certified as Innovative Educator Experts.
+          Every figure on this page is one the school publishes.
+        </p>
+      </div>
+    </section> -->
+
+    <Method />
+    <Room />
+    <HandsOn />
+    <StemRail />
+    <Words />
+    <LabIndex />
+  </div>
+
+  {/* NO <ChapterNav />. Removed at the client's request, as on Academic
+      Philosophy. ⚠ It was this page's only route to Academic Structure, to
+      Assessment & Support and to the Academics overview, so the page is now a
+      leaf: a reader arriving from search leaves via the masthead or the footer.
+      Worth revisiting once the section is finished. */}
+</BaseLayout>
+
+<style>
+  /* div.tl-panel, not .tl-panel: it has to out-specify .u-page-panel in base.css,
+     which a bare scoped class only matches rather than beats. */
+  div.tl-panel { padding-bottom: 0; }
+
+  /* --- The lede ------------------------------------------------------------
+     HeroTitle's type is set inside that component, because Astro passes a class
+     to a child but NOT its style scope — a rule written here would compile to
+     `.lede__h[data-astro-cid-PAGE]` and match nothing. Custom properties DO cross
+     the boundary, so the three things this page varies are handed over on an
+     ancestor it owns. See the header of HeroTitle.astro. */
+  .lede .u-container {
+    --htitle-size: clamp(30px, 4.4vw, 62px);
+    /* 30ch, not 20: at 20 the line broke after "and a" and left the plate
+       stranded on a line of its own. This holds the headline as one line at 1440
+       and lets it break naturally below that. */
+    --htitle-measure: 30ch;
+    --htitle-color: var(--sb-charcoal);
+  }
+
+  .lede__stand {
+    max-width: 56ch;
+    margin-top: var(--sb-7);
+    font-size: var(--sb-body);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+    /* Arrives after the headline's last word has landed. `backwards` holds it
+       hidden through the delay rather than showing it and then animating. */
+    animation: lede-in 800ms var(--sb-ease) 620ms backwards;
+  }
+
+  @keyframes lede-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* base.css collapses animation DURATIONS under reduced motion but leaves delays
+     alone, so with `backwards` fill this would sit invisible for 620ms and then
+     appear — more motion than it removes. Off entirely instead. */
+  @media (prefers-reduced-motion: reduce) {
+    .lede__stand { animation: none; }
+  }
+</style>

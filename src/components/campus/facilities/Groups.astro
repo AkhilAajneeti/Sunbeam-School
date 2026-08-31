@@ -1,0 +1,549 @@
+---
+/**
+ * §3 · THE SIX GROUPS — the whole inventory, organised.
+ *
+ * A STICKY HEADING COLUMN, NOT A CENTRED BAND PER GROUP. Six sections each
+ * opening on a centred eyebrow/heading/standfirst would be six identical
+ * openings in a row, and the page would read as a template. Here the group
+ * heading pins to the left while its items scroll past it, so the reader always
+ * knows which of the six they are in without the heading being restated.
+ *
+ * Grounds alternate ivory/sand so the boundary between groups is visible without
+ * a rule, and the item count sits in the heading column as a running total —
+ * which is also the page's promise that nothing was dropped.
+ *
+ * `unlisted` items carry a small mark ONLY while showBuildNotes is on: they are
+ * on the brief but absent from this repository's audit of the live site, so the
+ * team can check six rather than re-checking forty. Parents never see it.
+ */
+import { Picture } from 'astro:assets';
+import { groups } from '../../../data/facilities';
+import { facilities as shot } from '../../../data/campusTour';
+import { showBuildNotes } from '../../../data/site';
+import FacIcon from './FacIcon.astro';
+
+/**
+ * Card backgrounds. Ten of the forty-seven items name a facility folder that
+ * genuinely depicts them; the rest render as the plain white card.
+ *
+ * The frame is chosen by the item's position so that two cards drawing on the
+ * same folder — the junior and senior computer labs both use `computer` — do
+ * not show the identical photograph side by side.
+ */
+const byId = new Map(shot.map((f) => [f.id, f]));
+const frameFor = (photo: string | undefined, i: number) => {
+  const f = photo ? byId.get(photo) : undefined;
+  if (!f || !f.images.length) return undefined;
+  return { src: f.images[i % f.images.length], alt: f.alt };
+};
+---
+
+{groups.map((g, gi) => (
+  <section class:list={['grp', gi % 2 === 1 && 'grp--alt']} id={g.id} aria-labelledby={`${g.id}-title`}>
+    <div class="u-container grp__inner">
+      <header class="grp__head">
+        <p class="grp__eyebrow t-label">{g.eyebrow}</p>
+        <h2 class="grp__h" id={`${g.id}-title`} data-split>{g.title}</h2>
+        <p class="grp__stand">{g.stand}</p>
+        <p class="grp__count t-tabular">
+          {String(g.items.length).padStart(2, '0')} <span>facilities</span>
+        </p>
+      </header>
+
+      <ul class="grp__items" data-grp-rail>
+        {g.items.map((it, i) => {
+          const frame = frameFor(it.photo, i);
+          return (
+          <li class:list={['grp__item', frame && 'grp__item--shot']} data-reveal data-reveal-delay={(i % 3) * 70}>
+            {frame && (
+              /* Decorative: the card's own heading already names the room, so a
+                 described background would be the same information twice. */
+              <span class="grp__bg" aria-hidden="true">
+                <Picture
+                  src={frame.src}
+                  alt=""
+                  formats={['webp']}
+                  widths={[400, 800]}
+                  sizes="(max-width: 600px) 92vw, 34vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            )}
+
+            {/* Two faces of one plate, 180° apart — the same flip the KPI cards
+                and Parent Partnership use, so the page has one motion language
+                rather than three. Decorative: the heading beside it already
+                names the facility. */}
+            <span class="grp__icon" aria-hidden="true">
+              <span class="grp__face grp__face--front"><FacIcon name={it.icon} size={22} /></span>
+              <span class="grp__face grp__face--back"><FacIcon name={it.icon} size={22} /></span>
+            </span>
+
+            <div>
+              <h3 class="grp__label">
+                {it.label}
+                {it.unlisted && showBuildNotes && <span class="grp__flag">verify</span>}
+              </h3>
+              <p class="grp__body">{it.body}</p>
+            </div>
+          </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+))}
+
+<style>
+  .grp {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .grp--alt { background: var(--sb-sand); }
+
+  .grp__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+  }
+
+  /* --- Heading column ------------------------------------------------------ */
+
+  .grp__head {
+    position: sticky;
+    /* Clears the sticky masthead, which is the only fixed chrome above it. */
+    top: calc(var(--sb-masthead-h-condensed) + 28px);
+  }
+
+  .grp__eyebrow { color: var(--sb-violet); }
+
+  .grp__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3.2vw, 42px);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .grp__stand {
+    margin-top: var(--sb-5);
+    max-width: 40ch;
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  .grp__count {
+    margin-top: var(--sb-7);
+    padding-top: var(--sb-5);
+    border-top: 2px solid var(--sb-violet);
+    font-family: var(--sb-font-display);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-violet);
+  }
+
+  .grp__count span {
+    font-family: var(--sb-font-body);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+    margin-left: 6px;
+  }
+
+  /* --- Items --------------------------------------------------------------- */
+
+  .grp__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-6);
+  }
+
+  .grp__item {
+    position: relative;
+    /* The background is a z-index:-1 child; without a stacking context of its
+       own it would paint behind the card's ground and never be seen. */
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    gap: var(--sb-5);
+    padding: var(--sb-6);
+    background: var(--sb-paper);
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(28, 14, 8, 0.04);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .grp__item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px rgba(28, 14, 8, 0.06), 0 16px 32px rgba(28, 14, 8, 0.09);
+  }
+
+  /* --- Photographic cards --------------------------------------------------
+     A WHITE VEIL WAS THE WRONG ANSWER AND THIS REPLACES IT. Holding the photo
+     at 0.16 under a 0.9 white wash kept the two card states looking identical,
+     but it left the photograph as washed-out pastel noise — legible neither as
+     a picture nor as a clean ground for the type. Passing a contrast check is
+     not the same as being readable.
+
+     So the photo now runs at FULL strength under a black ramp, and the copy is
+     white. Contrast stops being a calculation: white on the 0.94 black at the
+     card's foot is about 17:1, and the thinnest part of the ramp the text ever
+     touches is 0.78, which is still ~12:1 over any photograph.
+
+     THE RAMP IS ANGLED, NOT VERTICAL — 32°, so it is densest at the bottom-left
+     corner where the copy sits and thinnest at the top-right, which leaves one
+     corner of the frame genuinely visible. A straight vertical scrim would
+     flatten the whole image evenly and lose that. */
+  .grp__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transition: transform 800ms var(--sb-ease);
+  }
+
+  .grp__bg :global(picture),
+  .grp__bg :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .grp__item--shot {
+    /* Column, so the copy anchors to the foot of the card and the photograph
+       keeps the space above it. */
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+    background: var(--sb-ink);
+    box-shadow: 0 2px 6px rgba(28, 14, 8, 0.14), 0 14px 30px rgba(28, 14, 8, 0.14);
+  }
+
+  /* ::after, NOT ::before, AND THAT IS LOad-BEARING. Both this scrim and the
+     photograph sit at z-index:-1, so neither wins on z-index and painting order
+     falls back to tree order — and ::before is generated as the element's FIRST
+     child, which put the gradient UNDERNEATH the image. Measured, white copy on
+     the resulting ground came out at 1.1:1. ::after is the last child, so it
+     paints over the photograph. The old white-veil version hid this bug because
+     the image was at 0.16 opacity and the veil showed through it anyway. */
+  .grp__item--shot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      32deg,
+      rgba(10, 6, 4, 0.94) 0%,
+      rgba(10, 6, 4, 0.86) 28%,
+      rgba(10, 6, 4, 0.62) 58%,
+      rgba(10, 6, 4, 0.3) 100%
+    );
+    pointer-events: none;
+    transition: opacity var(--sb-dur-link) ease;
+  }
+
+  .grp__item--shot:hover {
+    box-shadow: 0 4px 10px rgba(28, 14, 8, 0.18), 0 22px 44px rgba(28, 14, 8, 0.2);
+  }
+
+  .grp__item--shot:hover .grp__bg { transform: scale(1.07); }
+
+  .grp__item--shot .grp__label { color: #fff; }
+  .grp__item--shot .grp__body { color: rgba(255, 255, 255, 0.8); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .grp__item--shot:hover .grp__bg { transform: none; }
+  }
+
+  /* --- The flipping plate --------------------------------------------------
+     Same mechanic as ui/BurstCard: two faces rotated 180° apart with
+     backface-visibility hidden, so hover turns the plate rather than
+     cross-fading two stacked squares into a smear. Applied to ALL 47 cards, not
+     only the photographic ones — one interaction across the grid reads as a
+     system, two reads as an accident. */
+  .grp__icon {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    transform-style: preserve-3d;
+    transform: perspective(600px) rotateY(0deg);
+    transition: transform 620ms var(--sb-ease);
+  }
+
+  .grp__item:hover .grp__icon { transform: perspective(600px) rotateY(180deg); }
+
+  .grp__face {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .grp__face--front {
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet);
+  }
+
+  .grp__face--back {
+    transform: rotateY(180deg);
+    background: var(--sb-violet);
+    color: #fff;
+  }
+
+  /* On a dark card the wash plate would disappear, so the front face becomes a
+     frosted pane over the photograph instead. */
+  .grp__item--shot .grp__face--front {
+    background: rgba(255, 255, 255, 0.17);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .grp__icon { transition: none; }
+    .grp__item:hover .grp__icon { transform: perspective(600px) rotateY(0deg); }
+  }
+
+  .grp__label {
+    font-family: var(--sb-font-display);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--sb-charcoal);
+  }
+
+  .grp__flag {
+    display: inline-block;
+    margin-left: var(--sb-2);
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--sb-lime-wash);
+    color: var(--sb-lime-deep);
+    font-family: var(--sb-font-body);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: 2px;
+  }
+
+  .grp__body {
+    margin-top: var(--sb-3);
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-secondary);
+  }
+
+  /* --- Narrow -------------------------------------------------------------- */
+
+  @media (max-width: 1000px) {
+    .grp__inner { grid-template-columns: minmax(0, 1fr); gap: var(--sb-8); }
+    /* Unpinned: a sticky heading in a single column would sit on its own items. */
+    .grp__head { position: static; }
+    .grp__count { display: inline-block; }
+  }
+
+  /* --- Phones: a carousel, not a column -------------------------------------
+     Stacked one-per-row, the six groups ran to forty-seven full-width cards and
+     the page became an 18,000px scroll. As a snapping rail each group occupies
+     one card's height instead of eleven, which is most of that length removed
+     without dropping a single facility.
+
+     It is a scroll container, so it works by swipe with no script at all — the
+     auto-advance below is an enhancement on top, not the mechanism. */
+  @media (max-width: 700px) {
+    /* CENTRED, not start-aligned. The card width and the rail's side padding are
+       derived from the SAME expression, so the leading and trailing padding is
+       exactly the gap needed to bring the first and last card to the middle —
+       without it, `scroll-snap-align: center` can centre every card except
+       those two, which is the usual half-finished version of this. */
+    .grp__items {
+      /* Declared ON the rail, not bare inside the @media — a custom property
+         with no selector is a parse error, and it silently ate the whole
+         `.grp__items` rule that followed it. Custom properties inherit, so the
+         cards below read the same value. */
+      --grp-card: min(78vw, 330px);
+      display: flex;
+      grid-template-columns: none;
+      gap: 12px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      /* Full-bleed, so the rail's centre is the SCREEN's centre. */
+      margin-inline: calc(var(--sb-margin) * -1);
+      padding-inline: calc((100vw - var(--grp-card)) / 2);
+      scroll-padding-inline: calc((100vw - var(--grp-card)) / 2);
+      padding-bottom: 6px;
+      scrollbar-width: none;
+      cursor: grab;
+    }
+
+    .grp__items::-webkit-scrollbar { display: none; }
+
+    /* Set by the drag handler while a pointer is down. */
+    .grp__items.is-dragging {
+      cursor: grabbing;
+      scroll-snap-type: none;
+      scroll-behavior: auto;
+    }
+
+    .grp__item {
+      flex: 0 0 var(--grp-card);
+      scroll-snap-align: center;
+      /* Equal heights across the rail, so snapping does not change the card
+         height under the reader's thumb. */
+      min-height: 100%;
+      /* A dragged card must not be picked up as an image/selection drag. */
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .grp__items.is-dragging .grp__item { pointer-events: none; }
+
+    /* The off-centre cards sit back, so the middle one reads as the subject
+       rather than the rail reading as three equal slices. */
+    .grp__item { transition: opacity 300ms ease, transform 300ms var(--sb-ease); }
+
+    /* The lift is a pointer affordance and there is no pointer here; on a rail
+       it also fights the scroll. */
+    .grp__item:hover { transform: none; }
+
+    .grp__item--shot { min-height: 200px; }
+  }
+</style>
+
+<script>
+  /**
+   * PHONE CAROUSELS — auto-advance and mouse drag.
+   *
+   * The rail is a scroll container with centred snap points, so swiping works
+   * with none of this. Everything below is an enhancement; if the script never
+   * runs the carousel is simply manual.
+   *
+   * AUTO-ADVANCE IS GATED FOUR WAYS, because a self-scrolling carousel is the
+   * easiest thing on a page to make hostile:
+   *   · phones only — the desktop grid shows every card at once
+   *   · never under `prefers-reduced-motion`
+   *   · only while the rail is on screen, so six rails are not all animating
+   *     themselves in the background
+   *   · it stops for good once the reader takes over. Resuming after a timeout
+   *     is the behaviour that makes these things infuriating.
+   */
+  const phone = window.matchMedia('(max-width: 700px)');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-grp-rail]').forEach((rail) => {
+    let timer: number | undefined;
+    let surrendered = false;
+
+    /* One card plus one gap. Read from the DOM rather than hard-coded, so the
+       card width can stay a clamp in CSS without the two drifting apart. */
+    const stride = () => {
+      const card = rail.querySelector<HTMLElement>('.grp__item');
+      if (!card) return 0;
+      const gap = parseFloat(getComputedStyle(rail).columnGap) || 12;
+      return card.getBoundingClientRect().width + gap;
+    };
+
+    const step = () => {
+      if (surrendered || !phone.matches) return;
+      const end = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+      rail.scrollTo({ left: end ? 0 : rail.scrollLeft + stride(), behavior: 'smooth' });
+    };
+
+    const start = () => {
+      if (surrendered || timer || still.matches || !phone.matches) return;
+      timer = window.setInterval(step, 4000);
+    };
+
+    const stop = () => {
+      window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    const surrender = () => {
+      surrendered = true;
+      stop();
+    };
+
+    /* --- Mouse / pen drag -------------------------------------------------
+       Touch already pans a scroll container natively, so this is only bound for
+       pointer types that do NOT — binding it for touch as well would fight the
+       browser's own inertia and feel worse than doing nothing.
+
+       Snapping is switched off mid-drag: with `mandatory` still on, every
+       scrollLeft write is immediately re-snapped and the card fights the
+       cursor. It comes back on release, which is what settles the rail onto a
+       centred card. */
+    let down = false;
+    let startX = 0;
+    let startLeft = 0;
+    let moved = 0;
+
+    rail.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' || !phone.matches) return;
+      down = true;
+      moved = 0;
+      startX = e.clientX;
+      startLeft = rail.scrollLeft;
+      rail.classList.add('is-dragging');
+      rail.setPointerCapture(e.pointerId);
+      surrender();
+    });
+
+    rail.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      moved = Math.max(moved, Math.abs(dx));
+      rail.scrollLeft = startLeft - dx;
+    });
+
+    const release = (e: PointerEvent) => {
+      if (!down) return;
+      down = false;
+      rail.classList.remove('is-dragging');
+      try { rail.releasePointerCapture(e.pointerId); } catch {}
+      /* Re-snap to the nearest card. `scroll-snap-type` returning alone does not
+         reposition an already-scrolled container in every engine, so nudge it. */
+      const s = stride();
+      if (s) {
+        const pad = parseFloat(getComputedStyle(rail).paddingInlineStart) || 0;
+        const i = Math.round((rail.scrollLeft + pad - pad) / s);
+        rail.scrollTo({ left: i * s, behavior: 'smooth' });
+      }
+    };
+
+    rail.addEventListener('pointerup', release);
+    rail.addEventListener('pointercancel', release);
+
+    /* Touch and keyboard hand the rail over without the drag path. */
+    ['touchstart', 'wheel', 'keydown'].forEach((e) =>
+      rail.addEventListener(e, surrender, { passive: true, once: true })
+    );
+
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((en) => (en.isIntersecting ? start() : stop())),
+      { threshold: 0.35 }
+    );
+    io.observe(rail);
+
+    phone.addEventListener('change', () => (phone.matches ? start() : stop()));
+  });
+</script>

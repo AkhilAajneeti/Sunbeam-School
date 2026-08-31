@@ -1,0 +1,265 @@
+---
+/**
+ * RESULT — three sections.
+ *
+ * ⚠⚠ THE SCHOOL'S RESULT PAGE IS THREE THINGS: a heading, the line "WANT TO
+ * CHECK YOUR REPORT CARD?", and a "Click here" that opens
+ * sbb.nascorptechnologies.com in a new tab. That is the entire page. This one
+ * changes the presentation and preserves the destination and behaviour exactly.
+ *
+ * ⚠⚠ NOT ONE NUMBER APPEARS HERE. No pass percentage, no topper, no marks, no
+ * year table, no report-card preview — the school publishes none, and the brief
+ * forbids inventing them. The closing section is a photograph and one line of
+ * branding copy rather than a statistics band, for exactly that reason.
+ *
+ * ⚠ NO LOGIN FORM. The portal does its own authentication; a username and
+ * password box here would either be decoration or would capture credentials for
+ * a system this project has no business touching.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ *   01 · IVORY  the editorial opening.
+ *   02 · PAPER  the access card — photograph left, the CTA right.
+ *   03 · PHOTO  the dark close.
+ */
+import { Picture } from 'astro:assets';
+import '../../styles/assessment.css';
+import { MARK } from '../academics/assessment/marks';
+import { resultPortal, resultPoints } from '../../data/services';
+
+import pStudents from '../../assets/photos/sunbeem-5.jpg';
+import pCohort from '../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+---
+
+{/* ══ 01 · ONE CLICK AWAY ════════════════════════════════════════════════════ */}
+<section class="as-sec as-sec--ivory as-pad rs-open" aria-labelledby="rs-open-t">
+  <span class="as-warm" aria-hidden="true"></span>
+  <span class="as-dots rs-open__dots" aria-hidden="true"></span>
+
+  <div class="u-container rs-open__in">
+    <p class="as-kicker" data-reveal>Report card</p>
+    {/* ⚠ THE SCHOOL’S OWN QUESTION, WORD FOR WORD. Its Result page asks exactly
+        this; the page is a presentation of that line, not a rewrite of it. */}
+    <h2 class="as-h as-h--xl rs-open__h" id="rs-open-t">
+      <span data-clip data-clip-delay="0">Want to check</span>
+      <span data-clip data-clip-delay="150"><em>your report card?</em></span>
+    </h2>
+    <p class="as-body rs-open__b" data-reveal data-reveal-delay="200">
+      Report cards are issued through the school’s online portal.
+    </p>
+  </div>
+</section>
+
+{/* ══ 02 · THE ACCESS CARD ═══════════════════════════════════════════════════ */}
+<section class="as-sec as-sec--paper as-pad rs-card" aria-labelledby="rs-card-t">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="rs-box">
+      {/* ⚠ THE GHOSTED MARK IS DECORATION AND IS aria-hidden. It must never
+          compete with the one action on this page. */}
+      <span class="rs-box__ghost" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.doc} />
+        </svg>
+      </span>
+
+      <div class="rs-box__pic" data-mask>
+        <Picture
+          src={pStudents}
+          alt={`Students of ${S} at work in a classroom.`}
+          formats={['avif', 'webp']}
+          widths={[520, 860, 1200]}
+          sizes="(max-width: 1023px) 92vw, 44vw"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+
+      <div class="rs-box__copy">
+        <p class="as-kicker" data-reveal>Online result</p>
+        {/* ⚠ THE SCHOOL’S LINE IN ITS OWN CASING. It is set as a statement rather
+            than repeated at headline size — the words are identical to the
+            headline above, and shouting them twice at the same scale would read
+            as a mistake rather than as emphasis. */}
+        <h2 class="rs-box__h" id="rs-card-t">WANT TO CHECK YOUR REPORT CARD?</h2>
+        <p class="as-body rs-box__b" data-reveal data-reveal-delay="200">
+          The portal opens in a new tab, so this page stays where you left it.
+        </p>
+
+        <p class="rs-box__act" data-reveal data-reveal-delay="260">
+          <a class="rs-cta" href={resultPortal} target="_blank" rel="noopener noreferrer">
+            Click here
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+            </svg>
+          </a>
+        </p>
+
+        <ul class="rs-points">
+          {resultPoints.map((r, i) => (
+            <li class="rs-point" data-reveal data-reveal-delay={300 + i * 70}>
+              <span class="rs-point__m" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[r.mark]} />
+                </svg>
+              </span>
+              <span class="rs-point__t">
+                <span class="rs-point__k">{r.k}</span>
+                <span class="rs-point__v">{r.v}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · THE CLOSE ═════════════════════════════════════════════════════════
+    ⚠ BRANDING COPY, AND NOTHING NUMERICAL. This is where a statistics band
+    would go on a lesser page; the school publishes no figures, so it does not. */}
+<section class="as-close rs-close" aria-labelledby="rs-close-t">
+  <div class="as-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pCohort}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+      style="object-position: 50% 40%;"
+    />
+  </div>
+  <span class="as-close__scrim" aria-hidden="true"></span>
+  <span class="as-close__grain" aria-hidden="true"></span>
+
+  <div class="u-container as-close__inner">
+    <h2 class="as-h as-close__h rs-close__h" id="rs-close-t">
+      <span data-clip data-clip-delay="0">Every result</span>
+      <span data-clip data-clip-delay="150">tells <em>a story.</em></span>
+    </h2>
+  </div>
+</section>
+
+<style>
+  /* ═══ 01 · OPENING ════════════════════════════════════════════════════════ */
+  .rs-open__in { position: relative; display: grid; justify-items: center; text-align: center; }
+  .rs-open__dots { top: 16%; right: 6%; }
+  .rs-open__h { max-width: 16ch; }
+  .rs-open__b { max-width: 58ch; }
+
+  /* ═══ 02 · THE CARD ═══════════════════════════════════════════════════════ */
+  .rs-box {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(24px, 3.2vw, 54px);
+    align-items: center;
+    padding: clamp(20px, 2.6vw, 36px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: 0 26px 58px -36px rgba(28, 14, 8, 0.36);
+    overflow: hidden;
+  }
+  /* A soft orange bloom behind the card's right half. */
+  .rs-box::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -12%;
+    width: 52%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--sb-orange-bright) 16%, transparent), transparent 68%);
+    pointer-events: none;
+  }
+  .rs-box__ghost {
+    position: absolute;
+    right: clamp(-30px, -2vw, -14px);
+    bottom: clamp(-40px, -3vw, -20px);
+    display: block;
+    width: clamp(140px, 15vw, 230px);
+    color: color-mix(in srgb, var(--sb-orange-bright) 9%, transparent);
+    pointer-events: none;
+  }
+  .rs-box__ghost svg { display: block; width: 100%; height: auto; }
+
+  .rs-box__pic { position: relative; overflow: hidden; border-radius: var(--sb-r-2); }
+  .rs-box__pic :global(picture) { display: block; }
+  .rs-box__pic :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 12; object-fit: cover; }
+  .rs-box__copy { position: relative; }
+  .rs-box__h {
+    margin: 0;
+    max-width: 22ch;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.2vw, 20px);
+    font-weight: 700;
+    line-height: 1.26;
+    letter-spacing: -0.01em;
+    color: var(--sb-charcoal);
+  }
+  .rs-box__b { max-width: 44ch; }
+  .rs-box__act { margin: clamp(16px, 2vw, 24px) 0 0; }
+
+  .rs-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: clamp(12px, 1.4vw, 17px) clamp(22px, 2.6vw, 34px);
+    border-radius: var(--sb-r-1);
+    background: var(--sb-orange-bright);
+    font-size: clamp(11.5px, 0.88vw, 14px);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fff;
+    box-shadow: 0 10px 26px -14px color-mix(in srgb, var(--sb-orange-bright) 80%, transparent);
+    transition: transform 220ms var(--sb-ease), background 220ms var(--sb-ease), box-shadow 220ms var(--sb-ease);
+  }
+  .rs-cta svg { width: 15px; height: auto; transition: transform 220ms var(--sb-ease); }
+  .rs-cta:hover {
+    transform: translateY(-2px);
+    background: var(--sb-violet);
+    box-shadow: 0 16px 32px -14px color-mix(in srgb, var(--sb-violet) 70%, transparent);
+  }
+  .rs-cta:hover svg { transform: translateX(4px); }
+
+  .rs-points {
+    display: grid;
+    gap: clamp(9px, 1.1vw, 13px);
+    margin: clamp(18px, 2.2vw, 28px) 0 0;
+    padding: clamp(15px, 1.8vw, 22px) 0 0;
+    border-top: 1px solid var(--sb-border);
+    list-style: none;
+  }
+  .rs-point { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(9px, 1.1vw, 13px); align-items: start; }
+  .rs-point__m {
+    display: grid;
+    place-items: center;
+    width: clamp(26px, 2.4vw, 32px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--sb-violet-wash);
+    color: var(--sb-orange-bright);
+  }
+  .rs-point__m svg { width: 50%; height: auto; }
+  .rs-point__t { display: grid; gap: 2px; }
+  .rs-point__k { font-size: clamp(10px, 0.76vw, 12.2px); font-weight: 700; color: var(--sb-charcoal); }
+  .rs-point__v { font-size: clamp(9px, 0.68vw, 10.8px); line-height: 1.6; color: var(--sb-text-muted); }
+
+  .rs-close__h { max-width: 20ch; }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .rs-box { grid-template-columns: minmax(0, 1fr); }
+    .rs-box__h { max-width: none; }
+    .rs-box__b { max-width: 62ch; }
+  }
+
+  @media (max-width: 559px) {
+    .rs-cta { width: 100%; justify-content: center; }
+  }
+</style>

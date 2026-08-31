@@ -1,0 +1,145 @@
+---
+/**
+ * ACADEMICS → 02 · ACADEMIC STRUCTURE
+ *
+ * Rebuilt to the client's brief. The previous page opened on a bespoke split
+ * hero and put the five stages on a horizontal scroll-snap rail; this one uses
+ * the shared banner every other inner page uses and lays the stages out as a
+ * connected row, which is what the brief asked for and what a reader comparing
+ * five stages actually wants — five things side by side, not five things one
+ * flick apart.
+ *
+ *   Banner        components/ui/PageHero.astro         shared, as Philosophy uses
+ *   01            structure/Intro.astro                the overview, and three facts
+ *   02            structure/Stages.astro               five cards, chevron-joined
+ *   03            structure/Streams.astro              the choice at the end of X
+ *   04            structure/Combinations.astro         core + electives per stream
+ *
+ * ═══ THIS PAGE RUNS A COOL PALETTE, AND ONLY THIS PAGE ══════════════════════
+ *
+ * The client asked for teal / blue / cyan / indigo / violet washes here instead
+ * of the site's warm orange, with orange reserved for CTA buttons. The tokens
+ * are therefore declared BELOW, on the page's panel, rather than added to
+ * tokens.css — a custom property set on an ancestor inherits into every child
+ * component whatever Astro's style scoping does, so the four structure/*
+ * components read `--as-*` without importing anything.
+ *
+ * That containment is the point. The departure is visible in one file, revertible
+ * in one file, and cannot leak into the other six Academics pages by accident.
+ *
+ * ⚠ IT IS STILL A DEPARTURE. Every other page on this site is warm, and a reader
+ * moving from Academic Philosophy to Academic Structure crosses a colour
+ * boundary. That is a deliberate instruction being followed, not an oversight —
+ * but if the section is ever audited for consistency, this is the page that will
+ * come up, and this comment is why.
+ *
+ * ⚠ THE ELECTIVE SUBJECT LISTS ARE PLACEHOLDERS. See the header of
+ * structure/Combinations.astro and `streamDetail` in data/academics.ts. The page
+ * renders a visible notice for as long as they stay unconfirmed.
+ *
+ * ⚠ NO <ChapterNav />. The client asked the chapter pager off this page, as they
+ * did on Academic Philosophy. It was the only link from here to Teaching &
+ * Learning and back to the Academics overview, so this page is now a LEAF: a
+ * reader arriving from search leaves via the masthead or the footer. Two of the
+ * six Academics pages are now dead ends.
+ *
+ * ⚠ NO AGES. The school's age criteria live in a Drive-hosted prospectus and are
+ * not ours to estimate, so every stage is identified by its class band. Asset
+ * request A8.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+
+import Intro from '../../components/academics/structure/Intro.astro';
+import Stages from '../../components/academics/structure/Stages.astro';
+import Streams from '../../components/academics/structure/Streams.astro';
+import Combinations from '../../components/academics/structure/Combinations.astro';
+
+import banner from '../../assets/photos/sunbeem-3.jpg';
+---
+
+<BaseLayout
+  title="Academic Structure — Sunbeam School Ballia"
+  description="The academic structure at Sunbeam School Ballia: Pre-Primary through Senior Secondary, Nursery to Class XII, with four CBSE streams — PCM, PCB, Commerce and Humanities."
+>
+  <PageHero
+    title="Academic Structure"
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+    ]}
+    src={banner}
+    alt="Students and staff of Sunbeam School Ballia gathered under the school name at a whole-school assembly."
+    position="50% 40%"
+  />
+
+  <div class="u-page-panel as-panel">
+    <Intro />
+    <Stages />
+    <Streams />
+    <Combinations />
+  </div>
+</BaseLayout>
+
+<style>
+  /* div.as-panel, not .as-panel: it has to out-specify .u-page-panel in base.css,
+     which a bare scoped class only matches rather than beats.
+
+     padding-block: 0 — the four sections carry their own vertical rhythm and the
+     panel's default 88/120 would add a band of empty ivory at each end. */
+  div.as-panel {
+    padding-block: 0;
+    background: var(--as-ground);
+
+    /* ── THE COOL PALETTE ────────────────────────────────────────────────────
+       Five accents and their washes, plus ink, body text, ground and the two
+       shadows the cards share.
+
+       ⚠ THE HUES WERE RE-SPACED AFTER MEASURING THEM. The first set ran
+       violet/blue/teal/cyan/indigo and was, in practice, one colour: pairwise
+       RGB distance bottomed out at 27 (teal vs cyan) and three more pairs sat
+       under 55. Anything under about 40 reads as the same colour. The brief
+       asked for "a distinct accent colour" per stage and it was distinct only
+       in the stylesheet.
+
+       These five span 150°–290° of hue instead of huddling in the blues, and
+       the closest pair is now 64 apart. They are ordered green → violet so the
+       five stages read as a progression through the spectrum rather than as
+       five unrelated categories.
+
+       ⚠ AND THE WASH CANNOT CARRY IT. A wash is the accent mixed toward white,
+       so the distance between two washes is roughly the mix percentage times
+       the distance between their accents — at 8% those same five are 5 apart,
+       and at 20% they would still be 13. No tint strength fixes this. The
+       differentiation therefore lives in SATURATED marks: the filled node on
+       the timeline, the class pill's type, the milestone label. The washes stay
+       light because their only job is to be a legible ground for accent text.
+
+       Every value measured against white; all five clear AA as small text.
+
+           teal   #0a6d3a  6.6:1      indigo #4340bb  7.8:1
+           cyan   #056579  6.6:1      violet #8226c0  7.0:1
+           blue   #1259c4  6.4:1 */
+    --as-teal: #0a6d3a;
+    --as-teal-wash: #e8f2eb;
+    --as-cyan: #056579;
+    --as-cyan-wash: #e6eff2;
+    --as-blue: #1259c4;
+    --as-blue-wash: #e8eefa;
+    --as-indigo: #4340bb;
+    --as-indigo-wash: #ebebf8;
+    --as-violet: #8226c0;
+    --as-violet-wash: #f3e9f9;
+
+    /* Ink and body copy carry a faint cool cast so type on this page belongs to
+       its own palette, without going anywhere near the low-contrast grey-blue
+       that a "cool theme" usually degenerates into. Measured on white: 16.4:1
+       and 8.9:1. */
+    --as-ink: #16182a;
+    --as-text: #4a4f63;
+    --as-ground: var(--sb-ivory);
+
+    --as-shadow: 0 14px 40px -26px rgba(22, 24, 42, 0.34);
+    --as-shadow-hover: 0 28px 64px -28px rgba(22, 24, 42, 0.4);
+  }
+</style>

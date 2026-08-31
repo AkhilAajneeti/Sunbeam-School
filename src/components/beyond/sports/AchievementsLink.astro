@@ -1,0 +1,110 @@
+---
+/**
+ * THE HANDOFF — sport ends, achievements continue elsewhere.
+ *
+ * WHY THIS EXISTS. Audit §4 asks for achievements "showcased separately", so the
+ * record moved off this page to /beyond-academics/achievements/. A reader who
+ * has just read about facilities, games, participation, houses and coaching is
+ * exactly the reader who now wants the medals — and without this band the page
+ * would simply stop, with the thing they were building towards nowhere in sight
+ * and no link to it.
+ *
+ * IT NAMES THE THREE MAJORS RATHER THAN SAYING "see our achievements". A link
+ * that states what is behind it is worth following; a link that does not, is
+ * not. Every one of the three is published — see data/achievements.ts.
+ */
+---
+
+<section class="sxa" aria-labelledby="sxa-title">
+  <div class="u-container">
+    <a class="sxa__card" href="/beyond-academics/achievements/">
+      <div class="sxa__body">
+        {/* Visitor-facing copy, not project language. This read "Shown
+            separately, as the audit asks" — accurate about WHY the section
+            moved, and meaningless to a parent, who has never seen the audit. */}
+        <p class="sxa__eyebrow t-label">Beyond the field</p>
+        <h2 class="sxa__h" id="sxa-title">And then the results</h2>
+        <p class="sxa__b">
+          An international robotics placing in Kuala Lumpur, second in Uttar Pradesh at the
+          National School Innovation Awards, and CBSE Cluster V Kho-Kho gold — with the full
+          sporting and academic record behind them.
+        </p>
+      </div>
+
+      <span class="sxa__go">
+        Achievements
+        <svg width="15" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+      </span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .sxa {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-paper);
+  }
+
+  /* THE WHOLE BAND IS THE LINK, not a paragraph with a link at the end of it —
+     a 900px target rather than a 90px one, which matters most on a phone. */
+  .sxa__card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(24px, 4vw, 64px);
+    padding: clamp(28px, 3vw, 52px);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-violet-ink);
+    color: rgba(255, 255, 255, 0.8);
+    transition: transform var(--sb-dur-link) var(--sb-ease), box-shadow var(--sb-dur-link) ease;
+  }
+
+  .sxa__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 28px 56px -26px rgba(28, 14, 8, 0.5);
+  }
+
+  .sxa__card:focus-visible { outline: 2px solid var(--sb-lime); outline-offset: 4px; }
+
+  .sxa__eyebrow { color: var(--sb-lime); }
+
+  .sxa__h {
+    margin-top: var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(24px, 2.6vw, 36px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.032em;
+    color: #fff;
+  }
+
+  .sxa__b {
+    margin-top: var(--sb-4);
+    max-width: 62ch;
+    font-size: var(--sb-body-sm);
+    line-height: 1.62;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .sxa__go {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-4);
+    flex-shrink: 0;
+    padding: 14px 24px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    color: #fff;
+    font-weight: 650;
+    font-size: var(--sb-body-sm);
+    transition: background var(--sb-dur-btn) ease, gap var(--sb-dur-btn) var(--sb-ease);
+  }
+
+  .sxa__card:hover .sxa__go { background: var(--sb-violet-dark); gap: var(--sb-6); }
+
+  @media (max-width: 860px) {
+    .sxa__card { flex-direction: column; align-items: flex-start; }
+  }
+</style>

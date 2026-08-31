@@ -1,0 +1,713 @@
+---
+/**
+ * ABOUT → OUR JOURNEY — audit 1.6, 1.8 and 1.11
+ *
+ * ⚠ THE PAGE IS CALLED "Our Journey" AND THE URL IS STILL /about/history-legacy/.
+ * That is deliberate, not an oversight. The client renamed the LABEL; the slug
+ * is referenced by the nav, the footer, the homepage story card and two
+ * redirects in astro.config.mjs, and changing it would mean editing all of them
+ * and adding a sixth redirect to alter a string no reader ever sees. The name is
+ * changed in all five places it is PRINTED: this file's <title>, the <h1>, the
+ * breadcrumb (which PageHero derives from `title`, so both come from one edit),
+ * the nav dropdown, the footer and the homepage card.
+ *
+ * Audit 1.11, verbatim: the contributions of "the Chairman, Secretary and other
+ * dignitaries can be incorporated within the History section instead of creating
+ * separate menu links." So this page carries both messages, at #leadership, and
+ * docs/04 § redirects already point /chairmans-message/ and /secretarys-message/
+ * here rather than to pages of their own.
+ *
+ * COPY — every word is the school's own, from its History, Chairman's Message
+ * and Secretary's Message pages.
+ *
+ * ⚠ ONE STALE FACT, LEFT AS WRITTEN. The Chairman's message says the school has
+ * spread the Sunbeam revolution "for last 7 years". Founded 2013 plus seven puts
+ * the writing around 2020; it is 2026, so the true figure is thirteen. It is a
+ * signed message and not ours to quietly rewrite, so it is reproduced exactly.
+ * It is one word to change once the school decides — update the number, add a
+ * dateline, or ask the Chairman for a refreshed line. Audit 1.12 asks for
+ * precisely this kind of proofreading on the leadership pages.
+ *
+ * ⚠ THE OLD NOTE ABOUT TWO CORRECTED TYPOS IS GONE BECAUSE THE SENTENCE IT
+ * CORRECTED IS GONE. It read "is the one of the leading educational
+ * Institution"; the client has since supplied a rewritten story, and that
+ * wording is not in it. Nothing in the current copy is corrected — it is
+ * reproduced exactly as supplied.
+ */
+/* ⚠ JourneyRoad IS NO LONGER IMPORTED HERE. This page's four milestones now run
+   on components/about/LegacyTimeline.astro, which carries a picture per card;
+   JourneyRoad is text-only and is still what Assessment & Support uses. See the
+   header of LegacyTimeline for why this is a second component and not a
+   `picture?` prop on the first. */
+import LegacyTimeline from '../../components/about/LegacyTimeline.astro';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/ui/PageHero.astro";
+/* ⚠ VideoFeature IS STILL IMPORTED FOR THE COMMENTED-OUT BLOCK BELOW. The film
+   is switched off, not deleted — see the note at the section. Removing the
+   import as well would mean the block cannot simply be uncommented back on. */
+import VideoFeature from "../../components/about/VideoFeature.astro";
+import Photo from "../../components/ui/Photo.astro";
+import { school } from "../../data/site";
+import stars from "../../assets/icons/stars.png";
+import banner from "../../assets/photos/sunbeem-1.jpg";
+import poster from "../../assets/photos/sunbeem-2.jpg";
+import chairman from "../../assets/photos/Chairman-sunbeam.jpg";
+import secretary from "../../assets/photos/secretary-sunbeam.jpeg";
+/* THE FOUR MILESTONE DRAWINGS — the supplied sepia pencil artwork, one per
+   milestone, in src/assets/icons/.
+   ⚠ NO CSS SEPIA FILTER, HERE OR IN LegacyTimeline. These are ALREADY sepia
+   ink-and-wash; a filter: sepia() on top would double the treatment and turn
+   them orange. There is none in either file and there must not be one.
+   ⚠ THEY ARE PASSED IN FROM THIS PAGE rather than imported inside the component,
+   so LegacyTimeline stays a layout that any sequence can use and swapping the
+   artwork is four lines in one file.
+   ⚠ `shoolsketch` IS THE CLIENT'S SPELLING OF THE FILENAME. Left exactly as
+   delivered — renaming a supplied asset is how the next drop stops resolving. */
+import mVaranasi from "../../assets/icons/varanasi.png";
+import mCampus from "../../assets/icons/shoolsketch.png";
+import mStudents from "../../assets/icons/studentlearning.png";
+import mTrophy from "../../assets/icons/troffe.png";
+import { Image } from "astro:assets";
+
+/**
+ * THE SCHOOL'S OWN STORY, AS THE CLIENT SUPPLIED IT — six paragraphs, joined
+ * 1-2-3 and 4-5-6.
+ *
+ * ⚠ NOT ONE WORD IS CUT, ADDED OR REORDERED. Only the paragraph BREAKS moved.
+ * Six short blocks set full width and justified read as a list of assertions;
+ * two read as an account, and the seam between them is the school's own — the
+ * first half is what the school IS, the second is how it teaches.
+ *
+ * ⚠ THIS REPLACES THE OLDER TWO-PARAGRAPH VERSION, which was the same story
+ * told shorter and carried two typos this copy does not have ("is the one of the
+ * leading educational Institution"). The correction note that used to stand in
+ * this file's header went with it — there is nothing left to correct.
+ */
+const history = [
+  'Established in 2013, Sunbeam School, Agarsanda, Ballia has grown into one of the district’s leading educational institutions, evolving from a humble beginning of 456 students to a thriving community of 2,700+ learners from Nursery to Class XII. A Co-educational Senior Secondary School affiliated with CBSE, New Delhi, the school offers PCM, PCB, Commerce and Humanities, providing students with diverse pathways to discover their interests, pursue their aspirations and prepare for an ever-changing world. At Sunbeam School Ballia, education extends far beyond the classroom. Over the years, the school has built a strong reputation for academic excellence, value-based education and holistic development, creating an environment where every learner is encouraged to question, explore, create and excel.',
+  'With a vibrant campus, experienced educators, progressive teaching methodologies and excellent infrastructure, Sunbeam School strives to provide an enriching learning experience that nurtures knowledge, character, confidence and leadership. Rooted in the guiding values of Duty, Devotion and Discipline, the school encourages students to participate and excel across academics, sports, cultural pursuits, leadership and life skills. Today, with a growing community of 2,700+ students, Sunbeam School, Agarsanda, Ballia continues its journey with a clear purpose — to educate the future, inspire excellence and empower every learner to make a meaningful difference in the world.',
+];
+
+/** The school's own sign-off, set apart from the prose because it is a motto and
+ *  not a sentence in it. */
+const closing = 'Educating the FUTURE!';
+
+/**
+ * The plate under the paragraph.
+ *
+ * The school's History page is the single paragraph above and nothing more, so
+ * there is no further narrative to draw on — writing one would be inventing a
+ * school's own history, which is the one thing this build never does. What IS
+ * available is fact the school already publishes elsewhere on its site, and
+ * none of these three are repeated by the timeline further down the page: that
+ * covers 1972, 2013, today's strength and the Education World run.
+ *
+ * A longer account of the founding years is asset request A3.
+ */
+const facts = [
+  { label: "Motto", value: school.motto },
+  {
+    label: "Affiliation",
+    value: `CBSE ${school.affiliationNo} · School Code ${school.schoolCode}`,
+  },
+  { label: "Campus", value: `${school.address.line1}, ${school.address.city}` },
+];
+
+/**
+ * Legacy — audit 1.8. Every figure verified in docs/01 § 5.
+ *
+ * ⚠ EVERY FIGURE IS EITHER A FIXED DATE OR A `school.*` VALUE. Nothing here
+ * computes an elapsed span, which is exactly how the old heading above this
+ * timeline — "Fifty years, and thirteen in Ballia" — became false: 1972 to 2026
+ * is fifty-FOUR. A number that has to be right on the day it is written is a
+ * number that will be wrong later.
+ */
+const milestones = [
+  {
+    year: "1972",
+    kicker: "The Beginning",
+    body: `Founded by ${school.founders}, Sunbeam was born from a shared vision to create an institution that nurtures the complete development of every child — academically, intellectually, emotionally and socially.`,
+    art: mVaranasi,
+    artAlt: "A pencil drawing of the Varanasi ghats on the Ganges, where the Sunbeam group was founded in 1972.",
+  },
+  {
+    year: "2013",
+    kicker: "Agarsanda, Ballia",
+    body: `Sunbeam School, Agarsanda, Ballia begins its journey with ${school.openingStrength} students, carrying forward the Sunbeam philosophy of holistic education, values and excellence into a new district.`,
+    art: mCampus,
+    artAlt: "A pencil drawing of the Sunbeam School Ballia campus at Agarsanda, seen across its lawn.",
+  },
+  {
+    year: "Today",
+    kicker: "Nursery to Class XII",
+    body: `${school.currentStrength} students. ${school.teachingStaff} educators. Nursery to Class XII. Four senior-secondary pathways — ${school.streams.join(", ")}. Growing with purpose. Educating the FUTURE!`,
+    art: mStudents,
+    artAlt: "A pencil drawing of two Sunbeam students in uniform reading a book together.",
+  },
+  {
+    year: "Six years",
+    kicker: "Running",
+    body: "Ranked #1 Co-educational Day School in Ballia by EducationWorld for six consecutive years, from 2019–20 to 2024–25.",
+    art: mTrophy,
+    artAlt: "A pencil drawing of a trophy on its plinth beside a laurel sprig.",
+  },
+];
+
+const voices = [
+  {
+    name: "Mr. Sanjai Kumar Pandey",
+    role: "Chairman",
+    portrait: chairman,
+    alt: "Mr. Sanjai Kumar Pandey, Chairman of Sunbeam School Ballia.",
+    paragraphs: [
+      "Sunbeam School Ballia has effectively played a pivotal role in spreading the Sunbeam Education revolution in the district for last 7 years. I congratulate the entire team of Management, staff members, students and last but not the least the parents of the school for this success of Sunbeam Ballia.",
+      "Education is a continuous life long process which begins at the early stage of life from a school till one enters the last stage of life. The aim & objective of a school is to instill in the students the qualities of a genuine human and concerns of society. Sunbeam School Ballia fulfills these commitments to realize the welfare of not only an individual but society & country at a large. To realize this we offer many co-curricular activities which help to unfold the hidden talents of our students.",
+      "I would like to offer my sincere thanks to all the parents & well-wishers for their support & co-operation.",
+    ],
+  },
+  {
+    name: "Mr. Shriwats Singh",
+    role: "Secretary",
+    portrait: secretary,
+    alt: "Mr. Shriwats Singh, Secretary of Sunbeam School Ballia.",
+    paragraphs: [
+      "Learning is not a process limited to school & colleges only. It is indeed a never ending process and the school is the first orientation of formal education of a child. We all agree that the youth of future generation are going to face more pressure in all spheres. It is the demand of our time to prepare global students for a better world.",
+      "I am happy to share that Sunbeam School Ballia has been facilitating students for the all round progress & character building.",
+      "Wish you all the best!",
+    ],
+  },
+];
+
+const onward = [
+  {
+    label: "Director's Message",
+    href: "/about/directors-message/",
+    note: "Dr. Kunwar Arun Singh",
+  },
+  {
+    label: "Principal's Message",
+    href: "/about/principals-message/",
+    note: school.principal,
+  },
+  {
+    // Client's chosen label. Worth knowing: the supplied panels carry a Vision,
+    // a greeting and an identity story, but still no Mission statement — so
+    // this link promises something the page does not yet contain. Nothing has
+    // been invented to cover the gap; see the header of vision-mission.astro.
+    label: "Vision and Mission",
+    href: "/about/vision-mission/",
+    note: "The vision, the greeting, and the Sunbeam cipher",
+  },
+];
+---
+
+<BaseLayout
+  title="Our Journey — Sunbeam School Ballia"
+  description="Sunbeam School Ballia, founded 2013 at Agarsanda and part of the Sunbeam group since 1972 — the school's history, its growth from 456 to 2,700+ students, and messages from the Chairman and Secretary."
+>
+  <PageHero
+    title="Our Journey"
+    crumbs={[
+      { label: "Home", href: "/" },
+      { label: "About", href: "/about/" },
+    ]}
+    src={banner}
+    alt="The Sunbeam School Ballia campus at Agarsanda."
+    position="50% 58%"
+  />
+
+  <div class="u-page-panel">
+    {
+      /* --- The film, first --------------------------------------------------- */
+    }
+    <section class="hist-film" aria-labelledby="film-heading">
+      <div class="u-container">
+        {
+          /* ⚠⚠ THE FILM IS SWITCHED OFF, NOT DELETED — CLIENT INSTRUCTION.
+             It was a 14:30 YouTube embed at 21:9 sitting above the fold of this
+             page, so the first thing "Our Journey" said was "watch a
+             quarter-hour video", ahead of the story it is a page for.
+
+             COMMENTED RATHER THAN CUT, and the VideoFeature import is kept with
+             it, because "put the film back" is then one block uncommented rather
+             than a component, a poster, an import and a scroll-scrub rebuilt from
+             the git history. .hist-film__media and its @media (prefers-reduced-
+             motion) rule stay in the stylesheet below for the same reason; they
+             style nothing while this is off.
+
+             ⚠ IF IT COMES BACK, .hist-film--noreel COMES OFF THE COPY BELOW.
+             That modifier removes the 40-80px top margin the copy needs only
+             when it is sitting under the film.
+
+          <div class="hist-film__media" data-expand>
+            <VideoFeature
+              id="kfCpTF0Aagk"
+              title="Journey of Sunbeam School"
+              duration="14:30"
+              poster={poster}
+              posterAlt="Students and staff gathered at the entrance to Sunbeam School Ballia."
+              posterPosition="50% 42%"
+              ratio="21 / 9"
+            />
+          </div>
+          */
+        }
+
+        <div class="hist-film__copy hist-film__copy--noreel" data-reveal>
+          <Image
+            class="history-stars"
+            src={stars}
+            alt=""
+            aria-hidden="true"
+            widths={[200, 400]}
+            sizes="200px"
+            loading="lazy"
+          />
+          <p class="hist__pill">
+            <span class="pill pill--violet">Our Story</span>
+          </p>
+          {/* ⚠ THE LINE BREAK IS AUTHORED, NOT LEFT TO THE MEASURE. These are
+              two balanced halves of one statement — "A Legacy of Learning." and
+              "A Future of Possibilities." — and a heading that wraps wherever
+              the container happens to end reads as one long sentence that ran
+              out of room. */}
+          <h2 class="hist-film__heading" id="film-heading" data-split>
+            A Legacy of Learning.<br />A Future of <span class="t-squiggle">Possibilities.</span>
+          </h2>
+          <div class="hist-film__prose">
+            {history.map((p) => <p>{p}</p>)}
+          </div>
+          {/* Set apart and in the accent, because it is the school's punch line
+              and not the last sentence of the paragraph above it. */}
+          <p class="hist-film__closing">{closing}</p>
+        </div>
+      </div>
+    </section>
+
+    {
+      /* --- Legacy: the line from 1972 ---------------------------------------- */
+    }
+    {/* ⚠ THE WRAPPING <section class="hist-line"> AND ITS HEADING ARE GONE, NOT
+        just re-filled. LegacyTimeline IS a <section>: it carries its own
+        aria-labelledby, its own band colour and its own centred head, so keeping
+        the old wrapper would have produced a section inside a section with two
+        competing headings and two lots of vertical padding.
+
+        ⚠ AND THE OLD HEADING WAS FACTUALLY WRONG. "Fifty years, and thirteen in
+        Ballia" — 1972 to 2026 is fifty-FOUR years, and the first card underneath
+        it printed the 1972 a reader would do the subtraction from. The
+        replacement states no span at all, which is the only version that cannot
+        go stale. */}
+    <LegacyTimeline
+      eyebrow="Our Legacy"
+      heading="An Unchallenged Legacy of Excellence"
+      headingAccent="Excellence"
+      standfirst="A journey rooted in vision, values and commitment to holistic education that continues to transform lives."
+      items={milestones}
+      label="Four milestones, 1972 to today"
+      watermark="Sunbeam Ballia"
+    />
+
+    {
+      /* --- Leadership. Audit 1.11, and the target of both redirects ---------- */
+    }
+    <section
+      class="hist-voices"
+      id="leadership"
+      aria-labelledby="voices-heading"
+    >
+      <div class="u-container">
+        <div class="hist-voices__head" data-reveal>
+          <p class="hist__pill">
+            <span class="pill pill--violet">Leadership</span>
+          </p>
+          <h2
+            class="hist-voices__heading t-h2-sans"
+            id="voices-heading"
+            data-split
+          >
+            In their own <span class="t-squiggle">words</span>
+          </h2>
+        </div>
+
+        {
+          voices.map((v, i) => (
+            <article
+              class:list={['voice', i % 2 === 1 && 'voice--flip']}
+              data-reveal
+            >
+              <div class="voice__media">
+                <Photo
+                  src={v.portrait}
+                  alt={v.alt}
+                  brief={`${v.role} portrait`}
+                  ratio="4 / 5"
+                  position="50% 18%"
+                  sizes="(max-width: 899px) 260px, 360px"
+                />
+              </div>
+
+              <div class="voice__body">
+                <svg
+                  class="voice__mark"
+                  width="34"
+                  height="26"
+                  viewBox="0 0 18 15"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
+                </svg>
+
+                <div class="voice__prose">
+                  {v.paragraphs.map((p) => (
+                    <p>{p}</p>
+                  ))}
+                </div>
+
+                {/* ⚠ THE ROLE ALONE — NO ", Sunbeam School Ballia" AFTER IT.
+                    This is the school's own site: every one of these two men is
+                    Chairman and Secretary OF it, the masthead says so on every
+                    page, and the suffix ran the sign-off onto a second line on a
+                    phone to repeat what the reader already knew. */}
+                <div class="voice__sign">
+                  <p class="voice__name">{v.name}</p>
+                  <p class="voice__role">{v.role}</p>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    
+  </div>
+</BaseLayout>
+
+<style>
+  /* stars */
+  .history-stars {
+    position: absolute;
+    top: -18px;
+    right: clamp(-24px, -2vw, 18px);
+    width: clamp(84px, 10vw, 120px);
+    height: auto;
+    opacity: 0.28;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    transform: rotate(-8deg);
+    animation: affil-drift 7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .hist__pill {
+    margin-bottom: var(--sb-6);
+  }
+
+  /* --- Film ------------------------------------------------------------------ */
+
+  /* No top padding: .u-page-panel already opens the page with its own, and the
+     two stacked to 208px of empty ground between the banner and the heading. */
+  .hist-film {
+    padding-block: 0 var(--sb-section-y);
+  }
+
+  /* SCALE-UP ON SCROLL. The frame starts at 80% and reaches full size as it
+     travels up the viewport - motion-gsap.ts scrubs it against scroll.
+
+     The 80% START LIVES IN CSS, not in the script. This element sits just under
+     the banner and is on screen at first paint, so setting the start in JS
+     meant a visible snap from full size down to 80% the moment the motion
+     chunk arrived. In CSS it is simply how the frame is drawn.
+
+     The degraded state is therefore a slightly inset video rather than a
+     hidden one - fine if the chunk never loads, which is the test that matters.
+
+     transform, not width: width would relayout the poster every frame; a scale
+     is composited and costs nothing. */
+  .hist-film__media {
+    transform: scale(0.8);
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+
+  /* No scroll-coupled scaling for anyone who asked for less motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .hist-film__media {
+      transform: none;
+    }
+  }
+
+  /* Copy sits BELOW the film, centred on it, rather than beside it.
+     66ch, not 74: centred text is harder to track back than ranged-left, since
+     every line starts at a different place, so it wants the shorter measure. */
+  .hist-film__copy {
+    position: relative;
+    overflow: visible;
+    isolation: isolate;
+    max-width: 100%;
+    margin: clamp(40px, 6vh, 80px) auto 0;
+    text-align: center;
+  }
+
+  .hist-film__copy > :not(.history-stars) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hist-film__heading {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-6);
+  }
+
+  .hist-film__prose p {
+    font-size: var(--sb-body);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    text-align: justify;
+  }
+
+  .hist-film__prose p + p {
+    margin-top: var(--sb-5);
+    text-align: justify;
+  }
+
+  /* ⚠ THE COPY LEADS THE PAGE NOW THAT THE FILM IS OFF. That 40-80px was the gap
+     between the video and the words under it; with nothing above, it is a gap
+     between the banner's own padding and the words, and the two stack. The
+     modifier is on the copy rather than the rule being deleted so that
+     uncommenting the film restores the spacing by removing one class. */
+  .hist-film__copy--noreel {
+    margin-top: 0;
+  }
+
+  /* The punch line. Not part of the prose: no justification, no 66ch measure,
+     its own space above and below, and the accent colour — it is a motto being
+     quoted, and it is set like one. */
+  .hist-film__closing {
+    margin-top: clamp(28px, 4vh, 44px);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 1.6vw, 26px);
+    letter-spacing: -0.02em;
+    color: var(--sb-violet);
+    text-align: center;
+  }
+
+  /* --- Fact row --------------------------------------------------------------
+     Three columns on a hairline rule, dividers BETWEEN only. The rule is drawn
+     on the row's top edge and on each item's left, so it needs no
+     :last-child exception and no trailing divider to suppress. */
+  .hist-film__facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: clamp(32px, 4.5vh, 52px) 0 0;
+    padding-top: var(--sb-7);
+    border-top: var(--sb-hairline);
+    text-align: center;
+  }
+
+  .hist-film__fact {
+    padding-inline: var(--sb-5);
+  }
+
+  /* The divider sits on the item, so the first column simply has none. */
+  .hist-film__fact + .hist-film__fact {
+    border-left: var(--sb-hairline);
+  }
+
+  .hist-film__fact dt {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-3);
+  }
+
+  .hist-film__fact dd {
+    margin: 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--sb-charcoal);
+    /* Tabular figures so the affiliation and school code numbers line up
+       against the words either side of them rather than wobbling. */
+    font-variant-numeric: tabular-nums;
+    /* These wrap at two or three words, and the greedy default broke
+       "School Code 70205" across the line, orphaning the number away from its
+       own label. Balance splits at the phrase instead. Unsupported browsers
+       just get the greedy wrap, which is what it was before. */
+    text-wrap: balance;
+  }
+
+  /* Stacked, the vertical dividers become horizontal ones — a left border on a
+     full-width row would read as a stray tick. */
+  @media (max-width: 639px) {
+    .hist-film__facts {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-5);
+    }
+
+    .hist-film__fact {
+      padding-inline: 0;
+    }
+
+    .hist-film__fact + .hist-film__fact {
+      border-left: 0;
+      border-top: var(--sb-hairline);
+      padding-top: var(--sb-5);
+    }
+  }
+
+  /* --- Timeline --------------------------------------------------------------- */
+
+  /* ⚠ .hist-line, .hist-line__head, .hist-line__heading AND .hist-line__list
+     ARE ALL DELETED. They styled a wrapper section, a heading and a list that
+     this page no longer emits — the timeline is components/about/
+     LegacyTimeline.astro, which is a <section> carrying its own band, its own
+     centred head and its own stacked fallback. Astro scopes styles per file, so
+     these rules could never have applied to it; leaving them would have left
+     four selectors matching nothing and a reader hunting for the element. */
+
+  /* --- LEADERSHIP · "In their own words" ------------------------------------
+     REBUILT. The base rules for this section had been deleted from the
+     stylesheet while its two media queries were left behind — `.voice` and
+     `.voice__media` existed ONLY inside `@media (max-width: 899px)` and
+     `(max-width: 639px)`. Ten of the section's twelve classes had no CSS at all.
+
+     The visible symptom was the portraits rendering enormous: with no
+     `display: grid` on `.voice`, `.voice__media` fell back to a full-width
+     block, and Photo's `ratio="4 / 5"` then made it two thousand pixels tall.
+     The prose, which should sit beside it, was pushed underneath.
+
+     The two surviving media queries are the contract this block is written to
+     satisfy — they override `grid-template-columns`, reset `order` to 0 and cap
+     the portrait at 280px, so the base has to establish a grid, set an order on
+     the flipped portrait, and leave the portrait width to the column. */
+
+  .hist-voices {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .hist-voices__head {
+    margin-bottom: var(--sb-10);
+  }
+
+  .hist-voices__heading {
+    margin-top: var(--sb-4);
+    color: var(--sb-charcoal);
+  }
+
+  .voice {
+    display: grid;
+    /* 360px matches the `sizes` the Photo is given, so the browser is not
+       fetching a candidate wider than the slot it lands in. */
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+  }
+
+  /* The second portrait sits on the right, and that needs BOTH halves of this:
+     `order` alone moved the media into the second grid cell, which is the 1fr
+     track — so the flipped portrait came out 862px wide and the prose was
+     squeezed into the 360px column. The track list has to be mirrored too.
+
+     The swap is keyed to `.voice--flip` ONLY, never `.voice + .voice`. The
+     899px query stacks the row with a plain `.voice` selector, and `.voice +
+     .voice` would out-specify it and keep two columns on a phone. */
+  .voice--flip {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+
+  .voice--flip .voice__media,
+  .voice + .voice .voice__media {
+    order: 2;
+  }
+
+  .voice + .voice {
+    margin-top: var(--sb-10);
+    padding-top: var(--sb-10);
+    border-top: var(--sb-hairline);
+  }
+
+  .voice__media {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(28, 14, 8, 0.08), 0 22px 44px rgba(28, 14, 8, 0.12);
+  }
+
+  .voice__mark {
+    display: block;
+    color: var(--sb-violet);
+    opacity: 0.85;
+    margin-bottom: var(--sb-5);
+  }
+
+  .voice__prose p {
+    color: var(--sb-text-secondary);
+    line-height: 1.75;
+    max-width: 62ch;
+  }
+
+  .voice__prose p + p {
+    margin-top: var(--sb-5);
+  }
+
+  /* The rule is the width of the name, not the column — a full-width hairline
+     under a two-word signature reads as a section break rather than a sign-off. */
+  .voice__sign {
+    display: inline-block;
+    margin-top: var(--sb-7);
+    padding-top: var(--sb-5);
+    border-top: 2px solid var(--sb-violet);
+  }
+
+  .voice__name {
+    font-family: var(--sb-font-display);
+    font-size: clamp(18px, 1.6vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .voice__role {
+    margin-top: 2px;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-text-muted);
+  }
+
+  @media (max-width: 1023px) {
+    .hist-next__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .voice {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    /* Order is a desktop device; stacked, the portrait always leads. */
+    .voice + .voice .voice__media {
+      order: 0;
+    }
+    .voice__media {
+      max-width: 280px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .voice + .voice {
+      margin-top: var(--sb-9);
+      padding-top: var(--sb-9);
+    }
+  }
+</style>

@@ -1,0 +1,232 @@
+---
+/**
+ * ⏸ PARKED — NOT CURRENTLY RENDERED. Removed from the page at the client's
+ * request along with everything below it; the page now ends on the timeline. The copy is still in
+ * `parents` in data/academics.ts. To restore: import it and drop it back into
+ * parent-partnership.astro after <Timeline />.
+ *
+ * PARENT PARTNERSHIP · SECTION 4 — THE BENTO
+ *
+ * Six destinations at two sizes. A bento rather than a six-up grid because these
+ * are not equal: the parent portal and the phone number are what a parent came
+ * for, and the other four are what they might browse.
+ *
+ * EVERY TILE IS A REAL DESTINATION. The brief also asked for a "School Mobile
+ * App" tile; the school publishes no app, on its site or in the brief, so there
+ * is none here rather than a tile that goes nowhere. Two tiles point at the live
+ * external portal; the rest at routes already in the sitemap and already linked
+ * from the footer.
+ *
+ * The whole tile is the link, not a "read more" inside it — a 300px target beats
+ * a 90px one, and it means the hover state and the hit area are the same object.
+ */
+import SectionHead from '../SectionHead.astro';
+import AcademicGlyph from '../AcademicGlyph.astro';
+import { parents } from '../../../data/academics';
+
+const { resources } = parents;
+---
+
+<section class="pres" id="resources" aria-labelledby="pres-title">
+  <div class="u-container">
+    <SectionHead
+      eyebrow={resources.eyebrow}
+      heading={resources.heading}
+      align="center"
+      id="pres-title"
+      measure={20}
+    />
+
+    <ul class="pres__grid">
+      {
+        resources.items.map((it, i) => (
+          <li class:list={['pres__cell', it.span === 'wide' && 'pres__cell--wide']}>
+            <a
+              class="pres__tile"
+              href={it.href}
+              data-pop
+              data-pop-delay={(i % 3) * 70}
+              {...(it.external ? { target: '_blank', rel: 'noopener' } : {})}
+            >
+              <span class="pres__glyph" aria-hidden="true">
+                <AcademicGlyph name={it.glyph} size={24} />
+              </span>
+
+              <span class="pres__label">{it.label}</span>
+              <span class="pres__body">{it.body}</span>
+
+              <span class="pres__go" aria-hidden="true">
+                <svg width="15" height="10" viewBox="0 0 14 10" fill="none">
+                  <path d="M9 1l4 4-4 4M13 5H0" stroke="currentColor" stroke-width="1.6" />
+                </svg>
+              </span>
+
+              {/* Only ever announced for the tiles that genuinely leave the site. */}
+              {it.external && <span class="u-visually-hidden">(opens in a new tab)</span>}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .pres {
+    padding-block: clamp(64px, 9vh, 104px) var(--sb-section-y);
+    background: var(--sb-ivory);
+    --shead-gap: clamp(36px, 5vh, 60px);
+  }
+
+  .pres__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 22px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Two tiles take a double column. Six cells over four columns lands as
+     2+1+1 / 1+1+2, which is the bento's whole point — an even six-up would say
+     the phone number matters exactly as much as the notice board. */
+  .pres__cell--wide { grid-column: span 2; }
+
+  .pres__tile {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: clamp(190px, 20vw, 240px);
+    padding: clamp(20px, 2vw, 30px);
+    border: 1px solid rgba(201, 60, 10, 0.1);
+    border-radius: var(--sb-r-3);
+    background: linear-gradient(165deg, #ffffff 0%, #fffaf7 66%, #fff3ec 100%);
+    box-shadow: var(--sb-shadow-card);
+    transition:
+      transform var(--sb-dur-image) var(--sb-ease),
+      box-shadow var(--sb-dur-image) var(--sb-ease),
+      border-color var(--sb-dur-image) var(--sb-ease);
+  }
+
+  /* A wash that arrives from the corner the arrow sits in. Behind the content in
+     an isolated context, so it can never paint over the copy. */
+  .pres__tile::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      120% 90% at 100% 100%,
+      rgba(255, 138, 99, 0.18) 0%,
+      rgba(255, 138, 99, 0) 60%
+    );
+    opacity: 0;
+    transition: opacity var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .pres__tile:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--sb-shadow-card-hover);
+    border-color: rgba(201, 60, 10, 0.22);
+  }
+
+  .pres__tile:hover::before { opacity: 1; }
+
+  .pres__glyph {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet-wash);
+    color: var(--sb-violet-dark);
+    transition:
+      background-color var(--sb-dur-link) ease,
+      color var(--sb-dur-link) ease,
+      transform var(--sb-dur-image) var(--sb-ease);
+  }
+
+  .pres__tile:hover .pres__glyph {
+    background: var(--sb-violet);
+    color: #fff;
+    transform: rotate(-6deg) scale(1.06);
+  }
+
+  .pres__label {
+    margin-top: clamp(18px, 2vw, 26px);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(18px, 1.6vw, 23px);
+    line-height: 1.18;
+    letter-spacing: -0.022em;
+    color: var(--sb-charcoal);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .pres__tile:hover .pres__label { color: var(--sb-violet-dark); }
+
+  .pres__body {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  .pres__go {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    margin-top: auto;
+    /* Reserved from the start rather than added on hover, so the tile's content
+       never reflows under the pointer. */
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-full);
+    color: var(--sb-violet);
+    transition:
+      background-color var(--sb-dur-link) ease,
+      border-color var(--sb-dur-link) ease,
+      color var(--sb-dur-link) ease,
+      transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .pres__tile:hover .pres__go {
+    background: var(--sb-violet);
+    border-color: var(--sb-violet);
+    color: #fff;
+    transform: translateX(4px);
+  }
+
+  .pres__tile:focus-visible {
+    outline: 2px solid var(--sb-focus);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pres__tile,
+    .pres__tile::before,
+    .pres__glyph,
+    .pres__label,
+    .pres__go { transition: none; }
+    .pres__tile:hover { transform: none; }
+    .pres__tile:hover .pres__glyph { transform: none; }
+    .pres__tile:hover .pres__go { transform: none; }
+  }
+
+  @media (max-width: 1023px) {
+    .pres__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pres__cell--wide { grid-column: span 2; }
+  }
+
+  @media (max-width: 639px) {
+    .pres { padding-block: var(--sb-9) var(--sb-section-y); }
+    .pres__grid { grid-template-columns: minmax(0, 1fr); }
+    .pres__cell--wide { grid-column: span 1; }
+    /* Hover lift is a pointer gesture; on touch it only ever reads as a stuck
+       state after a tap. */
+    .pres__tile:hover { transform: none; }
+  }
+</style>

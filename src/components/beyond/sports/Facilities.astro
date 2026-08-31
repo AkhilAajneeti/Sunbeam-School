@@ -1,0 +1,293 @@
+---
+/**
+ * §1 · SPORTS FACILITIES — alternating rows, large images, no cards.
+ *
+ * THE CLIENT ASKED FOR THREE THINGS AND THEY ARE IN TENSION: alternating
+ * image/content layouts, large images, and no repetitive cards. Four alternating
+ * rows on their own solve the first two and fail the third — a row that is
+ * always [big photo | paragraph] is a card lying on its side, four times.
+ *
+ * So the row has THREE photographic slots, not one: a large lead frame, and two
+ * support frames stacked beside the copy. That does three things at once — it
+ * breaks the mirror symmetry that makes alternating rows feel mechanical, it
+ * gives the eye a real composition to travel, and it puts eleven of the twenty
+ * photographs we hold on screen instead of four. The support column also flips
+ * side with the row, so no two rows have the same silhouette.
+ *
+ * ⚠ THE HEADING IS THE CLIENT'S OWN BULLET, VERBATIM, and so are the other five
+ * on this page. The audit lists what must be shown before achievements, and the
+ * client asked for those exact words as the headings so the brief can be read
+ * straight off the page. Editorial headings ("Four places to play") moved into
+ * the standfirst. DO NOT REWORD IT — matching the brief exactly is the point.
+ *
+ * THE FOURTH ROW HAS NO PHOTOGRAPHS AT ALL. The shooting range is real, rare and
+ * unphotographed, and it gets the shot brief rather than a borrowed picture of a
+ * different facility. It is composed as its own row rather than left broken, so
+ * the gap reads as a deliberate note to the school and not as a hole.
+ */
+import { Picture } from 'astro:assets';
+import { facilities } from '../../../data/sports';
+import SectionHead from '../../academics/SectionHead.astro';
+import AssetPlaceholder from '../../ui/AssetPlaceholder.astro';
+---
+
+<section class="spf" id="facilities" aria-labelledby="spf-title">
+  <div class="u-container">
+    <SectionHead
+      id="spf-title"
+      eyebrow="Where it happens"
+      heading="Sports facilities available"
+      stand="Four places to play, before a single medal is mentioned — the ground, the court, the park and the range."
+      align="start"
+      measure={18}
+    />
+
+    <div class="spf__rows">
+      {facilities.map((f, i) => (
+        <article class:list={['spf__row', i % 2 === 1 && 'spf__row--flip', !f.lead && 'spf__row--brief']}>
+          <div class="spf__lead" data-reveal>
+            {f.lead ? (
+              <Picture
+                src={f.lead}
+                alt={f.alt ?? ''}
+                formats={['webp']}
+                widths={[600, 1000, 1600]}
+                sizes="(max-width: 900px) 92vw, 52vw"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <AssetPlaceholder ratio="16 / 11" tone="charcoal" brief={f.brief!} ref="A7 · Priority 1" />
+            )}
+
+            <span class="spf__num t-tabular" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          </div>
+
+          <div class="spf__side">
+            <div class="spf__copy" data-reveal data-reveal-delay="90">
+              <p class="spf__kicker t-label">{f.kicker}</p>
+              <h3 class="spf__name">{f.name}</h3>
+              <p class="spf__body">{f.body}</p>
+
+              <ul class="spf__notes">
+                {f.notes.map((n) => (
+                  <li>
+                    <span class="spf__tick" aria-hidden="true"></span>
+                    {n}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {f.support && (
+              <div class="spf__support" data-reveal data-reveal-delay="150">
+                {f.support.map((s) => (
+                  <span class="spf__thumb">
+                    <Picture
+                      src={s}
+                      alt=""
+                      formats={['webp']}
+                      widths={[320, 640]}
+                      sizes="(max-width: 900px) 46vw, 20vw"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .spf {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .spf__rows {
+    margin-top: var(--sb-10);
+    display: grid;
+    gap: clamp(56px, 8vh, 104px);
+  }
+
+  .spf__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(24px, 3.4vw, 52px);
+    align-items: center;
+  }
+
+  /* The MIRROR is what stops four rows reading as one repeated card. Order is
+     set on the children rather than by reversing the grid, so the DOM stays in
+     reading order for a screen reader. */
+  .spf__row--flip .spf__lead { order: 2; }
+  .spf__row--flip .spf__side { order: 1; }
+
+  /* --- Lead frame ----------------------------------------------------------- */
+
+  .spf__lead {
+    position: relative;
+    border-radius: var(--sb-r-3);
+    overflow: hidden;
+    background: var(--sb-sand);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .spf__lead :global(picture) { display: block; }
+
+  /* `height: auto` IS LOAD-BEARING, not tidiness. Astro's <Picture> emits real
+     width/height attributes (5568 × 3712 here), which are presentational hints
+     that map to the CSS width and height properties. base.css resets `max-width:
+     100%` but NOT `height: auto`, so the width collapsed to the column while the
+     specified height stayed at 3712px — and `aspect-ratio` cannot help, because
+     it only applies when one dimension is auto. Measured: this row was 4001px
+     tall and the lead frame showed nothing but sky. */
+  .spf__lead :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 11;
+    object-fit: cover;
+    /* The grounds are shot with a lot of sky. Weighting the crop low keeps the
+       playing surface in the frame instead of a blue rectangle. */
+    object-position: 50% 68%;
+    transform: scale(1.001);
+    transition: transform 900ms var(--sb-ease);
+  }
+
+  .spf__row:hover .spf__lead :global(img) { transform: scale(1.045); }
+
+  /* The numeral sits ON the photograph, at the corner the copy is not on, so it
+     never lands on the side the eye reads into. */
+  .spf__num {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: var(--sb-4) var(--sb-5);
+    font-family: var(--sb-font-display);
+    font-size: clamp(28px, 3.6vw, 46px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: #fff;
+    text-shadow: 0 2px 18px rgba(10, 6, 4, 0.55);
+  }
+
+  .spf__row--flip .spf__num { left: auto; right: 0; }
+
+  /* --- Side column ---------------------------------------------------------- */
+
+  .spf__side {
+    display: grid;
+    gap: var(--sb-6);
+    align-content: center;
+  }
+
+  .spf__kicker { color: var(--sb-violet); }
+
+  .spf__name {
+    margin-top: var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    text-wrap: balance;
+  }
+
+  .spf__body {
+    margin-top: var(--sb-5);
+    max-width: 46ch;
+    font-size: var(--sb-body);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  .spf__notes {
+    list-style: none;
+    margin: var(--sb-6) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-3);
+  }
+
+  .spf__notes li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 13px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-paper);
+    box-shadow: inset 0 0 0 1px var(--sb-border);
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    color: var(--sb-charcoal);
+  }
+
+  .spf__tick {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--sb-violet);
+    flex-shrink: 0;
+  }
+
+  /* --- Support frames ------------------------------------------------------- */
+
+  .spf__support {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-4);
+  }
+
+  .spf__thumb {
+    display: block;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    background: var(--sb-sand);
+  }
+
+  .spf__thumb :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 50% 64%;
+    filter: saturate(0.94);
+    transition: transform 700ms var(--sb-ease), filter 400ms ease;
+  }
+
+  .spf__thumb:hover :global(img) { transform: scale(1.06); filter: saturate(1.06); }
+
+  /* --- The unphotographed row ----------------------------------------------- */
+
+  .spf__row--brief { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .spf__row--brief .spf__lead { box-shadow: none; background: transparent; }
+  .spf__row--brief .spf__num { display: none; }
+
+  @media (max-width: 900px) {
+    .spf__rows { gap: clamp(40px, 6vh, 64px); }
+
+    .spf__row,
+    .spf__row--brief {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-6);
+    }
+
+    /* The flip is meaningless in one column and would only put the photograph
+       below its own heading. */
+    .spf__row--flip .spf__lead { order: 0; }
+    .spf__row--flip .spf__side { order: 0; }
+    .spf__row--flip .spf__num { left: 0; right: auto; }
+
+    .spf__lead :global(img) { aspect-ratio: 16 / 10; }
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+/**
+ * ONE ACHIEVEMENT — routing only. The page is components/news/DetailPage.
+ *
+ * Same component as the workshops, school-events, competitions and celebrations
+ * detail routes; only `page` and `base` differ. That is the point of it — the
+ * card treatment, the facts rail, the gallery, the lightbox and the prev/next
+ * are written once.
+ *
+ * ⚠ THE GALLERY IS THE AWARD GRAPHIC ITSELF. These items carry `art` rather than
+ * a `photoDir`, and DetailPage treats that as a gallery of one — so the poster
+ * appears whole, at its own ratio, and opens in the lightbox like any other
+ * picture. Without that it would have shown the "photographs not yet supplied"
+ * placeholder for an item whose image is right there.
+ *
+ * ⚠ THE BANNER FALLS BACK TO A PHOTOGRAPH, NOT THE POSTER. DetailPage only
+ * promotes a lead image to the banner when the set has more than one, precisely
+ * so a solo designed graphic is not cropped into a 3:1 strip — the fault
+ * recorded in the header of beyond/achievements/Majors.astro. The award ceremony
+ * frame is the honest banner for an award.
+ */
+import DetailPage from '../../../components/news/DetailPage.astro';
+import { achievementsPage } from '../../../data/newsEvents';
+import type { ChronicleItem } from '../../../data/newsPages';
+
+/* The awards ceremony in the school hall — the one photograph in the library
+   that actually depicts an achievement being received. */
+import heroPhoto from '../../../assets/photos/sunbeem-4.jpg';
+
+export async function getStaticPaths() {
+  const { achievementsPage: page } = await import('../../../data/newsEvents');
+  return page.groups.flatMap((g) =>
+    g.items
+      .filter((i) => i.slug)
+      .map((item) => ({
+        params: { slug: item.slug! },
+        props: { item, group: g.label },
+      })),
+  );
+}
+
+interface Props {
+  item: ChronicleItem;
+  group: string;
+}
+
+const { item, group } = Astro.props;
+---
+
+<DetailPage
+  item={item}
+  group={group}
+  page={achievementsPage}
+  base="/news-events/achievements/"
+  indexHref="/news-events/"
+  unit="achievement"
+  fallbackHero={heroPhoto}
+  fallbackAlt="An award ceremony on stage in the hall at Sunbeam School Ballia"
+  metaLabel="Where and when"
+  resultLabel="On the award"
+/>

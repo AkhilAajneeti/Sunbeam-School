@@ -1,0 +1,658 @@
+---
+/**
+ * ALUMNI REGISTRATION — the whole body. Six sections.
+ *
+ * ⚠⚠ TWO KINDS OF CONTENT SIT ON THIS PAGE AND THEY ARE KEPT APART BY DESIGN.
+ *   PUBLISHED  — the Pradiptam 2.0 meet: its wording, its session and its five
+ *                photographs, all from sunbeamballia.edu.in/school-activities/.
+ *                It arrives through data/alumniMeets.ts and is quoted, not
+ *                rewritten.
+ *   PROPOSED   — the form, the purpose strip and the engagement cards. The
+ *                school runs no alumni register, no alumni association, no
+ *                mentorship scheme and no alumni events calendar; none of the
+ *                four is published anywhere on its site. These come through
+ *                data/alumniRegistration.ts and the page labels them as a
+ *                proposal in a notice above the form.
+ * Mixing the two is exactly how a design concept ends up quoted back as a school
+ * commitment, so nothing here states a service the school has not announced.
+ *
+ * ⚠ THE ENGAGEMENT CARDS ARE PHRASED AS POSSIBILITIES. "Mentorship
+ * opportunities" as a flat title announces a programme; "A way to offer
+ * mentorship", with a line saying none is published, does not.
+ *
+ * ⚠ THE MEET SECTION IS CONDITIONAL AND DATA-DRIVEN. It renders the newest
+ * published meet, whatever that is. No meet, no section — and the gallery strip
+ * only appears when a meet actually carries photographs, so it can never fill
+ * itself with unrelated school images.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ *   01 · IVORY  let's stay connected — copy left, campus right, purpose strip.
+ *   02 · PAPER  the registration card: form left, engagement right.
+ *   03 · CREAM  the published meet, photograph left.
+ *   04 · IVORY  the meet's photographs, a rail.
+ *   05 · PHOTO  the dark contact close.
+ */
+import { Picture } from 'astro:assets';
+import '../../styles/assessment.css';
+import { MARK } from '../academics/assessment/marks';
+import ArForm from './ArForm.astro';
+import AlRail from './AlRail.astro';
+import Lightbox from '../ui/Lightbox.astro';
+import { featuredMeet, alumniGallery } from '../../data/alumniMeets';
+import { registrationBenefits, engagementCards, registrationSettings } from '../../data/alumniRegistration';
+
+import pCampus from '../../assets/photos/sunbeamcloudimage.png';
+import pCohort from '../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+const ALUMNI = '/alumni/';
+const CONTACT = '/contact-us/';
+const hasGallery = alumniGallery.length > 0;
+---
+
+{/* ══ 01 · LET'S STAY CONNECTED ══════════════════════════════════════════════ */}
+<section class="as-sec as-sec--ivory as-pad ar-intro" aria-labelledby="ar-intro-t">
+  <span class="as-warm" aria-hidden="true"></span>
+
+  <div class="u-container ar-intro__grid">
+    <div class="ar-intro__copy">
+      <p class="as-kicker" data-reveal>Welcome back</p>
+      <h2 class="as-h as-h--xl ar-intro__h" id="ar-intro-t">
+        <span data-clip data-clip-delay="0">Let’s stay</span>
+        <span data-clip data-clip-delay="150"><em>connected.</em></span>
+      </h2>
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        Leave your details and the school can find you when the next alumni meet comes round. Where
+        you went afterwards, and what you are doing now, is yours to share — every field but four is
+        optional.
+      </p>
+      <p class="as-note" data-reveal data-reveal-delay="260">
+        {S} has held its alumni meet — {' '}
+        {featuredMeet
+          ? <a class="as-link" href={`${ALUMNI}${featuredMeet.slug}/`}>{featuredMeet.title}</a>
+          : 'see the alumni page'}
+        {' '}— and publishes the photographs from it. It does not yet run a register, which is what
+        this page is for.
+      </p>
+    </div>
+
+    <div class="ar-intro__media">
+      <span class="as-dots ar-intro__dots" aria-hidden="true"></span>
+      <div class="ar-intro__frame" data-mask>
+        <Picture
+          src={pCampus}
+          alt={`The campus of ${S} at Agarsanda — its teaching blocks ranged around the field.`}
+          formats={['avif', 'webp']}
+          widths={[620, 1000, 1440]}
+          sizes="(max-width: 1023px) 96vw, 50vw"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* The purpose strip — four columns on hairlines, not four more cards. */}
+  <div class="u-container">
+    <ul class="ar-why">
+      {registrationBenefits.map((r, i) => (
+        <li class="ar-why__i" data-reveal data-reveal-delay={120 + i * 80}>
+          <span class="ar-why__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[r.mark]} />
+            </svg>
+          </span>
+          <span class="ar-why__n t-tabular">{r.n}</span>
+          <h3 class="ar-why__k">{r.k}</h3>
+          <p class="ar-why__v">{r.v}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+{/* ══ 02 · THE REGISTRATION CARD ═════════════════════════════════════════════ */}
+<section class="as-sec as-sec--paper as-pad ar-card" aria-labelledby="ar-form-t">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="ar-card__box">
+      <div class="ar-card__form">
+        <p class="as-kicker" data-reveal>Register as alumni</p>
+        <h2 class="as-h as-h--lg ar-card__h" id="ar-form-t">
+          <span data-clip data-clip-delay="0">We would love</span>
+          <span data-clip data-clip-delay="150"><em>to hear from you.</em></span>
+        </h2>
+
+        {/* ⚠⚠ THE NOTICE SITS ABOVE THE FORM. A disclaimer under a submit button
+            is read after the decision it should have informed. */}
+        <div class="ar-note" role="note">
+          <span class="ar-note__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.shield} />
+            </svg>
+          </span>
+          <div>
+            <p class="ar-note__k">A proposed form, not a live service</p>
+            <p class="ar-note__v">
+              The school does not currently operate an alumni register, and nothing it publishes
+              describes one. Until it adopts and connects this form, submitting
+              <strong> sends nothing and stores nothing</strong>. To register today, call the office
+              on {' '}<a href={`tel:${registrationSettings.contactPhone}`}>{registrationSettings.contactPhoneDisplay}</a>.
+            </p>
+          </div>
+        </div>
+
+        <ArForm />
+      </div>
+
+      <aside class="ar-card__side" aria-labelledby="ar-side-t">
+        <p class="as-kicker" data-reveal>Be a part of our journey</p>
+        <h2 class="ar-side__h" id="ar-side-t">What a register would make possible</h2>
+
+        <ul class="ar-side__list">
+          {engagementCards.map((c, i) => (
+            <li class="ar-eng" data-pop data-pop-delay={110 + i * 80}>
+              <span class="ar-eng__m" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[c.mark]} />
+                </svg>
+              </span>
+              <div>
+                <h3 class="ar-eng__k">{c.k}</h3>
+                <p class="ar-eng__v">{c.v}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <p class="ar-side__n">
+          None of the four is a programme the school runs today. Each is what a list of former
+          students would allow, which is the case for keeping one.
+        </p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · THE PUBLISHED MEET ════════════════════════════════════════════════
+    ⚠ THIS IS THE ONE SECTION ON THE PAGE MADE OF PUBLISHED FACT. Photograph
+    left, the school's own words right, quoted. */}
+{featuredMeet && (
+  <section class="as-sec as-sec--cream as-pad ar-meet" aria-labelledby="ar-meet-t">
+    <div class="u-container ar-meet__grid">
+      <div class="ar-meet__media">
+        {featuredMeet.cover && (
+          <a
+            class="ar-meet__frame"
+            data-lb-open
+            href={featuredMeet.cover.src}
+            data-lb-alt={featuredMeet.coverAlt}
+            data-lb-cap={`${featuredMeet.title} · ${featuredMeet.session}`}
+            data-mask
+          >
+            <Picture
+              src={featuredMeet.cover}
+              alt={featuredMeet.coverAlt ?? `${featuredMeet.title} at ${S}.`}
+              formats={['avif', 'webp']}
+              widths={[540, 900, 1280]}
+              sizes="(max-width: 1023px) 92vw, 48vw"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        )}
+      </div>
+
+      <div class="ar-meet__copy">
+        <p class="as-kicker" data-reveal>Alumni meet</p>
+        <h2 class="as-h as-h--lg ar-meet__h" id="ar-meet-t">
+          <span data-clip data-clip-delay="0">Moments worth</span>
+          <span data-clip data-clip-delay="150"><em>coming back to.</em></span>
+        </h2>
+
+        <p class="ar-meet__badge">
+          <span class="t-tabular">{featuredMeet.title}</span>
+          {featuredMeet.subtitle && <span class="ar-meet__sub">{featuredMeet.subtitle}</span>}
+        </p>
+
+        {/* The school's own opening lines, quoted. */}
+        {featuredMeet.description.slice(0, 2).map((para, i) => (
+          <p class="as-body" data-reveal data-reveal-delay={200 + i * 55}>{para}</p>
+        ))}
+
+        <p class="ar-meet__acts" data-reveal data-reveal-delay="320">
+          <a class="ar-pill" href={`${ALUMNI}${featuredMeet.slug}/`}>
+            Explore the alumni meet
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+            </svg>
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+)}
+
+{/* ══ 04 · THE MEET'S PHOTOGRAPHS ════════════════════════════════════════════
+    ⚠ OMITTED ENTIRELY WHEN THERE ARE NONE, per the brief — never padded with
+    generic school images. */}
+{hasGallery && (
+  <section class="as-sec as-sec--ivory as-pad--sm ar-gal" aria-labelledby="ar-gal-t">
+    <div class="u-container">
+      <div class="ar-gal__head">
+        <p class="as-kicker" data-reveal>From the meet</p>
+        <h2 class="as-h as-h--md ar-gal__h" id="ar-gal-t">
+          <span data-clip data-clip-delay="0">Glimpses of our</span>
+          <span data-clip data-clip-delay="140"><em>alumni moments</em></span>
+        </h2>
+        <span class="ar-rule" aria-hidden="true"></span>
+      </div>
+
+      <AlRail label="Photographs from the alumni meet" id="ar-gal-rail" per={5} perMd={3} perSm={2}>
+        {alumniGallery.map((g) => (
+          <li class="ar-shot">
+            <a class="ar-shot__a" data-lb-open href={g.image.src} data-lb-alt={g.alt} data-lb-cap={g.caption ?? g.alt}>
+              <Picture
+                src={g.image}
+                alt={g.alt}
+                formats={['avif', 'webp']}
+                widths={[320, 560]}
+                sizes="(max-width: 767px) 46vw, 19vw"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+          </li>
+        ))}
+      </AlRail>
+    </div>
+  </section>
+)}
+
+{/* ══ 05 · THE CLOSE ═════════════════════════════════════════════════════════ */}
+<section class="as-close ar-close" aria-labelledby="ar-close-t">
+  <div class="as-close__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pCohort}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+      style="object-position: 50% 40%;"
+    />
+  </div>
+  <span class="as-close__scrim" aria-hidden="true"></span>
+  <span class="as-close__grain" aria-hidden="true"></span>
+
+  <div class="u-container as-close__inner ar-close__inner">
+    <div>
+      <p class="as-kicker as-kicker--dark" data-reveal>Need a hand?</p>
+      <h2 class="as-h as-close__h ar-close__h" id="ar-close-t">
+        <span data-clip data-clip-delay="0">Stay connected</span>
+        <span data-clip data-clip-delay="150">with <em>Sunbeam.</em></span>
+      </h2>
+      <p class="as-close__b" data-reveal data-reveal-delay="180">
+        For help registering — or to register over the phone while this form is being connected —
+        the school office is the route.
+      </p>
+    </div>
+
+    <div class="ar-close__panels" data-reveal data-reveal-delay="240">
+      <a class="ar-panel ar-panel--solid" href={`tel:${registrationSettings.contactPhone}`}>
+        <span class="ar-panel__m" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.phone} />
+          </svg>
+        </span>
+        <span>
+          <span class="ar-panel__k">Call the school</span>
+          <span class="ar-panel__v t-tabular">{registrationSettings.contactPhoneDisplay}</span>
+        </span>
+      </a>
+
+      <a class="ar-panel" href={`mailto:${registrationSettings.contactEmail}`}>
+        <span class="ar-panel__m" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.doc} />
+          </svg>
+        </span>
+        <span>
+          <span class="ar-panel__k">Write to us</span>
+          <span class="ar-panel__v">{registrationSettings.contactEmail}</span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<Lightbox />
+
+<style>
+  /* ═══ 01 · INTRO ══════════════════════════════════════════════════════════ */
+  .ar-intro__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+    gap: clamp(28px, 3.8vw, 64px);
+    align-items: center;
+  }
+  .ar-intro__h { max-width: 12ch; }
+  .ar-intro__copy .as-body { max-width: 46ch; }
+  .ar-intro__media { position: relative; }
+  .ar-intro__dots { top: -6%; right: -3%; z-index: 0; }
+  /* ⚠ THE EDGE IS FEATHERED HERE, NOT IN THE ARTWORK. The supplied image fades
+     to a warm off-white — rgb(253,247,244) — which is close to the ivory ground
+     but not equal to it, so the two meet in a faint rectangle. Three fixes were
+     tried and rejected before this one:
+
+       · mix-blend-mode: multiply — computed correctly and did nothing. The GSAP
+         reveal on the wrapper opens a stacking context, so the image blended
+         against that transparent group instead of the section behind it.
+       · cutting the halo out with a flood fill — leaked straight through the
+         building, whose cream walls and window frames are the same near-white
+         as the halo. 31% of the picture dissolved.
+       · retoning the halo to the exact background — fixed the corners and left
+         the rest of the border visible, because the halo is not one flat colour.
+
+     A short feather on all four edges works whatever colour the halo happens to
+     be, and leaves the client's file untouched. Two gradients intersected, so
+     the corners fade on both axes rather than only one. */
+  .ar-intro__frame { position: relative; display: block; }
+  .ar-intro__frame :global(picture) { display: block; }
+  .ar-intro__frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  .ar-why {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin: clamp(28px, 3.6vw, 54px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ar-why__i {
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    padding: clamp(4px, 0.6vw, 8px) clamp(14px, 2vw, 28px);
+    text-align: center;
+  }
+  .ar-why__i:first-child { padding-left: 0; }
+  .ar-why__i:last-child { padding-right: 0; }
+  .ar-why__i + .ar-why__i { border-left: 1px solid var(--sb-border); }
+  .ar-why__m { display: block; width: clamp(26px, 2.4vw, 34px); color: var(--sb-orange-bright); }
+  .ar-why__m svg { display: block; width: 100%; height: auto; }
+  .ar-why__n {
+    margin-top: clamp(9px, 1.1vw, 14px);
+    font-size: clamp(8.6px, 0.64vw, 10.2px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sb-orange-bright);
+  }
+  .ar-why__k {
+    margin: 4px 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(12.5px, 1vw, 15.5px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ar-why__v { margin: clamp(6px, 0.8vw, 10px) 0 0; font-size: clamp(9.5px, 0.7vw, 11px); line-height: 1.62; color: var(--sb-text-muted); }
+
+  /* ═══ 02 · THE CARD ═══════════════════════════════════════════════════════ */
+  .ar-card__box {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.32fr) minmax(0, 0.78fr);
+    gap: clamp(24px, 3vw, 52px);
+    align-items: start;
+    padding: clamp(22px, 2.8vw, 44px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: 0 26px 56px -34px rgba(28, 14, 8, 0.34);
+  }
+  .ar-card__h { margin-top: 0; max-width: 18ch; }
+
+  .ar-note {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(11px, 1.3vw, 15px);
+    margin: clamp(14px, 1.8vw, 22px) 0 clamp(16px, 2vw, 24px);
+    padding: clamp(13px, 1.5vw, 18px) clamp(14px, 1.6vw, 20px);
+    border: 1px solid color-mix(in srgb, var(--sb-orange-bright) 38%, transparent);
+    border-left: 3px solid var(--sb-orange-bright);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet-wash);
+  }
+  .ar-note__m { display: block; width: clamp(19px, 1.8vw, 24px); color: var(--sb-orange-bright); }
+  .ar-note__m svg { display: block; width: 100%; height: auto; }
+  .ar-note__k {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(11.5px, 0.88vw, 13.6px);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    color: var(--sb-violet);
+  }
+  .ar-note__v { margin: 4px 0 0; font-size: clamp(9.4px, 0.7vw, 11.2px); line-height: 1.66; color: var(--sb-text-secondary); }
+  .ar-note__v a { color: var(--sb-violet); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .ar-note__v a:hover { color: var(--sb-orange-bright); }
+
+  .ar-card__side {
+    padding: clamp(18px, 2.2vw, 26px) clamp(17px, 2vw, 24px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-ivory);
+  }
+  .ar-side__h {
+    margin: clamp(7px, 0.9vw, 11px) 0 clamp(13px, 1.6vw, 19px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.06vw, 17px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ar-side__list { display: grid; gap: clamp(9px, 1.1vw, 13px); margin: 0; padding: 0; list-style: none; }
+  .ar-eng {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(10px, 1.2vw, 14px);
+    align-items: start;
+    padding: clamp(12px, 1.4vw, 16px) clamp(12px, 1.4vw, 15px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    transition: border-color 220ms var(--sb-ease), transform 220ms var(--sb-ease);
+  }
+  .ar-eng:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--sb-orange-bright) 44%, transparent); }
+  .ar-eng__m {
+    display: grid;
+    place-items: center;
+    width: clamp(30px, 2.8vw, 38px);
+    aspect-ratio: 1 / 1;
+    border-radius: var(--sb-r-2);
+    background: var(--sb-violet-wash);
+    color: var(--sb-orange-bright);
+  }
+  .ar-eng__m svg { width: 52%; height: auto; }
+  .ar-eng__k {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(11px, 0.86vw, 13.4px);
+    font-weight: 700;
+    line-height: 1.24;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+  .ar-eng__v { margin: 4px 0 0; font-size: clamp(8.8px, 0.66vw, 10.4px); line-height: 1.58; color: var(--sb-text-muted); }
+  .ar-side__n {
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    font-size: clamp(8.8px, 0.66vw, 10.4px);
+    line-height: 1.64;
+    font-style: italic;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 03 · THE MEET ═══════════════════════════════════════════════════════ */
+  .ar-meet__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(26px, 3.6vw, 60px);
+    align-items: center;
+  }
+  .ar-meet__frame { display: block; overflow: hidden; border-radius: var(--sb-r-3); cursor: zoom-in; box-shadow: var(--sb-shadow-card); }
+  .ar-meet__frame :global(picture) { display: block; }
+  .ar-meet__frame :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10.4; object-fit: cover; }
+  .ar-meet__h { max-width: 15ch; }
+  .ar-meet__badge {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    margin: clamp(12px, 1.5vw, 18px) 0 0;
+    padding: clamp(6px, 0.8vw, 9px) clamp(11px, 1.3vw, 15px);
+    border-radius: var(--sb-r-1);
+    background: var(--sb-paper);
+    border: 1px solid var(--sb-border);
+    font-family: var(--sb-font-display);
+    font-size: clamp(12px, 0.94vw, 15px);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+  }
+  .ar-meet__sub { font-size: clamp(9.5px, 0.72vw, 11.4px); font-weight: 600; font-style: italic; letter-spacing: 0; color: var(--sb-orange-bright); }
+  .ar-meet__copy .as-body { max-width: 46ch; }
+  .ar-meet__acts { margin: clamp(16px, 2vw, 24px) 0 0; }
+
+  .ar-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: clamp(10px, 1.15vw, 14px) clamp(18px, 2vw, 26px);
+    border: 1.5px solid var(--sb-orange-bright);
+    border-radius: var(--sb-r-1);
+    background: var(--sb-orange-bright);
+    font-size: clamp(11px, 0.82vw, 13px);
+    font-weight: 700;
+    color: #fff;
+    transition: background 220ms var(--sb-ease), border-color 220ms var(--sb-ease);
+  }
+  .ar-pill svg { width: 14px; height: auto; transition: transform 220ms var(--sb-ease); }
+  .ar-pill:hover { background: var(--sb-violet); border-color: var(--sb-violet); }
+  .ar-pill:hover svg { transform: translateX(3px); }
+
+  /* ═══ 04 · THE GALLERY ════════════════════════════════════════════════════ */
+  .ar-gal__head { display: grid; justify-items: start; margin: 0 0 clamp(22px, 2.8vw, 34px); }
+  .ar-gal__h { margin-top: 0; }
+  .ar-rule {
+    display: block;
+    width: clamp(34px, 3.4vw, 46px);
+    height: 3px;
+    margin: clamp(9px, 1.1vw, 14px) 0 0;
+    border-radius: 3px;
+    background: var(--sb-orange-bright);
+  }
+  .ar-shot { display: flex; }
+  .ar-shot__a { display: block; width: 100%; overflow: hidden; border-radius: var(--sb-r-2); cursor: zoom-in; }
+  .ar-shot__a :global(picture) { display: block; }
+  .ar-shot__a :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: scale var(--sb-dur-image) var(--sb-ease);
+  }
+  .ar-shot__a:hover :global(img) { scale: 1.06; }
+
+  /* ═══ 05 · THE CLOSE ══════════════════════════════════════════════════════ */
+  .ar-close__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(22px, 3vw, 48px);
+    align-items: center;
+    justify-items: stretch;
+    text-align: left;
+  }
+  .ar-close__inner .as-close__b { margin-left: 0; margin-right: 0; }
+  .ar-close__h { max-width: 16ch; }
+  .ar-close__panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.2vw, 15px); }
+  .ar-panel {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(10px, 1.2vw, 14px);
+    align-items: center;
+    padding: clamp(14px, 1.7vw, 20px) clamp(14px, 1.6vw, 19px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--sb-r-2);
+    background: rgba(255, 255, 255, 0.96);
+    color: var(--sb-charcoal);
+    transition: transform 220ms var(--sb-ease), box-shadow 220ms var(--sb-ease);
+  }
+  .ar-panel:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -20px rgba(0, 0, 0, 0.5); }
+  .ar-panel--solid { border-color: var(--sb-orange-bright); background: var(--sb-orange-bright); color: #fff; }
+  .ar-panel__m {
+    display: grid;
+    place-items: center;
+    width: clamp(32px, 3vw, 40px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: color-mix(in srgb, currentColor 14%, transparent);
+    color: inherit;
+  }
+  .ar-panel--solid .ar-panel__m { background: rgba(255, 255, 255, 0.22); }
+  .ar-panel__m svg { width: 48%; height: auto; }
+  .ar-panel__k { display: block; font-size: clamp(10px, 0.76vw, 12.2px); font-weight: 700; }
+  .ar-panel__v {
+    display: block;
+    margin-top: 2px;
+    font-size: clamp(9.4px, 0.7vw, 11.2px);
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    opacity: 0.86;
+  }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .ar-card__box { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 1023px) {
+    .ar-intro__grid,
+    .ar-meet__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(26px, 4vw, 36px); }
+    .ar-intro__h,
+    .ar-meet__h { max-width: none; }
+    .ar-intro__copy .as-body,
+    .ar-meet__copy .as-body { max-width: 62ch; }
+    .ar-meet__media { order: 2; }
+    .ar-why { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(22px, 3vw, 30px); }
+    .ar-why__i:nth-child(odd) { padding-left: 0; border-left: 0; }
+    .ar-why__i:nth-child(even) { padding-right: 0; }
+    .ar-close__inner { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 639px) {
+    .ar-why { grid-template-columns: minmax(0, 1fr); }
+    .ar-why__i { padding: 0; border-left: 0 !important; }
+    .ar-why__i + .ar-why__i { padding-top: clamp(18px, 4vw, 24px); border-top: 1px solid var(--sb-border); }
+    .ar-close__panels { grid-template-columns: minmax(0, 1fr); }
+    .ar-card__box { padding: clamp(16px, 4vw, 22px); }
+  }
+</style>

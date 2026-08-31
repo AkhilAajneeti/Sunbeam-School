@@ -1,0 +1,40 @@
+---
+/**
+ * PARENT PARTNERSHIP · SCHOOL–PARENT COMMUNICATION.
+ *
+ * Every number, address and link on the body comes out of data/site.ts — not one
+ * is typed into the component. What the school does NOT publish, and is
+ * therefore not claimed anywhere on the page, is listed in the component header.
+ *
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import SchoolParentCommunicationPage from '../../../components/academics/partnership/SchoolParentCommunicationPage.astro';
+
+import banner from '../../../assets/corridor and stairs/DSC_1223 copy.jpg';
+---
+
+<BaseLayout
+  title="School–Parent Communication — Sunbeam School Ballia"
+  description="How Sunbeam School Ballia reaches parents: separate published lines for admissions, the school office and transport, a named transport in-charge, an office email, and a parent portal carrying term reports and results."
+>
+  <PageHero
+    title="School–Parent Communication"
+    standfirst="Three numbers, not one — so a question about a bus does not queue behind an admissions enquiry."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+    ]}
+    src={banner}
+    alt="A corridor at Sunbeam School Ballia, its noticeboards ranged along the wall."
+    position="50% 50%"
+  />
+
+  <div class="u-page-panel" style="padding-block: 0;">
+    <SchoolParentCommunicationPage />
+  </div>
+</BaseLayout>

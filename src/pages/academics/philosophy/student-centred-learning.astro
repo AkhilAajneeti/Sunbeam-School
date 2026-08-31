@@ -1,0 +1,49 @@
+---
+/**
+ * ACADEMIC PHILOSOPHY · STUDENT-CENTRED LEARNING — audit §2A.
+ *
+ * ⚠ THE BANNER IS THE SHARED PageHero, THE SAME AS EVERY OTHER PAGE. A bespoke
+ * editorial hero was built here first — a poster-scale display word over the
+ * hall photograph, with a portrait breaking the section's bottom edge. The
+ * client's instruction is that the banner stays consistent with the rest of the
+ * site, so it does. The art direction the brief asked for lives in the six
+ * sections below it instead, which is where it can be different without the
+ * masthead area behaving unlike every other page.
+ *
+ * ⚠ UNVERIFIABLE CLAIMS WERE DELETED, NOT REDESIGNED. See the header of
+ * StudentCentredPage for the full list and the searches behind it.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import StudentCentredPage from '../../../components/academics/StudentCentredPage.astro';
+import banner from '../../../assets/school-activities/josh-spring-camp/02.jpg';
+---
+
+<BaseLayout
+  title="Student-Centred Learning — Sunbeam School Ballia"
+  description="How Sunbeam School Ballia puts the learner at the centre: equal regard and equal access to the curriculum, a secure and caring environment, a Children's Forum where students are heard, collaborative learning, and room for different strengths."
+>
+  <PageHero
+    title="Student-Centred Learning"
+    standfirst="Every learner has a voice, a potential and a path of their own."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Academic Philosophy', href: '/academics/philosophy/' },
+    ]}
+    src={banner}
+    alt="Students of Sunbeam School Ballia seated together in the school hall at the Sports and Spring Camp assembly."
+    position="50% 46%"
+  />
+
+  {/* padding-block: 0 — every section carries its own rhythm, and the panel
+      adding its own on top is what put a 183px void under the hero on three
+      earlier pages. */}
+  <div class="u-page-panel sc-panel">
+    <StudentCentredPage />
+  </div>
+</BaseLayout>
+
+<style>
+  div.sc-panel { padding-block: 0; }
+</style>

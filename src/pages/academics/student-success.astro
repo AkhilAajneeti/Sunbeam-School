@@ -1,0 +1,429 @@
+---
+/**
+ * ACADEMICS → 05 · STUDENT SUCCESS
+ *
+ * LAYOUT: a dated timeline of named results, then guidance, then three plainly
+ * unfinished cards. No photographs and no bento — this chapter is entirely about
+ * evidence, so the page is set as a record.
+ *
+ * ═══ THE HONEST PART OF THIS PAGE ═══════════════════════════════════════════
+ *
+ * The client brief asked for counters reading "98% Board Results", "150+
+ * University Admissions" and "100+ Olympiad Awards". None of the three appears
+ * here, because docs/01 § 3.8 records all three as unpublished by the school:
+ *
+ *   board results (X & XII) — "no pass %, no toppers, no year-on-year data"
+ *   university placements   — "Not mentioned"
+ *   scholarships            — "Not mentioned"
+ *
+ * A school's results are the one thing on a school website a parent will act on,
+ * and a number we invented would be indistinguishable from a number the school
+ * measured. So this page does two things instead: it lists what IS verifiable —
+ * named, dated and checkable — and it states the three gaps in designed cards
+ * that look deliberately unfinished rather than defective.
+ *
+ * That is not a smaller page than the brief asked for. "#1 in Ballia six years
+ * running" and "100 Microsoft-certified teachers" are stronger than a round
+ * number nobody can check, precisely because a parent CAN check them.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import CounterStrip from '../../components/academics/CounterStrip.astro';
+import { showBuildNotes } from '../../data/site';
+import { wins, guidance, awaiting } from '../../data/academics';
+
+/* The student council and NCC cadets with the school's dignitaries — the page is
+   about what students have been recognised for. */
+import banner from '../../assets/photos/sunbeem-5.jpg';
+---
+
+<BaseLayout
+  title="Student Success — Sunbeam School Ballia"
+  description="Named results at Sunbeam School Ballia: #1 Co-Ed Day School in Ballia for six consecutive years, Microsoft Showcase School with 100 certified teachers, and national science programme selections."
+>
+  <PageHero
+    title="Student Success"
+    standfirst="Every figure here is published by the school and can be checked against a third party. Where it has not published something, this page says so rather than estimating."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+    ]}
+    src={banner}
+    alt="Student council office-bearers and NCC cadets of Sunbeam School Ballia on stage with the school's dignitaries."
+    position="50% 38%"
+  />
+
+  {/* ⚠ THE PANEL IS REQUIRED, NOT DECORATION. PageHero is position: sticky and
+      is covered by this panel as the page scrolls; without it the banner hangs
+      under the footer. */}
+  <div class="u-page-panel ss5-panel">
+  {/* ══ HERO — dark, with the published figures in it ═══════════════════════ */}
+  <section class="shero5" aria-labelledby="shero5-title">
+    <div class="u-container">
+      <p class="shero5__n t-tabular" aria-hidden="true">Chapter 05</p>
+
+      <h2 class="shero5__title" id="shero5-title" data-split>
+        The numbers the school can <span class="t-squiggle">prove</span>
+      </h2>
+
+      <p class="shero5__stand">
+        Every figure below is published by Sunbeam and can be checked against a third party. Where
+        the school has not published something, this page says so rather than estimating it.
+      </p>
+
+      <div class="shero5__figs">
+        <CounterStrip tone="dark" />
+      </div>
+    </div>
+  </section>
+
+  {/* ══ THE RECORD ═════════════════════════════════════════════════════════ */}
+  <section class="rec" id="record" aria-labelledby="rec-title">
+    <div class="u-container">
+      <div class="rec__head" data-reveal>
+        <p class="rec__pill"><span class="pill pill--violet">The record</span></p>
+        <h2 class="rec__title t-h2-sans" id="rec-title" data-split>
+          Named, dated, <span class="t-squiggle">checkable</span>
+        </h2>
+        <p class="rec__lede">
+          No aggregate award totals. The school publishes none, so a headline count would be a
+          number we made up — these are the individual results it does record.
+        </p>
+      </div>
+
+      <ol class="rec__list">
+        {wins.map((w, i) => (
+          <li class="win" data-reveal data-reveal-delay={(i % 3) * 80}>
+            <p class="win__year t-tabular">{w.year}</p>
+            <div class="win__body">
+              <h3 class="win__h">{w.title}</h3>
+              <p class="win__b">{w.detail}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* ══ GUIDANCE ═══════════════════════════════════════════════════════════ */}
+  <section class="gd" id="olympiads" aria-labelledby="gd-title">
+    <div class="u-container">
+      <div class="gd__head" data-reveal>
+        <p class="gd__pill"><span class="pill pill--glass">Guidance</span></p>
+        <h2 class="gd__title t-h2-sans" id="gd-title" data-split>
+          Choosing what comes <span class="t-squiggle">next</span>
+        </h2>
+      </div>
+
+      <ul class="gd__grid">
+        {guidance.map((g, i) => (
+          <li class="gd__item" data-reveal data-reveal-delay={i * 80}>
+            <span class="gd__i t-tabular" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="gd__h">{g.label}</h3>
+            <p class="gd__b">{g.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* ══ WHAT IS MISSING ════════════════════════════════════════════════════
+      Designed to be plainly unfinished, not broken. A parent reading these should
+      see a school that has not published a figure yet — not a school hiding one,
+      and not a template with a placeholder left in by accident. */}
+  <section class="gap" id="board-results" aria-labelledby="gap-title">
+    <div class="u-container">
+      <div class="gap__head" data-reveal>
+        <p class="gap__pill"><span class="pill pill--violet">Not yet published</span></p>
+        <h2 class="gap__title t-h2-sans" id="gap-title" data-split>
+          Three things this page <span class="t-squiggle">will not</span> estimate
+        </h2>
+        <p class="gap__lede">
+          These are the facts parents search for most. The school has not stated them, and this page
+          will not invent them — each one drops straight in when it arrives.
+        </p>
+      </div>
+
+      <ul class="gap__grid">
+        {awaiting.map((a, i) => (
+          <li class="await" data-reveal data-reveal-delay={i * 90}>
+            <h3 class="await__h">{a.title}</h3>
+            <p class="await__b">{a.body}</p>
+            {showBuildNotes && <p class="await__ref">Asset request {a.id}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  </div>
+
+  {/* ⚠ NO CHAPTER NAVIGATION — removed at the client’s instruction.
+
+      WITH THIS ONE, THE PAGER IS NOW GONE FROM ALL SIX ACADEMICS CHAPTERS. It
+      came off Philosophy, Structure and Teaching & Learning in earlier passes,
+      and off Assessment & Support alongside this one, so the sequence is
+      consistently without it rather than half-wired — which is the better
+      outcome of the two.
+
+      `ChapterNav.astro` is intact but is now rendered NOWHERE. It is dead code
+      until someone puts it back; worth deleting on the next tidy-up if the
+      chapter pager is not returning.
+
+      The consequence to know: a reader at the end of a chapter has no onward
+      route through the Academics sequence except the main navigation. */}
+</BaseLayout>
+
+<style>
+  /* ══════════ HERO ════════════════════════════════════════════════════════ */
+  .shero5 {
+    background:
+      radial-gradient(90% 60% at 88% 0%, rgba(201, 60, 10, 0.26), rgba(201, 60, 10, 0) 62%),
+      var(--sb-ink);
+    padding-block: clamp(110px, 15vh, 176px) var(--sb-section-y-major);
+  }
+
+  .shero5__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-3);
+    list-style: none;
+    margin: 0 0 var(--sb-8);
+    padding: 0;
+    font-size: var(--sb-caption);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .shero5__crumbs li + li::before {
+    content: '/';
+    margin-right: var(--sb-3);
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .shero5__crumbs a { color: rgba(255, 255, 255, 0.78); }
+  .shero5__crumbs a:hover { color: #fff; }
+  .shero5__crumbs [aria-current] { color: #fff; font-weight: 600; }
+
+  .shero5__n {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sb-lime);
+    margin-bottom: var(--sb-5);
+  }
+
+  .shero5__title {
+    max-width: 24ch;
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: clamp(34px, 5.2vw, 74px);
+    line-height: 1.05;
+    letter-spacing: -0.038em;
+    color: #fff;
+  }
+
+  .shero5__stand {
+    max-width: 58ch;
+    margin-top: var(--sb-6);
+    font-size: var(--sb-body);
+    line-height: 1.72;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .shero5__figs {
+    margin-top: clamp(40px, 6vh, 76px);
+    padding-top: clamp(36px, 5vh, 60px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* ══════════ THE RECORD ══════════════════════════════════════════════════
+     A dated register: year in a fixed left column, entry beside it. Reads as
+     evidence rather than as marketing cards. */
+  .rec {
+    background: var(--sb-ivory);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  .rec__head { margin-bottom: var(--sb-9); max-width: 46ch; }
+  .rec__pill { margin-bottom: var(--sb-5); }
+  .rec__title { color: var(--sb-charcoal); }
+
+  .rec__lede {
+    margin-top: var(--sb-6);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .rec__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: var(--sb-hairline);
+  }
+
+  .win {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: var(--sb-7);
+    align-items: baseline;
+    padding-block: var(--sb-7);
+    border-bottom: var(--sb-hairline);
+  }
+
+  .win__year {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(17px, 1.6vw, 21px);
+    letter-spacing: -0.02em;
+    color: var(--sb-violet);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .win__h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(19px, 2vw, 27px);
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    color: var(--sb-charcoal);
+  }
+
+  .win__b {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+    max-width: 62ch;
+  }
+
+  /* ══════════ GUIDANCE ════════════════════════════════════════════════════ */
+  .gd {
+    background: var(--sb-ink);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  .gd__head { margin-bottom: var(--sb-9); max-width: 32ch; }
+  .gd__pill { margin-bottom: var(--sb-5); }
+  .gd__title { color: #fff; }
+
+  .gd__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sb-6);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .gd__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-4);
+    padding-top: var(--sb-6);
+    border-top: 2px solid rgba(255, 255, 255, 0.22);
+  }
+
+  .gd__i {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--sb-lime);
+  }
+
+  .gd__h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(18px, 1.7vw, 23px);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: #fff;
+  }
+
+  .gd__b {
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* ══════════ THE GAPS ════════════════════════════════════════════════════ */
+  .gap {
+    background: var(--sb-sand);
+    padding-block: var(--sb-section-y-major);
+  }
+
+  .gap__head { margin-bottom: var(--sb-9); max-width: 46ch; }
+  .gap__pill { margin-bottom: var(--sb-5); }
+  .gap__title { color: var(--sb-charcoal); }
+
+  .gap__lede {
+    margin-top: var(--sb-6);
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .gap__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sb-6);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Dashed, on the page ground rather than on white — it should look like a
+     space left open on purpose, not like a card that failed to load. */
+  .await {
+    padding: var(--sb-7);
+    border: 1px dashed var(--sb-border-strong);
+    border-radius: var(--sb-r-2);
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .await__h {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-4);
+  }
+
+  .await__b {
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  .await__ref {
+    margin-top: var(--sb-5);
+    padding-top: var(--sb-4);
+    border-top: 1px dashed var(--sb-border-strong);
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  /* ══════════ TABLET ══════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .gd__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .gap__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* ══════════ MOBILE ══════════════════════════════════════════════════════ */
+  @media (max-width: 639px) {
+    .shero5 { padding-block: clamp(92px, 13vh, 130px) var(--sb-section-y); }
+    .rec,
+    .gd,
+    .gap { padding-block: var(--sb-section-y); }
+
+    /* The year becomes a label above the entry — a 140px column leaves the
+       title about 190px of measure at this width. */
+    .win { grid-template-columns: minmax(0, 1fr); gap: var(--sb-3); }
+
+    .gd__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

@@ -1,0 +1,438 @@
+---
+/**
+ * PARENT PARTNERSHIP · SCHOOL–PARENT COMMUNICATION — four sections and the close.
+ *
+ * ⚠⚠ EVERY NUMBER, ADDRESS AND LINK COMES OUT OF data/site.ts. Not one is typed
+ * into this file. A contact page is the single worst place on a school site for
+ * a transcription slip, and the only defence that actually works is never having
+ * a second copy of the value.
+ *
+ * ═══ SOURCE — data/site.ts, all published by the school ════════════════════
+ *   Admissions    +91 77550 05908
+ *   School office +91 77550 05905
+ *   Transport     +91 77550 05909 — in-charge Mr. Sheo Sarjan Singh
+ *   Office email  sunbeamballia2131962@gmail.com
+ *   Parent portal / results   https://sbb.nascorptechnologies.com/
+ *   Apply online · Download TC — the school's own hosted forms
+ *   Facebook · Instagram · LinkedIn
+ *
+ * ⚠ THREE NUMBERS IS THE STORY. Most schools this size publish one. Sunbeam
+ * separates admissions, the office and transport, and names the person holding
+ * the transport line — so a question about a bus does not queue behind an
+ * admissions enquiry. That is checkable, operational, and the spine of the page.
+ *
+ * ⚠ THE RECRUITMENT INBOX IS DELIBERATELY ABSENT. appointmentsunbeamballia@
+ * gmail.com is for applicants; putting it on a parent page would send CVs and
+ * absence notes to one address.
+ *
+ * ⚠ NOT CLAIMED, ANYWHERE: an app, an SMS gateway, a WhatsApp broadcast, office
+ * hours, or a response time. None is published, and each is a promise a parent
+ * would reasonably hold the school to. Section 03 says so in as many words
+ * rather than leaving the absence to be inferred.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ *   01 · IVORY  copy left, photographs right, the directory beneath both.
+ *   02 · CREAM  photographs left, the portal and the written channels right.
+ *   03 · PAPER  five reasons, centred.
+ *   04 · CREAM  the contact panel.
+ *   05 · PHOTO  the cinematic close.
+ */
+import { Picture } from 'astro:assets';
+import '../../../styles/assessment.css';
+import { MARK } from '../assessment/marks';
+import AsClose from '../assessment/AsClose.astro';
+import PpWhy from './PpWhy.astro';
+import PpCta from './PpCta.astro';
+import Lightbox from '../../ui/Lightbox.astro';
+import { commsBenefits } from '../../../data/parentsForum';
+import { school } from '../../../data/site';
+
+import pPanel from '../../../assets/parents forum/parents forum (2).jpg';
+import pLib from '../../../assets/photos/sb-library.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+/**
+ * The directory. Built from site.ts so the page holds no second copy of a
+ * number — `value` is the label a parent reads, `href` the action.
+ *
+ * ⚠ `why` DESCRIBES WHAT THE LINE IS FOR, NOT HOW FAST IT ANSWERS.
+ */
+const channels = [
+  {
+    n: '01',
+    mark: 'megaphone',
+    k: 'Admissions',
+    value: school.phone.admissionsDisplay,
+    href: `tel:${school.phone.admissions}`,
+    why: 'Applications, dates and the fee schedule for a class.',
+  },
+  {
+    n: '02',
+    mark: 'desk',
+    k: 'School office',
+    value: school.phone.officeDisplay,
+    href: `tel:${school.phone.office}`,
+    why: 'The day-to-day line: absence, documents, everything else.',
+  },
+  {
+    n: '03',
+    mark: 'route',
+    k: 'Transport',
+    value: school.phone.transportDisplay,
+    href: `tel:${school.phone.transport}`,
+    why: `Routes and stops, held by ${school.phone.transportIncharge}.`,
+  },
+  {
+    n: '04',
+    mark: 'doc',
+    k: 'Email',
+    value: school.email,
+    href: `mailto:${school.email}`,
+    why: 'The office address, for anything that needs to be in writing.',
+  },
+];
+---
+
+{/* ══ 01 · WHOEVER YOU NEED ══════════════════════════════════════════════════
+    Ground: warm ivory. Copy left, an overlapping pair right, and the four-card
+    directory across the full width beneath them.
+
+    ⚠ THE CARDS ARE THE POINT OF THE SECTION, so they sit below the copy at full
+    width rather than squeezed into the text column. Four across at desktop. */}
+<section class="as-sec as-sec--ivory as-pad sc-open" aria-labelledby="sc-open-t">
+  <span class="as-warm" aria-hidden="true"></span>
+
+  <div class="u-container">
+    <div class="sc-open__grid">
+      <div class="sc-open__copy">
+        <p class="as-kicker" data-reveal>One line per purpose</p>
+        <h2 class="as-h as-h--xl sc-open__h" id="sc-open-t">
+          <span data-clip data-clip-delay="0">Whoever you need,</span>
+          <span data-clip data-clip-delay="150"><em>on their own number.</em></span>
+        </h2>
+        <p class="as-body" data-reveal data-reveal-delay="200">
+          A single switchboard is the commonest reason a sensible question goes unanswered: the
+          person who can answer it is not the person who picks up. Sunbeam publishes
+          {' '}<strong>three separate lines</strong>, and names the person holding one of them.
+        </p>
+      </div>
+
+      <div class="sc-open__media">
+        <span class="as-dots sc-open__dots" aria-hidden="true"></span>
+
+        <a
+          class="sc-open__big as-frame"
+          data-lb-open
+          href={pPanel.src}
+          data-lb-alt={`Parents of ${S} seated in the rows at a school meeting`}
+          data-lb-cap="Parents in the school’s own meeting room"
+          data-mask
+        >
+          <Picture
+            src={pPanel}
+            alt={`Parents of ${S} seated in the rows at a school meeting`}
+            formats={['avif', 'webp']}
+            widths={[520, 860, 1200]}
+            sizes="(max-width: 1023px) 92vw, 42vw"
+            loading="eager"
+            decoding="async"
+          />
+        </a>
+
+        <a
+          class="sc-open__small as-frame as-frame--float"
+          data-lb-open
+          href={pLib.src}
+          data-lb-alt={`The Nalanda Library at ${S}, its reading tables set out beneath the shelves`}
+          data-lb-cap="The Nalanda Library"
+          data-pop
+          data-pop-delay="240"
+        >
+          <Picture
+            src={pLib}
+            alt={`The Nalanda Library at ${S}, its reading tables set out beneath signed shelves`}
+            formats={['avif', 'webp']}
+            widths={[320, 560]}
+            sizes="(max-width: 1023px) 46vw, 20vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </div>
+    </div>
+
+    <ul class="sc-dir">
+      {channels.map((c, i) => (
+        <li class="sc-ch" data-pop data-pop-delay={140 + i * 80}>
+          <div class="sc-ch__top">
+            <span class="sc-ch__n t-tabular">{c.n}</span>
+            <span class="sc-ch__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[c.mark]} />
+              </svg>
+            </span>
+          </div>
+          <h3 class="sc-ch__k">{c.k}</h3>
+          <p class="sc-ch__v"><a href={c.href}>{c.value}</a></p>
+          <p class="sc-ch__why">{c.why}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+{/* ══ 02 · THE REPORT IS ALREADY THERE ═══════════════════════════════════════
+    Ground: cream. Photographs LEFT this time — the page's one reversal, so two
+    consecutive sections do not read as the same slide twice. */}
+<section class="as-sec as-sec--cream as-pad sc-rep" aria-labelledby="sc-rep-t">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container sc-rep__grid">
+    <div class="sc-rep__media">
+      <a
+        class="sc-rep__big as-frame"
+        data-lb-open
+        href={pPanel.src}
+        data-lb-alt={`Parents of ${S} at a school meeting`}
+        data-lb-cap="Parents at a school meeting"
+        data-mask
+      >
+        <Picture
+          src={pPanel}
+          alt={`Parents of ${S} listening at a school meeting`}
+          formats={['avif', 'webp']}
+          widths={[420, 760, 1080]}
+          sizes="(max-width: 1023px) 92vw, 38vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+
+      <a
+        class="sc-rep__small as-frame as-frame--float"
+        data-lb-open
+        href={pLib.src}
+        data-lb-alt={`Students reading at the tables of the Nalanda Library at ${S}`}
+        data-lb-cap="The Nalanda Library"
+        data-pop
+        data-pop-delay="220"
+      >
+        <Picture
+          src={pLib}
+          alt={`Students reading at the tables of the Nalanda Library at ${S}`}
+          formats={['avif', 'webp']}
+          widths={[300, 520]}
+          sizes="(max-width: 1023px) 44vw, 18vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+    </div>
+
+    <div class="sc-rep__copy">
+      <p class="as-kicker" data-reveal>Transparent and timely</p>
+      <h2 class="as-h as-h--lg" id="sc-rep-t">
+        <span data-clip data-clip-delay="0">The report is</span>
+        <span data-clip data-clip-delay="150"><em>already there.</em></span>
+      </h2>
+
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        Term reports and results are not sent home to be lost. They sit in the school’s
+        {' '}<a class="as-link" href={school.external.parentLogin} target="_blank" rel="noopener noreferrer"><strong>parent portal</strong></a>,
+        reachable with your own login at any hour — which is also where the record of the year
+        accumulates rather than being reassembled from letters.
+      </p>
+      <p class="as-body" data-reveal data-reveal-delay="250">
+        The school runs its {' '}
+        <a class="as-link" href={school.external.applyNurseryToIX} target="_blank" rel="noopener noreferrer"><strong>online application</strong></a>
+        {' '}and its {' '}
+        <a class="as-link" href={school.external.downloadTC} target="_blank" rel="noopener noreferrer"><strong>transfer-certificate download</strong></a>
+        {' '}on the same principle — a form a family can complete without coming in for it. Notices
+        go to the school’s notice board, and it publishes on {' '}
+        <a class="as-link" href={school.social.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>,{' '}
+        <a class="as-link" href={school.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>{' '}and{' '}
+        <a class="as-link" href={school.social.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>.
+      </p>
+      <p class="as-note" data-reveal data-reveal-delay="300">
+        What the school does <strong>not</strong> publish is a mobile app, a broadcast list, an
+        office-hours window or a stated response time. None of those is described here.
+      </p>
+    </div>
+  </div>
+</section>
+
+<PpWhy
+  id="sc-why-t"
+  lead="Why this communication"
+  accent="matters"
+  items={commsBenefits}
+/>
+
+<PpCta
+  id="sc-cta-t"
+  lead="Have a question"
+  tail="or need an"
+  accent="update?"
+  body="Reach the right person on the right line — or write to us, so the answer exists on paper."
+/>
+
+<AsClose
+  id="sc-close-t"
+  kicker="Three numbers, one portal"
+  lead="And"
+  accent="one login."
+  body="Every number, address and link on this page is published by the school. Office hours, response times and whether messages also travel by app or SMS are not — so the office line above is the reliable route."
+  photo={pCohort}
+  position="50% 40%"
+  inline
+/>
+
+<Lightbox />
+
+<style>
+  /* ═══ 01 · WHOEVER YOU NEED ═══════════════════════════════════════════════ */
+  .sc-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+    gap: clamp(28px, 3.8vw, 62px);
+    align-items: center;
+  }
+  /* ⚠ 16ch, NOT 13. At 13 the second line broke after "own" and the headline
+     ran to three lines against a two-line reference. */
+  .sc-open__h { max-width: 16ch; }
+  .sc-open__copy .as-body { max-width: 44ch; }
+
+  .sc-open__media { position: relative; padding-bottom: clamp(28px, 3.6vw, 52px); }
+  .sc-open__dots { top: 22%; left: -5%; z-index: 0; }
+  .sc-open__big { display: block; overflow: hidden; border-radius: var(--sb-r-2); cursor: zoom-in; }
+  .sc-open__big :global(picture) { display: block; }
+  .sc-open__big :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9.4; object-fit: cover; }
+  .sc-open__small {
+    position: absolute;
+    right: 3%;
+    bottom: 0;
+    z-index: 2;
+    display: block;
+    width: 36%;
+    overflow: hidden;
+    border: 4px solid var(--sb-paper);
+    border-radius: var(--sb-r-2);
+    cursor: zoom-in;
+  }
+  .sc-open__small :global(picture) { display: block; }
+  .sc-open__small :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 2.9; object-fit: cover; }
+
+  /* --- the directory ------------------------------------------------------ */
+  .sc-dir {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.5vw, 22px);
+    margin: clamp(26px, 3.4vw, 48px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sc-ch {
+    display: grid;
+    align-content: start;
+    padding: clamp(15px, 1.8vw, 22px) clamp(15px, 1.8vw, 22px) clamp(17px, 2vw, 25px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 4px 16px -12px rgba(28, 14, 8, 0.16);
+    transition: transform var(--sb-dur-image) var(--sb-ease), border-color var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .sc-ch:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--sb-orange-bright) 44%, transparent);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .sc-ch__top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .sc-ch__n {
+    font-size: clamp(10px, 0.76vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--sb-orange-bright);
+  }
+  .sc-ch__m { display: block; width: clamp(20px, 1.9vw, 26px); color: var(--sb-orange-bright); }
+  .sc-ch__m svg { display: block; width: 100%; height: auto; }
+  .sc-ch__k {
+    margin: clamp(9px, 1.1vw, 14px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(13.5px, 1.1vw, 18px);
+    font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  /* ⚠ THE VALUE WRAPS RATHER THAN OVERFLOWS. The office email is long enough to
+     push a 4-up card past its track at 1024, and `break-word` is what stops it. */
+  .sc-ch__v {
+    margin: clamp(5px, 0.7vw, 8px) 0 0;
+    font-size: clamp(10px, 0.76vw, 12px);
+    font-weight: 700;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    color: var(--sb-text-secondary);
+  }
+  .sc-ch__v a { color: inherit; }
+  .sc-ch__v a:hover { color: var(--sb-orange-bright); }
+  .sc-ch__why {
+    margin: clamp(8px, 1vw, 12px) 0 0;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* ═══ 02 · THE REPORT IS ALREADY THERE ════════════════════════════════════ */
+  .sc-rep__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 3.8vw, 64px);
+    align-items: center;
+  }
+  .sc-rep__media { position: relative; padding-bottom: clamp(30px, 4vw, 56px); }
+  .sc-rep__big { display: block; overflow: hidden; border-radius: var(--sb-r-2); cursor: zoom-in; }
+  .sc-rep__big :global(picture) { display: block; }
+  .sc-rep__big :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+  .sc-rep__small {
+    position: absolute;
+    left: 6%;
+    bottom: 0;
+    z-index: 2;
+    display: block;
+    width: 40%;
+    overflow: hidden;
+    border: 4px solid var(--sb-paper);
+    border-radius: var(--sb-r-2);
+    cursor: zoom-in;
+  }
+  .sc-rep__small :global(picture) { display: block; }
+  .sc-rep__small :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 2.9; object-fit: cover; }
+  .sc-rep__copy .as-body { max-width: 46ch; }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .sc-dir { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 1023px) {
+    .sc-open__grid,
+    .sc-rep__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(26px, 4vw, 36px); }
+    .sc-open__h { max-width: none; }
+    .sc-open__copy .as-body,
+    .sc-rep__copy .as-body { max-width: 62ch; }
+    /* The reversal only reads as a reversal side by side; stacked, the picture
+       belongs under the words that introduce it. */
+    .sc-rep__media { order: 2; }
+  }
+
+  @media (max-width: 559px) {
+    .sc-dir { grid-template-columns: minmax(0, 1fr); }
+    .sc-open__small { width: 44%; }
+    .sc-rep__small { width: 46%; }
+  }
+</style>

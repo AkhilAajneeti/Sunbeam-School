@@ -1,0 +1,137 @@
+---
+/**
+ * BEYOND ACADEMICS → SPORTS & GAMES  ·  audit §4.
+ *
+ * ═══ THE ORDER IS THE CLIENT'S AND IS THE POINT OF THE PAGE ═════════════════
+ *
+ * The audit says the live page's emphasis "appears to be primarily on
+ * achievements" and asks for it inverted. This page runs in exactly the client's
+ * order, and it is written out here so a later edit cannot quietly reshuffle it:
+ *
+ *   1 Facilities     ivory · alternating rows, three photographic slots each
+ *   2 Games          INK   · the highlight — a fifteen-card horizontal carousel
+ *   3 Participation  — REMOVED at client instruction, see the note in the body
+ *   4 Inter-house    sand  · the sticky ticket deck, house fixture → national
+ *   5 Coaching       white · staggered tinted cards under a cloud edge
+ *   6 Record        ivory · fourteen achievement blocks, each with its gallery
+ *   7 Results       sand  · every published placing, pulled into one board
+ *
+ * §7 IS A CLIENT DECISION AND IT MADE §6 CONSISTENT. The placings used to live
+ * inside two of the fourteen record blocks. Asmita's nine rows are a tournament
+ * scoreboard — the school HOSTED that league, so the published field is mostly
+ * other schools — which read as the school's own honours when it sat under the
+ * school's own heading. Moved out, the results read as results, and all
+ * fourteen blocks became the same object. See Results.astro.
+ *
+ * §6 IS THE LIVE PAGE'S OWN CONTENT, RESTORED. The client sent their original
+ * Sports & Games page back and asked for its structure — a heading, the account,
+ * and that achievement's own photographs — because the rebuild had reduced all
+ * of it to six one-line records with no pictures. The Asmita league, both
+ * national camps, the district handball sweep, UDAAN, the Annual Sports Day and
+ * the four championship flyers were all missing. Sixty photographs came back
+ * with them. See data/sportsRecord.ts.
+ *
+ * The audit's "achievements shown separately" is still honoured: §6 is the
+ * SPORTING record and it comes last on the page, while the school-wide record —
+ * robotics, innovation, third-party recognition, academics — lives at
+ * /beyond-academics/achievements/, which the handoff band links to.
+ *
+ * ═══ THE RHYTHM ════════════════════════════════════════════════════════════
+ *
+ * The ink beat at §2 is the highlight; the page then lightens through ivory,
+ * sand and white before §6 returns to ivory for a long read, and the handoff
+ * band closes on one dark card. Section padding is always the shared
+ * `--sb-section-y`; a section that invents its own number breaks the rhythm.
+ *
+ * ⚠ TWO PHOTOGRAPHIC LIBRARIES, AND THEY ARE NOT INTERCHANGEABLE.
+ * `src/assets/` (JOSH GROUND, play ground, basket ball) holds twenty shots of
+ * EMPTY grounds — no child plays a sport in any of them, which is why §§1-5 are
+ * composed the way they are. `src/assets/sports-record/` holds sixty shots of
+ * children actually competing, and belongs to §6. Do not use a §6 action shot to
+ * illustrate a facility: it dates the facility to one fixture.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import SectionRail from '../../components/academics/SectionRail.astro';
+
+import Facilities from '../../components/beyond/sports/Facilities.astro';
+import GamesRail from '../../components/beyond/sports/GamesRail.astro';
+import Ladder from '../../components/beyond/sports/Ladder.astro';
+import Coaching from '../../components/beyond/sports/Coaching.astro';
+import Record from '../../components/beyond/sports/Record.astro';
+import Results from '../../components/beyond/sports/Results.astro';
+
+import heroPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
+---
+
+<BaseLayout
+  title="Sports & Games — Sunbeam School Ballia"
+  description="Sport at Sunbeam School Ballia: the JOSH ground, the basketball court, the junior park and the shooting range; fifteen games indoor and out; inter-house competition through to a national women's league; and a record that includes CBSE Cluster V Kho-Kho."
+>
+  <PageHero
+    title="Sports & Games"
+    standfirst="Four places to play, fifteen games on the roster, and a games period that reaches every year group in the school."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Beyond Academics', href: '/beyond-academics/' },
+    ]}
+    src={heroPhoto}
+    alt="The JOSH ground at Sunbeam School Ballia, seen through the school gateway arch"
+    position="50% 58%"
+  />
+
+  <SectionRail
+    items={[
+      { id: 'facilities', label: 'Facilities' },
+      { id: 'games', label: 'Games' },
+      { id: 'houses', label: 'Inter-house' },
+      { id: 'coaching', label: 'Coaching' },
+      { id: 'record', label: 'The record' },
+      { id: 'results', label: 'Results' },
+    ]}
+  />
+
+  {/* padding-block: 0 — every section carries its own --sb-section-y, and the
+      panel adding its own on top is what put a 183px void under the hero on
+      three earlier pages. */}
+  <div class="u-page-panel sp-panel">
+    <Facilities />
+    <GamesRail />
+
+    {/* ⚠ NO "STUDENT PARTICIPATION" SECTION — removed at the client's
+        instruction. `Participation.astro` and its data are intact, so restoring
+        it is one import and one tag.
+
+        Worth knowing what went with it: audit 4.5 names student participation
+        explicitly, alongside facilities, games, inter-house and coaching. Four
+        of those five are still here; participation is the one now missing. */}
+
+    <Ladder />
+    <Coaching />
+    <Record />
+    <Results />
+
+    {/* ⚠ NO "BEYOND THE FIELD" HANDOFF BAND HERE — removed at the client's
+        instruction. It linked to /beyond-academics/achievements/ and named the
+        three majors behind that link.
+
+        NOTHING WAS DELETED: `AchievementsLink.astro` is intact, so restoring it
+        is one import and one tag. Worth knowing what went with it — the page
+        now ends on the results board with no route to the school-wide record,
+        which is still reachable from the main navigation but no longer from
+        here. */}
+  </div>
+</BaseLayout>
+
+<style>
+  div.sp-panel { padding-block: 0; }
+
+  .sp-panel :global(section[id]) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
+  }
+
+  /* The games rail is full-bleed ink and sits directly under the facilities
+     section; without this the panel's rounded top corner clips its left edge on
+     wide screens. */
+  .sp-panel :global(.grail) { border-radius: 0; }
+</style>

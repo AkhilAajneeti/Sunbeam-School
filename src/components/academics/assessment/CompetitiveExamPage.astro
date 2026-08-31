@@ -1,0 +1,514 @@
+---
+/**
+ * ASSESSMENT & SUPPORT · COMPETITIVE EXAMINATION PREPARATION — six sections.
+ *
+ * ⚠ THIS PAGE AND OLYMPIAD ACHIEVEMENTS MUST NOT BE THE SAME PAGE. They cover
+ * the same four programmes from opposite ends, and the split is deliberate:
+ *
+ *     this page              — what each programme ASKS OF A STUDENT
+ *     olympiad-achievements  — what has COME BACK from them
+ *
+ * No result is repeated here, so there is one record of what students have won
+ * rather than two that can disagree.
+ *
+ * ═══ SOURCE — verified in this repository ══════════════════════════════════
+ *   Vidyarthi Vigyan Manthan — the national science talent search, Classes VI–XI.
+ *   National Children's Science Congress — project-based science, presented and
+ *     defended.
+ *   Inspire Award MANAK — Department of Science & Technology; original ideas
+ *     from school students, taken to national level.
+ *   Science Olympiad Foundation — entered from the primary years upward.
+ *   CUET (UG) — the school published 2025 results across PCM, Commerce and
+ *     Humanities; destinations are on University Counselling.
+ *
+ * ⚠ NOT CLAIMED: a coaching timetable, an entry fee, a selection process for who
+ * is entered, preparation classes, a rank, a selection percentage or a number of
+ * students. The school names the programmes it enters; it does not describe how
+ * it prepares students for them, and neither does this page.
+ *
+ * ⚠ THE GALLERY IS A CONTROLLED COLLAGE, NOT A MASONRY WALL — one large frame,
+ * two smaller overlapping ones and a circular crop, as the brief specifies. Each
+ * opens in the site's Lightbox.
+ *
+ * ═══ COMPOSITION — six sections, six different builds ══════════════════════
+ *   01 · IVORY  the collage crosses LEFT, copy right.
+ *   02 · PAPER  copy left, five numbered programme rows on rules right.
+ *   03 · CREAM  four editorial feature blocks, subtle borders, no shadow stack.
+ *   04 · PAPER  the four-frame gallery, asymmetric, opening in the viewer.
+ *   05 · PHOTO  the cinematic close.
+ */
+import { Picture } from 'astro:assets';
+import '../../../styles/assessment.css';
+import { MARK } from './marks';
+import AsClose from './AsClose.astro';
+import Lightbox from '../../ui/Lightbox.astro';
+
+/* ── PHOTOGRAPHY — six genuine Sunbeam Ballia frames, each used ONCE. ─────── */
+import pBench from '../../../assets/photos/sb-chem-lab.jpg';
+import pComposite from '../../../assets/composite lab/DSC_1257 copy.jpg';
+import pMicro from '../../../assets/photos/sb-sci-lab.jpg';
+import pActivity from '../../../assets/activity learning lab/DSC_1216 copy.jpg';
+import pBio from '../../../assets/photos/sb-bio-lab.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+const OLYMPIADS = '/academics/student-success/olympiad-achievements/';
+const UNIVERSITY = '/academics/student-success/university-counselling/';
+const STEM = '/academics/teaching-learning/stem-robotics/';
+
+/* ── SECTION 02 — the programmes, in the school's own wording ─────────────
+   ⚠ FIVE ROWS, AND THE FIFTH IS AN HONEST CATCH-ALL. The school enables
+   participation in other nationally notified programmes from time to time
+   without naming them in a list, so the row says exactly that rather than
+   inventing a sixth name to round the set out. */
+const programmes = [
+  {
+    n: '01',
+    k: 'Vidyarthi Vigyan Manthan',
+    v: 'The national science talent search, for students of <strong>Classes VI to XI</strong>. A written search, sat against a national field.',
+  },
+  {
+    n: '02',
+    k: 'National Children’s Science Congress',
+    v: 'Project-based science — work <strong>presented and defended</strong>, not answered on a paper.',
+  },
+  {
+    n: '03',
+    k: 'Inspire Award MANAK',
+    v: 'The Department of Science &amp; Technology’s scheme for <strong>original ideas</strong> from school students, taken to national level.',
+  },
+  {
+    n: '04',
+    k: 'Science Olympiad Foundation',
+    v: 'The olympiad, entered <strong>from the primary years upward</strong> — the earliest external paper a Sunbeam child sits.',
+  },
+  {
+    n: '05',
+    k: 'CUET (UG)',
+    v: 'The senior-school entrance examination; the school published 2025 results across PCM, Commerce and Humanities.',
+  },
+] as const;
+
+/* ── SECTION 03 — the same four, at a glance ─────────────────────────────── */
+const features = [
+  { n: '01', mark: 'search', k: 'VVM', sub: 'Science talent search', v: 'A written search for scientific temper and reasoning.' },
+  { n: '02', mark: 'flask', k: 'NCSC', sub: 'National science project', v: 'Investigate, innovate and present — then defend it.' },
+  { n: '03', mark: 'bulb', k: 'INSPIRE MANAK', sub: 'Innovation & original ideas', v: 'Original ideas from school students, taken to national level.' },
+  { n: '04', mark: 'book', k: 'Olympiads', sub: 'Subject academic challenge', v: 'External academic assessments from the primary years upward.' },
+] as const;
+
+/* ── SECTION 04 — the gallery. One large, two smaller, one circular. ─────── */
+const gallery = [
+  { src: pMicro, alt: `A student of ${S} using a microscope beside plant specimens in flasks`, cap: 'Practical work' },
+  { src: pComposite, alt: `The composite laboratory at ${S}, apparatus set out along the benches`, cap: 'The composite laboratory' },
+  { src: pActivity, alt: `The activity learning laboratory at ${S}, its worktables set out for group work`, cap: 'The activity learning room' },
+  { src: pBio, alt: `Two students of ${S} handling glassware in the biology laboratory`, cap: 'The biology laboratory' },
+] as const;
+---
+
+{/* ══ 01 · FOUR PAPERS NOBODY HAS TO SIT ═════════════════════════════════════
+    Ground: warm ivory. The asymmetric collage crosses LEFT, the copy sits right
+    with a dot field above it — the reference's exact arrangement. */}
+<section class="as-sec as-sec--ivory as-pad ce-open" aria-labelledby="ce-open-t">
+  <span class="as-warm" aria-hidden="true"></span>
+
+  <div class="u-container ce-open__grid">
+    <div class="ce-open__stage">
+      <div class="ce-open__lead as-frame as-fill" data-mask>
+        <Picture
+          src={pBench}
+          alt={`Students of ${S} working along the chemistry bench, test tubes held over the burners`}
+          formats={['avif', 'webp']}
+          widths={[520, 880, 1200]}
+          sizes="(max-width: 1023px) 92vw, 42vw"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      <div class="ce-open__sm as-frame as-frame--float as-fill" data-pop data-pop-delay="200">
+        <Picture
+          src={pComposite}
+          alt={`The composite laboratory at ${S}, apparatus set out along the benches`}
+          formats={['avif', 'webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 1023px) 46vw, 18vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div class="ce-open__copy">
+      <span class="as-dots ce-open__dots" aria-hidden="true"></span>
+
+      <p class="as-kicker" data-reveal>Beyond the board syllabus</p>
+      <h2 class="as-h as-h--lg" id="ce-open-t">
+        <span data-clip data-clip-delay="0">Four papers</span>
+        <span data-clip data-clip-delay="150"><em>nobody has to sit</em></span>
+      </h2>
+
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        None of the programmes below is compulsory, and none of them counts towards a board result.
+        That is what makes entering them a decision — and the school names which ones it enters
+        rather than describing a culture of enrichment in the abstract.
+      </p>
+      <p class="as-body" data-reveal data-reveal-delay="260">
+        What each asks for is different in kind, which is the useful part for a family reading this:
+        one is a written talent search, one is a defended project, one is an original idea, and one is
+        a paper set from the primary years.
+      </p>
+      <p class="as-body" data-reveal data-reveal-delay="320">
+        What has come back from them — the national qualifications and the placings — is recorded on
+        {' '}<a class="as-link" href={OLYMPIADS}>Olympiad Achievements</a> rather than repeated here.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · WHAT EACH ONE ASKS ════════════════════════════════════════════════
+    Ground: white. Copy left, the programmes right as numbered rows on thin
+    rules — a record, not a card set. */}
+<section class="as-sec as-sec--paper as-pad ce-list" aria-labelledby="ce-list-t">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container ce-list__grid">
+    <div class="ce-list__head">
+      <p class="as-kicker" data-reveal>What each one asks</p>
+      <h2 class="as-h as-h--lg" id="ce-list-t">
+        <span data-clip data-clip-delay="0">A search, a defence,</span>
+        <span data-clip data-clip-delay="150"><em>an idea, a paper</em></span>
+      </h2>
+      <p class="as-body ce-list__b" data-reveal data-reveal-delay="200">
+        Read side by side, the four programmes ask for four different things — and between them they
+        cover most of what a science education is supposed to produce. A student who can sit a talent
+        search may not be the one who can defend a project in front of a panel.
+      </p>
+      <p class="as-note" data-reveal data-reveal-delay="270">
+        Where the work is actually done is on
+        {' '}<a class="as-link" href={STEM}>STEM, Robotics &amp; Enrichment</a>; CUET destinations
+        are on {' '}<a class="as-link" href={UNIVERSITY}>University Counselling</a>.
+      </p>
+    </div>
+
+    <ol class="ce-progs">
+      {programmes.map((p, i) => (
+        <li class="ce-prog" data-reveal data-reveal-delay={180 + i * 70}>
+          <span class="ce-prog__n t-tabular">{p.n}</span>
+          <div class="ce-prog__t">
+            <p class="ce-prog__k">{p.k}</p>
+            <p class="ce-prog__v" set:html={p.v} />
+          </div>
+        </li>
+      ))}
+      <li class="ce-prog ce-prog--soft" data-reveal data-reveal-delay="560">
+        <span class="ce-prog__n t-tabular">06</span>
+        <div class="ce-prog__t">
+          <p class="ce-prog__k">Other officially published opportunities</p>
+          <p class="ce-prog__v">
+            From time to time the school enables participation in other nationally notified science
+            and academic programmes. It does not publish them as a standing list, so none is named
+            here.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+{/* ══ 03 · PROGRAMMES, AT A GLANCE ═══════════════════════════════════════════
+    Ground: warm cream. Four editorial feature blocks — subtle border, one very
+    light shadow, generous whitespace. Architectural rather than card-like. */}
+<section class="as-sec as-sec--cream as-pad--sm ce-feat" aria-labelledby="ce-feat-t">
+  <div class="u-container">
+    <p class="as-kicker" data-reveal id="ce-feat-t">Programmes, at a glance</p>
+
+    <ol class="ce-feats">
+      {features.map((f, i) => (
+        <li class="ce-fcard" data-pop data-pop-delay={130 + i * 90}>
+          <p class="ce-fcard__n t-tabular">{f.n}</p>
+          <span class="ce-fcard__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[f.mark]} />
+            </svg>
+          </span>
+          <h3 class="ce-fcard__k">{f.k}</h3>
+          <p class="ce-fcard__s">{f.sub}</p>
+          <p class="ce-fcard__v">{f.v}</p>
+          <span class="ce-fcard__go" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.arrow} />
+            </svg>
+          </span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 04 · THE GALLERY ═══════════════════════════════════════════════════════
+    Ground: white. One large frame, two smaller overlapping ones and a circular
+    crop — a controlled collage, not a masonry wall. Each opens in the viewer. */}
+<section class="as-sec as-sec--paper as-pad--sm ce-gal" aria-label="Where the work is done">
+  <div class="u-container ce-gal__stage">
+    <span class="as-dots ce-gal__dots" aria-hidden="true"></span>
+
+    <a
+      class="ce-gal__a as-frame as-fill"
+      data-lb-open
+      href={gallery[0].src.src}
+      data-lb-alt={gallery[0].alt}
+      data-lb-cap={gallery[0].cap}
+      data-pop
+    >
+      <Picture src={gallery[0].src} alt={gallery[0].alt} formats={['avif', 'webp']} widths={[480, 860]} sizes="(max-width: 767px) 92vw, 30vw" loading="lazy" decoding="async" />
+    </a>
+
+    <a
+      class="ce-gal__b as-frame as-frame--float as-fill"
+      data-lb-open
+      href={gallery[1].src.src}
+      data-lb-alt={gallery[1].alt}
+      data-lb-cap={gallery[1].cap}
+      data-pop
+      data-pop-delay="120"
+    >
+      <Picture src={gallery[1].src} alt={gallery[1].alt} formats={['avif', 'webp']} widths={[360, 640]} sizes="(max-width: 767px) 46vw, 22vw" loading="lazy" decoding="async" />
+    </a>
+
+    <a
+      class="ce-gal__c as-frame as-frame--float as-fill"
+      data-lb-open
+      href={gallery[2].src.src}
+      data-lb-alt={gallery[2].alt}
+      data-lb-cap={gallery[2].cap}
+      data-pop
+      data-pop-delay="220"
+    >
+      <Picture src={gallery[2].src} alt={gallery[2].alt} formats={['avif', 'webp']} widths={[360, 640]} sizes="(max-width: 767px) 46vw, 22vw" loading="lazy" decoding="async" />
+    </a>
+
+    <a
+      class="ce-gal__d as-frame as-frame--float as-frame--round as-fill"
+      data-lb-open
+      href={gallery[3].src.src}
+      data-lb-alt={gallery[3].alt}
+      data-lb-cap={gallery[3].cap}
+      data-pop
+      data-pop-delay="320"
+    >
+      <Picture src={gallery[3].src} alt={gallery[3].alt} formats={['avif', 'webp']} widths={[260, 460]} sizes="(max-width: 767px) 40vw, 14vw" loading="lazy" decoding="async" />
+    </a>
+  </div>
+</section>
+
+<AsClose
+  id="ce-close-t"
+  kicker="Four national programmes"
+  lead="Named,"
+  accent="so it can be checked."
+  body="The school names the programmes it enters and the classes eligible for them. It does not publish a coaching timetable, how students are selected for entry, or whether preparation runs inside or outside the school day — and none of that is invented here."
+  photo={pCohort}
+/>
+
+<Lightbox />
+
+<style>
+  /* ═══ 01 · FOUR PAPERS NOBODY HAS TO SIT ══════════════════════════════════ */
+  .ce-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(26px, 3.6vw, 58px);
+    align-items: center;
+  }
+  .ce-open__stage { position: relative; padding-bottom: clamp(30px, 3.4vw, 52px); }
+  .ce-open__lead { width: 86%; aspect-ratio: 16 / 11; }
+  .ce-open__sm {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 44%;
+    aspect-ratio: 4 / 5;
+    border: 5px solid #f7f0ea;
+  }
+  .ce-open__copy { position: relative; }
+  .ce-open__dots { top: -14%; right: -2%; }
+
+  /* ═══ 02 · WHAT EACH ONE ASKS ═════════════════════════════════════════════ */
+  .ce-list__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    gap: clamp(26px, 3.6vw, 54px);
+    align-items: center;
+  }
+  .ce-list__b { max-width: 40ch; }
+
+  .ce-progs { margin: 0; padding: 0; list-style: none; }
+  .ce-prog {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(12px, 1.5vw, 20px);
+    align-items: start;
+    padding: clamp(9px, 1.05vw, 13px) 0;
+    border-bottom: 1px solid var(--sb-border);
+  }
+  .ce-prog:first-child { border-top: 1px solid var(--sb-border); }
+  .ce-prog__n {
+    font-family: var(--sb-font-display);
+    font-size: clamp(13px, 1.1vw, 17px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .ce-prog__t { display: grid; gap: 3px; }
+  .ce-prog__k {
+    margin: 0;
+    font-size: clamp(9.5px, 0.72vw, 11.2px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sb-charcoal);
+  }
+  .ce-prog__v { margin: 0; font-size: clamp(10.5px, 0.78vw, 12.4px); line-height: 1.64; color: var(--sb-text-muted); }
+  /* The catch-all row is set back a shade, because it names nothing. */
+  .ce-prog--soft .ce-prog__n { color: color-mix(in srgb, var(--sb-orange-bright) 58%, transparent); }
+  .ce-prog--soft .ce-prog__k { color: var(--sb-text-muted); }
+
+  /* ═══ 03 · PROGRAMMES, AT A GLANCE ════════════════════════════════════════ */
+  .ce-feats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(11px, 1.4vw, 20px);
+    margin: clamp(18px, 2.2vw, 28px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ce-fcard {
+    display: grid;
+    align-content: start;
+    padding: clamp(15px, 1.8vw, 24px) clamp(14px, 1.6vw, 20px) clamp(16px, 2vw, 26px);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+    box-shadow: 0 3px 14px -10px rgba(28, 14, 8, 0.14);
+    transition: transform var(--sb-dur-image) var(--sb-ease), box-shadow var(--sb-dur-image) var(--sb-ease);
+  }
+  .ce-fcard:hover { transform: translateY(-3px); box-shadow: var(--sb-shadow-card); }
+  .ce-fcard__n {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(11.5px, 0.9vw, 14px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .ce-fcard__m {
+    display: grid;
+    place-items: center;
+    width: clamp(36px, 3.4vw, 48px);
+    aspect-ratio: 1 / 1;
+    margin-top: clamp(9px, 1.1vw, 14px);
+    border: 1.4px solid color-mix(in srgb, var(--sb-violet) 34%, transparent);
+    border-radius: 50%;
+    color: var(--sb-violet);
+  }
+  .ce-fcard__m svg { width: 50%; height: auto; }
+  .ce-fcard__k {
+    margin: clamp(10px, 1.2vw, 15px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(14px, 1.2vw, 19px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .ce-fcard__s {
+    margin: 2px 0 0;
+    font-size: clamp(10px, 0.76vw, 12px);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+  .ce-fcard__v {
+    margin: clamp(7px, 0.85vw, 11px) 0 0;
+    font-size: clamp(10px, 0.74vw, 11.8px);
+    line-height: 1.64;
+    color: var(--sb-text-muted);
+  }
+  .ce-fcard__go {
+    display: block;
+    width: clamp(18px, 1.7vw, 23px);
+    margin-top: clamp(11px, 1.4vw, 17px);
+    color: var(--sb-orange-bright);
+    transition: translate var(--sb-dur-image) var(--sb-ease);
+  }
+  .ce-fcard__go svg { display: block; width: 100%; height: auto; }
+  .ce-fcard:hover .ce-fcard__go { translate: 5px 0; }
+
+  /* ═══ 04 · THE GALLERY ════════════════════════════════════════════════════
+     ⚠ FOUR NAMED SLOTS, NOT auto-fit. The composition is the point: a large
+     frame left, two stacked and overlapping in the middle, and a circle dropped
+     over the seam. A grid that reflowed would lose it. */
+  .ce-gal__stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr) minmax(0, 0.5fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: clamp(10px, 1.2vw, 18px);
+    aspect-ratio: 16 / 6.4;
+  }
+  .ce-gal__dots { bottom: 4%; right: 0; }
+  .ce-gal__a { grid-column: 1; grid-row: 1 / 3; display: block; }
+  .ce-gal__b { grid-column: 2; grid-row: 1; display: block; border: 4px solid var(--sb-paper); }
+  .ce-gal__c { grid-column: 2; grid-row: 2; display: block; border: 4px solid var(--sb-paper); }
+  .ce-gal__d {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    align-self: center;
+    justify-self: start;
+    display: block;
+    width: clamp(110px, 13vw, 196px);
+    aspect-ratio: 1 / 1;
+    margin-left: clamp(-52px, -3.4vw, -18px);
+    border: 5px solid var(--sb-paper);
+  }
+  .ce-gal__a :global(img),
+  .ce-gal__b :global(img),
+  .ce-gal__c :global(img),
+  .ce-gal__d :global(img) { transition: scale var(--sb-dur-image) var(--sb-ease); }
+  .ce-gal__a:hover :global(img),
+  .ce-gal__b:hover :global(img),
+  .ce-gal__c:hover :global(img),
+  .ce-gal__d:hover :global(img) { scale: 1.05; }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .ce-list__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(22px, 3vw, 32px); }
+    .ce-list__b { max-width: 62ch; }
+    .ce-feats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 1023px) {
+    .ce-open__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 4vw, 40px); }
+    .ce-open__stage { order: -1; }
+    .ce-gal__stage { aspect-ratio: 16 / 8.4; }
+  }
+
+  @media (max-width: 767px) {
+    .ce-open__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .ce-open__sm { width: 46%; }
+    .ce-open__stage { padding-bottom: clamp(30px, 8vw, 42px); }
+
+    .ce-prog { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .ce-feats { grid-template-columns: minmax(0, 1fr); }
+
+    /* The collage becomes a deliberate pair plus a strip, not four shrunk boxes. */
+    .ce-gal__stage {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto auto;
+      aspect-ratio: auto;
+    }
+    .ce-gal__a { grid-column: 1 / -1; grid-row: 1; aspect-ratio: 16 / 10; }
+    .ce-gal__b { grid-column: 1; grid-row: 2; aspect-ratio: 4 / 3; }
+    .ce-gal__c { grid-column: 2; grid-row: 2; aspect-ratio: 4 / 3; }
+    .ce-gal__d { display: none; }
+  }
+</style>

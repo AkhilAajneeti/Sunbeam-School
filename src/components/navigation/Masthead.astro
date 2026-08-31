@@ -1,0 +1,620 @@
+---
+/**
+ * C02 · MASTHEAD — docs/06 §02
+ *
+ * Crest + wordmark left, Apply Online right, and the navigation on its own
+ * full-width row beneath. Sticky; condenses 96 → 68px on scroll.
+ *
+ * IMPLEMENTATION NOTE — TWO ROWS, and the desktop threshold is 1280px.
+ *
+ * The client requires all eleven audit sections on the main menu. Named
+ * verbatim they measure 1117px of link text at 14px — "School Planner &
+ * Academic Calendar" (§8) is 253px on its own, "Latest News & Events" (§11)
+ * 148px — and the container caps at 1280px. Beside the brand lockup (242px) and
+ * the Apply button (151px) a single row leaves roughly 810px, so eleven items
+ * cannot share a line with the brand at any type size worth reading. Giving the
+ * nav its own row hands it the full container and is what makes eleven possible.
+ *
+ * Measured slack in Chromium, one row at every width: 81px at 1280, 95px at
+ * 1360, 52px at 1440 and above (the floor — the container stops growing while
+ * the gap clamp does not). Below 1280 the drawer takes over.
+ */
+import { mainNav } from '../../data/navigation';
+import { school } from '../../data/site';
+import MegaMenu from './MegaMenu.astro';
+---
+
+<header class="masthead" data-masthead>
+  <div class="masthead__inner u-container">
+    <a class="brand" href="/" aria-label="Sunbeam School Ballia — home">
+      <img
+        class="brand__emblem"
+        src="/brand/sunbeam-emblem.png"
+        alt=""
+        width="190"
+        height="144"
+        decoding="async"
+      />
+      <img
+        class="brand__wordmark"
+        src="/brand/sunbeam-wordmark.png"
+        alt="Sunbeam School Ballia"
+        width="588"
+        height="178"
+        decoding="async"
+      />
+    </a>
+
+    <nav class="mainnav" aria-label="Main">
+      <ul class="mainnav__list">
+        {mainNav.map((item) => {
+          const panelId = `mega-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+          return (
+          <li class:list={['mainnav__item', item.columns && 'mainnav__item--has-mega']}>
+            {/* ⚠⚠ A BUTTON, NOT A LINK, WHEN THE ITEM OWNS A SUBMENU — and that is a
+                semantic claim, not a styling one. These six parents have nothing
+                of their own to show; the submenu IS the content. As <a href> they
+                navigated, which on a phone meant tapping “About Us” left the
+                drawer for a page that reads “we’re still writing this” instead of
+                opening the six links underneath it. A button that reveals is
+                what this control has always been.
+                ⚠ /academics/ AND /news-events/ ARE NO LONGER REACHED FROM THIS
+                BAR, deliberately — the client’s call. Both remain in the footer
+                and the sitemap; neither is orphaned.
+                ⚠ THE PANEL STILL OPENS ON HOVER AND focus-within IN CSS. This
+                button adds the click/Enter/Space path for pointer and touch, and
+                keeps aria-expanded honest about what is actually showing. */}
+            {item.columns ? (
+              <button
+                type="button"
+                class="mainnav__link mainnav__link--toggle"
+                aria-expanded="false"
+                aria-controls={panelId}
+                data-mega-toggle
+              >{item.label}</button>
+            ) : (
+              <a class="mainnav__link" href={item.href}>{item.label}</a>
+            )}
+            {item.columns && <MegaMenu item={item} panelId={panelId} />}
+          </li>
+          );
+        })}
+      </ul>
+    </nav>
+
+    <div class="masthead__actions">
+      {/* ⚠⚠ THE ADMISSIONS PILL IS BACK, AND IT POINTS AT ONE FORM, NOT AT AN
+          ADMISSIONS PAGE. The school has no admissions page of its own; what it
+          publishes is two session-coded registration forms. This pill takes the
+          Nursery-to-IX one, which is the intake almost every visitor to a school
+          site is here about. Class XI is not hidden — it is in the utility bar
+          directly above this, alongside this same form.
+
+          ⚠ ONE ACTION, NOT TWO. Two pills in a masthead that is already 1117px
+          of link text over roughly 810px of row is not a choice offered, it is a
+          row that wraps.
+
+          ⚠ NEW TAB WITH rel="noopener noreferrer": the form is on another host,
+          and a parent half-way through filling one in should not lose the school
+          site behind them.
+
+          ⚠ THE PULSE IS DATA-DRIVEN AND IS THE ONLY THING THE FLAG CONTROLS.
+          `school.admissionsOpen` adds the class that animates; false stops the
+          movement and leaves the button exactly where it is. See the note on the
+          flag in data/site.ts for why it is a boolean and not a date. */}
+      <a
+        class:list={['masthead__cta', school.admissionsOpen && 'is-open']}
+        href={school.external.applyFormNurseryToIX}
+        target="_blank"
+        rel="noopener noreferrer"
+      >Admissions</a>
+
+      <button
+        class="masthead__toggle"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        data-nav-toggle
+      >
+        <span class="masthead__toggle-bars" aria-hidden="true"><i></i><i></i></span>
+        <span class="masthead__toggle-text">Menu</span>
+      </button>
+    </div>
+  </div>
+
+</header>
+
+<style>
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--sb-paper);
+    border-bottom: var(--sb-hairline);
+    transition: box-shadow var(--sb-dur-nav) ease;
+  }
+
+  .masthead.is-scrolled {
+    box-shadow: var(--sb-shadow-header);
+  }
+
+  /* --- The admissions pill --------------------------------------------------
+     Deliberately NOT .btn: the buttons in this project are 44-48px tall and this
+     sits in a 68-96px masthead row beside a 242px brand lockup, where a full
+     button is the heaviest thing on the row and out-shouts the school's own
+     name. A pill is the same action at the weight a masthead can carry. */
+  .masthead__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background-color var(--sb-dur-btn) ease;
+  }
+
+  .masthead__cta:hover { background: var(--sb-violet-dark); }
+
+  /* GENTLE. The pulse is a 6px ring fading outward every 2.4s and a 1.5%
+     scale — it has to be noticeable in peripheral vision and invisible once you
+     are reading, because it sits above every page on the site and a hard
+     throb becomes something a returning parent learns to ignore.
+
+     ⚠ box-shadow AND transform ONLY. Both are composited, so this animates off
+     the main thread; animating width, padding or background-position here would
+     relayout the masthead sixty times a second on every page. */
+  .masthead__cta.is-open {
+    animation: masthead-pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes masthead-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(201, 60, 10, 0.42); transform: scale(1); }
+    55%  { box-shadow: 0 0 0 6px rgba(201, 60, 10, 0);   transform: scale(1.015); }
+    100% { box-shadow: 0 0 0 0 rgba(201, 60, 10, 0);     transform: scale(1); }
+  }
+
+  /* ⚠ THE PULSE IS MOTION AND OBEYS THE PREFERENCE. The button keeps its colour
+     and its position; it simply stops moving, which loses a hint and nothing
+     else. */
+  @media (prefers-reduced-motion: reduce) {
+    .masthead__cta.is-open { animation: none; }
+  }
+
+  /* Tucked away once the footer reaches the top of the viewport. A sticky header
+     will always sit on whatever lands beneath it, and at the end of the page
+     that was slicing the top off the footer's wordmark at shorter viewport
+     heights. Scrolling up brings it straight back. */
+  .masthead.is-tucked {
+    transform: translateY(-100%);
+  }
+
+  .masthead {
+    transition: box-shadow var(--sb-dur-nav) ease,
+      transform var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .masthead { transition: none; }
+  }
+
+  .masthead__inner {
+    height: var(--sb-masthead-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Capped, not clamp(20px, 2vw, 40px): the container stops growing at 1280
+       but vw does not, so the old gap widened on big screens while the space it
+       had to fit into stayed fixed — 1920 overflowed harder than 1440 did. */
+    gap: clamp(12px, 1.1vw, 16px);
+    transition: height var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  /* --- Brand ------------------------------------------------------------- */
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  /* 52/48 rather than 60/56: the doc's verbatim labels cost the nav ~120px over
+     the short ones, and the lockup is where that comes back from. 279 → 242px. */
+  .brand__emblem {
+    height: 52px;
+    width: auto;
+    transition: height var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  .brand__wordmark {
+    height: 48px;
+    width: auto;
+    transition: height var(--sb-dur-nav) var(--sb-ease);
+  }
+
+  /* Shrinks on scroll so the sticky bar stays shallow — same ratio as above. */
+  .masthead.is-scrolled .brand__emblem { height: 52px; }
+  .masthead.is-scrolled .brand__wordmark { height: 48px; }
+
+  /* --- Main navigation --------------------------------------------------- */
+
+  .mainnav {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .mainnav__list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Wraps rather than overflows: if a longer label is ever added the row drops
+       to a second line instead of pushing a horizontal scrollbar onto every
+       page — `body` is overflow-x:hidden, so that bug shows up as the whole
+       document sliding sideways, not as a broken header. */
+    flex-wrap: wrap;
+    gap: 0 clamp(9px, 0.95vw, 13px);
+  }
+
+  /* relative — the multi-level panel is narrow and hangs off its own trigger,
+     so the item is the containing block. (The 920px glass panel that briefly
+     lived here had to centre on the nav instead; this one does not.) */
+  .mainnav__item {
+    position: relative;
+  }
+
+  .mainnav__link {
+    position: relative;
+    display: inline-block;
+    padding: 11px 2px;
+    /* Fluid, and the cap is set by measurement rather than taste: the nine
+       labels plus the Apply button and the brand lockup need every pixel the
+       1280px container has. At 13.5px the row wrapped at 1280, 1600 and 1920. */
+    font-size: clamp(12px, 0.92vw, 13px);
+    font-weight: 600;
+    color: var(--sb-charcoal);
+    white-space: nowrap;
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  /* Active/hover indicator: 2px maroon rule, wipes in from the left. */
+  .mainnav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--sb-violet);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .mainnav__item:hover .mainnav__link,
+  .mainnav__item:focus-within .mainnav__link {
+    color: var(--sb-violet);
+  }
+
+  .mainnav__item:hover .mainnav__link::after,
+  .mainnav__item:focus-within .mainnav__link::after {
+    transform: scaleX(1);
+  }
+
+  /* ⚠ THE TOGGLE IS A <button>, SO IT ARRIVES WITH A UA BUTTON’S BACKGROUND,
+     BORDER, PADDING, FONT AND CENTRED TEXT. Every one of those has to be reset
+     or it would sit a few pixels off its nine neighbours — which is exactly the
+     kind of drift that makes a semantic fix look like a regression. */
+  .mainnav__link--toggle {
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: clamp(12px, 0.92vw, 13px);
+    font-weight: 600;
+    line-height: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  /* CSS-first mega-menu reveal — plus .is-open, which is how a CLICK or a tap
+     holds the panel open for anyone not using hover. */
+  .mainnav__item--has-mega:hover :global(.mega),
+  .mainnav__item--has-mega:focus-within :global(.mega),
+  .mainnav__item--has-mega.is-open :global(.mega) {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+      opacity var(--sb-dur-menu) ease,
+      transform var(--sb-dur-menu) var(--sb-ease);
+  }
+
+  /* ONE PANEL AT A TIME. Hover and focus both open a menu, so a keyboard user
+     who has tabbed into one and then moves the pointer over another had two
+     open together. That was survivable when each panel hung off its own item —
+     they sat side by side. Now every panel is centred on the nav, so two open
+     panels stack directly on top of each other and the menu reads as corrupt.
+     Whenever the pointer is over the bar, hover wins and any focus-held panel
+     that is not also hovered is suppressed. */
+  .mainnav:hover .mainnav__item--has-mega:not(:hover) :global(.mega) {
+    opacity: 0;
+    visibility: hidden;
+    transition-delay: 0ms;
+  }
+
+  .masthead.is-mega-suppressed :global(.mega) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  /* --- Actions ----------------------------------------------------------- */
+
+  .masthead__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-5);
+    flex-shrink: 0;
+  }
+
+
+  .masthead__toggle {
+    display: none;
+    align-items: center;
+    gap: var(--sb-3);
+    min-height: 48px;
+    padding: 0 var(--sb-2);
+    font-size: var(--sb-body-sm);
+    font-weight: 600;
+    color: var(--sb-charcoal);
+  }
+
+  .masthead__toggle-bars {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 22px;
+    height: 14px;
+  }
+
+  .masthead__toggle-bars i {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--sb-charcoal);
+    border-radius: 2px;
+    transition: transform 320ms var(--sb-ease);
+  }
+
+  /* --- Hamburger → cross ---------------------------------------------------
+     The maths, so the X is actually centred rather than approximately so: two
+     2px bars with a 5px gap occupy 9px inside a 14px box, so their centres sit
+     at 3.5px and 10.5px while the box centre is 7px. Each bar therefore travels
+     exactly 3.5px inward before rotating, and the two strokes cross dead centre.
+
+     Driven off `aria-expanded`, not a class — the attribute has to be correct
+     for assistive tech anyway, so keying the visual to it means the two can
+     never disagree. */
+  .masthead__toggle[aria-expanded='true'] .masthead__toggle-bars i:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+
+  .masthead__toggle[aria-expanded='true'] .masthead__toggle-bars i:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  /* ABOVE THE DRAWER WHILE IT IS OPEN. The drawer sits at z-index 100 and this
+     header at 50, so the toggle was behind the scrim and unclickable — a
+     hamburger that morphs into a cross is pointless if the cross cannot be
+     pressed. Raised only while open, so the resting stack is unchanged. */
+  .masthead.is-nav-open {
+    z-index: 120;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .masthead__toggle-bars i { transition: none; }
+  }
+
+  /* --- Below 1360: drawer takes over --------------------------------------
+     THE BUG THIS PREVENTS IS A HORIZONTAL SCROLLBAR ON EVERY PAGE. Because
+     `body` is `overflow-x: hidden` an over-wide header never shows as a broken
+     header — it shows as the whole document scrolling sideways, which on a
+     full-bleed layout looks like every band stopping short of the right edge.
+
+     Moving the nav onto its own row bought back everything the brand lockup and
+     the Apply button used to take, which is what makes eleven items possible at
+     all. The threshold is set from the measured width of the eleven links; see
+     the figures recorded in the header comment above. Below it the drawer takes
+     over, which is honest, rather than a nav squeezed past legibility.
+
+     ⚠ RE-MEASURE IF A TWELFTH ITEM OR A LONGER LABEL IS ADDED. The list wraps
+     rather than overflowing, so the failure mode is a second row appearing, not
+     a sideways-scrolling page. */
+
+  @media (max-width: 1279px) {
+    .mainnav { display: none; }
+    .masthead__toggle { display: inline-flex; }
+  }
+
+  /* ⚠ THE PILL LEAVES THE ROW AT 560, NOT AT 1280. Between those widths it sits
+     beside the hamburger and there is room for both, which is where a parent on
+     a tablet expects to find it. Below 560 the brand lockup and the toggle
+     already fill the row, and the drawer carries the identical button pinned to
+     its foot — so this is the action moving, not the action going. Both are
+     rendered from school.external.applyFormNurseryToIX, so they cannot drift. */
+  @media (max-width: 559px) {
+    .masthead__cta { display: none; }
+  }
+
+  /* 1280–1439 is where the row is tightest: the container is still growing but
+     has not reached its 1280 cap, so the nav has less room than it does at 1440
+     while carrying exactly the same labels. The lockup steps down one notch
+     there rather than the type shrinking further. */
+  @media (max-width: 1439px) {
+    .brand__emblem,
+    .masthead.is-scrolled .brand__emblem { height: 44px; }
+    .brand__wordmark,
+    .masthead.is-scrolled .brand__wordmark { height: 40px; }
+  }
+
+  @media (max-width: 1023px) {
+    .brand__emblem { height: 44px; }
+    .brand__wordmark { height: 40px; }
+    .masthead.is-scrolled .brand__emblem { height: 38px; }
+    .masthead.is-scrolled .brand__wordmark { height: 34px; }
+  }
+
+  @media (max-width: 767px) {
+    .brand { gap: 10px; }
+    .brand__emblem { height: 38px; }
+    .brand__wordmark { height: 34px; }
+    .masthead.is-scrolled .brand__emblem { height: 32px; }
+    .masthead.is-scrolled .brand__wordmark { height: 28px; }
+    .masthead__toggle-text { display: none; }
+  }
+</style>
+
+<script>
+  // Sticky condense + Escape-to-close. Everything else is CSS.
+  const masthead = document.querySelector<HTMLElement>('[data-masthead]');
+  const utility = document.querySelector<HTMLElement>('[data-utility-bar]');
+  const footer = document.querySelector<HTMLElement>('footer');
+
+  if (masthead) {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      masthead.classList.toggle('is-scrolled', y > 8);
+
+      // Tuck the header out of the way once the footer reaches it, so the
+      // footer's wordmark is never sliced in half at the end of the page.
+      if (footer) {
+        masthead.classList.toggle(
+          'is-tucked',
+          footer.getBoundingClientRect().top <= masthead.offsetHeight + 4
+        );
+      }
+
+      // Utility bar hides on scroll-down, returns on scroll-up (docs/06 §01).
+      if (utility) {
+        const goingDown = y > lastY && y > 120;
+        utility.classList.toggle('is-hidden', goingDown);
+      }
+
+      lastY = y;
+      ticking = false;
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          window.requestAnimationFrame(onScroll);
+        }
+      },
+      { passive: true }
+    );
+
+    /* ⚠⚠ CLICK/TAP TOGGLES THE PANEL, because hover is not available to a
+       touch user and these triggers no longer navigate. The panel is still
+       revealed by :hover and :focus-within in CSS — this only adds .is-open for
+       the pointer path, and keeps aria-expanded truthful, which a CSS-only
+       reveal cannot do on its own.
+
+       ⚠ ONE OPEN AT A TIME. Two panels overlapping the hero at once is how a
+       nav starts looking broken. */
+    const megaToggles = Array.from(
+      masthead.querySelectorAll<HTMLButtonElement>('[data-mega-toggle]'),
+    );
+
+    const setOpen = (btn: HTMLButtonElement, open: boolean) => {
+      btn.closest('.mainnav__item')?.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    };
+    const closeAllMega = (except?: HTMLButtonElement) =>
+      megaToggles.forEach((b) => b !== except && setOpen(b, false));
+
+    megaToggles.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        /* ⚠ READ .is-open, NOT aria-expanded. aria-expanded also tracks the
+           HOVER reveal, so using it here meant a mouse user who hovered a parent
+           and then clicked it saw the panel vanish — the click was read as
+           ‘close the thing hover just opened’. .is-open is the click state alone:
+           first click pins the panel, second unpins it, and hovering is
+           unaffected either way. */
+        const open = btn.closest('.mainnav__item')?.classList.contains('is-open') ?? false;
+        closeAllMega(btn);
+        setOpen(btn, !open);
+      });
+
+      /* aria-expanded has to follow the CSS reveal too, or a screen-reader user
+         hears “collapsed” about a panel that is plainly on screen. */
+      const item = btn.closest('.mainnav__item');
+      item?.addEventListener('pointerenter', () => btn.setAttribute('aria-expanded', 'true'));
+      /* ⚠⚠ THE POINTER LEAVING CLOSES THE PANEL, PINNED OR NOT. A clicked-open
+         menu that survived the cursor walking away sat over the hero until
+         something else was clicked, which reads as stuck rather than as pinned.
+         Two things have to be undone, and missing either one leaves it open:
+           · .is-open, the click state;
+           · FOCUS — a mouse click leaves the button focused, and :focus-within
+             reveals the panel on its own, so clearing .is-open alone changed
+             nothing visible.
+         ⚠ MOUSE ONLY. A tap fires pointerleave too, and on a touchscreen there
+         is no hover to fall back on — closing there would make the menu
+         unopenable. Keyboard focus is untouched: if nobody is moving a mouse,
+         this never fires. */
+      item?.addEventListener('pointerleave', (event) => {
+        const e = event as PointerEvent;
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        setOpen(btn, false);
+        if (item.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
+      });
+      item?.addEventListener('focusin', () => btn.setAttribute('aria-expanded', 'true'));
+      item?.addEventListener('focusout', (e) => {
+        const to = (e as FocusEvent).relatedTarget as Node | null;
+        if (item.contains(to)) return;
+        if (!item.classList.contains('is-open')) btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    /* A click anywhere else dismisses a clicked-open panel. */
+    document.addEventListener('click', (event) => {
+      const t = event.target as Node;
+      if (!masthead.contains(t)) closeAllMega();
+      else if (!(t as Element).closest?.('.mainnav__item--has-mega')) closeAllMega();
+    });
+
+    // Escape closes an open mega-menu and returns focus to its trigger.
+    masthead.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const openItem = masthead
+        .querySelector('.mainnav__item--has-mega:focus-within');
+      if (!openItem) return;
+
+      const trigger = openItem.querySelector<HTMLElement>('.mainnav__link');
+      closeAllMega();
+      masthead.classList.add('is-mega-suppressed');
+      trigger?.focus();
+      // Release the suppression once focus moves on, so hover still works.
+      const release = () => {
+        masthead.classList.remove('is-mega-suppressed');
+        masthead.removeEventListener('focusout', release);
+        masthead.removeEventListener('mouseleave', release);
+      };
+      masthead.addEventListener('focusout', release);
+      masthead.addEventListener('mouseleave', release);
+    });
+  }
+</script>

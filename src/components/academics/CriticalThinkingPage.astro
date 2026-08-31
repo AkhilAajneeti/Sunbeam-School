@@ -1,0 +1,835 @@
+---
+/**
+ * CRITICAL THINKING & CREATIVITY — four sections under the shared banner.
+ *
+ * ═══ SOURCE OF TRUTH ═══════════════════════════════════════════════════════
+ *
+ *   sunbeamballia.edu.in — Principal Speak (homepage)
+ *     "think critically, acts responsibly, and dreams fearlessly"
+ *     "nurturing character, inspiring creativity"
+ *
+ *   sunbeamballia.edu.in — SUNBEAM INNOVX
+ *     "SUNBEAM INNOVX – Hackathon & Coding Contest 2026"
+ *     "a two-day celebration of young innovators solving real-world problems
+ *      through code, creativity, and collaboration"
+ *     7 schools in the preliminary round; the finals took the top 3 on cut-off
+ *     merit — Sunbeam School Ballia, Columbus International School and PM Shri
+ *     Kendriya Vidyalaya
+ *
+ *   sunbeamballia.edu.in — Event Chronicles
+ *     "our students participated in CMSMUN—an experience that went beyond the
+ *      classroom"
+ *     "Where ideas take the stage and voices find their power – TED talk begins
+ *      at Sunbeam Ballia!"
+ *
+ *   Repository, already verified for this project
+ *     Critical Thinking — a STAFF workshop, Prof. Pradeep Mishra of Lovely
+ *     Professional University, "teaching critical thinking in the classroom"
+ *     Impetus — Classes III to V; the Canva Presentation activity is visible in
+ *     the school's own photograph
+ *     MUN Lab — a room the school lists among its inquiry rooms
+ *
+ * ⚠⚠ THIS REDESIGN CHANGED THE LAYOUT AND THE TYPE SCALE. NOT ONE WORD OF COPY.
+ * Every sentence, quotation, figure, caption and alt text below is the same text
+ * this page carried before, moved into a two-column editorial frame. If a fact
+ * is not in the list above it is not on this page — see the four exclusions
+ * below, which the redesign did not relax.
+ *
+ * ⚠ FOUR NAMES IN THE ORIGINAL BRIEF ARE STILL NOT ON THIS PAGE. "Pratidhwani",
+ * "Maths Arena", a science-innovation award, and Sudoku / "Maths Around Me" /
+ * character enactment as named activities: searched the homepage, the Principal's
+ * Message, both Event Chronicles pages and School Activities, and none appears.
+ * The MUN here is CMSMUN, which the school does name.
+ *
+ * ⚠ THE CRITICAL THINKING WORKSHOP TRAINED TEACHERS, NOT STUDENTS. It is a
+ * faculty session with a named trainer and institution, and §01 says so.
+ *
+ * ⚠ THE MONASH FRAME IS A STUDENT AT AN OUTREACH SESSION, not a student's
+ * innovation being exhibited. The caption says what the photograph shows.
+ *
+ * ═══ COMPOSITION ═══════════════════════════════════════════════════════════
+ *
+ *   01 MINDSET  ivory · copy left, one portrait card right, dotted ornament
+ *   02 VOICE    paper · copy left, a vertical rail of six verbs, layered frames
+ *   03 IMPACT   ink   · the loudest band — faint IMPACT behind, a 4-step arc
+ *   04 CREATE   sand  · a three-frame collage left, "Create." right
+ *
+ * Ground rhythm ivory → paper → ink → sand, deliberately a different order from
+ * Experiential (ivory → paper → sand → ink) so the two do not scroll alike.
+ *
+ * ⚠ THE TYPE SCALE IS DELIBERATELY SMALLER THAN THE BUILD THIS REPLACED. The
+ * statement heading topped out near 90px and owned the whole viewport; it now
+ * caps at 54px, with secondary headings at 44 and body at 16.5. The page reads
+ * as composed rather than shouted, which is the whole point of an editorial
+ * layout — nothing is competing with the photography any more.
+ *
+ * ⚠ MOTION IS THE SITE'S OWN CONTRACT — data-split, data-reveal(+delay),
+ * data-mask, data-parallax(+y), data-zoom(+to) — handled by
+ * scripts/motion-gsap.ts, already gated on prefers-reduced-motion and Save-Data.
+ */
+import { Picture } from 'astro:assets';
+import { school } from '../../data/site';
+import { MARK } from './assessment/marks';
+
+/* ─── Photography — seven frames, each opened and looked at before placing ─── */
+import pTrainer from '../../assets/workshops/CriticalThinking/CriticalThinking2.jpg';
+import pDelegation from '../../assets/excursions/imun-1.jpg';
+import pCertificates from '../../assets/excursions/imun-3.jpg';
+import pMonash from '../../assets/school-event/Monash-Innovation/Monash-Innovation-01.jpg';
+import pCanva from '../../assets/school-event/Impetus—ClassesIII-V/Impetus—ClassesIII-V-02.jpg';
+import pMaking from '../../assets/School Activity in Uniform/Embriodery.jpg';
+import pRocket from '../../assets/school-activities/summer-camp/05.jpg';
+
+/**
+ * §02's six verbs, now a vertical rail rather than type scattered across the
+ * stage. Same six words; each carries a line icon from the project's own mark
+ * set, so nothing new was drawn for this page.
+ */
+const verbs = [
+  { k: 'Question', mark: 'search' },
+  { k: 'Argue', mark: 'megaphone' },
+  { k: 'Reason', mark: 'bulb' },
+  { k: 'Present', mark: 'present' },
+  { k: 'Listen', mark: 'chat' },
+  { k: 'Decide', mark: 'target' },
+] as const;
+
+/** §03's arc. Four words the INNOVX description itself supports. */
+const arc = [
+  { k: 'Idea', mark: 'bulb' },
+  { k: 'Think', mark: 'head' },
+  { k: 'Build', mark: 'layers' },
+  { k: 'Solve', mark: 'cup' },
+] as const;
+---
+
+<div class="ct">
+  {/* ═══ 01 · THE MINDSET ════════════════════════════════════════════════════
+      Copy left, one portrait card right. The statement is the page's loudest
+      idea and is stated once, at a size that leaves room for the photograph
+      beside it rather than pushing it below the fold. */}
+  <section class="ct-mind" aria-labelledby="ct-mind-h">
+    <span class="ct__grid" aria-hidden="true"></span>
+
+    <div class="u-container ct-mind__in">
+      <div class="ct-mind__copy">
+        <p class="ct__k t-label" data-reveal>Critical Thinking &amp; Creativity</p>
+
+        <h2 class="ct-mind__h" id="ct-mind-h" data-split>
+          Think critically.<br /><em>Dream fearlessly.</em>
+        </h2>
+
+        <span class="ct__rule" aria-hidden="true"></span>
+
+        <p class="ct__p" data-reveal data-reveal-delay="160">
+          The words are the Principal's. She describes a Sunbeam education as
+          <em>“nurturing character, inspiring creativity”</em>, and the student it is meant to
+          produce as one who <strong>“thinks critically, acts responsibly, and dreams
+          fearlessly.”</strong>
+        </p>
+        <p class="ct__p" data-reveal data-reveal-delay="230">
+          Beyond knowing the answer is a teachable thing, so the school treated it as one: it
+          brought in a workshop on <strong>teaching critical thinking in the classroom</strong> and
+          put its own staff through it. The training went to the teachers first.
+        </p>
+      </div>
+
+      {/* ⚠ THE DOT FIELDS ARE aria-hidden SPANS INSIDE THE FIGURE, not background
+          on the section. Anchored to the frame they travel with it at every
+          width, which is what stopped them drifting over the copy on tablet. */}
+      <figure class="ct-mind__art">
+        <span class="ct-dots ct-dots--tr" aria-hidden="true"></span>
+        <span class="ct-dots ct-dots--bl" aria-hidden="true"></span>
+
+        <span class="ct-mind__frame" data-mask data-zoom data-zoom-to="1.1">
+          <Picture
+            src={pTrainer}
+            alt={`Prof. Pradeep Mishra of Lovely Professional University speaking at the Critical Thinking workshop for teachers at ${school.name}`}
+            formats={['avif', 'webp']}
+            widths={[380, 760]}
+            sizes="(max-width: 900px) 84vw, 40vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </span>
+
+        <figcaption class="ct-mind__cap">
+          <span class="ct-mind__cap-n">Prof. Pradeep Mishra — Lovely</span>
+          <span class="ct-mind__cap-s">Professional University</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  {/* ═══ 02 · IDEAS NEED A VOICE ═════════════════════════════════════════════
+      Copy, then a vertical rail of the six verbs, then two layered frames. The
+      rail replaces the verbs-as-scattered-type composition: same six words,
+      readable as a sequence rather than as decoration. */}
+  <section class="ct-voice" aria-labelledby="ct-voice-h">
+    <div class="u-container ct-voice__in">
+      <div class="ct-voice__lede">
+        <p class="ct__k t-label" data-reveal>Ideas need a voice</p>
+        <h2 class="ct-voice__h" id="ct-voice-h" data-split>
+          A position you<br />have to <em>defend aloud.</em>
+        </h2>
+        <p class="ct__p" data-reveal data-reveal-delay="150">
+          Sunbeam's students went to <strong>CMSMUN</strong> — which the school records as
+          <em>“an experience that went beyond the classroom.”</em> A Model United Nations committee
+          is the one room where a thought is no use until it has been said out loud, to people who
+          may disagree.
+        </p>
+        <p class="ct__p" data-reveal data-reveal-delay="220">
+          The school keeps a <strong>Model United Nations Lab</strong> among its inquiry rooms, so
+          the committee is not only something the delegation meets once a year at somebody else's
+          conference.
+        </p>
+      </div>
+
+      {/* ⚠ aria-hidden, AND THAT IS CORRECT. These six words are a visual accent
+          on the argument the paragraphs already make; read aloud they would be a
+          list of bare verbs with no sentence around them. */}
+      <ol class="ct-rail" aria-hidden="true">
+        {verbs.map((v, i) => (
+          <li class="ct-rail__step" data-reveal data-reveal-delay={i * 80}>
+            <span class="ct-rail__k">{v.k}</span>
+            <span class="ct-rail__m">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[v.mark]} />
+              </svg>
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <div class="ct-voice__stage">
+        <figure class="ct-voice__a" data-mask data-zoom>
+          <Picture
+            src={pDelegation}
+            alt={`The ${school.name} delegation holding the school flag at the MU20 Model United Nations conference`}
+            formats={['avif', 'webp']}
+            widths={[460, 940]}
+            sizes="(max-width: 900px) 88vw, 40vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+
+        <figure class="ct-voice__b" data-reveal data-reveal-delay="180" data-zoom data-zoom-to="1.14">
+          <Picture
+            src={pCertificates}
+            alt={`Four delegates from ${school.name} holding their Model United Nations certificates in front of the national flags`}
+            formats={['avif', 'webp']}
+            widths={[300, 620]}
+            sizes="(max-width: 900px) 46vw, 18vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  {/* ═══ 03 · IDEAS INTO IMPACT ══════════════════════════════════════════════
+      The strongest transition on the page. IMPACT set behind the photograph at
+      poster scale, a four-step arc, and the result stated as the school
+      published it. */}
+  <section class="ct-impact" aria-labelledby="ct-impact-h">
+    <span class="ct__dots" aria-hidden="true"></span>
+    <span class="ct__grain" aria-hidden="true"></span>
+    <span class="ct-impact__word" aria-hidden="true">Impact</span>
+
+    <div class="u-container ct-impact__in">
+      <div class="ct-impact__copy">
+        <p class="ct__k ct__k--onink t-label" data-reveal>Ideas into impact</p>
+        <h2 class="ct-impact__h" id="ct-impact-h" data-split>
+          Two days, seven schools,<br /><em>one working answer.</em>
+        </h2>
+        <p class="ct__p ct__p--onink" data-reveal data-reveal-delay="150">
+          <strong>SUNBEAM INNOVX — Hackathon &amp; Coding Contest 2026</strong> is the school's own
+          description of <em>“a two-day celebration of young innovators solving real-world problems
+          through code, creativity, and collaboration.”</em>
+        </p>
+        <p class="ct__p ct__p--onink" data-reveal data-reveal-delay="220">
+          Seven schools entered the preliminary round. The finals took the top three on cut-off
+          merit — Sunbeam School Ballia, Columbus International School and PM Shri Kendriya
+          Vidyalaya.
+        </p>
+
+        <ol class="ct-arc">
+          {arc.map((a, i) => (
+            <li class="ct-arc__step" data-reveal data-reveal-delay={300 + i * 90}>
+              <span class="ct-arc__m">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[a.mark]} />
+                </svg>
+              </span>
+              <span class="ct-arc__n t-tabular">{String(i + 1).padStart(2, '0')}</span>
+              <span class="ct-arc__k">{a.k}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <figure class="ct-impact__art" data-mask data-mask-from="left" data-zoom data-zoom-to="1.1">
+        <Picture
+          src={pMonash}
+          alt={`A student of ${school.name} beside the Monash University Innovation Guarantee banner at an outreach session`}
+          formats={['avif', 'webp']}
+          widths={[420, 840]}
+          sizes="(max-width: 900px) 84vw, 34vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </section>
+
+  {/* ═══ 04 · CREATE ═════════════════════════════════════════════════════════
+      A collage left — one dominant frame, one overlapping, one cropped to a
+      circle — with "Create." and the closing line to its right. */}
+  <section class="ct-create" aria-labelledby="ct-create-h">
+    <span class="ct-spark ct-spark--a" aria-hidden="true"></span>
+    <span class="ct-spark ct-spark--b" aria-hidden="true"></span>
+
+    <div class="u-container ct-create__in">
+      <div class="ct-create__collage">
+        <figure class="ct-create__a" data-mask data-zoom>
+          <Picture
+            src={pCanva}
+            alt={`A Canva Presentation activity in progress with a class at ${school.name} during Impetus, Classes III to V`}
+            formats={['avif', 'webp']}
+            widths={[440, 900]}
+            sizes="(max-width: 900px) 88vw, 34vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <figure class="ct-create__b" data-reveal data-reveal-delay="150" data-zoom data-zoom-to="1.14">
+          <Picture
+            src={pMaking}
+            alt={`Students of ${school.name} working on embroidery together from one shared basket of thread`}
+            formats={['avif', 'webp']}
+            widths={[300, 620]}
+            sizes="(max-width: 900px) 44vw, 18vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+        <figure class="ct-create__c" data-reveal data-reveal-delay="230" data-zoom data-zoom-to="1.18">
+          <Picture
+            src={pRocket}
+            alt={`A young student of ${school.name} holding a hand-made rocket cut-out at the Star Gazing session`}
+            formats={['avif', 'webp']}
+            widths={[220, 440]}
+            sizes="(max-width: 900px) 30vw, 11vw"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+
+      <div class="ct-create__copy">
+        <p class="ct__k t-label" data-reveal>Ideas take shape</p>
+        <h2 class="ct-create__h" id="ct-create-h" data-split>Create.</h2>
+        <p class="ct__p" data-reveal data-reveal-delay="150">
+          Because ideas become powerful when students have the freedom to express them — on a
+          stage, in a presentation, or with their hands. The school's own TED Talk put it best:
+          <em>“Where ideas take the stage and voices find their power.”</em>
+        </p>
+        <span class="ct__rule ct__rule--wide" aria-hidden="true"></span>
+        <p class="ct-create__end" data-reveal data-reveal-delay="240">Think deeply. Create boldly.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .ct { position: relative; }
+
+  /* ═══ SHARED ═══════════════════════════════════════════════════════════════
+     ⚠ EVERY SECTION IS `overflow: clip`, NOT `hidden`. Each carries decoration
+     that deliberately sits outside its own box — dot fields, the IMPACT word,
+     the sparks — and `hidden` would create a scrollport that breaks sticky
+     positioning further up the document. `clip` crops without doing that. */
+  .ct-mind,
+  .ct-voice,
+  .ct-impact,
+  .ct-create {
+    position: relative;
+    overflow: clip;
+    padding-block: clamp(48px, 6.4vw, 104px);
+  }
+
+  .ct__k { color: var(--sb-violet); }
+  .ct__k--onink { color: var(--sb-orange-bright); }
+
+  /* Body caps at 16.5px. The brief asked for 16–18 and the build this replaced
+     ran to 17 at a much larger heading scale; holding the body and cutting the
+     headings is what changes the feel. */
+  .ct__p {
+    max-width: 52ch;
+    margin: clamp(12px, 1.5vw, 17px) 0 0;
+    /* ⚠⚠ 0.5vw + 9px, NOT A BARE vw. A pure-vw middle term only reaches 16.5px
+       at ~1620px wide, so on a 1440 laptop — the commonest desktop there is —
+       this body was rendering at 14.7px, under the 16px floor the brief sets and
+       squarely in the small-type problem the QA audit raised across the site. The
+       offset form hits 16.2px at 1440 and still floors at 15px on a phone. */
+    font-size: clamp(15px, 0.5vw + 9px, 16.5px);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+  }
+  .ct__p strong { font-weight: 700; color: var(--sb-charcoal); }
+  .ct__p em { font-style: italic; color: var(--sb-charcoal); }
+  .ct__p--onink { color: rgba(255, 255, 255, 0.8); }
+  .ct__p--onink strong,
+  .ct__p--onink em { color: #fff; }
+
+  .ct__rule {
+    display: block;
+    width: 52px;
+    height: 3px;
+    margin: clamp(18px, 2.2vw, 26px) 0 0;
+    border-radius: 999px;
+    background: var(--sb-violet);
+  }
+  .ct__rule--wide { width: 100%; height: 1px; background: var(--sb-border); }
+
+  /* Shared heading shape. `em` is the orange half of every statement on this
+     page, which is why it is set here once rather than per section. */
+  .ct-mind__h,
+  .ct-voice__h,
+  .ct-impact__h,
+  .ct-create__h {
+    margin: clamp(10px, 1.2vw, 15px) 0 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .ct-mind__h em,
+  .ct-voice__h em,
+  .ct-impact__h em,
+  .ct-create__h em {
+    font-style: normal;
+    color: var(--sb-violet);
+  }
+  .ct-impact__h em { color: var(--sb-orange-bright); }
+
+  /* ⚠ 54px CAP, DOWN FROM ~90. This is the single change that most alters how
+     the page reads: the statement used to fill the viewport on its own and the
+     photograph beside it had nowhere to go. */
+  .ct-mind__h { font-size: clamp(29px, 3.6vw, 54px); color: var(--sb-charcoal); }
+  .ct-voice__h { font-size: clamp(25px, 2.9vw, 42px); color: var(--sb-charcoal); }
+  .ct-impact__h { font-size: clamp(25px, 2.9vw, 42px); color: #fff; }
+  .ct-create__h {
+    font-size: clamp(36px, 4.4vw, 62px);
+    color: var(--sb-violet);
+  }
+
+  /* Every frame stretches its <picture>, not just its <img> — astro:assets emits
+     a <picture> wrapper and a rule on the img alone leaves the wrapper at its
+     intrinsic size, so the frame's radius clips nothing. */
+  .ct figure { margin: 0; }
+  .ct :global(picture) { display: block; width: 100%; height: 100%; }
+  .ct :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* Orange dot fields. Small, masked to fade at the far edge, and never over
+     text — they hang off the corners of a frame. */
+  .ct-dots {
+    position: absolute;
+    z-index: 0;
+    width: clamp(86px, 10vw, 132px);
+    aspect-ratio: 1;
+    background-image: radial-gradient(color-mix(in srgb, var(--sb-orange-bright) 62%, transparent) 1.6px, transparent 1.6px);
+    background-size: 13px 13px;
+    pointer-events: none;
+  }
+  .ct-dots--tr {
+    top: clamp(-26px, -2vw, -14px);
+    right: clamp(-30px, -2.4vw, -16px);
+    -webkit-mask-image: linear-gradient(225deg, #000 10%, transparent 78%);
+    mask-image: linear-gradient(225deg, #000 10%, transparent 78%);
+  }
+  .ct-dots--bl {
+    bottom: clamp(-8px, 1vw, 14px);
+    left: clamp(-30px, -2.4vw, -16px);
+    -webkit-mask-image: linear-gradient(45deg, #000 10%, transparent 78%);
+    mask-image: linear-gradient(45deg, #000 10%, transparent 78%);
+  }
+
+  /* ═══ 01 · MINDSET ═════════════════════════════════════════════════════════ */
+  .ct-mind { background: var(--sb-ivory); }
+  .ct__grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(27, 21, 18, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 21, 18, 0.04) 1px, transparent 1px);
+    background-size: 78px 78px;
+    -webkit-mask-image: radial-gradient(70% 60% at 20% 30%, #000 20%, transparent 78%);
+    mask-image: radial-gradient(70% 60% at 20% 30%, #000 20%, transparent 78%);
+  }
+
+  .ct-mind__in {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    gap: clamp(30px, 4.4vw, 76px);
+    align-items: center;
+  }
+
+  .ct-mind__art { position: relative; }
+  .ct-mind__frame {
+    position: relative;
+    z-index: 1;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    background: var(--sb-paper);
+    box-shadow: 0 34px 66px -34px rgba(28, 14, 8, 0.44);
+  }
+  .ct-mind__frame :global(img) { aspect-ratio: 4 / 4.4; }
+
+  .ct-mind__cap {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 2px;
+    margin: clamp(14px, 1.7vw, 20px) 0 0;
+    text-align: center;
+  }
+  .ct-mind__cap-n {
+    font-size: clamp(10.5px, 0.8vw, 12.5px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .ct-mind__cap-s {
+    font-size: clamp(10.5px, 0.8vw, 12.5px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-charcoal);
+  }
+
+  /* ═══ 02 · VOICE ═══════════════════════════════════════════════════════════ */
+  .ct-voice { background: var(--sb-paper); }
+  .ct-voice__in {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) auto minmax(0, 1.08fr);
+    gap: clamp(20px, 2.8vw, 46px);
+    align-items: center;
+  }
+
+  /* ⚠ THE RAIL IS ONE COLUMN WITH A DRAWN LINE, not six bordered rows. The line
+     is a pseudo-element on the list so it spans exactly the first icon to the
+     last regardless of how the labels wrap. */
+  .ct-rail {
+    position: relative;
+    display: grid;
+    gap: clamp(13px, 1.7vw, 22px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ct-rail::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    bottom: 14px;
+    right: calc(clamp(24px, 2.2vw, 30px) / 2);
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--sb-orange-bright) 42%, transparent) 12%,
+      color-mix(in srgb, var(--sb-orange-bright) 42%, transparent) 88%,
+      transparent
+    );
+  }
+  .ct-rail__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(8px, 1vw, 13px);
+  }
+  .ct-rail__k {
+    font-size: clamp(8.8px, 0.7vw, 10.5px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: right;
+    white-space: nowrap;
+    color: var(--sb-violet);
+  }
+  .ct-rail__m {
+    display: grid;
+    place-items: center;
+    width: clamp(24px, 2.2vw, 30px);
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, var(--sb-orange-bright) 40%, transparent);
+    border-radius: 50%;
+    background: var(--sb-paper);
+    color: var(--sb-violet);
+  }
+  .ct-rail__m svg { width: 54%; height: auto; }
+
+  .ct-voice__stage { position: relative; }
+  .ct-voice__a {
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: 0 32px 62px -34px rgba(28, 14, 8, 0.4);
+  }
+  .ct-voice__a :global(img) { aspect-ratio: 16 / 11; }
+  .ct-voice__b {
+    position: absolute;
+    right: clamp(-14px, -1vw, -6px);
+    bottom: clamp(-24px, -2vw, -14px);
+    z-index: 2;
+    width: clamp(120px, 17vw, 216px);
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    border: 4px solid var(--sb-paper);
+    box-shadow: 0 22px 44px -22px rgba(28, 14, 8, 0.46);
+  }
+  .ct-voice__b :global(img) { aspect-ratio: 4 / 3; }
+
+  /* ═══ 03 · IMPACT ══════════════════════════════════════════════════════════ */
+  .ct-impact { background: #23150f; }
+  .ct__dots {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px);
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(80% 70% at 60% 40%, #000 25%, transparent 80%);
+    mask-image: radial-gradient(80% 70% at 60% 40%, #000 25%, transparent 80%);
+  }
+  /* Grain, as an SVG data URI rather than an image request. Very low opacity —
+     it should be felt on the flat brown, not seen. */
+  .ct__grain {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.055;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .ct-impact__word {
+    position: absolute;
+    right: clamp(-18px, -1vw, 2%);
+    bottom: clamp(-10px, 1vw, 6%);
+    z-index: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(96px, 17vw, 260px);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: rgba(255, 255, 255, 0.038);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .ct-impact__in {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(30px, 4.4vw, 72px);
+    align-items: center;
+  }
+
+  .ct-arc {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(8px, 1.2vw, 16px);
+    margin: clamp(24px, 3vw, 40px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* ⚠ THE CONNECTOR IS A PSEUDO-ELEMENT ON EACH STEP EXCEPT THE LAST, drawn from
+     the icon's own row. A single line behind the row would pass through the
+     circles rather than between them. */
+  .ct-arc__step {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    gap: 7px;
+  }
+  .ct-arc__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: clamp(15px, 1.4vw, 19px);
+    left: calc(clamp(30px, 2.8vw, 38px) + 8px);
+    right: 6px;
+    height: 1px;
+    background-image: linear-gradient(to right, color-mix(in srgb, var(--sb-orange-bright) 58%, transparent) 0 4px, transparent 4px 9px);
+    background-size: 9px 1px;
+    background-repeat: repeat-x;
+  }
+  .ct-arc__m {
+    display: grid;
+    place-items: center;
+    width: clamp(30px, 2.8vw, 38px);
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, var(--sb-orange-bright) 46%, transparent);
+    border-radius: 50%;
+    color: var(--sb-orange-bright);
+  }
+  .ct-arc__m svg { width: 52%; height: auto; }
+  .ct-arc__n {
+    font-size: clamp(11px, 0.86vw, 13px);
+    font-weight: 700;
+    color: var(--sb-orange-bright);
+  }
+  .ct-arc__k {
+    font-size: clamp(8.8px, 0.7vw, 10.5px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  /* ⚠ NO WHITE PLATE AND NO HARD EDGE. The brief asks for the photograph to feel
+     part of the section rather than a card dropped on it, so it carries the
+     radius and a shadow but no border, and a warm bloom sits behind it. */
+  .ct-impact__art {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+  }
+  .ct-impact__art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(200deg, transparent 55%, rgba(35, 21, 15, 0.5));
+    pointer-events: none;
+  }
+  .ct-impact__art :global(img) { aspect-ratio: 4 / 4.6; }
+
+  /* ═══ 04 · CREATE ══════════════════════════════════════════════════════════ */
+  .ct-create { background: var(--sb-sand); }
+  .ct-create__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(34px, 5vw, 84px);
+    align-items: center;
+  }
+
+  .ct-create__collage { position: relative; padding-bottom: clamp(18px, 3vw, 34px); }
+  .ct-create__a {
+    width: min(100%, 420px);
+    overflow: hidden;
+    border-radius: var(--sb-r-3);
+    box-shadow: 0 32px 62px -34px rgba(28, 14, 8, 0.4);
+  }
+  .ct-create__a :global(img) { aspect-ratio: 4 / 3.2; }
+  .ct-create__b {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    width: clamp(120px, 17vw, 208px);
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+    border: 4px solid var(--sb-sand);
+    box-shadow: 0 22px 44px -22px rgba(28, 14, 8, 0.44);
+  }
+  .ct-create__b :global(img) { aspect-ratio: 4 / 4.6; }
+  .ct-create__c {
+    position: absolute;
+    left: clamp(6px, 2vw, 34px);
+    bottom: clamp(-14px, -0.6vw, -4px);
+    z-index: 3;
+    width: clamp(66px, 8.4vw, 106px);
+    overflow: hidden;
+    border-radius: 50%;
+    border: 4px solid var(--sb-sand);
+    box-shadow: 0 18px 34px -18px rgba(28, 14, 8, 0.5);
+  }
+  .ct-create__c :global(img) { aspect-ratio: 1; }
+
+  .ct-create__end {
+    margin: clamp(14px, 1.8vw, 20px) 0 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 20px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--sb-charcoal);
+  }
+
+  /* Sparks. Two four-point stars drawn in CSS, so no asset request and no image
+     that could fail to load. */
+  .ct-spark {
+    position: absolute;
+    z-index: 0;
+    width: clamp(14px, 1.4vw, 20px);
+    aspect-ratio: 1;
+    background: color-mix(in srgb, var(--sb-orange-bright) 44%, transparent);
+    clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+    pointer-events: none;
+  }
+  .ct-spark--a { top: 12%; right: 6%; }
+  .ct-spark--b { bottom: 16%; left: 3%; width: clamp(10px, 1vw, 15px); opacity: 0.7; }
+
+  /* ═══ RESPONSIVE ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 1023px) {
+    .ct-voice__in { grid-template-columns: minmax(0, 1fr) auto; }
+    /* The rail moves under the copy and lies down, so the frames get the full
+       width of the second column rather than a third of the row. */
+    .ct-voice__stage { grid-column: 1 / -1; }
+    .ct-rail { align-self: start; }
+  }
+
+  @media (max-width: 899px) {
+    .ct-mind__in,
+    .ct-impact__in,
+    .ct-create__in { grid-template-columns: minmax(0, 1fr); }
+    .ct-mind__art { order: -1; max-width: 420px; margin-inline: auto; }
+    .ct-impact__art { max-width: 460px; margin-inline: auto; }
+    .ct-impact__art :global(img) { aspect-ratio: 4 / 3.4; }
+    .ct-mind__frame :global(img) { aspect-ratio: 4 / 3.6; }
+    .ct__p { max-width: 62ch; }
+
+    .ct-voice__in { grid-template-columns: minmax(0, 1fr); }
+    /* ⚠ HORIZONTAL, NOT VERTICAL, ON A PHONE. Six stacked rows of one word each
+       is 300px of near-empty column; laid out as a wrapping row of chips the
+       same six words take two lines and still read in order. */
+    .ct-rail {
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      justify-content: start;
+      gap: clamp(10px, 2.4vw, 16px);
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-block: 2px;
+    }
+    .ct-rail::-webkit-scrollbar { display: none; }
+    .ct-rail::before { display: none; }
+    .ct-rail__step { grid-template-columns: auto; justify-items: center; gap: 6px; }
+    .ct-rail__k { text-align: center; order: 2; }
+    .ct-rail__m { order: 1; }
+    .ct-create__collage { max-width: 420px; }
+  }
+
+  @media (max-width: 559px) {
+    .ct-arc { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(16px, 4vw, 22px); }
+    /* The connector only ever joined a row; with two columns it would point at
+       nothing on the second. */
+    .ct-arc__step:not(:last-child)::after { display: none; }
+    .ct-create__c { display: none; }
+    .ct-spark--a { right: 3%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ct-spark { animation: none; }
+  }
+</style>

@@ -1,0 +1,1156 @@
+---
+/**
+ * CONTACT — /contact-us/
+ *
+ * ═══ WHAT THIS PAGE IS ═════════════════════════════════════════════════════
+ *
+ * Built to the reference the client supplied: eyebrow pill, oversized display
+ * heading, underline-only fields in a 2×2 grid, a consent checkbox, one
+ * full-width button, and an illustration to the right over a cloud gradient.
+ *
+ * ⚠ THIS ROUTE ALREADY HAD SEVEN INBOUND LINKS AND NO PAGE. `/contact-us/` is
+ * referenced from the footer, the drawer, StayConnected, the parents' data and
+ * the utility bar; until now every one of them landed on the generated
+ * "page coming" placeholder. Writing this file retires that placeholder
+ * automatically — pages/[...slug].astro only mints routes that have no file.
+ *
+ * ⚠ THE PALETTE IS THE REFERENCE'S, NOT THE SITE'S, ON THE CLIENT'S EXPLICIT
+ * INSTRUCTION. Indigo #4F46E5, slate body text, sky-and-amber illustration,
+ * cloud gradient. This was raised as a clash with the warm ivory/violet used on
+ * every other page and the client chose it anyway, so it is deliberate rather
+ * than drift. The masthead and footer are unchanged, so the seam is visible at
+ * the top and bottom of the page — that is the known trade.
+ *
+ * ⚠ THE FORM HAS NO BACKEND YET, AND IT DOES NOT PRETEND OTHERWISE. Client:
+ * "currently we are working on frontend, when backend is prepared then we
+ * worked on it." So every client-side behaviour is finished — validation,
+ * error text, disabled/sending/success states — and the single missing piece
+ * is the endpoint. See ENDPOINT below: set it and the form posts for real.
+ * Until then a submit runs the whole validation pass and then says plainly that
+ * delivery is not connected. It never shows a false "message sent".
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import Atmosphere from '../components/contact/Atmosphere.astro';
+import Backdrop from '../components/ui/Backdrop.astro';
+import LocationSection from '../components/contact/LocationSection.astro';
+import heroPhoto from '../assets/photos/sunbeem-1.jpg';
+import { school } from '../data/site';
+
+/**
+ * ⚠ EVERY VALUE COMES FROM data/site.ts, THE VERIFIED-FACTS FILE — nothing on
+ * this page is a number somebody typed into the markup. The client supplied the
+ * copy for these blocks and each line was checked against site.ts before use:
+ * the address, the email and both phone numbers match exactly.
+ *
+ * ⚠ THE TRANSPORT NUMBER IS DELIBERATELY ABSENT. It is real (7755005909) and it
+ * is on the transport page, but the client's brief for THIS section lists two
+ * numbers, and adding a third would be inventing the page's content rather than
+ * designing it. Trivial to add if they want it.
+ */
+/**
+ * The class bands the school groups its intake by, exactly as the client wrote
+ * them. Not derived from `school.classRange` — that string is "Nursery to
+ * Class XII", a different granularity, and splitting it here would be inventing
+ * a grouping the school has not published.
+ */
+const CLASSES = [
+  'Pre-Primary',
+  'Classes I – V',
+  'Classes VI – VIII',
+  'Classes IX – X',
+  'Classes XI – XII',
+] as const;
+
+const addressLines = [
+  `${school.address.line1},`,
+  `${school.address.city}, ${school.address.state} ${school.address.pin},`,
+  `(${school.address.country})`,
+];
+
+/**
+ * ⚠ `role` IS FOR SCREEN READERS ONLY, AND IT IS NOT DECORATION. Both lines now
+ * carry an identical handset icon, so by sight they are two numbers with no way
+ * to tell which is which — and by ear they were already just two strings of
+ * digits. The role goes into the link's accessible name so the difference is at
+ * least available to anyone navigating by link. It PREFIXES the visible number
+ * rather than replacing it: WCAG 2.5.3 requires the accessible name to contain
+ * the visible text, so "Admissions: +91 77550 05908" passes where a bare
+ * "Admissions" would fail.
+ */
+const phones = [
+  { display: school.phone.admissionsDisplay, tel: school.phone.admissions, role: 'Admissions' },
+  { display: school.phone.officeDisplay, tel: school.phone.office, role: 'School office' },
+];
+
+const socials = [
+  {
+    name: 'Facebook',
+    href: school.social.facebook,
+    path: 'M15 8h-2a1 1 0 0 0-1 1v2h3l-.4 3H12v7H9v-7H7v-3h2V9a4 4 0 0 1 4-4h2v3Z',
+  },
+  {
+    name: 'Instagram',
+    href: school.social.instagram,
+    path: 'M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Zm0 5.6a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4ZM16 4H8a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4Zm2.8 12a2.8 2.8 0 0 1-2.8 2.8H8A2.8 2.8 0 0 1 5.2 16V8A2.8 2.8 0 0 1 8 5.2h8A2.8 2.8 0 0 1 18.8 8v8Zm-2-8.6a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0Z',
+  },
+  {
+    name: 'LinkedIn',
+    href: school.social.linkedin,
+    path: 'M6.94 5.5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.2 9h3.5v11H3.2V9Zm5.8 0h3.35v1.5h.05A3.67 3.67 0 0 1 15.7 8.7c3.5 0 4.15 2.3 4.15 5.3V20h-3.5v-5.3c0-1.27-.02-2.9-1.77-2.9-1.78 0-2.05 1.38-2.05 2.8V20H9V9Z',
+  },
+] as const;
+
+---
+
+<BaseLayout
+  title={`Contact — ${school.name}`}
+  description={`Reach ${school.name} — admissions, school office and transport numbers, email, and the campus address at ${school.address.line1}, ${school.address.city}.`}
+>
+  {/* ⚠ THE SHARED BANNER, ON THE CLIENT'S INSTRUCTION — this page had a bespoke
+      one (parallax photograph, orange accent word, floating rings) and now wears
+      exactly what the other 117 pages wear: pinned photograph, centred crumbs
+      and title, the standard scrim. The page-local ContactHero is deleted rather
+      than left orphaned in the tree.
+
+      ⚠ position IS PASSED, THE REST IS DEFAULT. PageHero crops at 50% 45%; the
+      old hero held this frame at 50% 58%, which is what keeps the building —
+      rather than the sky above it — in the band. Same photograph, same focal
+      point, standard everything else. */}
+  <PageHero
+    title="Contact us"
+    standfirst="Where the school is, who to call, and a message form that reaches the office."
+    crumbs={[{ label: 'Home', href: '/' }]}
+    src={heroPhoto}
+    alt={`The main building of ${school.name} seen across its ground, with the school buses parked alongside`}
+    position="50% 58%"
+  />
+
+  {/* ⚠ THE ANCHOR IS #contact, NOT #contact-form. The <form> below already owns
+      that id, and a duplicate would make the script's querySelector("#contact-form")
+      match this DIV instead — the submit handler would never bind and the form
+      would fall through to a native page reload. */}
+  <div class="ct" id="contact">
+    <Atmosphere tone="light" dots={false} blobs={true} />
+    {/* The curved lines, moved here from the closing section the client removed
+        — same component, same geometry.
+
+        ⚠ NO `word` — THE "Talk" BEHIND THIS SECTION IS GONE on the client's
+        instruction. The component now renders the curves alone; it is not a
+        prop that was dropped by accident. */}
+    <Backdrop tone="light" />
+
+    <div class="u-container">
+      <div class="ct__head">
+        <p class="ct__eyebrow"><span class="ct__dot" aria-hidden="true"></span>Contact us</p>
+        {/* ⚠ h2, NOT h1. The banner above now owns the page's only h1
+            ("Contact us"). Two h1s on one document is the single most common
+            heading-structure fault, and a screen-reader user navigating by
+            heading would be told the page starts twice. */}
+        {/* data-split / data-reveal are the site's own motion contract
+            (scripts/motion-gsap.ts): the heading arrives word by word from
+            under a mask, the standfirst fades up behind it. Both are gated on
+            `belowFold`, so nothing above the fold ever animates in — and the
+            CSS default is visible, so with JS off the copy simply sits there. */}
+        <h2 class="ct__h1" data-split>Get in touch</h2>
+        <p class="ct__stand" data-reveal>
+          Admissions, transport, fees or a question about your child's class — send it here, or
+          call the office directly. Someone from the school will come back to you.
+        </p>
+      </div>
+
+      {/* ⚠ THE TWO CARDS ARE THE ONLY GRID ITEMS NOW. With the intro inside the
+          left column, the column was intro + form while the right was panel
+          alone — so `align-items: center` was balancing unequal things and the
+          two cards sat at different heights, one visibly above the other. Lift
+          the intro out and the grid holds two cards and nothing else, which is
+          what lets them stretch to a shared top and a shared base. */}
+      <div class="ct__grid">
+
+        {/* ⚠ novalidate IS DELIBERATE. The browser's own bubbles cannot be
+            styled, vanish on scroll, and are announced inconsistently; the
+            script below does the same checks and writes a persistent message
+            tied to each field with aria-describedby. The `required` and `type`
+            attributes stay, because they are what the script and assistive
+            tech both read. */}
+        <form class="ct__form" id="contact-form" novalidate>
+          <div class="ct__row">
+            <div class="fld">
+              <input class="fld__in" id="cf-name" name="name" type="text" required placeholder=" " autocomplete="name" />
+              <label class="fld__lb" for="cf-name">Name <span aria-hidden="true">*</span></label>
+              <p class="fld__err" id="cf-name-err" hidden></p>
+            </div>
+
+            <div class="fld">
+              <input class="fld__in" id="cf-email" name="email" type="email" required placeholder=" " autocomplete="email" />
+              <label class="fld__lb" for="cf-email">Email <span aria-hidden="true">*</span></label>
+              <p class="fld__err" id="cf-email-err" hidden></p>
+            </div>
+          </div>
+
+          <div class="ct__row">
+            <div class="fld">
+              <input class="fld__in" id="cf-subject" name="subject" type="text" placeholder=" " />
+              <label class="fld__lb" for="cf-subject">Subject</label>
+            </div>
+
+            <div class="fld">
+              <input class="fld__in" id="cf-phone" name="phone" type="tel" placeholder=" " autocomplete="tel" inputmode="tel" />
+              <label class="fld__lb" for="cf-phone">Phone number</label>
+            </div>
+          </div>
+
+          <div class="ct__row">
+            <div class="fld">
+              <input class="fld__in" id="cf-city" name="city" type="text" placeholder=" " autocomplete="address-level2" />
+              <label class="fld__lb" for="cf-city">City</label>
+            </div>
+
+            {/* ⚠ THE LABEL SITS UP PERMANENTLY ON THE SELECT, unlike its
+                neighbours. The float-label trick the text inputs use keys off
+                `:placeholder-shown`, and a <select> has no placeholder to show —
+                it always has a selected option. So the label stays raised and
+                the first option carries the prompt. A select that looks slightly
+                different from a text field is honest; a label that overlaps the
+                chosen value is not. */}
+            <div class="fld fld--sel">
+              <select class="fld__in fld__in--sel" id="cf-class" name="class">
+                <option value="">Select a class</option>
+                {CLASSES.map((c) => <option value={c}>{c}</option>)}
+              </select>
+              <label class="fld__lb fld__lb--up" for="cf-class">Class</label>
+            </div>
+          </div>
+
+          <div class="ct__consent">
+            <input class="ct__box" id="cf-terms" name="terms" type="checkbox" required />
+            <label class="ct__terms" for="cf-terms">I accept the privacy and terms.</label>
+          </div>
+          <p class="fld__err ct__err--consent" id="cf-terms-err" hidden></p>
+
+          <button class="ct__send" type="submit">Send Message</button>
+
+          {/* role="status" so the outcome is announced without stealing focus.
+              It is in the DOM from the start — a live region inserted at the
+              moment it gains text is frequently missed by screen readers. */}
+          <p class="ct__status" id="cf-status" role="status" aria-live="polite"></p>
+        </form>
+
+      {/* ═══ THE ADDRESS PANEL ═══════════════════════════════════════════════
+          ONE panel, three rows — not three cards.
+
+          ⚠ THE FIRST BUILD USED THREE SEPARATE CARDS AND THE CLIENT ASKED FOR
+          ONE. They were right: three white boxes with three shadows against a
+          form that has none is three competing objects for what is a single
+          idea — how to reach the school. Rows inside one panel keep the three
+          groupings legible while reading as one block.
+
+          "Get directions" is gone too. The map immediately below IS the
+          directions, so the link was sending a reader away from the page to see
+          the thing already at the foot of it. */}
+      <div class="panel">
+          <div class="prow">
+            <span class="prow__ico" aria-hidden="true">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                <circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="1.8" />
+              </svg>
+            </span>
+            <div class="prow__body">
+              <h3 class="prow__h">Address</h3>
+              {/* <address> is italic by default in every browser, which reads as
+                  an aside rather than as the thing the page is for. */}
+              <address class="prow__addr">
+                {addressLines.map((l) => <span>{l}</span>)}
+              </address>
+              {/* ⚠ THE ADMISSIONS NUMBER USED TO SIT HERE TOO, AND IT WAS THE
+                  SAME NUMBER as the first line of the row below — one fact
+                  printed twice, three inches apart, under two different
+                  headings. Removed on the client's instruction: every way of
+                  reaching a person is now in "Contact details" and this row is
+                  the postal address and nothing else. */}
+            </div>
+          </div>
+
+          <div class="prow">
+            <span class="prow__ico" aria-hidden="true">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5.5" width="18" height="13" rx="2.4" stroke="currentColor" stroke-width="1.8" />
+                <path d="m4 7 8 5.6L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            {/* ⚠ EVERY LINE CARRIES ITS OWN ICON NOW, and they are aria-hidden
+                to a one. The glyph says "this is an email address" / "this is a
+                phone number" at a glance, which is the whole point — but the
+                href already says exactly that to assistive tech (`mailto:` vs
+                `tel:`), so announcing the icon as well would be the same fact
+                read out twice per line. */}
+            <div class="prow__body">
+              <h3 class="prow__h">Contact details</h3>
+
+              <a class="prow__v prow__v--mail" href={`mailto:${school.email}`}>
+                <svg class="prow__vico" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3" y="5.5" width="18" height="13" rx="2.4" stroke="currentColor" stroke-width="1.8" />
+                  <path d="m4 7 8 5.6L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                <span>{school.email}</span>
+              </a>
+
+              {
+                phones.map((p) => (
+                  <a class="prow__v" href={`tel:${p.tel}`} aria-label={`${p.role}: ${p.display}`}>
+                    <svg class="prow__vico" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M7.6 3.5h-2A2.1 2.1 0 0 0 3.5 5.8C3.5 13.7 10.3 20.5 18.2 20.5a2.1 2.1 0 0 0 2.3-2.1v-2a1.3 1.3 0 0 0-1-1.3l-3-.7a1.3 1.3 0 0 0-1.3.5l-.9 1.2a12.6 12.6 0 0 1-5.4-5.4l1.2-.9a1.3 1.3 0 0 0 .5-1.3l-.7-3a1.3 1.3 0 0 0-1.3-1Z"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    <span>{p.display}</span>
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="prow">
+            <span class="prow__ico" aria-hidden="true">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <circle cx="18" cy="5.6" r="2.9" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="6" cy="12" r="2.9" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="18" cy="18.4" r="2.9" stroke="currentColor" stroke-width="1.8" />
+                <path d="m8.6 10.6 6.8-3.6m-6.8 6.4 6.8 3.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            <div class="prow__body">
+              <h3 class="prow__h">Join us on social</h3>
+              <ul class="soc">
+                {
+                  socials.map((s) => (
+                    <li>
+                      {/* rel is set because target="_blank" without it hands the
+                          new tab a window.opener reference to this page. */}
+                      <a class="soc__a" href={s.href} target="_blank" rel="noopener noreferrer">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d={s.path} />
+                        </svg>
+                        <span class="u-visually-hidden">{s.name} (opens in a new tab)</span>
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* ⚠ THE CLOSING WAVE IS GONE, AND IT WAS NEVER STYLED. A two-layer white
+        SVG sat here as the section's send-off into the map — but no rule for
+        `.ct__clouds` was ever written, so it was a full-width block in normal
+        flow: a white band across a cream section, with the section's own
+        120–190px of foot padding stacked underneath it and then the map
+        section's top padding under that. That is the empty stretch the client
+        pointed at, and there was nothing to salvage — the shape was white on
+        cream, carrying one pale ground into another pale ground. The section now
+        ends on its own padding and meets the map directly. */}
+  </div>
+
+  {/* ═══ THE MAP ═══════════════════════════════════════════════════════════
+      Full-bleed, below everything, because a map is a destination rather than
+      a detail — it is what a parent opens on the way to the school.
+
+      ⚠ THE FRAME IS BUILT BY AN IntersectionObserver, NOT SHIPPED IN THE HTML,
+      AND `loading="lazy"` WAS NOT ENOUGH. A Google Maps iframe pulls several
+      hundred kilobytes and sets third-party cookies the moment it is parsed, so
+      the first build used `loading="lazy"` and this comment claimed a visitor
+      who never scrolls here is never contacted by Google.
+
+      MEASURED, THAT WAS FALSE: two requests to google.com/maps fired at rest,
+      before any scrolling at all. Chrome's lazy threshold is roughly 1250px on
+      a fast connection, and this map sits about one viewport down — well inside
+      it. The attribute is a hint about when to fetch, never a guarantee that
+      nothing is fetched.
+
+      Creating the iframe from script when the section actually approaches the
+      viewport is the only version that keeps the promise: zero contact with
+      Google until the reader is nearly looking at the map. Same reasoning, and
+      nearly the same code, as about/VideoFeature.astro.
+
+      ⚠ THE IFRAME GETS A title WHEN IT IS BUILT. Without one a screen reader
+      announces it as "frame", with no way to know what is inside.
+
+      ⚠ <noscript> CARRIES A REAL LINK. With scripting off there is no map, so
+      the address and a Google Maps link take its place rather than a dead grey
+      band. */}
+  <LocationSection />
+</BaseLayout>
+
+<style>
+  /* ═══ GROUND ══════════════════════════════════════════════════════════════
+     The cream the whole page now sits on, with the shared Atmosphere layer
+     supplying grain and blobs on top of it. */
+  /* ⚠ position + z-index + AN OPAQUE GROUND ARE THE THREE HALVES OF ONE THING,
+     and with the shared PageHero back they are load-bearing again. That banner
+     is `position: sticky` and stays pinned while this panel rides up over it;
+     without a positioned, opaque block above it in the stack the photograph
+     paints straight through this section. It is the same contract `.u-page-panel`
+     carries on every other page — spelled out here because this section also
+     needs its own stacking context for the Backdrop layer beneath its content. */
+  .ct {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    /* ⚠ THE FOOT WAS clamp(120px, 14vw, 190px), SIZED FOR A WAVE THAT IS GONE.
+       That padding existed to clear the closing SVG; with the SVG removed it was
+       190px of bare cream between the panel and the map. It now matches the head
+       of the section, so the seam reads as an ordinary section break. */
+    padding-block: clamp(40px, 6vw, 84px);
+    /* ⚠ ONE FLAT WARM GROUND, replacing the blue wash the page was built on.
+       #FBF7F4 is the client's choice and it pulls this page back toward the
+       ivory used everywhere else on the site — so the seam at the masthead and
+       footer that was flagged when the indigo reference was chosen is now much
+       narrower. Everything that was tuned against the old blue ground (the
+       colour field below, the cursor pool, the field rules) moves with it. */
+    background: #fbf7f4;
+  }
+
+  /* The intro sits above the grid now, so it spans the full measure and the
+     grid holds nothing but the two cards. */
+  .ct__head {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    margin-bottom: clamp(28px, 3.6vw, 46px);
+    text-align: center;
+  }
+
+  .ct__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(24px, 3vw, 40px);
+    /* ⚠ stretch, NOT center. Both children are now cards of their own, so they
+       take a shared top AND a shared base — which is the whole point of moving
+       the intro out. `center` was the right answer only while the two columns
+       held different kinds of thing. */
+    align-items: stretch;
+  }
+
+  /* ═══ COPY ════════════════════════════════════════════════════════════════ */
+  .ct__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    background: var(--sb-violet-wash);
+    /* ⚠ THE DARK STEP, NOT THE BRAND ORANGE. These labels are 11–12px uppercase,
+     which WCAG counts as small text at 4.5:1 — and #c93c0a measures 4.48 on the
+     pill wash and 4.35 on the sand ground. Both fail. --sb-violet-dark is the
+     same hue two steps down and clears at 6.24 and 6.07. The decorative dot
+     keeps the brighter brand orange; only the glyphs move. */
+    color: var(--sb-violet-dark);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ct__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--sb-violet);
+  }
+
+  .ct__h1 {
+    margin-top: clamp(16px, 2vw, 22px);
+    font-family: var(--sb-font-display);
+    font-size: clamp(38px, 5.4vw, 62px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: #0f172a;
+  }
+
+  .ct__stand {
+    max-width: 100%;
+    margin-top: clamp(14px, 1.8vw, 20px);
+    font-size: clamp(15px, 1.15vw, 17px);
+    line-height: 1.72;
+    /* 4.76:1 on the palest part of the wash — measured, not eyeballed. */
+    color: #566476;
+    text-align: center;
+  }
+
+  /* ═══ FIELDS ══════════════════════════════════════════════════════════════
+     Underline-only, as the reference draws them.
+
+     ⚠ THE LABEL IS A REAL <label>, NOT A PLACEHOLDER. The reference shows the
+     field name sitting inside the box, which is normally done with `placeholder`
+     — and that is a well-known failure: the name disappears the moment typing
+     starts, so anyone interrupted mid-form cannot tell what a filled field was
+     for, and several screen readers never announce it at all. Here the label
+     starts in the same position and RISES on focus or once the field has
+     content, which looks the same at rest and keeps the name on screen.
+
+     The empty `placeholder=" "` in the markup is what makes `:placeholder-shown`
+     usable as the "is this field empty" test in pure CSS. */
+  /* No top margin — the intro above the grid carries the separation now. */
+  .ct__form {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(22px, 2.6vw, 30px);
+  }
+
+  /* Pushes the consent row and the button to the foot of a stretched card
+     instead of leaving the gap under them. */
+  /* Only the panel needs this — its rows run edge to edge and have to be
+     clipped by the radius. The form's own padding keeps it clear. */
+  .panel { overflow: hidden; }
+
+  .ct__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(16px, 2vw, 26px);
+  }
+
+  .fld {
+    position: relative;
+    padding-top: 18px;
+    margin-bottom: clamp(10px, 1.4vw, 16px);
+  }
+
+  .fld__in {
+    display: block;
+    width: 100%;
+    padding: 6px 2px 10px;
+    border: 0;
+    border-bottom: 1px solid #cbd5e1;
+    border-radius: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 15px;
+    color: #0f172a;
+    transition: border-color 180ms ease;
+  }
+
+  .fld__lb {
+    position: absolute;
+    top: 24px;
+    left: 2px;
+    font-size: 15px;
+    color: #566476;
+    pointer-events: none;
+    transition: top 170ms ease, font-size 170ms ease, color 170ms ease;
+  }
+
+  .fld__in:focus + .fld__lb,
+  .fld__in:not(:placeholder-shown) + .fld__lb {
+    top: 0;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .fld__in:focus {
+    outline: none;
+    border-bottom-color: var(--sb-violet);
+    border-bottom-width: 2px;
+    padding-bottom: 9px; /* hold the baseline as the rule thickens */
+  }
+
+  /* ⚠ A VISIBLE FOCUS RING FOR KEYBOARD USERS, on top of the coloured rule.
+     The rule alone is a 1px colour change — it reads as decoration, and against
+     the pale ground it is nowhere near a 3:1 non-text contrast. */
+  .fld__in:focus-visible {
+    outline: 2px solid var(--sb-violet);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  .fld__in[aria-invalid='true'] { border-bottom-color: #dc2626; }
+
+  /* ═══ THE SELECT ══════════════════════════════════════════════════════════
+     `appearance: none` strips the platform control so it can carry the same
+     underline as its neighbours; the chevron is drawn back on by the wrapper.
+     Height is matched to a text input rather than left to the platform, or the
+     row sits a few pixels out of line on Windows. */
+  .fld--sel { position: relative; }
+
+  /* ⚠ NO FIXED HEIGHT. Pinning it to 37px left the select 5px shorter than the
+     City input beside it and the two underlines no longer lined up. It already
+     inherits `.fld__in`'s padding; matching the line-height is all it needs, and
+     the row then measures identically whatever the platform does with the
+     control. */
+  .fld__in--sel {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 26px;
+    line-height: 1.6;
+    cursor: pointer;
+  }
+
+  /* ⚠ THE CHEVRON IS pointer-events: none. Drawn over the control, it would
+     otherwise swallow the click on the one part of the field a reader is most
+     likely to aim at. */
+  .fld--sel::after {
+    content: '';
+    position: absolute;
+    right: 4px;
+    bottom: 18px;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid #566476;
+    border-bottom: 2px solid #566476;
+    transform: rotate(45deg);
+    pointer-events: none;
+    transition: border-color 180ms ease;
+  }
+
+  .fld--sel:focus-within::after { border-color: var(--sb-violet); }
+
+  /* The permanently-raised label, matching the risen state of the text fields
+     exactly so the row reads as one set. */
+  .fld__lb--up {
+    top: 0;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .fld__err {
+    margin-top: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #dc2626; /* 4.83:1 on #f8fafc */
+  }
+
+  .fld__err[hidden] { display: none; }
+
+  /* ═══ CONSENT ═════════════════════════════════════════════════════════════ */
+  /* ⚠ margin-top: auto, AND IT HAS TO LIVE HERE. It was first written up beside
+     the .ct__form rule, where this later declaration simply overrode it and the
+     button stayed floating mid-card with a block of empty ground beneath it.
+     In a stretched flex column, auto is what pushes the consent row, the button
+     and the status line down to the foot. */
+  .ct__consent {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-top: auto;
+    padding-top: clamp(14px, 2vw, 22px);
+  }
+
+  /* 20px box in a 24px hit area — SC 2.5.8 wants 24×24, and a 20px tickbox on
+     a phone is a miss waiting to happen. The label is clickable too. */
+  .ct__box {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    accent-color: var(--sb-violet);
+    cursor: pointer;
+  }
+
+  .ct__box:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; }
+
+  .ct__terms {
+    font-size: 14.5px;
+    color: #566476;
+    cursor: pointer;
+  }
+
+  .ct__err--consent { margin-left: 33px; }
+
+  /* ═══ BUTTON ══════════════════════════════════════════════════════════════ */
+  .ct__send {
+    display: block;
+    width: 100%;
+    margin-top: clamp(18px, 2.2vw, 24px);
+    padding: 17px 24px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--sb-violet);
+    color: #fff; /* 6.5:1 */
+    font-family: inherit;
+    font-size: 15.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .ct__send:hover { background: var(--sb-violet-dark); }
+  .ct__send:focus-visible { outline: 2px solid var(--sb-violet-deep); outline-offset: 3px; }
+  .ct__send:active { transform: translateY(1px); }
+
+  .ct__send[disabled] { opacity: 0.62; cursor: progress; }
+
+  .ct__status {
+    min-height: 1.2em;
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .ct__status[data-tone='bad'] { color: #dc2626; }
+  .ct__status[data-tone='good'] { color: #15803d; }
+
+  /* ⚠ THE PANEL IS A FLEX COLUMN AND ITS ROWS SHARE THE HEIGHT. Stretched to
+     match the form, a panel whose rows sit at their natural height leaves a
+     block of empty card under the social row — which looks like the layout
+     failed rather than like a decision. Giving each row an equal share spreads
+     the three groups down the card and the base lands where the form's does. */
+  .panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .prow {
+    flex: 1 1 0;
+    align-content: center;
+  }
+
+  /* ═══ GLASS ══════════════════════════════════════════════════════════════
+     ⚠ GLASS NEEDS SOMETHING BEHIND IT. `backdrop-filter` blurs whatever is
+     painted underneath — over the flat pale wash this panel sat on, a blur of
+     an almost-even colour is an almost-even colour, and the effect would have
+     been invisible. These two soft colour fields are what the blur actually
+     bends; they sit under the right-hand column and nowhere near the form's
+     text, so nothing on the page loses contrast to them.
+
+     They are `aria-hidden` by construction — pseudo-elements are never in the
+     accessibility tree. */
+  /* ⚠ THE STANDING COLOUR FIELD IS GONE — the burst is hover-only now.
+     A soft disc sat permanently at the top-right, ahead of the "Get in touch"
+     block, and on a flat cream ground it read as a smudge rather than as light.
+     Removed on the client's instruction.
+
+     The consequence, stated plainly: `backdrop-filter` now has an even colour
+     to blur, and an even colour blurred is the same even colour — so the cards
+     no longer show a tint at rest. They keep their lit edge and their shadow,
+     and the glass only becomes visible under the pointer, which is where the
+     client wants it. */
+
+  /* ⚠ ONE RULE FOR BOTH CARDS, NOT TWO COPIES. The form used to sit bare on
+     the wash beside a glass panel, which made one column look designed and the
+     other look unfinished — and it is the FORM that the page is for. Sharing
+     the selector means the two can never drift apart in radius, alpha, blur or
+     shadow.
+
+     Where there is colour behind (the right-hand column) the tint shows; where
+     there is not (the left) it reads as clean white. Same construction, one
+     material across the section. */
+  .panel,
+  .ct__form {
+    position: relative;
+    z-index: 1;
+    border-radius: 22px;
+
+    /* ⚠ 0.62 IS THE FLOOR, NOT A TASTE CALL. Glassmorphism is usually written
+       at 0.15–0.35 alpha, and at that value the indigo field behind shows
+       through hard enough to drag the body copy under 4.5:1 — measured on the
+       rendered pixels, not on the declared colours. 0.62 keeps the blurred
+       colour visible as a tint while every line of text stays legible. */
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+
+    /* The lit top edge is what actually sells glass: a bright hairline where
+       the light catches, fading to nothing at the foot. A flat 1px border round
+       all four sides reads as a card with a border. */
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.85) inset,
+      0 8px 32px rgba(31, 38, 135, 0.14),
+      0 22px 48px -30px rgba(30, 58, 138, 0.42);
+  }
+
+  /* ⚠ THE OPAQUE FALLBACK IS REQUIRED, NOT OPTIONAL. Without backdrop-filter a
+     0.62-alpha panel is simply a washed-out box with the page showing through
+     it — the blur is the only thing that made the translucency legible. Where
+     the property is unsupported the panel goes solid and keeps its border. */
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .panel,
+    .ct__form {
+      background: #fff;
+      border-color: var(--sb-border);
+    }
+  }
+
+  /* ⚠ THE ROWS ARE A TWO-COLUMN GRID, NOT ICON-ABOVE-HEADING. With the icon in
+     its own column every heading, address line and number starts on one
+     vertical rule down the whole panel — which is what makes three groupings
+     read as one object rather than three stacked cards wearing a shared
+     border. */
+  .prow {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: clamp(14px, 1.6vw, 18px);
+    padding: clamp(20px, 2.4vw, 26px) clamp(20px, 2.4vw, 28px);
+  }
+
+  /* A solid hairline on glass reads as a seam between two cards; a white one
+     reads as a light break in a single sheet. */
+  .prow + .prow { border-top: 1px solid rgba(255, 255, 255, 0.9); }
+
+  .prow__ico {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: color-mix(in srgb, var(--sb-violet-wash) 90%, transparent);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    color: var(--sb-violet);
+  }
+
+  .prow__body { min-width: 0; }
+
+  .prow__h {
+    font-family: var(--sb-font-display);
+    font-size: clamp(16px, 1.3vw, 18.5px);
+    font-weight: 700;
+    letter-spacing: -0.018em;
+    line-height: 1.25;
+    color: #0f172a;
+  }
+
+  .prow__addr {
+    display: grid;
+    gap: 2px;
+    margin-top: 9px;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #566476;
+  }
+
+  /* Each contact is its own line and its own 24px target — two numbers on one
+     line read as one long number, and a phone link crammed beside another is a
+     mis-tap waiting to happen. */
+  /* ⚠ flex, NOT block — the line now holds an icon and a label. `fit-content`
+     still keeps the hit area to the width of the content rather than the full
+     column, so the whole row is not a live link. */
+  .prow__v {
+    display: flex;
+    /* ⚠ start, NOT center. The email wraps to two lines on a narrow panel, and
+       centred against a two-line label the icon floats into the gap between
+       them. Anchored to the top it stays on the first line, which is where the
+       eye reads it. */
+    align-items: start;
+    gap: 9px;
+    width: fit-content;
+    min-height: 24px;
+    margin-top: 9px;
+    font-size: 15.5px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--sb-violet);
+    text-decoration: none;
+  }
+
+  /* Optically centred on the first line: (15.5 × 1.45 − 16) ÷ 2 ≈ 3px. */
+  .prow__vico {
+    flex: 0 0 auto;
+    margin-top: 3px;
+  }
+
+  /* An email address has no spaces, so on a narrow panel it would push the
+     layout wide rather than wrap. */
+  /* ⚠ min-width: 0 ON THE LABEL. A flex item will not shrink below its content's
+     intrinsic width by default, and an unbroken email address makes that width
+     the whole address — so `overflow-wrap` never gets the chance to act and the
+     panel is pushed wide instead. */
+  .prow__v > span { min-width: 0; }
+  .prow__v--mail { overflow-wrap: anywhere; }
+
+  /* ⚠ THE UNDERLINE IS ON THE LABEL, NOT ON THE LINK. `.prow__v` is a flex
+     container now, and a text-decoration set on one is not reliably propagated
+     into its flex items — the rule looked correct and drew nothing. */
+  .prow__v:hover > span { text-decoration: underline; }
+  .prow__v:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; border-radius: 4px; }
+
+  /* ═══ SOCIAL ══════════════════════════════════════════════════════════════ */
+  /* ⚠ ONE `margin`, NOT `margin-top` FOLLOWED BY `margin: 0`. Written in that
+     order the shorthand silently wipes the longhand set two lines above it. */
+  /* The flip needs a perspective ancestor or rotateY is a flat squash. */
+  .soc {
+    perspective: 620px;
+    display: flex;
+    gap: 10px;
+    margin: 13px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* 46px, comfortably past the 24×24 floor — these are the only controls in
+     this column and they are commonly tapped on a phone. */
+  .soc__a {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--sb-violet-wash) 92%, transparent);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    color: var(--sb-violet-dark); /* 6.8:1 on the chip */
+    transform-style: preserve-3d;
+    /* ⚠ AN EXPLICIT rotateY(0deg) AT REST, NOT `transform: none`. Interpolating
+       `none` → `rotateY(360deg)` makes the browser fall back to MATRIX
+       interpolation, and the matrix for a full turn is the identity matrix — so
+       it animates from identity to identity and nothing moves at all. Measured:
+       computed transform stayed `none` right through the hover. With both ends
+       written as the same function the angle itself interpolates and the icon
+       actually turns. */
+    transform: rotateY(0deg);
+    transition:
+      transform 620ms cubic-bezier(0.22, 0.68, 0.26, 1),
+      background 200ms ease,
+      color 200ms ease;
+  }
+
+  /* ⚠ A FULL 360, NOT 180. Half a turn leaves the glyph mirrored — an "f" facing
+     backwards — which reads as a rendering fault rather than a flip. A whole
+     turn lands where it started and still reads as the coin-flip that was
+     asked for. Focus gets the same treatment so it is not a mouse-only cue. */
+  .soc__a:hover,
+  .soc__a:focus-visible {
+    transform: rotateY(360deg);
+    background: var(--sb-violet);
+    color: #fff;
+  }
+
+  .soc__a:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; }
+
+  /* ⚠ NEITHER CARD HAS A HOVER LIGHT ANY MORE, AND THAT IS THE FINISHED STATE.
+     There were two in succession — a beige pool that tracked the cursor, then
+     BurstCard's warm bloom in its place — and the client has removed both. The
+     cards are glass with a lit top edge and a shadow, and they do not respond to
+     the pointer at all.
+
+     What went with it: the ::before layer on `.panel` / `.ct__form`, the
+     `--mx`/`--my` custom properties, and the pointermove/pointerleave listeners
+     at the foot of this file. Nothing else read those properties, so there is no
+     dead code left behind — if a hover light is ever wanted back, it is a new
+     pseudo-element plus the listener, not a flag to flip. */
+
+  /* ═══ LAYOUT ══════════════════════════════════════════════════════════════ */
+  @media (min-width: 700px) {
+    .ct__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  }
+
+  @media (min-width: 1000px) {
+    .ct__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+      gap: clamp(48px, 6vw, 96px);
+    }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fld__in,
+    .fld__lb,
+    .soc__a,
+    .ct__send { transition-duration: 1ms; }
+    /* A 360° spin is exactly the kind of motion this setting exists to stop.
+       The colour change alone still confirms the hover. */
+    .soc__a:hover,
+    .soc__a:focus-visible { transform: none; }
+    .ct__send:active { transform: none; }
+  }
+</style>
+
+<script>
+  /* THE MAP — built only when the reader nearly reaches it. See the note beside
+     the markup for why `loading="lazy"` was not enough. */
+  {
+    const slot = document.querySelector<HTMLElement>('[data-map-src]');
+
+    if (slot) {
+      const build = () => {
+        const frame = document.createElement('iframe');
+        frame.src = slot.dataset.mapSrc ?? '';
+        frame.title = slot.dataset.mapTitle ?? 'Map';
+        frame.loading = 'lazy';
+        frame.referrerPolicy = 'no-referrer-when-downgrade';
+        frame.allowFullscreen = true;
+        slot.replaceChildren(frame);
+      };
+
+      if (!('IntersectionObserver' in window)) {
+        /* No observer — build it rather than leave an empty band. */
+        build();
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            if (!entries.some((e) => e.isIntersecting)) return;
+            io.disconnect();
+            build();
+          },
+          /* A little ahead of the viewport, so the tiles are painted by the
+             time the band is actually on screen. Small enough that a reader who
+             stops at the form never triggers it. */
+          { rootMargin: '150px' },
+        );
+        io.observe(slot);
+      }
+    }
+  }
+
+  /**
+   * ⚠ EVERY SYMBOL IS INSIDE THE BLOCK. Astro concatenates component scripts
+   * into one page bundle, so a bare `const form` here would collide with any
+   * other component's `form` on the same page.
+   */
+  {
+    /**
+     * ═══ THE ONE LINE THAT TURNS THIS FORM ON ═══════════════════════════════
+     *
+     * Paste the POST endpoint here — a Web3Forms/Formspree URL, or the school's
+     * own handler once the backend exists. Everything else is already written:
+     * validation, per-field errors, the sending state, success and failure.
+     *
+     * While it is empty the form deliberately REFUSES to claim it sent
+     * anything. A contact form on a school site that silently swallows an
+     * admissions enquiry is worse than no form at all, so the honest failure is
+     * the default and it takes one edit to remove.
+     */
+    const ENDPOINT = '';
+
+    const form = document.querySelector<HTMLFormElement>('#contact-form');
+    const status = document.querySelector<HTMLElement>('#cf-status');
+
+    if (form && status) {
+      const say = (msg: string, tone: 'good' | 'bad' | '') => {
+        status.textContent = msg;
+        if (tone) status.dataset.tone = tone;
+        else delete status.dataset.tone;
+      };
+
+      /** Field id → the message shown when it fails, and the test it must pass. */
+      const RULES: { id: string; msg: string; ok: (v: string) => boolean }[] = [
+        { id: 'cf-name', msg: 'Please tell us your name.', ok: (v) => v.trim().length > 0 },
+        {
+          id: 'cf-email',
+          msg: 'Please enter an email address we can reply to.',
+          /* Deliberately loose. Anything stricter rejects real addresses —
+             plus-tags, new TLDs, non-Latin domains — and the only reliable test
+             of an address is sending to it. */
+          ok: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+        },
+      ];
+
+      const setError = (id: string, msg: string | null) => {
+        const input = document.querySelector<HTMLInputElement>(`#${id}`);
+        const err = document.querySelector<HTMLElement>(`#${id}-err`);
+        if (!input || !err) return;
+        if (msg) {
+          err.textContent = msg;
+          err.hidden = false;
+          input.setAttribute('aria-invalid', 'true');
+          input.setAttribute('aria-describedby', `${id}-err`);
+        } else {
+          err.hidden = true;
+          input.removeAttribute('aria-invalid');
+          input.removeAttribute('aria-describedby');
+        }
+      };
+
+      /* Clear a field's error as soon as it is fixed — leaving red text under a
+         field the reader has already corrected is its own small insult. */
+      for (const r of RULES) {
+        const el = document.querySelector<HTMLInputElement>(`#${r.id}`);
+        el?.addEventListener('input', () => {
+          if (el.getAttribute('aria-invalid') === 'true' && r.ok(el.value)) setError(r.id, null);
+        });
+      }
+
+      const terms = document.querySelector<HTMLInputElement>('#cf-terms');
+      terms?.addEventListener('change', () => {
+        if (terms.checked) {
+          const e = document.querySelector<HTMLElement>('#cf-terms-err');
+          if (e) e.hidden = true;
+        }
+      });
+
+      /* ⚠ THE POINTER-TRACKING BLOCK THAT USED TO SIT HERE IS DELETED, not
+         disabled. It wrote `--mx`/`--my` onto `.panel` and `.ct__form` for the
+         hover light, and the client has removed that light — so the two
+         pointermove/pointerleave listeners had nothing left to feed. Leaving
+         them behind would mean a listener firing on every mouse move over the
+         form for no rendered effect. See the note in the stylesheet. */
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        say('', '');
+
+        let firstBad: HTMLElement | null = null;
+
+        for (const r of RULES) {
+          const el = document.querySelector<HTMLInputElement>(`#${r.id}`);
+          if (!el) continue;
+          const good = r.ok(el.value);
+          setError(r.id, good ? null : r.msg);
+          if (!good && !firstBad) firstBad = el;
+        }
+
+        const termsErr = document.querySelector<HTMLElement>('#cf-terms-err');
+        if (terms && termsErr) {
+          const good = terms.checked;
+          termsErr.textContent = good ? '' : 'Please accept the privacy and terms to continue.';
+          termsErr.hidden = good;
+          if (!good && !firstBad) firstBad = terms;
+        }
+
+        if (firstBad) {
+          /* Move focus to the first problem rather than only colouring it —
+             otherwise a keyboard user is told something is wrong and left at
+             the bottom of the form with no way to find it. */
+          firstBad.focus();
+          return;
+        }
+
+        if (!ENDPOINT) {
+          say('This form is not connected to the school’s inbox yet. Please call the office on ' + '+91 77550 05905' + ' meanwhile.', 'bad');
+          return;
+        }
+
+        const btn = form.querySelector<HTMLButtonElement>('.ct__send');
+        const label = btn?.textContent ?? 'Send Message';
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Sending…';
+        }
+        say('', '');
+
+        try {
+          const res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: new FormData(form),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          form.reset();
+          say('Thank you — your message has reached the school. We will reply soon.', 'good');
+        } catch {
+          say('Sorry, that did not send. Please try again, or call the office on +91 77550 05905.', 'bad');
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = label;
+          }
+        }
+      });
+    }
+  }
+</script>

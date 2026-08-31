@@ -1,0 +1,168 @@
+---
+/**
+ * PARENT PARTNERSHIP · WORKSHOPS & WEBINARS.
+ *
+ * ⚠ BUILT ON THE NEWS & EVENTS WORKSHOPS DESIGN, ON THE CLIENT'S INSTRUCTION —
+ * the same PageHero, SectionRail, IndexIntro and CardGrid, the same groups, the
+ * same counted figures. One page's layout, two entry points into it.
+ *
+ * ⚠⚠ AND IT SAYS WHO THE SESSIONS ARE FOR, IN THE HEADING, BEFORE THE FIRST
+ * CARD. This is a PARENT page showing STAFF training. A parent who lands here
+ * and sees fifteen workshop cards will assume they may attend unless told
+ * otherwise, so the framing is not a footnote here — it is the headline, the
+ * standfirst and a closing note. Get that wrong and the page invents a parent
+ * programme by implication rather than by sentence.
+ *
+ * ⚠⚠ WHAT THIS PAGE STILL CORRECTS. data/academics.ts `parents.workshops.cards`
+ * describes SIX parent workshops — "Digital safety at home", "Choosing a
+ * stream", "Supporting learning at home", "The exam years", "What we teach, and
+ * why", "Growing up, and wellbeing" — each with a format and topic chips. None
+ * of the six appears anywhere in the school's published record; they were
+ * written for this site. They are still live on the parent-partnership overview
+ * and should be removed there too.
+ *
+ * ⚠ THE CARDS OPEN THE EXISTING DETAIL PAGES at /news-events/workshops/<slug>/.
+ * `base` is a prop for exactly this reason — minting a second set of detail
+ * routes would duplicate every session at two URLs and split the school's own
+ * record in half.
+ *
+ * ⚠ NOT CLAIMED: that parents may attend any of these; a parent webinar
+ * programme; or any session the school has not listed.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import SectionRail from '../../../components/academics/SectionRail.astro';
+import IndexIntro from '../../../components/news/IndexIntro.astro';
+import CardGrid from '../../../components/news/CardGrid.astro';
+
+import { workshops } from '../../../data/newsPages';
+import heroPhoto from '../../../assets/workshops/CriticalThinking/CriticalThinking1.jpg';
+
+/**
+ * ⚠ COUNTED FROM THE DATA, NEVER TYPED — the same rule as the News & Events
+ * index, and for the same reason: the copy cannot drift away from the content
+ * as sessions are added or corrected.
+ */
+const items = workshops.groups.flatMap((g) => g.items);
+const count = items.length;
+
+const NAMED = /\b(Mr|Mrs|Ms|Dr|Prof)\b/;
+const INSTITUTION = /\b(IIT|University|College|School|Eduserve|Consulting|Group|Foundation|Services)\b/i;
+
+const figures = [
+  { n: count, k: 'sessions on record' },
+  { n: items.filter((i) => NAMED.test(i.meta)).length, k: 'name the person who led it' },
+  { n: items.filter((i) => INSTITUTION.test(i.meta)).length, k: 'name the institution' },
+];
+
+const CONTACT = '/contact-us/';
+const FORUM = '/academics/parent-partnership/parents-forum/';
+---
+
+<BaseLayout
+  title="Workshops & Webinars — Sunbeam School Ballia"
+  description="The professional development Sunbeam School Ballia publishes: workshop sessions in counselling, pedagogy, AI in the classroom and the CBSE capacity-building programme — run for the school's teachers and administrators."
+>
+  <PageHero
+    title="Workshops & Webinars"
+    standfirst="The training the school publishes is run for the people who teach your child — named trainers, named institutions, on the record."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+    ]}
+    src={heroPhoto}
+    alt="A workshop session in progress at Sunbeam School Ballia, delegates seated at tables facing the speaker."
+    position="50% 45%"
+  />
+
+  <SectionRail items={workshops.groups.map((g) => ({ id: g.id, label: g.label }))} />
+
+  <div class="u-page-panel wk-panel">
+    <IndexIntro
+      eyebrow="Workshops & Webinars"
+      heading="Run for the teachers your child has"
+      stand="Every session below is professional development for the school's teaching and administrative staff — not a programme parents attend. It is here because it is the part of the school's training that is actually on the record: each card carries whatever the school has published about it, the trainer where they are named, the institution where it is stated. Nothing is filled in for the sake of a tidy page."
+      figures={figures}
+    />
+
+    <CardGrid page={workshops} base="/news-events/workshops/" />
+
+    {/* ⚠ THE ABSENCE IS STATED, NOT LEFT TO BE INFERRED. A parent page that
+        lists fifteen workshops and says nothing about parent workshops has
+        answered the question badly rather than not at all. */}
+    <section class="wk-note" aria-labelledby="wk-note-t">
+      <div class="u-container wk-note__box">
+        <h2 class="wk-note__h" id="wk-note-t">What is not published</h2>
+        <p class="wk-note__b">
+          The school does not publish a parent-facing workshop or webinar programme — no schedule,
+          no topics, and no joining details. Rather than describe one that cannot be checked, this
+          page reports the training that is documented and says plainly who it is for.
+        </p>
+        <p class="wk-note__b">
+          If a session for parents is announced, the school office holds the details. The
+          {' '}<a href={FORUM}>Parents’ Forum</a> is the standing arrangement where parents raise
+          matters with the school’s leadership directly, and its agenda is published in full.
+        </p>
+        <p class="wk-note__a">
+          <a class="wk-note__btn" href={CONTACT}>Contact the school office</a>
+        </p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  div.wk-panel { padding-block: 0; }
+
+  .wk-panel :global(section[id]) {
+    scroll-margin-top: calc(var(--sb-masthead-h) + 24px);
+  }
+
+  .wk-note {
+    padding-block: clamp(28px, 3.6vw, 56px) clamp(36px, 4.6vw, 72px);
+    background: var(--sb-ivory);
+  }
+  .wk-note__box {
+    max-width: 74ch;
+    padding: clamp(20px, 2.4vw, 32px) clamp(20px, 2.6vw, 36px);
+    border: 1px solid var(--sb-border);
+    border-left: 3px solid var(--sb-orange-bright);
+    border-radius: var(--sb-r-2);
+    background: var(--sb-paper);
+  }
+  .wk-note__h {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-size: clamp(15px, 1.3vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+  }
+  .wk-note__b {
+    margin: clamp(8px, 1vw, 12px) 0 0;
+    font-size: clamp(11px, 0.82vw, 13px);
+    line-height: 1.72;
+    color: var(--sb-text-secondary);
+  }
+  .wk-note__b a {
+    color: var(--sb-violet);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .wk-note__b a:hover { color: var(--sb-orange-bright); }
+  .wk-note__a { margin: clamp(13px, 1.6vw, 20px) 0 0; }
+  .wk-note__btn {
+    display: inline-flex;
+    align-items: center;
+    padding: clamp(9px, 1vw, 12px) clamp(16px, 1.8vw, 24px);
+    border: 1.5px solid var(--sb-violet);
+    border-radius: var(--sb-r-1);
+    font-size: clamp(11px, 0.8vw, 12.8px);
+    font-weight: 700;
+    color: var(--sb-violet);
+    transition: background-color var(--sb-dur-image) var(--sb-ease), color var(--sb-dur-image) var(--sb-ease);
+  }
+  .wk-note__btn:hover { background: var(--sb-violet); color: #fff; }
+</style>

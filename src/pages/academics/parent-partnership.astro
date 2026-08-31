@@ -1,0 +1,122 @@
+---
+/**
+ * ACADEMICS → 06 · PARENT PARTNERSHIP
+ *
+ * Rebuilt from scratch. The previous page was three bands of stacked white cards
+ * listing seven channels; this one argues for the partnership first and lists the
+ * channels afterwards, which is the order a family deciding whether to trust a
+ * school actually reads in.
+ *
+ *   Banner        components/ui/PageHero.astro       shared, as History uses
+ *   01            parents/Orientation.astro          copy left, photo cluster right — FIRST
+ *   02            parents/Forum.astro                what a forum IS, and the route
+ *   03            parents/Workshops.astro            JourneyCarousel — three-up, wave foot
+ *   04            parents/Comms.astro                copy left, one frame right
+ *   05            parents/Engagement.astro           MIRRORED — frame left
+ *   06            parents/Faq.astro                  photo left, accordion right
+ *   Timeline      parents/Timeline.astro             the year, drawn in — LAST
+ *
+ * SIX TOPICS, SIX FULL SECTIONS. An earlier pass folded all six into one
+ * carousel, which compressed each to a paragraph and three chips — the client's
+ * word for it was "shortcuts", and it was right. Each now has the room its
+ * content needs, and 04 and 05 are the same component mirrored so two adjacent
+ * splits do not read as the same slide twice.
+ *
+ * ONE NEW REUSABLE COMPONENT, as briefed: JourneyCarousel, used by 03. It takes
+ * its cards as a prop and hard-codes nothing about parents. The parents/* files
+ * are page decomposition rather than abstractions — the same pattern as
+ * teaching/* on Teaching & Learning.
+ *
+ * ⚠ FOUR SECTIONS HAVE BEEN REMOVED AT THE CLIENT'S REQUEST. The page now opens
+ * straight onto Orientation and ends on the timeline:
+ *   · parents/Intro.astro        the philosophy statement and the four figures
+ *   · parents/Resources.astro    the parent-resources bento
+ *   · parents/Voice.astro        the quote panel
+ *   · parents/StayConnected.astro the closing call to action
+ * All four components are still in parents/ and all four blocks of copy are still
+ * in the `parents` data — see each file. Putting any of them back is one import
+ * and one line.
+ *
+ * TWO CONSEQUENCES WORTH KNOWING:
+ *   · The school's phone numbers and email now appear only in the site footer,
+ *     and the page no longer closes on a call to action.
+ *   · Nothing now states what the partnership IS before the page starts listing
+ *     its parts. A reader meets "Orientation" cold, under the banner.
+ *
+ * ⚠ ONE THING THE BRIEF ASKED FOR THAT IS NOT HERE: a parent testimonial with a
+ * name, a child's class and a star rating. The school supplied none of it and
+ * none of it can be invented — see the header of parents/Voice.astro, which
+ * holds the Principal's own published words instead and swaps the moment a real
+ * quote arrives WITH consent. An asset request, not an omission.
+ *
+ * ⚠ PHOTOGRAPHY. The brief asks for parents interacting with children and
+ * teachers meeting parents. The repository holds no such photograph — every image
+ * here is of students or campus. The compositions take the real thing unchanged
+ * as soon as it exists. Request A2.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import SectionRail from '../../components/academics/SectionRail.astro';
+
+import Orientation from '../../components/academics/parents/Orientation.astro';
+import Forum from '../../components/academics/parents/Forum.astro';
+import Workshops from '../../components/academics/parents/Workshops.astro';
+import Comms from '../../components/academics/parents/Comms.astro';
+import Engagement from '../../components/academics/parents/Engagement.astro';
+import Faq from '../../components/academics/parents/Faq.astro';
+import Timeline from '../../components/academics/parents/Timeline.astro';
+
+import { parents } from '../../data/academics';
+import banner from '../../assets/photos/sunbeem-3.jpg';
+
+---
+
+<BaseLayout
+  title="Parent Partnership — Sunbeam School Ballia"
+  description="How Sunbeam School Ballia works with parents: orientation before the session, a parents' forum, workshops, parent–teacher meetings on the published calendar, and a report card portal."
+>
+  <PageHero
+    title={parents.hero.title}
+    standfirst={parents.hero.stand}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Academics', href: '/academics/' },
+    ]}
+    src={banner}
+    alt="Students of Sunbeam School Ballia on the school campus."
+    position="50% 42%"
+  />
+
+  {/* A slim sticky index of the page's main sections. */}
+  <SectionRail
+    items={[
+      { id: 'orientation', label: 'Orientation' },
+      { id: 'forum', label: 'Parents’ forum' },
+      { id: 'workshops', label: 'Workshops' },
+      { id: 'communication', label: 'Communication' },
+      { id: 'engagement', label: 'Engagement' },
+      { id: 'faqs', label: 'FAQs' },
+    ]}
+  />
+
+  {/* padding-bottom: 0 — the timeline closes the page and carries its own 160px
+      foot, on a ground that fades from ivory to sand. The panel's own 120px of
+      flat ivory underneath would undo that fade and put a pale band between the
+      section and the footer. */}
+  <div class="u-page-panel pp-panel">
+    <Orientation />
+    <Forum />
+    <Workshops />
+    <Comms />
+    <Engagement />
+    <Faq />
+
+    <Timeline />
+  </div>
+</BaseLayout>
+
+<style>
+  /* div.pp-panel, not .pp-panel: it has to out-specify .u-page-panel in base.css,
+     which a bare scoped class only matches rather than beats. */
+  div.pp-panel { padding-bottom: 0; }
+</style>

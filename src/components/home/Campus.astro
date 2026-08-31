@@ -1,0 +1,632 @@
+---
+/**
+ * §08 · CAMPUS EXPERIENCE — docs/06 §08, audit 3.2–3.7
+ *
+ * One white rounded card on a lavender ground, holding: a centred heading with
+ * a full-width hand-drawn swoosh, a sliding panel (copy left, three-photo grid
+ * right) and a stepper with circular thumbnails on a progress line.
+ *
+ * LABELLING NOTE — the brief asks for no text overlaid on the photographs.
+ * Audit 3.2–3.7 still requires every facility to be labelled, so the label now
+ * lives in two places instead of on the image: the panel heading, and the
+ * stepper caption beneath each thumbnail. Nothing has become unlabelled.
+ *
+ * Photography: only images the school supplied, and only where they genuinely
+ * depict that facility. Auditorium is the one entry with a full set of three —
+ * all taken in the hall. The rest keep labelled placeholders rather than
+ * borrowing an unrelated photograph.
+ */
+import { facilities } from '../../data/home';
+import Photo from '../ui/Photo.astro';
+import { Picture } from 'astro:assets';
+import campusPhoto from '../../assets/photos/sunbeem-1.jpg';
+import awardsPhoto from '../../assets/photos/sunbeem-4.jpg';
+import farewellPhoto from '../../assets/photos/sunbeem-3.jpg';
+import councilPhoto from '../../assets/photos/sunbeem-5.jpg';
+import labPhoto from '../../assets/photos/sunbeem-students.jpg';
+import libraryPhoto from '../../assets/photos/sb-library.jpg';
+import physicsPhoto from '../../assets/photos/sb-phy-lab.jpg';
+import bioPhoto from '../../assets/photos/sb-bio-lab.jpg';
+import compPhoto from '../../assets/photos/sb-comp-lab-2.jpg';
+import mathsPhoto from '../../assets/photos/sb-maths-lab.jpg';
+
+/* The academic blocks from the inside. The exterior shot alone left two of this
+   panel's three frames as placeholders, and these are the same building — a
+   corridor and a stairwell in the block the panel is about, not a borrowed
+   picture of somewhere else. */
+import corridorPhoto from '../../assets/corridor and stairs/DSC_1211 copy.jpg';
+import stairsPhoto from '../../assets/corridor and stairs/DSC_1240 copy.jpg';
+
+/* Sports had NO photograph at all on this panel and three placeholders, which
+   was true when this component was written and is not any more — the ground,
+   court and junior park are all photographed. */
+import joshPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
+import courtPhoto from '../../assets/basket ball/DSC_1280 copy.jpg';
+import parkPhoto from '../../assets/play ground/DSC_1248 copy.jpg';
+
+type Shot = { src: ImageMetadata; alt: string };
+
+/** Real photography, keyed to the facility it actually shows. */
+const gallery: Record<string, Shot[]> = {
+  campus: [
+    { src: campusPhoto, alt: 'The Sunbeam School Ballia academic blocks at Agarsanda, seen across the school lawn.' },
+    { src: corridorPhoto, alt: 'A corridor inside the academic block at Sunbeam School Ballia.' },
+    { src: stairsPhoto, alt: 'A noticeboard-lined corridor in the academic block at Sunbeam School Ballia.' },
+  ],
+  sports: [
+    { src: joshPhoto, alt: 'The JOSH ground at Sunbeam School Ballia, seen through the school gateway arch.' },
+    { src: courtPhoto, alt: 'The basketball court at Sunbeam School Ballia.' },
+    { src: parkPhoto, alt: 'The junior playground at Sunbeam School Ballia.' },
+  ],
+  lab: [
+    { src: labPhoto, alt: 'Sunbeam School Ballia students performing a chemistry practical in the science laboratory.' },
+    { src: physicsPhoto, alt: 'The physics laboratory at Sunbeam School Ballia.' },
+    { src: bioPhoto, alt: 'The biology laboratory at Sunbeam School Ballia.' },
+  ],
+  library: [
+    { src: libraryPhoto, alt: 'Students reading at tables in the Nalanda Library at Sunbeam School Ballia.' },
+    { src: mathsPhoto, alt: 'The mathematics laboratory at Sunbeam School Ballia.' },
+    { src: compPhoto, alt: 'A computer laboratory at Sunbeam School Ballia.' },
+  ],
+  auditorium: [
+    { src: awardsPhoto, alt: 'An award ceremony on stage in the hall at Sunbeam School Ballia.' },
+    { src: farewellPhoto, alt: 'The 2024-25 farewell ceremony in the hall at Sunbeam School Ballia.' },
+    { src: councilPhoto, alt: 'Student council office-bearers and NCC cadets on the hall stage.' },
+  ],
+};
+
+const total = String(facilities.length).padStart(2, '0');
+const slots = ['tall', 'top', 'bottom'] as const;
+---
+
+<section class="campus" aria-labelledby="campus-heading">
+  <div class="u-container">
+    <div class="campus__card">
+      <header class="campus__head" data-reveal>
+        {/* the pill is inline-flex, so it needs a block wrapper or it sits on
+            the same line as the heading */}
+        <p class="campus__eyebrow"><span class="pill pill--violet">The Campus</span></p>
+        <h2 class="campus__heading t-h2-sans" data-split id="campus-heading">Explore our campus life</h2>
+        <p class="campus__sub t-body-lg">
+          Twelve laboratories, a fifteen-thousand-book library and a shooting range, on one
+          campus at Agarsanda. Step through the places a Sunbeam day actually happens in.
+        </p>
+      </header>
+
+      <div class="campus__browser" data-campus>
+        <div class="campus__viewport">
+          <div class="campus__track" data-track>
+            {facilities.map((f: any, i) => {
+              const shots = f.photo ? gallery[f.photo] ?? [] : [];
+              return (
+                <div
+                  class="campus__panel"
+                  id={`campus-panel-${i}`}
+                  role="tabpanel"
+                  aria-labelledby={`campus-tab-${i}`}
+                  aria-hidden={i === 0 ? 'false' : 'true'}
+                >
+                  <div class="campus__copy">
+                    <span class="campus__index t-tabular">{String(i + 1).padStart(2, '0')}</span>
+                    <h3 class="campus__name t-h3">{f.name}</h3>
+                    <p class="campus__qualifier">{f.qualifier}</p>
+                    <p class="campus__detail">{f.detail}</p>
+                    <a class="link-tertiary" href={f.href} tabindex={i === 0 ? 0 : -1}>
+                      See more details
+                      <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                        <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
+                      </svg>
+                    </a>
+                  </div>
+
+                  {/* One tall frame left, two stacked right. No overlay text. */}
+                  <div class="campus__grid">
+                    {slots.map((slot, s) => (
+                      <div class={`campus__tile campus__tile--${slot}`}>
+                        <Photo
+                          tone={s === 0 ? 'ink' : 'charcoal'}
+                          brief={`${f.name} — ${slot === 'tall' ? 'primary' : 'supporting'} view. ${f.brief}`}
+                          ref="A2"
+                          quiet
+                          src={shots[s]?.src}
+                          alt={shots[s]?.alt}
+                          sizes="(max-width: 1023px) 50vw, 28vw"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* --- Stepper -------------------------------------------------- */}
+        <div class="campus__stepper">
+          <div class="campus__steps" role="tablist" aria-label="Campus facilities">
+            <span class="campus__progress" aria-hidden="true"></span>
+            {facilities.map((f: any, i) => {
+              const thumb = f.photo ? gallery[f.photo]?.[0] : undefined;
+              return (
+                <button
+                  class="campus__step"
+                  id={`campus-tab-${i}`}
+                  role="tab"
+                  type="button"
+                  data-tab
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                  aria-controls={`campus-panel-${i}`}
+                  tabindex={i === 0 ? 0 : -1}
+                >
+                  <span class="campus__thumb">
+                    {thumb ? (
+                      <Picture src={thumb.src} alt="" formats={['avif', 'webp']}
+                        widths={[56, 112]} sizes="56px" loading="lazy" />
+                    ) : (
+                      <span class="campus__thumb-mono" aria-hidden="true">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                    )}
+                  </span>
+                  <span class="campus__step-num t-tabular">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="campus__step-name">{f.name}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div class="campus__nav">
+            <button class="campus__arrow campus__arrow--ghost" type="button" data-prev
+              aria-label="Previous facility">
+              <svg width="15" height="11" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <path d="M5 1L1 5L5 9M1 5H14" stroke="currentColor" stroke-width="1.6" />
+              </svg>
+            </button>
+            <p class="campus__counter t-tabular" aria-live="polite">
+              <span data-counter>01</span><span class="campus__counter-sep">/</span>{total}
+            </p>
+            <button class="campus__arrow campus__arrow--solid" type="button" data-next
+              aria-label="Next facility">
+              <svg width="15" height="11" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .campus {
+    /* light lavender ground, so the white card lifts off it */
+    background: linear-gradient(180deg, var(--sb-violet-wash) 0%, #fffaf7 62%, var(--sb-ivory) 100%);
+    /* Trimmed from the standard section rhythm so the whole card — heading,
+       panel and stepper — lands inside one screen. */
+    /* Viewport-fit — this section must show whole on one screen (measured:
+       804px inside 900, 646px inside 760), so its padding has to give way as
+       the viewport shortens. Now a named token rather than an inline clamp. */
+    padding-block: var(--sb-section-y-viewport);
+  }
+
+  .campus__card {
+    background: #fff;
+    border-radius: var(--sb-r-3);
+    box-shadow: 0 30px 70px -34px rgba(21, 15, 51, 0.28);
+    padding: clamp(28px, 3.4vh, 52px) var(--sb-9);
+  }
+
+  /* --- Centred header ------------------------------------------------------ */
+
+  .campus__head {
+    text-align: center;
+    max-width: 66ch;
+    margin-inline: auto;
+    margin-bottom: clamp(24px, 3vh, 48px);
+  }
+
+  .campus__eyebrow { margin-bottom: var(--sb-5); }
+
+  /* inline-block so the swoosh spans exactly the heading's width */
+  .campus__heading {
+    position: relative;
+    font-size: clamp(26px, 3.4vh, var(--sb-h2));
+    display: inline-block;
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-6);
+  }
+
+  .campus__heading::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.26em;
+    height: 0.2em;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 20' preserveAspectRatio='none'%3E%3Cpath d='M4 13C96 5 214 3 300 6c86 3 190 8 296 3' stroke='%23C93C0A' stroke-width='6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  }
+
+  .campus__sub {
+    font-size: clamp(15px, 1.9vh, var(--sb-body-lg));
+    color: var(--sb-text-muted);
+    max-width: 58ch;
+    margin-inline: auto;
+  }
+
+  /* --- Sliding track -------------------------------------------------------- */
+
+  .campus__viewport { overflow: hidden; }
+
+  .campus__track {
+    display: flex;
+    transform: translateX(calc(var(--i, 0) * -100%));
+    transition: transform 620ms var(--sb-ease);
+    will-change: transform;
+  }
+
+  .campus__panel {
+    flex: 0 0 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    gap: var(--sb-10);
+    align-items: center;
+  }
+
+  .campus__index {
+    display: block;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 4.2vh, 46px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-5);
+  }
+
+  .campus__name { color: var(--sb-charcoal); margin-bottom: var(--sb-3); }
+
+  .campus__qualifier {
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    color: var(--sb-violet-dark);
+    margin-bottom: var(--sb-5);
+  }
+
+  .campus__detail {
+    color: var(--sb-text-secondary);
+    max-width: 44ch;
+    margin-bottom: var(--sb-7);
+  }
+
+  /* --- 3-photo grid: one tall left, two stacked right ----------------------- */
+
+  /* The grid owns the proportions and the tiles fill it, rather than each tile
+     carrying its own aspect-ratio — mismatched ratios left the right-hand
+     column short and put white space above it. */
+  .campus__grid {
+    display: grid;
+    grid-template-columns: 1.22fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      'tall top'
+      'tall bottom';
+    gap: var(--sb-4);
+    /* Height follows the viewport rather than a fixed ratio, so the card
+       always fits one screen. */
+    height: clamp(200px, 36vh, 430px);
+  }
+
+  .campus__tile {
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--sb-r-2);
+  }
+
+  .campus__tile--tall { grid-area: tall; }
+  .campus__tile--top { grid-area: top; }
+  .campus__tile--bottom { grid-area: bottom; }
+
+  /* --- Stepper -------------------------------------------------------------- */
+
+  .campus__stepper {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--sb-8);
+    margin-top: clamp(16px, 2.6vh, 48px);
+  }
+
+  .campus__steps {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    gap: var(--sb-6);
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: var(--sb-2);
+  }
+
+  .campus__steps::-webkit-scrollbar { display: none; }
+
+  /* the thin line the steps sit on */
+  .campus__progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 28px;
+    height: 1px;
+    background: var(--sb-border);
+  }
+
+  .campus__step {
+    position: relative;
+    flex: 0 0 auto;
+    width: 118px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sb-3);
+    text-align: center;
+  }
+
+  .campus__thumb {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--sb-r-full);
+    overflow: hidden;
+    background: var(--sb-violet-wash);
+    border: 2px solid var(--sb-border);
+    display: grid;
+    place-items: center;
+    transition: border-color var(--sb-dur-link) ease, transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .campus__thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .campus__thumb-mono {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: 15px;
+    /* darker tone + full opacity: at 0.6 on the wash circle this measured
+       4.48:1, a hair under AA */
+    color: var(--sb-violet-dark);
+  }
+
+  .campus__step[aria-selected='true'] .campus__thumb {
+    border-color: var(--sb-violet);
+    transform: scale(1.06);
+  }
+
+  .campus__step:hover .campus__thumb { border-color: var(--sb-violet); }
+
+  .campus__step-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sb-text-muted);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .campus__step-name {
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--sb-text-muted);
+    transition: color var(--sb-dur-link) ease;
+  }
+
+  .campus__step[aria-selected='true'] .campus__step-num { color: var(--sb-violet); }
+  .campus__step[aria-selected='true'] .campus__step-name { color: var(--sb-charcoal); }
+
+  /* --- Nav ------------------------------------------------------------------ */
+
+  .campus__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    flex-shrink: 0;
+    padding-bottom: var(--sb-3);
+  }
+
+  .campus__arrow {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--sb-r-full);
+    transition: background-color var(--sb-dur-btn) ease, color var(--sb-dur-btn) ease,
+      border-color var(--sb-dur-btn) ease;
+  }
+
+  .campus__arrow--ghost {
+    background: #fff;
+    border: 1px solid var(--sb-border-strong);
+    color: var(--sb-charcoal);
+  }
+
+  .campus__arrow--ghost:hover { border-color: var(--sb-violet); color: var(--sb-violet); }
+
+  .campus__arrow--solid {
+    background: var(--sb-violet);
+    border: 1px solid var(--sb-violet);
+    color: #fff;
+    box-shadow: 0 10px 22px -10px rgba(201, 60, 10, 0.9);
+  }
+
+  .campus__arrow--solid:hover { background: var(--sb-violet-dark); border-color: var(--sb-violet-dark); }
+
+  .campus__counter {
+    margin: 0;
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    color: var(--sb-charcoal);
+    min-width: 5ch;
+    text-align: center;
+  }
+
+  .campus__counter-sep { color: var(--sb-text-muted); margin-inline: 1px; }
+
+  /* --- Tablet & mobile -------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .campus__card { padding: var(--sb-9) var(--sb-7) var(--sb-8); }
+
+    .campus__panel {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-7);
+    }
+
+    .campus__copy { order: 2; }
+    .campus__grid { order: 1; }
+
+    .campus__index { font-size: 36px; }
+
+    .campus__stepper { flex-direction: column; align-items: stretch; gap: var(--sb-6); }
+    .campus__nav { justify-content: space-between; padding-bottom: 0; }
+  }
+
+  @media (max-width: 767px) {
+    .campus__card { padding: var(--sb-8) var(--sb-6) var(--sb-7); border-radius: var(--sb-r-2); }
+    .campus__detail { max-width: none; }
+    .campus__step { width: 96px; }
+    .campus__thumb { width: 48px; height: 48px; }
+    .campus__progress { top: 24px; }
+  }
+
+  /* Very short viewports (small laptops, 720p and below). The subheading is the
+     least load-bearing element here — the heading and the panel copy already
+     say what this section is — so it steps aside rather than the photography
+     shrinking to something unreadable. */
+  @media (max-height: 780px) {
+    .campus__sub { display: none; }
+    .campus__step-name { display: none; }
+    .campus__thumb { width: 44px; height: 44px; }
+    .campus__progress { top: 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .campus__track { transition: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-campus]');
+
+  if (root) {
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    const counter = root.querySelector<HTMLElement>('[data-counter]');
+    /* The stepper's own horizontal scroller — the ONLY thing show() is allowed
+       to scroll. See the warning in show(). */
+    const strip = root.querySelector<HTMLElement>('[role="tablist"]');
+    let index = 0;
+
+    const show = (next: number) => {
+      index = (next + panels.length) % panels.length;
+      track.style.setProperty('--i', String(index));
+
+      panels.forEach((panel, i) => {
+        const active = i === index;
+        panel.setAttribute('aria-hidden', String(!active));
+        // keep off-screen links out of the tab order
+        panel.querySelectorAll<HTMLAnchorElement>('a').forEach((a) => {
+          a.tabIndex = active ? 0 : -1;
+        });
+      });
+
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
+      });
+
+      if (counter) counter.textContent = String(index + 1).padStart(2, '0');
+
+      /* ⚠ KEEP THE ACTIVE THUMBNAIL IN THE STRIP — AND ONLY THE STRIP.
+         This was `tabs[index].scrollIntoView({ block: 'nearest', inline:
+         'nearest' })`, which was fine for as long as `show()` only ran from a
+         click: the section was already on screen, so "nearest" resolved to a
+         few pixels of horizontal nudge inside the strip.
+
+         The 4-second timer broke that. scrollIntoView walks EVERY scrollable
+         ancestor including the document, so once the reader had scrolled past
+         this section, each tick dragged the whole page back up to it. Measured
+         from the foot of the home page: parked at 11046, hauled to 4497 —
+         6549px against the reader, across 74 scroll events, every four seconds.
+         That is both the "vibrating" and the "jumps to the top".
+
+         Scrolling the strip by hand touches nothing else on the page. */
+      const t = tabs[index];
+      if (strip && t && strip.scrollWidth > strip.clientWidth + 1) {
+        strip.scrollTo({
+          left: Math.max(0, t.offsetLeft - (strip.clientWidth - t.offsetWidth) / 2),
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        });
+      }
+    };
+
+    /* ── AUTO-ADVANCE, EVERY 4 SECONDS ───────────────────────────────────────
+       WITH FOUR GATES, because a carousel that moves while someone is reading
+       it is worse than one that never moves at all:
+
+         · prefers-reduced-motion — it never starts;
+         · any deliberate interaction (a tab, an arrow, a keypress) STOPS IT FOR
+           GOOD. Resuming after a pause fights the reader, who moved it there on
+           purpose;
+         · pointer over the card, or keyboard focus inside it — paused while
+           they are there, since that is someone reading rather than passing;
+         · the tab being in the background — an interval that keeps firing on a
+           hidden tab burns battery and returns to a slide nobody chose. */
+    const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timer = 0;
+    let stopped = REDUCED.matches;
+
+    const tick = () => { if (!stopped) show(index + 1); };
+    const play = () => { if (!stopped && !timer) timer = window.setInterval(tick, 4000); };
+    const pause = () => { if (timer) { clearInterval(timer); timer = 0; } };
+    const stop = () => { stopped = true; pause(); };
+
+    root.addEventListener('pointerenter', pause);
+    root.addEventListener('pointerleave', play);
+    root.addEventListener('focusin', pause);
+    root.addEventListener('focusout', (e) => {
+      // Only resume once focus has actually left the card, not on every hop
+      // between two controls inside it.
+      if (!root.contains(e.relatedTarget as Node)) play();
+    });
+    document.addEventListener('visibilitychange', () => (document.hidden ? pause() : play()));
+
+    tabs.forEach((tab, i) => tab.addEventListener('click', () => { stop(); show(i); }));
+    root.querySelector('[data-prev]')?.addEventListener('click', () => { stop(); show(index - 1); });
+    root.querySelector('[data-next]')?.addEventListener('click', () => { stop(); show(index + 1); });
+
+    root.querySelector('[role="tablist"]')?.addEventListener('keydown', (event) => {
+      const e = event as KeyboardEvent;
+      const map: Record<string, number> = {
+        ArrowRight: index + 1,
+        ArrowLeft: index - 1,
+        Home: 0,
+        End: tabs.length - 1,
+      };
+      if (!(e.key in map)) return;
+      e.preventDefault();
+      stop();
+      show(map[e.key]);
+      tabs[index].focus();
+    });
+
+    show(0);
+    play();
+  }
+</script>

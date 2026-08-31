@@ -1,0 +1,641 @@
+---
+/**
+ * §03 · HERO — docs/06 §03
+ *
+ * AUDIT 1.3, verbatim: "The hero banner should function as a stationary image
+ * slider where only the images transition, rather than the entire page moving."
+ * So: the frame, headline, deck and buttons are fixed. Only the photograph and
+ * its own caption cross-fade — the caption belongs to the image.
+ *
+ * The eyebrow carries the school's real motto, read off the crest ring on the
+ * official logo artwork ("DUTY · DEVOTION · DISCIPLINE"). Text extraction never
+ * surfaced it; it exists only in the emblem. It is the single most
+ * Sunbeam-specific line available and it replaces a generic name-and-year
+ * eyebrow that merely repeated the masthead.
+ */
+import { school } from '../../data/site';
+import Photo from '../ui/Photo.astro';
+import chemPractical from '../../assets/photos/sunbeem-students.jpg';
+import community from '../../assets/photos/sunbeem-2.jpg';
+
+/**
+ * docs/07 § A2 Priority 1 — 21:9 or 16:9, min 2400px.
+ *
+ * ═══ WHY THIS IS TWO SLIDES AND NOT THREE ═════════════════════════════════
+ *
+ * ⚠ AUDIT 1.1 IS ANSWERED AT LAST — THE FIRST SLIDE IS A LESSON. The audit asked
+ * for "students engaged in learning" and the header of this file recorded, for
+ * three revisions, that no such photograph existed. One does: four students of
+ * the school in its own uniform and lab coats, running a chemistry practical at
+ * the bench, with the aim written up on the blackboard behind them —
+ * "Verification of the law of conservation of mass in a chemical reaction",
+ * which is the CBSE Class IX/X practical. Lab, uniform and blackboard are all
+ * the school's own. It replaces the wide campus shot: a building says where the
+ * school is, and this says what happens inside it.
+ *
+ * ⚠⚠ THE RoboWunder SLIDE IS GONE, AND IT IS A CROPPING FAULT, NOT A JUDGEMENT
+ * ON THE RESULT. That file is a designed POSTER with its headline baked into the
+ * pixels. A 21:9 full-bleed hero crop cut straight through the typography and
+ * shipped the words "nbeam" and "ONAL ROBOTICS CHAMPI" across the top of the
+ * page, competing with the actual <h1> underneath. The same fault is on record
+ * in the header of Majors.astro. The RESULT still appears in full, and legibly,
+ * on Achievements and on STEM & Robotics, where the poster is shown `contain`
+ * and nothing is sliced off it.
+ *
+ * ⚠ TWO SLIDES IS A REAL SET, NOT A GAP. The rotator, the dots and the counter
+ * are all derived from this array's length, so nothing below needs editing — and
+ * a third slide is one entry the moment a true wide 2400px frame of the campus
+ * in use is supplied. What is NOT acceptable is padding it back to three with
+ * another poster.
+ */
+const slides = [
+  {
+    src: chemPractical,
+    alt: 'Four students of Sunbeam School Ballia in uniform and lab coats running a chemistry practical at the bench, the aim written up on the blackboard behind them.',
+    /* The blackboard is at the top of the frame and the students across the
+       middle. 38% keeps both in a wide crop; 50% would cut the aim off the
+       board, which is the half that makes this a lesson rather than a posed
+       group. */
+    position: '50% 38%',
+    tone: 'ink' as const,
+    brief: 'Students engaged in classroom learning — a practical in progress',
+    caption: 'A Class IX/X chemistry practical, in the school’s own lab',
+  },
+  {
+    src: community,
+    alt: 'Senior students and staff of Sunbeam School Ballia gathered together in the school hall.',
+    position: '50% 40%',
+    tone: 'maroon' as const,
+    brief: 'A co-curricular moment — sport, performance or competition',
+    caption: 'The senior school, together',
+  },
+];
+---
+
+<section class="hero" data-hero aria-label="Welcome to Sunbeam School Ballia">
+  <div class="hero__stage">
+    {slides.map((slide, i) => (
+      <div
+        class="hero__slide"
+        data-slide
+        data-caption={slide.caption ?? slide.brief}
+        data-caption-tag={slide.caption ? '' : 'Needed · A2'}
+        data-active={i === 0 ? '' : undefined}
+        aria-hidden={i !== 0}
+      >
+        <Photo
+          src={slide.src}
+          alt={slide.alt}
+          brief={slide.brief}
+          tone={slide.tone}
+          position={slide.position}
+          ref="A2"
+          quiet
+          eager={i === 0}
+          sizes="100vw"
+        />
+      </div>
+    ))}
+    <div class="hero__tint" aria-hidden="true"></div>
+    <div class="hero__scrim" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__content u-container u-on-dark">
+    <div class="hero__copy">
+      {/* ⚠ NO ADMISSIONS BADGE ABOVE THE HEADLINE ANY MORE. It stacked a third
+          line of small type over the <h1> — badge, eyebrow, then the headline —
+          and pushed the one sentence this page exists to say further down the
+          fold on every phone. The admissions route is not lost: it is the
+          pulsing pill in the masthead, both forms in the utility bar, and the
+          whole Admissions band further down this page. */}
+      <p class="hero__eyebrow t-label">{school.motto}</p>
+      {/* ⚠ THE ACCENT PLATE TAKES "Take Shape", WHICH IS TWO WORDS, SO IT CARRIES
+          white-space: nowrap FROM .t-squiggle AND CANNOT BREAK ACROSS LINES.
+          That is deliberate — a plate split over two lines renders as two
+          half-plates — and it is why the manual <br> sits where it does. */}
+      <h1 class="hero__title t-display" data-split>
+        Where Ballia's Future Leaders <br class="hero__br" /><span class="t-squiggle t-squiggle--lime">Take Shape</span>
+      </h1>
+      <p class="hero__deck t-body-lg">
+        A Sunbeam institution since 2013 — {school.currentStrength} students, Nursery to
+        Class&nbsp;XII, on a campus built for how children actually learn.
+      </p>
+      {/* ⚠ THE HERO NO LONGER ASKS ANYONE TO APPLY, AND THAT IS THE POINT.
+          It carried the two application forms — the same two that are in the
+          utility bar at the top of every page, in the masthead pill, and in the
+          Admissions band below. Four copies of one action on one screen is not
+          four chances to convert; it is a page that will not let a reader look
+          around before deciding. First contact gets the two things a parent
+          actually wants first: what is taught, and where.
+          ⚠ INTERNAL, SAME TAB, TRAILING SLASH. Both are pages on this site, so
+          neither needs target="_blank" — and the slash matters, because
+          trailingSlash: 'always' in astro.config.mjs makes the bare form a
+          redirect hop. */}
+      <div class="hero__actions">
+        <a class="btn btn--on-image-primary" href="/academics/">Explore Academics</a>
+        <a class="btn btn--on-image-secondary" href="/campus/">Explore the Campus</a>
+      </div>
+
+      {/* Floating stat card — reference hero pattern. Verified figures only. */}
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <span class="hero__stat-value">13</span>
+          <span class="hero__stat-label">years in Ballia</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">{school.currentStrength}</span>
+          <span class="hero__stat-label">students today</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">#1</span>
+          <span class="hero__stat-label">co-ed day school, Ballia</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__meta">
+      <p class="hero__caption" data-hero-caption aria-live="off">
+        <span class="hero__caption-tag t-label">{slides[0].caption ? '' : 'Needed · A2'}</span>
+        <span class="hero__caption-text">{slides[0].caption ?? slides[0].brief}</span>
+      </p>
+
+      <div class="hero__controls">
+        <div class="hero__dots" role="group" aria-label="Choose hero image">
+          {slides.map((_, i) => (
+            <button
+              class="hero__dot"
+              type="button"
+              data-dot
+              aria-label={`Show image ${i + 1} of ${slides.length}`}
+              aria-current={i === 0 ? 'true' : 'false'}
+            ></button>
+          ))}
+        </div>
+        <button class="hero__pause" type="button" data-hero-pause aria-label="Pause image slideshow">
+          <svg class="hero__icon-pause" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
+            <rect x="0" y="0" width="3" height="12" fill="currentColor" />
+            <rect x="7" y="0" width="3" height="12" fill="currentColor" />
+          </svg>
+          <svg class="hero__icon-play" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
+            <path d="M0 0L10 6L0 12Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: clamp(600px, calc(100svh - 140px), 820px);
+    background: var(--sb-ink);
+    isolation: isolate;
+  }
+
+  /* --- Image stage ------------------------------------------------------- */
+
+  .hero__stage {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .hero__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    /* Audit 1.3 — opacity only. Nothing translates, nothing scales. */
+    transition: opacity var(--sb-dur-fade) ease-in-out;
+  }
+
+  .hero__slide[data-active] { opacity: 1; }
+
+  /* Square. <Photo> carries a 16px radius for the card contexts it usually sits
+     in; a full-bleed banner is not one of those, and the rounded corners showed
+     against the stage. */
+  .hero__slide :global(.photo) { border-radius: 0; }
+
+  /* Warm the photography toward the brand without tinting it into a filter.
+     Kept light: a heavy maroon wash makes the whole frame read as sepia, and
+     this school needs to look current, not archival. */
+  .hero__tint {
+    position: absolute;
+    inset: 0;
+    background: rgba(61, 0, 0, 0.12);
+  }
+
+  /* Two-axis scrim.
+     The stock bottom-weighted scrim assumes a photograph that darkens toward
+     the base. The real campus shot is bright at BOTH ends — sky above, sunlit
+     grass below — and it left the gold eyebrow effectively invisible and the
+     headline marginal.
+     So the vertical scrim is joined by a left-weighted one, which lands exactly
+     where the copy sits (columns 1–7) and clears by the two-thirds mark, so the
+     buildings on the right stay fully legible. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to right,
+        rgba(18, 16, 15, 0.9) 0%,
+        rgba(18, 16, 15, 0.82) 30%,
+        rgba(18, 16, 15, 0.52) 50%,
+        rgba(18, 16, 15, 0.16) 70%,
+        rgba(18, 16, 15, 0) 84%
+      ),
+      linear-gradient(
+        to top,
+        rgba(18, 16, 15, 0.78) 0%,
+        rgba(18, 16, 15, 0.4) 30%,
+        rgba(18, 16, 15, 0.16) 60%,
+        rgba(18, 16, 15, 0.26) 100%
+      );
+  }
+
+  /* On narrow screens the copy spans the full width, so the horizontal ramp
+     would leave the right-hand words sitting on bare photograph. */
+  /* From tablet down the copy spans most of the width, so the horizontal ramp
+     no longer covers it and the vertical one has to do all the work. */
+  @media (max-width: 1023px) {
+    /* The copy block reaches roughly 70% up the frame here, and a worst-case
+       white building behind white text needs ~0.82 alpha to clear 4.5:1. So the
+       ramp stays heavy to the 78% mark and only releases above it, where the
+       photograph is left to read on its own. */
+    .hero__scrim {
+      background:
+        linear-gradient(
+          to top,
+          rgba(18, 16, 15, 0.92) 0%,
+          rgba(18, 16, 15, 0.88) 55%,
+          rgba(18, 16, 15, 0.8) 78%,
+          rgba(18, 16, 15, 0.46) 92%,
+          rgba(18, 16, 15, 0.34) 100%
+        );
+    }
+  }
+
+  /* --- Content ----------------------------------------------------------- */
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--sb-cols), minmax(0, 1fr));
+    column-gap: var(--sb-gutter);
+    align-items: end;
+    padding-block: var(--sb-11);
+  }
+
+  /* Asymmetric: columns 1–7 of 12. Never centred. */
+  .hero__copy {
+    /* Columns 1–8. .hero__meta holds 9–12, so column 8 was simply unused, and
+       the title needs it: "Where Ballia's Future Leaders" is wider still at
+       76px than the 737px seven-column measure it used to overrun. */
+    grid-column: 1 / span 8;
+  }
+
+  /* .hero__badge and .hero__badge-dot were deleted with the markup they styled
+     — see the note beside the eyebrow. Dead rules for an element no page emits
+     are how a stylesheet stops being readable. */
+
+  /* Floating stat card — reference hero pattern. */
+  .hero__stats {
+    display: inline-flex;
+    align-items: stretch;
+    gap: var(--sb-7);
+    margin-top: var(--sb-8);
+    padding: var(--sb-6) var(--sb-7);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--sb-r-2);
+    backdrop-filter: blur(10px);
+  }
+
+  .hero__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hero__stat + .hero__stat {
+    padding-left: var(--sb-7);
+    border-left: 1px solid rgba(255, 255, 255, 0.22);
+  }
+
+  .hero__stat-value {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+
+  .hero__stat-label {
+    font-size: var(--sb-caption);
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  /* The motto is set in white, not gold.
+     Measured over the real campus photograph, gold ran at 2.89:1 average and
+     1.31:1 at worst — and the fix is not a heavier scrim: gold (#C9A227, L=0.38)
+     needs a ground darker than L=0.046 to clear 4.5:1, which would mean blacking
+     out the photograph entirely. Gold stays as the rule above, where it is
+     decoration rather than text. */
+  .hero__eyebrow {
+    color: #fff;
+    margin-bottom: var(--sb-6);
+  }
+
+  .hero__title {
+    color: #fff;
+    /* FLUID, so the chosen break holds at every width rather than only at the
+       two where it happened to fit.
+       Line 1 is a constant 10.26em ("Where Ballia's children" at this tracking),
+       and the eight-column measure is about 0.58vw. 5.2vw keeps 10.26em inside
+       that at every size in the range — a fixed 76px did not: it needed 780px
+       against 762px at 1240, and broke into three lines there while looking
+       correct at 1200.
+       No max-width: a measure's only job here would be to stop line 1 fitting,
+       and `text-wrap: balance` is gone because balancing fights a break we
+       have already chosen. */
+    font-size: clamp(40px, 5.2vw, 76px);
+    max-width: none;
+    margin-bottom: var(--sb-6);
+  }
+
+  .hero__deck {
+    color: var(--sb-on-dark-90);
+    max-width: 46ch;
+    margin-bottom: var(--sb-8);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sb-4);
+  }
+
+  /* --- Meta: editorial caption + controls, bottom right ------------------ */
+
+  .hero__meta {
+    grid-column: 9 / span 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--sb-5);
+    text-align: right;
+  }
+
+  .hero__caption {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--sb-2);
+    padding-right: var(--sb-5);
+    border-right: 2px solid var(--sb-gold);
+    transition: opacity var(--sb-dur-fade) ease-in-out;
+  }
+
+  .hero__caption.is-fading { opacity: 0; }
+
+  .hero__caption-tag { color: var(--sb-gold); }
+
+  .hero__caption-text {
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: var(--sb-on-dark-78);
+    max-width: 34ch;
+  }
+
+  .hero__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-5);
+  }
+
+  .hero__dots {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-3);
+  }
+
+  /* 24px gold rules, per docs/06 §03. Hit area padded to 44px. */
+  .hero__dot {
+    position: relative;
+    width: 24px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+  }
+
+  .hero__dot::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.38);
+    transition: background-color var(--sb-dur-link) ease;
+  }
+
+  .hero__dot[aria-current='true']::before { background: var(--sb-gold); }
+  .hero__dot:hover::before { background: rgba(255, 255, 255, 0.75); }
+  .hero__dot[aria-current='true']:hover::before { background: var(--sb-gold); }
+
+  .hero__pause {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    color: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--sb-r-1);
+    transition: color var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease;
+  }
+
+  .hero__pause:hover { color: #fff; border-color: rgba(255, 255, 255, 0.6); }
+
+  .hero__icon-play { display: none; }
+  .hero__pause[data-paused] .hero__icon-play { display: block; }
+  .hero__pause[data-paused] .hero__icon-pause { display: none; }
+
+  /* --- Tablet ------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .hero__copy { grid-column: 1 / span 6; }
+    .hero__meta { grid-column: 7 / span 2; }
+    .hero__title { max-width: none; }
+  }
+
+  /* Below ~900 the caption competes with the deck for the same optical line. */
+  @media (max-width: 899px) {
+    .hero__caption-text { display: none; }
+    .hero__caption { border-right: 0; padding-right: 0; }
+    .hero__caption-tag { color: rgba(255, 255, 255, 0.5); }
+  }
+
+  /* --- Mobile: 4:5 crop, stacked actions, controls below copy ------------- */
+
+  /* The type size bottoms out at 40px, so below roughly 480 the first line can
+     no longer fit however wide the column is. The chosen break is dropped there
+     and the heading wraps naturally. */
+  @media (max-width: 479px) {
+    .hero__br { display: none; }
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      min-height: clamp(560px, 84svh, 680px);
+      align-items: flex-end;
+    }
+
+    .hero__content {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding-block: var(--sb-9);
+      gap: var(--sb-7);
+    }
+
+    .hero__eyebrow { margin-bottom: var(--sb-5); }
+    .hero__stats {
+      display: flex;
+      width: 100%;
+      gap: var(--sb-5);
+      padding: var(--sb-5);
+      margin-top: var(--sb-7);
+    }
+    .hero__stat + .hero__stat { padding-left: var(--sb-5); }
+    .hero__stat-value { font-size: 22px; }
+    .hero__stat-label { font-size: 11px; }
+    .hero__title { max-width: none; margin-bottom: var(--sb-5); }
+    .hero__deck { max-width: none; margin-bottom: var(--sb-7); }
+
+    .hero__actions { flex-direction: column; }
+    .hero__actions .btn { width: 100%; }
+
+    .hero__meta {
+      align-items: flex-start;
+      text-align: left;
+      gap: 0;
+    }
+
+    .hero__caption { display: none; }
+    .hero__controls { gap: var(--sb-4); }
+
+    /* Auto-advance never runs at this width, so a pause control would be a
+       button that does nothing. Swipe and the dots remain. */
+    .hero__pause { display: none; }
+  }
+</style>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+
+  if (hero) {
+    const slides = Array.from(hero.querySelectorAll<HTMLElement>('[data-slide]'));
+    const dots = Array.from(hero.querySelectorAll<HTMLButtonElement>('[data-dot]'));
+    const pauseBtn = hero.querySelector<HTMLButtonElement>('[data-hero-pause]');
+    const caption = hero.querySelector<HTMLElement>('[data-hero-caption]');
+    const captionText = caption?.querySelector<HTMLElement>('.hero__caption-text');
+    const captionTag = caption?.querySelector<HTMLElement>('.hero__caption-tag');
+
+    // A real photograph gets an editorial caption; a slot still awaiting one
+    // keeps showing its shot brief under a "Needed" tag.
+    const captions = slides.map((slide) => ({
+      text: slide.dataset.caption ?? '',
+      tag: slide.dataset.captionTag ?? '',
+    }));
+
+    const INTERVAL = 4500;
+    let index = 0;
+    let timer: number | undefined;
+    let userPaused = false;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Auto-advance is desktop-only and motion-respecting (docs/06 §03 Mobile).
+    const mayAutoplay = () =>
+      !reduced.matches && window.matchMedia('(min-width: 768px)').matches && !userPaused;
+
+    const show = (next: number) => {
+      if (next === index) return;
+      slides[index].removeAttribute('data-active');
+      slides[index].setAttribute('aria-hidden', 'true');
+      dots[index]?.setAttribute('aria-current', 'false');
+
+      index = (next + slides.length) % slides.length;
+
+      slides[index].setAttribute('data-active', '');
+      slides[index].setAttribute('aria-hidden', 'false');
+      dots[index]?.setAttribute('aria-current', 'true');
+
+      // The caption belongs to the image, so it cross-fades with it.
+      if (caption && captionText && captionTag) {
+        caption.classList.add('is-fading');
+        window.setTimeout(() => {
+          captionText.textContent = captions[index].text;
+          captionTag.textContent = captions[index].tag;
+          caption.classList.remove('is-fading');
+        }, 450);
+      }
+    };
+
+    const stop = () => {
+      if (timer) window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    const start = () => {
+      stop();
+      if (!mayAutoplay()) return;
+      timer = window.setInterval(() => show(index + 1), INTERVAL);
+    };
+
+    dots.forEach((dot, i) =>
+      dot.addEventListener('click', () => {
+        show(i);
+        start();
+      })
+    );
+
+    pauseBtn?.addEventListener('click', () => {
+      userPaused = !userPaused;
+      pauseBtn.toggleAttribute('data-paused', userPaused);
+      pauseBtn.setAttribute(
+        'aria-label',
+        userPaused ? 'Play image slideshow' : 'Pause image slideshow'
+      );
+      if (userPaused) stop();
+      else start();
+    });
+
+    // Pause on hover and on keyboard focus.
+    hero.addEventListener('mouseenter', stop);
+    hero.addEventListener('mouseleave', start);
+    hero.addEventListener('focusin', stop);
+    hero.addEventListener('focusout', start);
+
+    // Swipe — the only way to advance on mobile.
+    let touchX = 0;
+    hero.addEventListener(
+      'touchstart',
+      (event) => { touchX = event.changedTouches[0].clientX; },
+      { passive: true }
+    );
+    hero.addEventListener(
+      'touchend',
+      (event) => {
+        const delta = event.changedTouches[0].clientX - touchX;
+        if (Math.abs(delta) > 48) show(index + (delta < 0 ? 1 : -1));
+      },
+      { passive: true }
+    );
+
+    reduced.addEventListener('change', start);
+    start();
+  }
+</script>

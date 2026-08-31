@@ -1,0 +1,366 @@
+---
+/**
+ * LEADER MESSAGE — shared body for the Director's and Principal's pages.
+ *
+ * Audit 1.9 and 1.10 keep both as their own pages. They are the same object with
+ * different content, so they are one component.
+ *
+ * LAYOUT — the homepage §PrincipalSpeak band, rebuilt on a light ground: the
+ * portrait bleeds to the left edge of the viewport and runs the full height of
+ * the band, with the message set large beside it. Same grid arithmetic as the
+ * homepage — gutter · 42% · 58% · gutter — so the copy's right edge lands on the
+ * same container line every other section uses, and the photograph still bleeds,
+ * without any 100vw that would disagree with the container by a scrollbar width.
+ *
+ * `paragraphs` empty renders the awaiting-content state rather than a blank
+ * page. Nothing here writes words on behalf of the school — a message signed by
+ * a named person at a real school is theirs to write, not ours.
+ */
+import { Image } from 'astro:assets';
+import Photo from '../ui/Photo.astro';
+import crest from '../../assets/icons/logos/sunbeam.png';
+
+interface Props {
+  name?: string;
+  role?: string;
+  eyebrow?: string;
+  heading?: string;
+  portrait?: ImageMetadata;
+  portraitAlt?: string;
+  portraitBrief: string;
+  /** The single strongest line, set large above the body. */
+  pullQuote?: string;
+  paragraphs: string[];
+  /** Qualifications, listed under the signature. */
+  credentials?: string[];
+  /** docs/07 id for whatever is still owed on this page. */
+  pending?: string;
+  pendingNote?: string;
+}
+
+const {
+  name,
+  role,
+  eyebrow = 'Principal Speak',
+  heading,
+  portrait,
+  portraitAlt,
+  portraitBrief,
+  pullQuote,
+  paragraphs,
+  credentials = [],
+  pending,
+  pendingNote,
+} = Astro.props;
+
+const hasBody = paragraphs.length > 0;
+---
+
+<section class="lead">
+  <div class="lead__media">
+    <Photo
+      src={portrait}
+      alt={portrait ? portraitAlt : undefined}
+      brief={portraitBrief}
+      position="50% 24%"
+      sizes="(max-width: 1023px) 100vw, 44vw"
+    />
+  </div>
+
+  <div class="lead__copy" data-reveal>
+    {/* The crest, very faint. Decorative — the same mark is a real logo in the
+        affiliations row and in the masthead. */}
+    <Image class="lead__crest" src={crest} alt="" aria-hidden="true"
+      widths={[260, 520]} sizes="260px" loading="lazy" />
+
+    <p class="lead__pill"><span class="pill pill--violet">{eyebrow}</span></p>
+
+    {heading && <h2 class="lead__heading">{heading}</h2>}
+
+    {pullQuote && (
+      <blockquote class="lead__quote">
+        <svg class="lead__mark" width="34" height="26" viewBox="0 0 18 15" fill="currentColor"
+          aria-hidden="true">
+          <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
+        </svg>
+        <p>{pullQuote}</p>
+      </blockquote>
+    )}
+
+    {hasBody ? (
+      <div class="lead__prose">
+        {paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+    ) : (
+      <div class="lead__awaiting">
+        <p class="lead__awaiting-title">This message is awaiting the school's own words.</p>
+        <p>
+          The page, its layout and its type are finished and ready. The text has to
+          come from the school — a message signed by a named person is not ours to
+          write. Send it over and it drops straight in.
+        </p>
+        {pendingNote && <p class="lead__awaiting-note">{pendingNote}</p>}
+      </div>
+    )}
+
+    {(name || role) && (
+      <div class="lead__sign">
+        <p class="lead__name">{name ?? 'Name to be confirmed'}</p>
+        {role && <p class="lead__role">{role}</p>}
+        {credentials.length > 0 && (
+          <ul class="lead__creds">
+            {credentials.map((c) => <li>{c}</li>)}
+          </ul>
+        )}
+      </div>
+    )}
+
+    {pending && <p class="lead__ref">Asset request {pending}</p>}
+  </div>
+</section>
+
+<style>
+  .lead {
+    display: grid;
+    /* gutter · 42% of content · 58% of content · gutter — the homepage band's
+       arithmetic, so the copy ends on the same line as every other section. */
+    grid-template-columns:
+      minmax(var(--sb-margin), 1fr)
+      minmax(0, calc(var(--sb-max-content) * 0.42))
+      minmax(0, calc(var(--sb-max-content) * 0.58))
+      minmax(var(--sb-margin), 1fr);
+    /* Sized to the screen, not to the copy. The band should land in one view
+       below the banner, so its height follows the viewport and its internals
+       compress with it — the same approach as §Campus on the homepage. */
+    min-height: clamp(460px, 58vh, 640px);
+    /* Light. The homepage band is ink because it sits between two pale sections
+       and needs to punch; here the whole page is already pale and a dark slab
+       inside a rounded ivory panel would read as a hole cut in the page. */
+    background: var(--sb-sand);
+  }
+
+  /* --- Portrait -------------------------------------------------------------- */
+
+  .lead__media {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ABSOLUTE, so the portrait contributes no intrinsic height and the row is
+     driven by the copy alone.
+     Without this the image's own 1131x1600 aspect set the band height: at 1920
+     the media column is 857px wide, which forced 1212px of band for 927px of
+     copy. The wider the screen, the taller the page got — the opposite of what
+     a full-bleed portrait should do. */
+  .lead__media :global(.photo) {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  /* The portrait's right edge would otherwise be a hard vertical line. A short
+     gradient dissolves it into the ground. */
+  .lead__media::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: clamp(32px, 6%, 96px);
+    background: linear-gradient(to right, rgba(244, 236, 231, 0), var(--sb-sand));
+    pointer-events: none;
+  }
+
+  /* --- Copy ------------------------------------------------------------------ */
+
+  .lead__copy {
+    grid-column: 3 / 4;
+    grid-row: 1;
+    position: relative;
+    align-self: center;
+    /* Padding has a 32px floor. It was allowed to collapse to 4px chasing a
+       one-screen fit, which put the eyebrow at -32px — above the viewport — and
+       buried the heading under the 97px sticky masthead. A band that "fits the
+       screen" is worth nothing if the header is sitting on its first two
+       elements. Above the floor it takes whatever the screen has spare, capped
+       so it never gets baggy on a tall display. */
+    padding: clamp(32px, calc((100svh - 892px) / 2), 64px) 0
+      clamp(32px, calc((100svh - 892px) / 2), 64px) clamp(28px, 4.5vw, 80px);
+  }
+
+  /* Centred behind the copy rather than tucked into a corner — the message is
+     the school speaking, and the crest sitting behind it says so.
+     Faint enough that the body text keeps its contrast; verified by sampling
+     rendered pixels, since a watermark is invisible to the DOM-based audit. */
+  .lead__crest {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(200px, 24vw, 360px);
+    height: auto;
+    opacity: 0.045;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  /* Everything else in the copy sits above the watermark. */
+  .lead__copy > :not(.lead__crest) { position: relative; z-index: 1; }
+
+  .lead__pill { margin-bottom: var(--sb-6); }
+
+  .lead__heading {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 2.4vw, 34px);
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-7);
+  }
+
+  /* The serif, italic, at real display size — docs/05 D9 reserves it for the
+     school's institutional voice, which is exactly what a signed message is. */
+  .lead__quote {
+    margin: 0 0 var(--sb-7);
+    padding-left: var(--sb-7);
+    border-left: 3px solid var(--sb-violet);
+  }
+
+  .lead__mark { color: var(--sb-violet); opacity: 0.45; margin-bottom: var(--sb-4); }
+
+  .lead__quote p {
+    font-family: var(--sb-font-serif);
+    font-style: italic;
+    font-size: clamp(19px, 1.8vw, 26px);
+    line-height: 1.42;
+    letter-spacing: -0.01em;
+    color: var(--sb-charcoal);
+    max-width: 21em;
+  }
+
+  .lead__prose p {
+    font-size: var(--sb-body-sm);
+    line-height: 1.75;
+    color: var(--sb-text-secondary);
+    max-width: 58ch;
+  }
+
+  .lead__prose p + p { margin-top: var(--sb-5); }
+
+  /* --- Awaiting content ------------------------------------------------------
+     Designed, not broken. A parent who reaches this page should see a page that
+     is plainly unfinished on purpose, not one that looks defective. */
+  .lead__awaiting {
+    padding: var(--sb-7);
+    border: 1px dashed var(--sb-border-strong);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    max-width: 58ch;
+  }
+
+  .lead__awaiting-title {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    margin-bottom: var(--sb-4);
+  }
+
+  .lead__awaiting p {
+    font-size: var(--sb-body-sm);
+    line-height: 1.7;
+    color: var(--sb-text-secondary);
+  }
+
+  .lead__awaiting-note {
+    margin-top: var(--sb-4);
+    padding-top: var(--sb-4);
+    border-top: 1px solid var(--sb-border-strong);
+  }
+
+  /* --- Signature -------------------------------------------------------------- */
+
+  .lead__sign {
+    margin-top: var(--sb-8);
+    padding-top: var(--sb-6);
+    border-top: var(--sb-hairline);
+    max-width: 58ch;
+  }
+
+  .lead__name {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-body);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+  }
+
+  .lead__role {
+    margin-top: 2px;
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  .lead__creds {
+    margin: var(--sb-4) 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
+  }
+
+  .lead__ref {
+    margin-top: var(--sb-6);
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  /* --- Tablet and below: the band stacks -------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .lead {
+      grid-template-columns:
+        minmax(var(--sb-margin), 1fr)
+        minmax(0, var(--sb-max-content))
+        minmax(var(--sb-margin), 1fr);
+      min-height: 0;
+    }
+
+    .lead__media {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      height: clamp(280px, 42vh, 420px);
+    }
+
+    /* Stacked, the portrait meets the copy along its bottom edge instead of its
+       right. Deep and eased for the same reason as §PrincipalSpeak: a short
+       linear fade leaves a line the eye still reads. */
+    .lead__media::after {
+      inset: auto 0 0 0;
+      width: auto;
+      height: clamp(120px, 34%, 220px);
+      background: linear-gradient(
+        to bottom,
+        rgba(244, 236, 231, 0) 0%,
+        rgba(244, 236, 231, 0.5) 46%,
+        rgba(244, 236, 231, 0.88) 78%,
+        var(--sb-sand) 100%
+      );
+    }
+
+    .lead__copy {
+      grid-column: 2 / 3;
+      grid-row: 2;
+      padding: var(--sb-8) 0 var(--sb-section-y);
+    }
+
+    .lead__quote p { max-width: none; }
+  }
+</style>

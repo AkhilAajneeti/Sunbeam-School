@@ -1,0 +1,236 @@
+---
+/**
+ * SECTION RAIL — a slim sticky index of the sections on a long page.
+ *
+ * Six chapters at roughly a screen each is a long scroll, and until now a reader
+ * who wanted the Reading Programme had to travel past everything else to find it.
+ * This gives them a way through and a sense of where they are.
+ *
+ * ═══ IT IS A LIST OF LINKS, AND ONLY THEN AN INDICATOR ═══════════════════════
+ *
+ * The markup is a <nav> of ordinary anchors. That means it works with the script
+ * blocked, it is reachable and operable by keyboard for free, each item is a real
+ * navigation target, and "open in new tab" does the obvious thing. The
+ * IntersectionObserver only decides which dot is lit.
+ *
+ * WHY THE OBSERVER IS NOT IN motion-gsap.ts. That chunk is gated behind
+ * prefers-reduced-motion and Save-Data, because everything in it is decoration.
+ * Knowing where you are on a page is not decoration — a reader who asked for less
+ * motion still deserves the indicator. This is state, so it ships as a component
+ * script that always runs, in the same way MobileNav's drawer does.
+ *
+ * ═══ WHY NO SCROLL ANIMATION ═════════════════════════════════════════════════
+ *
+ * The anchors do nothing on click but be anchors. `scroll-behavior: smooth` is
+ * already set globally in base.css and is switched off under reduced motion
+ * there, so a hijacked scrollTo() here would only take that decision away.
+ *
+ * DESKTOP ONLY. Below 1200px there is no gutter to put it in, and a floating
+ * index over the content is worse than none — the reader is one flick from the
+ * next section anyway on a phone.
+ */
+interface Item {
+  /** The id of the section this points at. */
+  id: string;
+  /** Short label. Two or three words; it sits in a 150px flyout. */
+  label: string;
+}
+
+interface Props {
+  items: Item[];
+  /** Accessible name for the nav landmark. */
+  label?: string;
+}
+
+const { items, label = 'Sections on this page' } = Astro.props;
+---
+
+<nav class="srail" aria-label={label} data-section-rail>
+  <ol>
+    {
+      items.map((it, i) => (
+        <li>
+          <a class="srail__link" href={`#${it.id}`} data-srail-link={it.id}>
+            <span class="srail__n t-tabular" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="srail__dot" aria-hidden="true"></span>
+            <span class="srail__label">{it.label}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .srail {
+    position: fixed;
+    z-index: 40;
+    top: 50%;
+    right: clamp(12px, 1.6vw, 26px);
+    transform: translateY(-50%);
+    /* The rail is a shortcut, not a wall: only the links themselves take the
+       pointer, so the gap between them never blocks a click on the page. */
+    pointer-events: none;
+  }
+
+  .srail ol {
+    display: grid;
+    gap: 2px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .srail__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--sb-4);
+    padding: 7px 4px;
+    pointer-events: auto;
+  }
+
+  /* --- The index numeral: present, quiet, and never the hit target ---------- */
+  .srail__n {
+    font-family: var(--sb-font-display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--sb-text-muted);
+    opacity: 0;
+    transform: translateX(6px);
+    transition:
+      opacity var(--sb-dur-link) var(--sb-ease),
+      transform var(--sb-dur-link) var(--sb-ease),
+      color var(--sb-dur-link) ease;
+  }
+
+  /* --- The dot, which is really a bar that grows ---------------------------- */
+  .srail__dot {
+    width: 18px;
+    height: 2px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-border-strong);
+    transition:
+      width var(--sb-dur-link) var(--sb-ease),
+      background-color var(--sb-dur-link) ease;
+  }
+
+  /* --- The label, revealed on hover or focus -------------------------------
+     It is in the markup at all times and only VISUALLY hidden, so a screen
+     reader always announces the destination — the numeral and dot alone would
+     make these six links read as "01, 02, 03…". */
+  .srail__label {
+    position: absolute;
+    right: calc(100% + var(--sb-4));
+    white-space: nowrap;
+    padding: 5px 12px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-charcoal);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateX(8px);
+    pointer-events: none;
+    transition:
+      opacity var(--sb-dur-link) var(--sb-ease),
+      transform var(--sb-dur-link) var(--sb-ease);
+  }
+
+  .srail__link:hover .srail__label,
+  .srail__link:focus-visible .srail__label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .srail__link:hover .srail__dot { width: 30px; background: var(--sb-violet); }
+  .srail__link:hover .srail__n { opacity: 1; transform: translateX(0); }
+
+  .srail__link:focus-visible {
+    outline: 2px solid var(--sb-focus);
+    outline-offset: 3px;
+    border-radius: var(--sb-r-full);
+  }
+
+  /* --- Current section ------------------------------------------------------
+     Set by the observer below. Weight and width carry it, not colour alone. */
+  .srail__link[aria-current='true'] .srail__dot {
+    width: 34px;
+    background: var(--sb-violet);
+  }
+
+  .srail__link[aria-current='true'] .srail__n {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--sb-violet);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .srail__n,
+    .srail__dot,
+    .srail__label { transition: none; }
+  }
+
+  /* No gutter to live in below this, and floating it over the copy would be
+     worse than not having it. */
+  @media (max-width: 1199px) {
+    .srail { display: none; }
+  }
+</style>
+
+<script>
+  /**
+   * Lights the dot for whichever section is currently in view.
+   *
+   * ROOT MARGIN, NOT A THRESHOLD. A section taller than the viewport can never
+   * be "50% visible", so a threshold-based test simply never fires for the long
+   * chapters. Collapsing the viewport to a band across its middle
+   * (`-45% 0px -45% 0px`) asks a different and correct question: which section is
+   * under the middle of the screen right now?
+   *
+   * The LAST entry in the band wins rather than the first. Where two sections
+   * both cross it — at a boundary — the one further down is the one being
+   * scrolled into, which is what a reader means by "where I am".
+   */
+  const rail = document.querySelector<HTMLElement>('[data-section-rail]');
+
+  if (rail) {
+    const links = new Map<string, HTMLAnchorElement>();
+    rail.querySelectorAll<HTMLAnchorElement>('[data-srail-link]').forEach((a) => {
+      links.set(a.dataset.srailLink!, a);
+    });
+
+    const sections = [...links.keys()]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (sections.length) {
+      const setCurrent = (id: string) => {
+        links.forEach((a, key) => {
+          if (key === id) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        });
+      };
+
+      const visible = new Set<string>();
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) visible.add(e.target.id);
+            else visible.delete(e.target.id);
+          });
+          // Document order, so "last in the band" is meaningful.
+          const current = sections.filter((s) => visible.has(s.id)).pop();
+          if (current) setCurrent(current.id);
+        },
+        { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+      );
+
+      sections.forEach((s) => io.observe(s));
+    }
+  }
+</script>

@@ -1,0 +1,561 @@
+---
+/**
+ * ASSESSMENT & SUPPORT · MENTORING — seven sections.
+ *
+ * ⚠ THE SCHOOL PUBLISHES ONE LINE OF MENTORING COPY. What it also publishes,
+ * and what a page of pastoral prose would have missed, is its own recruitment
+ * advertising — and a school's job adverts are a harder statement of what it
+ * staffs than any paragraph about care. Read off the posters in assets/jobs/:
+ *
+ *   "School counsellor: MA in counselling or clinical psychology with two years
+ *    of experience as a school counsellor"        (walk-in interview poster)
+ *   "clinical psychology counsellor and wellness trainer"  (vacancies poster)
+ *
+ * A school that requires a master's degree and two years' experience for its
+ * counsellor is describing its provision more precisely than copy could.
+ *
+ * ═══ ALSO VERIFIED ═════════════════════════════════════════════════════════
+ *   Every student has a member of staff who knows them as a person rather than
+ *     as a name on a class list.  (data/academics.ts assessmentTopics)
+ *   BCS Counsellors — "trained counsellors available to students."
+ *     (data/facilities.ts, listed on campus)
+ *
+ * ⚠ NOT USED: data/campus.ts carries a "Counselling" entry marked
+ * `verified: false`. It is not cited here.
+ *
+ * ⚠ NOT CLAIMED: a mentor-to-student ratio, a programme name, a meeting
+ * frequency, how a mentor is assigned, or how a parent contacts one. None is
+ * published, and inventing any of it would be inventing pastoral care.
+ *
+ * ⚠ THIS PAGE IS ABOUT PEOPLE AND IS BUILT DIFFERENTLY FROM ITS SIBLINGS. Its
+ * image composition is portrait rather than landscape, its journey alternates
+ * vertically rather than sitting on one line, and it ends on a quiet cream
+ * callout instead of going straight from the dark statement to the footer.
+ *
+ * ═══ COMPOSITION — seven sections, seven different builds ═══════════════════
+ *   01 · PAPER  copy left, a three-frame portrait composition right.
+ *   02 · CREAM  the collage crosses LEFT, four numbered rows on rules right.
+ *   03 · IVORY  the mentoring journey — four stages on a drawn rail, over
+ *               GUIDANCE set oversized, the middle two dropped a half-step.
+ *   04 · PAPER  four editorial blocks, divided by thin vertical rules.
+ *   05 · PHOTO  the human moment — full width, parallaxed.
+ *   06 · CREAM  the closing callout, with an orange rule under it.
+ */
+import { Picture } from 'astro:assets';
+import '../../../styles/assessment.css';
+import { MARK } from './marks';
+import AsRail from './AsRail.astro';
+
+/* ── PHOTOGRAPHY — six genuine Sunbeam Ballia frames, each used ONCE. ─────── */
+import pLib from '../../../assets/photos/sb-library.jpg';
+import pBench from '../../../assets/photos/sb-chem-lab.jpg';
+import pCorridor from '../../../assets/corridor and stairs/DSC_1222 copy.jpg';
+import pTables from '../../../assets/library/DSC_1230 copy.jpg';
+import pStage from '../../../assets/photos/sunbeem-5.jpg';
+import pCohort from '../../../assets/photos/sunbeem-3.jpg';
+
+const S = 'Sunbeam School Ballia';
+
+const CAREERS = '/career/';
+const ASSESSMENT = '/academics/assessment/';
+const REMEDIAL = '/academics/assessment/remedial-support/';
+
+/* ── SECTION 02 — the four people, in the order the school lists them ─────
+   ⚠ `advert: true` marks the two whose evidence is a recruitment poster rather
+   than a page of copy, and the rows say so in their own text. */
+const people = [
+  {
+    n: '01',
+    mark: 'person',
+    k: 'Student mentor',
+    v: 'A member of staff who knows the student as a person, not as a row on a class list.',
+  },
+  {
+    n: '02',
+    mark: 'chat',
+    k: 'School counsellor',
+    v: 'Advertised at MA in counselling or clinical psychology, with two years’ experience as a school counsellor.',
+  },
+  {
+    n: '03',
+    mark: 'head',
+    k: 'Clinical psychology counsellor',
+    v: 'Listed with a wellness trainer among the posts the school has advertised for.',
+  },
+  {
+    n: '04',
+    mark: 'hands',
+    k: 'BCS Counsellors',
+    v: 'Trained counsellors available to students, listed among the school’s campus provision.',
+  },
+] as const;
+
+/* ── SECTION 03 — the journey. Four stages, and each is a consequence of the
+   one before it rather than a stage in a programme the school has not named. */
+const journey = [
+  { n: '01', mark: 'person', k: 'Know', v: 'Someone in the school knows the student as a person.' },
+  { n: '02', mark: 'eye', k: 'Notice', v: 'Small changes and concerns can be recognised early.' },
+  { n: '03', mark: 'handHeart', k: 'Guide', v: 'Support can be offered at the point it matters.' },
+  { n: '04', mark: 'grow', k: 'Grow', v: 'The student is supported beyond the classroom.' },
+] as const;
+
+/* ── SECTION 04 — the same four people, stated flat ──────────────────────── */
+const roles = [
+  { n: '01', mark: 'person', k: 'Mentor', v: 'A member of staff who knows the student personally.' },
+  { n: '02', mark: 'chat', k: 'School counsellor', v: 'Counselling support available within the school structure.' },
+  { n: '03', mark: 'head', k: 'Clinical psychology counsellor', v: 'Professional counselling support, where the school has published it.' },
+  { n: '04', mark: 'hands', k: 'BCS Counsellors', v: 'Trained counsellors available to students on campus.' },
+] as const;
+---
+
+{/* ══ 01 · SOMEONE WHO KNOWS THE CHILD ═══════════════════════════════════════
+    Ground: white. Copy left, and on the right a PORTRAIT composition — a tall
+    lead frame, one overlapping landscape frame and a circular detail — rather
+    than the landscape lead this page's siblings use. */}
+<section class="as-sec as-sec--paper as-pad mn-open" aria-labelledby="mn-open-t">
+  <span class="as-grid as-grid--fine" aria-hidden="true"></span>
+
+  <div class="u-container mn-open__grid">
+    <div>
+      <p class="as-kicker" data-reveal>What the school publishes</p>
+      <h2 class="as-h as-h--xl mn-open__h" id="mn-open-t">
+        <span data-clip data-clip-delay="0">Someone who knows</span>
+        <span data-clip data-clip-delay="150"><em>the child.</em></span>
+      </h2>
+
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        Sunbeam states one thing about mentoring: that every student has
+        <strong> a member of staff who knows them as a person rather than as a name on a class
+        list</strong>. It is a single line, and it is not expanded here into a programme that has not
+        been described.
+      </p>
+      <p class="as-body" data-reveal data-reveal-delay="260">
+        What that line is for is easy to say without inventing anything. A subject teacher seeing a
+        child four times a week may not notice a change in them. Someone who already knows the child
+        does — and the years in which a student is least likely to raise a problem themselves are
+        exactly the years in which that difference matters.
+      </p>
+      <p class="as-note" data-reveal data-reveal-delay="330">
+        The line sits under Assessment &amp; Support on the school’s own
+        {' '}<a class="as-link" href={ASSESSMENT}>assessment</a> pages. It does not say how a mentor
+        is assigned, how often they meet, or how a parent reaches one.
+      </p>
+    </div>
+
+    <div class="mn-open__stage">
+      <span class="as-dots mn-open__dots" aria-hidden="true"></span>
+      <div class="mn-open__lead as-frame as-fill" data-mask>
+        <Picture
+          src={pLib}
+          alt={`Students of ${S} reading at the long tables of the library, a member of staff at the head of the row`}
+          formats={['avif', 'webp']}
+          widths={[520, 880, 1200]}
+          sizes="(max-width: 1023px) 92vw, 42vw"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      <div class="mn-open__sm as-frame as-frame--float as-fill" data-pop data-pop-delay="180">
+        <Picture
+          src={pTables}
+          alt={`The reading tables of the Nalanda Library at ${S}, set out along the shelves`}
+          formats={['avif', 'webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 1023px) 44vw, 17vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="mn-open__cir as-frame as-frame--float as-frame--round as-fill" data-pop data-pop-delay="300">
+        <Picture
+          src={pBench}
+          alt={`Students of ${S} working along the chemistry bench`}
+          formats={['avif', 'webp']}
+          widths={[220, 400]}
+          sizes="(max-width: 1023px) 28vw, 11vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ══ 02 · MORE THAN A NAME ON A LIST ════════════════════════════════════════
+    Ground: warm cream. The collage crosses LEFT and the four people are listed
+    on the right as numbered rows on thin rules. */}
+<section class="as-sec as-sec--cream as-pad mn-rel" aria-labelledby="mn-rel-t">
+  <div class="u-container mn-rel__grid">
+    <div class="mn-rel__stage">
+      <span class="as-dots mn-rel__dots" aria-hidden="true"></span>
+      <div class="mn-rel__lead as-frame as-fill" data-zoom data-zoom-to="1.04">
+        <Picture
+          src={pCorridor}
+          alt={`A corridor at ${S}, its classroom doors running the length of the block`}
+          formats={['avif', 'webp']}
+          widths={[520, 880, 1200]}
+          sizes="(max-width: 1023px) 92vw, 42vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="mn-rel__sm as-frame as-frame--float as-fill" data-pop data-pop-delay="200">
+        <Picture
+          src={pStage}
+          alt={`Student council office-bearers and NCC cadets of ${S} on stage with the school’s dignitaries`}
+          formats={['avif', 'webp']}
+          widths={[320, 560]}
+          sizes="(max-width: 1023px) 48vw, 19vw"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div class="mn-rel__copy">
+      <p class="as-kicker" data-reveal>The relationship</p>
+      <h2 class="as-h as-h--lg" id="mn-rel-t">
+        <span data-clip data-clip-delay="0">More than</span>
+        <span data-clip data-clip-delay="150"><em>a name on a list.</em></span>
+      </h2>
+      <p class="as-body" data-reveal data-reveal-delay="200">
+        The firmer evidence is in the school’s own recruitment posters, where a school states what it
+        will and will not accept. Four kinds of person are named across them and its campus
+        inventory.
+      </p>
+
+      <ol class="mn-people">
+        {people.map((p, i) => (
+          <li class="mn-person" data-reveal data-reveal-delay={250 + i * 80}>
+            <span class="mn-person__m" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[p.mark]} />
+              </svg>
+            </span>
+            <span class="mn-person__n t-tabular">{p.n}</span>
+            <span class="mn-person__t">
+              <span class="mn-person__k">{p.k}</span>
+              <span class="mn-person__v">{p.v}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+      <p class="as-note" data-reveal data-reveal-delay="580">
+        Rows two and three are read off the school’s published recruitment notices, which are on
+        {' '}<a class="as-link" href={CAREERS}>Career</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ══ 03 · THE MENTORING JOURNEY ═════════════════════════════════════════════
+    Ground: warm ivory, with GUIDANCE set oversized and outlined behind. */}
+<section class="as-sec as-sec--ivory as-pad mn-jrn" aria-labelledby="mn-jrn-t">
+  <span class="as-ghost mn-jrn__ghost" aria-hidden="true" data-drift>Guidance</span>
+
+  <div class="u-container mn-jrn__inner">
+    <p class="as-kicker mn-jrn__kick" data-reveal>The mentoring journey</p>
+    <h2 class="as-h as-h--md mn-jrn__h" id="mn-jrn-t">
+      <span data-clip data-clip-delay="0">Known first.</span>
+      <span data-clip data-clip-delay="150"><em>Then noticed.</em></span>
+    </h2>
+
+    <AsRail steps={journey} ground="ivory" label="The mentoring journey, four stages" class="mn-jrn__rail" />
+  </div>
+</section>
+
+{/* ══ 04 · DIFFERENT PEOPLE, ONE PURPOSE ═════════════════════════════════════
+    Ground: white. Four editorial blocks divided by thin vertical rules — not
+    four cards; the brief rules those out on this page in as many words. */}
+<section class="as-sec as-sec--paper as-pad--sm mn-roles" aria-labelledby="mn-roles-t">
+  <div class="u-container mn-roles__grid">
+    <div class="mn-roles__head">
+      <p class="as-kicker" data-reveal>People who support</p>
+      <h2 class="as-h as-h--md" id="mn-roles-t">
+        <span data-clip data-clip-delay="0">Different people.</span>
+        <span data-clip data-clip-delay="150"><em>One purpose.</em></span>
+      </h2>
+    </div>
+
+    <ol class="as-cols" style="--n: 4;">
+      {roles.map((r, i) => (
+        <li class="as-col" data-reveal data-reveal-delay={140 + i * 90}>
+          <span class="as-col__m" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={MARK[r.mark]} />
+            </svg>
+          </span>
+          <p class="as-col__n t-tabular">{r.n}</p>
+          <h3 class="as-col__k">{r.k}</h3>
+          <p class="as-col__v">{r.v}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+{/* ══ 05 · THE HUMAN MOMENT ══════════════════════════════════════════════════
+    ⚠ THIS IS NOT THE PAGE'S LAST SECTION, WHICH IS WHY IT DOES NOT USE AsClose.
+    The brief puts a quiet cream callout after it, and a dark statement that is
+    followed by anything other than the footer needs its own build. */}
+<section class="as-sec mn-human" aria-labelledby="mn-human-t">
+  <div class="mn-human__media" aria-hidden="true" data-parallax data-parallax-y="-40">
+    <Picture
+      src={pCohort}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[1024, 1600, 2000]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <span class="mn-human__scrim" aria-hidden="true"></span>
+
+  <div class="u-container mn-human__inner">
+    <h2 class="as-h mn-human__h" id="mn-human-t">
+      <span data-clip data-clip-delay="0">Noticed before</span>
+      <span data-clip data-clip-delay="150"><em>it is a result.</em></span>
+    </h2>
+    <p class="mn-human__b" data-reveal data-reveal-delay="180">
+      The school publishes that every student has a mentor, and its own adverts show what it requires
+      of a counsellor. It does not publish a ratio, a programme name, a meeting frequency, or how a
+      parent reaches a child’s mentor — and none of those is estimated here.
+    </p>
+  </div>
+</section>
+
+{/* ══ 06 · THE CLOSING CALLOUT ═══════════════════════════════════════════════ */}
+<section class="as-sec as-sec--cream mn-final" aria-label="Closing statement">
+  <div class="u-container mn-final__inner">
+    <span class="mn-final__m" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" set:html={MARK.quote} />
+      </svg>
+    </span>
+    <p class="mn-final__t" data-reveal>
+      Knowing a student
+      <em>changes what support can mean.</em>
+    </p>
+    <span class="as-dots mn-final__dots" aria-hidden="true"></span>
+  </div>
+  <p class="u-container as-note mn-final__foot" data-reveal data-reveal-delay="140">
+    Where a difficulty turns out to be a subject rather than a state of mind, it goes to
+    {' '}<a class="as-link" href={REMEDIAL}>remedial support</a>.
+  </p>
+</section>
+
+<style>
+  /* ═══ 01 · SOMEONE WHO KNOWS THE CHILD ════════════════════════════════════ */
+  .mn-open__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.96fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .mn-open__h { max-width: 14ch; }
+
+  /* ⚠ A PORTRAIT COMPOSITION, NOT A LANDSCAPE ONE. Mentoring is the page about
+     people, and a 4:5 lead with a landscape frame across its foot reads closer
+     to a person than the 16:11 the other pages use. */
+  .mn-open__stage { position: relative; padding-bottom: clamp(30px, 3.4vw, 52px); }
+  .mn-open__dots { top: 2%; right: 0; }
+  .mn-open__lead { width: 76%; margin-left: auto; aspect-ratio: 4 / 5; }
+  .mn-open__sm {
+    position: absolute;
+    left: 0;
+    bottom: clamp(30px, 3.4vw, 52px);
+    width: 52%;
+    aspect-ratio: 4 / 3;
+    border: 5px solid var(--sb-paper);
+  }
+  .mn-open__cir {
+    position: absolute;
+    right: 6%;
+    bottom: 0;
+    width: clamp(84px, 9vw, 132px);
+    aspect-ratio: 1 / 1;
+    border: 5px solid var(--sb-paper);
+  }
+
+  /* ═══ 02 · MORE THAN A NAME ON A LIST ═════════════════════════════════════ */
+  .mn-rel__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+    gap: clamp(26px, 3.6vw, 56px);
+    align-items: center;
+  }
+  .mn-rel__stage { position: relative; padding-bottom: clamp(24px, 2.8vw, 42px); }
+  .mn-rel__dots { top: 0; left: 0; }
+  .mn-rel__lead { width: 84%; aspect-ratio: 4 / 3; }
+  .mn-rel__sm {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 46%;
+    aspect-ratio: 16 / 10;
+    border: 5px solid #f3ece5;
+  }
+
+  .mn-people { margin: clamp(18px, 2.2vw, 28px) 0 0; padding: 0; list-style: none; }
+  .mn-person {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: clamp(10px, 1.2vw, 15px);
+    align-items: start;
+    padding: clamp(9px, 1.05vw, 13px) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--sb-charcoal) 12%, transparent);
+  }
+  .mn-person:first-child { border-top: 1px solid color-mix(in srgb, var(--sb-charcoal) 12%, transparent); }
+  .mn-person__m { display: block; width: clamp(20px, 1.9vw, 26px); margin-top: 1px; color: var(--sb-violet); }
+  .mn-person__m svg { display: block; width: 100%; height: auto; }
+  .mn-person__n {
+    margin-top: 3px;
+    font-size: clamp(9px, 0.68vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    color: var(--sb-orange-bright);
+  }
+  .mn-person__t { display: grid; gap: 3px; }
+  .mn-person__k {
+    font-size: clamp(9.5px, 0.72vw, 11.2px);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+  .mn-person__v { font-size: clamp(10.5px, 0.78vw, 12.4px); line-height: 1.62; color: var(--sb-text-secondary); }
+
+  /* ═══ 03 · THE MENTORING JOURNEY ══════════════════════════════════════════ */
+  .mn-jrn__ghost {
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    font-size: clamp(76px, 13.5vw, 210px);
+  }
+  .mn-jrn__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+  .mn-jrn__kick { text-align: center; }
+  .mn-jrn__rail { margin-top: clamp(26px, 3.2vw, 44px); }
+  /* ⚠ THE MIDDLE TWO DROP A HALF-STEP. Four stages on one dead-straight line is
+     the build every other page on this site uses; mentoring is not a process, so
+     its rail is allowed to breathe. The rule still passes through every disc
+     because the rule is pinned to the FIRST row of the grid. */
+  .mn-jrn__rail :global(.as-step:nth-child(2)),
+  .mn-jrn__rail :global(.as-step:nth-child(4)) { padding-top: clamp(10px, 1.4vw, 22px); }
+  .mn-jrn__rail :global(.as-rail__rule) { top: calc(clamp(38px, 3.6vw, 50px) / 2 - 1px); }
+
+  /* ═══ 04 · DIFFERENT PEOPLE, ONE PURPOSE ══════════════════════════════════ */
+  .mn-roles__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+    gap: clamp(24px, 3.2vw, 50px);
+    align-items: center;
+  }
+
+  /* ═══ 05 · THE HUMAN MOMENT ═══════════════════════════════════════════════ */
+  .mn-human { padding-block: clamp(44px, 5.4vw, 84px); }
+  .mn-human__media { position: absolute; z-index: -3; inset: -12% 0; }
+  .mn-human__media :global(picture),
+  .mn-human__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 40%;
+  }
+  .mn-human__scrim {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(24, 16, 12, 0.84) 0%, rgba(24, 16, 12, 0.7) 48%, rgba(24, 16, 12, 0.88) 100%),
+      radial-gradient(64% 74% at 50% 44%, rgba(255, 92, 53, 0.15) 0%, transparent 72%);
+  }
+  .mn-human__inner { position: relative; display: grid; justify-items: center; text-align: center; }
+  .mn-human__h { max-width: 20ch; font-size: clamp(26px, 3.2vw, 46px); color: #fff; }
+  .mn-human__h em { color: var(--sb-lime); font-style: italic; }
+  .mn-human__b {
+    max-width: 66ch;
+    margin: clamp(14px, 1.7vw, 21px) 0 0;
+    font-size: clamp(12px, 0.88vw, 14px);
+    line-height: 1.78;
+    color: var(--sb-on-dark-82);
+  }
+
+  /* ═══ 06 · THE CLOSING CALLOUT ════════════════════════════════════════════ */
+  .mn-final { padding-block: clamp(30px, 3.6vw, 56px); }
+  .mn-final__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(16px, 2vw, 28px);
+    align-items: center;
+  }
+  .mn-final__m {
+    display: grid;
+    place-items: center;
+    width: clamp(44px, 4.2vw, 60px);
+    aspect-ratio: 1 / 1;
+    border: 1.6px solid color-mix(in srgb, var(--sb-violet) 40%, transparent);
+    border-radius: 50%;
+    color: var(--sb-violet);
+  }
+  .mn-final__m svg { width: 50%; height: auto; }
+  .mn-final__t {
+    margin: 0;
+    max-width: 30ch;
+    padding-bottom: clamp(10px, 1.2vw, 15px);
+    border-bottom: 2px solid var(--sb-orange-bright);
+    font-family: var(--sb-font-display);
+    font-size: clamp(17px, 1.7vw, 29px);
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: -0.032em;
+    color: var(--sb-charcoal);
+  }
+  .mn-final__t em { display: block; font-style: normal; color: var(--sb-violet); }
+  .mn-final__dots { top: 50%; right: 3%; translate: 0 -50%; width: clamp(64px, 6.4vw, 104px); }
+  .mn-final__foot { max-width: none; margin-top: clamp(14px, 1.7vw, 20px); }
+
+  /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */
+  @media (max-width: 1179px) {
+    .mn-roles__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 2.8vw, 30px); }
+  }
+
+  @media (max-width: 1023px) {
+    .mn-open__grid,
+    .mn-rel__grid { grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 4vw, 40px); }
+    .mn-open__stage,
+    .mn-rel__stage { order: -1; }
+    .mn-open__h { max-width: none; }
+    .mn-open__lead { width: 70%; aspect-ratio: 4 / 3; }
+    .mn-jrn__ghost { font-size: clamp(64px, 13vw, 130px); }
+    .mn-jrn__rail :global(.as-step:nth-child(2)),
+    .mn-jrn__rail :global(.as-step:nth-child(4)) { padding-top: 0; }
+  }
+
+  @media (max-width: 767px) {
+    .mn-open__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .mn-open__sm { width: 50%; bottom: 0; }
+    .mn-open__cir { display: none; }
+    .mn-open__stage { padding-bottom: clamp(30px, 8vw, 42px); }
+
+    .mn-rel__lead { width: 100%; aspect-ratio: 5 / 4; }
+    .mn-rel__sm { width: 50%; }
+    .mn-rel__stage { padding-bottom: clamp(28px, 7.4vw, 40px); }
+
+    .mn-person { grid-template-columns: auto minmax(0, 1fr); row-gap: 4px; }
+    .mn-person__n { grid-column: 2; margin-top: 0; }
+
+    .mn-final__inner { grid-template-columns: minmax(0, 1fr); gap: clamp(13px, 3.6vw, 18px); }
+    .mn-final__t { max-width: none; }
+    .mn-final__dots { display: none; }
+  }
+</style>

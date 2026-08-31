@@ -1,0 +1,344 @@
+---
+/**
+ * §15 · ADMISSIONS CTA — audit 1.15
+ *
+ * The audit's closing recommendation: the homepage must end on a clear
+ * admissions call to action rather than trailing off into the footer. This is
+ * the last thing a prospective parent reads, so it carries the three routes
+ * they actually take — apply, call, visit — and nothing else.
+ *
+ * No numbers are quoted here that are not already verified elsewhere on the
+ * page. Admission dates, age criteria and fees are outstanding (asset request
+ * A8), so this band routes to the admissions page rather than stating them.
+ */
+import { Image } from 'astro:assets';
+import { school } from '../../data/site';
+import cap from '../../assets/icons/graduate-cap.png';
+import book from '../../assets/icons/icon-2.png';
+import brush from '../../assets/icons/paintbrush.png';
+---
+
+<section class="adm" aria-labelledby="adm-heading">
+  <div class="u-container">
+    <div class="adm__panel" data-reveal>
+      {/* Decorative only — empty alt and hidden from assistive tech. They
+          straddle the panel's corners rather than sitting wholly inside it: the
+          brush is orange-on-orange and the book carries a red outline, so on the
+          panel alone parts of each would disappear. Half on the panel, half on
+          the cream, and every element of all three reads. */}
+      <Image class="adm__deco adm__deco--cap" src={cap} alt="" aria-hidden="true"
+        widths={[120, 240]} sizes="120px" loading="lazy" />
+      <Image class="adm__deco adm__deco--book" src={book} alt="" aria-hidden="true"
+        widths={[143, 286]} sizes="110px" loading="lazy" />
+      <Image class="adm__deco adm__deco--brush" src={brush} alt="" aria-hidden="true"
+        widths={[130, 260]} sizes="130px" loading="lazy" />
+
+      <div class="adm__copy">
+        {/* No session year. The build would bake in whatever year it ran, and a
+            stale "Admissions 2026" is worse than no year at all — the session
+            label belongs with the admission dates the school still owes (A8). */}
+        <p class="adm__pill"><span class="pill adm__badge">Admissions Open</span></p>
+
+        <h2 class="adm__heading" data-split id="adm-heading">
+          Bring your child to <span class="t-squiggle adm__squiggle">Sunbeam</span>
+        </h2>
+
+        <p class="adm__sub">
+          Speak to the admissions desk and arrange a walk around the Agarsanda campus
+          before you decide.
+        </p>
+
+        <div class="adm__actions">
+          {/* ⚠⚠ NO APPLY BUTTONS IN THIS BAND ANY MORE, AND THE HISTORY MATTERS.
+              It once held ONE “Apply online” pointing at
+              sunbeamballia.edu.in/apply-online/ — the LEGACY site — while the
+              utility bar linked the school’s two actual session-coded forms. The
+              same action sent a parent to two different websites depending on
+              which link they happened to click, which is the kind of fault
+              nobody reports because each link works.
+
+              The fix was to make all of them agree, and this band then carried a
+              third and fourth copy of an action already in the utility bar on
+              every page and in the masthead pill. So the copies are gone rather
+              than merely reconciled. What this band is for is what is left in
+              it: the board, the classes, the streams, the campus, and a
+              telephone number that reaches a person. The forms are one tap away
+              at the top of this and every other page.
+
+              ⚠ THE HELPLINE STAYS AND IS NOW THE ONLY BUTTON. Do not restyle it
+              as a secondary action — with the apply buttons gone it is the
+              band’s primary one. */}
+          <a class="btn adm__call t-tabular" href={`tel:${school.phone.admissions}`}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
+            </svg>
+            {school.phone.admissionsDisplay}
+          </a>
+        </div>
+
+        <p class="adm__visit">
+          Prefer to see it first? <a href="/admissions/campus-visit/">Book a campus visit</a>
+        </p>
+      </div>
+
+      {/* Three plain facts, no invented figures. Each is verified in docs/01 § 5. */}
+      <ul class="adm__facts">
+        <li>
+          <span class="adm__fact-k">Board</span>
+          <span class="adm__fact-v">{school.board} · Affiliation {school.affiliationNo}</span>
+        </li>
+        <li>
+          <span class="adm__fact-k">Classes</span>
+          <span class="adm__fact-v">{school.classRange}</span>
+        </li>
+        <li>
+          <span class="adm__fact-k">Streams at +2</span>
+          <span class="adm__fact-v">{school.streams.join(' · ')}</span>
+        </li>
+        <li>
+          <span class="adm__fact-k">Campus</span>
+          <span class="adm__fact-v">{school.address.line1}, {school.address.city}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .adm {
+    /* Sand — the Achievements gradient above resolves back to ivory at its
+       foot, so an ivory ground here left the orange panel floating in one
+       undifferentiated cream field. See the note in Affiliations. */
+    background: var(--sb-sand);
+    padding-block: var(--sb-section-y);
+  }
+
+  .adm__panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--sb-10);
+    align-items: center;
+    padding: var(--sb-10);
+    border-radius: var(--sb-r-3);
+    /* ORANGE, not ink. The footer immediately below is --sb-violet-ink, and an
+       ink panel stacked on an ink footer read as one undifferentiated dark
+       block — the page's last conversion moment lost its edge. Orange also puts
+       the strongest colour on the strongest ask. */
+    background: var(--sb-violet);
+    color: #fff;
+    /* A quiet depth bloom rather than a gradient wash — keeps the panel from
+       reading as the gradient-heavy template look docs/05 rules out. */
+    background-image: radial-gradient(
+      120% 150% at 82% 0%,
+      rgba(122, 36, 6, 0.5) 0%,
+      rgba(122, 36, 6, 0) 62%
+    );
+    box-shadow: 0 26px 60px -26px rgba(122, 36, 6, 0.75);
+  }
+
+  /* --- Floating decorations --------------------------------------------------
+     Positioned on the PANEL, overhanging its corners. The overhang is always
+     smaller than --sb-margin (20px at the narrowest breakpoint), so nothing can
+     reach past the page gutter and widen the document.
+
+     They sit in the panel's own padding, clear of every text box — the copy
+     starts 72px in and the facts card is vertically centred, leaving all four
+     corners empty. */
+  .adm__deco {
+    position: absolute;
+    z-index: 2;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 10px 18px rgba(60, 18, 4, 0.28));
+    animation: adm-float var(--dur, 8s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    will-change: transform;
+  }
+
+  /* Sizes and offsets are chosen so each icon's BOX clears every text box, not
+     just its visible artwork — the cap is 1.12x as tall as it is wide, so at
+     118px it reached 106px down the panel and crossed the "Admissions Open"
+     pill, which starts at the 72px padding line. */
+  .adm__deco--cap {
+    --dur: 7.5s;
+    --tilt: -8deg;
+    top: clamp(-40px, -3vw, -18px);
+    left: clamp(-26px, -2vw, -12px);
+    width: clamp(56px, 6.6vw, 96px);
+  }
+
+  .adm__deco--book {
+    --dur: 9s;
+    --delay: -2.4s;
+    --tilt: 7deg;
+    top: clamp(-34px, -2.6vw, -16px);
+    right: clamp(-22px, -1.7vw, -10px);
+    width: clamp(50px, 6vw, 100px);
+  }
+
+  .adm__deco--brush {
+    --dur: 8.4s;
+    --delay: -4.8s;
+    --tilt: -12deg;
+    bottom: clamp(-44px, -3.2vw, -20px);
+    right: clamp(-26px, -2vw, -12px);
+    width: clamp(54px, 7vw, 112px);
+  }
+
+  @keyframes adm-float {
+    0%,
+    100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+    50% { transform: translateY(-11px) rotate(calc(var(--tilt, 0deg) + 3deg)); }
+  }
+
+  /* docs/05 § N — motion is decoration, never information. Nothing here carries
+     meaning, so it simply stops. */
+  @media (prefers-reduced-motion: reduce) {
+    .adm__deco { animation: none; transform: rotate(var(--tilt, 0deg)); }
+  }
+
+  .adm__pill { margin-bottom: var(--sb-6); }
+
+  /* Solid white plate. A translucent-white pill over orange composites to a
+     ground of only 4.2:1 against white text — measured, not estimated. */
+  .adm__badge { background: #fff; color: var(--sb-violet-dark); }
+
+  /* Inverted. The default plate is --sb-violet, which is this panel's own
+     ground — the highlight would vanish into it. White plate, orange word. */
+  .adm__squiggle {
+    background: #fff;
+    color: var(--sb-violet-dark);
+  }
+
+  .adm__heading {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h2);
+    line-height: var(--sb-h2-lh);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--sb-heading-gap);
+    text-wrap: balance;
+  }
+
+  .adm__sub {
+    font-size: var(--sb-body);
+    line-height: 1.6;
+    color: var(--sb-on-violet-muted);
+    max-width: 52ch;
+  }
+
+  .adm__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sb-5);
+    margin-top: var(--sb-8);
+  }
+
+  /* ⚠ .adm__apply AND .adm__apply--ghost WENT WITH THE BUTTONS THEY DRESSED.
+     Both were white-on-orange fills for the two application forms; the markup
+     note above says why the forms left this band.
+
+     ⚠ AND THE CALL BUTTON INHERITED THEIR FILL. It was an outline precisely so
+     that it would not compete with Apply — that comment is quoted here because
+     it is the reason the rule looked the way it did. With Apply gone, an
+     outline-only band has no primary action at all and the phone number reads
+     as an afterthought, which is the opposite of true: it is now the one thing
+     this band asks a parent to do. Solid white, because on an orange ground
+     white is the high-contrast fill and orange-on-orange is not a button. */
+  .adm__call {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+    background: #fff;
+    border: 1px solid #fff;
+    color: var(--sb-violet-dark);
+    transition: background-color var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease;
+  }
+
+  .adm__call:hover {
+    background: #ffede6;
+    border-color: #ffede6;
+  }
+
+  .adm__visit {
+    margin-top: var(--sb-6);
+    font-size: var(--sb-caption);
+    color: var(--sb-on-violet-muted);
+  }
+
+  .adm__visit a { color: #fff; font-weight: 600; border-bottom: 1px solid currentColor; }
+
+  /* --- Facts ----------------------------------------------------------------- */
+
+  /* Solid white card. A translucent-white panel over orange composites to a
+     1.97 relative luminance ground, leaving white text at 4.2:1 — under AA at
+     this size. Inverting to white-on-white-card is the only clean fix. */
+  .adm__facts {
+    list-style: none;
+    margin: 0;
+    padding: var(--sb-7);
+    border-radius: var(--sb-r-2);
+    background: #fff;
+    box-shadow: 0 18px 40px -20px rgba(60, 18, 4, 0.55);
+  }
+
+  .adm__facts li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-block: var(--sb-5);
+  }
+
+  .adm__facts li:nth-child(n + 2) { border-top: var(--sb-hairline); }
+  .adm__facts li:nth-child(1) { padding-top: 0; }
+  .adm__facts li:nth-last-child(1) { padding-bottom: 0; }
+
+  .adm__fact-k {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+  }
+
+  .adm__fact-v {
+    font-size: var(--sb-body-sm);
+    line-height: 1.45;
+    color: var(--sb-charcoal);
+  }
+
+  /* --- Tablet ---------------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .adm__panel {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-8);
+      padding: var(--sb-9) var(--sb-8);
+    }
+
+    .adm__sub { max-width: none; }
+  }
+
+  /* --- Mobile ---------------------------------------------------------------- */
+
+  @media (max-width: 639px) {
+    /* The panel's padding falls to 24px here, so a corner overhang can no longer
+       clear the pill or the facts card. The icons move fully outside the panel
+       into the section's own vertical padding instead, inset horizontally so
+       none of them reaches the page gutter. */
+    .adm__deco--cap { top: -46px; left: 4px; width: 54px; }
+    .adm__deco--book { top: -40px; right: 4px; width: 50px; }
+    .adm__deco--brush { bottom: -46px; right: 4px; width: 54px; }
+
+    .adm__panel { padding: var(--sb-8) var(--sb-6); border-radius: var(--sb-r-2); }
+
+    .adm__actions { gap: var(--sb-4); }
+    .adm__call { width: 100%; justify-content: center; }
+
+    .adm__facts { padding: var(--sb-6); }
+  }
+</style>

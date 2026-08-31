@@ -1,0 +1,273 @@
+{
+ "derivedOn": "2026-08-11",
+ "method": "Located the event caption in the page source, collected WordPress thumbnail URLs in the 30,000 characters following it, stripped the -WIDTHxHEIGHT suffix to obtain the original upload, and fetched that URL directly.",
+ "caveat": "Attribution is BY POSITION in the page, not by any explicit label. The files are certainly Sunbeam Ballia uploads; that a given set belongs to the event it is filed under rests on caption/gallery adjacency being correct.",
+ "events": {
+  "Guiding-Futures": {
+   "sourcePage": "https://sunbeamballia.edu.in/event-chronicles/",
+   "matchedPhrase": "Guiding Futures",
+   "files": [
+    {
+     "local": "Guiding-Futures-01.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/531512670_1196704565808583_7778235162130623673_n.jpg"
+    },
+    {
+     "local": "Guiding-Futures-02.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/532066651_1196704295808610_1698900043999772308_n.jpg"
+    },
+    {
+     "local": "Guiding-Futures-03.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/532083402_1196704395808600_9041126301558222274_n.jpg"
+    },
+    {
+     "local": "Guiding-Futures-04.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/532333524_1196703995808640_5287049800851525883_n.jpg"
+    },
+    {
+     "local": "Guiding-Futures-05.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/532345969_1196704785808561_8874594481822601140_n.jpg"
+    },
+    {
+     "local": "Guiding-Futures-06.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/532415959_1196704522475254_1092669922535967280_n.jpg"
+    },
+    {
+     "local": "Guiding-Futures-07.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/532532778_1196704605808579_1305174710851492718_n.jpg"
+    },
+    {
+     "local": "Guiding-Futures-08.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/532630007_1196704255808614_4798464433225015025_n.jpg"
+    }
+   ]
+  },
+  "Kindness-over-Violence": {
+   "sourcePage": "https://sunbeamballia.edu.in/event-chronicles/",
+   "matchedPhrase": "Kindness over Violence",
+   "files": [
+    {
+     "local": "Kindness-over-Violence-01.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/544896800_1217178910427815_9041733692329218739_n.jpg"
+    },
+    {
+     "local": "Kindness-over-Violence-02.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/544961187_1217178743761165_6179587684025393854_n.jpg"
+    },
+    {
+     "local": "Kindness-over-Violence-03.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/545388246_1217196820426024_1175388673977628339_n.jpg"
+    },
+    {
+     "local": "Kindness-over-Violence-04.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/545391674_1217192243759815_6876729838874388882_n.jpg"
+    },
+    {
+     "local": "Kindness-over-Violence-05.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/545453862_1217191920426514_8484508042437369467_n.jpg"
+    },
+    {
+     "local": "Kindness-over-Violence-06.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/545519051_1217197267092646_7418706156648947873_n.jpg"
+    },
+    {
+     "local": "Kindness-over-Violence-07.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/545544125_1216402340505472_7584151457411580055_n.jpg"
+    },
+    {
+     "local": "Kindness-over-Violence-08.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/545548259_1217192823759757_7379480908993637014_n.jpg"
+    }
+   ]
+  },
+  "CUET-(UG)-results": {
+   "sourcePage": "https://sunbeamballia.edu.in/event-chronicles/",
+   "matchedPhrase": "CUET",
+   "files": [
+    {
+     "local": "CUET-(UG)-results-01.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/518271870_1170700065075700_8885605079327294498_n.jpg"
+    },
+    {
+     "local": "CUET-(UG)-results-02.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/518273075_1170700145075692_4495150477538608508_n.jpg"
+    },
+    {
+     "local": "CUET-(UG)-results-03.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/518274426_1170700205075686_9174899859364232135_n.jpg"
+    },
+    {
+     "local": "CUET-(UG)-results-04.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/518274451_1170700098409030_1141831009233488286_n.jpg"
+    },
+    {
+     "local": "CUET-(UG)-results-05.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/528710180_1191046089707764_2584872783248889572_n.jpg"
+    },
+    {
+     "local": "CUET-(UG)-results-06.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/528791937_1191046046374435_4790770456436005977_n.jpg"
+    },
+    {
+     "local": "CUET-(UG)-results-07.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/529260799_1191045909707782_3658833090213798101_n.jpg"
+    },
+    {
+     "local": "CUET-(UG)-results-08.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/529739633_1191045989707774_8463985020622109244_n.jpg"
+    }
+   ]
+  },
+  "Impetus—ClassesIII-V": {
+   "sourcePage": "https://sunbeamballia.edu.in/school-activities/",
+   "matchedPhrase": "Impetus Day - 1",
+   "files": [
+    {
+     "local": "Impetus—ClassesIII-V-01.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/456264415_924227673056275_3789010266358796054_n.jpg"
+    },
+    {
+     "local": "Impetus—ClassesIII-V-02.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/456276641_924229929722716_2736134946079667836_n.jpg"
+    },
+    {
+     "local": "Impetus—ClassesIII-V-03.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/456337225_924229313056111_1892171618643675288_n.jpg"
+    },
+    {
+     "local": "Impetus—ClassesIII-V-04.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/456406172_924229613056081_9175532453774011251_n.jpg"
+    },
+    {
+     "local": "Impetus—ClassesIII-V-05.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/456417648_924229259722783_3689100720807671707_n.jpg"
+    },
+    {
+     "local": "Impetus—ClassesIII-V-06.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/456420205_924229496389426_5365556392077500611_n.jpg"
+    },
+    {
+     "local": "Impetus—ClassesIII-V-07.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/456420839_924227803056262_1070642272727435155_n.jpg"
+    },
+    {
+     "local": "Impetus—ClassesIII-V-08.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/456422029_924229146389461_3148283431520381645_n.jpg"
+    }
+   ]
+  },
+  "Monash-Innovation": {
+   "sourcePage": "https://sunbeamballia.edu.in/event-chronicles/",
+   "matchedPhrase": "Monash Innovation",
+   "files": [
+    {
+     "local": "Monash-Innovation-01.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/538880126_1209725834506456_8223980248909792906_n.jpg"
+    },
+    {
+     "local": "Monash-Innovation-02.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/540498225_1209725871173119_1603710649461762691_n.jpg"
+    },
+    {
+     "local": "Monash-Innovation-03.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/540708860_1209726001173106_6106466730120508793_n.jpg"
+    },
+    {
+     "local": "Monash-Innovation-04.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/540960659_1209725791173127_9221451401376381898_n.jpg"
+    },
+    {
+     "local": "Monash-Innovation-05.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/540977182_1209725954506444_4342775477978527735_n.jpg"
+    },
+    {
+     "local": "Monash-Innovation-06.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/541929039_1209725924506447_51377762320929507_n.jpg"
+    },
+    {
+     "local": "Monash-Innovation-07.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/539845514_1209296444549395_6583768046691528361_n.jpg"
+    },
+    {
+     "local": "Monash-Innovation-08.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/540583679_1209296547882718_2349019205633741362_n.jpg"
+    }
+   ]
+  },
+  "Reading-Carnival": {
+   "sourcePage": "https://sunbeamballia.edu.in/event-chronicles/",
+   "matchedPhrase": "Reading Carnival",
+   "files": [
+    {
+     "local": "Reading-Carnival-01.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/538069099_1206919161453790_4841551127766207128_n.jpg"
+    },
+    {
+     "local": "Reading-Carnival-02.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/538440230_1206919634787076_5234810045979463471_n.jpg"
+    },
+    {
+     "local": "Reading-Carnival-03.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/538465668_1206918668120506_3464826641012160487_n.jpg"
+    },
+    {
+     "local": "Reading-Carnival-04.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/538536477_1206919231453783_4764648579722780505_n.jpg"
+    },
+    {
+     "local": "Reading-Carnival-05.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/538604709_1206919678120405_6941308641808313492_n.jpg"
+    },
+    {
+     "local": "Reading-Carnival-06.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/538743061_1206919754787064_3381939474340408696_n.jpg"
+    },
+    {
+     "local": "Reading-Carnival-07.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/538770594_1206918798120493_3632003561630417654_n.jpg"
+    },
+    {
+     "local": "Reading-Carnival-08.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/539061337_1206918601453846_6583297034012130418_n.jpg"
+    }
+   ]
+  },
+  "Seventeen-books": {
+   "sourcePage": "https://sunbeamballia.edu.in/event-chronicles/",
+   "matchedPhrase": "Ramesh Chandra Srivastava",
+   "files": [
+    {
+     "local": "Seventeen-books-01.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/539767532_1211480620997644_9142485002401246203_n.jpg"
+    },
+    {
+     "local": "Seventeen-books-02.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/540924084_1211480664330973_2662962524268172173_n.jpg"
+    },
+    {
+     "local": "Seventeen-books-03.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/540961631_1211480754330964_5694485142407495254_n.jpg"
+    },
+    {
+     "local": "Seventeen-books-04.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/541252156_1211480574330982_6186431731614213057_n.jpg"
+    },
+    {
+     "local": "Seventeen-books-05.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/541367927_1211480887664284_3457145172148060487_n.jpg"
+    },
+    {
+     "local": "Seventeen-books-06.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/541624784_1211480844330955_8597585069835625538_n.jpg"
+    },
+    {
+     "local": "Seventeen-books-07.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/541631941_1211480794330960_1097082043946072408_n.jpg"
+    },
+    {
+     "local": "Seventeen-books-08.jpg",
+     "source": "https://sunbeamballia.edu.in/wp-content/uploads/540901418_1210838487728524_4444094226443420267_n.jpg"
+    }
+   ]
+  }
+ }
+}

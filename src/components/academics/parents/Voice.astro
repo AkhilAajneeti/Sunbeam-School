@@ -1,0 +1,185 @@
+---
+/**
+ * ⏸ PARKED — NOT CURRENTLY RENDERED. Removed from the page at the client's
+ * request along with everything below it; the testimonial reasoning below is worth keeping either way. The copy is still in
+ * `parents` in data/academics.ts. To restore: import it and drop it back into
+ * parent-partnership.astro after <Timeline />.
+ *
+ * PARENT PARTNERSHIP · SECTION 5 — THE TESTIMONIAL SLOT
+ *
+ * ⚠ THIS IS THE SCHOOL'S VOICE, NOT A PARENT'S, AND THAT IS DELIBERATE.
+ *
+ * The brief asked for a parent testimonial: photograph, quote, name, the child's
+ * class, and a star rating. The school supplied none of them, and every single
+ * one is a claim about a real, identifiable family. A name and a quote written
+ * here would be a fabricated endorsement. A star rating written here would be a
+ * fabricated review. Neither is a design decision that a designer gets to make,
+ * and no amount of "it's a placeholder" changes what ships.
+ *
+ * What the school HAS published, signed, is its Principal's own words — so the
+ * slot carries those. Same register, same emotional job, nothing invented: the
+ * quote is verbatim from /about/principals-message/, the portrait is the
+ * school's own, and the attribution links to the full message so a reader can
+ * check it.
+ *
+ * TO SWAP IN A REAL PARENT, four things are needed together — the quote, the
+ * parent's name, the child's class, and written consent to publish with a
+ * photograph. The shape below takes them unchanged; only `parents.voice` in
+ * data/academics.ts has to move. Star ratings are a separate conversation: a
+ * school publishing its own five stars is marketing, not testimony.
+ */
+import Photo from '../../ui/Photo.astro';
+import { parents } from '../../../data/academics';
+import portrait from '../../../assets/photos/sb-principal.jpg';
+
+const { voice } = parents;
+---
+
+<section class="pvo" aria-label="A word from the school">
+  <div class="u-container">
+    <figure class="pvo__panel" data-pop>
+      <span class="pvo__bloom" aria-hidden="true"></span>
+
+      <div class="pvo__media">
+        <Photo
+          src={portrait}
+          alt={`${voice.name}, Principal of Sunbeam School Ballia.`}
+          brief="Principal portrait"
+          ratio="1 / 1"
+          position="50% 18%"
+          sizes="(max-width: 767px) 160px, 240px"
+        />
+      </div>
+
+      <div class="pvo__body">
+        <p class="pvo__eyebrow">{voice.eyebrow}</p>
+
+        <svg class="pvo__mark" width="38" height="29" viewBox="0 0 18 15" fill="currentColor" aria-hidden="true">
+          <path d="M7.2 0C3.3 0 0 3.1 0 7.4c0 3.9 2.7 6.9 6.2 7.6l.6-1.9C4.5 12.4 3 10.6 3 8.3h4.2V0Zm10.6 0c-3.9 0-7.2 3.1-7.2 7.4 0 3.9 2.7 6.9 6.2 7.6l.6-1.9c-2.3-.7-3.8-2.5-3.8-4.8H18V0Z" />
+        </svg>
+
+        <blockquote class="pvo__quote">
+          <p>{voice.quote}</p>
+        </blockquote>
+
+        <figcaption class="pvo__sign">
+          <a class="pvo__name" href={voice.href}>{voice.name}</a>
+          <span class="pvo__role">{voice.role}</span>
+        </figcaption>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .pvo {
+    padding-block: 0 var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .pvo__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+    margin: 0;
+    padding: clamp(28px, 3.4vw, 56px);
+    border: 1px solid rgba(201, 60, 10, 0.14);
+    border-radius: 36px;
+    background: linear-gradient(150deg, #fffaf7 0%, #ffffff 48%, #fff2ea 100%);
+    box-shadow: 0 26px 72px -46px rgba(28, 14, 8, 0.42);
+  }
+
+  /* One warm bloom behind the portrait, so the panel reads as lit rather than as
+     a flat swatch. Stacked radials with a blur, which is what separates a bloom
+     from a coloured oval. */
+  .pvo__bloom {
+    position: absolute;
+    z-index: -1;
+    inset: auto auto -30% -14%;
+    width: 48%;
+    aspect-ratio: 1;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(255, 92, 53, 0.26), transparent 66%),
+      radial-gradient(circle at 30% 70%, rgba(201, 60, 10, 0.18), transparent 70%);
+    filter: blur(44px);
+    pointer-events: none;
+  }
+
+  .pvo__media {
+    width: clamp(140px, 17vw, 232px);
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .pvo__eyebrow {
+    margin-bottom: var(--sb-5);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .pvo__mark { color: var(--sb-violet); opacity: 0.4; margin-bottom: var(--sb-4); }
+
+  .pvo__quote p {
+    max-width: 44ch;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 2.2vw, 32px);
+    line-height: 1.34;
+    letter-spacing: -0.028em;
+    color: var(--sb-charcoal);
+    text-wrap: pretty;
+  }
+
+  .pvo__sign {
+    margin-top: clamp(22px, 2.8vw, 34px);
+    padding-top: var(--sb-5);
+    border-top: var(--sb-hairline);
+  }
+
+  .pvo__name {
+    display: inline-block;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: var(--sb-h4);
+    letter-spacing: -0.02em;
+    color: var(--sb-charcoal);
+    border-bottom: 1px solid transparent;
+    transition: color var(--sb-dur-link) ease, border-color var(--sb-dur-link) ease;
+  }
+
+  .pvo__name:hover {
+    color: var(--sb-violet-dark);
+    border-bottom-color: var(--sb-violet);
+  }
+
+  .pvo__role {
+    display: block;
+    margin-top: 6px;
+    font-size: var(--sb-caption);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pvo__name { transition: none; }
+  }
+
+  @media (max-width: 767px) {
+    .pvo__panel {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sb-7);
+      border-radius: 24px;
+    }
+    .pvo__media { width: min(160px, 46%); }
+  }
+</style>
