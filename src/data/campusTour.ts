@@ -10,18 +10,26 @@
  *
  * WHAT IS REAL AND WHAT IS NOT. Every folder below is the school's own
  * professional shoot — the library shelves are labelled "Ballia Literature", so
- * the provenance is visible in the frames themselves. Five facilities the brief
- * asked for have NO photograph anywhere in the repository:
+ * the provenance is visible in the frames themselves. Four facilities the brief
+ * asked for still have NO photograph anywhere in the repository:
  *
- *   Shooting Range · Auditorium & Seminar Hall · Medical Centre
- *   Robotics Lab   · Smart Classrooms
+ *   Auditorium & Seminar Hall · Medical Centre · Robotics Lab · Smart Classrooms
  *
  * They are kept in the page as `pending` categories that render a labelled shot
- * brief, because the shooting range in particular is the rarest thing this
- * school has and dropping it would hide the campus's best argument. Two files in
- * `src/assets/photos` LOOK like they would fill these slots and must not be used
- * — `Robotics-drones.jpg` is a consumer DJI product shot and
- * `Smart-classrooms.jpg` is an empty Western lecture theatre. Neither is Ballia.
+ * brief. Two files in `src/assets/photos` LOOK like they would fill these slots
+ * and must not be used — `Robotics-drones.jpg` is a consumer DJI product shot
+ * and `Smart-classrooms.jpg` is an empty Western lecture theatre. Neither is
+ * Ballia.
+ *
+ * ⚠ THE SHOOTING RANGE CAME OFF THAT LIST — PARTLY. The client's second asset
+ * drop includes nine frames of the range in use, in
+ * `src/assets/sunbeam-assets-2/Archery/`, and the homepage Campus panel now uses
+ * three of them. They are ARCHERY — a target boss, bow stands and students at
+ * full draw, under the school's own JOSH banner — which is not necessarily what
+ * a reader pictures when the school writes "a dedicated shooting range". This
+ * page has not been given a category for them, because whether the school means
+ * one facility or two is its own question to answer; see the note beside the
+ * imports in components/home/Campus.astro.
  *
  * `src/assets/corridor and stairs/` is excluded: all six frames are stored
  * rotated 90° (the "KG-2B" door signs read sideways) with no EXIF orientation

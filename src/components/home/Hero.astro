@@ -17,6 +17,29 @@ import { school } from '../../data/site';
 import Photo from '../ui/Photo.astro';
 import chemPractical from '../../assets/photos/sunbeem-students.jpg';
 import community from '../../assets/photos/sunbeem-2.jpg';
+/**
+ * THE CLIENT'S BANNER SET — src/assets/banners/, nine wide ceremonial frames.
+ *
+ * ⚠ FOUR OF THE NINE ARE IN THE ROTATION, AND THE OTHER FIVE ARE NOT LOST.
+ * banner2, banner3, banner4, banner6 and banner8 are the same two subjects again
+ * — another investiture on another stage, another line of adults holding framed
+ * plaques. A rotator whose slides a reader cannot tell apart does not read as
+ * nine photographs, it reads as one photograph that will not load properly. The
+ * four below were chosen to be DIFFERENT FROM EACH OTHER: a parade, the youngest
+ * children, an award stage, an investiture.
+ *
+ * Adding any of the rest is one import and one entry in `slides` — the dots, the
+ * counter, the timer and the keyboard controls are all derived from the array's
+ * length and none of them needs touching.
+ *
+ * ⚠ THEY ARE 1600px WIDE AND docs/07 § A2 ASKS FOR 2400px. At a full-bleed 21:9
+ * hero on a 1440 laptop that is fine; on a 27-inch monitor they are being
+ * upscaled. Worth re-exporting from the originals if the school still has them.
+ */
+import bannerParade from '../../assets/banners/banner1.jpg';
+import bannerAwards from '../../assets/banners/banner5.jpg';
+import bannerInvestiture from '../../assets/banners/banner7.jpg';
+import bannerKg from '../../assets/banners/banner9.jpg';
 
 /**
  * docs/07 § A2 Priority 1 — 21:9 or 16:9, min 2400px.
@@ -42,11 +65,26 @@ import community from '../../assets/photos/sunbeem-2.jpg';
  * on Achievements and on STEM & Robotics, where the poster is shown `contain`
  * and nothing is sliced off it.
  *
- * ⚠ TWO SLIDES IS A REAL SET, NOT A GAP. The rotator, the dots and the counter
- * are all derived from this array's length, so nothing below needs editing — and
- * a third slide is one entry the moment a true wide 2400px frame of the campus
- * in use is supplied. What is NOT acceptable is padding it back to three with
- * another poster.
+ * ═══ AND THEN THE CLIENT'S BANNER SET ARRIVED ═════════════════════════════
+ *
+ * Six slides now, not two. The four added are from src/assets/banners/ — see the
+ * note beside their imports for why four of the nine and not all nine.
+ *
+ * ⚠ THE ORDER IS AN ARGUMENT, NOT AN UPLOAD SEQUENCE. Learning first, because
+ * that is what a school is for and what audit 1.1 asked the hero to show. Then
+ * the parade, the youngest children, the award stage, an investiture, and the
+ * senior school together — so a reader who watches the whole rotation sees the
+ * age range, the ceremony and the results, and never two adjacent slides that
+ * look like the same photograph.
+ *
+ * ⚠ SLIDE 1 STAYS THE CHEMISTRY PRACTICAL. It is the only frame in the set
+ * showing a lesson rather than an occasion, it is the one the audit specifically
+ * asked for, and it is the one that loads `eager` — so it is what a parent sees
+ * before any rotation begins. Do not demote it to make room for a ceremony.
+ *
+ * ⚠ EVERY SLIDE CARRIES A REAL `caption`. A slide with none falls back to its
+ * `brief` and renders the "Needed · A2" tag over the photograph, which is an
+ * internal authoring marker and must never reach a visitor.
  */
 const slides = [
   {
@@ -60,6 +98,40 @@ const slides = [
     tone: 'ink' as const,
     brief: 'Students engaged in classroom learning — a practical in progress',
     caption: 'A Class IX/X chemistry practical, in the school’s own lab',
+  },
+  {
+    src: bannerParade,
+    alt: 'NCC cadets of Sunbeam School Ballia drawn up in ranks on the school ground as an officer and the school’s staff inspect the parade.',
+    /* Ranks fill the lower two-thirds and the sky the top. 55% drops the crop
+       past the empty sky without cutting the front rank's heads. */
+    position: '50% 55%',
+    tone: 'ink' as const,
+    brief: 'A co-curricular moment — parade, sport or performance',
+    caption: 'The NCC contingent on parade',
+  },
+  {
+    src: bannerKg,
+    alt: 'Kindergarten children of Sunbeam School Ballia in convocation sashes and caps, standing in rows with their teachers.',
+    position: '50% 46%',
+    tone: 'maroon' as const,
+    brief: 'The youngest year groups — a ceremony of their own',
+    caption: 'The KG convocation',
+  },
+  {
+    src: bannerAwards,
+    alt: 'Staff of Sunbeam School Ballia lined up across the stage holding framed awards at a school ceremony.',
+    position: '50% 45%',
+    tone: 'charcoal' as const,
+    brief: 'Recognition — an award ceremony in the school hall',
+    caption: 'An award evening in the hall',
+  },
+  {
+    src: bannerInvestiture,
+    alt: 'Student office-bearers of Sunbeam School Ballia on the hall steps with the house flags at the investiture ceremony.',
+    position: '50% 48%',
+    tone: 'ink' as const,
+    brief: 'The investiture — student office-bearers take up their posts',
+    caption: 'Investiture, and the house flags',
   },
   {
     src: community,

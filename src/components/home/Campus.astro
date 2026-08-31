@@ -43,6 +43,23 @@ import stairsPhoto from '../../assets/corridor and stairs/DSC_1240 copy.jpg';
 import joshPhoto from '../../assets/JOSH GROUND/DSC_1287 copy.jpg';
 import courtPhoto from '../../assets/basket ball/DSC_1280 copy.jpg';
 import parkPhoto from '../../assets/play ground/DSC_1248 copy.jpg';
+/* ⚠⚠ THESE ARE ARCHERY, AND THE ALT TEXT BELOW SAYS SO. The panel they fill is
+   titled "Shooting Range", and the two are not automatically the same thing —
+   the school's own copy for it says "a dedicated shooting range", which most
+   readers will take to mean firearms. What the client supplied, and what is in
+   these frames, is target archery: a target boss, bow stands and students at
+   full draw on the JOSH ground, under the school's own "JOSH · Sunbeam School"
+   banner. So it IS the school's own range, photographed, on its own campus.
+
+   The pictures go in because the panel was rendering three empty black boxes
+   without them. The alt text names archery rather than inheriting the panel's
+   title, because a caption that says "shooting range" over a photograph of a
+   recurve bow is the kind of small untruth this project does not ship. If the
+   school also has a separate firearms range, these stay and those get their own
+   entry — they do not get relabelled. */
+import archeryDraw from '../../assets/sunbeam-assets-2/Archery/DSC_0916.JPG';
+import archeryLine from '../../assets/sunbeam-assets-2/Archery/DSC_7246.JPG';
+import archeryCoach from '../../assets/sunbeam-assets-2/Archery/DSC_4430.JPG';
 
 type Shot = { src: ImageMetadata; alt: string };
 
@@ -67,6 +84,11 @@ const gallery: Record<string, Shot[]> = {
     { src: libraryPhoto, alt: 'Students reading at tables in the Nalanda Library at Sunbeam School Ballia.' },
     { src: mathsPhoto, alt: 'The mathematics laboratory at Sunbeam School Ballia.' },
     { src: compPhoto, alt: 'A computer laboratory at Sunbeam School Ballia.' },
+  ],
+  range: [
+    { src: archeryDraw, alt: 'A student of Sunbeam School Ballia at full draw on the archery range, the target boss and the school’s JOSH banner behind.' },
+    { src: archeryLine, alt: 'A line of students shooting together on the archery range at Sunbeam School Ballia.' },
+    { src: archeryCoach, alt: 'A coach fitting an arrow for a young student on the archery range at Sunbeam School Ballia.' },
   ],
   auditorium: [
     { src: awardsPhoto, alt: 'An award ceremony on stage in the hall at Sunbeam School Ballia.' },

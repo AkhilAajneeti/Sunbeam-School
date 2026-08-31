@@ -186,6 +186,12 @@ export const facilities = [
     detail:
       'A dedicated shooting range on the Agarsanda campus — among the least common facilities at any school in the district.',
     href: '/campus/shooting-range/',
+    /* ⚠ PHOTOGRAPHED AT LAST — the client's second asset drop includes the range
+       in use. Without `photo` this panel resolved `gallery[undefined]` to an
+       empty array and rendered three empty black boxes on the homepage, which is
+       what it had been doing. The frames are ARCHERY; see the note beside the
+       imports in components/home/Campus.astro before relabelling anything. */
+    photo: 'range',
     brief: 'Shooting range in use — the rarest facility the school has. 16:9, min 2400px',
   },
   {
