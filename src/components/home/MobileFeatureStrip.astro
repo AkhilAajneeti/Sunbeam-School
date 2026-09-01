@@ -1,0 +1,109 @@
+---
+/**
+ * MOBILE FEATURE STRIP — the cream card directly under the hero statistics.
+ *
+ * ⚠⚠ MOBILE ONLY, BY DESIGN. It is display:none from 768px up. The brief for it
+ * was explicitly "do NOT redesign the desktop version", and the desktop
+ * homepage already runs the heritage lede in this slot; dropping a second card
+ * above that would be a desktop change nobody asked for.
+ *
+ * ⚠⚠ THE FOUR FEATURES ARE THE PROJECT'S OWN, NOT THE ONES THE BRIEF LISTED,
+ * AND THAT IS DELIBERATE. The brief asked for "Holistic Education, Values &
+ * Discipline, Experienced Faculty, World-class Campus" — and in the same breath
+ * said not to invent school information. Those four are not claims this school
+ * has made anywhere in the project: "Experienced Faculty" is an assertion about
+ * staff nobody has evidenced, and "World-class Campus" is a superlative with
+ * nothing behind it. So the strip draws on data/facilities.ts → whyCards, which
+ * is the sourced "why any of this matters" set already shown on the campus
+ * page, and takes the four that read best at a glance. Every title here is one
+ * the site already stands behind.
+ *
+ * "Holistic Development" is whyCards' own wording and covers the brief's
+ * "Holistic Education" without rephrasing a sourced label.
+ *
+ * ⚠ IT SCROLLS RATHER THAN WRAPS. Four columns need roughly 340px of usable
+ * width; below that the row becomes a horizontal scroller with snap points
+ * instead of breaking to two rows, because a 2x2 grid here reads as a second
+ * content section rather than a strip. Tested down to 320px.
+ */
+import FacIcon from '../campus/facilities/FacIcon.astro';
+import { whyCards } from '../../data/facilities';
+
+/** Four of the six, in the order that reads best cold. */
+const PICK = ['Modern Learning', 'Innovation', 'Safety', 'Holistic Development'];
+const features = PICK.map((t) => whyCards.find((c) => c.title === t)!).filter(Boolean);
+---
+
+<section class="mfs" aria-label="What Sunbeam School Ballia offers">
+  <ul class="mfs__row">
+    {features.map((f) => (
+      <li class="mfs__item">
+        <span class="mfs__icon" aria-hidden="true"><FacIcon name={f.icon} size={22} /></span>
+        <span class="mfs__label">{f.title}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  /* Hidden on desktop — see the note at the top of this file. */
+  .mfs { display: none; }
+
+  @media (max-width: 767px) {
+    .mfs {
+      display: block;
+      padding: var(--sb-5) var(--sb-margin) 0;
+      background: var(--sb-ivory);
+    }
+
+    .mfs__row {
+      display: grid;
+      grid-auto-flow: column;
+      /* 1fr each while they fit; the min is what turns the row into a scroller
+         instead of letting the labels crush. */
+      grid-auto-columns: minmax(82px, 1fr);
+      gap: 0;
+      margin: 0;
+      padding: var(--sb-4) 0;
+      list-style: none;
+      background: var(--sb-paper);
+      border: var(--sb-rule);
+      border-radius: var(--sb-r-2);
+      box-shadow: var(--sb-shadow-card);
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .mfs__row::-webkit-scrollbar { display: none; }
+
+    .mfs__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 7px;
+      padding-inline: 8px;
+      text-align: center;
+      scroll-snap-align: center;
+      min-width: 0;
+    }
+
+    .mfs__item + .mfs__item { border-left: var(--sb-rule); }
+
+    .mfs__icon {
+      display: grid;
+      place-items: center;
+      color: var(--sb-violet);
+    }
+
+    .mfs__label {
+      font-size: clamp(10px, 2.9vw, 11.5px);
+      line-height: 1.25;
+      font-weight: 600;
+      color: var(--sb-ink);
+      text-wrap: balance;
+    }
+  }
+</style>
