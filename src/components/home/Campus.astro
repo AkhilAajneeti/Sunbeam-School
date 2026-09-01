@@ -61,6 +61,16 @@ import archeryDraw from '../../assets/sunbeam-assets-2/Archery/DSC_0916.JPG';
 import archeryLine from '../../assets/sunbeam-assets-2/Archery/DSC_7246.JPG';
 import archeryCoach from '../../assets/sunbeam-assets-2/Archery/DSC_4430.JPG';
 
+/* The book fair, in the corridor it is actually held in. Chosen for what each
+   frame SHOWS, not for how it composes: the corridor wide shot leads because it
+   is the only one where the fair reads as a fair — racks down both walls and
+   classes working along them — and the other two are the opening and a browser
+   at the racks. The remaining seven frames are on the school-activities page
+   this panel links to. */
+import fairCorridor from '../../assets/sunbeam-assets-2/Book-Fair/DSC_0473.JPG';
+import fairOpening from '../../assets/sunbeam-assets-2/Book-Fair/DSC_0449.JPG';
+import fairBrowsing from '../../assets/sunbeam-assets-2/Book-Fair/DSC_0471.JPG';
+
 type Shot = { src: ImageMetadata; alt: string };
 
 /** Real photography, keyed to the facility it actually shows. */
@@ -89,6 +99,11 @@ const gallery: Record<string, Shot[]> = {
     { src: archeryDraw, alt: 'A student of Sunbeam School Ballia at full draw on the archery range, the target boss and the school’s JOSH banner behind.' },
     { src: archeryLine, alt: 'A line of students shooting together on the archery range at Sunbeam School Ballia.' },
     { src: archeryCoach, alt: 'A coach fitting an arrow for a young student on the archery range at Sunbeam School Ballia.' },
+  ],
+  bookFair: [
+    { src: fairCorridor, alt: 'Students of Sunbeam School Ballia at book racks lined along both sides of a school corridor during the book fair.' },
+    { src: fairOpening, alt: 'The book fair at Sunbeam School Ballia being opened with a ribbon, staff and students gathered at the display tables.' },
+    { src: fairBrowsing, alt: 'A visitor looking through the racks at the Sunbeam School Ballia book fair, a line of students filing past behind.' },
   ],
   auditorium: [
     { src: awardsPhoto, alt: 'An award ceremony on stage in the hall at Sunbeam School Ballia.' },

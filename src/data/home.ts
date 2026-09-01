@@ -213,18 +213,30 @@ export const facilities = [
     brief: 'Science lab with equipment IN USE, students working. 3:2',
   },
   {
-    name: 'Conference Room',
-    qualifier: 'Meetings, briefings and parent sessions',
-    /* ⚠⚠ NO detail HERE, DELIBERATELY. This used to carry
-       "[NEEDED — B3] …" — an internal authoring marker that was rendering on
-       the live homepage. The facility is named by audit 3.4 but the school has
-       published no description of it, and inventing one is not an option, so
-       the panel prints its name and qualifier and nothing else. Asset B3 is
-       still open: when the copy arrives it goes here.
-       ⚠ A build-time grep for [NEEDED / TBD / TODO belongs in CI so this
-       cannot happen again. */
-    href: '/campus/conference-room/',
-    brief: 'Conference room — not photographed anywhere on the live site. 3:2',
+    name: 'Book Fair',
+    qualifier: 'The Reading Carnival, along the school corridors',
+    detail:
+      'A book fair set up along the school’s own corridors, opened with a ribbon and browsed stall by stall — open to students, parents and visitors. The school runs it as the Reading Carnival.',
+    /* ⚠ THIS PANEL WAS "Conference Room" AND IT RENDERED THREE BLACK BOXES.
+       The conference room is named by audit 3.4 but the school has never
+       photographed it and published no copy for it, so the panel had no
+       `photo` — which resolves gallery[undefined] to an empty array — and no
+       `detail`. Two of the seven slides in a section titled "Explore our
+       campus life" were therefore empty, this one and the range.
+
+       The book fair replaces it because it is the same corridor, IS
+       photographed (ten frames), and already has a written-up page to send
+       people to. If the conference room is ever photographed it comes back as
+       its own entry; it was not deleted for being wrong, only for being blank.
+
+       ⚠ href GOES TO THE EXISTING GALLERY, NOT A NEW /campus/ ROUTE. Every
+       other entry here points at /campus/…, and copying that pattern would
+       have invented /campus/book-fair/ — a URL with no page, which
+       [...slug].astro would then have auto-built as a "being prepared"
+       placeholder. The fair is written up under school-activities already. */
+    href: '/beyond-academics/school-activities/book-fair/',
+    photo: 'bookFair',
+    brief: 'Book fair along the corridor, classes at the racks. 3:2',
   },
   {
     name: 'Auditorium',

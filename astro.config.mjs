@@ -14,7 +14,6 @@ const PLACEHOLDER_ROUTES = new Set([
   '/campus/shooting-range/',
   '/campus/library/',
   '/campus/laboratories/',
-  '/campus/conference-room/',
   '/campus/auditorium/',
   '/campus/sports-facilities/',
 ]);
