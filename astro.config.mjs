@@ -20,26 +20,39 @@ const PLACEHOLDER_ROUTES = new Set([
 ]);
 
 /**
- * ⚠ EVERY WIDTH ANY <Picture> OR <Image> ASKS FOR, AND NOTHING ELSE MAY BE ADDED
- * CASUALLY. Vercel's optimiser only serves widths named here — the adapter
- * silently DROPS any `widths={[...]}` entry that is missing from this list, and
- * an image whose whole set is dropped collapses to a single-width srcset. So a
- * new `widths={[...]}` value in a component means a new entry here, or that
- * component quietly stops being responsive with nothing failing to warn you.
+ * ⚠ EVERY WIDTH ANY <Picture> OR <Image> ASKS FOR — AND VERCEL ALLOWS AT MOST
+ * FIFTY. This list is FULL. There are exactly 50 entries and the platform
+ * rejects 51: the build dies at the very end, after the pages are rendered,
+ * with
  *
- * Regenerate with:
- *   grep -rho "widths={\[[0-9, ]*\]}" src --include=*.astro  *     | grep -o "[0-9]\+" | sort -n -u
+ *     "images.sizes" should be an Array of length between 1 to 50
  *
- * The list is deliberately dense. Bare `width=` props carry no list of their
- * own and are snapped to the nearest entry, so gaps here show up as images
- * served at the wrong size rather than as an error.
+ * which reads like a code error but is a hard platform cap, and is not
+ * documented on Vercel's build-output configuration page. Adding a width
+ * without removing one WILL break the deploy.
+ *
+ * ⚠ AND A WIDTH MISSING FROM THIS LIST IS SILENTLY DROPPED. The adapter
+ * filters `widths={[...]}` down to the entries named here — it does not snap
+ * them — so an unlisted width just disappears from the srcset, and a component
+ * whose every width is unlisted collapses to one. Nothing warns you.
+ *
+ * So a new `widths={[...]}` value in a component means EITHER reusing a number
+ * already on this list, or trading one away. Eleven near-duplicates were
+ * already merged into neighbours to get under the cap (286→300, 430→440,
+ * 700/719→720, 768/780→800, 820→840, 940→980, 1080→1100, 1300→1320,
+ * 1440→1400); prefer picking an existing number over spending the last slot.
+ *
+ * Verify with:
+ *   grep -rho "widths={\[[0-9, ]*\]}" src --include=*.astro  *     | grep -o "[0-9]\+" | sort -n -u | wc -l
+ *
+ * Bare `width=` props carry no list of their own and ARE snapped to the
+ * nearest entry, so the list stays deliberately dense at the small end.
  */
 const IMAGE_WIDTHS = [
   48, 56, 60, 100, 112, 120, 130, 143, 160, 180, 200, 220, 240, 260, 280,
-  286, 300, 320, 340, 360, 380, 400, 420, 430, 440, 460, 480, 520, 540,
-  560, 600, 620, 640, 700, 719, 720, 760, 768, 780, 800, 820, 840, 860,
-  880, 900, 940, 980, 1000, 1024, 1080, 1100, 1200, 1280, 1300, 1320, 1400,
-  1440, 1600, 1920, 2000, 2400,
+  300, 320, 340, 360, 380, 400, 420, 440, 460, 480, 520, 540, 560, 600,
+  620, 640, 720, 760, 800, 840, 860, 880, 900, 980, 1000, 1024, 1100, 1200,
+  1280, 1320, 1400, 1600, 1920, 2000, 2400,
 ];
 
 /**
