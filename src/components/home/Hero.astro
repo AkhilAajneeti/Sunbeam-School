@@ -268,18 +268,6 @@ const slides = [
         <span class="hero__caption-tag t-label">{slides[0].caption ? '' : 'Needed · A2'}</span>
         <span class="hero__caption-text">{slides[0].caption ?? slides[0].brief}</span>
       </p>
-
-      <div class="hero__controls">
-        <button class="hero__pause" type="button" data-hero-pause aria-label="Pause image slideshow">
-          <svg class="hero__icon-pause" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
-            <rect x="0" y="0" width="3" height="12" fill="currentColor" />
-            <rect x="7" y="0" width="3" height="12" fill="currentColor" />
-          </svg>
-          <svg class="hero__icon-play" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
-            <path d="M0 0L10 6L0 12Z" fill="currentColor" />
-          </svg>
-        </button>
-      </div>
     </div>
   </div>
 </section>
@@ -512,29 +500,6 @@ const slides = [
     max-width: 34ch;
   }
 
-  .hero__controls {
-    display: flex;
-    align-items: center;
-    gap: var(--sb-5);
-  }
-
-  .hero__pause {
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    color: rgba(255, 255, 255, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    border-radius: var(--sb-r-1);
-    transition: color var(--sb-dur-btn) ease, border-color var(--sb-dur-btn) ease;
-  }
-
-  .hero__pause:hover { color: #fff; border-color: rgba(255, 255, 255, 0.6); }
-
-  .hero__icon-play { display: none; }
-  .hero__pause[data-paused] .hero__icon-play { display: block; }
-  .hero__pause[data-paused] .hero__icon-pause { display: none; }
-
   /* --- Tablet ------------------------------------------------------------- */
 
   @media (max-width: 1023px) {
@@ -597,13 +562,6 @@ const slides = [
     }
 
     .hero__caption { display: none; }
-    .hero__controls { gap: var(--sb-4); }
-
-    /* Auto-advance never runs at this width, so a pause control would be a
-       button that does nothing. Swipe is what remains — the dots are gone from
-       every width now, so this leaves the hero with no visible control on a
-       phone. That is deliberate; the images still advance by swipe. */
-    .hero__pause { display: none; }
   }
 </style>
 
@@ -612,7 +570,6 @@ const slides = [
 
   if (hero) {
     const slides = Array.from(hero.querySelectorAll<HTMLElement>('[data-slide]'));
-    const pauseBtn = hero.querySelector<HTMLButtonElement>('[data-hero-pause]');
     const caption = hero.querySelector<HTMLElement>('[data-hero-caption]');
     const captionText = caption?.querySelector<HTMLElement>('.hero__caption-text');
     const captionTag = caption?.querySelector<HTMLElement>('.hero__caption-tag');
@@ -627,12 +584,11 @@ const slides = [
     const INTERVAL = 4500;
     let index = 0;
     let timer: number | undefined;
-    let userPaused = false;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     // Auto-advance is desktop-only and motion-respecting (docs/06 §03 Mobile).
     const mayAutoplay = () =>
-      !reduced.matches && window.matchMedia('(min-width: 768px)').matches && !userPaused;
+      !reduced.matches && window.matchMedia('(min-width: 768px)').matches;
 
     const show = (next: number) => {
       if (next === index) return;
@@ -666,18 +622,11 @@ const slides = [
       timer = window.setInterval(() => show(index + 1), INTERVAL);
     };
 
-    pauseBtn?.addEventListener('click', () => {
-      userPaused = !userPaused;
-      pauseBtn.toggleAttribute('data-paused', userPaused);
-      pauseBtn.setAttribute(
-        'aria-label',
-        userPaused ? 'Play image slideshow' : 'Pause image slideshow'
-      );
-      if (userPaused) stop();
-      else start();
-    });
-
-    // Pause on hover and on keyboard focus.
+    /* ⚠ THIS IS NOW THE ONLY WAY TO STOP THE ROTATION. The pause/play button
+       was removed at the client's request, so hovering the hero or tabbing into
+       it is all that halts autoplay. Autoplay is already off entirely under
+       prefers-reduced-motion and below 768px, which is what keeps this
+       defensible — do not widen where it runs without restoring a control. */
     hero.addEventListener('mouseenter', stop);
     hero.addEventListener('mouseleave', start);
     hero.addEventListener('focusin', stop);
