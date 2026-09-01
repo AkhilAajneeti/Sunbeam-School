@@ -94,3 +94,15 @@ $RECYCLE.BIN/
 #   scripts/             logo prep + visual QA tooling
 #   package-lock.json    pins the exact dependency tree for `npm ci`
 #   *.pdf                the client audit report — the governing requirements doc
+
+# ─── Source video ────────────────────────────────────────────────────────────
+# The client's raw drone footage: 1080p50 at ~40 Mbps, ~100 MB per clip.
+# banner-2.MP4 is 107 MB, which is OVER GitHub's 100 MB hard limit and would
+# have its push REJECTED outright. What ships is the encode in public/video/
+# (1600x900, CRF 32, ~3 MB each) plus the poster frames in src/assets/videos/,
+# and both of those ARE tracked. Keep the masters here locally; re-encode with
+# the recipe in components/home/Hero.astro rather than committing these.
+src/assets/videos/*.MP4
+src/assets/videos/*.mp4
+src/assets/videos/*.MOV
+src/assets/videos/*.mov

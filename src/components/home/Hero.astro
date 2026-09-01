@@ -61,6 +61,30 @@ import community from '../../assets/photos/sunbeem-2.jpg';
  * 21:9 hero on a 1440 laptop that is fine; on a 27-inch monitor they are being
  * upscaled. Worth re-exporting from the originals if the school still has them.
  */
+/**
+ * THE DRONE FOOTAGE — the client's opening shot, and the reason this hero has
+ * video in it at all. The brief was "the school from the air first, then the
+ * students", which is a SEQUENCE, so it is expressed as the first two slides of
+ * the rotation rather than as a splash screen or a loader. A loader would make
+ * every parent checking an admission date wait through it.
+ *
+ * ⚠⚠ THE MASTERS ARE GITIGNORED AND THAT IS DELIBERATE. src/assets/videos/
+ * holds ~55 MB clips at 1080p50 / ~22 Mbps; an earlier pair were ~100 MB and one
+ * of those was over GitHub's 100 MB hard limit, which rejects the push outright.
+ * What ships is public/video/hero-*.mp4 — 1600x900, 25 fps, CRF 32, no audio
+ * track, faststart — about 3 MB each, roughly 1.2 Mbps. Re-encode with:
+ *
+ *   ffmpeg -i banner-1.MP4 -an -vf "fps=25,scale=1600:-2:flags=lanczos"  *     -c:v libx264 -profile:v high -crf 32 -preset slow -pix_fmt yuv420p  *     -movflags +faststart public/video/hero-1.mp4
+ *
+ * ⚠ THE POSTER IS A REAL <Photo> UNDERNEATH, NOT THE poster= ATTRIBUTE. That is
+ * what makes the video optional: the still is responsive, AVIF/WebP, and always
+ * painted, so it carries the slide on its own wherever the film never loads —
+ * mobile, reduced motion, a blocked autoplay. The video fades in over it only
+ * once it is actually playing. It is also why the LCP element stays an image.
+ */
+import heroFilm1Poster from '../../assets/videos/hero-1-poster.jpg';
+import heroFilm2Poster from '../../assets/videos/hero-2-poster.jpg';
+
 import bannerParade from '../../assets/banners/banner1.jpg';
 import bannerAssembly from '../../assets/banners/banner4.jpg';
 import bannerInvestiture from '../../assets/banners/banner7.jpg';
@@ -113,6 +137,24 @@ import bannerKg from '../../assets/banners/banner9.jpg';
  * internal authoring marker and must never reach a visitor.
  */
 const slides = [
+  {
+    src: heroFilm1Poster,
+    video: '/video/hero-1.mp4',
+    alt: 'The Sunbeam School Ballia campus at Agarsanda seen from the air, its blocks around the central courtyard.',
+    position: '50% 50%',
+    tone: 'ink' as const,
+    brief: 'The campus from the air — the establishing shot',
+    caption: 'The Agarsanda campus from the air',
+  },
+  {
+    src: heroFilm2Poster,
+    video: '/video/hero-2.mp4',
+    alt: 'A second aerial view of the Sunbeam School Ballia campus at Agarsanda, its grounds and buildings from above.',
+    position: '50% 50%',
+    tone: 'ink' as const,
+    brief: 'The campus from the air — the grounds',
+    caption: 'The grounds at Agarsanda',
+  },
   {
     src: chemPractical,
     alt: 'Four students of Sunbeam School Ballia in uniform and lab coats running a chemistry practical at the bench, the aim written up on the blackboard behind them.',
@@ -204,6 +246,22 @@ const slides = [
           eager={i === 0}
           sizes="100vw"
         />
+        {'video' in slide && slide.video && (
+          /* ⚠ NO src HERE — the URL rides on data-src and the script attaches it
+             only on a wide viewport with motion allowed. An empty <video> costs
+             nothing; a src attribute would have every phone on a metered
+             connection fetching three megabytes to show a still it already has. */
+          <video
+            class="hero__video"
+            data-video
+            data-src={slide.video}
+            muted
+            playsinline
+            preload="none"
+            tabindex="-1"
+            aria-hidden="true"
+          ></video>
+        )}
       </div>
     ))}
     <div class="hero__tint" aria-hidden="true"></div>
@@ -300,6 +358,21 @@ const slides = [
   }
 
   .hero__slide[data-active] { opacity: 1; }
+
+  /* Sits exactly over its own poster <Photo>, and is invisible until the script
+     has it playing — so a film that never loads leaves the still in place with
+     nothing to notice. */
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--sb-dur-fade) ease-in-out;
+  }
+
+  .hero__video[data-playing] { opacity: 1; }
 
   /* Square. <Photo> carries a 16px radius for the card contexts it usually sits
      in; a full-bleed banner is not one of those, and the rounded corners showed
@@ -590,15 +663,59 @@ const slides = [
     const mayAutoplay = () =>
       !reduced.matches && window.matchMedia('(min-width: 768px)').matches;
 
+    /* ⚠ THE FILM SLIDES RUN ON THEIR OWN CLOCK, NOT THE 4.5s INTERVAL. A drone
+       clip is twenty seconds; cutting it off a fifth of the way through is worse
+       than not having it. So while a video slide is playing the interval is
+       stopped, and `ended` is what advances the rotation.
+
+       ⚠ AND EVERY PATH OUT OF HERE MUST STILL ADVANCE. If the film cannot play —
+       narrow viewport, reduced motion, a browser refusing muted autoplay, a 404
+       on the file — the interval has to take over or the hero stops dead on
+       slide one with a still. That is why the failure branch calls start(). */
+    const filmOf = (i: number) => slides[i].querySelector<HTMLVideoElement>('[data-video]');
+
+    const attach = (video: HTMLVideoElement) => {
+      const src = video.dataset.src;
+      if (src && !video.src) video.src = src;
+    };
+
+    const rest = (i: number) => {
+      const film = filmOf(i);
+      if (!film) return;
+      film.removeAttribute('data-playing');
+      film.pause();
+      try { film.currentTime = 0; } catch { /* not seekable yet */ }
+    };
+
+    const roll = (i: number) => {
+      const film = filmOf(i);
+      if (!film || !mayAutoplay()) return false;
+      attach(film);
+      stop();
+      film.currentTime = 0;
+      film
+        .play()
+        .then(() => film.setAttribute('data-playing', ''))
+        .catch(() => {
+          /* Autoplay refused. Leave the poster showing and hand the slide back
+             to the timer rather than stranding the rotation here. */
+          film.removeAttribute('data-playing');
+          start();
+        });
+      return true;
+    };
+
     const show = (next: number) => {
       if (next === index) return;
       slides[index].removeAttribute('data-active');
       slides[index].setAttribute('aria-hidden', 'true');
+      rest(index);
 
       index = (next + slides.length) % slides.length;
 
       slides[index].setAttribute('data-active', '');
       slides[index].setAttribute('aria-hidden', 'false');
+      if (!roll(index)) start();
 
       // The caption belongs to the image, so it cross-fades with it.
       if (caption && captionText && captionTag) {
@@ -619,6 +736,11 @@ const slides = [
     const start = () => {
       stop();
       if (!mayAutoplay()) return;
+      /* ⚠ A PLAYING FILM OWNS THE CLOCK — DO NOT ARM THE INTERVAL OVER IT. Every
+         hover out of the hero calls start(), so without this guard leaving the
+         mouse would set a 4.5s timer running underneath a twenty-second clip and
+         chop it off four seconds in. `ended` is what advances a film slide. */
+      if (filmOf(index)?.hasAttribute('data-playing')) return;
       timer = window.setInterval(() => show(index + 1), INTERVAL);
     };
 
@@ -648,7 +770,26 @@ const slides = [
       { passive: true }
     );
 
+    slides.forEach((_, i) => {
+      const film = filmOf(i);
+      film?.addEventListener('ended', () => {
+        film.removeAttribute('data-playing');
+        show(index + 1);
+      });
+    });
+
+    /* Hover/focus pause has to reach the film too, or hovering the hero freezes
+       the timer while the video keeps running underneath. */
+    hero.addEventListener('mouseenter', () => filmOf(index)?.pause());
+    hero.addEventListener('mouseleave', () => {
+      const film = filmOf(index);
+      if (film && film.hasAttribute('data-playing')) void film.play().catch(() => {});
+    });
+
     reduced.addEventListener('change', start);
-    start();
+
+    /* Slide one is a film, so the opening move is to roll it; start() is the
+       fallback for every case where it will not run. */
+    if (!roll(index)) start();
   }
 </script>
