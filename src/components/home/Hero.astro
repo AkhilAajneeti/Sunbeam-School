@@ -776,15 +776,26 @@ const slides = [
         film.removeAttribute('data-playing');
         show(index + 1);
       });
+      /* Same failure mode by another route: a clip that 404s or fails to decode
+         never reaches `ended`. Hand the slide back to the interval rather than
+         leaving the hero parked on a still forever. */
+      film?.addEventListener('error', () => {
+        film.removeAttribute('data-playing');
+        start();
+      });
     });
 
-    /* Hover/focus pause has to reach the film too, or hovering the hero freezes
-       the timer while the video keeps running underneath. */
-    hero.addEventListener('mouseenter', () => filmOf(index)?.pause());
-    hero.addEventListener('mouseleave', () => {
-      const film = filmOf(index);
-      if (film && film.hasAttribute('data-playing')) void film.play().catch(() => {});
-    });
+    /* ⚠⚠ DO NOT PAUSE THE FILM ON HOVER. IT DEADLOCKS THE WHOLE ROTATION.
+       An earlier version did exactly that, to match the timer's pause-on-hover.
+       But a cursor resting anywhere over the hero — which is where it sits while
+       anyone is actually looking at the page — paused the clip about a second
+       in, and a paused clip never fires `ended`, and `ended` is the only thing
+       that advances a film slide. The hero stopped dead on slide one and no
+       photograph was ever reached. It reproduces instantly: load the page and
+       leave the mouse over the banner.
+
+       So hover governs the INTERVAL only, which is what it was written for. The
+       film plays through and hands off when it ends, hovered or not. */
 
     reduced.addEventListener('change', start);
 
