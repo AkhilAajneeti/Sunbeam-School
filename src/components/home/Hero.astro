@@ -20,25 +20,50 @@ import community from '../../assets/photos/sunbeem-2.jpg';
 /**
  * THE CLIENT'S BANNER SET — src/assets/banners/, nine wide ceremonial frames.
  *
- * ⚠ FOUR OF THE NINE ARE IN THE ROTATION, AND THE OTHER FIVE ARE NOT LOST.
- * banner2, banner3, banner4, banner6 and banner8 are the same two subjects again
- * — another investiture on another stage, another line of adults holding framed
- * plaques. A rotator whose slides a reader cannot tell apart does not read as
- * nine photographs, it reads as one photograph that will not load properly. The
- * four below were chosen to be DIFFERENT FROM EACH OTHER: a parade, the youngest
- * children, an award stage, an investiture.
+ * ⚠⚠ THE RULE FOR THIS ROTATION IS: EVERY SLIDE HAS STUDENTS IN IT. That is
+ * what the hero is for — a visitor should see the school's own children and
+ * know within a second what kind of place this is. banner5 was in the rotation
+ * and broke the rule: twelve adults in suits on a dark stage holding copies of
+ * a "Hamar Ballia" publication, with not one student in frame. Its alt text
+ * also described "framed awards", which is not what anyone in it is holding.
+ * It is out. Do not put it back without a reason that outranks the rule.
  *
- * Adding any of the rest is one import and one entry in `slides` — the dots, the
+ * ⚠ AND FIVE OF THE NINE ARE OUT FOR THREE DIFFERENT REASONS — an earlier note
+ * here said they were all "the same two subjects again", which was true of two
+ * of them and was then applied to the other three without looking:
+ *
+ *   banner2  DUPLICATE — the same council investiture as banner7, same stage,
+ *            same students, one frame earlier.
+ *   banner6  DUPLICATE — staff on stage with framed plaques, the same subject
+ *            banner5 covered.
+ *   banner3  UNUSABLE — two students at a podcast studio with a burned-in
+ *            camera timestamp, "2024.11.16 16:22", in the bottom-right corner,
+ *            under magenta and green studio lighting. A date stamp baked into
+ *            the pixels does not belong on a homepage.
+ *   banner5  NO STUDENTS — see above.
+ *
+ * The four in rotation from this set are banner1 (NCC on parade), banner4 (the
+ * school gathered at its own entrance), banner8 (cadets on the Republic Day
+ * stage) and banner9 (the KG convocation).
+ *
+ * ⚠ banner4 IS 1280px WIDE — THE SMALLEST OF THE NINE, and already 16:9, so a
+ * 21:9 hero crop takes more off it than off the others. It earns its place
+ * anyway: the school's name board is in the frame above a hundred and fifty of
+ * its own students, which is the fastest "this is a school" in the whole set.
+ * It is the first slide to re-export if better originals turn up.
+ *
+ * Adding another is one import and one entry in `slides` — the dots, the
  * counter, the timer and the keyboard controls are all derived from the array's
  * length and none of them needs touching.
  *
- * ⚠ THEY ARE 1600px WIDE AND docs/07 § A2 ASKS FOR 2400px. At a full-bleed 21:9
- * hero on a 1440 laptop that is fine; on a 27-inch monitor they are being
+ * ⚠ THE REST ARE 1600px WIDE AND docs/07 § A2 ASKS FOR 2400px. At a full-bleed
+ * 21:9 hero on a 1440 laptop that is fine; on a 27-inch monitor they are being
  * upscaled. Worth re-exporting from the originals if the school still has them.
  */
 import bannerParade from '../../assets/banners/banner1.jpg';
-import bannerAwards from '../../assets/banners/banner5.jpg';
+import bannerAssembly from '../../assets/banners/banner4.jpg';
 import bannerInvestiture from '../../assets/banners/banner7.jpg';
+import bannerCadets from '../../assets/banners/banner8.jpg';
 import bannerKg from '../../assets/banners/banner9.jpg';
 
 /**
@@ -118,12 +143,24 @@ const slides = [
     caption: 'The KG convocation',
   },
   {
-    src: bannerAwards,
-    alt: 'Staff of Sunbeam School Ballia lined up across the stage holding framed awards at a school ceremony.',
+    src: bannerCadets,
+    alt: 'NCC cadets of Sunbeam School Ballia in uniform, standing in rows on the school stage with two of their officers, in front of a Republic Day backdrop.',
     position: '50% 45%',
+    tone: 'ink' as const,
+    brief: 'The cadets, formed up — uniform, ranks and the school behind them',
+    caption: 'The NCC cadets on Republic Day',
+  },
+  {
+    src: bannerAssembly,
+    /* ⚠ THE SCHOOL'S OWN NAME BOARD IS IN THIS FRAME and the crop must not lose
+       it — it is the reason this photograph is here rather than a tidier one.
+       42% holds the board and the standing rows together; 50% pushes the board
+       out of the top. */
+    position: '50% 42%',
+    alt: 'Students and staff of Sunbeam School Ballia gathered in rows outside the school entrance, beneath the school’s name board.',
     tone: 'charcoal' as const,
-    brief: 'Recognition — an award ceremony in the school hall',
-    caption: 'An award evening in the hall',
+    brief: 'The school together, at its own front door',
+    caption: 'The senior school at the Agarsanda entrance',
   },
   {
     src: bannerInvestiture,
