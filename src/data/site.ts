@@ -200,10 +200,16 @@ export const heritageLede = {
  * Deliberately no icons: docs/06 "no cards, no boxes, no icon circles".
  */
 export const quickAccess = [
-  { label: 'Admissions', desc: 'Process, dates and fees', href: '/admissions/' },
+  /* ⚠ THIS CARD AND THE 'Notice Board' CARD BELOW ARE NOT THE SAME THING, AND
+     THE DESCRIPTIONS ARE WHAT KEEPS THEM APART. This one is the CURRENT
+     admissions notice — one document, the form dates a parent is looking for.
+     The other is the archive of all 24 circulars the school has issued. Two
+     cards in one row of six both saying 'notice' is only confusing if the
+     descriptions do not say which is which, so do not shorten them to match. */
+  { label: 'Admission Notice', desc: 'Form dates for Session 2026-27', href: '/admission-notice/' },
   { label: 'Transport', desc: '22 routes across Ballia', href: '/campus/transport/' },
   { label: 'Academic Calendar', desc: 'Terms, holidays and events', href: '/academics/academic-calendar/' },
-  { label: 'Notice Board', desc: 'Official school notices', href: '/news-events/notices/' },
+  { label: 'Notice Board', desc: 'Every circular, all 24', href: '/news-events/notices/' },
   { label: 'Results', desc: 'Student report card portal', href: school.external.results, external: true },
   { label: 'Contact', desc: 'Reach the school office', href: '/contact-us/' },
 ] as const;

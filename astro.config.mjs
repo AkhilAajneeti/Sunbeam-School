@@ -8,7 +8,6 @@ import vercel from '@astrojs/vercel';
 /** Live routes that are still placeholders — see the sitemap filter below. */
 const PLACEHOLDER_ROUTES = new Set([
   '/about/',
-  '/admissions/',
   '/admissions/campus-visit/',
   '/campus/classrooms/',
   '/campus/shooting-range/',
@@ -91,6 +90,101 @@ const imageServiceOverrides = () => ({
   },
 });
 
+/**
+ * Retired URLs → where they now live. Read TWICE: by `redirects` in the config
+ * below, and by retiredRoutePages(), which is what actually makes them work.
+ */
+const RETIRED_ROUTES = {
+  /* The school publishes this page at /general-info/ and this project had it
+       at /mandatory-public-disclosure/. The route moved to match theirs; this
+       carries anything already pointing at the old path. */
+    '/mandatory-public-disclosure': '/general-info/',
+
+    /* ⚠ /admissions/ WAS A PLACEHOLDER AND IS NOW THE ADMISSION NOTICE. It was
+       an auto-generated "being prepared" page — there was never any admissions
+       content behind it, because client asset A8 (eligibility, age criteria,
+       dates, fee data) has still not arrived. What the school DOES publish is
+       the admission notice, so the URL was moved to say what the page is.
+
+       ⚠ THE CHILD ROUTE /admissions/uniform-catalogue/ IS UNAFFECTED AND STAYS
+       WHERE IT IS. This redirect matches the exact path only, not the subtree,
+       and that page is real, linked from three places and possibly bookmarked —
+       moving a working URL to tidy up a path segment is not worth a broken
+       link. Its breadcrumb no longer points here. */
+    '/admissions': '/admission-notice/',
+    // → Teaching Methodology
+    '/academics/teaching-learning/collaborative-learning': '/academics/teaching-learning/methodology/',
+    // → Smart Classrooms & Digital Literacy
+    '/academics/teaching-learning/ai-digital-literacy': '/academics/teaching-learning/smart-classrooms/',
+    // → Experiential & Project-Based Learning
+    '/academics/teaching-learning/project-based-learning': '/academics/teaching-learning/experiential-learning/',
+    // → STEM, Robotics & Enrichment
+    '/academics/teaching-learning/stem-education': '/academics/teaching-learning/stem-robotics/',
+    '/academics/teaching-learning/robotics-coding': '/academics/teaching-learning/stem-robotics/',
+    '/academics/teaching-learning/mathematics-science-enrichment': '/academics/teaching-learning/stem-robotics/',
+    // → Reading, Language & Library
+    '/academics/teaching-learning/reading-programme': '/academics/teaching-learning/reading-language/',
+    '/academics/teaching-learning/language-development': '/academics/teaching-learning/reading-language/',
+    '/academics/teaching-learning/library-programme': '/academics/teaching-learning/reading-language/',
+    // → Laboratories & Academic Clubs
+    '/academics/teaching-learning/laboratories': '/academics/teaching-learning/laboratories-clubs/',
+    '/academics/teaching-learning/academic-clubs': '/academics/teaching-learning/laboratories-clubs/',
+  };
+
+/**
+ * Emits a real redirecting HTML page at each retired path.
+ *
+ * ⚠ THIS EXISTS BECAUSE THE `redirects` CONFIG STOPPED WORKING WHEN THE VERCEL
+ * ADAPTER WAS ADDED — see the long note beside `redirects` below for exactly
+ * why. A file on disk is served by the filesystem handler and cannot be
+ * outranked by a route rule, which is the whole point: it does not depend on
+ * the order Vercel evaluates anything in.
+ *
+ * ⚠ IT WRITES THE SLASH FORM, /path/index.html, because trailingSlash is
+ * 'always' and the canonicaliser rewrites the bare form to it before anything
+ * else runs. The bare form therefore needs nothing of its own.
+ *
+ * ⚠ AND IT WRITES TO BOTH dist/ AND .vercel/output/static/. The adapter copies
+ * the former to the latter from its own astro:build:done hook, and nothing
+ * guarantees that hook runs after this one. Writing both is two lines and
+ * removes the ordering question entirely; if the copy has not happened yet the
+ * second write simply lands in a directory that is about to be overwritten with
+ * identical content.
+ *
+ * A meta refresh plus a canonical link is weaker than a 301 and is a stopgap.
+ * The durable fix is Vercel handling it — but that needs a rule ordered ahead
+ * of the canonicaliser, which the adapter does not expose.
+ */
+const retiredRoutePages = () => ({
+  name: 'sunbeam:retired-route-pages',
+  hooks: {
+    'astro:build:done': async ({ dir, logger }) => {
+      const { mkdir, writeFile } = await import('node:fs/promises');
+      const { existsSync } = await import('node:fs');
+      const roots = [dir, new URL('./.vercel/output/static/', import.meta.url)]
+        .filter((u) => u === dir || existsSync(u));
+
+      for (const [from, to] of Object.entries(RETIRED_ROUTES)) {
+        const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">` +
+          `<meta http-equiv="refresh" content="0;url=${to}">` +
+          `<link rel="canonical" href="${to}">` +
+          `<meta name="robots" content="noindex">` +
+          `<title>Redirecting…</title></head>` +
+          `<body><p>This page has moved to <a href="${to}">${to}</a>.</p></body></html>
+`;
+        for (const root of roots) {
+          const target = new URL(`.${from}/`, root);
+          await mkdir(target, { recursive: true });
+          await writeFile(new URL('./index.html', target), html, 'utf8');
+        }
+      }
+      logger.info(
+        `Wrote ${Object.keys(RETIRED_ROUTES).length} retired-route redirect pages`,
+      );
+    },
+  },
+});
+
 export default defineConfig({
   site: 'https://sunbeamballia.edu.in',
   output: 'static',
@@ -138,6 +232,7 @@ export default defineConfig({
       filter: (page) => !PLACEHOLDER_ROUTES.has(new URL(page).pathname),
     }),
     imageServiceOverrides(),
+    retiredRoutePages(),
   ],
   build: {
     inlineStylesheets: 'auto',
@@ -200,29 +295,33 @@ export default defineConfig({
    * are declared here rather than as .astro files that would need deleting
    * again later.
    */
-  redirects: {
-    /* The school publishes this page at /general-info/ and this project had it
-       at /mandatory-public-disclosure/. The route moved to match theirs; this
-       carries anything already pointing at the old path. */
-    '/mandatory-public-disclosure': '/general-info/',
-    // → Teaching Methodology
-    '/academics/teaching-learning/collaborative-learning': '/academics/teaching-learning/methodology/',
-    // → Smart Classrooms & Digital Literacy
-    '/academics/teaching-learning/ai-digital-literacy': '/academics/teaching-learning/smart-classrooms/',
-    // → Experiential & Project-Based Learning
-    '/academics/teaching-learning/project-based-learning': '/academics/teaching-learning/experiential-learning/',
-    // → STEM, Robotics & Enrichment
-    '/academics/teaching-learning/stem-education': '/academics/teaching-learning/stem-robotics/',
-    '/academics/teaching-learning/robotics-coding': '/academics/teaching-learning/stem-robotics/',
-    '/academics/teaching-learning/mathematics-science-enrichment': '/academics/teaching-learning/stem-robotics/',
-    // → Reading, Language & Library
-    '/academics/teaching-learning/reading-programme': '/academics/teaching-learning/reading-language/',
-    '/academics/teaching-learning/language-development': '/academics/teaching-learning/reading-language/',
-    '/academics/teaching-learning/library-programme': '/academics/teaching-learning/reading-language/',
-    // → Laboratories & Academic Clubs
-    '/academics/teaching-learning/laboratories': '/academics/teaching-learning/laboratories-clubs/',
-    '/academics/teaching-learning/academic-clubs': '/academics/teaching-learning/laboratories-clubs/',
-  },
+  /* ⚠⚠ THESE ARE DECLARED HERE BUT THEY DO NOT REDIRECT ON THEIR OWN ANY MORE,
+     AND THE PAGES THAT MAKE THEM WORK ARE EMITTED BY retiredRoutePages() BELOW.
+     Read that before touching either.
+
+     WHAT CHANGED. Under plain output: 'static' Astro emitted each of these as a
+     meta-refresh HTML page sitting at the real path, and they worked. Adding
+     @astrojs/vercel turned them into ordered route rules in
+     .vercel/output/config.json instead — and the adapter puts the
+     trailingSlash: 'always' canonicaliser FIRST in that list:
+
+         ^/((?:[^/]+/)*[^/.]+)$  ->  /$1/   (308, no `continue`, so it STOPS)
+
+     A key written '/admissions' compiles to ^/admissions$. The canonicaliser
+     has already rewritten /admissions to /admissions/ by the time that rule is
+     reached, and /admissions/ matches no rule at all, so it falls through to
+     the filesystem and 404s. Writing the key WITH a slash does not help either:
+     Astro strips it before compiling the pattern — verified, the emitted src is
+     ^/admissions$ both ways.
+
+     So all thirteen — the eleven Section C routes, mandatory-public-disclosure
+     and admissions — were silently dead the moment the adapter went in. They
+     look correct in this file and correct in the built config.
+
+     ⚠ THE ENTRIES STAY because this is the one place the retired → live map is
+     written down, and retiredRoutePages() reads it. Deleting an entry deletes
+     its redirect page too. */
+  redirects: RETIRED_ROUTES,
 
   devToolbar: {
     enabled: false,

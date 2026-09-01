@@ -600,7 +600,7 @@ export const drawerQuickLinks = [
  * findable regardless of how short the utility bar gets.
  */
 export const footerUtility = [
-  { label: "Admissions", href: "/admissions/" },
+  { label: "Admission Notice", href: "/admission-notice/" },
   { label: "Uniform Catalogue", href: "/admissions/uniform-catalogue/" },
   {
     label: "Notices",

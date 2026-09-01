@@ -32,7 +32,14 @@ import banner from '../../assets/photos/sunbeem-1.jpg';
     standfirst="School uniform and dress guidelines for all classes and seasons."
     crumbs={[
       { label: 'Home', href: '/' },
-      { label: 'Essential Information', href: '/admissions/' },
+      /* ⚠ THE MIDDLE CRUMB IS GONE ON PURPOSE. It read 'Essential
+         Information' but pointed at /admissions/ — a label and a
+         destination that never matched. There IS no
+         /essential-information/ landing page; it is a menu heading only.
+         Once /admissions/ became /admission-notice/, following that crumb
+         would have dropped the reader on an admission notice from a page
+         about something else, so the bogus level is dropped rather than
+         repointed. Restore it the day the section gets a real page. */
     ]}
     src={banner}
     alt="The main building of Sunbeam School Ballia at Agarsanda, seen across its front lawn."

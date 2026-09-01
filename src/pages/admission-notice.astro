@@ -1,0 +1,173 @@
+---
+/**
+ * ADMISSION NOTICE — the school's current admissions notice.
+ *
+ * ═══ SOURCE — sunbeamballia.edu.in/admission-notice/, and nothing else ══════
+ *
+ * ⚠⚠ EVERY SENTENCE ON THIS PAGE IS THE NOTICE'S OWN. The school publishes this
+ * as a single poster image with no accompanying text, and the wording below is
+ * transcribed from it verbatim — dates, class ranges, counter hours and the
+ * closing line. Nothing is paraphrased, and nothing is added: the notice does
+ * not state a fee, a form price, a deadline, an age criterion or an eligibility
+ * rule, so this page states none either. Client asset A8 (admission
+ * eligibility, age criteria, dates, fee data) is still outstanding and this
+ * page is NOT a substitute for it.
+ *
+ * ⚠ IT IS TRANSCRIBED, NOT SCREENSHOTTED, AND THAT IS DELIBERATE. The school's
+ * own page is a bare <img> — the notice is unreadable to a screen reader, not
+ * selectable, not searchable, not translatable, and illegible on a phone
+ * without pinch-zoom. A parent checking a form date on a handset is the whole
+ * audience for this page. The poster can be added ALONGSIDE this text if the
+ * client supplies the file; it must not replace it.
+ *
+ * ⚠ THE DATE BELOW IS THE DATE PRINTED ON THE NOTICE (19/11/2025), not a
+ * publication date invented here, and it is exposed as <time datetime> so it
+ * stays machine-readable. When the school issues the next notice, replace the
+ * block wholesale — this page holds the CURRENT notice, not an archive. The
+ * archive is /news-events/notices/, which carries all 24 posters.
+ *
+ * ⚠ "1st December (Monday)" IS COPIED AS PRINTED, WITH NO YEAR. The notice
+ * gives no year for it. In context it is December 2025 — the notice is dated
+ * 19/11/2025 and the session is 2026-27 — but the school did not write the
+ * year, so neither does this page. Do not "helpfully" resolve it.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import { school } from '../data/site';
+
+import banner from '../assets/photos/sunbeem-1.jpg';
+
+const applyLinks = [
+  { label: 'Apply online — Nursery to IX', href: school.external.applyFormNurseryToIX },
+  { label: 'Apply online — Class XI', href: school.external.applyFormClassXI },
+];
+---
+
+<BaseLayout
+  title="Admission Notice — Sunbeam School Ballia"
+  description="Admission Forms for Session 2026-27 at Sunbeam School Ballia are available from 1st December for classes Nursery to IX and XI, from the School Fee Counter between 9:00 a.m. and 3:00 p.m."
+>
+  <PageHero
+    title="Admission Notice"
+    standfirst="The school's current notice to parents on admission forms."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Admission Notice', href: '/admission-notice/' },
+    ]}
+    src={banner}
+    alt="The main building of Sunbeam School Ballia at Agarsanda, seen across its front lawn."
+    position="50% 46%"
+  />
+
+  <div class="u-page-panel">
+    <div class="u-container">
+      <article class="notice" aria-labelledby="notice-heading">
+        <header class="notice__head">
+          <p class="notice__kicker">Notice</p>
+          <h2 class="notice__heading t-h3" id="notice-heading">
+            Availability of Admission Forms for Session 2026&ndash;27
+          </h2>
+          <p class="notice__date">
+            Dated <time datetime="2025-11-19">19 November 2025</time>
+          </p>
+        </header>
+
+        <div class="notice__body">
+          <p>Dear Parents,</p>
+          <p>
+            This is to inform you that the <strong>Admission Forms for Session
+            2026&ndash;27</strong> will be available from <strong>1st December
+            (Monday)</strong> for classes <strong>Nursery to IX &amp; XI</strong>.
+          </p>
+          <p>
+            Parents are requested to contact the <strong>School Fee Counter</strong>
+            for collecting the form between <strong>9:00 a.m. to 3:00 p.m.</strong>
+          </p>
+          <p>Your cooperation is appreciated.</p>
+        </div>
+
+        <p class="notice__sign">Principal</p>
+      </article>
+
+      {/* Actions the notice itself implies. The helpline and the application
+          forms are the school's own, already used elsewhere on this site; no
+          new contact detail is introduced here. */}
+      <div class="notice__actions">
+        <a class="btn btn--primary" href={`tel:${school.phone.admissions}`}>
+          Admission helpline {school.phone.admissionsDisplay}
+        </a>
+        {applyLinks.map((l) => (
+          <a class="btn btn--secondary" href={l.href} target="_blank" rel="noopener">
+            {l.label}
+          </a>
+        ))}
+      </div>
+
+      <p class="notice__more">
+        Every circular the school issues is collected on the
+        <a href="/news-events/notices/">notice board</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* The notice reads as a document, so it is set as one: a single measured
+     column on a card, not a marketing block. The measure sits on the article
+     rather than the container so the action row below can run wider. */
+  .notice {
+    max-width: var(--sb-max-prose);
+    margin-inline: auto;
+    padding: clamp(24px, 4vw, 44px);
+    background: var(--sb-paper);
+    border: var(--sb-rule);
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .notice__head {
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    border-bottom: var(--sb-rule);
+  }
+
+  .notice__kicker {
+    margin: 0 0 8px;
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .notice__heading { margin: 0 0 10px; }
+
+  .notice__date {
+    margin: 0;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-text-muted);
+  }
+
+  .notice__body > p { margin: 0 0 var(--sb-para-gap); }
+  .notice__body > p:last-child { margin-bottom: 0; }
+
+  .notice__sign {
+    margin: 28px 0 0;
+    font-weight: 700;
+  }
+
+  .notice__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin: 28px auto 0;
+  }
+
+  .notice__more {
+    margin: 22px 0 0;
+    font-size: var(--sb-body-sm);
+    text-align: center;
+    color: var(--sb-text-muted);
+  }
+</style>
