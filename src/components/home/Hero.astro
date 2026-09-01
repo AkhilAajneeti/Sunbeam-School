@@ -52,9 +52,10 @@ import community from '../../assets/photos/sunbeem-2.jpg';
  * its own students, which is the fastest "this is a school" in the whole set.
  * It is the first slide to re-export if better originals turn up.
  *
- * Adding another is one import and one entry in `slides` — the dots, the
- * counter, the timer and the keyboard controls are all derived from the array's
- * length and none of them needs touching.
+ * Adding another is one import and one entry in `slides` — the timer and the
+ * caption cross-fade are derived from the array's length and neither needs
+ * touching. (The dot indicators this note used to mention were removed; the
+ * hero now advances on its own, by swipe on touch, or not at all while paused.)
  *
  * ⚠ THE REST ARE 1600px WIDE AND docs/07 § A2 ASKS FOR 2400px. At a full-bleed
  * 21:9 hero on a 1440 laptop that is fine; on a 27-inch monitor they are being
@@ -269,17 +270,6 @@ const slides = [
       </p>
 
       <div class="hero__controls">
-        <div class="hero__dots" role="group" aria-label="Choose hero image">
-          {slides.map((_, i) => (
-            <button
-              class="hero__dot"
-              type="button"
-              data-dot
-              aria-label={`Show image ${i + 1} of ${slides.length}`}
-              aria-current={i === 0 ? 'true' : 'false'}
-            ></button>
-          ))}
-        </div>
         <button class="hero__pause" type="button" data-hero-pause aria-label="Pause image slideshow">
           <svg class="hero__icon-pause" width="10" height="12" viewBox="0 0 10 12" aria-hidden="true">
             <rect x="0" y="0" width="3" height="12" fill="currentColor" />
@@ -528,33 +518,6 @@ const slides = [
     gap: var(--sb-5);
   }
 
-  .hero__dots {
-    display: flex;
-    align-items: center;
-    gap: var(--sb-3);
-  }
-
-  /* 24px gold rules, per docs/06 §03. Hit area padded to 44px. */
-  .hero__dot {
-    position: relative;
-    width: 24px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-  }
-
-  .hero__dot::before {
-    content: '';
-    width: 24px;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.38);
-    transition: background-color var(--sb-dur-link) ease;
-  }
-
-  .hero__dot[aria-current='true']::before { background: var(--sb-gold); }
-  .hero__dot:hover::before { background: rgba(255, 255, 255, 0.75); }
-  .hero__dot[aria-current='true']:hover::before { background: var(--sb-gold); }
-
   .hero__pause {
     width: 44px;
     height: 44px;
@@ -637,7 +600,9 @@ const slides = [
     .hero__controls { gap: var(--sb-4); }
 
     /* Auto-advance never runs at this width, so a pause control would be a
-       button that does nothing. Swipe and the dots remain. */
+       button that does nothing. Swipe is what remains — the dots are gone from
+       every width now, so this leaves the hero with no visible control on a
+       phone. That is deliberate; the images still advance by swipe. */
     .hero__pause { display: none; }
   }
 </style>
@@ -647,7 +612,6 @@ const slides = [
 
   if (hero) {
     const slides = Array.from(hero.querySelectorAll<HTMLElement>('[data-slide]'));
-    const dots = Array.from(hero.querySelectorAll<HTMLButtonElement>('[data-dot]'));
     const pauseBtn = hero.querySelector<HTMLButtonElement>('[data-hero-pause]');
     const caption = hero.querySelector<HTMLElement>('[data-hero-caption]');
     const captionText = caption?.querySelector<HTMLElement>('.hero__caption-text');
@@ -674,13 +638,11 @@ const slides = [
       if (next === index) return;
       slides[index].removeAttribute('data-active');
       slides[index].setAttribute('aria-hidden', 'true');
-      dots[index]?.setAttribute('aria-current', 'false');
 
       index = (next + slides.length) % slides.length;
 
       slides[index].setAttribute('data-active', '');
       slides[index].setAttribute('aria-hidden', 'false');
-      dots[index]?.setAttribute('aria-current', 'true');
 
       // The caption belongs to the image, so it cross-fades with it.
       if (caption && captionText && captionTag) {
@@ -703,13 +665,6 @@ const slides = [
       if (!mayAutoplay()) return;
       timer = window.setInterval(() => show(index + 1), INTERVAL);
     };
-
-    dots.forEach((dot, i) =>
-      dot.addEventListener('click', () => {
-        show(i);
-        start();
-      })
-    );
 
     pauseBtn?.addEventListener('click', () => {
       userPaused = !userPaused;
