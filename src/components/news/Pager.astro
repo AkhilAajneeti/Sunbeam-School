@@ -84,6 +84,22 @@ const pages = Array.from({ length: total }, (_, i) => i + 1);
 
 <style>
   .pager {
+    /* ⚠⚠ position + z-index ARE LOAD BEARING; THIS IS NOT DECORATION. PageHero
+       is pinned (position: sticky, z-index: 0) and the page scrolls OVER it —
+       .u-page-panel covers it by being `relative; z-index: 1` with an opaque
+       ground. The pager renders as a SIBLING AFTER that panel, so it is not
+       part of the covering layer, and a static box paints BELOW a positioned
+       one with z-index: 0 no matter how late it comes in the DOM.
+
+       Without these two lines the pinned banner shows through as a full-bleed
+       strip of photograph directly above the page numbers, with the pills
+       sitting half on top of it. The ivory background below is not enough on
+       its own — it paints in the wrong layer.
+
+       Matching the panel's z-index: 1 is the whole fix: the pager already wears
+       the panel's ivory and is meant to read as a continuation of it. */
+    position: relative;
+    z-index: 1;
     background: var(--sb-ivory);
     padding-block: clamp(28px, 4vw, 52px);
   }
