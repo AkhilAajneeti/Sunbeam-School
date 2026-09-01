@@ -1,0 +1,715 @@
+---
+/**
+ * PARENTS' FEEDBACK — the page body, built to the client's reference.
+ *
+ * ⚠⚠ THE CAROUSEL IS FULLY BUILT AND CURRENTLY HAS NOTHING TO SHOW. The
+ * reference has four testimonial cards in it; the names on them — Priya Sharma,
+ * Ankit Verma, Neha Singh, Rajesh Gupta, each with a child and a class — are
+ * invented, and the same brief that supplied the reference forbids inventing
+ * parent names, quotes, classes and ratings. Both halves are meant. So the rail,
+ * the arrows, the dots and the snap behaviour are all here and all wired, and
+ * they render the moment `testimonials` in data/parentsFeedback.ts has entries.
+ * Until then the section carries an honest panel sized to hold the same ground,
+ * so the page's proportions do not collapse while it waits.
+ *
+ * This project has answered this once already, in writing, when the school
+ * supplied no testimonial — see components/academics/parents/Voice.astro.
+ *
+ * ⚠ THE INTRO HEAD IS HAND-BUILT, NOT <SectionHead>, FOR ONE REASON: the
+ * reference sets "Stronger together." in orange on its own line, and
+ * SectionHead takes `heading` as a plain string with no room for markup. The
+ * eyebrow below is the SAME global `.pill pill--violet` that SectionHead emits,
+ * and the heading inherits the same display face and tracking, so the two read
+ * as one system. Every other head on this page IS SectionHead.
+ *
+ * ⚠ NO SUBMISSION FORM. A "Submit feedback" button with no backend behind it is
+ * a promise the site cannot keep; the closing band links to Parent Partnership,
+ * which is a real page with the real channels on it.
+ */
+import SectionHead from '../SectionHead.astro';
+import Photo from '../../ui/Photo.astro';
+import { testimonials, emptyState, participation, closing } from '../../../data/parentsFeedback';
+
+import forumSeated from '../../../assets/parents forum/parents forum (2).jpg';
+import forumPanel from '../../../assets/parents forum/parents forum (4).jpg';
+import forumHall from '../../../assets/parents forum/parents forum (6).jpg';
+import orientation from '../../../assets/school-event/Parent-Orientation/pop1-2024-a.jpg';
+
+/* The lead frame is the one that shows parents as a body rather than a room —
+   it is what the page is about, so it runs full width above the other three. */
+const lead = {
+  src: forumSeated,
+  alt: 'Parents seated for a Parents’ Forum at Sunbeam School Ballia, each place marked with a class nameplate.',
+  position: '50% 44%',
+};
+
+const strip = [
+  {
+    src: orientation,
+    alt: 'A Parent Orientation Programme session at Sunbeam School Ballia, parents seated facing the staff.',
+    position: '50% 42%',
+  },
+  {
+    src: forumPanel,
+    alt: 'The leadership panel answering parents during a sitting of the Parents’ Forum at Sunbeam School Ballia.',
+    position: '50% 45%',
+  },
+  {
+    src: forumHall,
+    alt: 'Parents of Sunbeam School Ballia in the hall during a Parents’ Forum sitting.',
+    position: '50% 48%',
+  },
+];
+---
+
+<div class="pfb">
+  {/* ── 01 · Introduction ────────────────────────────────────────────────── */}
+  <section class="pfb__intro" aria-labelledby="pfb-intro">
+    <span class="pfb__dots" aria-hidden="true"></span>
+    <svg class="pfb__flourish" viewBox="0 0 220 150" fill="none" aria-hidden="true">
+      <path d="M92 44c0-13 10-23 22-23s22 10 22 23c0 21-30 39-44 52C78 83 48 65 48 44c0-13 10-23 22-23s22 10 22 23Z"
+        stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" />
+      <path d="M136 96c22 6 44 14 62 30M198 126c8-10 14-16 20-19" stroke="currentColor"
+        stroke-width="2.2" stroke-linecap="round" />
+    </svg>
+
+    <div class="u-container">
+      <div class="pfb__lede">
+        <p class="pfb__eyebrow">
+          <span class="pill pill--violet">
+            <span class="pfb__dot" aria-hidden="true"></span>
+            Parents as partners in learning
+          </span>
+        </p>
+        <h2 class="pfb__h2" id="pfb-intro" data-split>
+          Real experiences.<br />
+          <span class="pfb__mark">Stronger together.</span>
+        </h2>
+        <p class="pfb__stand">
+          A child spends roughly a third of a weekday in one classroom and the rest in the other.
+          The two only add up when they are talking to each other.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ── 02 · What our parents say ────────────────────────────────────────── */}
+  <section class="pfb__voices" aria-labelledby="pfb-voices">
+    <div class="u-container">
+      <SectionHead
+        id="pfb-voices"
+        eyebrow="What our parents say"
+        heading="In parents’ own words"
+        measure={18}
+        class="pfb__head"
+      />
+
+      {testimonials.length > 0 ? (
+        <div class="pfb__carousel" data-pfb-carousel>
+          <button class="pfb__nav pfb__nav--prev" type="button" data-pfb-prev
+            aria-label="Previous feedback">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+
+          <ul class="pfb__rail" data-pfb-rail>
+            {testimonials.map((t) => (
+              <li class="pfb__card">
+                <span class="pfb__quote" aria-hidden="true">&ldquo;</span>
+                <blockquote class="pfb__text"><p>{t.quote}</p></blockquote>
+                <div class="pfb__by">
+                  <span class="pfb__rule" aria-hidden="true"></span>
+                  <span class="pfb__who">
+                    <svg class="pfb__avatar" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7" />
+                      <path d="M4.8 20c0-3.6 3.2-5.8 7.2-5.8s7.2 2.2 7.2 5.8" stroke="currentColor"
+                        stroke-width="1.7" stroke-linecap="round" />
+                    </svg>
+                    <span>
+                      <span class="pfb__name">{t.parentName}</span>
+                      <span class="pfb__rel">
+                        {t.relation}{t.className ? <><br />{t.className}</> : null}
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <button class="pfb__nav pfb__nav--next" type="button" data-pfb-next
+            aria-label="More feedback">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+
+          <div class="pfb__dotsnav" data-pfb-dots aria-hidden="true"></div>
+        </div>
+      ) : (
+        /* ⚠ NOT A SKELETON AND NOT A LOADING STATE. It is what the page says
+           while no parent has been quoted. Read the header of
+           data/parentsFeedback.ts before replacing it with anything. */
+        <div class="pfb__empty">
+          <span class="pfb__quote pfb__quote--big" aria-hidden="true">&ldquo;</span>
+          <p class="pfb__empty-h">{emptyState.heading}</p>
+          <p class="pfb__empty-b">{emptyState.body}</p>
+          <a class="link-tertiary" href="/academics/parent-partnership/">
+            The channels the school does publish
+            <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+              <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {/* ── 03 · Documented participation ────────────────────────────────────── */}
+  <section class="pfb__part" aria-labelledby="pfb-part">
+    <div class="u-container">
+      <SectionHead
+        id="pfb-part"
+        eyebrow="Parent participation"
+        heading="Parents are part of the journey."
+        stand="Not testimonials — the standing channels the school has published, and where each one is written up in full."
+        measure={22}
+        class="pfb__head"
+      />
+
+      <ul class="pfb__grid">
+        {participation.map((c, i) => (
+          <li class="pfb__item" data-reveal data-reveal-delay={(i % 4) * 70}>
+            <span class="pfb__n" aria-hidden="true">{c.n}</span>
+            <h3 class="pfb__ih">{c.title}</h3>
+            <p class="pfb__ib">{c.body}</p>
+            <a class="link-tertiary pfb__ia" href={c.href}>
+              {c.cta}
+              <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* ── 04 · Photographs ─────────────────────────────────────────────────── */}
+  <section class="pfb__shots" aria-label="Parents at Sunbeam School Ballia">
+    <div class="u-container">
+      <figure class="pfb__lead" data-reveal>
+        <Photo src={lead.src} alt={lead.alt} brief={lead.alt} position={lead.position}
+          ref="A2" quiet sizes="(max-width: 767px) 92vw, 76vw" />
+      </figure>
+
+      <div class="pfb__strip">
+        {strip.map((g, i) => (
+          <figure class="pfb__shot" data-reveal data-reveal-delay={i * 70}>
+            <Photo src={g.src} alt={g.alt} brief={g.alt} position={g.position}
+              ref="A2" quiet sizes="(max-width: 767px) 92vw, 26vw" />
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ── 05 · Closing ─────────────────────────────────────────────────────── */}
+  <section class="pfb__close" aria-labelledby="pfb-close">
+    <div class="u-container">
+      <div class="pfb__band">
+        <span class="pfb__badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20s-6.2-4-8-7.4C2.4 9.4 4 6 7.2 6c1.9 0 3.2 1.1 4 2.2.8-1.1 2.1-2.2 4-2.2 3.2 0 4.8 3.4 3.2 6.6C18.2 16 12 20 12 20Z" />
+          </svg>
+        </span>
+        <div class="pfb__band-copy">
+          <h2 class="pfb__band-h" id="pfb-close">{closing.heading}</h2>
+          <p class="pfb__band-b">{closing.body}</p>
+        </div>
+        <a class="btn btn--primary pfb__band-cta" href={closing.cta.href}>
+          {closing.cta.label}
+          <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* ⚠ SECTION RHYTHM IS THE POINT OF THIS PAGE, NOT DECORATION. An earlier pass
+     used the default band padding throughout and the whole thing read as a
+     compact information page: five sections stacked with nothing between them.
+     These clamps are what give each section room to be a section. Do not trim
+     them to "fit more above the fold" — nothing here is above the fold. */
+  .pfb {
+    --pfb-band: clamp(64px, 8.2vw, 124px);
+    background: var(--sb-ivory);
+  }
+
+  /* ── Intro ────────────────────────────────────────────────────────────── */
+
+  .pfb__intro {
+    position: relative;
+    padding-block: var(--pfb-band);
+    overflow: hidden;
+  }
+
+  .pfb__lede {
+    max-width: 60ch;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  /* Same pill SectionHead emits, so the two heads read as one system. */
+  .pfb__eyebrow { margin: 0 0 var(--sb-5); }
+  .pfb__eyebrow .pill {
+    font-size: var(--sb-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .pfb__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet);
+    flex-shrink: 0;
+  }
+
+  .pfb__h2 {
+    margin: 0 0 var(--sb-5);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 48px);
+    line-height: 1.12;
+    letter-spacing: -0.034em;
+    color: var(--sb-ink);
+  }
+
+  .pfb__mark { color: var(--sb-violet); }
+
+  .pfb__stand {
+    margin: 0;
+    color: var(--sb-text-secondary);
+    font-size: var(--sb-body);
+    line-height: var(--sb-body-lh);
+  }
+
+  /* Decoration, and it stays decoration: both are behind the copy and neither
+     carries meaning a reader would miss. */
+  .pfb__dots {
+    position: absolute;
+    inset-block-start: clamp(28px, 5vw, 70px);
+    inset-inline-start: clamp(-20px, 1.5vw, 40px);
+    width: 150px;
+    height: 110px;
+    background-image: radial-gradient(var(--sb-violet) 1.3px, transparent 1.3px);
+    background-size: 17px 17px;
+    opacity: 0.22;
+    pointer-events: none;
+  }
+
+  .pfb__flourish {
+    position: absolute;
+    inset-block-start: clamp(30px, 5vw, 74px);
+    inset-inline-end: clamp(-30px, 1vw, 48px);
+    width: clamp(150px, 15vw, 230px);
+    color: var(--sb-violet);
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  @media (max-width: 899px) {
+    .pfb__flourish { display: none; }
+    .pfb__dots { opacity: 0.14; }
+  }
+
+  /* ── Voices ───────────────────────────────────────────────────────────── */
+
+  .pfb__voices {
+    padding-block: 0 var(--pfb-band);
+  }
+
+  .pfb :global(.pfb__head) { --shead-gap: clamp(36px, 4vw, 62px); }
+
+  .pfb__carousel { position: relative; }
+
+  .pfb__rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - (3 * var(--sb-6))) / 4);
+    gap: var(--sb-6);
+    margin: 0;
+    padding: 0 0 var(--sb-4);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .pfb__rail::-webkit-scrollbar { display: none; }
+
+  .pfb__card {
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    padding: var(--sb-7);
+    background: var(--sb-paper);
+    border: var(--sb-rule);
+    border-radius: var(--sb-r-2);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .pfb__quote {
+    display: block;
+    font-family: var(--sb-font-display);
+    font-size: 52px;
+    line-height: 0.62;
+    color: var(--sb-violet-wash);
+    margin-bottom: var(--sb-5);
+  }
+
+  .pfb__text { margin: 0 0 var(--sb-6); flex: 1 1 auto; }
+  .pfb__text p {
+    margin: 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-secondary);
+  }
+
+  .pfb__rule {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: var(--sb-violet);
+    margin-bottom: var(--sb-4);
+  }
+  .pfb__who { display: flex; gap: 10px; align-items: flex-start; }
+  .pfb__avatar { width: 20px; height: 20px; color: var(--sb-violet); flex-shrink: 0; }
+  .pfb__name { display: block; font-weight: 700; color: var(--sb-violet); }
+  .pfb__rel {
+    display: block;
+    font-size: var(--sb-caption);
+    line-height: 1.45;
+    color: var(--sb-text-muted);
+  }
+
+  /* Arrows sit outside the rail on desktop and are hidden where they would
+     overlap it. */
+  .pfb__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-paper);
+    border: var(--sb-rule);
+    box-shadow: var(--sb-shadow-card);
+    color: var(--sb-violet);
+    transition: transform var(--sb-dur-btn) ease, box-shadow var(--sb-dur-btn) ease;
+  }
+  .pfb__nav svg { width: 22px; height: 22px; }
+  .pfb__nav:hover { box-shadow: var(--sb-shadow-card-hover); }
+  .pfb__nav--prev { inset-inline-start: calc(-1 * clamp(14px, 3.4vw, 58px)); }
+  .pfb__nav--next { inset-inline-end: calc(-1 * clamp(14px, 3.4vw, 58px)); }
+  .pfb__nav[disabled] { opacity: 0.34; pointer-events: none; }
+  .pfb__nav--prev:hover { transform: translateY(-50%) translateX(-2px); }
+  .pfb__nav--next:hover { transform: translateY(-50%) translateX(2px); }
+
+  .pfb__dotsnav {
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+    margin-top: var(--sb-6);
+  }
+  .pfb__dotsnav :global(button) {
+    width: 9px;
+    height: 9px;
+    border-radius: var(--sb-r-full);
+    background: var(--sb-violet-wash);
+    transition: background-color var(--sb-dur-link) ease, transform var(--sb-dur-link) ease;
+  }
+  .pfb__dotsnav :global(button[aria-current='true']) {
+    background: var(--sb-violet);
+    transform: scale(1.16);
+  }
+
+  /* The empty state holds the same ground the rail would, so the page keeps its
+     proportions while it waits for real words. */
+  .pfb__empty {
+    max-width: 68ch;
+    margin-inline: auto;
+    padding: clamp(36px, 5vw, 68px) clamp(24px, 4vw, 60px);
+    text-align: center;
+    background: var(--sb-paper);
+    border: var(--sb-rule);
+    border-radius: var(--sb-r-3);
+    box-shadow: var(--sb-shadow-card);
+  }
+  .pfb__quote--big {
+    font-size: 74px;
+    color: var(--sb-border-strong);
+    margin-bottom: var(--sb-4);
+  }
+  .pfb__empty-h {
+    margin: 0 0 var(--sb-4);
+    font-family: var(--sb-font-display);
+    font-size: clamp(19px, 2vw, 25px);
+    line-height: 1.28;
+    color: var(--sb-ink);
+  }
+  .pfb__empty-b {
+    margin: 0 0 var(--sb-6);
+    color: var(--sb-text-secondary);
+    font-size: var(--sb-body-sm);
+    line-height: var(--sb-body-sm-lh);
+  }
+
+  /* ── Participation ────────────────────────────────────────────────────── */
+
+  .pfb__part {
+    padding-block: var(--pfb-band);
+    background: var(--sb-paper);
+    border-block: var(--sb-rule);
+  }
+
+  .pfb__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sb-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pfb__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--sb-7);
+    background: var(--sb-ivory);
+    border: var(--sb-rule);
+    border-radius: var(--sb-r-2);
+    transition: transform var(--sb-dur-btn) ease, box-shadow var(--sb-dur-btn) ease;
+  }
+  .pfb__item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .pfb__n {
+    font-family: var(--sb-font-display);
+    font-size: var(--sb-body-sm);
+    letter-spacing: 0.14em;
+    color: var(--sb-violet);
+    margin-bottom: var(--sb-4);
+  }
+
+  .pfb__ih {
+    margin: 0 0 var(--sb-4);
+    font-size: clamp(17px, 1.4vw, 21px);
+    line-height: 1.24;
+  }
+  .pfb__ib {
+    margin: 0 0 var(--sb-5);
+    color: var(--sb-text-secondary);
+    font-size: var(--sb-body-sm);
+    line-height: var(--sb-body-sm-lh);
+  }
+  /* Pins every arrow to the same baseline however long the copy runs. */
+  .pfb__ia { margin-top: auto; }
+
+  /* ── Photographs ──────────────────────────────────────────────────────── */
+
+  .pfb__shots { padding-block: var(--pfb-band); }
+
+  .pfb__lead,
+  .pfb__shot {
+    margin: 0;
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
+    box-shadow: var(--sb-shadow-card);
+  }
+
+  .pfb__lead {
+    width: min(100%, 980px);
+    margin-inline: auto;
+    aspect-ratio: 16 / 7;
+  }
+
+  /* Pulled up under the lead so the two read as one composition rather than two
+     stacked rows. */
+  .pfb__strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sb-5);
+    width: min(100%, 1120px);
+    margin: calc(-1 * clamp(20px, 3vw, 52px)) auto 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pfb__shot { aspect-ratio: 4 / 3; }
+
+  .pfb__lead :global(.photo),
+  .pfb__shot :global(.photo) { border-radius: 0; height: 100%; }
+  .pfb__lead :global(img),
+  .pfb__shot :global(img) {
+    height: 100%;
+    transition: transform var(--sb-dur-image) var(--sb-ease);
+  }
+  .pfb__lead:hover :global(img),
+  .pfb__shot:hover :global(img) { transform: scale(1.03); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pfb__lead:hover :global(img),
+    .pfb__shot:hover :global(img) { transform: none; }
+  }
+
+  /* ── Closing ──────────────────────────────────────────────────────────── */
+
+  .pfb__close { padding-block: 0 var(--pfb-band); }
+
+  .pfb__band {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: clamp(20px, 3vw, 46px);
+    padding: clamp(28px, 3.4vw, 52px);
+    background: var(--sb-violet-wash);
+    border-radius: var(--sb-r-3);
+  }
+
+  .pfb__badge {
+    display: grid;
+    place-items: center;
+    width: clamp(64px, 6vw, 92px);
+    height: clamp(64px, 6vw, 92px);
+    border-radius: var(--sb-r-full);
+    background: var(--sb-paper);
+    color: var(--sb-violet);
+  }
+  .pfb__badge svg { width: 42%; height: 42%; }
+
+  .pfb__band-h {
+    margin: 0 0 var(--sb-3);
+    font-family: var(--sb-font-display);
+    font-size: clamp(21px, 2.3vw, 31px);
+    line-height: 1.18;
+    letter-spacing: -0.03em;
+    color: var(--sb-violet-ink);
+  }
+  .pfb__band-b {
+    margin: 0;
+    color: var(--sb-text-secondary);
+    font-size: var(--sb-body-sm);
+    line-height: var(--sb-body-sm-lh);
+    max-width: 58ch;
+  }
+  .pfb__band-cta { white-space: nowrap; }
+
+  /* ── Tablet ───────────────────────────────────────────────────────────── */
+
+  @media (max-width: 1023px) {
+    .pfb__rail { grid-auto-columns: calc((100% - var(--sb-6)) / 2); }
+    .pfb__grid { grid-template-columns: repeat(2, 1fr); }
+    .pfb__nav--prev { inset-inline-start: 4px; }
+    .pfb__nav--next { inset-inline-end: 4px; }
+  }
+
+  @media (max-width: 899px) {
+    .pfb__band {
+      grid-template-columns: 1fr;
+      justify-items: start;
+      gap: var(--sb-5);
+    }
+    .pfb__band-cta { width: 100%; justify-content: center; }
+  }
+
+  /* ── Mobile ───────────────────────────────────────────────────────────── */
+
+  @media (max-width: 767px) {
+    /* One card per swipe, and the arrows go — a thumb swipes, and two 46px
+       buttons over an 88% card is more chrome than content. */
+    .pfb__rail { grid-auto-columns: 88%; }
+    .pfb__nav { display: none; }
+
+    .pfb__grid { grid-template-columns: 1fr; }
+
+    .pfb__lead { aspect-ratio: 4 / 3; }
+    .pfb__strip {
+      grid-template-columns: 1fr;
+      margin-top: var(--sb-5);
+      gap: var(--sb-4);
+    }
+    .pfb__shot { aspect-ratio: 16 / 10; }
+  }
+</style>
+
+<script>
+  /* ⚠ THE WHOLE BLOCK NO-OPS WHILE THE CAROUSEL IS EMPTY, and that is why it is
+     guarded rather than deleted. `testimonials` is empty today, so the rail is
+     not rendered and querySelector returns null; the moment real feedback lands
+     in data/parentsFeedback.ts the markup appears and this wires itself up with
+     no further change.
+
+     Scroll position is the single source of truth — the dots and the arrows
+     both read it rather than keeping a counter of their own, so a swipe, a
+     click and a keyboard scroll can never disagree about which card is current. */
+  const rail = document.querySelector<HTMLElement>('[data-pfb-rail]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-pfb-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-pfb-next]');
+  const dots = document.querySelector<HTMLElement>('[data-pfb-dots]');
+
+  if (rail && prev && next && dots) {
+    const cards = Array.from(rail.children) as HTMLElement[];
+
+    /** How many fit at once — recomputed on resize, never assumed. */
+    const perView = () =>
+      Math.max(1, Math.round(rail.clientWidth / (cards[0]?.offsetWidth || rail.clientWidth)));
+
+    const pages = () => Math.max(1, cards.length - perView() + 1);
+    const current = () =>
+      Math.min(pages() - 1, Math.round(rail.scrollLeft / (cards[0]?.offsetWidth || 1)));
+
+    cards.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', `Show feedback ${i + 1}`);
+      b.addEventListener('click', () => {
+        rail.scrollTo({ left: i * (cards[0]?.offsetWidth || 0), behavior: 'smooth' });
+      });
+      dots.appendChild(b);
+    });
+
+    const sync = () => {
+      const at = current();
+      const last = pages() - 1;
+      prev.disabled = at <= 0;
+      next.disabled = at >= last;
+      Array.from(dots.children).forEach((d, i) => {
+        (d as HTMLElement).hidden = i > last;
+        d.setAttribute('aria-current', i === at ? 'true' : 'false');
+      });
+    };
+
+    const step = (dir: number) =>
+      rail.scrollBy({ left: dir * (cards[0]?.offsetWidth || 0), behavior: 'smooth' });
+
+    prev.addEventListener('click', () => step(-1));
+    next.addEventListener('click', () => step(1));
+    rail.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync, { passive: true });
+    sync();
+  }
+</script>

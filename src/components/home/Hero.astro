@@ -276,22 +276,6 @@ const slides = [
     <div class="hero__tint" aria-hidden="true"></div>
     <div class="hero__scrim" aria-hidden="true"></div>
 
-    {/* ⚠ MOBILE ONLY, AND ONLY WHILE A FILM SLIDE IS SHOWING. The script hides
-        it on the photograph slides and above 768px — a play control over a still
-        would be a button that plays nothing. It is also the recovery path when a
-        phone refuses muted autoplay: the poster stays, this stays, and a tap
-        starts the film. `hidden` by default so it never flashes before the
-        script has decided. */}
-    <button class="hero__play" type="button" data-hero-play hidden
-      aria-label="Play the campus film">
-      <svg class="hero__play-go" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor" />
-      </svg>
-      <svg class="hero__play-stop" viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="7" y="5.5" width="3.4" height="13" rx="1" fill="currentColor" />
-        <rect x="13.6" y="5.5" width="3.4" height="13" rx="1" fill="currentColor" />
-      </svg>
-    </button>
   </div>
 
   <div class="hero__content u-container u-on-dark">
@@ -627,8 +611,6 @@ const slides = [
   /* Hidden on desktop; the mobile block below turns both on. */
   .hero__stat-icon { display: none; }
 
-  .hero__play { display: none; }
-
   /* --- Tablet ------------------------------------------------------------- */
 
   @media (max-width: 1023px) {
@@ -717,34 +699,6 @@ const slides = [
       gap: var(--sb-6);
     }
 
-    /* Centred in the band, which is now the stage's own box. */
-    .hero__play {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 3;
-      display: grid;
-      place-items: center;
-      width: 58px;
-      height: 58px;
-      border-radius: var(--sb-r-full);
-      color: #fff;
-      background: rgba(18, 16, 15, 0.42);
-      border: 1.5px solid rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28);
-      transition: background-color var(--sb-dur-btn) ease, transform var(--sb-dur-btn) ease;
-    }
-
-    .hero__play:active { transform: translate(-50%, -50%) scale(0.94); }
-    .hero__play svg { width: 24px; height: 24px; }
-    /* The play triangle is optically left-heavy inside a circle. */
-    .hero__play-go { margin-left: 3px; }
-    .hero__play-stop { display: none; }
-    .hero__play[data-on] .hero__play-go { display: none; }
-    .hero__play[data-on] .hero__play-stop { display: block; }
 
     .hero__eyebrow { margin-bottom: var(--sb-4); }
 
@@ -814,7 +768,6 @@ const slides = [
       text-wrap: balance;
     }
 
-    .hero__play { display: grid; }
 
     .hero__actions { flex-direction: column; }
     .hero__actions .btn { width: 100%; }
@@ -929,7 +882,6 @@ const slides = [
       slides[index].setAttribute('data-active', '');
       slides[index].setAttribute('aria-hidden', 'false');
       if (!roll(index)) start();
-      syncPlay();
 
       // The caption belongs to the image, so it cross-fades with it.
       if (caption && captionText && captionTag) {
@@ -1010,55 +962,6 @@ const slides = [
 
        So hover governs the INTERVAL only, which is what it was written for. The
        film plays through and hands off when it ends, hovered or not. */
-
-    /* ⚠ THE PLAY BUTTON IS A MOBILE RECOVERY PATH, NOT A SECOND ROTATION
-       CONTROL. It appears only while a film slide is showing and only under
-       768px, and it does one thing: toggle that film. Its main job is the case
-       a phone refuses muted autoplay — roll()'s catch leaves the poster up, and
-       without a control there would be no way to ever see the film.
-
-       ⚠ IT SYNCS FROM THE VIDEO'S OWN EVENTS, not from the click. A film can
-       start or stop for reasons the button never hears about — autoplay
-       resolving late, `ended` firing, the slide changing — so play/pause on the
-       element is what sets the icon. */
-    const playBtn = hero.querySelector<HTMLButtonElement>('[data-hero-play]');
-
-    const syncPlay = () => {
-      if (!playBtn) return;
-      const film = filmOf(index);
-      const onPhone = narrow();
-      playBtn.hidden = !film || !onPhone;
-      if (!film) return;
-      playBtn.toggleAttribute('data-on', !film.paused);
-      playBtn.setAttribute(
-        'aria-label',
-        film.paused ? 'Play the campus film' : 'Pause the campus film',
-      );
-    };
-
-    playBtn?.addEventListener('click', () => {
-      const film = filmOf(index);
-      if (!film) return;
-      if (film.paused) {
-        attach(film);
-        stop();
-        void film
-          .play()
-          .then(() => film.setAttribute('data-playing', ''))
-          .catch(() => {});
-      } else {
-        film.pause();
-      }
-    });
-
-    slides.forEach((_, i) => {
-      const film = filmOf(i);
-      film?.addEventListener('play', syncPlay);
-      film?.addEventListener('pause', syncPlay);
-    });
-
-    window.addEventListener('resize', syncPlay, { passive: true });
-    syncPlay();
 
     reduced.addEventListener('change', start);
 

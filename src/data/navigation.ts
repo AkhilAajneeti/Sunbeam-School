@@ -323,6 +323,11 @@ export const mainNav: NavItem[] = [
             { label: "Workshops & Webinars", href: "/academics/parent-partnership/workshops-webinars/", icon: "panel" },
             { label: "School–Parent Communication", href: "/academics/parent-partnership/school-parent-communication/", icon: "mail" },
             { label: "Parent Engagement Initiatives", href: "/academics/parent-partnership/parent-engagement/", icon: "star" },
+            /* ⚠ THE ONLY ENTRY IN THIS GROUP WHOSE URL IS NOT UNDER
+               /academics/parent-partnership/. The page was routed at
+               /parents-feedback/ on the client's instruction; it belongs to
+               this group and its breadcrumb says so. */
+            { label: "Parents’ Feedback", href: "/parents-feedback/", icon: "speech" },
             { label: "Frequently Asked Questions", href: "/academics/parent-partnership/faqs/", icon: "bulb" },
           ],
         },

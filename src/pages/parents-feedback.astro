@@ -1,0 +1,45 @@
+---
+/**
+ * PARENTS' FEEDBACK.
+ *
+ * ⚠ THE ROUTE IS TOP-LEVEL /parents-feedback/ ON THE BRIEF'S INSTRUCTION, while
+ * every sibling channel sits under /academics/parent-partnership/. The crumb
+ * therefore points at Parent Partnership even though the URL is not beneath it,
+ * which is legitimate — a breadcrumb describes where a page belongs, not where
+ * its file lives — but if the IA is ever tidied, this is the page to move.
+ *
+ * ⚠ THE TESTIMONIAL CAROUSEL SHIPS EMPTY. See data/parentsFeedback.ts; the
+ * school has published no individual parent testimonial and none is invented
+ * here.
+ *
+ * The banner, navbar and footer are untouched.
+ * The panel's padding-block is an inline style — a scoped rule can skew against
+ * its build hash and reopen the white band above the footer.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import ParentsFeedbackPage from '../components/academics/partnership/ParentsFeedbackPage.astro';
+
+import banner from '../assets/parents forum/parents forum (5).jpg';
+---
+
+<BaseLayout
+  title="Parents’ Feedback — Sunbeam School Ballia"
+  description="Voices from the Sunbeam School Ballia community, and the documented channels through which parents take part — the Parents’ Forum, the Child–Parent–Teacher Dialogue, Art Integrated Learning and Parent Orientation."
+>
+  <PageHero
+    title="Parents’ Feedback"
+    standfirst="Voices from our school community."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
+    ]}
+    src={banner}
+    alt="A sitting of the Parents' Forum at Sunbeam School Ballia, its agenda projected on the screen above the school's leadership panel."
+    position="50% 42%"
+  />
+
+  <div class="u-page-panel" style="padding-block: 0;">
+    <ParentsFeedbackPage />
+  </div>
+</BaseLayout>
