@@ -21,9 +21,12 @@
  *
  * ⚠ WHAT IS NEEDED TO TURN THE CAROUSEL ON — four things TOGETHER, per parent:
  * the quote, the parent's name, the child's class, and written consent to
- * publish. Add entries to `testimonials` and the section renders itself; no
- * component change is required, the empty state simply stops being shown.
- * `image` and `source` are optional and the card adapts to their absence.
+ * publish. Add entries here and the entire "What our parents say" band — its
+ * eyebrow, heading, copy, cards, arrows and dots — renders itself; no component
+ * change is required. While this array is empty that band does not appear on
+ * the page at all, which is the client's call: a section with nothing to say
+ * should not be there. `image` and `source` are optional and the card adapts to
+ * their absence.
  *
  * ⚠ STAR RATINGS ARE A SEPARATE CONVERSATION AND THE SHAPE HAS NO FIELD FOR
  * ONE. A school publishing its own five stars is marketing, not testimony.
@@ -49,72 +52,74 @@ export interface ParentTestimonial {
  */
 export const testimonials: ParentTestimonial[] = [];
 
-/** Shown in place of the carousel while `testimonials` is empty. */
-export const emptyState = {
-  heading: 'Parent feedback will be published here as the school shares it.',
-  body:
-    'Sunbeam School Ballia has not published individual parent testimonials. Rather than fill this ' +
-    'page with words no parent has said, it stays open until real ones are supplied — with the ' +
-    'family’s consent — and what the school HAS documented about working with parents is below.',
-};
-
 /**
  * ═══ DOCUMENTED PARTICIPATION ══════════════════════════════════════════════
  *
- * ⚠ THESE ARE INFORMATION CARDS, NOT TESTIMONIALS, AND THE PAGE MUST KEEP THEM
- * LOOKING LIKE INFORMATION. Every line is drawn from material already published
- * on this site, and each card names its source and links to the page carrying
- * the full account, so nothing here is a claim this project invented:
+ * ⚠⚠ EVERY LINE IN `paras` IS THE SCHOOL'S OWN, COPIED VERBATIM, AND MUST STAY
+ * THAT WAY. This block was previously written by this project — summaries of
+ * what each channel is for, in this project's voice. The client supplied the
+ * school's actual published wording and asked for it unedited, so the summaries
+ * are gone and these are transcriptions. Do not tighten, re-order, merge,
+ * paraphrase or "fix" them, and do not add a sentence to balance a short card
+ * against a long one. The exclamation marks, the en dash in "teaching–learning"
+ * and the sentence fragments are the school's.
  *
- *   01  data/academics.ts → parents.forum and parents.engagement
- *   02  data/notices.ts   → the 15 November 2025 notice, read off the poster
- *   03  data/schoolActivities.ts → the Art Integrated Learning gallery
- *   04  data/academics.ts → parents.orientation
+ * ⚠ THE TITLES ARE THE SCHOOL'S HEADINGS TOO. "Child Parent Teacher Dialogue"
+ * carries no hyphens and "Art Integrated Class Project" is not "Art Integrated
+ * Learning" — both were this project's renderings and both are corrected here.
  *
- * ⚠ NOT ONE OF THEM IS PHRASED AS A QUOTATION, because none of it is one.
+ * ⚠ `href` IS UNUSED AND KEPT ON PURPOSE. The cards are not clickable — the
+ * client asked for no links at all — so nothing renders it today. It stays as
+ * the record of which page on this site writes each item up in full, so the
+ * mapping does not have to be worked out again if links ever return. `cta` is
+ * gone: it held a label this project wrote, and there is nothing to label.
  */
 export const participation = [
   {
     n: '01',
     title: 'Parents’ Forum',
-    body:
-      'The forum answers how the school is doing rather than how one child is doing — the only ' +
-      'channel where parents raise things collectively and get an answer on the record. In the ' +
-      'school’s own photographs every seat carries a class nameplate, so a concern arrives as a ' +
-      'section’s concern rather than one family’s.',
+    paras: [
+      'Today, we successfully conducted the Parents’ Forum for classes Nursery to V, creating a meaningful platform for collaboration between parents and teachers.',
+      'Parents actively participated, shared valuable feedback, and appreciated the efforts taken for their children’s growth and wellbeing.',
+    ],
     href: '/academics/parent-partnership/parents-forum/',
-    cta: 'How the forum works',
   },
   {
     n: '02',
-    title: 'Child–Parent–Teacher Dialogue',
-    body:
-      'The school issued a notice for a Child Parents Teacher Dialogue for Classes X and XII, dated ' +
-      '15 November 2025. It sits the student in the conversation alongside the parent and the ' +
-      'teacher rather than reporting on them afterwards.',
+    title: 'Child Parent Teacher Dialogue',
+    paras: [
+      'The session provided an opportunity to discuss progress, share feedback, and exchange valuable suggestions.',
+      'Parents actively participated and their insights will surely help us in further strengthening the teaching–learning process.',
+    ],
     href: '/academics/assessment/parent-teacher-meetings/',
-    cta: 'Meetings and reporting',
   },
   {
     n: '03',
-    title: 'Art Integrated Learning',
-    body:
-      'A class project taught through art, published by the school under a hand-painted banner ' +
-      'reading “ART INTEGRATED CLASS PROJECT”. The photographs run from the exhibition tables — ' +
-      'models, maps and a spread of regional food the children prepared — to the stage, where ' +
-      'classes present in the dress of the region they studied.',
+    title: 'Art Integrated Class Project',
+    paras: [
+      'Heartfelt feedback from parents.',
+      'The students showcased incredible talent and teamwork, while parents actively participated and appreciated the creative learning approach.',
+    ],
     href: '/beyond-academics/school-activities/art-integrated-learning/',
-    cta: 'See the photographs',
   },
   {
     n: '04',
     title: 'Parent Orientation',
-    body:
-      'Orientation runs before the session begins rather than in the first week of it. Families ' +
-      'walk the building, meet the class teacher and the subject staff in person, and leave with ' +
-      'the handbook and the dates in hand.',
+    paras: [
+      'Parents as Partners in Learning!',
+      'At Sunbeam School Ballia, we believe that education is a shared journey, and when parents and teachers work together, the results are extraordinary!',
+      'The program also featured a Parents Interface Session, where parents had the opportunity to interact one-on-one with the leadership team, fostering a stronger school-community bond.',
+      'Parents were an integral part of this experience, interacting with their children, exploring the activities, and witnessing the vibrant learning ecosystem we nurture at Sunbeam.',
+    ],
     href: '/academics/parent-partnership/parent-orientation/',
-    cta: 'What orientation covers',
+  },
+  {
+    n: '05',
+    title: 'Second Parents Orientation Programme',
+    paras: [
+      'Today we have conducted the Second Parents Orientation Programme successfully. Glimpses of the same are shared for your reference.',
+    ],
+    href: '/academics/parent-partnership/parent-orientation/',
   },
 ] as const;
 
@@ -122,9 +127,9 @@ export const participation = [
  *  because the project has no backend to receive one. */
 export const closing = {
   heading: 'Together, we shape brighter futures.',
-  body:
-    'Education at Sunbeam is strongest when parents and teachers work together, which is why every ' +
-    'channel between the staff room and your kitchen table is scheduled and published rather than ' +
-    'left to chance.',
+  /* ⚠ THE CLIENT'S OWN LINE FROM THE REFERENCE, not this project's. What stood
+     here was written by this project and went out with the rest of the invented
+     copy. */
+  body: 'We remain committed to nurturing curiosity, character and confidence in every child.',
   cta: { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
 };

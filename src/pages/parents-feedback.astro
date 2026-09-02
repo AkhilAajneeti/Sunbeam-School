@@ -2,25 +2,32 @@
 /**
  * PARENTS' FEEDBACK.
  *
- * ⚠ THE ROUTE IS TOP-LEVEL /parents-feedback/ ON THE BRIEF'S INSTRUCTION, while
- * every sibling channel sits under /academics/parent-partnership/. The crumb
- * therefore points at Parent Partnership even though the URL is not beneath it,
- * which is legitimate — a breadcrumb describes where a page belongs, not where
- * its file lives — but if the IA is ever tidied, this is the page to move.
+ * ⚠ THE BANNER IS STOCK PageHero, EXACTLY AS EVERY OTHER INTERNAL PAGE USES IT
+ * — centred crumb, title and standfirst, no rule, no extra paragraph. An
+ * earlier pass matched the reference's left-aligned banner instead, which
+ * needed an `align` prop on PageHero and a block of page-level overrides; both
+ * are gone and PageHero is back to its original file. If the left-aligned
+ * treatment is ever wanted again it belongs in PageHero as a variant, not as a
+ * page reaching into a component's scoped styles.
+ *
+ * ⚠ THE BANNER IS A FRAME LIFTED FROM THE SCHOOL'S OWN DRONE FOOTAGE, saved to
+ * src/assets/photos/campus-entrance-wall.jpg. It is the shot in the reference —
+ * the school's name carved into the brick wall, the palms behind it and the row
+ * of potted plants along the drive. Neither clip's poster frame carried it
+ * (hero-1 is the campus from above, hero-2 opens on the entrance arch), so it
+ * was extracted at 13s from banner-2.MP4 rather than substituting a different
+ * photograph. Re-cut it from that master if a cleaner frame is wanted.
  *
  * ⚠ THE TESTIMONIAL CAROUSEL SHIPS EMPTY. See data/parentsFeedback.ts; the
- * school has published no individual parent testimonial and none is invented
- * here.
+ * school has published no individual parent testimonial and none is invented.
  *
- * The banner, navbar and footer are untouched.
- * The panel's padding-block is an inline style — a scoped rule can skew against
- * its build hash and reopen the white band above the footer.
+ * The navbar and footer are untouched.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/ui/PageHero.astro';
 import ParentsFeedbackPage from '../components/academics/partnership/ParentsFeedbackPage.astro';
 
-import banner from '../assets/parents forum/parents forum (5).jpg';
+import banner from '../assets/photos/campus-entrance-wall.jpg';
 ---
 
 <BaseLayout
@@ -29,14 +36,14 @@ import banner from '../assets/parents forum/parents forum (5).jpg';
 >
   <PageHero
     title="Parents’ Feedback"
-    standfirst="Voices from our school community."
+    standfirst="Voices from our school community"
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Parent Partnership', href: '/academics/parent-partnership/' },
     ]}
     src={banner}
-    alt="A sitting of the Parents' Forum at Sunbeam School Ballia, its agenda projected on the screen above the school's leadership panel."
-    position="50% 42%"
+    alt="The drive inside Sunbeam School Ballia at Agarsanda, the school’s name carved into the brick wall with palms and potted plants along it."
+    position="46% 58%"
   />
 
   <div class="u-page-panel" style="padding-block: 0;">

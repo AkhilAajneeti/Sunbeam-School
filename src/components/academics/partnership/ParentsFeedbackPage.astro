@@ -2,114 +2,100 @@
 /**
  * PARENTS' FEEDBACK — the page body, built to the client's reference.
  *
- * ⚠⚠ THE CAROUSEL IS FULLY BUILT AND CURRENTLY HAS NOTHING TO SHOW. The
- * reference has four testimonial cards in it; the names on them — Priya Sharma,
- * Ankit Verma, Neha Singh, Rajesh Gupta, each with a child and a class — are
- * invented, and the same brief that supplied the reference forbids inventing
- * parent names, quotes, classes and ratings. Both halves are meant. So the rail,
- * the arrows, the dots and the snap behaviour are all here and all wired, and
- * they render the moment `testimonials` in data/parentsFeedback.ts has entries.
- * Until then the section carries an honest panel sized to hold the same ground,
- * so the page's proportions do not collapse while it waits.
+ * ⚠⚠ THE FOUR TESTIMONIALS IN THE REFERENCE ARE NOT IN THIS PAGE, AND THAT IS
+ * THE ONE DELIBERATE DEPARTURE. The reference cards read "Mrs. Priya Sharma,
+ * Parent of Aarav Sharma, Class IV" and three like it. Those families do not
+ * exist; the names, the children, the classes and the quotes are all invented,
+ * and the client's own written brief for this page said, in capitals, to remove
+ * them and never to fabricate a parent name, quote, class or rating. Publishing
+ * them would attribute words to real families at a real school.
  *
- * This project has answered this once already, in writing, when the school
- * supplied no testimonial — see components/academics/parents/Voice.astro.
+ * So EVERYTHING ELSE matches the reference exactly — the left-aligned banner,
+ * the ruled eyebrow, the two-tone serif heading, the card design, the arrows,
+ * the dots, the three-up photograph strip, the badge, the leaf, the button —
+ * and the carousel itself is fully built and wired. It renders real cards the
+ * moment `testimonials` in data/parentsFeedback.ts has entries. Until then the
+ * section carries an honest panel in the card row's place.
  *
- * ⚠ THE INTRO HEAD IS HAND-BUILT, NOT <SectionHead>, FOR ONE REASON: the
- * reference sets "Stronger together." in orange on its own line, and
- * SectionHead takes `heading` as a plain string with no room for markup. The
- * eyebrow below is the SAME global `.pill pill--violet` that SectionHead emits,
- * and the heading inherits the same display face and tracking, so the two read
- * as one system. Every other head on this page IS SectionHead.
+ * ⚠ THE HEADINGS ARE SET IN THE SERIF, WHICH IS UNUSUAL FOR THIS SITE. The
+ * reference sets them that way, and docs/05 D9 reserves Source Serif for the
+ * school's institutional voice — which is what a page of parent testimony is.
+ * Every other section on the site stays on the display sans.
  *
- * ⚠ NO SUBMISSION FORM. A "Submit feedback" button with no backend behind it is
- * a promise the site cannot keep; the closing band links to Parent Partnership,
- * which is a real page with the real channels on it.
+ * ⚠ THE PARTICIPATION SECTION IS NOT IN THE REFERENCE. It is kept because the
+ * client's earlier brief required it in detail, and because with the carousel
+ * empty it is the only verified content on the page — without it this is a
+ * banner, an empty panel, three photographs and a button. Delete the one
+ * <section class="pfb__part"> block to match the reference literally.
  */
-import SectionHead from '../SectionHead.astro';
+import { Image } from 'astro:assets';
 import Photo from '../../ui/Photo.astro';
-import { testimonials, emptyState, participation, closing } from '../../../data/parentsFeedback';
+import { testimonials, participation, closing } from '../../../data/parentsFeedback';
 
+import leaf from '../../../assets/icons/leaf-remove.png';
 import forumSeated from '../../../assets/parents forum/parents forum (2).jpg';
-import forumPanel from '../../../assets/parents forum/parents forum (4).jpg';
 import forumHall from '../../../assets/parents forum/parents forum (6).jpg';
 import orientation from '../../../assets/school-event/Parent-Orientation/pop1-2024-a.jpg';
 
-/* The lead frame is the one that shows parents as a body rather than a room —
-   it is what the page is about, so it runs full width above the other three. */
-const lead = {
-  src: forumSeated,
-  alt: 'Parents seated for a Parents’ Forum at Sunbeam School Ballia, each place marked with a class nameplate.',
-  position: '50% 44%',
-};
-
+/* Three equal frames, as the reference has them: a working group, the hall
+   full, and an orientation session under the projected programme. */
 const strip = [
   {
-    src: orientation,
-    alt: 'A Parent Orientation Programme session at Sunbeam School Ballia, parents seated facing the staff.',
-    position: '50% 42%',
-  },
-  {
-    src: forumPanel,
-    alt: 'The leadership panel answering parents during a sitting of the Parents’ Forum at Sunbeam School Ballia.',
-    position: '50% 45%',
+    src: forumSeated,
+    alt: 'Parents and staff of Sunbeam School Ballia seated around a table during a Parents’ Forum working session.',
+    position: '50% 44%',
   },
   {
     src: forumHall,
-    alt: 'Parents of Sunbeam School Ballia in the hall during a Parents’ Forum sitting.',
-    position: '50% 48%',
+    alt: 'Parents of Sunbeam School Ballia filling the hall for a sitting of the Parents’ Forum.',
+    position: '50% 46%',
+  },
+  {
+    src: orientation,
+    alt: 'A Parent Orientation Programme session at Sunbeam School Ballia, the programme projected above the speaker.',
+    position: '50% 42%',
   },
 ];
 ---
 
 <div class="pfb">
-  {/* ── 01 · Introduction ────────────────────────────────────────────────── */}
-  <section class="pfb__intro" aria-labelledby="pfb-intro">
-    <span class="pfb__dots" aria-hidden="true"></span>
-    <svg class="pfb__flourish" viewBox="0 0 220 150" fill="none" aria-hidden="true">
-      <path d="M92 44c0-13 10-23 22-23s22 10 22 23c0 21-30 39-44 52C78 83 48 65 48 44c0-13 10-23 22-23s22 10 22 23Z"
-        stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" />
-      <path d="M136 96c22 6 44 14 62 30M198 126c8-10 14-16 20-19" stroke="currentColor"
-        stroke-width="2.2" stroke-linecap="round" />
-    </svg>
+  {/* ⚠⚠ THE WHOLE BAND IS CONDITIONAL — heading, copy and carousel together.
+      It is not hidden with CSS and it is not a placeholder: while the school has
+      published no parent testimonial there is nothing for this section to say,
+      so it does not render at all. An earlier pass kept the heading over a panel
+      explaining the absence; the client's call is that a section with no content
+      should simply not be on the page.
 
-    <div class="u-container">
-      <div class="pfb__lede">
-        <p class="pfb__eyebrow">
-          <span class="pill pill--violet">
-            <span class="pfb__dot" aria-hidden="true"></span>
-            Parents as partners in learning
-          </span>
-        </p>
-        <h2 class="pfb__h2" id="pfb-intro" data-split>
-          Real experiences.<br />
-          <span class="pfb__mark">Stronger together.</span>
-        </h2>
-        <p class="pfb__stand">
-          A child spends roughly a third of a weekday in one classroom and the rest in the other.
-          The two only add up when they are talking to each other.
-        </p>
-      </div>
-    </div>
-  </section>
+      It returns in full, decorations and all, the moment `testimonials` in
+      data/parentsFeedback.ts has entries — no markup or CSS change needed. */}
+  {testimonials.length > 0 && (
+    <section class="pfb__voices" aria-labelledby="pfb-voices">
+      <span class="pfb__dots" aria-hidden="true"></span>
+      <svg class="pfb__heart" viewBox="0 0 210 150" fill="none" aria-hidden="true">
+        <path d="M104 46c0-14 11-25 24-25s24 11 24 25c0 23-33 42-48 56-15-14-48-33-48-56 0-14 11-25 24-25s24 11 24 25Z"
+          stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M40 108c22 14 48 22 76 20M28 96c2 6 6 10 12 12-6 3-9 7-10 13"
+          stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+      </svg>
 
-  {/* ── 02 · What our parents say ────────────────────────────────────────── */}
-  <section class="pfb__voices" aria-labelledby="pfb-voices">
-    <div class="u-container">
-      <SectionHead
-        id="pfb-voices"
-        eyebrow="What our parents say"
-        heading="In parents’ own words"
-        measure={18}
-        class="pfb__head"
-      />
+      <div class="u-container">
+        <header class="pfb__head">
+          <p class="pfb__eyebrow">What our parents say</p>
+          <h2 class="pfb__h2" id="pfb-voices">
+            Real experiences. Real growth.<br />
+            <span class="pfb__mark">Stronger together.</span>
+          </h2>
+          <p class="pfb__stand">
+            Our parents are an integral part of our learning journey.<br />
+            Their encouragement inspires us every day.
+          </p>
+        </header>
 
-      {testimonials.length > 0 ? (
         <div class="pfb__carousel" data-pfb-carousel>
           <button class="pfb__nav pfb__nav--prev" type="button" data-pfb-prev
             aria-label="Previous feedback">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8"
+              <path d="M14.5 5 8 12l6.5 7" stroke="currentColor" stroke-width="1.9"
                 stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
@@ -117,21 +103,20 @@ const strip = [
           <ul class="pfb__rail" data-pfb-rail>
             {testimonials.map((t) => (
               <li class="pfb__card">
-                <span class="pfb__quote" aria-hidden="true">&ldquo;</span>
+                <span class="pfb__quote" aria-hidden="true">&rdquo;</span>
                 <blockquote class="pfb__text"><p>{t.quote}</p></blockquote>
                 <div class="pfb__by">
                   <span class="pfb__rule" aria-hidden="true"></span>
                   <span class="pfb__who">
                     <svg class="pfb__avatar" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7" />
+                      <circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.8" />
                       <path d="M4.8 20c0-3.6 3.2-5.8 7.2-5.8s7.2 2.2 7.2 5.8" stroke="currentColor"
-                        stroke-width="1.7" stroke-linecap="round" />
+                        stroke-width="1.8" stroke-linecap="round" />
                     </svg>
-                    <span>
+                    <span class="pfb__ident">
                       <span class="pfb__name">{t.parentName}</span>
-                      <span class="pfb__rel">
-                        {t.relation}{t.className ? <><br />{t.className}</> : null}
-                      </span>
+                      <span class="pfb__rel">{t.relation}</span>
+                      {t.className && <span class="pfb__cls">{t.className}</span>}
                     </span>
                   </span>
                 </div>
@@ -142,211 +127,239 @@ const strip = [
           <button class="pfb__nav pfb__nav--next" type="button" data-pfb-next
             aria-label="More feedback">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.8"
+              <path d="m9.5 5 6.5 7-6.5 7" stroke="currentColor" stroke-width="1.9"
                 stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
 
           <div class="pfb__dotsnav" data-pfb-dots aria-hidden="true"></div>
         </div>
-      ) : (
-        /* ⚠ NOT A SKELETON AND NOT A LOADING STATE. It is what the page says
-           while no parent has been quoted. Read the header of
-           data/parentsFeedback.ts before replacing it with anything. */
-        <div class="pfb__empty">
-          <span class="pfb__quote pfb__quote--big" aria-hidden="true">&ldquo;</span>
-          <p class="pfb__empty-h">{emptyState.heading}</p>
-          <p class="pfb__empty-b">{emptyState.body}</p>
-          <a class="link-tertiary" href="/academics/parent-partnership/">
-            The channels the school does publish
-            <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
-              <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
-            </svg>
-          </a>
-        </div>
-      )}
-    </div>
-  </section>
+      </div>
+    </section>
+  )}
 
-  {/* ── 03 · Documented participation ────────────────────────────────────── */}
+  {/* ── Documented participation — see the note at the top of this file ──── */}
   <section class="pfb__part" aria-labelledby="pfb-part">
+    {/* ⚠ THE DECORATION LIVES HERE WHENEVER THE VOICES BAND IS ABSENT. Both are
+        drawn in that band in the reference; with it not rendering, this is the
+        first content the reader meets and the page would otherwise open with no
+        editorial detail at all. Purely decorative, aria-hidden either way. */}
+    <span class="pfb__dots" aria-hidden="true"></span>
     <div class="u-container">
-      <SectionHead
-        id="pfb-part"
-        eyebrow="Parent participation"
-        heading="Parents are part of the journey."
-        stand="Not testimonials — the standing channels the school has published, and where each one is written up in full."
-        measure={22}
-        class="pfb__head"
-      />
+      {/* ⚠ NO SUPPORTING LINE UNDER THIS HEADING. There was one, written by this
+          project to explain that the cards are not testimonials. It went with
+          the rest of the invented copy; the eyebrow and heading are the
+          client's own and stand on their own. */}
+      <header class="pfb__head pfb__head--tight">
+        <p class="pfb__eyebrow">Parent participation</p>
+        <h2 class="pfb__h2 pfb__h2--sm" id="pfb-part">Parents are part of the journey.</h2>
+      </header>
 
-      <ul class="pfb__grid">
+      {/* ⚠ THIS IS A RAIL THAT USUALLY DOES NOT MOVE. With the four cards the
+          school publishes today it fills the row exactly, nothing overflows, and
+          it renders as the static 4-up grid it was — no arrows, no timer, no
+          scrollbar. The moment a fifth is added to `participation` it starts
+          advancing on its own. The script decides that from measured overflow,
+          not from a hardcoded count, so nothing here needs touching. */}
+      <div class="pfb__slider" data-pfb-part>
+        <button class="pfb__nav pfb__nav--prev" type="button" data-pfb-part-prev hidden
+          aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M14.5 5 8 12l6.5 7" stroke="currentColor" stroke-width="1.9"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+
+      <ul class="pfb__grid" data-pfb-part-rail>
+        {/* ⚠ THESE CARDS GO NOWHERE, DELIBERATELY. They were briefly wrapped in an
+            <a> after the "Read more" row came out, so the destination survived;
+            the client's call is that nothing here should be clickable. So the
+            anchor is gone, and with it the hover lift — a card that rises under
+            the cursor promises a click it will not honour. `href` stays in
+            data/parentsFeedback.ts, unused, as the record of which page writes
+            each item up in full.
+
+            ⚠ THE COMMENT LIVES OUT HERE, NOT INSIDE THE ARROW BODY. A comment
+            block beside the returned element makes two expressions in one
+            parenthesised return, and the build fails with the distinctly
+            unhelpful `Expected ")" but found "$$render"`. */}
         {participation.map((c, i) => (
           <li class="pfb__item" data-reveal data-reveal-delay={(i % 4) * 70}>
+            <span class="pfb__cshape" aria-hidden="true"></span>
             <span class="pfb__n" aria-hidden="true">{c.n}</span>
             <h3 class="pfb__ih">{c.title}</h3>
-            <p class="pfb__ib">{c.body}</p>
-            <a class="link-tertiary pfb__ia" href={c.href}>
-              {c.cta}
-              <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
-                <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
-              </svg>
-            </a>
+            {c.paras.map((t) => <p class="pfb__ib">{t}</p>)}
           </li>
         ))}
       </ul>
+
+        <button class="pfb__nav pfb__nav--next" type="button" data-pfb-part-next hidden
+          aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m9.5 5 6.5 7-6.5 7" stroke="currentColor" stroke-width="1.9"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
     </div>
   </section>
 
-  {/* ── 04 · Photographs ─────────────────────────────────────────────────── */}
+  {/* ── Three photographs ────────────────────────────────────────────────── */}
   <section class="pfb__shots" aria-label="Parents at Sunbeam School Ballia">
     <div class="u-container">
-      <figure class="pfb__lead" data-reveal>
-        <Photo src={lead.src} alt={lead.alt} brief={lead.alt} position={lead.position}
-          ref="A2" quiet sizes="(max-width: 767px) 92vw, 76vw" />
-      </figure>
-
       <div class="pfb__strip">
         {strip.map((g, i) => (
           <figure class="pfb__shot" data-reveal data-reveal-delay={i * 70}>
             <Photo src={g.src} alt={g.alt} brief={g.alt} position={g.position}
-              ref="A2" quiet sizes="(max-width: 767px) 92vw, 26vw" />
+              ref="A2" quiet sizes="(max-width: 767px) 92vw, 30vw" />
           </figure>
         ))}
       </div>
     </div>
   </section>
 
-  {/* ── 05 · Closing ─────────────────────────────────────────────────────── */}
+  {/* ── Closing ──────────────────────────────────────────────────────────── */}
   <section class="pfb__close" aria-labelledby="pfb-close">
     <div class="u-container">
       <div class="pfb__band">
         <span class="pfb__badge" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8"
             stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 20s-6.2-4-8-7.4C2.4 9.4 4 6 7.2 6c1.9 0 3.2 1.1 4 2.2.8-1.1 2.1-2.2 4-2.2 3.2 0 4.8 3.4 3.2 6.6C18.2 16 12 20 12 20Z" />
+            <path d="M20 15.6s-3.4-2.3-4.4-4.1c-.9-1.8.2-3.7 2-3.7 1.1 0 1.9.6 2.4 1.3.5-.7 1.3-1.3 2.4-1.3 1.8 0 2.9 1.9 2 3.7-1 1.8-4.4 4.1-4.4 4.1Z" />
+            <circle cx="20" cy="22.4" r="3" />
+            <path d="M14 32.5c0-3.3 2.7-5 6-5s6 1.7 6 5" />
+            <circle cx="9.6" cy="24.4" r="2.6" />
+            <path d="M4.5 32.5c0-2.7 2.2-4.2 5.1-4.2" />
+            <circle cx="30.4" cy="24.4" r="2.6" />
+            <path d="M35.5 32.5c0-2.7-2.2-4.2-5.1-4.2" />
           </svg>
         </span>
+
         <div class="pfb__band-copy">
-          <h2 class="pfb__band-h" id="pfb-close">{closing.heading}</h2>
+          <h2 class="pfb__band-h" id="pfb-close">
+            {closing.heading}<br />
+            <span class="pfb__mark">Thank you, parents!</span>
+          </h2>
           <p class="pfb__band-b">{closing.body}</p>
         </div>
+
         <a class="btn btn--primary pfb__band-cta" href={closing.cta.href}>
           {closing.cta.label}
           <svg class="arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
             <path d="M9 1L13 5L9 9M13 5H0" stroke="currentColor" stroke-width="1.5" />
           </svg>
         </a>
+
+        {/* The client's own leaf mark, from src/assets/icons. Decorative and
+            aria-hidden — it carries nothing a reader would miss. */}
+        <Image class="pfb__leaf" src={leaf} alt="" widths={[220, 440]} sizes="220px"
+          loading="lazy" aria-hidden="true" />
       </div>
     </div>
   </section>
 </div>
 
 <style>
-  /* ⚠ SECTION RHYTHM IS THE POINT OF THIS PAGE, NOT DECORATION. An earlier pass
-     used the default band padding throughout and the whole thing read as a
-     compact information page: five sections stacked with nothing between them.
-     These clamps are what give each section room to be a section. Do not trim
-     them to "fit more above the fold" — nothing here is above the fold. */
   .pfb {
-    --pfb-band: clamp(64px, 8.2vw, 124px);
+    --pfb-band: clamp(56px, 6.4vw, 96px);
     background: var(--sb-ivory);
   }
 
-  /* ── Intro ────────────────────────────────────────────────────────────── */
+  /* ── Shared head ──────────────────────────────────────────────────────── */
 
-  .pfb__intro {
-    position: relative;
-    padding-block: var(--pfb-band);
-    overflow: hidden;
-  }
-
-  .pfb__lede {
-    max-width: 60ch;
-    margin-inline: auto;
+  .pfb__head {
+    max-width: 62ch;
+    margin: 0 auto clamp(34px, 4vw, 58px);
     text-align: center;
   }
+  .pfb__head--tight { margin-bottom: clamp(28px, 3.2vw, 46px); }
 
-  /* Same pill SectionHead emits, so the two heads read as one system. */
-  .pfb__eyebrow { margin: 0 0 var(--sb-5); }
-  .pfb__eyebrow .pill {
-    font-size: var(--sb-label);
-    letter-spacing: 0.12em;
+  /* Ruled, not a pill — the reference underlines the eyebrow with a short
+     orange rule instead of setting it in a badge. */
+  .pfb__eyebrow {
+    position: relative;
+    margin: 0 0 var(--sb-6);
+    padding-bottom: 13px;
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
+    color: var(--sb-violet);
   }
-  .pfb__dot {
-    width: 7px;
-    height: 7px;
-    border-radius: var(--sb-r-full);
+  .pfb__eyebrow::after {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    width: 46px;
+    height: 2px;
     background: var(--sb-violet);
-    flex-shrink: 0;
   }
 
   .pfb__h2 {
     margin: 0 0 var(--sb-5);
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(28px, 3.4vw, 48px);
-    line-height: 1.12;
-    letter-spacing: -0.034em;
+    font-family: var(--sb-font-serif);
+    font-weight: 600;
+    font-size: clamp(27px, 3.1vw, 42px);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
     color: var(--sb-ink);
   }
-
+  .pfb__h2--sm { font-size: clamp(24px, 2.6vw, 35px); }
   .pfb__mark { color: var(--sb-violet); }
 
   .pfb__stand {
     margin: 0;
     color: var(--sb-text-secondary);
-    font-size: var(--sb-body);
-    line-height: var(--sb-body-lh);
-  }
-
-  /* Decoration, and it stays decoration: both are behind the copy and neither
-     carries meaning a reader would miss. */
-  .pfb__dots {
-    position: absolute;
-    inset-block-start: clamp(28px, 5vw, 70px);
-    inset-inline-start: clamp(-20px, 1.5vw, 40px);
-    width: 150px;
-    height: 110px;
-    background-image: radial-gradient(var(--sb-violet) 1.3px, transparent 1.3px);
-    background-size: 17px 17px;
-    opacity: 0.22;
-    pointer-events: none;
-  }
-
-  .pfb__flourish {
-    position: absolute;
-    inset-block-start: clamp(30px, 5vw, 74px);
-    inset-inline-end: clamp(-30px, 1vw, 48px);
-    width: clamp(150px, 15vw, 230px);
-    color: var(--sb-violet);
-    opacity: 0.16;
-    pointer-events: none;
-  }
-
-  @media (max-width: 899px) {
-    .pfb__flourish { display: none; }
-    .pfb__dots { opacity: 0.14; }
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
   }
 
   /* ── Voices ───────────────────────────────────────────────────────────── */
 
   .pfb__voices {
-    padding-block: 0 var(--pfb-band);
+    position: relative;
+    padding-block: var(--pfb-band);
+    overflow: hidden;
   }
 
-  .pfb :global(.pfb__head) { --shead-gap: clamp(36px, 4vw, 62px); }
+  .pfb__dots {
+    position: absolute;
+    inset-block-start: clamp(24px, 3.6vw, 52px);
+    inset-inline-start: clamp(-16px, 1.6vw, 44px);
+    width: 130px;
+    height: 96px;
+    background-image: radial-gradient(var(--sb-violet) 1.4px, transparent 1.4px);
+    background-size: 17px 17px;
+    opacity: 0.26;
+    pointer-events: none;
+  }
+
+  .pfb__heart {
+    position: absolute;
+    inset-block-start: clamp(26px, 3.6vw, 56px);
+    inset-inline-end: clamp(-24px, 1.2vw, 44px);
+    width: clamp(140px, 13vw, 210px);
+    color: var(--sb-violet);
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  @media (max-width: 899px) {
+    .pfb__heart { display: none; }
+    .pfb__dots { opacity: 0.15; }
+  }
 
   .pfb__carousel { position: relative; }
 
   .pfb__rail {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: calc((100% - (3 * var(--sb-6))) / 4);
-    gap: var(--sb-6);
+    grid-auto-columns: calc((100% - (3 * var(--sb-5))) / 4);
+    gap: var(--sb-5);
     margin: 0;
-    padding: 0 0 var(--sb-4);
+    padding: 4px 4px var(--sb-4);
     list-style: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -359,19 +372,22 @@ const strip = [
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
-    padding: var(--sb-7);
+    padding: var(--sb-6);
     background: var(--sb-paper);
     border: var(--sb-rule);
-    border-radius: var(--sb-r-2);
+    border-radius: var(--sb-r-0);
     box-shadow: var(--sb-shadow-card);
   }
 
+  /* A closing quote glyph, which is what the reference draws — it sits above
+     the text rather than wrapping it. */
   .pfb__quote {
     display: block;
-    font-family: var(--sb-font-display);
-    font-size: 52px;
-    line-height: 0.62;
-    color: var(--sb-violet-wash);
+    font-family: var(--sb-font-serif);
+    font-size: 46px;
+    line-height: 0.5;
+    padding-top: 22px;
+    color: var(--sb-orange-tint);
     margin-bottom: var(--sb-5);
   }
 
@@ -379,7 +395,7 @@ const strip = [
   .pfb__text p {
     margin: 0;
     font-size: var(--sb-body-sm);
-    line-height: 1.65;
+    line-height: 1.62;
     color: var(--sb-text-secondary);
   }
 
@@ -390,18 +406,18 @@ const strip = [
     background: var(--sb-violet);
     margin-bottom: var(--sb-4);
   }
-  .pfb__who { display: flex; gap: 10px; align-items: flex-start; }
-  .pfb__avatar { width: 20px; height: 20px; color: var(--sb-violet); flex-shrink: 0; }
-  .pfb__name { display: block; font-weight: 700; color: var(--sb-violet); }
-  .pfb__rel {
+  .pfb__who { display: flex; gap: 9px; align-items: flex-start; }
+  .pfb__avatar { width: 19px; height: 19px; color: var(--sb-violet); flex-shrink: 0; margin-top: 1px; }
+  .pfb__ident { display: block; }
+  .pfb__name { display: block; font-weight: 600; color: var(--sb-violet); }
+  .pfb__rel,
+  .pfb__cls {
     display: block;
     font-size: var(--sb-caption);
-    line-height: 1.45;
+    line-height: 1.5;
     color: var(--sb-text-muted);
   }
 
-  /* Arrows sit outside the rail on desktop and are hidden where they would
-     overlap it. */
   .pfb__nav {
     position: absolute;
     top: 50%;
@@ -409,8 +425,8 @@ const strip = [
     z-index: 2;
     display: grid;
     place-items: center;
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
     border-radius: var(--sb-r-full);
     background: var(--sb-paper);
     border: var(--sb-rule);
@@ -420,9 +436,16 @@ const strip = [
   }
   .pfb__nav svg { width: 22px; height: 22px; }
   .pfb__nav:hover { box-shadow: var(--sb-shadow-card-hover); }
-  .pfb__nav--prev { inset-inline-start: calc(-1 * clamp(14px, 3.4vw, 58px)); }
-  .pfb__nav--next { inset-inline-end: calc(-1 * clamp(14px, 3.4vw, 58px)); }
+  .pfb__nav--prev { inset-inline-start: calc(-1 * clamp(12px, 3.6vw, 62px)); }
+  .pfb__nav--next { inset-inline-end: calc(-1 * clamp(12px, 3.6vw, 62px)); }
   .pfb__nav[disabled] { opacity: 0.34; pointer-events: none; }
+
+  /* ⚠ WITHOUT THIS THE `hidden` ATTRIBUTE DOES NOTHING HERE. `.pfb__nav` sets
+     display:grid, and an author `display` beats the UA's `[hidden]{display:none}`
+     — so the participation arrows stayed on screen with four cards even though
+     the script had hidden them. Any rule that gives this class a display value
+     has to keep this line beside it. */
+  .pfb__nav[hidden] { display: none; }
   .pfb__nav--prev:hover { transform: translateY(-50%) translateX(-2px); }
   .pfb__nav--next:hover { transform: translateY(-50%) translateX(2px); }
 
@@ -436,143 +459,183 @@ const strip = [
     width: 9px;
     height: 9px;
     border-radius: var(--sb-r-full);
-    background: var(--sb-violet-wash);
-    transition: background-color var(--sb-dur-link) ease, transform var(--sb-dur-link) ease;
+    background: var(--sb-orange-tint);
+    opacity: 0.4;
+    transition: opacity var(--sb-dur-link) ease, background-color var(--sb-dur-link) ease;
   }
   .pfb__dotsnav :global(button[aria-current='true']) {
     background: var(--sb-violet);
-    transform: scale(1.16);
-  }
-
-  /* The empty state holds the same ground the rail would, so the page keeps its
-     proportions while it waits for real words. */
-  .pfb__empty {
-    max-width: 68ch;
-    margin-inline: auto;
-    padding: clamp(36px, 5vw, 68px) clamp(24px, 4vw, 60px);
-    text-align: center;
-    background: var(--sb-paper);
-    border: var(--sb-rule);
-    border-radius: var(--sb-r-3);
-    box-shadow: var(--sb-shadow-card);
-  }
-  .pfb__quote--big {
-    font-size: 74px;
-    color: var(--sb-border-strong);
-    margin-bottom: var(--sb-4);
-  }
-  .pfb__empty-h {
-    margin: 0 0 var(--sb-4);
-    font-family: var(--sb-font-display);
-    font-size: clamp(19px, 2vw, 25px);
-    line-height: 1.28;
-    color: var(--sb-ink);
-  }
-  .pfb__empty-b {
-    margin: 0 0 var(--sb-6);
-    color: var(--sb-text-secondary);
-    font-size: var(--sb-body-sm);
-    line-height: var(--sb-body-sm-lh);
+    opacity: 1;
   }
 
   /* ── Participation ────────────────────────────────────────────────────── */
 
+  /* ⚠ NO border-block HERE. It used to carry one top and bottom, and the BOTTOM
+     one drew a hard rule straight across the page immediately above the
+     photographs — it read as a stray line over the images rather than as the
+     edge of this section. The white ground against the page's cream is enough
+     to separate the band on its own. */
   .pfb__part {
+    position: relative;
+    overflow: hidden;
     padding-block: var(--pfb-band);
     background: var(--sb-paper);
-    border-block: var(--sb-rule);
   }
 
+  /* ⚠ DECORATION, AND IT STAYS BEHIND EVERYTHING. A single soft brand wash sat
+     under the card rail so the white band is not a flat sheet — it is the only
+     thing carrying colour in this section besides the numbers. Kept at 7% and
+     feathered to nothing by 70%: at full strength it turns the cards' cream into
+     a tint and the section starts competing with the closing band. If it ever
+     reads as a gradient rather than as paper, it is too strong. */
+  .pfb__part::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 22%;
+    inset-inline: -12%;
+    height: 62%;
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      color-mix(in srgb, var(--sb-violet) 7%, transparent),
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Everything real sits above the wash and the two line drawings. */
+  .pfb__part > .u-container { position: relative; z-index: 1; }
+
+  .pfb__slider { position: relative; }
+
+  /* ⚠ TWO PER VIEW, AND THAT IS A CONTENT DECISION AS MUCH AS A LAYOUT ONE.
+     Four across put each card at ~300px, where Parent Orientation's four
+     paragraphs stacked twenty lines deep while Second Parents Orientation
+     Programme ran three — the row was driven by one card and the rest were
+     mostly empty. Two across roughly doubles the measure, so the long card
+     collapses to a handful of lines and the pair reads as matched rather than
+     as one tall card beside a stub.
+
+     grid-auto-COLUMNS, not template-columns: the track sizes each card and lets
+     the remaining three run off the end, which is what makes this a rail
+     without a second layout. */
   .pfb__grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--sb-6);
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - var(--sb-5)) / 2);
+    /* stretch, so the two on screen are a matched pair. With this measure the
+       difference between the longest and shortest card is small enough that
+       equal heights read as deliberate rather than as a hole. */
+    align-items: stretch;
+    gap: var(--sb-5);
     margin: 0;
-    padding: 0;
+    /* ⚠ THE VERTICAL PADDING IS WHAT STOPS THE HOVER LIFT BEING GUILLOTINED.
+       `overflow-x: auto` cannot leave the other axis visible — the spec makes
+       overflow-y compute to auto too — so this box clips vertically whether or
+       not it ever scrolls that way. The cards translate -3px on hover and cast a
+       shadow, and both were being sliced off flush at the top edge. This is the
+       clearance they need; do not trim it back to 0. */
+    padding-block: 10px 14px;
+    padding-inline: 0;
     list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .pfb__grid::-webkit-scrollbar { display: none; }
+  .pfb__item { scroll-snap-align: start; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pfb__grid { scroll-behavior: auto; }
   }
 
   .pfb__item {
+    position: relative;
+    /* Clips the flourish to the card's own rounded corners. */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: var(--sb-7);
+    padding: var(--sb-6);
     background: var(--sb-ivory);
     border: var(--sb-rule);
-    border-radius: var(--sb-r-2);
-    transition: transform var(--sb-dur-btn) ease, box-shadow var(--sb-dur-btn) ease;
+    border-radius: var(--sb-r-0);
   }
-  .pfb__item:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--sb-shadow-card);
+  /* ⚠ THE CLIENT'S shape-2.png, MASKED RATHER THAN PLACED AS AN <img>. The file
+     is white line-art on transparency; on the card's cream ground it would be
+     invisible. Masking a brand-coloured box with it paints the same artwork in
+     --sb-violet at whatever weight suits, and it stays crisp at any size.
+
+     ⚠ IT SITS BOTTOM-RIGHT ON PURPOSE. The school's copy is very uneven — one
+     card runs four paragraphs, another a single sentence — so the short cards
+     carry dead space at the foot. This lands in exactly that space and gives it
+     something to be, without touching a word of the content or the card's
+     height. The url() sits in this stylesheet rather than on an inline style,
+     so Vite resolves and fingerprints it like any other asset. */
+  .pfb__cshape {
+    position: absolute;
+    inset-block-end: -8%;
+    inset-inline-end: -6%;
+    width: 68%;
+    aspect-ratio: 1429 / 552;
+    background: var(--sb-violet);
+    -webkit-mask: url('../../../assets/icons/shape-2.png') no-repeat right bottom / contain;
+    mask: url('../../../assets/icons/shape-2.png') no-repeat right bottom / contain;
+    opacity: 0.14;
+    pointer-events: none;
+    z-index: 0;
   }
 
+  /* Everything the reader is here for sits above the flourish. */
+  .pfb__n,
+  .pfb__ih,
+  .pfb__ib { position: relative; z-index: 1; }
+
   .pfb__n {
-    font-family: var(--sb-font-display);
+    font-family: var(--sb-font-serif);
     font-size: var(--sb-body-sm);
     letter-spacing: 0.14em;
     color: var(--sb-violet);
     margin-bottom: var(--sb-4);
   }
-
   .pfb__ih {
     margin: 0 0 var(--sb-4);
-    font-size: clamp(17px, 1.4vw, 21px);
-    line-height: 1.24;
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.26;
   }
   .pfb__ib {
-    margin: 0 0 var(--sb-5);
+    margin: 0 0 var(--sb-4);
     color: var(--sb-text-secondary);
     font-size: var(--sb-body-sm);
     line-height: var(--sb-body-sm-lh);
   }
-  /* Pins every arrow to the same baseline however long the copy runs. */
-  .pfb__ia { margin-top: auto; }
+  .pfb__ib:last-of-type { margin-bottom: 0; }
 
   /* ── Photographs ──────────────────────────────────────────────────────── */
 
-  .pfb__shots { padding-block: var(--pfb-band); }
+  .pfb__shots { padding-block: 0 var(--pfb-band); }
 
-  .pfb__lead,
-  .pfb__shot {
-    margin: 0;
-    border-radius: var(--sb-r-2);
-    overflow: hidden;
-    box-shadow: var(--sb-shadow-card);
-  }
-
-  .pfb__lead {
-    width: min(100%, 980px);
-    margin-inline: auto;
-    aspect-ratio: 16 / 7;
-  }
-
-  /* Pulled up under the lead so the two read as one composition rather than two
-     stacked rows. */
   .pfb__strip {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--sb-5);
-    width: min(100%, 1120px);
-    margin: calc(-1 * clamp(20px, 3vw, 52px)) auto 0;
-    position: relative;
-    z-index: 1;
   }
 
-  .pfb__shot { aspect-ratio: 4 / 3; }
-
-  .pfb__lead :global(.photo),
+  .pfb__shot {
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--sb-r-0);
+    overflow: hidden;
+  }
   .pfb__shot :global(.photo) { border-radius: 0; height: 100%; }
-  .pfb__lead :global(img),
   .pfb__shot :global(img) {
     height: 100%;
     transition: transform var(--sb-dur-image) var(--sb-ease);
   }
-  .pfb__lead:hover :global(img),
   .pfb__shot:hover :global(img) { transform: scale(1.03); }
 
   @media (prefers-reduced-motion: reduce) {
-    .pfb__lead:hover :global(img),
     .pfb__shot:hover :global(img) { transform: none; }
   }
 
@@ -581,50 +644,67 @@ const strip = [
   .pfb__close { padding-block: 0 var(--pfb-band); }
 
   .pfb__band {
+    position: relative;
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: clamp(20px, 3vw, 46px);
-    padding: clamp(28px, 3.4vw, 52px);
+    gap: clamp(18px, 2.6vw, 40px);
+    padding: clamp(26px, 3vw, 44px) clamp(24px, 3vw, 48px);
     background: var(--sb-violet-wash);
-    border-radius: var(--sb-r-3);
+    border-radius: var(--sb-r-2);
+    overflow: hidden;
   }
 
   .pfb__badge {
     display: grid;
     place-items: center;
-    width: clamp(64px, 6vw, 92px);
-    height: clamp(64px, 6vw, 92px);
+    width: clamp(74px, 6.4vw, 104px);
+    height: clamp(74px, 6.4vw, 104px);
     border-radius: var(--sb-r-full);
     background: var(--sb-paper);
     color: var(--sb-violet);
+    flex-shrink: 0;
   }
-  .pfb__badge svg { width: 42%; height: 42%; }
+  .pfb__badge svg { width: 54%; height: 54%; }
 
   .pfb__band-h {
     margin: 0 0 var(--sb-3);
-    font-family: var(--sb-font-display);
-    font-size: clamp(21px, 2.3vw, 31px);
-    line-height: 1.18;
-    letter-spacing: -0.03em;
-    color: var(--sb-violet-ink);
+    font-family: var(--sb-font-serif);
+    font-weight: 600;
+    font-size: clamp(19px, 2.1vw, 28px);
+    line-height: 1.24;
+    color: var(--sb-ink);
   }
   .pfb__band-b {
     margin: 0;
     color: var(--sb-text-secondary);
     font-size: var(--sb-body-sm);
-    line-height: var(--sb-body-sm-lh);
-    max-width: 58ch;
+    line-height: 1.6;
+    max-width: 52ch;
   }
   .pfb__band-cta { white-space: nowrap; }
+
+  /* Bottom-right, behind the copy, and clipped by the band's own radius. */
+  .pfb__leaf {
+    position: absolute;
+    inset-block-end: -18px;
+    inset-inline-end: -10px;
+    width: clamp(120px, 12vw, 190px);
+    height: auto;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .pfb__badge,
+  .pfb__band-copy,
+  .pfb__band-cta { position: relative; z-index: 1; }
 
   /* ── Tablet ───────────────────────────────────────────────────────────── */
 
   @media (max-width: 1023px) {
-    .pfb__rail { grid-auto-columns: calc((100% - var(--sb-6)) / 2); }
-    .pfb__grid { grid-template-columns: repeat(2, 1fr); }
-    .pfb__nav--prev { inset-inline-start: 4px; }
-    .pfb__nav--next { inset-inline-end: 4px; }
+    .pfb__rail { grid-auto-columns: calc((100% - var(--sb-5)) / 2); }
+    .pfb__nav--prev { inset-inline-start: 2px; }
+    .pfb__nav--next { inset-inline-end: 2px; }
   }
 
   @media (max-width: 899px) {
@@ -639,20 +719,19 @@ const strip = [
   /* ── Mobile ───────────────────────────────────────────────────────────── */
 
   @media (max-width: 767px) {
-    /* One card per swipe, and the arrows go — a thumb swipes, and two 46px
+    /* One card per swipe; the arrows go, because a thumb swipes and two 48px
        buttons over an 88% card is more chrome than content. */
     .pfb__rail { grid-auto-columns: 88%; }
     .pfb__nav { display: none; }
 
-    .pfb__grid { grid-template-columns: 1fr; }
+    .pfb__grid { grid-auto-columns: 88%; }
 
-    .pfb__lead { aspect-ratio: 4 / 3; }
-    .pfb__strip {
-      grid-template-columns: 1fr;
-      margin-top: var(--sb-5);
-      gap: var(--sb-4);
-    }
+    .pfb__strip { grid-template-columns: 1fr; gap: var(--sb-4); }
     .pfb__shot { aspect-ratio: 16 / 10; }
+
+    /* The reference breaks these two lines for rhythm on a wide screen; on a
+       phone the forced break leaves a short orphan line. */
+    .pfb__stand br { display: none; }
   }
 </style>
 
@@ -666,6 +745,80 @@ const strip = [
      Scroll position is the single source of truth — the dots and the arrows
      both read it rather than keeping a counter of their own, so a swipe, a
      click and a keyboard scroll can never disagree about which card is current. */
+  /* ═══ PARTICIPATION RAIL — auto-advances ONLY when it overflows ══════════
+     ⚠ OVERFLOW IS MEASURED, NEVER ASSUMED. With the four cards published today
+     the track fills the row exactly, so `rolling` is false: the arrows stay
+     hidden, no timer is armed, and the section is the static grid it has always
+     been. Add a fifth to `participation` and the same code starts sliding it.
+     That is the whole reason it tests scrollWidth instead of counting cards.
+
+     ⚠ IT STOPS FOR PEOPLE WHO ASK IT TO. prefers-reduced-motion cancels the
+     timer outright, and hover or keyboard focus pauses it — moving content that
+     cannot be stopped is exactly what WCAG 2.2.2 is about, and a card carrying
+     a link a reader is trying to click must not slide out from under them. */
+  const pRail = document.querySelector<HTMLElement>('[data-pfb-part-rail]');
+  const pPrev = document.querySelector<HTMLButtonElement>('[data-pfb-part-prev]');
+  const pNext = document.querySelector<HTMLButtonElement>('[data-pfb-part-next]');
+
+  if (pRail && pPrev && pNext) {
+    const DWELL = 5000;
+    const slowed = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timer: number | undefined;
+    let held = false;
+
+    const gap = () => parseFloat(getComputedStyle(pRail).columnGap || '0') || 0;
+    const stride = () =>
+      (pRail.firstElementChild as HTMLElement | null)?.getBoundingClientRect().width ?? 0;
+    const rolling = () => pRail.scrollWidth > pRail.clientWidth + 2;
+    const atEnd = () => pRail.scrollLeft + pRail.clientWidth >= pRail.scrollWidth - 2;
+
+    const halt = () => {
+      if (timer) window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    const go = () => {
+      halt();
+      if (!rolling() || slowed.matches || held) return;
+      timer = window.setInterval(() => {
+        if (atEnd()) pRail.scrollTo({ left: 0, behavior: 'smooth' });
+        else pRail.scrollBy({ left: stride() + gap(), behavior: 'smooth' });
+      }, DWELL);
+    };
+
+    const fit = () => {
+      const on = rolling();
+      pPrev.hidden = !on;
+      pNext.hidden = !on;
+      go();
+    };
+
+    pPrev.addEventListener('click', () => pRail.scrollBy({ left: -(stride() + gap()), behavior: 'smooth' }));
+    pNext.addEventListener('click', () => pRail.scrollBy({ left: stride() + gap(), behavior: 'smooth' }));
+
+    const pause = () => { held = true; halt(); };
+    const resume = () => { held = false; go(); };
+    pRail.addEventListener('mouseenter', pause);
+    pRail.addEventListener('mouseleave', resume);
+    pRail.addEventListener('focusin', pause);
+    pRail.addEventListener('focusout', resume);
+
+    /* ⚠ A TOUCH STOPS IT FOR GOOD, and that is deliberate. Hover-pause is the
+       desktop escape hatch and a phone has no hover — without this a reader
+       halfway through a card gets slid off it every five seconds with no way to
+       stop it, which is both maddening and the thing WCAG 2.2.2 exists to
+       prevent. Once someone has taken hold of the rail they own it; the timer
+       does not come back and start fighting them for the rest of the visit. */
+    pRail.addEventListener('pointerdown', () => {
+      held = true;
+      halt();
+    }, { passive: true });
+
+    window.addEventListener('resize', fit, { passive: true });
+    slowed.addEventListener('change', fit);
+    fit();
+  }
+
   const rail = document.querySelector<HTMLElement>('[data-pfb-rail]');
   const prev = document.querySelector<HTMLButtonElement>('[data-pfb-prev]');
   const next = document.querySelector<HTMLButtonElement>('[data-pfb-next]');
@@ -673,22 +826,17 @@ const strip = [
 
   if (rail && prev && next && dots) {
     const cards = Array.from(rail.children) as HTMLElement[];
+    const unit = () => (cards[0]?.offsetWidth || 0) + 16;
 
-    /** How many fit at once — recomputed on resize, never assumed. */
-    const perView = () =>
-      Math.max(1, Math.round(rail.clientWidth / (cards[0]?.offsetWidth || rail.clientWidth)));
-
+    const perView = () => Math.max(1, Math.round(rail.clientWidth / (unit() || 1)));
     const pages = () => Math.max(1, cards.length - perView() + 1);
-    const current = () =>
-      Math.min(pages() - 1, Math.round(rail.scrollLeft / (cards[0]?.offsetWidth || 1)));
+    const current = () => Math.min(pages() - 1, Math.round(rail.scrollLeft / (unit() || 1)));
 
     cards.forEach((_, i) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.setAttribute('aria-label', `Show feedback ${i + 1}`);
-      b.addEventListener('click', () => {
-        rail.scrollTo({ left: i * (cards[0]?.offsetWidth || 0), behavior: 'smooth' });
-      });
+      b.addEventListener('click', () => rail.scrollTo({ left: i * unit(), behavior: 'smooth' }));
       dots.appendChild(b);
     });
 
@@ -703,11 +851,8 @@ const strip = [
       });
     };
 
-    const step = (dir: number) =>
-      rail.scrollBy({ left: dir * (cards[0]?.offsetWidth || 0), behavior: 'smooth' });
-
-    prev.addEventListener('click', () => step(-1));
-    next.addEventListener('click', () => step(1));
+    prev.addEventListener('click', () => rail.scrollBy({ left: -unit(), behavior: 'smooth' }));
+    next.addEventListener('click', () => rail.scrollBy({ left: unit(), behavior: 'smooth' }));
     rail.addEventListener('scroll', sync, { passive: true });
     window.addEventListener('resize', sync, { passive: true });
     sync();
