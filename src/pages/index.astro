@@ -10,19 +10,16 @@
  *           §05 Sunbeam Story · §07 Learning   (§06 Academic Journey removed for now)
  *           §08 Campus · §11 Events & News · §10 Notice Board + §12 Alumni
  *           §12b Voices · §13 Affiliations · §14 Achievements · §15 Admissions CTA
- *           §16 Footer
+ *           §14b Google reviews · §16 Footer
  * PENDING   §10 dedicated event galleries (blocked on asset A2)
- *
  * ORDER — §13 Affiliations then §14 Achievements is fixed by the audit, which
  * places affiliations "before the footer" and achievements immediately after
  * it. §15 closes the page on the admissions ask.
- *
  * Background rhythm — no two adjacent sections share a treatment:
  *   dark → sand → ivory → paper → ivory → ink → ivory mosaic → sand
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
-import MobileFeatureStrip from '../components/home/MobileFeatureStrip.astro';
 import ProofStrip from '../components/home/ProofStrip.astro';
 import QuickAccess from '../components/home/QuickAccess.astro';
 import Story from '../components/home/Story.astro';
@@ -34,6 +31,7 @@ import NoticeBoard from '../components/home/NoticeBoard.astro';
 import Voices from '../components/home/Voices.astro';
 import Affiliations from '../components/home/Affiliations.astro';
 import Achievements from '../components/home/Achievements.astro';
+import GoogleReviews from '../components/home/GoogleReviews.astro';
 import AdmissionsCta from '../components/home/AdmissionsCta.astro';
 ---
   
@@ -42,8 +40,6 @@ import AdmissionsCta from '../components/home/AdmissionsCta.astro';
   description="Sunbeam School Ballia, established 2013 at Agarsanda. A CBSE co-educational day school for Nursery to Class XII, ranked Ballia's #1 co-ed day school by Education World for six consecutive years."
 >
   <Hero />
-  {/* Mobile only — see the note in the component. */}
-  <MobileFeatureStrip />
   <ProofStrip />
   <QuickAccess />
   <Story />
@@ -55,5 +51,8 @@ import AdmissionsCta from '../components/home/AdmissionsCta.astro';
   <Voices />
   <Affiliations />
   <Achievements />
+  {/* Social proof immediately before the ask — see the note in the component
+      for why it sits here rather than beside §12 Voices. */}
+  <GoogleReviews />
   <AdmissionsCta />
 </BaseLayout>

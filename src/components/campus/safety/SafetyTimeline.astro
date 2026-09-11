@@ -22,12 +22,17 @@ import SafetyIcon from './SafetyIcon.astro';
 /** Label → icon. Kept here rather than in the data so the content file stays
     about content and knows nothing about how a measure is drawn. */
 const icons: Record<string, string> = {
-  '24×7 security guards': 'shield',
-  'Full CCTV coverage': 'camera',
-  'Controlled main gate': 'gate',
-  '15,000-litre fire hose reel': 'hose',
-  'Extinguishers in all corridors': 'flame',
-  'Marked exit routes': 'exit',
+  /* ⚠ THESE KEYS ARE THE MEASURE LABELS AND MUST TRACK data/campus.ts EXACTLY.
+     A key that no longer matches does not error — it falls through to the
+     `shield` default, and every measure in the group silently becomes the same
+     icon. Groups I and II were relabelled when the client supplied the school's
+     own copy; these keys moved with them. */
+  '24×7 Security': 'shield',
+  'CCTV Surveillance': 'camera',
+  'Controlled Access': 'gate',
+  'Fire-Safety Equipment': 'hose',
+  'Accessible Fire Extinguishers': 'flame',
+  'Clearly Marked Exits': 'exit',
   'Attendants in junior classes': 'hand',
   'Elevator access': 'lift',
   'Supervised movement': 'walk',
@@ -39,8 +44,8 @@ const icons: Record<string, string> = {
     <SectionHead
       id="stl-title"
       eyebrow="What is in place"
-      heading="Eleven measures, in three groups"
-      stand="The school publishes five of these. The rest are marked, because a safety page is the last place to guess."
+      heading="Nine measures, in three groups"
+      stand="Eight of these are the school's own published wording. The ninth is marked, because a safety page is the last place to guess."
       measure={20}
     />
 

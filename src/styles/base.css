@@ -61,6 +61,22 @@
    slightly irregular, tightly-set grotesque shapes the reference heading uses.
    One file at 41 KB replaces two at 16 KB; the extra 25 KB buys the full weight
    axis and the whole display voice. */
+/* Caveat, SIL Open Font License 1.1, self-hosted like every other face here —
+   nothing in this project loads a font off a third-party CDN.
+   ⚠ ONE CONSUMER ONLY: the "Real stories, real impact" flourish in the Google
+   review band (.grv__flourish). It is a display script with no business near
+   running text — if a second component ever wants it, that is the moment to ask
+   whether the component is right, not to widen the token. 75 KB, and it is
+   deliberately NOT preloaded: the section reads completely without it. */
+@font-face {
+  font-family: 'Caveat Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url('/fonts/caveat-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2122, U+FEFF, U+FFFD;
+}
 @font-face {
   font-family: 'Bricolage Grotesque Variable';
   font-style: normal;

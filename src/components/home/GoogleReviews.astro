@@ -1,0 +1,749 @@
+---
+/**
+ * §14b · WHAT OUR COMMUNITY SAYS — the Google review band, homepage.
+ *
+ * ⚠⚠ READ data/googleReviews.ts BEFORE TOUCHING ANY NUMBER OR NAME IN HERE.
+ * The design comp this is built from carried four invented testimonials, a made
+ * up 4.8/5, "500+ reviews" and "500+ Happy Families". The layout below is that
+ * comp's; every word and figure it renders comes off the school's own live
+ * Google widget. That file records what was dropped and why.
+ *
+ * ⚠ IT SITS BETWEEN ACHIEVEMENTS AND THE ADMISSIONS ASK, which is a placement
+ * decision and not just the end of the list. Three hundred and sixty-eight
+ * strangers rating the school in public is the last thing a reader should pass
+ * before being asked to apply.
+ *
+ * ⚠⚠ IT KEEPS ITS DISTANCE FROM §12 VOICES ON PURPOSE. That section's heading
+ * is "What our students say" and this one's is "What our community says" — read
+ * back to back they are duplicates, and Voices carries alumni placements rather
+ * than quotes. Two sections apart is the minimum. If either heading changes,
+ * check the other.
+ *
+ * ⚠ GROUND: ivory, between Achievements (violet) and AdmissionsCta (sand), so
+ * the homepage rule that no two adjacent sections share a treatment holds.
+ *
+ * ⚠ IT IS NOT A TESTIMONIAL SECTION. The reviews are shown as they were
+ * published, two-star entry included.
+ *
+ * ⚠ THE AVERAGE STAR ROW IS CLIPPED, NOT ROUNDED. 4.4 of 5 renders as four
+ * stars and two fifths of a fifth — a width-clipped overlay over a grey rank.
+ * Rounding it to a tidy 4.5 would be inventing a tenth of a point.
+ */
+/* ⚠ NO SectionHead HERE, AND IT IS NOT AN OVERSIGHT. Two details of the comp
+   cannot come out of it: the heading is two-tone ("what OUR COMMUNITY says",
+   the middle in orange) and its `heading` prop is a plain string, and the
+   eyebrow is flanked by rules rather than set in the house pill. Both would
+   mean changing a component every Academics section on the site depends on, to
+   suit one band. The head below is local and the type scale is still the
+   shared one. */
+import { Picture } from 'astro:assets';
+import { reviews, rating, strip } from '../../data/googleReviews';
+
+/**
+ * ⚠ THE CLIENT'S BACKGROUND ARTWORK, and it is run through Astro's image
+ * pipeline rather than set as a CSS url(). The source is a 979 KB PNG of smooth
+ * pastel gradients — exactly the content AVIF crushes — so the pipeline earns
+ * its keep here more than on a photograph.
+ *
+ * ⚠⚠ THE WIDTHS ARE NOT FREE CHOICES. astro.config.mjs pins IMAGE_WIDTHS to
+ * exactly fifty entries because Vercel's `images.sizes` caps there, and the
+ * adapter SILENTLY DROPS any width not on that list — no warning, no failure,
+ * just a missing srcset entry. 900 / 1280 / 1600 are all on it. 1600 is also
+ * the ceiling worth asking for: the file itself is 1672px wide, so anything
+ * above that is upscaling a gradient.
+ */
+import bgArt from '../../assets/icons/googel-review-bg.png';
+
+/* Google's four-colour G, inlined — it needs no network request, it is the
+   mark a reader recognises as "this came from Google rather than from the
+   school", and it must not inherit the page's colour. Decorative everywhere it
+   is used: the words beside it already say where the reviews come from. */
+const GOOGLE_G = `<svg viewBox="0 0 48 48" role="presentation" focusable="false">
+  <path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.2-.4-4.7H24v8.9h11.8a10 10 0 0 1-4.4 6.6v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.3Z"/>
+  <path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.2l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.5-3.8-12.2-9H4.5v5.7A22 22 0 0 0 24 46Z"/>
+  <path fill="#FBBC05" d="M11.8 28.4a13.2 13.2 0 0 1 0-8.4v-5.7H4.5a22 22 0 0 0 0 19.8l7.3-5.7Z"/>
+  <path fill="#EA4335" d="M24 9.5c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 2.9 29.9 1 24 1A22 22 0 0 0 4.5 14.3l7.3 5.7c1.7-5.2 6.5-9 12.2-9Z"/>
+</svg>`;
+
+/** Deterministic, so a given reviewer keeps the same disc on every build. */
+const DISC = ['#7b53c1', '#c93c0a', '#1a73e8', '#0b8043', '#c5221f', '#b06000'];
+const discFor = (name: string) =>
+  DISC[[...name].reduce((a, c) => a + c.charCodeAt(0), 0) % DISC.length];
+
+---
+
+<section class="grv" id="reviews" aria-labelledby="grv-title">
+  {/* ⚠ alt="" AND aria-hidden — it is a decorative ground, and a screen reader
+      announcing "pastel blobs and a paper plane" before the heading would be
+      noise. It replaced three CSS gradient fields that stood in for it. */}
+  <Picture
+    class="grv__bg"
+    src={bgArt}
+    alt=""
+    aria-hidden="true"
+    formats={['avif', 'webp']}
+    widths={[900, 1280, 1600]}
+    sizes="100vw"
+    loading="lazy"
+    decoding="async"
+  />
+
+  {/* ⚠ THE SCRIPT LINE IS THE ONLY DRAWN ORNAMENT LEFT. A second, SVG paper
+      plane used to sit top-right; the client's background artwork has one baked
+      in at that exact spot, and two planes in one corner is not a design. This
+      line stays because the artwork carries no text.
+      Decoration, aria-hidden, and off below 1200px where there is no margin to
+      hold it. Delete this element and the .grv__flourish rules to remove it —
+      the Caveat @font-face in base.css goes with them, since this band is its
+      only consumer. */}
+  <p class="grv__flourish" aria-hidden="true"><span>Real Stories</span><span class="grv__flourish-last">Real Impact</span></p>
+  <div class="u-container grv__wrap">
+    <div class="grv__head-block">
+      <p class="grv__eyebrow t-label">
+        <span class="grv__eyebrow-rule" aria-hidden="true"></span>
+        Parent &amp; Student Voices
+        <span class="grv__eyebrow-rule" aria-hidden="true"></span>
+      </p>
+
+      <h2 class="grv__h t-display" id="grv-title">
+        What <span class="grv__h-accent">Our Community</span> Says
+      </h2>
+
+      <p class="grv__stand">
+        Real experiences from parents, students and well-wishers on Google.
+        Their words are shown here exactly as they were written.
+      </p>
+    </div>
+
+    {/* ⚠ THE AGGREGATE PILL WAS HERE AND IS DELIBERATELY GONE. The client
+        needs this band to sit inside one screen, and the pill cost ~120px of
+        height for figures the closing strip already carries — 368 reviews and
+        4.4 / 5 are both still on the page, at the foot of it. Nothing was lost
+        but the duplication. If it comes back, the strip's first two tiles
+        should go with it, not sit alongside it. */}
+
+    {/* ── The rail ──────────────────────────────────────────────────────── */}
+    <div class="grv__deck">
+      <button class="grv__nav grv__nav--prev" type="button" data-grv-prev aria-label="Previous reviews" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+      </button>
+
+      {/* ⚠ THE STARS SIT BESIDE THE NAME AND THE QUOTE FILLS WHAT IS LEFT.
+          These reviews are one to six words long — "Good" in a tall card, under
+          a stars row of its own, left two thirds of the card empty and read as a
+          rendering fault rather than as a short review.
+
+          ⚠ THIS COMMENT LIVES OUT HERE, NOT INSIDE THE .map() BELOW. A JSX
+          comment in the return position of an arrow body is a parse error in
+          Astro — "Expected ) but found $$render" — and it has cost this project
+          twice. Note also that a JSX comment cannot contain the two characters
+          that close a block comment: writing them inline ends the comment early
+          and the remainder ships to the page as visible text. That cost a third
+          attempt. */}
+      <ul class="grv__rail" data-grv-rail>
+        {reviews.map((r) => (
+          <li class="grv__card">
+            <div class="grv__head">
+              <span class="grv__avatar" aria-hidden="true" style={`--disc:${discFor(r.name)}`}>
+                {r.name.trim().charAt(0).toUpperCase()}
+              </span>
+              <span class="grv__who">
+                <span class="grv__name">{r.name}</span>
+                <span class="grv__stars" aria-hidden="true">
+                  <span class="grv__stars-rank">★★★★★</span>
+                  <span class="grv__stars-fill" style={`width:${(r.stars / 5) * 100}%`}>★★★★★</span>
+                </span>
+              </span>
+              <span class="grv__g grv__g--sm" aria-hidden="true" set:html={GOOGLE_G} />
+            </div>
+
+            <blockquote class="grv__quote">
+              <span class="grv__mark" aria-hidden="true">&rdquo;</span>
+              <p>{r.text}{r.clipped && <span class="grv__clip">&hellip;</span>}</p>
+            </blockquote>
+
+            {/* Factual, and it earns its place: it fills the foot of a card a
+                four-word review cannot, and it is the one thing every card can
+                say without inventing anything about the person who wrote it. */}
+            <p class="grv__foot">Posted on Google</p>
+
+            <p class="u-visually-hidden">{r.stars} out of 5 stars, reviewed by {r.name} on Google.</p>
+          </li>
+        ))}
+      </ul>
+
+      <button class="grv__nav grv__nav--next" type="button" data-grv-next aria-label="More reviews" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+      </button>
+    </div>
+
+    {/* ⚠ BUILT BY THE SCRIPT, ONE PER PAGE OF THE RAIL, NOT ONE PER CARD. Eight
+        dots under four visible cards is a progress bar nobody can aim at; the
+        count is derived from how many screenfuls the rail actually holds, which
+        also means it re-derives itself if the school's widget gains a review.
+        No JS, no dots — the rail still swipes and the arrows stay hidden. */}
+    <div class="grv__dots" data-grv-dots role="tablist" aria-label="Review pages"></div>
+
+    {/* ── Closing strip ─────────────────────────────────────────────────── */}
+    <ul class="grv__strip" data-reveal>
+      {strip.map((s) => (
+        <li class="grv__strip-item">
+          <span class="grv__strip-icon" aria-hidden="true">
+            {s.icon === 'people' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="8" r="3.2" /><path d="M2.5 19c0-3 2.9-4.8 6.5-4.8s6.5 1.8 6.5 4.8" />
+                <path d="M16.5 5.6a3.2 3.2 0 0 1 0 5.4M18 14.6c2 .7 3.5 2.2 3.5 4.4" />
+              </svg>
+            )}
+            {s.icon === 'star' && (
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.6 9.7l5.8-.8Z" />
+              </svg>
+            )}
+            {s.icon === 'heart' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20s-7.2-4.5-7.2-9.4A4.1 4.1 0 0 1 12 8.2a4.1 4.1 0 0 1 7.2 2.4C19.2 15.5 12 20 12 20Z" />
+              </svg>
+            )}
+          </span>
+          <span class="grv__strip-text">
+            <strong class="grv__strip-val">{s.value}</strong>
+            <span class="grv__strip-label">{s.label}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .grv {
+    position: relative;
+    /* ⚠ -viewport, NOT the default --sb-section-y. tokens.css documents this
+       one as "sections that must fit one screen", which is exactly the brief
+       here — 120px of padding top and bottom was a quarter of the budget on a
+       900px laptop. The Campus section already uses it, so this is the project's
+       own mechanism rather than a number invented for this band. */
+    /* ⚠ A LOCAL CLAMP, NOT THE SHARED TOKEN, AND MEASURED. The shared
+       --sb-section-y-viewport is clamp(40px, 8vh, 88px); on a 1366x768 laptop
+       that is 61px a side and the band came to 707px against 671px of room.
+       6vh with a 32px floor brings it to 46px a side. The token is left alone
+       because Campus depends on it and that section has different contents. */
+    padding-block: clamp(32px, 6vh, 88px);
+    background: var(--sb-ivory);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* ⚠ THE ARTWORK IS AN <img>, ABSOLUTELY PLACED, NOT A background-image. That
+     is what buys it the AVIF/WebP conversion and the srcset — a CSS url() would
+     ship the 979 KB PNG to every visitor. <Picture> puts this class on the
+     <img> itself and the <picture> wrapper is static, so `inset: 0` resolves
+     against .grv, which is position: relative.
+
+     ⚠ ON A NARROW SCREEN IT READS AS A PLAIN CREAM WASH, and that is accepted
+     rather than fixed. The art is 1672x941 with its decoration in the corners;
+     `cover` on a 390px-wide, ~1200px-tall section shows only the middle
+     eighteen per cent, which is the empty cream field. Stretching it instead
+     would smear the blobs into vertical streaks, and a second mobile crop is
+     more asset than this is worth. The ivory behind it matches, so nothing
+     looks broken — the decoration is simply a desktop pleasure. */
+  .grv__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .grv__wrap { position: relative; }
+
+  /* --- Head --------------------------------------------------------------- */
+
+  .grv__head-block { text-align: center; }
+
+  .grv__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sb-4);
+    margin: 0 0 var(--sb-5);
+    color: var(--sb-violet);
+  }
+
+  .grv__eyebrow-rule {
+    width: clamp(28px, 5vw, 56px);
+    height: 1px;
+    background: currentColor;
+    opacity: 0.55;
+  }
+
+  .grv__h {
+    max-width: 22ch;
+    margin: 0 auto;
+    font-size: clamp(30px, 4.2vw, 54px);
+    color: var(--sb-ink);
+  }
+
+  /* The comp's two-tone heading. */
+  .grv__h-accent { color: var(--sb-violet); }
+
+  .grv__stand {
+    max-width: 56ch;
+    margin: var(--sb-4) auto 0;
+    font-size: var(--sb-body-lg, 1.0625rem);
+    line-height: 1.55;
+    color: var(--sb-text-muted);
+  }
+
+  /* --- Ornament ------------------------------------------------------------
+     Absolutely positioned against the section, outside the container, so
+     neither can push the content around. */
+
+  .grv__flourish {
+    position: absolute;
+    top: clamp(90px, 12vw, 150px);
+    left: clamp(12px, 3vw, 64px);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: 'Caveat Variable', var(--sb-font-serif);
+    font-weight: 600;
+    font-size: clamp(20px, 2vw, 30px);
+    line-height: 1.05;
+    color: var(--sb-ink);
+    transform: rotate(-6deg);
+    pointer-events: none;
+  }
+
+  .grv__flourish span:nth-child(2) { margin-left: 0.4em; }
+
+  /* The swoosh: a skewed rounded bar, not an SVG path — it sits under a word
+     whose width changes with the viewport, and a fixed path would overshoot or
+     fall short at every size but one. */
+  .grv__flourish-last {
+    position: relative;
+    padding-bottom: 0.2em;
+  }
+
+  .grv__flourish-last::after {
+    content: '';
+    position: absolute;
+    left: 0.05em;
+    right: -0.15em;
+    bottom: 0;
+    height: 0.09em;
+    border-radius: 999px;
+    background: var(--sb-orange-tint);
+    transform: rotate(-1.5deg);
+  }
+
+  /* ⚠ OFF BELOW 1200. There is no clear margin beside the container at that
+     width, so it would land on the cards. Decoration, already aria-hidden —
+     nothing is lost but the flourish. */
+  @media (max-width: 1199px) {
+    .grv__flourish { display: none; }
+  }
+
+  /* --- Stars --------------------------------------------------------------
+     ⚠ TWO STACKED COPIES, THE TOP ONE CLIPPED BY WIDTH. That is what lets 4.4
+     of 5 render as four and two-fifths stars instead of being rounded to
+     something the school never published. Both copies are aria-hidden; the
+     figure is announced in words beside them. */
+  .grv__stars {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .grv__stars-rank { color: rgba(22, 16, 12, 0.2); }
+
+  .grv__stars-fill {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    color: #f5a623;
+  }
+
+  /* --- Rail ---------------------------------------------------------------- */
+
+  .grv__deck {
+    position: relative;
+    margin-top: var(--sb-7);
+  }
+
+  .grv__rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - var(--sb-5) * 3) / 4);
+    gap: var(--sb-5);
+    margin: 0;
+    /* Vertical room for the hover lift: `overflow-x` forces `overflow-y` to
+       compute to auto, which would guillotine anything that rises. */
+    padding: 10px 2px 14px;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .grv__rail::-webkit-scrollbar { display: none; }
+
+  .grv__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-5);
+    padding: var(--sb-6);
+    background: var(--sb-paper);
+    border: 1px solid rgba(18, 16, 15, 0.07);
+    border-radius: var(--sb-r-2);
+    box-shadow: 0 2px 4px rgba(18, 16, 15, 0.04), 0 10px 26px rgba(18, 16, 15, 0.06);
+    scroll-snap-align: start;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+
+  .grv__card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(201, 60, 10, 0.22);
+    box-shadow: 0 4px 8px rgba(18, 16, 15, 0.05), 0 22px 46px rgba(18, 16, 15, 0.12);
+  }
+
+  /* ⚠ THIS IS WHAT FILLS A CARD HOLDING FOUR WORDS. A watermark quote mark in
+     the bottom-right corner, big enough to be a shape rather than punctuation
+     and faint enough never to compete with the text. It is why the quotation
+     marks came OFF the copy itself — one pair of marks per card, not two. */
+  /* ⚠ IT LIVES INSIDE THE QUOTE BLOCK, NOT THE CARD. Anchored to the card it
+     sat across the footer hairline — a faint orange smudge cutting a rule,
+     which looks like a mistake rather than a watermark. Bounded by the quote
+     it has the whole of the card's flexible middle to sit in and touches
+     nothing. */
+  .grv__mark {
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-58%);
+    font-family: var(--sb-font-display);
+    font-weight: 800;
+    font-size: 104px;
+    line-height: 1;
+    color: var(--sb-violet);
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .grv__head {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+  }
+
+  /* ⚠ THE DISC IS A TINT OF THE LETTER'S COLOUR, NOT THE COLOUR ITSELF. Six
+     saturated solid circles across a row read as a pie chart; the letter keeps
+     the hue and carries the identity, the ground steps back to 12%. */
+  .grv__avatar {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--disc) 13%, #fff);
+    color: var(--disc);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .grv__who {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .grv__name {
+    font-weight: 700;
+    font-size: var(--sb-body-sm);
+    line-height: 1.25;
+    color: var(--sb-ink);
+  }
+
+  /* ⚠ flex: 1 — the quote takes whatever the tallest card in the row leaves
+     over, and centres in it. Without this a one-word review sat pinned to the
+     top with a void beneath it. */
+  .grv__quote {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    margin: 0;
+  }
+
+  .grv__quote p {
+    position: relative;
+    margin: 0;
+    font-size: clamp(15px, 1.1vw, 17px);
+    line-height: 1.5;
+    color: var(--sb-charcoal);
+  }
+
+  /* The widget truncates this one at source — the ellipsis is shown greyed so
+     it reads as "there is more of this review", not as the writer trailing off. */
+  .grv__clip { color: var(--sb-text-muted); }
+
+  .grv__foot {
+    margin: 0;
+    padding-top: var(--sb-4);
+    border-top: 1px solid rgba(18, 16, 15, 0.07);
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  /* --- Arrows -------------------------------------------------------------- */
+
+  .grv__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    margin-top: -23px;
+    border-radius: 50%;
+    background: var(--sb-paper);
+    border: var(--sb-rule);
+    box-shadow: 0 8px 22px rgba(18, 16, 15, 0.14);
+    color: var(--sb-ink);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  /* Author `display` beats the UA's [hidden] rule, so it has to be restated. */
+  .grv__nav[hidden] { display: none; }
+
+  .grv__nav:hover { background: var(--sb-violet); color: #fff; }
+  .grv__nav svg { width: 20px; height: 20px; }
+  .grv__nav--prev { left: calc(var(--sb-6) * -1); }
+  .grv__nav--next { right: calc(var(--sb-6) * -1); }
+
+  /* --- Dots ---------------------------------------------------------------- */
+
+  .grv__dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--sb-3);
+    margin-top: var(--sb-5);
+  }
+
+  /* ⚠⚠ :global(), AND IT IS LOAD-BEARING. The dots are created in the script,
+     so they never receive Astro's `data-astro-cid-…` scoping attribute and a
+     plain `.grv__dot` rule compiles to `.grv__dot[data-astro-cid-…]`, which
+     matches nothing. They rendered perfectly and were invisible. The selector
+     is anchored on .grv__dots — which IS in the template and does carry the
+     attribute — so this stays scoped to this section despite the :global. Any
+     rule added here for a JS-built node needs the same treatment. */
+  .grv__dots :global(.grv__dot) {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(201, 60, 10, 0.26);
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+
+  .grv__dots :global(.grv__dot[aria-selected='true']) {
+    background: var(--sb-violet);
+    transform: scale(1.15);
+  }
+
+  /* --- Closing strip ------------------------------------------------------- */
+
+  .grv__strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sb-8);
+    width: fit-content;
+    margin: var(--sb-7) auto 0;
+    padding: var(--sb-4) var(--sb-8);
+    list-style: none;
+    background: rgba(255, 255, 255, 0.6);
+    border: var(--sb-rule);
+    border-radius: var(--sb-r-2);
+  }
+
+  .grv__strip-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+  }
+
+  .grv__strip-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--sb-lime-wash);
+    color: var(--sb-violet);
+  }
+
+  .grv__strip-icon svg { width: 20px; height: 20px; }
+
+  .grv__strip-text { display: flex; flex-direction: column; gap: 1px; }
+
+  .grv__strip-val {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 1.1;
+    color: var(--sb-violet);
+  }
+
+  .grv__strip-label { font-size: var(--sb-caption); color: var(--sb-text-muted); }
+
+  /* --- Narrower ------------------------------------------------------------ */
+
+  @media (max-width: 1199px) {
+    .grv__rail { grid-auto-columns: calc((100% - var(--sb-5) * 2) / 3); }
+    .grv__nav--prev { left: 0; }
+    .grv__nav--next { right: 0; }
+  }
+
+  @media (max-width: 899px) {
+    .grv__rail { grid-auto-columns: calc((100% - var(--sb-5)) / 2); }
+  }
+
+  @media (max-width: 639px) {
+    .grv__rail { grid-auto-columns: 86%; }
+    .grv__strip {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--sb-5);
+      width: 100%;
+      padding: var(--sb-6);
+    }
+    /* The arrows would sit on the cards at this width; the rail swipes. */
+    .grv__nav { display: none; }
+  }
+</style>
+
+<script>
+  /* Scroll position is the single source of truth — the arrows read it rather
+     than keeping a counter, so a swipe and a click can never disagree.
+
+     ⚠ OVERFLOW IS MEASURED, NEVER ASSUMED. Eight reviews overflow four columns
+     today, but if the school's widget ever drops to four the arrows hide and no
+     timer is armed, and this becomes a static row with no code change.
+
+     ⚠ IT STOPS FOR PEOPLE WHO ASK IT TO. prefers-reduced-motion cancels the
+     timer outright, and hover or keyboard focus pauses it — WCAG 2.2.2. */
+  const rail = document.querySelector<HTMLElement>('[data-grv-rail]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-grv-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-grv-next]');
+
+  if (rail && prev && next) {
+    const DWELL = 5200;
+    const slowed = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timer: number | undefined;
+    let held = false;
+
+    const gap = () => parseFloat(getComputedStyle(rail).columnGap || '0') || 0;
+    const stride = () =>
+      (rail.firstElementChild as HTMLElement | null)?.getBoundingClientRect().width ?? 0;
+    const rolling = () => rail.scrollWidth > rail.clientWidth + 2;
+    const atEnd = () => rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 2;
+
+    const halt = () => {
+      if (timer) window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    const go = () => {
+      halt();
+      if (!rolling() || slowed.matches || held) return;
+      timer = window.setInterval(() => {
+        if (atEnd()) rail.scrollTo({ left: 0, behavior: 'smooth' });
+        else rail.scrollBy({ left: stride() + gap(), behavior: 'smooth' });
+      }, DWELL);
+    };
+
+    /* ── Dots ────────────────────────────────────────────────────────────
+       Rebuilt on resize, because how many pages the rail holds depends on how
+       many cards fit — four columns at desktop, one at phone width. */
+    const dots = document.querySelector<HTMLElement>('[data-grv-dots]');
+    let marks: HTMLButtonElement[] = [];
+
+    const pages = () => Math.max(1, Math.round(rail.scrollWidth / rail.clientWidth));
+
+    const paint = () => {
+      if (!marks.length) return;
+      const i = Math.min(marks.length - 1, Math.round(rail.scrollLeft / rail.clientWidth));
+      marks.forEach((d, n) => d.setAttribute('aria-selected', String(n === i)));
+    };
+
+    const buildDots = () => {
+      if (!dots) return;
+      const n = rolling() ? pages() : 0;
+      if (n === marks.length) return paint();
+      dots.textContent = '';
+      marks = Array.from({ length: n }, (_, i) => {
+        const d = document.createElement('button');
+        d.type = 'button';
+        d.className = 'grv__dot';
+        d.setAttribute('role', 'tab');
+        d.setAttribute('aria-label', `Reviews, page ${i + 1} of ${n}`);
+        d.addEventListener('click', () => {
+          rail.scrollTo({ left: i * rail.clientWidth, behavior: 'smooth' });
+        });
+        dots.appendChild(d);
+        return d;
+      });
+      paint();
+    };
+
+    const fit = () => {
+      const on = rolling();
+      prev.hidden = !on;
+      next.hidden = !on;
+      buildDots();
+      go();
+    };
+
+    rail.addEventListener('scroll', paint, { passive: true });
+
+    const pause = () => { held = true; halt(); };
+    const resume = () => { held = false; go(); };
+
+    prev.addEventListener('click', () => rail.scrollBy({ left: -(stride() + gap()), behavior: 'smooth' }));
+    next.addEventListener('click', () => rail.scrollBy({ left: stride() + gap(), behavior: 'smooth' }));
+
+    rail.addEventListener('mouseenter', pause);
+    rail.addEventListener('mouseleave', resume);
+    rail.addEventListener('focusin', pause);
+    rail.addEventListener('focusout', resume);
+    rail.addEventListener('pointerdown', pause, { passive: true });
+
+    window.addEventListener('resize', fit, { passive: true });
+    slowed.addEventListener('change', fit);
+    fit();
+  }
+</script>

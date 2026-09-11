@@ -25,9 +25,9 @@ import imgChairman from "../assets/photos/Chairman-sunbeam.jpg";
 import imgDirector from "../assets/photos/directorImage.jpeg";
 import imgPrincipal from "../assets/photos/sb-principal.jpg";
 import imgLibrary from "../assets/library/DSC_1224 copy.jpg";
-import imgChem from "../assets/chem lab/DSC_1262 copy.jpg";
+import imgChem from "../assets/chem lab/DSC_1263 copy.jpg";
 import imgComputer from "../assets/computer lab/DSC_1204 copy.jpg";
-import imgJosh from "../assets/JOSH GROUND/DSC_1283 copy.jpg";
+import imgJosh from "../assets/JOSH GROUND/DSC_1287 copy.jpg";
 import imgBasket from "../assets/basket ball/DSC_1212 copy.jpg";
 import imgActivity from "../assets/activity learning lab/DSC_1215 copy.jpg";
 

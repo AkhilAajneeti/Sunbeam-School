@@ -36,17 +36,27 @@ import campus from '../../../assets/photos/sunbeem-1.jpg';
   <span class="vst__mark vst__mark--2" aria-hidden="true"></span>
 
   <div class="u-container vst__inner">
-    <p class="vst__eyebrow t-label" data-reveal>Come and see it</p>
-    <h2 class="vst__h" id="vst-title" data-split>Experience our campus in person</h2>
+    {/* ⚠ EVERY LINE IN THIS BLOCK IS THE SCHOOL'S OWN COPY, SUPPLIED BY THE
+        CLIENT AND USED VERBATIM — eyebrow, heading, paragraph, button label and
+        the phone line. What stood here before was written by this project. Do
+        not rephrase it to fit the measure. */}
+    <p class="vst__eyebrow t-label" data-reveal>See Sunbeam Ballia for yourself</p>
+    <h2 class="vst__h" id="vst-title" data-split>Experience our campus. See learning in action.</h2>
     <p class="vst__stand" data-reveal data-reveal-delay="80">
-      Photographs can only show you the rooms. Book a visit and walk the corridors,
-      meet the staff, and see an ordinary school day as it actually runs.
+      A school is more than its buildings and photographs. Visit our campus, meet our teachers,
+      explore the learning spaces and experience the atmosphere in which our students learn,
+      grow and thrive.
     </p>
 
+    {/* ⚠ THIS BUTTON GOES TO /contact-us/, NOT /admissions/campus-visit/, AT THE
+        CLIENT'S INSTRUCTION. The campus-visit page still exists and is still
+        linked from the Admissions band on the homepage — this is a change of
+        destination, not a broken link being patched, so do not "restore" it.
+        The label stays as the client wrote it. */}
     <div class="vst__actions" data-reveal data-reveal-delay="150">
-      <a class="btn btn--primary" href="/admissions/campus-visit/">Book a campus visit</a>
+      <a class="btn btn--primary" href="/contact-us/">Book a Campus Visit</a>
       <a class="vst__call" href={`tel:${school.phone.admissions}`}>
-        Or call admissions
+        Or speak to Admissions:
         <strong class="t-tabular">{school.phone.admissionsDisplay}</strong>
       </a>
     </div>

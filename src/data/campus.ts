@@ -48,49 +48,59 @@ export interface SafetyGroup {
  * younger child's hand.
  */
 export const safetyGroups: SafetyGroup[] = [
+  /* ⚠ GROUPS I AND II ARE THE SCHOOL'S OWN COPY, SUPPLIED BY THE CLIENT AND
+     USED VERBATIM. Do not tighten or rephrase. The hedged register — "help
+     keep", "support", "designed to support" — is deliberate on a page about
+     child safety and is the school's wording, not this project's.
+
+     ⚠ THEY ARE ALL verified: true NOW. Three of these six used to be marked
+     unverified because the school had published only five safety facts and
+     this project would not present a guess as a fact. The client has since
+     supplied all six as official page copy, so the marking no longer applies.
+     Group III below is untouched and still carries one unverified measure. */
   {
     id: 'watch',
     numeral: 'I',
-    title: 'A watched campus',
-    stand: 'Someone is on duty at every hour the gate is shut, and at every hour it is open.',
+    title: 'A campus where children feel safe',
+    stand: 'A secure school environment begins with careful supervision and responsible access.',
     measures: [
       {
-        label: '24×7 security guards',
-        body: 'Guards are posted around the clock — through the school day, through the night, and through every holiday.',
+        label: '24×7 Security',
+        body: 'Security personnel remain on duty to help keep the campus protected throughout the day and beyond.',
         verified: true,
       },
       {
-        label: 'Full CCTV coverage',
-        body: 'Cameras cover the campus, with corridors, stairwells and entrances all within view.',
+        label: 'CCTV Surveillance',
+        body: 'Strategically placed cameras support continuous monitoring of key areas across the campus.',
         verified: true,
       },
       {
-        label: 'Controlled main gate',
-        body: 'One supervised entrance for students, staff and visitors alike.',
-        verified: false,
+        label: 'Controlled Access',
+        body: 'Entry and movement through the main gate are supervised to help maintain a secure campus environment.',
+        verified: true,
       },
     ],
   },
   {
     id: 'fire',
     numeral: 'II',
-    title: 'Prepared for fire',
-    stand: 'The equipment is sized for the building, not for an inspection.',
+    title: 'Prepared for every eventuality',
+    stand: 'Safety also means being prepared. Fire-safety provisions across the campus are designed to support a prompt and organised response in an emergency.',
     measures: [
       {
-        label: '15,000-litre fire hose reel',
-        body: 'A reserve of fifteen thousand litres, plumbed to hose reels serving the school block.',
+        label: 'Fire-Safety Equipment',
+        body: 'Essential fire-fighting equipment is placed at designated locations across the school.',
         verified: true,
       },
       {
-        label: 'Extinguishers in all corridors',
-        body: 'Every corridor carries extinguishers, so no classroom is far from one.',
+        label: 'Accessible Fire Extinguishers',
+        body: 'Fire extinguishers are positioned across key areas for quick access when required.',
         verified: true,
       },
       {
-        label: 'Marked exit routes',
-        body: 'Stairwells and exits are signed along the corridors.',
-        verified: false,
+        label: 'Clearly Marked Exits',
+        body: 'Exit routes and stairways are clearly identified to support safe movement during an emergency.',
+        verified: true,
       },
     ],
   },

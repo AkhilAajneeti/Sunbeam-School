@@ -82,7 +82,7 @@ export const record: RecordBlock[] = [
         places: ['1st — Sports Stadium Ballia', '2nd — Primary School Narhi No. 1', '3rd — Star Sports Narhi'],
       },
     ],
-    shots: ['asmita-1.jpg', 'asmita-2.jpg', 'asmita-3.jpg', 'asmita-4.jpg', 'asmita-5.jpg', 'asmita-6.jpg', 'asmita-7.jpg', 'asmita-8.jpg'],
+    shots: ['asmita-4.jpg', 'asmita-5.jpg', 'asmita-6.jpg', 'asmita-7.jpg', 'asmita-8.jpg'],
     alt: 'The Asmita Khelo India Women’s League being played at Sunbeam School Ballia',
   },
   {
@@ -102,7 +102,7 @@ export const record: RecordBlock[] = [
     podiums: [
       { event: 'Results', places: ['Junior Boys — 1st', 'Senior Boys — 2nd', 'Girls — 1st'] },
     ],
-    shots: ['handball-1.jpg', 'handball-2.jpg', 'handball-3.jpg', 'handball-4.jpg', 'handball-5.jpg', 'handball-6.jpg', 'handball-7.jpg'],
+    shots: ['handball-1.jpg', 'handball-2.jpg', 'handball-3.jpg', 'handball-4.jpg', 'handball-5.jpg', 'handball-6.jpg'],
     alt: 'Sunbeam School Ballia handball teams at the District Handball Championship, Veer Lorik Stadium',
   },
   {
@@ -110,7 +110,7 @@ export const record: RecordBlock[] = [
     kicker: '2025-26 · National camp',
     title: 'Sub-Junior National Camp (Girls)',
     body: 'The Sub-Junior National Camp for girls ran at Sunbeam School Ballia through to 22 February 2026. The squad selected from it went on to represent Uttar Pradesh at Hooghly, West Bengal, from 24 February to 1 March.',
-    shots: ['camp-1.jpg', 'camp-2.jpg', 'camp-3.jpg', 'camp-4.jpg', 'camp-5.jpg', 'camp-6.jpg'],
+    shots: ['camp-1.jpg', 'camp-2.jpg', 'camp-4.jpg', 'camp-5.jpg', 'camp-6.jpg'],
     alt: 'The Sub-Junior National Camp for girls in progress at Sunbeam School Ballia',
   },
   {
@@ -126,7 +126,7 @@ export const record: RecordBlock[] = [
     kicker: 'Veer Lorik Sports Stadium · District',
     title: 'Junior District Championship — 2nd overall',
     body: 'At the Junior District Championship at Veer Lorik Sports Stadium, the school’s junior athletes finished second overall among the district’s strongest competitors.',
-    shots: ['juniordist-1.jpg', 'juniordist-2.jpg', 'juniordist-3.jpg', 'juniordist-4.jpg', 'juniordist-5.jpg'],
+    shots: ['juniordist-2.jpg', 'juniordist-3.jpg', 'juniordist-4.jpg'],
     alt: 'Sunbeam School Ballia athletes competing at the Junior District Championship',
   },
   {

@@ -53,9 +53,14 @@ import heroPhoto from '../../assets/photos/sunbeem-1.jpg';
   title="Safety & Security — Sunbeam School Ballia"
   description="Safety at Sunbeam School Ballia: 24×7 security guards, full CCTV coverage, a 15,000-litre fire hose reel, extinguishers in every corridor, attendants in junior classes, and a GPS-tracked, speed-governed bus fleet across 22 routes."
 >
+  {/* ⚠ THE THIRD PARAGRAPH RIDES IN THE SLOT. PageHero takes one `standfirst`,
+      and the school's banner copy is a standfirst AND a paragraph under it, so
+      the paragraph is passed as children — the component already renders a
+      <slot /> after the standfirst for exactly this. Both lines are the
+      client's own wording, used verbatim. */}
   <PageHero
     title="Safety & Security"
-    standfirst="Guards on duty every hour of the year, cameras across the campus, and a fleet that is tracked on every one of its twenty-two routes."
+    standfirst="A safe and secure environment for every child"
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Campus Tour', href: '/campus/' },
@@ -63,7 +68,14 @@ import heroPhoto from '../../assets/photos/sunbeem-1.jpg';
     src={heroPhoto}
     alt="The Sunbeam School Ballia campus at Agarsanda — the four-storey teaching block seen across the school ground."
     position="50% 62%"
-  />
+  >
+    <p class="sfy-hero-note">
+      Your child&rsquo;s safety comes first. From campus security and surveillance to supervised
+      movement and safe transportation, every aspect of school life is designed to provide
+      children with a secure environment in which they can learn, explore and grow with
+      confidence.
+    </p>
+  </PageHero>
 
   <SectionRail
     items={[
@@ -85,6 +97,22 @@ import heroPhoto from '../../assets/photos/sunbeem-1.jpg';
     <div id="surveillance"><Surveillance /></div>
   </div>
 </BaseLayout>
+
+<style is:global>
+  /* ⚠ GLOBAL, AND ONLY BECAUSE IT HAS TO BE. This paragraph is rendered inside
+     PageHero's slot, so it carries THAT component's scoping attribute, not this
+     page's — a scoped rule here would compile to a selector that matches
+     nothing. These declarations only ADD; PageHero sets none of them, so there
+     is no specificity fight to lose. The rule is shipped in this page's own CSS
+     bundle, so no other banner is affected. */
+  .sfy-hero-note {
+    max-width: 62ch;
+    margin: var(--sb-4) auto 0;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+  }
+</style>
 
 <style>
   /* padding-block: 0 — SafetyTimeline already opens on --sb-section-y, so the

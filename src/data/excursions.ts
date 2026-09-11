@@ -128,7 +128,7 @@ export const sections: Section[] = [
     body: [
       'Expeditions hold significance for various reasons. They promote exploration, fostering a deeper understanding of our world. Expeditions also contribute to scientific research, uncovering new information about geography, biology, and more. Additionally, they inspire a sense of adventure and teamwork, cultivating personal growth and resilience. Students of class 6th have visited Kunwar Singh inter College, Ballia old tehsil and auditorium and learnt about different realm. Glimpses of the same has been shared with you.',
     ],
-    shots: ['kunwar-2.jpg', 'kunwar-1.jpg', 'kunwar-3.jpg', 'kunwar-4.jpg'],
+    shots: ['kunwar-2.jpg', 'kunwar-1.jpg', 'kunwar-3.jpg'],
     alt: 'Class 6 students of Sunbeam School Ballia visiting Kunwar Singh Inter College',
   },
   {
@@ -139,7 +139,7 @@ export const sections: Section[] = [
     body: [
       'Analyzing a monument can guide students to engage in observation, decoding, and inquiry, sparking curiosity and deeper learning. Monuments are created with a specific intent, but how they communicate with the viewer varies just as much as the meaning that different people might apply to the object. Our students participated in the Education through monuments festival which was organised by Sunbeam group of institutions.This participation was an exposure to the new realm of knowledge where subjects meet.',
     ],
-    shots: ['varanasi-1.jpg', 'varanasi-2.jpg'],
+    shots: ['varanasi-2.jpg'],
     alt: 'Sunbeam School Ballia students presenting their Buxar Fort project at the ETM festival in Varanasi',
   },
   {
@@ -207,7 +207,7 @@ export const sections: Section[] = [
       'As we all know educational trips are very important for students to develop experiential learning .',
       'And in the process of that Sunbeam is following the concept of educational expenditure, students of class IX has visited the Buxar fort and museum under the guidance of their mentors, Ms. Sneha Singh and Mr. Anurag Thakur',
     ],
-    shots: ['buxar-2.jpg', 'buxar-1.jpg', 'buxar-3.jpg', 'buxar-4.jpg'],
+    shots: ['buxar-2.jpg', 'buxar-1.jpg'],
     alt: 'Class IX students of Sunbeam School Ballia at the Sitaram Upadhyaya Museum, Buxar',
   },
   {

@@ -44,6 +44,25 @@ const shots: Record<string, ImageMetadata | undefined> = {
   '22 Routes': campus,
 };
 
+/**
+ * ⚠⚠ THE STAND-IN, AT THE CLIENT'S INSTRUCTION. The five unphotographed cards
+ * used to render Photo's dark placeholder; the client asked for a school
+ * photograph instead of a black panel. So every card now shows a picture, and
+ * four fifths of them show THIS one — the main building.
+ *
+ * ⚠ WHICH MAKES THE ALT TEXT LOAD-BEARING. A campus photograph beside "GPS
+ * Tracking" must not be captioned "GPS Tracking": that would turn a stand-in
+ * into a false claim about what the picture shows. The alt below describes the
+ * building, and only the card with a real frame gets the feature's own alt.
+ *
+ * ⚠ `briefs` BELOW IS STILL THE RECORD OF WHAT IS OWED and is deliberately
+ * kept. Nothing on screen asks for those photographs any more, so this comment
+ * and that object are the only remaining trace. Add a real frame to `shots` and
+ * the card stops using the stand-in with no other change.
+ */
+const FALLBACK_ALT =
+  'The main building of Sunbeam School Ballia at Agarsanda, seen across its front lawn.';
+
 const briefs: Record<string, string> = {
   'GPS Tracking': 'The GPS unit in a bus cab, 16:10 — screen live, route showing',
   'Speed Governor': 'The speed governor fitted in a bus, 16:10 — close, with the seal visible',
@@ -88,8 +107,8 @@ const figures = [
         {transportFeatures.map((f, i) => (
           <figure class="tsf__pane" data-tsf-pane={i} data-on={i === 0 ? '' : undefined}>
             <Photo
-              src={shots[f.label]}
-              alt={shots[f.label] ? `${f.label} — Sunbeam School Ballia` : undefined}
+              src={shots[f.label] ?? campus}
+              alt={shots[f.label] ? `${f.label} — Sunbeam School Ballia` : FALLBACK_ALT}
               brief={briefs[f.label] ?? 'A Sunbeam Ballia bus at the boarding bay, 16:10'}
               ratio="16 / 10"
               tone="ink"

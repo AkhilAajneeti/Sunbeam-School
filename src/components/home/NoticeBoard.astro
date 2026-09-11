@@ -18,6 +18,16 @@
  */
 import { school } from '../../data/site';
 
+/**
+ * ⚠ THE ALUMNI CARD'S GROUND, and it is run through Astro's image pipeline
+ * rather than set as a CSS url() — the source is a 1 MB PNG and a url() would
+ * ship every byte of it. 400/560/900 are all on IMAGE_WIDTHS in
+ * astro.config.mjs; the adapter SILENTLY DROPS any width that is not, so do not
+ * invent one here. 900 is the ceiling worth asking for at this card's width.
+ */
+import { Picture } from 'astro:assets';
+import alumniArt from '../../assets/icons/NoticeBoard.png';
+
 const notices = [
   {
     tag: 'Admissions',
@@ -107,7 +117,21 @@ const notices = [
       {/* --- Alumni ------------------------------------------------------- */}
       <aside class="notice__alumni" data-reveal data-reveal-delay="120"
         aria-labelledby="alumni-heading">
-        <p class="notice__pill"><span class="pill pill--lime">Alumni</span></p>
+        {/* Decorative ground. alt="" because the crest watermark inside it is
+            already the school's own mark, present in the masthead of every
+            page — announcing it here would be repetition, not information. */}
+        <Picture
+          class="notice__alumni-bg"
+          src={alumniArt}
+          alt=""
+          aria-hidden="true"
+          formats={['avif', 'webp']}
+          widths={[400, 560, 900]}
+          sizes="(max-width: 1023px) 92vw, 32vw"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="notice__pill"><span class="pill pill--violet">Alumni</span></p>
         <h2 class="notice__alumni-heading" id="alumni-heading">
           Once a Sunbeamite, always a Sunbeamite
         </h2>
@@ -250,15 +274,72 @@ const notices = [
 
   /* --- Alumni --------------------------------------------------------------- */
 
+  /* ⚠⚠ THIS CARD WAS DARK AND IS NOW LIGHT, AND EVERY COLOUR IN IT MOVED WITH
+     IT. The client supplied a cream artwork ground with the school crest
+     watermarked into it; white text on ink became ink text on cream, the pill
+     went from --lime (an on-dark orange) to --violet, and the card grew a
+     hairline because a cream panel on sand needs an edge that an ink panel did
+     not. Flipping the ground back without flipping these is white-on-cream. */
   .notice__alumni {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: var(--sb-9) var(--sb-8);
     border-radius: var(--sb-r-2);
-    background: var(--sb-ink);
-    color: #fff;
+    /* Fallback ground, and it matters: it is what shows in the moment before
+       the artwork paints, and it is the artwork's own field colour. */
+    background: #fdf6ef;
+    border: 1px solid rgba(201, 60, 10, 0.14);
+    color: var(--sb-ink);
     box-shadow: var(--sb-shadow-card);
+    overflow: hidden;
+  }
+
+  /* <Picture> puts this class on the <img>; the <picture> wrapper is static, so
+     `inset: 0` resolves against .notice__alumni, which is position: relative. */
+  /* ⚠ OVERSIZED BY 6% AND PULLED BACK 3%, so the card's overflow:hidden crops
+     the artwork's own bleed. The file is itself a drawn card — a rounded
+     rectangle with white outside its corners — and placed flush it read as a
+     frame inside a frame, the drawn arc sitting a few pixels inside this card's
+     radius.
+
+     ⚠⚠ THE SIZE IS EXPLICIT BECAUSE `inset: -3%` WITH `width: auto` DOES NOT
+     WORK ON AN IMAGE. For an absolutely positioned REPLACED element, `width:
+     auto` resolves to the intrinsic width and the opposite inset is then
+     ignored as over-constrained — the artwork sized itself to 460px, anchored
+     left, and left a pale strip down the right and bottom edges. width/height
+     have to be stated. */
+  .notice__alumni-bg {
+    position: absolute;
+    top: -3%;
+    left: -2%;
+    z-index: 0;
+    width: 106%;
+    height: 106%;
+    /* ⚠⚠ WITHOUT THIS THE OVERSIZE ONLY HAPPENS VERTICALLY. base.css sets
+       `img, picture, svg, video { max-width: 100% }` globally, so `width: 106%`
+       was clamped straight back to 100% while `height: 106%` — which no global
+       rule caps — went through. The artwork ended up 449 wide in a 451 card,
+       anchored left, overhanging 12.5px on the left and falling 14.5px SHORT on
+       the right: a pale strip down the right edge and across the bottom, and
+       nothing in this rule to explain it. Measured, not guessed. */
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* ⚠⚠ :not(picture), NOT :not(.notice__alumni-bg). <Picture> renders
+     <picture><source…><img class="notice__alumni-bg"> — the class lands on the
+     IMG, so the direct child of this card is the <picture> wrapper, which does
+     not carry it. Written the obvious way this rule matched the wrapper, made
+     it position: relative, and the absolutely-positioned image then sized
+     against an empty inline box instead of the card: 369x0, invisible, with the
+     image loaded and no error anywhere. The wrapper must stay static so the
+     image resolves against .notice__alumni. */
+  .notice__alumni > :not(picture) {
+    position: relative;
+    z-index: 1;
   }
 
 
@@ -274,28 +355,31 @@ const notices = [
   .notice__alumni-copy {
     font-size: var(--sb-body-sm);
     line-height: 1.6;
-    color: rgba(255, 255, 255, 0.78);
+    color: var(--sb-text-muted);
   }
 
-  .notice__alumni-copy strong { color: #fff; font-weight: 600; }
+  .notice__alumni-copy strong { color: var(--sb-ink); font-weight: 700; }
 
-  .notice__alumni-cta { margin-top: var(--sb-7); }
-
-  .notice__alumni-alt {
-    margin-top: var(--sb-5);
-    font-size: var(--sb-caption);
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  .notice__alumni-alt a {
-    color: var(--sb-lime);
-    border-bottom: 1px solid currentColor;
-  }
+  /* ⚠ .notice__alumni-cta AND .notice__alumni-alt WERE DELETED HERE, not
+     recoloured. Neither element is emitted by this component any more — the
+     button and the "or email us" line went in an earlier pass — so both rules
+     styled nothing. Dead rules for markup no page renders are how a stylesheet
+     stops being readable, and they would have been the next thing to "fix" for
+     contrast on a ground they never sat on. */
 
   /* --- Tablet ---------------------------------------------------------------- */
 
   @media (max-width: 1023px) {
     .notice__grid { grid-template-columns: minmax(0, 1fr); }
+
+    /* ⚠ PAN OFF THE CREST BELOW THIS BREAKPOINT. The grid drops to one column
+       here, so the card turns landscape while the artwork stays portrait —
+       `cover` then crops hard vertically and blows the watermarked crest up to
+       several times its desktop size, directly behind the copy. "Estd.2013" cut
+       straight through the last line. Taking the slice from the very top keeps
+       the corner blob and loses the crest, which is the right trade: it is a
+       watermark, and the text has to be read. */
+    .notice__alumni-bg { object-position: center top; }
   }
 
   /* --- Mobile ---------------------------------------------------------------- */
@@ -315,6 +399,5 @@ const notices = [
     }
 
     .notice__go { display: none; }
-    .notice__alumni-cta { width: 100%; text-align: center; }
   }
 </style>

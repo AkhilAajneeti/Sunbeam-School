@@ -7,11 +7,23 @@
  * So: the frame, headline, deck and buttons are fixed. Only the photograph and
  * its own caption cross-fade — the caption belongs to the image.
  *
- * The eyebrow carries the school's real motto, read off the crest ring on the
- * official logo artwork ("DUTY · DEVOTION · DISCIPLINE"). Text extraction never
- * surfaced it; it exists only in the emblem. It is the single most
- * Sunbeam-specific line available and it replaces a generic name-and-year
+ * The copy block carries the school's real motto, read off the crest ring on
+ * the official logo artwork ("DUTY · DEVOTION · DISCIPLINE"). Text extraction
+ * never surfaced it; it exists only in the emblem. It is the single most
+ * Sunbeam-specific line available and it replaced a generic name-and-year
  * eyebrow that merely repeated the masthead.
+ *
+ * ⚠ IT IS NOW A TAGLINE UNDER THE DECK, NOT AN EYEBROW OVER THE HEADLINE —
+ * the client asked for it there. Nothing took its old place: every candidate
+ * for an eyebrow line was one this project would have had to write itself.
+ *
+ * ⚠⚠ THE HERO IS THE ONE SECTION ON THIS PAGE THE CLIENT HAS REVIEWED LINE BY
+ * LINE. Four things in it are their explicit instruction and not this project's
+ * judgement — the headline hierarchy ("Where Ballia's Future Leaders" dominant,
+ * "Take Shape" noticeably smaller), the deck sentence verbatim, the motto as a
+ * tagline below it, and the overlay light enough to leave the building visible.
+ * Each is marked ⚠ at the rule or the markup that carries it. Read the note
+ * before changing the number.
  */
 import { school } from '../../data/site';
 import Photo from '../ui/Photo.astro';
@@ -286,18 +298,54 @@ const slides = [
           fold on every phone. The admissions route is not lost: it is the
           pulsing pill in the masthead, both forms in the utility bar, and the
           whole Admissions band further down this page. */}
-      <p class="hero__eyebrow t-label">{school.motto}</p>
-      {/* ⚠ THE ACCENT PLATE TAKES "Take Shape", WHICH IS TWO WORDS, SO IT CARRIES
-          white-space: nowrap FROM .t-squiggle AND CANNOT BREAK ACROSS LINES.
-          That is deliberate — a plate split over two lines renders as two
-          half-plates — and it is why the manual <br> sits where it does. */}
-      <h1 class="hero__title t-display" data-split>
-        Where Ballia's Future Leaders <br class="hero__br" /><span class="t-squiggle t-squiggle--lime">Take Shape</span>
-      </h1>
-      <p class="hero__deck t-body-lg">
-        A Sunbeam institution since 2013 — {school.currentStrength} students, Nursery to
-        Class&nbsp;XII, on a campus built for how children actually learn.
+      {/* ⚠ THE MOTTO MOVED OUT FROM ABOVE THE HEADLINE TO BELOW THE DECK, at the
+          client's request ("Duty Devotion Discipline .... I think you should add
+          your tagline here", pointing under the supporting sentence). Nothing
+          now stands between the top of the copy block and the <h1>, which is
+          also what the note about the deleted admissions badge wanted. It is
+          still the school's own motto off the crest ring — see the file header.
+          There is no eyebrow in its place: the only candidates were lines this
+          project would have had to invent. */}
+      <p class="hero__eyebrow t-label">
+        Welcome to Sunbeam School Ballia
+        <span class="hero__eyebrow-rule" aria-hidden="true"></span>
       </p>
+      {/* ⚠ THREE LINES, THREE TREATMENTS, AND ALL THREE ARE THE CLIENT'S DESIGN.
+          "Where Ballia's Future" white at full size, "Leaders" ORANGE at full
+          size, "Take Shape" white and noticeably smaller. An earlier pass had
+          the orange on "Take Shape" instead; the reference the client then sent
+          puts it on "Leaders" and leaves "Take Shape" white, so that is what
+          this is. The first two lines carry the weight, which is still the
+          hierarchy asked for in the round before.
+
+          ⚠⚠ THREE BLOCK SPANS, NOT TWO <br>s, AND THE SPACING IS WHY. As inline
+          content the small third line still sat on the FULL-SIZE line's strut —
+          80.9px of leading for a 43px word — so the white band under "Leaders"
+          came out roughly double the one under line 1 and the client's note was
+          exactly that. A negative margin only papered over it, because the strut
+          scales with the headline and the correction did not. As blocks each
+          line owns its own leading and the rhythm holds at every width.
+
+          ⚠ NO data-split HERE, DELIBERATELY. splitWords (motion-gsap.ts) rebuilds
+          a heading out of inline-block masks, which would pull these three
+          blocks onto one line. It never actually ran on this heading — the hero
+          is above the fold and `belowFold` skips it — so the attribute was doing
+          nothing but holding a loaded gun at the layout. Every other heading on
+          the site still animates; this one is a fixed three-line composition. */}
+      <h1 class="hero__title t-display">
+        <span class="hero__line">Where Ballia's Future</span>
+        <span class="hero__line hero__accent">Leaders</span>
+        <span class="hero__take">Take Shape</span>
+      </h1>
+      {/* ⚠ VERBATIM CLIENT COPY. This sentence was supplied word for word and
+          must not be re-cut. It replaced a line that interpolated
+          {school.currentStrength}; the roll is not in the client's wording, so
+          the interpolation is gone with it. */}
+      <p class="hero__deck t-body-lg">
+        A Sunbeam institution since 2013 — a CBSE school from Nursery to
+        Class&nbsp;XII, where children learn, grow and prepare for the future.
+      </p>
+      <p class="hero__motto t-label">{school.motto}</p>
       {/* ⚠ THE HERO NO LONGER ASKS ANYONE TO APPLY, AND THAT IS THE POINT.
           It carried the two application forms — the same two that are in the
           utility bar at the top of every page, in the masthead pill, and in the
@@ -309,17 +357,47 @@ const slides = [
           neither needs target="_blank" — and the slash matters, because
           trailingSlash: 'always' in astro.config.mjs makes the bare form a
           redirect hop. */}
+      {/* ⚠ THE LABELS ARE THE REFERENCE'S; THE DESTINATIONS ARE THIS SITE'S.
+          "Discover Our Campus" goes to /campus/. The play glyph beside it is the
+          reference's and is decorative: it opens no lightbox, and the campus
+          page is where the films live.
+
+          ⚠ "Explore Sunbeam" GOES TO /about/history-legacy/ — "Our Journey" — AT
+          THE CLIENT'S INSTRUCTION. It briefly pointed at /about/, the section
+          landing page, which does build but is not where they want a reader
+          sent. Note the label/route mismatch is only apparent: /about/history-
+          legacy/ is titled "Our Journey" everywhere a visitor sees it (its own
+          <h1>, the navbar, the footer) and the slug is kept for the redirects in
+          astro.config.mjs — see the note in data/navigation.ts. */}
       <div class="hero__actions">
-        <a class="btn btn--on-image-primary" href="/academics/">Explore Academics</a>
-        <a class="btn btn--on-image-secondary" href="/campus/">Explore the Campus</a>
+        <a class="btn btn--on-image-primary hero__cta" href="/about/history-legacy/">
+          Explore Sunbeam
+          <svg class="hero__cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 12h15M13 6l6 6-6 6" />
+          </svg>
+        </a>
+        <a class="btn btn--on-image-secondary hero__cta" href="/campus/">
+          <svg class="hero__cta-play" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.2" /><path d="M10 8.6 16 12l-6 3.4V8.6Z" fill="currentColor" stroke="none" />
+          </svg>
+          Discover Our Campus
+        </a>
       </div>
 
-      {/* Floating stat card — reference hero pattern. Verified figures only. */}
-      {/* ⚠ THE ICONS ARE MOBILE-ONLY (display:none from 768px). The desktop stat
-          row is a tight three-up beside the copy and an icon above each figure
-          would push it into a second line; the mobile card has the room and the
-          reference asks for them. Decorative, so aria-hidden — the figure and
-          its label already say everything. */}
+      {/* ⚠ THE CARD IS LIGHT NOW, NOT DARK GLASS, and the icons show at every
+          width. It used to be a white-at-10% panel with white figures, readable
+          only because the scrim behind it was heavy; the reference card is a
+          near-white plate with ink figures and orange icon discs, which is what
+          lets the scrim stay light. Icons are decorative, so aria-hidden — the
+          figure and its label already say everything.
+          ⚠⚠ THE FIGURES ARE THE SITE'S, NOT THE REFERENCE MOCK-UP'S. A design
+          comp that circulated alongside this one carried "50+ Years of Legacy"
+          and "100+ Dedicated Faculty". This school opened in 2013 and publishes
+          neither number, so neither is here. What is here is 13+ years, the
+          published roll, and the Cfore #1 ranking — all three already stand
+          elsewhere on this site. Do not swap in a rounder number. */}
       <div class="hero__stats">
         <div class="hero__stat">
           <span class="hero__stat-icon" aria-hidden="true">
@@ -328,8 +406,10 @@ const slides = [
               <path d="M12 4 2 9l10 5 10-5-10-5Z" /><path d="M6 11.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-4.5" />
             </svg>
           </span>
-          <span class="hero__stat-value">13</span>
-          <span class="hero__stat-label">years in Ballia</span>
+          <span class="hero__stat-body">
+            <span class="hero__stat-value">13+</span>
+            <span class="hero__stat-label">Years in Ballia</span>
+          </span>
         </div>
         <div class="hero__stat">
           <span class="hero__stat-icon" aria-hidden="true">
@@ -339,8 +419,10 @@ const slides = [
               <path d="M16.5 5.6a3.2 3.2 0 0 1 0 5.4M18 14.6c2 .7 3.5 2.2 3.5 4.4" />
             </svg>
           </span>
-          <span class="hero__stat-value">{school.currentStrength}</span>
-          <span class="hero__stat-label">students today</span>
+          <span class="hero__stat-body">
+            <span class="hero__stat-value">{school.currentStrength}</span>
+            <span class="hero__stat-label">Students Today</span>
+          </span>
         </div>
         <div class="hero__stat">
           <span class="hero__stat-icon" aria-hidden="true">
@@ -350,12 +432,19 @@ const slides = [
               <path d="M12 14v3M9 20h6" />
             </svg>
           </span>
-          <span class="hero__stat-value">#1</span>
-          <span class="hero__stat-label">co-ed day school, Ballia</span>
+          <span class="hero__stat-body">
+            <span class="hero__stat-value">#1</span>
+            <span class="hero__stat-label">Co-ed Day School<br />in Ballia</span>
+          </span>
         </div>
       </div>
     </div>
 
+    {/* ⚠ THE SLIDE CAPTION IS STILL HERE, JUST NOT PAINTED. The reference has
+        nothing in the bottom-right corner, so .hero__meta is display:none — but
+        the markup and the script that drives it are untouched, because the
+        caption is also the editorial tell for a slide still waiting on a real
+        photograph ("Needed · A2"). Deleting one line of CSS brings it back. */}
     <div class="hero__meta">
       <p class="hero__caption" data-hero-caption aria-live="off">
         <span class="hero__caption-tag t-label">{slides[0].caption ? '' : 'Needed · A2'}</span>
@@ -417,10 +506,14 @@ const slides = [
   /* Warm the photography toward the brand without tinting it into a filter.
      Kept light: a heavy maroon wash makes the whole frame read as sepia, and
      this school needs to look current, not archival. */
+  /* ⚠ HALVED, 0.12 → 0.06. A maroon wash across the whole frame is orange over
+     every pixel of the photograph, which is the other half of "the orange
+     colour is becoming dominant". At 0.06 it still takes the blue edge off a
+     hard midday sky without reading as a filter. */
   .hero__tint {
     position: absolute;
     inset: 0;
-    background: rgba(61, 0, 0, 0.12);
+    background: rgba(61, 0, 0, 0.06);
   }
 
   /* Two-axis scrim.
@@ -431,24 +524,37 @@ const slides = [
      So the vertical scrim is joined by a left-weighted one, which lands exactly
      where the copy sits (columns 1–7) and clears by the two-thirds mark, so the
      buildings on the right stay fully legible. */
+  /* ⚠ LIGHTENED, AND THE WEIGHT MOVED OFF THE MIDDLE OF THE FRAME. The client's
+     note was "the dark overlay is hiding the building at the back". The two
+     ramps multiply, so the old pair compounded to ~0.66 at the centre of the
+     image and ~0.30 over the buildings on the right — the campus was being
+     dimmed everywhere, not just under the words.
+     Now the horizontal ramp keeps its bite only where the copy actually is and
+     clears by the 72% mark, and the vertical one is roughly halved. Measured on
+     the composite: ~0.93 bottom-left (where the headline sits), ~0.42 at centre,
+     ~0.18 over the right-hand buildings. The copy keeps its ground; the campus
+     comes back.
+     ⚠ READABILITY IS PAID FOR IN TYPE, NOT IN MORE BLACK — the headline, deck
+     and motto carry their own text-shadow below. If a future photograph needs
+     more contrast, reach for that first. */
   .hero__scrim {
     position: absolute;
     inset: 0;
     background:
       linear-gradient(
         to right,
-        rgba(18, 16, 15, 0.9) 0%,
-        rgba(18, 16, 15, 0.82) 30%,
-        rgba(18, 16, 15, 0.52) 50%,
-        rgba(18, 16, 15, 0.16) 70%,
-        rgba(18, 16, 15, 0) 84%
+        rgba(18, 16, 15, 0.86) 0%,
+        rgba(18, 16, 15, 0.74) 26%,
+        rgba(18, 16, 15, 0.4) 46%,
+        rgba(18, 16, 15, 0.12) 62%,
+        rgba(18, 16, 15, 0) 72%
       ),
       linear-gradient(
         to top,
-        rgba(18, 16, 15, 0.78) 0%,
-        rgba(18, 16, 15, 0.4) 30%,
-        rgba(18, 16, 15, 0.16) 60%,
-        rgba(18, 16, 15, 0.26) 100%
+        rgba(18, 16, 15, 0.52) 0%,
+        rgba(18, 16, 15, 0.24) 32%,
+        rgba(18, 16, 15, 0.06) 62%,
+        rgba(18, 16, 15, 0.12) 100%
       );
   }
 
@@ -457,19 +563,21 @@ const slides = [
   /* From tablet down the copy spans most of the width, so the horizontal ramp
      no longer covers it and the vertical one has to do all the work. */
   @media (max-width: 1023px) {
-    /* The copy block reaches roughly 70% up the frame here, and a worst-case
-       white building behind white text needs ~0.82 alpha to clear 4.5:1. So the
-       ramp stays heavy to the 78% mark and only releases above it, where the
-       photograph is left to read on its own. */
+    /* The copy block reaches roughly 70% up the frame here, so the ramp has to
+       hold under it — but the old curve sat at 0.8 all the way to the 78% mark
+       and blacked the tablet hero out almost completely, which is the same
+       complaint the desktop scrim just answered. It now releases earlier and
+       ends much lighter, so the top third of the photograph reads; the type
+       below carries its own shadow for the rest. */
     .hero__scrim {
       background:
         linear-gradient(
           to top,
-          rgba(18, 16, 15, 0.92) 0%,
-          rgba(18, 16, 15, 0.88) 55%,
-          rgba(18, 16, 15, 0.8) 78%,
-          rgba(18, 16, 15, 0.46) 92%,
-          rgba(18, 16, 15, 0.34) 100%
+          rgba(18, 16, 15, 0.86) 0%,
+          rgba(18, 16, 15, 0.78) 50%,
+          rgba(18, 16, 15, 0.54) 72%,
+          rgba(18, 16, 15, 0.2) 88%,
+          rgba(18, 16, 15, 0.1) 100%
         );
     }
   }
@@ -488,39 +596,70 @@ const slides = [
 
   /* Asymmetric: columns 1–7 of 12. Never centred. */
   .hero__copy {
-    /* Columns 1–8. .hero__meta holds 9–12, so column 8 was simply unused, and
-       the title needs it: "Where Ballia's Future Leaders" is wider still at
-       76px than the 737px seven-column measure it used to overrun. */
-    grid-column: 1 / span 8;
+    /* ⚠ TEN COLUMNS, NOT EIGHT. .hero__meta used to hold 9–12 and is now
+       display:none, so the copy is free to take the room — and it needs it: the
+       headline runs to three lines and the stat card is a three-up row beside
+       an icon disc each. Columns 11–12 stay clear so the card never reaches the
+       right margin, which is where the reference has it end. */
+    grid-column: 1 / span 10;
   }
 
   /* .hero__badge and .hero__badge-dot were deleted with the markup they styled
      — see the note beside the eyebrow. Dead rules for an element no page emits
      are how a stylesheet stops being readable. */
 
-  /* Floating stat card — reference hero pattern. */
+  /* Floating stat card — a near-white plate, icon disc beside each figure.
+     ⚠ THE BLUR IS LOAD-BEARING. The plate is 88% white, not solid, so the
+     photograph still moves underneath it; without backdrop-filter that reads as
+     a flat grey rectangle dropped on the picture. Where the filter is
+     unsupported the fallback is simply a slightly more opaque plate, which is
+     why the alpha is 0.88 and not 0.6. */
   .hero__stats {
     display: inline-flex;
-    align-items: stretch;
-    gap: var(--sb-7);
+    align-items: center;
+    gap: var(--sb-6);
     margin-top: var(--sb-8);
-    padding: var(--sb-6) var(--sb-7);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: var(--sb-5) var(--sb-7);
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.55);
     border-radius: var(--sb-r-2);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 18px 50px rgba(18, 16, 15, 0.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
   .hero__stat {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    gap: var(--sb-4);
   }
 
   .hero__stat + .hero__stat {
-    padding-left: var(--sb-7);
-    border-left: 1px solid rgba(255, 255, 255, 0.22);
+    padding-left: var(--sb-6);
+    border-left: 1px solid rgba(18, 16, 15, 0.12);
   }
+
+  .hero__stat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  /* The orange disc. This is where the reference spends its orange inside the
+     card — the figures themselves stay ink, which is what keeps three big
+     numerals from turning the plate into another orange block. */
+  .hero__stat-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--sb-lime-wash);
+    color: var(--sb-violet);
+  }
+
+  .hero__stat-icon svg { width: 22px; height: 22px; display: block; }
 
   .hero__stat-value {
     font-family: var(--sb-font-display);
@@ -528,12 +667,13 @@ const slides = [
     font-size: 30px;
     line-height: 1.1;
     letter-spacing: -0.03em;
-    color: #fff;
+    color: var(--sb-ink);
   }
 
   .hero__stat-label {
     font-size: var(--sb-caption);
-    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.3;
+    color: var(--sb-text-muted);
   }
 
   /* The motto is set in white, not gold.
@@ -542,13 +682,42 @@ const slides = [
      needs a ground darker than L=0.046 to clear 4.5:1, which would mean blacking
      out the photograph entirely. Gold stays as the rule above, where it is
      decoration rather than text. */
+  /* The motto, now UNDER the deck rather than over the headline. Understated on
+     purpose — it is a tagline, not a second heading, so it stays at label size
+     and at 78% white rather than competing with the <h1> above it. */
+  .hero__motto {
+    color: var(--sb-on-dark-78);
+    margin: 0 0 var(--sb-8);
+    text-shadow: 0 1px 8px rgba(18, 16, 15, 0.55);
+  }
+
+  /* The eyebrow returns, with the reference's short orange rule after it. The
+     rule is a flex child rather than a ::after so it takes the leftover space
+     up to a cap — a fixed-width pseudo-element sat at a different distance from
+     the text at every viewport. */
   .hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
     color: #fff;
-    margin-bottom: var(--sb-6);
+    margin: 0 0 var(--sb-5);
+    text-shadow: 0 1px 8px rgba(18, 16, 15, 0.5);
+  }
+
+  .hero__eyebrow-rule {
+    flex: 0 1 56px;
+    height: 2px;
+    background: var(--sb-orange-tint);
   }
 
   .hero__title {
     color: #fff;
+    /* Buys back the contrast the lightened scrim gives up, without darkening a
+       single pixel of the photograph. Two stops: a tight one for edge
+       definition against a bright wall, a wide soft one for the general ground. */
+    text-shadow:
+      0 1px 2px rgba(18, 16, 15, 0.45),
+      0 4px 22px rgba(18, 16, 15, 0.5);
     /* FLUID, so the chosen break holds at every width rather than only at the
        two where it happened to fit.
        Line 1 is a constant 10.26em ("Where Ballia's children" at this tracking),
@@ -564,10 +733,38 @@ const slides = [
     margin-bottom: var(--sb-6);
   }
 
+  /* ⚠ --sb-orange-tint, NOT --sb-violet. The primary orange (#c93c0a) is a
+     light-ground colour; over a photograph it goes muddy and loses the contrast
+     that makes this line the accent it is meant to be. */
+  .hero__accent {
+    color: var(--sb-orange-tint);
+  }
+
+  /* ⚠ 0.58em — THE NUMBER THAT CARRIES THE HIERARCHY. "Take Shape" reads as a
+     smaller third line rather than a continuation of the headline, which was
+     the client's note two rounds ago and is still true of the reference. It is
+     white here, because the reference spends the headline's orange on
+     "Leaders"; it also drops to weight 600, so it settles rather than shouts. */
+  /* Each line is its own block box, so each carries its own leading — see the
+     note beside the markup. */
+  .hero__line { display: block; }
+
+  .hero__take {
+    display: block;
+    font-size: 0.58em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    /* 1.1 of 0.58em, not 1.08 of 1em: the leading that lands this line the same
+       optical distance under "Leaders" as "Leaders" sits under line 1. */
+    line-height: 1.1;
+    margin-top: 0.04em;
+  }
+
   .hero__deck {
     color: var(--sb-on-dark-90);
     max-width: 46ch;
-    margin-bottom: var(--sb-8);
+    margin-bottom: var(--sb-5);
+    text-shadow: 0 1px 10px rgba(18, 16, 15, 0.5);
   }
 
   .hero__actions {
@@ -576,16 +773,19 @@ const slides = [
     gap: var(--sb-4);
   }
 
+  .hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sb-3);
+  }
+
+  .hero__cta-icon { width: 18px; height: 18px; flex: 0 0 auto; }
+  .hero__cta-play { width: 22px; height: 22px; flex: 0 0 auto; }
+
   /* --- Meta: editorial caption + controls, bottom right ------------------ */
 
-  .hero__meta {
-    grid-column: 9 / span 4;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--sb-5);
-    text-align: right;
-  }
+  /* See the note beside the markup: hidden, not deleted. */
+  .hero__meta { display: none; }
 
   .hero__caption {
     display: flex;
@@ -608,14 +808,11 @@ const slides = [
     max-width: 34ch;
   }
 
-  /* Hidden on desktop; the mobile block below turns both on. */
-  .hero__stat-icon { display: none; }
 
   /* --- Tablet ------------------------------------------------------------- */
 
   @media (max-width: 1023px) {
-    .hero__copy { grid-column: 1 / span 6; }
-    .hero__meta { grid-column: 7 / span 2; }
+    .hero__copy { grid-column: 1 / span 10; }
     .hero__title { max-width: none; }
   }
 
@@ -628,12 +825,14 @@ const slides = [
 
   /* --- Mobile: 4:5 crop, stacked actions, controls below copy ------------- */
 
-  /* The type size bottoms out at 40px, so below roughly 480 the first line can
-     no longer fit however wide the column is. The chosen break is dropped there
-     and the heading wraps naturally. */
-  @media (max-width: 479px) {
-    .hero__br { display: none; }
-  }
+  /* ⚠ THE BREAK IS NO LONGER DROPPED ON NARROW SCREENS, and that rule is gone
+     rather than tightened. It existed because "Take Shape" used to be a plate
+     set at the full headline size: below ~480 the first phrase could not fit on
+     one line anyway, so the manual break was dropped and the whole thing wrapped
+     as one heading. "Take Shape" is now a smaller second line, so the break IS
+     the hierarchy — without it the phrase ran inline after "Leaders" at 390,
+     which is exactly what the client asked not to happen. The first phrase wraps
+     naturally over two lines at that width; it no longer needs the break. */
 
   @media (max-width: 767px) {
     /* ⚠⚠ ON MOBILE THE FILM IS A BLOCK AT THE TOP, NOT A BACKGROUND.
@@ -700,7 +899,21 @@ const slides = [
     }
 
 
-    .hero__eyebrow { margin-bottom: var(--sb-4); }
+    /* ⚠ SAME HIERARCHY ON A PHONE, which is the client's point 9. The headline
+       caps at 46px here, so "Take Shape" holding 0.42em of that would fall to
+       19px and read as body copy — it takes a floor of its own instead, still
+       comfortably under the line above it. */
+    .hero__take {
+      font-size: clamp(19px, 5.2vw, 25px);
+      /* Measured, not guessed: at 0.28em the band under "Leaders" ran 18px
+         against 12px under line 1 — the same unevenness the desktop rule just
+         fixed, reintroduced by this override. */
+      margin-top: 0.1em;
+    }
+
+    .hero__motto {
+      margin-bottom: var(--sb-6);
+    }
 
     /* ⚠ THE TITLE IS DELIBERATELY SMALLER THAN THE FLUID DESKTOP RULE. At 5.2vw
        the headline ran to three very deep lines on a phone and pushed the stat
@@ -715,20 +928,23 @@ const slides = [
 
     .hero__deck {
       max-width: none;
-      margin-bottom: var(--sb-6);
+      /* The motto now sits between the deck and the buttons and carries the
+         gap; the deck only needs to clear it. */
+      margin-bottom: var(--sb-4);
       font-size: clamp(15px, 4.2vw, 17px);
     }
 
-    /* The glass card. Sits over the film, so it needs its own ground rather
-       than borrowing the scrim's. */
+    /* The card keeps the light plate it has on desktop, but stacks the icon
+       above the figure again: three icon-beside-figure rows will not fit across
+       a 320px phone without the labels crushing. */
     .hero__stats {
       display: flex;
       width: 100%;
       gap: 0;
       padding: var(--sb-5) var(--sb-3);
       margin-top: var(--sb-6);
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.6);
       border-radius: var(--sb-r-2);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -749,18 +965,21 @@ const slides = [
 
     .hero__stat + .hero__stat {
       padding-left: 6px;
-      border-left: 1px solid rgba(255, 255, 255, 0.16);
+      border-left: 1px solid rgba(18, 16, 15, 0.12);
+    }
+
+    .hero__stat-body {
+      align-items: center;
+      text-align: center;
     }
 
     .hero__stat-icon {
-      display: block;
-      /* --sb-orange-tint is the palette's on-dark orange; --sb-violet-wash is a
-         near-white badge ground and rendered these as grey ticks. */
-      color: var(--sb-orange-tint);
+      width: 34px;
+      height: 34px;
       margin-bottom: 2px;
     }
 
-    .hero__stat-icon svg { width: 21px; height: 21px; display: block; }
+    .hero__stat-icon svg { width: 18px; height: 18px; }
     .hero__stat-value { font-size: clamp(19px, 5.4vw, 24px); }
     .hero__stat-label {
       font-size: clamp(9.5px, 2.7vw, 11px);
@@ -772,13 +991,14 @@ const slides = [
     .hero__actions { flex-direction: column; }
     .hero__actions .btn { width: 100%; }
 
-    .hero__meta {
-      align-items: flex-start;
-      text-align: left;
-      gap: 0;
-    }
+    .hero__eyebrow { margin-bottom: var(--sb-4); }
+  }
 
-    .hero__caption { display: none; }
+  /* Below ~400 the eyebrow wraps to two lines and the rule ends up alone on the
+     second, reading as a stray dash rather than as part of the line. */
+  @media (max-width: 400px) {
+    .hero__eyebrow-rule { display: none; }
+
   }
 </style>
 

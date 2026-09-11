@@ -30,11 +30,14 @@
  * list, or a stated gap where no image exists. Six identical cards on a rail is
  * still a card grid; it has just been turned on its side.
  *
- * ⚠ THE ROBOTICS LAB NOW HAS A PHOTOGRAPH, and photography request A2 is closed
- * for this panel. It carried `kind: 'gap'` and a rendered notice saying no image
- * existed, because the only robotics picture in the repository was stock. The
- * school has since supplied assets/extra-img/robotics.jpg — one of its own
- * builds, sensors and wiring visible — so the panel is an ordinary photo panel.
+ * ⚠ THE ROBOTICS LAB IS BACK TO `kind: 'gap'`, AND PHOTOGRAPHY REQUEST A2 IS
+ * OPEN AGAIN. The school had supplied assets/extra-img/robotics.jpg — one of its
+ * own builds, sensors and wiring visible — and the panel was an ordinary photo
+ * panel on the strength of it. That file has since been deleted from src/assets
+ * along with the rest of extra-img/, and the only other robotics imagery in the
+ * repository is stock (Robotics-drones.jpg, a consumer DJI product shot), so the
+ * panel states the gap rather than borrowing a lie. Restore the photo panel the
+ * moment a real photograph of this room exists — not before.
  *
  * ⚠ `kind: 'figure'` NO LONGER EXISTS. Two panels used to set a 56–88px white
  * numeral over their photograph; the client asked for it removed, so those are
@@ -49,9 +52,8 @@ import { teachingLearning } from '../../../data/academics';
 
 import compPhoto from '../../../assets/photos/sb-comp-lab-2.jpg';
 import bioPhoto from '../../../assets/photos/sb-bio-lab.jpg';
-import mathsPhoto from '../../../assets/photos/sb-maths-lab.jpg';
+import activityPhoto from '../../../assets/activity learning lab/DSC_1215 copy.jpg';
 import sciPhoto from '../../../assets/photos/sb-sci-lab.jpg';
-import roboticsPhoto from '../../../assets/extra-img/robotics.jpg';
 
 const { rail } = teachingLearning;
 
@@ -59,9 +61,8 @@ const { rail } = teachingLearning;
 const photos: Record<string, ImageMetadata> = {
   'sb-comp-lab-2.jpg': compPhoto,
   'sb-bio-lab.jpg': bioPhoto,
-  'sb-maths-lab.jpg': mathsPhoto,
+  'activity-learning-room.jpg': activityPhoto,
   'sb-sci-lab.jpg': sciPhoto,
-  'robotics.jpg': roboticsPhoto,
 };
 ---
 

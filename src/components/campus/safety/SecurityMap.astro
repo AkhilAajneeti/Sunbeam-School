@@ -22,6 +22,7 @@ import { facilities } from '../../../data/campusTour';
 import { showBuildNotes } from '../../../data/site';
 import SectionHead from '../../academics/SectionHead.astro';
 import SafetyIcon from './SafetyIcon.astro';
+import campus from '../../../assets/photos/sunbeem-1.jpg';
 
 /**
  * Pin → photograph, drawn from the same folders the gallery uses.
@@ -36,6 +37,20 @@ const byId = new Map(facilities.map((f) => [f.id, f]));
 const shots: Record<string, ImageMetadata | undefined> = Object.fromEntries(
   mapPoints.map((pt) => [pt.photo ?? '', pt.photo ? byId.get(pt.photo)?.images[0] : undefined])
 );
+
+/**
+ * ⚠⚠ THE STAND-IN, AT THE CLIENT'S INSTRUCTION. Five of the seven pins are
+ * unphotographed and used to render a "Photograph pending" panel; the client
+ * asked for a school photograph rather than an empty box. Those pins now show
+ * the main building.
+ *
+ * ⚠ SO THE ALT TEXT CARRIES THE HONESTY. The note at the top of this file still
+ * stands — on a map, a picture beside a pin IS a claim about that place — which
+ * is exactly why the stand-in is never captioned with the pin's label. A pin
+ * with a real frame keeps its own alt; the rest say what they actually show.
+ */
+const FALLBACK_ALT =
+  'The main building of Sunbeam School Ballia at Agarsanda, seen across its front lawn.';
 
 const icons: Record<string, string> = {
   gate: 'gate',
@@ -129,21 +144,17 @@ const icons: Record<string, string> = {
       <div class="cmap__detail" aria-live="polite">
         {mapPoints.map((pt, i) => (
           <article class="cmap__card" data-cmap-card={pt.id} hidden={i !== 0}>
-            {shots[pt.photo ?? ''] ? (
-              <span class="cmap__shot">
-                <Picture
-                  src={shots[pt.photo!]!}
-                  alt={`${pt.label} — Sunbeam School Ballia`}
-                  formats={['webp']}
-                  widths={[400, 800]}
-                  sizes="320px"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </span>
-            ) : (
-              <span class="cmap__noshot">Photograph pending</span>
-            )}
+            <span class="cmap__shot">
+              <Picture
+                src={shots[pt.photo ?? ''] ?? campus}
+                alt={shots[pt.photo ?? ''] ? `${pt.label} — Sunbeam School Ballia` : FALLBACK_ALT}
+                formats={['webp']}
+                widths={[400, 800]}
+                sizes="320px"
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
 
             <span class="cmap__card-icon"><SafetyIcon name={icons[pt.id] ?? 'shield'} size={26} /></span>
             <h3 class="cmap__card-h">
@@ -368,8 +379,7 @@ const icons: Record<string, string> = {
 
   /* The photograph leads the readout — a pin that opens a picture of the place
      is the difference between a diagram and wayfinding. */
-  .cmap__shot,
-  .cmap__noshot {
+  .cmap__shot {
     display: block;
     aspect-ratio: 4 / 3;
     border-radius: 12px;
@@ -384,17 +394,6 @@ const icons: Record<string, string> = {
     height: 100%;
     object-fit: cover;
     display: block;
-  }
-
-  .cmap__noshot {
-    display: grid;
-    place-items: center;
-    box-shadow: inset 0 0 0 1px var(--sb-border);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--sb-text-muted);
   }
 
   .cmap__card-icon { color: var(--sb-violet); margin-bottom: var(--sb-4); display: block; }

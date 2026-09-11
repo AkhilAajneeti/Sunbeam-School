@@ -66,8 +66,8 @@ export const careerGuidanceImages: PhotoRecord[] = [
    The photographs are of ROOMS, and every alt says so. There is no photograph
    of a Sunbeam student sitting an olympiad paper in this repository, and none is
    implied. ASSET REQUEST: an olympiad sitting, and the SOF award graphics. */
-import olyComposite from '../assets/composite lab/DSC_1255 copy.jpg';
-import olyMaths from '../assets/photos/sb-maths-lab.jpg';
+import olyComposite from '../assets/composite lab/DSC_1276 copy.jpg';
+import olyMaths from '../assets/activity learning lab/DSC_1216 copy.jpg';
 import olyActivity from '../assets/activity learning lab/DSC_1215 copy.jpg';
 import olyLib from '../assets/library/DSC_1226 copy.jpg';
 import olySci from '../assets/photos/sb-sci-lab.jpg';
@@ -131,7 +131,7 @@ export const olympiads: OlympiadRecord[] = [
     classes: 'Senior school',
     year: 'Ongoing',
     image: olyMaths,
-    alt: `The mathematics laboratory at ${S}, its models and charts set out on the working surfaces`,
+    alt: `The activity learning room at ${S} — one crescent table with chairs set all the way round it`,
     description: 'The Department of Science & Technology’s scheme for original ideas from school students. Student innovations have been selected for it.',
     link: '/academics/assessment/competitive-exam-preparation/',
   },

@@ -11,7 +11,7 @@ import { competitions, type ChronicleItem } from '../../../data/newsPages';
 /* The index's own banner, so a page with no photographs of its own still opens
    on the school's ground rather than on a generic hall. See DetailPage's
    `fallbackHero`. */
-import heroPhoto from '../../../assets/JOSH GROUND/DSC_1283 copy.jpg';
+import heroPhoto from '../../../assets/JOSH GROUND/DSC_1287 copy.jpg';
 
 export async function getStaticPaths() {
   const { competitions: c } = await import('../../../data/newsPages');
@@ -40,7 +40,7 @@ const { item, group } = Astro.props;
   base="/news-events/competitions/"
   unit="entry"
   fallbackHero={heroPhoto}
-  fallbackAlt="The JOSH ground at Sunbeam School Ballia, the volleyball court marked out and the school's name on the boundary wall"
+  fallbackAlt="The JOSH ground at Sunbeam School Ballia, a football goal standing against the boundary wall that carries the school's name"
   metaLabel="Who took part"
   resultLabel="Result"
 />

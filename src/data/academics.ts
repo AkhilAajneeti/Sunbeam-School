@@ -623,8 +623,8 @@ export const facilities = [
     title: 'Mathematics & Language labs',
     fact: 'Two subject laboratories',
     body: 'Mathematics and language taught as practical subjects, with rooms of their own.',
-    photo: 'sb-maths-lab.jpg',
-    alt: 'Students of Sunbeam School Ballia seated on the floor of a decorated activity room during a lesson.',
+    photo: 'activity-learning-room.jpg',
+    alt: 'The activity learning room at Sunbeam School Ballia, its walls painted and its worktables set out for a lesson.',
     span: '',
   },
   {
@@ -800,15 +800,18 @@ export const teachingLearning = {
      */
     panels: [
       {
-        kind: 'photo',
+        /* ⚠ `gap`, not `photo`, because the school's own photograph of this room
+           (extra-img/robotics.jpg) has been deleted and the only robotics image
+           left in the repository is stock. See the note in StemRail.astro. */
+        kind: 'gap',
         n: '01',
         title: 'Robotics Lab',
         fact: 'Drone · 3-D printer · telescope · embedded systems',
         body:
           'The rarest room in the school and the reason its students reach national science ' +
           'competitions. Coding is taught here against hardware that answers back.',
-        photo: 'robotics.jpg',
-        alt: 'A wheeled robot built in the Robotics Lab at Sunbeam School Ballia, with ultrasonic sensors, a camera module and exposed wiring.',
+        photo: null,
+        alt: '',
       },
       {
         kind: 'photo',
@@ -840,8 +843,8 @@ export const teachingLearning = {
         body:
           'Mathematics and language given practical rooms of their own — the enrichment happens in ' +
           'timetabled space, not in an after-school hour.',
-        photo: 'sb-maths-lab.jpg',
-        alt: 'Students of Sunbeam School Ballia seated on the floor of a decorated activity room during a lesson.',
+        photo: 'activity-learning-room.jpg',
+        alt: 'The activity learning room at Sunbeam School Ballia, its walls painted and its worktables set out for a lesson.',
       },
       {
         kind: 'list',

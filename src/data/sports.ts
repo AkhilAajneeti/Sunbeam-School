@@ -63,15 +63,19 @@
 
 /* Explicit imports, not a glob: which frame goes where is a content decision on
    this page (the goal photograph belongs to Football and the net photograph to
-   Volleyball), and a glob would sort them by filename and get both wrong. */
-import joshNets from '../assets/JOSH GROUND/DSC_1283 copy.jpg';
-import joshNetsWide from '../assets/JOSH GROUND/DSC_1284 copy.jpg';
+   Volleyball), and a glob would sort them by filename and get both wrong.
+
+   ⚠ THE TWO NET FRAMES AND THE GRASS FRAME ARE GONE. DSC_1283, DSC_1284 and
+   DSC_1292 were deleted from src/assets as near-duplicates, and no surviving
+   frame shows the volleyball nets square on. The rows that used them now draw
+   on the frames below and their alt text was rewritten to describe what is
+   actually in the picture — do not restore the old captions without the old
+   photographs. */
 import joshGoal from '../assets/JOSH GROUND/DSC_1286 copy.jpg';
 import joshArch from '../assets/JOSH GROUND/DSC_1287 copy.jpg';
 import joshBlock from '../assets/JOSH GROUND/DSC_1288 copy.jpg';
 import joshWall from '../assets/JOSH GROUND/DSC_1290 copy.jpg';
 import joshOpen from '../assets/JOSH GROUND/DSC_1291 copy.jpg';
-import joshGrass from '../assets/JOSH GROUND/DSC_1292 copy.jpg';
 /* The two action frames — client drop 2. Same rule as the JOSH ground imports
    above: named individually, because which frame goes where is a content
    decision and a glob would sort them by filename and get it wrong. */
@@ -80,33 +84,26 @@ import skatingRun from '../assets/sunbeam-assets-2/Scating/DSC_4090.JPG';
 
 import parkGym from '../assets/play ground/DSC_1241 copy.jpg';
 import parkTube from '../assets/play ground/DSC_1244 copy.jpg';
-import parkRound from '../assets/play ground/DSC_1245 copy.jpg';
 import parkSwings from '../assets/play ground/DSC_1246 copy.jpg';
 import parkSlide from '../assets/play ground/DSC_1248 copy.jpg';
 
 import courtTrees from '../assets/basket ball/DSC_1212 copy.jpg';
-import courtHoop from '../assets/basket ball/DSC_1280 copy.jpg';
-import courtHoopTwo from '../assets/basket ball/DSC_1281 copy.jpg';
+import courtHoop from '../assets/basket ball/DSC_1281 copy.jpg';
 
 import khokho from '../assets/school achivement/KHO KHO CHAMPIOANSHIP.jpg';
 
 export const img = {
-  joshNets,
-  joshNetsWide,
   joshGoal,
   joshArch,
   joshBlock,
   joshWall,
   joshOpen,
-  joshGrass,
   parkGym,
   parkTube,
-  parkRound,
   parkSwings,
   parkSlide,
   courtTrees,
   courtHoop,
-  courtHoopTwo,
   khokho,
 };
 
@@ -137,7 +134,7 @@ export const facilities: SportFacility[] = [
     body: 'The largest open space the school has, and the one most of the school stands on every morning. Volleyball nets stay up along one edge; full goals stand at either end.',
     notes: ['Morning assembly', 'Volleyball nets', 'Football goals', 'Open field games'],
     lead: joshGoal,
-    support: [joshNets, joshOpen],
+    support: [joshBlock, joshOpen],
     alt: 'A goal standing at the end of the JOSH ground at Sunbeam School Ballia',
   },
   {
@@ -147,7 +144,7 @@ export const facilities: SportFacility[] = [
     body: 'A hard court alongside the teaching block with a hoop at each end — the one surface on campus that stays playable straight after rain.',
     notes: ['Two hoops', 'Beside the teaching block', 'Games period and after school'],
     lead: courtHoop,
-    support: [courtHoopTwo, courtTrees],
+    support: [courtTrees],
     alt: 'The basketball court at Sunbeam School Ballia, with a hoop mounted against the teaching block',
   },
   {
@@ -216,7 +213,7 @@ export const games: { outdoor: Game[]; indoor: Game[] } = {
       icon: 'basketball',
       blurb: 'A hard court beside the teaching block, with a hoop at each end.',
       venue: 'Basketball Court',
-      photo: courtHoopTwo,
+      photo: courtHoop,
       alt: 'A basketball hoop on the court at Sunbeam School Ballia',
     },
     {
@@ -232,8 +229,8 @@ export const games: { outdoor: Game[]; indoor: Game[] } = {
       icon: 'khokho',
       blurb: 'The school’s strongest game — Cluster V champions in 2018-19, 2019-20, and gold again in 2025.',
       venue: 'JOSH Ground',
-      photo: joshGrass,
-      alt: 'The grass end of the JOSH ground at Sunbeam School Ballia',
+      photo: joshArch,
+      alt: 'The JOSH ground at Sunbeam School Ballia, the school’s name painted across the boundary wall',
     },
     {
       name: 'Kabaddi',
