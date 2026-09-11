@@ -536,25 +536,43 @@ const slides = [
      comes back.
      ⚠ READABILITY IS PAID FOR IN TYPE, NOT IN MORE BLACK — the headline, deck
      and motto carry their own text-shadow below. If a future photograph needs
-     more contrast, reach for that first. */
+     more contrast, reach for that first.
+
+     ⚠⚠ LIGHTENED AGAIN, AND THIS IS NEAR THE FLOOR. The client asked for less
+     overlay a second time, so the left edge came down from 0.86 to 0.72 and the
+     vertical ramp from 0.52 to 0.44.
+
+     ⚠ THE DECK IS THE BINDING CONSTRAINT, NOT THE HEADLINE. Measured by hiding
+     the copy, sampling the exact rectangle each block occupies and taking the
+     BRIGHTEST background pixel under it: the deck is small text and needs
+     4.5:1, and its 46ch measure reaches halfway across the frame, where the
+     ramp has already fallen away. These values give 5.05:1. The previous
+     settings gave 6.25:1, and dropping the left edge to 0.70 gives 4.37:1 —
+     under the line. So there is roughly half a stop left, not a free hand.
+
+     ⚠ STEEPENING THE FALLOFF INSTEAD DOES NOT WORK, and was tried: pulling the
+     stops in to clear the buildings sooner moved the building region's mean
+     luminance only 0.231 → 0.279 while the deck fell to 2.85:1. The buildings
+     on the right are already almost unveiled; what reads as "heavy" is the left
+     ramp, which is the half doing the work. */
   .hero__scrim {
     position: absolute;
     inset: 0;
     background:
       linear-gradient(
         to right,
-        rgba(18, 16, 15, 0.86) 0%,
-        rgba(18, 16, 15, 0.74) 26%,
-        rgba(18, 16, 15, 0.4) 46%,
-        rgba(18, 16, 15, 0.12) 62%,
+        rgba(18, 16, 15, 0.72) 0%,
+        rgba(18, 16, 15, 0.6) 26%,
+        rgba(18, 16, 15, 0.32) 46%,
+        rgba(18, 16, 15, 0.08) 62%,
         rgba(18, 16, 15, 0) 72%
       ),
       linear-gradient(
         to top,
-        rgba(18, 16, 15, 0.52) 0%,
-        rgba(18, 16, 15, 0.24) 32%,
-        rgba(18, 16, 15, 0.06) 62%,
-        rgba(18, 16, 15, 0.12) 100%
+        rgba(18, 16, 15, 0.44) 0%,
+        rgba(18, 16, 15, 0.19) 32%,
+        rgba(18, 16, 15, 0.05) 62%,
+        rgba(18, 16, 15, 0.1) 100%
       );
   }
 

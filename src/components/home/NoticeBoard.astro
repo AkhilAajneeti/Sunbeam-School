@@ -329,6 +329,43 @@ const notices = [
     object-position: center;
   }
 
+  /* ⚠⚠ A VEIL THAT SOFTENS THE CREST, NOT ONE THAT ERASES IT. The crest is
+     watermarked dead centre of the file and the copy sits dead centre of the
+     card, so at full strength the heading was reading over the ring lettering
+     and "Estd.2013" and the text stopped looking like the thing you were meant
+     to read. The first attempt at this fix went too far the other way and
+     removed the crest altogether — the client wants it visible, just faint.
+
+     ⚠ 0.8 IS A TUNED VALUE, NOT A ROUND NUMBER. Rendered and compared at 0.95,
+     0.8, 0.7, 0.58 and 0.45: below about 0.7 the ring lettering starts
+     competing with the heading, and at 0.95 the crest is gone. 0.8 leaves the
+     ring, the sun rays and "Estd.2013" all legible as a watermark while the
+     copy stays clean. Judge any change to it on screen, at this card's size —
+     the number means nothing on its own.
+
+     ⚠ IT CLEARS BY THE CORNERS on purpose, so the orange corner blobs keep
+     their full strength. Fading the whole image instead would have taken those
+     with it, and they are half the reason the artwork is here.
+
+     ⚠ IT IS A PSEUDO-ELEMENT AT z-index 1, BETWEEN THE IMAGE (0) AND THE COPY
+     (2). Paint order alone will not do it — ::after paints with the element's
+     children and the <picture> comes first in the DOM, so with no explicit
+     z-index the veil lands under the artwork and does nothing at all. */
+  .notice__alumni::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(
+      118% 76% at 50% 50%,
+      rgba(253, 246, 239, 0.8) 0%,
+      rgba(253, 246, 239, 0.72) 34%,
+      rgba(253, 246, 239, 0.43) 60%,
+      rgba(253, 246, 239, 0) 80%
+    );
+  }
+
   /* ⚠⚠ :not(picture), NOT :not(.notice__alumni-bg). <Picture> renders
      <picture><source…><img class="notice__alumni-bg"> — the class lands on the
      IMG, so the direct child of this card is the <picture> wrapper, which does
@@ -339,7 +376,7 @@ const notices = [
      image resolves against .notice__alumni. */
   .notice__alumni > :not(picture) {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
 
@@ -355,7 +392,9 @@ const notices = [
   .notice__alumni-copy {
     font-size: var(--sb-body-sm);
     line-height: 1.6;
-    color: var(--sb-text-muted);
+    /* Charcoal, not muted. Muted grey was picked against a plain card; over
+       artwork — even veiled — it was the weakest thing on it. */
+    color: var(--sb-charcoal);
   }
 
   .notice__alumni-copy strong { color: var(--sb-ink); font-weight: 700; }
