@@ -14,6 +14,7 @@
  * mirror the parent page and design it.
  */
 import { stats, transportContact, safety } from '../../data/transport';
+import { school } from '../../data/site';
 
 const shown = safety;
 
@@ -146,12 +147,40 @@ const figures = [
         </span>
         {transportContact.display}
       </a>
+
+      {/* ⚠ THE TRANSPORT INBOX, NOT THE GENERAL OFFICE ONE. The school runs a
+          dedicated address for exactly the things this band lists — allocation,
+          stop changes, timings, charges and complaints — so a parent writing
+          about a bus reaches the desk that can answer, rather than the office
+          having to forward it. */}
+      <a class="tcard__mail" href={`mailto:${school.departments.transport}`}>
+        <span class="tcard__tel-icon" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6" />
+            <path d="m3.6 6.8 8.4 5.9 8.4-5.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+        </span>
+        {school.departments.transport}
+      </a>
     </div>
   </div>
 </section>
 
 
 <style>
+  /* Shares the phone line's shape so the two read as one contact block. */
+  .tcard__mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-violet);
+    word-break: break-word;
+  }
+
+  .tcard__mail:hover { text-decoration: underline; }
+
   /* --- Overview ------------------------------------------------------------ */
 
   .tov {

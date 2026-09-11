@@ -96,7 +96,7 @@ export const quickInfo = [
   { mark: 'doc', k: 'Affiliation No.', v: '2131962' },
   { mark: 'bookmark', k: 'School code', v: '70205' },
   { mark: 'person', k: 'Principal', v: 'Arpita Singh' },
-  { mark: 'chat', k: 'School email', v: 'sunbeamballia2131962@gmail.com', href: 'mailto:sunbeamballia2131962@gmail.com' },
+  { mark: 'chat', k: 'School email', v: 'school@sunbeamballia.edu.in', href: 'mailto:school@sunbeamballia.edu.in' },
   { mark: 'phone', k: 'Contact', v: '7755005905', href: 'tel:+917755005905' },
 ] as const;
 
@@ -104,6 +104,19 @@ export const quickInfo = [
  * A · GENERAL INFORMATION. The first eight are the CBSE table verbatim; the rest
  * are marked with the document they were read off, because they are not part of
  * Appendix IX and a reader should be able to tell.
+ *
+ * ⚠⚠ ONE EXCEPTION TO "VERBATIM": "School email ID" IS THE DOMAIN ADDRESS, NOT
+ * THE GMAIL THAT WAS FILED. The client instructed this directly, so it is their
+ * decision and not an oversight — but it is the one row on this page that no
+ * longer matches the filing it is copied from.
+ *
+ * ⚠ WHAT THAT MEANS IN PRACTICE: this is a STATUTORY disclosure, and a parent,
+ * an inspector or the board is entitled to expect it to agree with the school's
+ * CBSE record. The school should update that record to school@sunbeamballia.edu.in
+ * so the two match. Until it does, this page states an address the board does
+ * not hold. If the filing cannot be changed, the honest fix is to put the gmail
+ * back HERE only — the rest of the site can keep the domain address, because no
+ * other page is quoting a government form.
  */
 export const generalInformation: Row[] = [
   { k: 'Name of the school', v: 'SUNBEAM SCHOOL' },
@@ -112,7 +125,7 @@ export const generalInformation: Row[] = [
   { k: 'Complete address with pin code', v: 'AGARSANDA, BALLIA U.P. 277001' },
   { k: 'Principal name', v: 'ARPITA SINGH' },
   { k: 'Principal qualification', v: 'M.Com, M.A., M.Ed, M.B.A.' },
-  { k: 'School email ID', v: 'sunbeamballia2131962@gmail.com', href: 'mailto:sunbeamballia2131962@gmail.com' },
+  { k: 'School email ID', v: 'school@sunbeamballia.edu.in', href: 'mailto:school@sunbeamballia.edu.in' },
   { k: 'Contact details (landline/mobile)', v: '7755005905', href: 'tel:+917755005905' },
 
   { k: 'Affiliated to', v: 'CBSE, New Delhi', from: 'affiliation letter' },

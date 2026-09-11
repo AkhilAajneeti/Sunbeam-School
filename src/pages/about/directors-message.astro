@@ -26,6 +26,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import LeaderMessage from '../../components/about/LeaderMessage.astro';
+import { school } from '../../data/site';
 import banner from '../../assets/photos/sunbeem-2.jpg';
 import portrait from '../../assets/photos/directorImage.jpeg';
 
@@ -68,6 +69,7 @@ const credentials = [
       pullQuote="Sunbeam Ballia is committed to make Ballia a name to reckon with for education and to provide world-class quality education."
       paragraphs={paragraphs}
       credentials={credentials}
+      email={school.departments.director}
     />
   </div>
 </BaseLayout>

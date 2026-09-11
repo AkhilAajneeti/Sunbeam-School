@@ -1,0 +1,811 @@
+---
+/**
+ * §4 · YOUR VOICE MATTERS — the parents' feedback form.
+ *
+ * ⚠⚠ IT VALIDATES FOR REAL AND SUBMITS ONLY IF THERE IS SOMEWHERE TO SUBMIT TO.
+ * `feedbackSettings.endpoint` is null while the school has no handler, and this
+ * form reads it: every field is checked, every error is shown inline and
+ * announced, and then it says plainly that nothing was sent and offers the
+ * office line. Set the endpoint and the identical form POSTs and shows the
+ * success state. No markup changes either way. The reasoning is written out in
+ * full at the top of data/parentsFeedbackForm.ts.
+ *
+ * ⚠ NO "WRITE A GOOGLE REVIEW" BUTTON. The client's reference has one beside
+ * Submit and asked for it to be left out. Do not add it back from the comp.
+ *
+ * ⚠ VALIDATION IS CUSTOM, NOT `required` ALONE — the same approach as
+ * components/alumni/ArForm.astro, which this follows deliberately rather than
+ * inventing a second form idiom. Native bubbles are unstyleable, vanish on
+ * scroll and only ever show the first error. This shows all of them at once,
+ * ties each to its field with aria-describedby, sets aria-invalid, and moves
+ * focus to the first one.
+ *
+ * ⚠ THE STAR RATING IS A RADIO GROUP WEARING STARS. It is five real radios in a
+ * fieldset, so it is reachable and operable by keyboard and announced properly;
+ * the stars are the label. A div-with-click-handlers would look identical and
+ * be unusable without a mouse.
+ */
+import { Picture } from 'astro:assets';
+import {
+  feedbackFields,
+  feedbackSettings,
+  assurances,
+  APPRECIATE,
+} from '../../../data/parentsFeedbackForm';
+import bgArt from '../../../assets/icons/googel-review-bg.png';
+
+const { endpoint, successMessage, contactPhoneDisplay, contactEmail } = feedbackSettings;
+
+const RATINGS = [
+  { value: '5', label: 'Excellent' },
+  { value: '4', label: 'Good' },
+  { value: '3', label: 'Fair' },
+  { value: '2', label: 'Poor' },
+  { value: '1', label: 'Very poor' },
+];
+---
+
+<section class="pff" id="feedback-form" aria-labelledby="pff-title">
+  <Picture
+    class="pff__bg"
+    src={bgArt}
+    alt=""
+    aria-hidden="true"
+    formats={['avif', 'webp']}
+    widths={[900, 1280, 1600]}
+    sizes="100vw"
+    loading="lazy"
+    decoding="async"
+  />
+
+  <div class="u-container pff__wrap">
+    <div class="pff__head">
+      <p class="pff__eyebrow t-label">
+        <span class="pff__eyebrow-rule" aria-hidden="true"></span>
+        Share your experience
+        <span class="pff__eyebrow-rule" aria-hidden="true"></span>
+      </p>
+      <h2 class="pff__h t-display" id="pff-title">
+        Your Voice <span class="pff__h-accent">Matters</span>
+      </h2>
+      <p class="pff__stand">
+        Every suggestion, appreciation and idea helps us make Sunbeam better for our children.
+      </p>
+    </div>
+
+    <p class="pff__flourish" aria-hidden="true">
+      <span>Together</span><span>for Brighter</span><span class="pff__flourish-last">Futures</span>
+    </p>
+
+    <div class="pff__body">
+      {/* ── The three notes beside the form ──────────────────────────────── */}
+      <ul class="pff__notes">
+        {assurances.map((a) => (
+          <li class="pff__note">
+            <span class="pff__note-icon" aria-hidden="true">
+              {a.icon === 'heart' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20s-7.2-4.5-7.2-9.4A4.1 4.1 0 0 1 12 8.2a4.1 4.1 0 0 1 7.2 2.4C19.2 15.5 12 20 12 20Z" />
+                </svg>
+              )}
+              {a.icon === 'people' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="8" r="3.2" /><path d="M2.5 19c0-3 2.9-4.8 6.5-4.8s6.5 1.8 6.5 4.8" />
+                  <path d="M16.5 5.6a3.2 3.2 0 0 1 0 5.4M18 14.6c2 .7 3.5 2.2 3.5 4.4" />
+                </svg>
+              )}
+              {a.icon === 'star' && (
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.6 9.7l5.8-.8Z" />
+                </svg>
+              )}
+            </span>
+            <span class="pff__note-text">
+              <strong class="pff__note-h">{a.title}</strong>
+              <span class="pff__note-b">{a.body}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      {/* ── The form ─────────────────────────────────────────────────────── */}
+      <form
+        class="pff__form"
+        novalidate
+        data-pff
+        data-endpoint={endpoint ?? ''}
+        data-success={successMessage}
+        data-phone={contactPhoneDisplay}
+        aria-describedby="pff-live"
+      >
+        <div class="pff__grid">
+          {feedbackFields.map((f) => {
+            const id = `pff-${f.name}`;
+            const err = `${id}-err`;
+            return (
+              <p class:list={['pff__f', f.wide && 'pff__f--wide']}>
+                <label class="pff__lab" for={id}>
+                  {f.label}
+                  {f.required
+                    ? <span class="pff__req" aria-hidden="true">*</span>
+                    : <span class="pff__opt">optional</span>}
+                </label>
+
+                {f.type === 'select' ? (
+                  <span class="pff__sel">
+                    <select id={id} name={f.name} data-required={f.required ? 'true' : undefined} aria-describedby={err}>
+                      <option value="">Select class</option>
+                      {f.options?.map((o) => <option value={o}>{o}</option>)}
+                    </select>
+                    <span class="pff__chev" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </span>
+                  </span>
+                ) : (
+                  <input
+                    id={id}
+                    name={f.name}
+                    type={f.type}
+                    placeholder={f.hint}
+                    autocomplete={f.auto}
+                    inputmode={f.rule === 'phone' ? 'tel' : undefined}
+                    data-required={f.required ? 'true' : undefined}
+                    data-rule={f.rule}
+                    aria-describedby={err}
+                  />
+                )}
+
+                <span class="pff__err" id={err} data-err-for={f.name}></span>
+              </p>
+            );
+          })}
+
+          {/* Stars: five real radios, reversed in the DOM so a pure-CSS
+              "fill everything before the checked one" selector works without
+              JavaScript. `flex-direction: row-reverse` puts 1 back on the left. */}
+          <fieldset class="pff__f pff__stars-f">
+            <legend class="pff__lab">
+              Overall experience<span class="pff__req" aria-hidden="true">*</span>
+            </legend>
+            <span class="pff__stars">
+              {RATINGS.map((r) => (
+                <span class="pff__star">
+                  <input type="radio" id={`pff-r${r.value}`} name="rating" value={r.value} aria-describedby="pff-rating-err" />
+                  <label for={`pff-r${r.value}`}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m12 3.4 2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.2 6.62 20l1.03-6L3.3 9.8l6-.9Z" />
+                    </svg>
+                    <span class="u-visually-hidden">{r.value} — {r.label}</span>
+                  </label>
+                </span>
+              ))}
+            </span>
+            <span class="pff__hint" data-pff-rating-hint>Tap to rate</span>
+            <span class="pff__err" id="pff-rating-err" data-err-for="rating"></span>
+          </fieldset>
+
+          <p class="pff__f">
+            <label class="pff__lab" for="pff-appreciate">
+              What do you appreciate most?<span class="pff__opt">optional</span>
+            </label>
+            <span class="pff__sel">
+              <select id="pff-appreciate" name="appreciate" aria-describedby="pff-appreciate-err">
+                <option value="">Select an option</option>
+                {APPRECIATE.map((o) => <option value={o}>{o}</option>)}
+              </select>
+              <span class="pff__chev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+            </span>
+            <span class="pff__err" id="pff-appreciate-err" data-err-for="appreciate"></span>
+          </p>
+
+          <p class="pff__f pff__f--wide">
+            <label class="pff__lab" for="pff-message">
+              Your feedback<span class="pff__req" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="pff-message"
+              name="message"
+              rows="4"
+              placeholder="Share your thoughts, suggestions or appreciation…"
+              data-required="true"
+              aria-describedby="pff-message-err"
+            />
+            <span class="pff__err" id="pff-message-err" data-err-for="message"></span>
+          </p>
+
+          <fieldset class="pff__f pff__f--wide pff__rec">
+            <legend class="pff__lab">Would you recommend Sunbeam to other parents?</legend>
+            <span class="pff__radios">
+              {['Yes', 'Maybe', 'No'].map((v) => (
+                <span class="pff__radio">
+                  <input type="radio" id={`pff-rec-${v}`} name="recommend" value={v} />
+                  <label for={`pff-rec-${v}`}>{v}</label>
+                </span>
+              ))}
+            </span>
+          </fieldset>
+        </div>
+
+        <div class="pff__actions">
+          <button type="submit" class="btn btn--primary pff__submit" data-pff-submit>
+            <svg class="pff__send" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 3 10.5 13.5M21 3l-6.5 18-4-8-8-4L21 3Z" />
+            </svg>
+            <span data-pff-label>Submit feedback</span>
+          </button>
+
+          {/* ⚠ THE OFFICE LINE, NOT A GOOGLE REVIEW BUTTON — see the file
+              header. It is also the route the form points a parent at when
+              there is no endpoint, so it has to be on screen either way. */}
+          <p class="pff__alt">
+            Or speak to the school office:
+            <a href={`tel:${feedbackSettings.contactPhone}`}>{contactPhoneDisplay}</a>
+            <span aria-hidden="true"> · </span>
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          </p>
+        </div>
+
+        <p class="pff__live" id="pff-live" role="status" aria-live="polite" data-pff-live></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pff {
+    position: relative;
+    padding-block: clamp(40px, 6vh, 88px);
+    background: var(--sb-ivory);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .pff__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .pff__wrap { position: relative; }
+
+  /* --- Head ---------------------------------------------------------------- */
+
+  .pff__head { text-align: center; }
+
+  .pff__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sb-4);
+    margin: 0 0 var(--sb-4);
+    color: var(--sb-violet);
+  }
+
+  .pff__eyebrow-rule {
+    width: clamp(24px, 4vw, 46px);
+    height: 1px;
+    background: currentColor;
+    opacity: 0.55;
+  }
+
+  .pff__h {
+    margin: 0 auto;
+    font-size: clamp(28px, 3.6vw, 46px);
+    color: var(--sb-ink);
+  }
+
+  .pff__h-accent { color: var(--sb-violet); }
+
+  .pff__stand {
+    max-width: 60ch;
+    margin: var(--sb-4) auto 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.55;
+    color: var(--sb-text-muted);
+  }
+
+  /* The script line, top right — same treatment as the review band's. */
+  .pff__flourish {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: 'Caveat Variable', var(--sb-font-serif);
+    font-weight: 600;
+    font-size: clamp(18px, 1.7vw, 26px);
+    line-height: 1.05;
+    color: var(--sb-ink);
+    transform: rotate(-5deg);
+    pointer-events: none;
+  }
+
+  .pff__flourish span:nth-child(2) { margin-left: 0.3em; }
+  .pff__flourish span:nth-child(3) { margin-left: 0.6em; }
+
+  .pff__flourish-last { position: relative; padding-bottom: 0.2em; }
+
+  .pff__flourish-last::after {
+    content: '';
+    position: absolute;
+    left: 0.05em;
+    right: -0.2em;
+    bottom: 0;
+    height: 0.09em;
+    border-radius: 999px;
+    background: var(--sb-orange-tint);
+    transform: rotate(-1.5deg);
+  }
+
+  @media (max-width: 1199px) { .pff__flourish { display: none; } }
+
+  /* --- Body ---------------------------------------------------------------- */
+
+  .pff__body {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 8fr);
+    gap: clamp(24px, 3vw, 56px);
+    align-items: start;
+    margin-top: var(--sb-8);
+  }
+
+  .pff__notes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-6);
+    margin: var(--sb-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pff__note { display: flex; gap: var(--sb-4); align-items: flex-start; }
+
+  .pff__note-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--sb-lime-wash);
+    color: var(--sb-violet);
+  }
+
+  .pff__note-icon svg { width: 21px; height: 21px; }
+  .pff__note-text { display: flex; flex-direction: column; gap: 3px; }
+
+  .pff__note-h {
+    font-size: var(--sb-body-sm);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+
+  .pff__note-b {
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
+  }
+
+  /* --- Form ---------------------------------------------------------------- */
+
+  .pff__form {
+    padding: clamp(20px, 2.4vw, 32px);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(201, 60, 10, 0.12);
+    border-radius: var(--sb-r-2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .pff__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-5) var(--sb-6);
+  }
+
+  .pff__f {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 0;
+    min-width: 0;
+    border: 0;
+    padding: 0;
+  }
+
+  .pff__f--wide { grid-column: 1 / -1; }
+
+  .pff__lab {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 0;
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    color: var(--sb-ink);
+  }
+
+  .pff__req { color: var(--sb-violet); }
+  .pff__opt { font-weight: 500; color: var(--sb-text-muted); }
+
+  .pff__f input[type='text'],
+  .pff__f input[type='tel'],
+  .pff__f select,
+  .pff__f textarea {
+    width: 100%;
+    padding: 11px 14px;
+    background: #fff;
+    border: 1px solid rgba(18, 16, 15, 0.14);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-ink);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .pff__f textarea { resize: vertical; min-height: 108px; line-height: 1.5; }
+
+  .pff__f input::placeholder,
+  .pff__f textarea::placeholder { color: rgba(18, 16, 15, 0.38); }
+
+  .pff__f input:focus-visible,
+  .pff__f select:focus-visible,
+  .pff__f textarea:focus-visible {
+    outline: none;
+    border-color: var(--sb-violet);
+    box-shadow: 0 0 0 3px rgba(201, 60, 10, 0.14);
+  }
+
+  .pff__f [aria-invalid='true'] {
+    border-color: #c5221f;
+    box-shadow: 0 0 0 3px rgba(197, 34, 31, 0.1);
+  }
+
+  .pff__sel { position: relative; display: block; }
+  .pff__sel select { appearance: none; padding-right: 38px; }
+
+  .pff__chev {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    translate: 0 -50%;
+    width: 18px;
+    height: 18px;
+    color: var(--sb-text-muted);
+    pointer-events: none;
+  }
+
+  .pff__err:empty { display: none; }
+
+  .pff__err {
+    font-size: var(--sb-caption);
+    line-height: 1.4;
+    color: #c5221f;
+  }
+
+  /* --- Stars ---------------------------------------------------------------
+     ⚠⚠ NO :global() ANYWHERE BELOW, AND THAT IS THE FIX. Every input and label
+     here is rendered by this template, so Astro stamps it with the component's
+     scoping attribute and plain selectors reach it. Wrapping them in :global()
+     was not merely redundant — inside `:has(:global(input:checked))` it stopped
+     matching altogether, so the stars never filled, the radios kept their
+     browser default appearance and "Tap to rate" never hid. Reach for :global()
+     only for nodes this component does not render.
+
+     ⚠ DOM ORDER IS 5→1 AND THE ROW IS REVERSED. That is what lets a plain CSS
+     sibling selector fill every star before the checked one without a line of
+     JavaScript: in source order the lower ratings FOLLOW the checked input, so
+     `:checked ~ .pff__star label` reaches exactly them. */
+  .pff__stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .pff__star input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pff__star label {
+    display: block;
+    padding: 2px;
+    cursor: pointer;
+    color: rgba(201, 60, 10, 0.28);
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+
+  .pff__star label svg {
+    width: 30px;
+    height: 30px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+  }
+
+  .pff__star input:checked ~ label,
+  .pff__star:has(input:checked) ~ .pff__star label {
+    color: #f5a623;
+  }
+
+  .pff__star:has(input:checked) label svg,
+  .pff__star:has(input:checked) ~ .pff__star label svg { fill: #f5a623; }
+
+  .pff__stars:hover .pff__star label { color: rgba(201, 60, 10, 0.28); }
+  .pff__star label:hover { transform: scale(1.08); }
+
+  /* Focus has to be visible even though the input itself is hidden. */
+  .pff__star input:focus-visible ~ label {
+    outline: 2px solid var(--sb-violet);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .pff__stars-f { gap: 6px; }
+
+  .pff__hint { font-size: var(--sb-caption); color: var(--sb-text-muted); }
+  .pff__stars-f:has(input:checked) .pff__hint { visibility: hidden; }
+
+  /* --- Recommend ----------------------------------------------------------- */
+
+  .pff__radios { display: flex; flex-wrap: wrap; gap: var(--sb-6); }
+  /* ⚠ THE GAP BELONGS HERE, NOT ON THE LABEL. The input and the label are
+     SIBLINGS inside .pff__radio, so a gap set on the label only spaces the
+     label's own contents — the circle sat flush against its word. */
+  .pff__radio { display: flex; align-items: center; gap: 9px; }
+
+  .pff__radio label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--sb-body-sm);
+    color: var(--sb-ink);
+    cursor: pointer;
+  }
+
+  .pff__radio input {
+    appearance: none;
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    border: 1.5px solid rgba(18, 16, 15, 0.3);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+
+  .pff__radio input:checked { border-color: var(--sb-violet); }
+
+  .pff__radio input:checked::after {
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--sb-violet);
+  }
+
+  .pff__radio input:focus-visible {
+    outline: 2px solid var(--sb-violet);
+    outline-offset: 2px;
+  }
+
+  /* --- Actions ------------------------------------------------------------- */
+
+  .pff__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sb-5) var(--sb-7);
+    margin-top: var(--sb-6);
+  }
+
+  .pff__submit { display: inline-flex; align-items: center; gap: 10px; }
+  .pff__send { width: 18px; height: 18px; }
+
+  .pff__alt {
+    margin: 0;
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
+  }
+
+  .pff__alt a { color: var(--sb-violet); border-bottom: 1px solid currentColor; }
+
+  .pff__live:empty { display: none; }
+
+  .pff__live {
+    margin: var(--sb-5) 0 0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: var(--sb-body-sm);
+    line-height: 1.5;
+  }
+
+  .pff__live.is-note { background: var(--sb-lime-wash); color: var(--sb-ink); }
+  .pff__live.is-err { background: rgba(197, 34, 31, 0.1); color: #8c1d1b; }
+  .pff__live.is-ok { background: rgba(11, 128, 67, 0.1); color: #0b5c33; }
+
+  /* --- Narrower ------------------------------------------------------------ */
+
+  @media (max-width: 1023px) {
+    .pff__body { grid-template-columns: minmax(0, 1fr); }
+
+    /* The notes become a row above the form — a column of three beside nothing
+       leaves a tall empty rail at this width. */
+    .pff__notes {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--sb-5) var(--sb-7);
+      margin-top: 0;
+    }
+
+    .pff__note { flex: 1 1 240px; }
+  }
+
+  @media (max-width: 639px) {
+    .pff__grid { grid-template-columns: minmax(0, 1fr); }
+
+    /* ⚠ `flex` HAS TO BE RESET WITH THE DIRECTION. The rule above sets
+       `flex: 1 1 240px` for the tablet ROW, where 240px is a width; flipping to
+       a column here turns that basis into a HEIGHT and each note grew to 240px
+       tall, with a screenful of dead space between the three. */
+    .pff__notes { flex-direction: column; }
+    .pff__note { flex: 0 0 auto; }
+    .pff__actions { flex-direction: column; align-items: stretch; }
+    .pff__submit { width: 100%; justify-content: center; }
+    .pff__star :global(label svg) { width: 27px; height: 27px; }
+  }
+</style>
+
+<script>
+  /* Mirrors components/alumni/ArForm.astro on purpose — same validation
+     contract, same "no endpoint, say so" behaviour. If one is fixed, fix both. */
+  document.querySelectorAll<HTMLFormElement>('[data-pff]').forEach((form) => {
+    const live = form.querySelector<HTMLElement>('[data-pff-live]');
+    const submit = form.querySelector<HTMLButtonElement>('[data-pff-submit]');
+    const label = form.querySelector<HTMLElement>('[data-pff-label]');
+    const endpoint = form.dataset.endpoint || '';
+    const phone = form.dataset.phone || 'the school office';
+    let sending = false;
+
+    const controls = Array.from(
+      form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        '[data-required], [data-rule]',
+      ),
+    );
+
+    const errorFor = (name: string) => form.querySelector<HTMLElement>(`[data-err-for="${name}"]`);
+
+    const check = (el: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) => {
+      /* ⚠ GUARD, BECAUSE `[data-required]` IS A TEMPTING ATTRIBUTE TO PUT ON A
+         WRAPPER. It was briefly on the stars' <span>, which has no `.value` —
+         so every submit painted its errors correctly and then threw
+         "Cannot read properties of undefined (reading 'trim')" before it could
+         write the status line. Silent in the UI, fatal to the handler. The
+         radio group is validated separately below; nothing but a real control
+         belongs in `controls`. */
+      if (!('value' in el) || typeof el.value !== 'string') return '';
+      const v = el.value.trim();
+      if (el.dataset.required && !v) return 'This field is required.';
+      /* ⚠ OPTIONAL FIELDS ARE ONLY CHECKED ONCE THEY HAVE SOMETHING IN THEM —
+         an empty optional phone box must never show an error. */
+      if (el.dataset.rule === 'phone' && v && !/^[+\d][\d\s-]{8,15}$/.test(v)) {
+        return 'Enter a valid phone number.';
+      }
+      return '';
+    };
+
+    const paint = (el: HTMLElement, msg: string) => {
+      const name = (el as HTMLInputElement).name;
+      const box = errorFor(name);
+      if (box) box.textContent = msg;
+      el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    };
+
+    controls.forEach((el) => {
+      el.addEventListener('blur', () => paint(el, check(el)));
+      el.addEventListener('input', () => {
+        if (el.getAttribute('aria-invalid') === 'true') paint(el, check(el));
+      });
+      el.addEventListener('change', () => paint(el, check(el)));
+    });
+
+    /* The star group is radios, so it is validated as a group rather than per
+       control — `controls` above cannot see it. */
+    const ratingErr = form.querySelector<HTMLElement>('[data-err-for="rating"]');
+    const ratedValue = () =>
+      (form.querySelector<HTMLInputElement>('input[name="rating"]:checked') || {}).value || '';
+
+    form.querySelectorAll<HTMLInputElement>('input[name="rating"]').forEach((r) =>
+      r.addEventListener('change', () => { if (ratingErr) ratingErr.textContent = ''; }),
+    );
+
+    const setBusy = (on: boolean) => {
+      form.classList.toggle('is-sending', on);
+      if (submit) submit.setAttribute('aria-busy', on ? 'true' : 'false');
+      if (label) label.textContent = on ? 'Sending…' : 'Submit feedback';
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (sending) return;
+
+      let firstBad: HTMLElement | null = null;
+      controls.forEach((el) => {
+        const msg = check(el);
+        paint(el, msg);
+        if (msg && !firstBad) firstBad = el;
+      });
+
+      if (!ratedValue()) {
+        if (ratingErr) ratingErr.textContent = 'Please choose a rating.';
+        if (!firstBad) firstBad = form.querySelector<HTMLElement>('input[name="rating"]');
+      }
+
+      if (firstBad) {
+        if (live) {
+          live.textContent = 'Please correct the highlighted fields.';
+          live.className = 'pff__live is-err';
+        }
+        (firstBad as HTMLElement).focus();
+        return;
+      }
+
+      /* ⚠⚠ NO ENDPOINT — SAY SO, DO NOT PRETEND. See the header of
+         data/parentsFeedbackForm.ts. */
+      if (!endpoint) {
+        if (live) {
+          live.innerHTML =
+            'Your feedback is complete, but this form is <strong>not connected yet</strong> — nothing was sent and nothing was stored. ' +
+            'Please call the school office on ' + phone + ', or send it by email, and it will reach the right person.';
+          live.className = 'pff__live is-note';
+          live.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+        return;
+      }
+
+      sending = true;
+      setBusy(true);
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form).entries())),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        if (live) {
+          live.textContent = form.dataset.success || 'Thank you.';
+          live.className = 'pff__live is-ok';
+        }
+        form.reset();
+        controls.forEach((el) => paint(el, ''));
+        if (ratingErr) ratingErr.textContent = '';
+      } catch {
+        if (live) {
+          live.textContent =
+            'Sorry — that could not be sent just now. Please try again, or call the school office on ' + phone + '.';
+          live.className = 'pff__live is-err';
+        }
+      } finally {
+        sending = false;
+        setBusy(false);
+      }
+    });
+  });
+</script>

@@ -101,8 +101,44 @@ export const school = {
     transportIncharge: 'Mr. Sheo Sarjan Singh',
   },
 
-  /** Finding X6 — a domain address is requested (decision C1). */
-  email: 'sunbeamballia2131962@gmail.com',
+  /**
+   * ⚠⚠ THE DOMAIN ADDRESS, AND IT CLOSES FINDING X6 / DECISION C1 — which asked
+   * for exactly this and had been open since the audit. The school supplied
+   * eight addresses on its own domain; this is the general office one and it is
+   * what the footer, the contact page, the parent-communication page, the alumni
+   * panel and the feedback form all print.
+   *
+   * ⚠⚠ THE GMAIL IT REPLACED IS STILL ON THE SITE IN TWO PLACES, ON PURPOSE.
+   *
+   *   · data/disclosure.ts — "School email ID" in the Mandatory Public
+   *     Disclosure is the CBSE table VERBATIM. It has to match what the school
+   *     has actually filed with the board, not what it would prefer to publish.
+   *     Change it when, and only when, the school confirms the filing is
+   *     updated; until then the two differing is correct, not a bug.
+   *   · data/career.ts — the hiring posters are transcribed as printed, and
+   *     `recruitmentEmail` is read off them. A quotation does not get modernised.
+   */
+  email: 'school@sunbeamballia.edu.in',
+
+  /**
+   * THE DEPARTMENTAL INBOXES, all supplied by the school on its own domain.
+   *
+   * ⚠ EACH ONE IS PRINTED WHERE ITS SUBJECT LIVES, not scattered. Transport on
+   * the transport page, the principal on the principal's page, accounts on the
+   * fee page, and the whole set once on the contact page so none is orphaned.
+   * Putting an address on a page it has nothing to do with misroutes real
+   * parents, which is worse than not publishing it at all.
+   */
+  departments: {
+    office: 'school@sunbeamballia.edu.in',
+    principal: 'principal@sunbeamballia.edu.in',
+    director: 'director@sunbeamballia.edu.in',
+    administrator: 'administrator@sunbeamballia.edu.in',
+    accounts: 'account@sunbeamballia.edu.in',
+    transport: 'transport@sunbeamballia.edu.in',
+    it: 'it@sunbeamballia.edu.in',
+    digital: 'digital@sunbeamballia.edu.in',
+  },
 
   /**
    * ⚠ THE RECRUITMENT INBOX, AND IT IS NOT `email` ABOVE. Read off the school's

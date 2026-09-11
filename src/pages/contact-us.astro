@@ -83,6 +83,23 @@ const phones = [
   { display: school.phone.officeDisplay, tel: school.phone.office, role: 'School office' },
 ];
 
+/**
+ * ⚠ ORDERED BY HOW OFTEN A PARENT WILL WANT IT, not alphabetically and not in
+ * the order they were supplied. General enquiries first; the two technical
+ * desks last, because a parent writing to them is the rare case.
+ */
+const d = school.departments;
+const departments = [
+  { k: 'General enquiries', v: d.office },
+  { k: 'Admissions and school office', v: d.administrator },
+  { k: 'Fees and accounts', v: d.accounts },
+  { k: 'School transport', v: d.transport },
+  { k: 'The Principal', v: d.principal },
+  { k: 'The Director', v: d.director },
+  { k: 'Website or portal problems', v: d.digital },
+  { k: 'IT support', v: d.it },
+];
+
 const socials = [
   {
     name: 'Facebook',
@@ -311,6 +328,34 @@ const socials = [
                   </a>
                 ))
               }
+            </div>
+          </div>
+
+          {/* ⚠⚠ THE DEPARTMENTAL DIRECTORY. The school runs eight inboxes on its
+              own domain; each is printed where its subject lives — transport on
+              the transport page, and so on — and the whole set is listed once
+              here so none of them is orphaned on a page nobody thinks to look
+              at. site.ts holds them.
+              ⚠ THE LABELS SAY WHAT EACH DESK ANSWERS, not just its name. "IT"
+              tells a parent nothing; "Website or portal problems" tells them
+              whether to write. A directory that misroutes is worse than none. */}
+          <div class="prow">
+            <span class="prow__ico" aria-hidden="true">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="4.5" width="18" height="15" rx="2.4" stroke="currentColor" stroke-width="1.8" />
+                <path d="M7.5 9h9M7.5 12.5h9M7.5 16h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            <div class="prow__body">
+              <h3 class="prow__h">Who to write to</h3>
+              <ul class="dept">
+                {departments.map((d) => (
+                  <li class="dept__row">
+                    <span class="dept__k">{d.k}</span>
+                    <a class="dept__v" href={`mailto:${d.v}`}>{d.v}</a>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
@@ -968,6 +1013,42 @@ const socials = [
     .soc__a:focus-visible { transform: none; }
     .ct__send:active { transform: none; }
   }
+
+  /* --- Departmental directory ---------------------------------------------- */
+
+  .dept {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ⚠ ALWAYS STACKED, NEVER "WRAP IF IT DOES NOT FIT". With a wrapping flex row
+     and a min-width label, seven rows broke onto two lines and the eighth —
+     "IT support", whose address is the shortest — stayed on one, so the column
+     looked misaligned rather than designed. The panel is ~450px wide; a label
+     column plus a full address was never going to fit anyway. */
+  .dept__row {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .dept__k {
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  .dept__v {
+    font-size: var(--sb-body-sm);
+    color: var(--sb-violet);
+    word-break: break-word;
+  }
+
+  .dept__v:hover { text-decoration: underline; }
+
 </style>
 
 <script>

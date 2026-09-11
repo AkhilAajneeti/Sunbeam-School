@@ -30,6 +30,7 @@
  */
 import { Image } from 'astro:assets';
 import Photo from '../../ui/Photo.astro';
+import FeedbackForm from './FeedbackForm.astro';
 import { testimonials, participation, closing } from '../../../data/parentsFeedback';
 
 import leaf from '../../../assets/icons/leaf-remove.png';
@@ -257,6 +258,14 @@ const strip = [
       </div>
     </div>
   </section>
+
+  {/* ⚠ LAST BAND ON THE PAGE, DIRECTLY ABOVE THE FOOTER, at the client's
+      instruction. It comes AFTER the closing band on purpose: that band thanks
+      parents and hands them on to Parent Partnership, and an ask for feedback
+      belongs after the thanks rather than interrupting it.
+      ⚠ THE FORM IS NOT CONNECTED TO ANYTHING YET AND SAYS SO WHEN SUBMITTED —
+      see data/parentsFeedbackForm.ts before assuming feedback is arriving. */}
+  <FeedbackForm />
 </div>
 
 <style>

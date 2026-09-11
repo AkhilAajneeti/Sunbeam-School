@@ -43,6 +43,7 @@ import {
 } from '../../data/disclosure';
 
 import pCampus from '../../assets/photos/sunbeem-1.jpg';
+import { school } from '../../data/site';
 
 const S = 'Sunbeam School Ballia';
 
@@ -364,7 +365,7 @@ const sections = [
           Every figure and document on this page is taken from the school’s own filing and the
           certificates linked beside it. For any query or clarification, please contact the school
           office on {' '}<a href="tel:+917755005905">7755005905</a>, or write to {' '}
-          <a href="mailto:sunbeamballia2131962@gmail.com">sunbeamballia2131962@gmail.com</a>.
+          <a href={`mailto:${school.email}`}>{school.email}</a>.
         </p>
       </div>
 
