@@ -420,6 +420,18 @@ export const mainNav: NavItem[] = [
           desc: "Trips, expeditions and field visits.",
           img: imgJosh,
         },
+        /* ⚠ PUBLICATIONS SITS HERE BECAUSE THE SCHOOL'S OWN SITE PUTS IT HERE —
+           its footer lists Publications under Beyond Academics. Without this
+           entry the page builds but nothing on the site links to it, which is
+           the one way a page with thirty-three live downloads can be worse than
+           no page at all. */
+        {
+          label: "Publications",
+          href: "/publications/",
+          icon: "book",
+          desc: "Club newsletters, magazines and the e-newspaper.",
+          img: imgLibrary,
+        },
       ],
     ],
     feature: {

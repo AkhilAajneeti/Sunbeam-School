@@ -1,0 +1,562 @@
+---
+/**
+ * PUBLICATIONS — the body of /publications/.
+ *
+ * ⚠⚠ READ data/publications.ts BEFORE CHANGING ANYTHING HERE. Thirty-three
+ * downloads and five images, every one transcribed from the school's live
+ * page. The count is the check: if an edit drops one, `totalDownloads` in that
+ * file no longer matches what renders.
+ *
+ * ⚠ FOUR COLUMNS EVERYWHERE, EVEN WHERE A SECTION HOLDS ONE CARD. The brief
+ * asks for a four-column grid and the club sections each publish exactly one
+ * newsletter, so their rows are a quarter full. That is honest and it is what
+ * the data supports — the alternative is padding the row with the three empty
+ * WordPress cells the reference shows, which carry no link at all.
+ *
+ * ⚠ THE DECORATION IS ALL CSS AND INLINE SVG, none of it behind text. The
+ * shapes sit in the section's padding — outside the container's measure — and
+ * every one is aria-hidden and pointer-events: none. They are also the first
+ * thing to go at narrow widths, where there is no margin to hold them.
+ *
+ * ⚠ ANIMATION REUSES THE SITE'S OWN CONTRACT — `data-reveal` and
+ * `data-reveal-delay`, read by scripts/motion-gsap.ts. No new animation code.
+ */
+import { Image } from 'astro:assets';
+import DownloadCard from './DownloadCard.astro';
+import Lightbox from '../ui/Lightbox.astro';
+import { clubs, magazine, newspaper, myraAlt } from '../../data/publications';
+
+/* The five MYRA pages, imported so they go through the image pipeline. */
+import myra1 from '../../assets/publications/myra-stem-lab/myra-01.jpeg';
+import myra2 from '../../assets/publications/myra-stem-lab/myra-02.jpeg';
+import myra3 from '../../assets/publications/myra-stem-lab/myra-03.jpeg';
+import myra4 from '../../assets/publications/myra-stem-lab/myra-04.jpeg';
+import myra5 from '../../assets/publications/myra-stem-lab/myra-05.jpeg';
+
+const myra = [myra1, myra2, myra3, myra4, myra5];
+---
+
+<div class="pub">
+  {/* ── Background decoration. Edges only, never behind the measure. ────── */}
+  <span class="pub__blob pub__blob--a" aria-hidden="true"></span>
+  <span class="pub__blob pub__blob--b" aria-hidden="true"></span>
+  <span class="pub__blob pub__blob--c" aria-hidden="true"></span>
+  <span class="pub__dots pub__dots--l" aria-hidden="true"></span>
+  <span class="pub__dots pub__dots--r" aria-hidden="true"></span>
+
+  <svg class="pub__arc pub__arc--top" viewBox="0 0 200 120" fill="none" aria-hidden="true">
+    <path d="M2 112C30 40 96 6 198 14" stroke="currentColor" stroke-width="1.6"
+      stroke-linecap="round" stroke-dasharray="6 10" />
+  </svg>
+
+  <svg class="pub__leaf" viewBox="0 0 120 160" fill="none" aria-hidden="true">
+    <path d="M60 158V64" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+    <path d="M60 96c0-20 14-36 34-42-2 22-14 38-34 42ZM60 96c0-20-14-36-34-42 2 22 14 38 34 42Z"
+      stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+    <path d="M60 130c0-16 11-29 27-34-1 18-11 30-27 34Z" stroke="currentColor"
+      stroke-width="1.6" stroke-linejoin="round" />
+  </svg>
+
+  <div class="u-container pub__wrap">
+    {/* ── 1 · Club newsletters ───────────────────────────────────────────── */}
+    {clubs.map((g, i) => (
+      <section class="pub__sec" id={g.id} aria-labelledby={`${g.id}-t`}>
+        <h2 class="pub__h" id={`${g.id}-t`} data-reveal>
+          <span class="pub__h-rule" aria-hidden="true"></span>
+          {g.heading}
+        </h2>
+        <ul class="pub__grid">
+          {g.items.map((p, n) => (
+            <li data-reveal data-reveal-delay={n * 70}>
+              <DownloadCard title={p.title} href={p.href} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    {/* ── 2 · MYRA STEM LAB ──────────────────────────────────────────────── */}
+    {/* ⚠ NO DOWNLOAD BUTTONS IN THIS ONE. The live page shows these five as
+        images with nothing behind them; a button here would lead nowhere.
+
+        ⚠⚠ THEY OPEN IN THE SITE'S SHARED VIEWER — components/ui/Lightbox.astro,
+        one instance dropped at the foot of this file. These are newsletter
+        PAGES: at 260px in the rail the body copy is unreadable, so a reader who
+        wants to actually read one needs it full size. Not a new viewer — the
+        same contract every other gallery here uses (data-lb-open + href +
+        data-lb-alt + data-lb-cap), so its prev/next walks these five in order.
+
+        ⚠ THE TRIGGER IS AN <a href> POINTING AT THE FULL IMAGE, not a button.
+        With JavaScript off the link still opens the page — the reader loses the
+        viewer, not the picture.
+
+        ⚠ THE RAIL SCROLLS RATHER THAN SHRINKS. Five portrait pages across four
+        columns would crush each one; a snap scroller keeps them readable.
+
+        ⚠⚠ IT USES THE SITE'S OWN RAIL, NOT A NEW ONE. Same arrows, same pips,
+        same hidden scrollbar and same "measure the overflow, never assume it"
+        contract as components/home/GoogleReviews.astro. The first version left
+        the browser's native scrollbar on show under the plates, which is what
+        made it look unfinished.
+
+        ⚠ NO AUTOPLAY HERE, and that is the one deliberate difference from the
+        reviews rail. These are pages of a newsletter — something a reader is
+        part-way through reading. Sliding it out from under them would be the
+        exact case WCAG 2.2.2 is about, and there is no carousel-of-testimonials
+        reason to move on its own. Arrows, pips and swipe only.
+
+        ⚠⚠ THIS COMMENT LEAKED ONTO THE PAGE ONCE, and the cause is worth the
+        line: an edit inserted a second `* /}` in the middle of it, which closed
+        the comment early and shipped the remaining paragraphs to the reader as
+        body text under the heading. When adding to a long JSX comment, check it
+        still has exactly ONE opener and ONE closer. */}
+    <section class="pub__sec" id="myra-stem-lab" aria-labelledby="myra-t">
+      <h2 class="pub__h" id="myra-t" data-reveal>
+        <span class="pub__h-rule" aria-hidden="true"></span>
+        MYRA STEM LAB
+      </h2>
+      <div class="pub__deck" data-reveal>
+        <button class="pub__nav pub__nav--prev" type="button" data-pub-prev aria-label="Previous pages" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+
+        <ul class="pub__rail" data-pub-rail>
+          {myra.map((src, i) => (
+            <li class="pub__plate">
+              <a
+                class="pub__plate-link"
+                data-lb-open
+                href={src.src}
+                data-lb-alt={myraAlt[i]}
+                data-lb-cap={`MYRA STEM Lab newsletter — page ${i + 1} of ${myra.length}`}
+              >
+                <Image src={src} alt={myraAlt[i]} widths={[300, 600]} sizes="(max-width: 700px) 68vw, 260px"
+                  loading="lazy" decoding="async" />
+                <span class="pub__plate-zoom" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="6.4" /><path d="M15.6 15.6 21 21M11 8.6v4.8M8.6 11h4.8" />
+                  </svg>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <button class="pub__nav pub__nav--next" type="button" data-pub-next aria-label="More pages" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+        </button>
+      </div>
+
+      <div class="pub__pips" data-pub-pips role="tablist" aria-label="Newsletter pages"></div>
+    </section>
+
+    {/* ── 3 · Our School Magazine ────────────────────────────────────────── */}
+    <section class="pub__sec" id={magazine.id} aria-labelledby="mag-t">
+      <h2 class="pub__h" id="mag-t" data-reveal>
+        <span class="pub__h-rule" aria-hidden="true"></span>
+        {magazine.heading}
+      </h2>
+      <ul class="pub__grid">
+        {magazine.items.map((p, n) => (
+          <li data-reveal data-reveal-delay={(n % 4) * 60}>
+            <DownloadCard title={p.title} href={p.href} />
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* ── 4 · E-Newspaper ────────────────────────────────────────────────── */}
+    <section class="pub__sec" id={newspaper.id} aria-labelledby="news-t">
+      <h2 class="pub__h" id="news-t" data-reveal>
+        <span class="pub__h-rule" aria-hidden="true"></span>
+        {newspaper.heading}
+      </h2>
+      <ul class="pub__grid">
+        {newspaper.items.map((p, n) => (
+          <li data-reveal data-reveal-delay={(n % 4) * 60}>
+            <DownloadCard title={p.title} href={p.href} icon="news" />
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</div>
+
+{/* One viewer for the whole page — see the note on the MYRA section. */}
+<Lightbox />
+
+<style>
+  .pub {
+    position: relative;
+    padding-block: var(--sb-section-y) calc(var(--sb-section-y) + 16px);
+    background: var(--sb-ivory);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .pub__wrap { position: relative; }
+
+  /* --- Background decoration ------------------------------------------------
+     ⚠ ALL OF IT IS z-index: -1 AND pointer-events: none. The brief's one hard
+     rule for these was that they never overlap text or catch a click; the
+     container above carries its own stacking context, so the copy always wins. */
+
+  .pub__blob,
+  .pub__dots,
+  .pub__arc,
+  .pub__leaf {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .pub__blob { border-radius: 50%; filter: blur(70px); }
+
+  .pub__blob--a {
+    top: -140px; left: -180px;
+    width: 460px; height: 380px;
+    background: rgba(255, 138, 99, 0.2);
+  }
+
+  .pub__blob--b {
+    top: 34%; right: -220px;
+    width: 480px; height: 420px;
+    background: rgba(255, 176, 120, 0.14);
+  }
+
+  .pub__blob--c {
+    bottom: -180px; left: -140px;
+    width: 440px; height: 400px;
+    background: rgba(255, 138, 99, 0.16);
+  }
+
+  /* A dotted grid, drawn rather than shipped as an image. */
+  .pub__dots {
+    width: 120px;
+    height: 150px;
+    background-image: radial-gradient(rgba(201, 60, 10, 0.22) 1.4px, transparent 1.4px);
+    background-size: 15px 15px;
+    opacity: 0.55;
+  }
+
+  .pub__dots--l { top: 9%; left: 18px; }
+  .pub__dots--r { bottom: 16%; right: 22px; }
+
+  .pub__arc {
+    color: rgba(201, 60, 10, 0.32);
+    width: 190px;
+    height: 115px;
+  }
+
+  .pub__arc--top { top: 40px; right: 4%; }
+
+  .pub__leaf {
+    bottom: 40px;
+    right: 3%;
+    width: 96px;
+    height: 128px;
+    color: rgba(112, 140, 96, 0.34);
+  }
+
+  /* ⚠ THE DECORATION GOES FIRST WHEN THE MARGINS DO. Below 1200 the container
+     reaches the viewport edge and every one of these would sit under a card. */
+  @media (max-width: 1199px) {
+    .pub__dots, .pub__arc, .pub__leaf { display: none; }
+  }
+
+  /* --- Sections -------------------------------------------------------------- */
+
+  .pub__sec + .pub__sec { margin-top: clamp(40px, 5vw, 72px); }
+
+  .pub__h {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    margin: 0 0 var(--sb-6);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 2.1vw, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--sb-ink);
+  }
+
+  /* The reference's short orange rule before each heading. */
+  .pub__h-rule {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--sb-violet);
+  }
+
+  /* --- The grid -------------------------------------------------------------- */
+
+  .pub__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sb-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pub__grid > li { display: flex; }
+  .pub__grid > li > :global(a) { width: 100%; }
+
+  /* --- MYRA rail ------------------------------------------------------------- */
+
+  /* ⚠ THE DECK IS THE POSITIONING CONTEXT FOR THE ARROWS, which sit outside the
+     rail so they never scroll with it. */
+  .pub__deck { position: relative; }
+
+  .pub__rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 260px;
+    gap: var(--sb-5);
+    margin: 0;
+    /* Vertical room for the hover lift — `overflow-x` forces `overflow-y` to
+       compute to auto, which would otherwise clip anything that rises. */
+    padding: 8px 2px 14px;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* ⚠ THE NATIVE SCROLLBAR IS OFF, and that was the whole complaint about the
+       first version: a grey system bar running under the plates is what made
+       the section look unfinished next to the rest of the site. The arrows and
+       pips below are the affordance instead — same as every other rail here. */
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pub__rail::-webkit-scrollbar { display: none; }
+
+  /* --- Arrows + pips — the site's own rail furniture ------------------------ */
+
+  .pub__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+    border-radius: 50%;
+    background: var(--sb-paper);
+    border: var(--sb-rule);
+    box-shadow: 0 8px 22px rgba(18, 16, 15, 0.14);
+    color: var(--sb-ink);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  /* Author `display` beats the UA's [hidden] rule, so it has to be restated. */
+  .pub__nav[hidden] { display: none; }
+
+  .pub__nav:hover { background: var(--sb-violet); color: #fff; }
+  .pub__nav svg { width: 19px; height: 19px; }
+  .pub__nav--prev { left: -18px; }
+  .pub__nav--next { right: -18px; }
+
+  .pub__pips {
+    display: flex;
+    justify-content: center;
+    gap: var(--sb-3);
+    margin-top: var(--sb-5);
+  }
+
+  /* ⚠⚠ :global(), AND IT IS LOAD-BEARING — the same trap as the reviews rail.
+     The pips are built in the script, so they never receive Astro's
+     `data-astro-cid-…` attribute and a plain `.pub__pip` rule compiles to
+     `.pub__pip[data-astro-cid-…]`, which matches nothing: they render perfectly
+     and are invisible. Anchoring on .pub__pips — which IS in the template —
+     keeps this scoped to this component despite the :global. */
+  .pub__pips :global(.pub__pip) {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(201, 60, 10, 0.26);
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+
+  .pub__pips :global(.pub__pip[aria-selected='true']) {
+    background: var(--sb-violet);
+    transform: scale(1.15);
+  }
+
+  .pub__plate {
+    scroll-snap-align: start;
+    padding: 10px;
+    background: var(--sb-paper);
+    border: 1px solid rgba(18, 16, 15, 0.07);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 10px 26px -14px rgba(28, 14, 8, 0.18);
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+  }
+
+  .pub__plate:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 6px rgba(28, 14, 8, 0.05), 0 18px 38px -16px rgba(28, 14, 8, 0.28);
+  }
+
+  /* The anchor fills the plate so the whole page is the target, not a corner. */
+  .pub__plate-link {
+    position: relative;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .pub__plate-link:focus-visible {
+    outline: 2px solid var(--sb-violet);
+    outline-offset: 3px;
+  }
+
+  /* ⚠ THE MAGNIFIER IS THE AFFORDANCE. Without it nothing says these five open
+     — they look like the static strip they replaced, and a reader has no reason
+     to try clicking a picture. It fades up on hover and is always there on
+     touch, where there is no hover to reveal it. */
+  .pub__plate-zoom {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(18, 16, 15, 0.62);
+    color: #fff;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    pointer-events: none;
+  }
+
+  .pub__plate-zoom svg { width: 17px; height: 17px; }
+
+  .pub__plate:hover .pub__plate-zoom,
+  .pub__plate-link:focus-visible .pub__plate-zoom {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (hover: none) {
+    .pub__plate-zoom { opacity: 1; transform: none; }
+  }
+
+  /* ⚠ `contain`, NOT `cover`. These are newsletter PAGES — cropping one cuts
+     off the words it exists to show. The plate takes the letterboxing. */
+  .pub__plate :global(img) {
+    display: block;
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: var(--sb-ivory);
+  }
+
+  /* --- Responsive ------------------------------------------------------------ */
+
+  @media (max-width: 1023px) {
+    .pub__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 599px) {
+    .pub__grid { grid-template-columns: minmax(0, 1fr); }
+    .pub__rail { grid-auto-columns: 68vw; }
+    .pub__plate :global(img) { height: 260px; }
+    /* The arrows would sit on the plates at this width; the rail swipes. */
+    .pub__nav { display: none; }
+  }
+</style>
+
+<script>
+  /* Mirrors the rail in components/home/GoogleReviews.astro — same contract,
+     deliberately, rather than a second carousel idiom in the same codebase.
+     Scroll position is the single source of truth: the arrows and the pips both
+     read it, so a swipe, a click and a keyboard scroll can never disagree.
+
+     ⚠ NO TIMER. The reviews rail auto-advances; this one must not — these are
+     pages of a newsletter someone is reading. See the note beside the markup.
+
+     ⚠ OVERFLOW IS MEASURED, NEVER ASSUMED. Five plates overflow today, but if
+     the school ever publishes two the arrows hide and no pips are built, and
+     this becomes a static row with no code change. */
+  const rail = document.querySelector<HTMLElement>('[data-pub-rail]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-pub-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-pub-next]');
+  const pips = document.querySelector<HTMLElement>('[data-pub-pips]');
+
+  if (rail && prev && next) {
+    const gap = () => parseFloat(getComputedStyle(rail).columnGap || '0') || 0;
+    const stride = () =>
+      (rail.firstElementChild as HTMLElement | null)?.getBoundingClientRect().width ?? 0;
+    const rolling = () => rail.scrollWidth > rail.clientWidth + 2;
+
+    let marks: HTMLButtonElement[] = [];
+    const maxScroll = () => rail.scrollWidth - rail.clientWidth;
+
+    /* ⚠ ceil, NOT round. This rail is only about 1.15 screens wide, and
+       Math.round(1.15) is 1 — it built a single pip, which tells a reader
+       nothing and cannot be clicked anywhere. ceil gives the two pages that
+       actually exist. The reviews rail gets away with round only because its
+       content is several screens wide. */
+    const pages = () => Math.max(1, Math.ceil(rail.scrollWidth / rail.clientWidth));
+
+    /* ⚠ THE LAST PAGE IS SHORT, so it never reaches i * clientWidth. Comparing
+       against maxScroll is what keeps the final pip lit at the end of the rail
+       instead of leaving the previous one selected. */
+    const paint = () => {
+      if (!marks.length) return;
+      const i =
+        rail.scrollLeft >= maxScroll() - 2
+          ? marks.length - 1
+          : Math.min(marks.length - 1, Math.round(rail.scrollLeft / rail.clientWidth));
+      marks.forEach((d, n) => d.setAttribute('aria-selected', String(n === i)));
+    };
+
+    const buildPips = () => {
+      if (!pips) return;
+      const n = rolling() ? pages() : 0;
+      if (n === marks.length) return paint();
+      pips.textContent = '';
+      marks = Array.from({ length: n }, (_, i) => {
+        const d = document.createElement('button');
+        d.type = 'button';
+        d.className = 'pub__pip';
+        d.setAttribute('role', 'tab');
+        d.setAttribute('aria-label', `Newsletter pages, ${i + 1} of ${n}`);
+        d.addEventListener('click', () =>
+          /* Clamped for the same reason paint() is — the last page is short. */
+          rail.scrollTo({ left: Math.min(i * rail.clientWidth, maxScroll()), behavior: 'smooth' }),
+        );
+        pips.appendChild(d);
+        return d;
+      });
+      paint();
+    };
+
+    const fit = () => {
+      const on = rolling();
+      prev.hidden = !on;
+      next.hidden = !on;
+      buildPips();
+    };
+
+    prev.addEventListener('click', () =>
+      rail.scrollBy({ left: -(stride() + gap()), behavior: 'smooth' }),
+    );
+    next.addEventListener('click', () =>
+      rail.scrollBy({ left: stride() + gap(), behavior: 'smooth' }),
+    );
+
+    rail.addEventListener('scroll', paint, { passive: true });
+    window.addEventListener('resize', fit, { passive: true });
+    fit();
+  }
+</script>

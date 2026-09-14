@@ -1,0 +1,154 @@
+---
+/**
+ * A SINGLE PUBLICATION CARD — icon, title, download button.
+ *
+ * ⚠⚠ EVERY `href` HERE IS A REAL FILE ON THE SCHOOL'S OLD SITE OR ON GOOGLE
+ * DRIVE. See the header of data/publications.ts. It is never "#", never a
+ * placeholder, and it must never be rewritten to a local path — the PDFs are
+ * not in this repo.
+ *
+ * ⚠ EXTERNAL, SO IT OPENS IN A NEW TAB with rel="noopener". A parent who taps
+ * a PDF and loses the page they were reading has to navigate back in from the
+ * top; and these leave this site entirely.
+ *
+ * ⚠ THE WHOLE CARD IS THE LINK, not just the button. A 40px button inside a
+ * 150px card is a small target for a thumb (WCAG 2.5.8), and the button still
+ * looks like the affordance — it is inside the anchor rather than a second
+ * one. Exactly one focus stop per publication.
+ */
+interface Props {
+  title: string;
+  href: string;
+  /** `doc` for newsletters and magazines, `news` for the E-Newspaper. */
+  icon?: 'doc' | 'news';
+}
+
+const { title, href, icon = 'doc' } = Astro.props;
+---
+
+<a class="pcard" href={href} target="_blank" rel="noopener">
+  {/* The reference's small three-dot detail, top right. Decorative. */}
+  <span class="pcard__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+
+  <span class="pcard__icon" aria-hidden="true">
+    {icon === 'doc' ? (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 3H7.5A1.5 1.5 0 0 0 6 4.5v15A1.5 1.5 0 0 0 7.5 21h9a1.5 1.5 0 0 0 1.5-1.5V7l-4-4Z" />
+        <path d="M14 3v4h4M9 12.5h6M9 16h4" />
+      </svg>
+    ) : (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 5.5h12.5v13H5.5A1.5 1.5 0 0 1 4 17V5.5Z" />
+        <path d="M16.5 8.5H20V17a1.5 1.5 0 0 1-3 0V8.5ZM7 9h6M7 12h6M7 15h3.5" />
+      </svg>
+    )}
+  </span>
+
+  <span class="pcard__body">
+    <span class="pcard__title">{title}</span>
+    <span class="pcard__cta">
+      Click here to Download
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14" />
+      </svg>
+    </span>
+  </span>
+
+  {/* Says what the link does and where it goes, once, to assistive tech. */}
+  <span class="u-visually-hidden">— download, opens in a new tab</span>
+</a>
+
+<style>
+  .pcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-4);
+    padding: var(--sb-5) var(--sb-5) var(--sb-5);
+    background: var(--sb-paper);
+    border: 1px solid rgba(18, 16, 15, 0.07);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 10px 26px -14px rgba(28, 14, 8, 0.18);
+    color: inherit;
+    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  }
+
+  .pcard:hover {
+    transform: translateY(-3px);
+    border-color: rgba(201, 60, 10, 0.24);
+    box-shadow: 0 2px 6px rgba(28, 14, 8, 0.05), 0 18px 38px -16px rgba(28, 14, 8, 0.28);
+  }
+
+  .pcard:focus-visible {
+    outline: 2px solid var(--sb-violet);
+    outline-offset: 3px;
+  }
+
+  .pcard__dots {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    gap: 3px;
+  }
+
+  .pcard__dots i {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(201, 60, 10, 0.28);
+  }
+
+  .pcard__icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--sb-lime-wash);
+    color: var(--sb-violet);
+  }
+
+  .pcard__icon svg { width: 21px; height: 21px; }
+
+  .pcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-4);
+    /* Pushes the button to the card's foot so a one-line and a two-line title
+       still line their buttons up across a row. */
+    flex: 1 1 auto;
+    justify-content: space-between;
+  }
+
+  .pcard__title {
+    font-weight: 700;
+    font-size: var(--sb-body-sm);
+    line-height: 1.35;
+    color: var(--sb-ink);
+    text-wrap: balance;
+  }
+
+  /* Looks like a button, is not one — see the header. Compact on purpose: the
+     reference's full-width orange bars made the page read as a wall of orange. */
+  .pcard__cta {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 7px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--sb-violet);
+    color: #fff;
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    line-height: 1;
+    transition: background 0.2s ease;
+  }
+
+  .pcard:hover .pcard__cta { background: var(--sb-violet-dark); }
+  .pcard__cta svg { width: 14px; height: 14px; }
+</style>

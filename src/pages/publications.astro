@@ -1,0 +1,49 @@
+---
+/**
+ * PUBLICATIONS — /publications/
+ *
+ * ⚠⚠ THIS PAGE IS NEW TO THIS PROJECT, THOUGH THE BRIEF CALLED IT A REDESIGN.
+ * There was no /publications/ route here, no component and no data: the page it
+ * described lives on the school's OLD WordPress site. So this is that page's
+ * content — all 33 downloads and the 5 MYRA pages, transcribed from the live
+ * HTML on 12 September 2026 — rebuilt in this site's design language. See the
+ * header of data/publications.ts for the full provenance and the count.
+ *
+ * ⚠ THE BANNER IS STOCK PageHero, EXACTLY AS EVERY OTHER INNER PAGE USES IT —
+ * centred crumb, title and standfirst, same height, same alignment. That was
+ * the brief's explicit instruction and it is also what /parents-feedback/ does.
+ *
+ * ⚠ THE BANNER PHOTOGRAPH IS THE SCHOOL'S OWN LIBRARY, not the old site's
+ * banner. That file (banner_publications-journals.jpeg) is a stock bookshelf
+ * graphic with "Publications & Journals" baked into the pixels — dropped into
+ * a PageHero it would print the page's title twice, once in type and once in
+ * the image, and the crop would cut through the baked words. The reading room
+ * is a real Sunbeam photograph and it shows the magazine racks, which is
+ * literally what this page is about.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import PublicationsPage from '../components/publications/PublicationsPage.astro';
+
+import banner from '../assets/library/DSC_1239 copy.jpg';
+---
+
+<BaseLayout
+  title="Publications — Sunbeam School Ballia"
+  description="Student club newsletters, the MYRA STEM Lab pages, the school magazines Dishayein and Balashray, Sandesh Times and every issue of the Sunbeam School Ballia e-newspaper, free to download."
+>
+  {/* ⚠ CRUMBS IS HOME ONLY. PageHero appends the current page itself from
+      `title` and marks it aria-current — passing "Publications" in the array as
+      well printed it twice, "Home / Publications / Publications". The prop's
+      own doc comment says so; I passed it anyway. */}
+  <PageHero
+    title="Publications"
+    standfirst="Stories, journals and publications from the Sunbeam community."
+    crumbs={[{ label: 'Home', href: '/' }]}
+    src={banner}
+    alt="The Nalanda Library reading room at Sunbeam School Ballia, its magazine racks stocked and the reading tables set out."
+    position="50% 54%"
+  />
+
+  <PublicationsPage />
+</BaseLayout>
