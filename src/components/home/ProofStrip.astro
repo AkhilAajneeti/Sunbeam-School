@@ -72,7 +72,17 @@ import crest from '../../assets/icons/logos/sunbeam.png';
   /* --- Crest panel ----------------------------------------------------------
      Top-aligned and bled off the right edge, not vertically centred: in the
      reference it reads as a block the composition sits against, and centring it
-     left the crest floating in the middle of nothing. */
+     left the crest floating in the middle of nothing.
+
+     ⚠⚠ THE TINT IS GONE — 17 Sep 2026, on a new comp from the client. It was
+     rgba(28,16,8,0.032), which measured rgb(228,219,214) against the section's
+     rgb(235,226,221): a seven-point step with a hard vertical edge running down
+     the page, right where the eye lands after the hero panel. The client's comp
+     shows the crest sitting directly on the blush ground with no block behind
+     it, and they asked for the same colour "at right side image bg".
+
+     ⚠ THE PANEL ELEMENT STAYS. It is what positions and sizes the crest; only
+     its ground is removed. Putting a background back here reinstates the edge. */
   .proof__panel {
     position: absolute;
     top: 0;
@@ -81,7 +91,7 @@ import crest from '../../assets/icons/logos/sunbeam.png';
     width: clamp(210px, 27vw, 440px);
     display: grid;
     place-items: center;
-    background: rgba(28, 14, 8, 0.032);
+    background: none;
     pointer-events: none;
     height:100%;
   }

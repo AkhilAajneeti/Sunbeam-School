@@ -30,6 +30,7 @@ import imgComputer from "../assets/computer lab/DSC_1204 copy.jpg";
 import imgJosh from "../assets/JOSH GROUND/DSC_1287 copy.jpg";
 import imgBasket from "../assets/basket ball/DSC_1212 copy.jpg";
 import imgActivity from "../assets/activity learning lab/DSC_1215 copy.jpg";
+import imgCorridor from "../assets/corridor and stairs/DSC_1210 copy.jpg";
 
 export interface NavChild {
   label: string;
@@ -178,6 +179,19 @@ export const mainNav: NavItem[] = [
           icon: "students",
           desc: "Mrs. Arpita Singh on daily school life.",
           img: imgPrincipal,
+        },
+        /* ⚠ THE THIRD LEADERSHIP MESSAGE, AND IT IS COMPLETE NOW. Client item 1.
+           This row used to warn that the page had no text: the message and the
+           portrait arrived from the school on 17 Sep 2026, closing asset A12.
+           ⚠ STILL NO `img` HERE, AND THAT IS A SEPARATE DECISION. Adding the new
+           portrait is fine to do, but check it first — it is a tight studio
+           head-and-shoulders, and the other two rows use frames that were shot
+           to sit behind a card. */
+        {
+          label: "Vice Principal's Message",
+          href: "/about/vice-principals-message/",
+          icon: "teacher",
+          desc: "Mr. Pankaj Singh on academics and resilience.",
         },
         // { label: 'Achievements & Recognition', href: '/about/achievements/' },
       ],
@@ -331,6 +345,18 @@ export const mainNav: NavItem[] = [
             { label: "Frequently Asked Questions", href: "/academics/parent-partnership/faqs/", icon: "bulb" },
           ],
         },
+        /* ⚠ COLUMN-LEVEL ON PURPOSE, NOT A CHILD. The mobile drawer renders
+           `columns.flat()` and never descends into `children` — anything nested
+           a level deeper is a desktop-only link. This one is a parent-facing
+           utility (teachers, timetable, monitors, exam schedule), so it has to
+           be reachable on a phone. See components/navigation/MobileNav.astro. */
+        {
+          label: "Class Corner",
+          href: "/academics/class-corner/",
+          icon: "badge",
+          desc: "Class teachers, timetables, monitors and exam dates.",
+          img: imgCorridor,
+        },
         // §8, kept as the single item the audit names it.
       ],
     ],
@@ -420,6 +446,37 @@ export const mainNav: NavItem[] = [
           desc: "Trips, expeditions and field visits.",
           img: imgJosh,
         },
+        /* ⚠ STUDENT COUNCIL LIVES HERE AND ONLY HERE — one page, one entry.
+           The client's item 4 asks for it "under the Academic/School
+           Activities area", and this IS that area of this site: the School
+           Activities menu item points into /beyond-academics/school-activities/,
+           the same URL family, and the council's siblings — Sports, Achievements,
+           Excursions, Publications — are all on this shelf.
+
+           It was briefly cross-listed under Academics as well. That was wrong
+           twice over: two menu rows for one route is clutter, and Academics is
+           curriculum, teaching and assessment — a roster of elected office-
+           bearers is school life, not a subject. Class Corner belongs in
+           Academics (teachers, timetables, exam dates); this does not. */
+        {
+          label: "Student Council",
+          href: "/beyond-academics/student-council/",
+          icon: "students",
+          desc: "The students who hold office, senior and junior.",
+          img: imgJosh,
+        },
+        /* ⚠ CLIENT ITEM 5 — "a Beyond Academics section covering NCC and Scout
+           & Guide". It is one entry, not two, because Scouts & Guides has no
+           published record at all: a menu row leading to an empty page would
+           promise something the school has not got. One page carries both, and
+           says which is which. */
+        {
+          label: "NCC, Scouts & Guides",
+          href: "/beyond-academics/ncc-scouts-guides/",
+          icon: "shield",
+          desc: "NCC ‘A’ and ‘B’ affiliations, and what is still unpublished.",
+          img: imgJosh,
+        },
         /* ⚠ PUBLICATIONS SITS HERE BECAUSE THE SCHOOL'S OWN SITE PUTS IT HERE —
            its footer lists Publications under Beyond Academics. Without this
            entry the page builds but nothing on the site links to it, which is
@@ -437,8 +494,11 @@ export const mainNav: NavItem[] = [
     feature: {
       eyebrow: "Beyond Academics",
       title: "Every child plays",
-      // 15 = the school's own published lists: 7 indoor + 8 outdoor. The house
-      // count is NOT verified anywhere on the live site, so it is not claimed.
+      // 15 = the school's own published lists: 7 indoor + 8 outdoor.
+      // ⚠ THE HOUSE COUNT IS NOW VERIFIED — three, named on the school's own
+      // Student Council page (Red, Yellow, Green); see data/sports.ts `houses`.
+      // This line still does not claim it, because the destination is Sports &
+      // Games and the houses belong to the inter-house rung on that page.
       body: "Fifteen sports, indoor and outdoor, and room to take part.",
       href: "/beyond-academics/sports/",
       cta: "Sport at Sunbeam",

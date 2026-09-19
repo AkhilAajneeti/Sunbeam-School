@@ -1,0 +1,299 @@
+---
+/**
+ * ABOUT → VICE PRINCIPAL'S MESSAGE — client item 1, completed 17 Sep 2026.
+ *
+ * ⚠⚠ THE COPY IS THE SCHOOL'S OWN, VERBATIM. The message and the portrait were
+ * supplied by the school on 17 September 2026, closing asset request A12. This
+ * page stood as a designed awaiting-state until then; nothing was ever drafted
+ * on the Vice Principal's behalf, and the words below are his.
+ *
+ * ⚠ DO NOT EDIT, TIGHTEN OR RE-ORDER THE MESSAGE. It is signed by a named
+ * person at a real school. That includes its punctuation — the colon in "Our
+ * goal is simple:" and the serial commas are his.
+ *
+ * ⚠ THE PULL QUOTE IS HIS OPENING SENTENCE, MOVED NOT COPIED. The school sent
+ * it inside quotation marks as the message's first line, so it is set as the
+ * quote and does NOT repeat in the body. Read the quote and the paragraphs in
+ * order and you have exactly what was supplied, once.
+ *
+ * ⚠ "Mr." IS NOW THE SCHOOL'S OWN FORM. Until today this page printed the bare
+ * surname from the CBSE filing, because that document records no honorific for
+ * any of its 131 staff and inventing one was not ours to do. The supplied copy
+ * signs "Mr. Pankaj Singh", so that is what it prints. The M.Sc. still comes
+ * from the filing.
+ *
+ * ⚠ THE LEADERSHIP SECTION BELOW IS SEPARATE, VERIFIED CONTENT — names, roles
+ * and staff counts from the signed CBSE mandatory public disclosure. It is not
+ * part of the message and is not the school's prose.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import LeaderMessage from '../../components/about/LeaderMessage.astro';
+import { teachers, staffSummary } from '../../data/disclosure';
+import { school } from '../../data/site';
+
+import banner from '../../assets/photos/sunbeem-3.jpg';
+import portrait from '../../assets/photos/vicePrincipal.jpeg';
+
+/* ⚠ READ OUT OF THE FILING, NOT RETYPED HERE. If the school files a new MPD
+   with a different post holder, this page follows it rather than going stale
+   behind a hard-coded name. */
+const vp = teachers.find((r) => r.designation.toUpperCase() === 'VICE PRINCIPAL');
+
+/* The filing prints staff names in capitals. Title-case for reading; the
+   spelling is untouched. */
+const titleCase = (n: string) =>
+  n.replace(/\S+/g, (w) => w[0].toUpperCase() + w.slice(1).toLowerCase());
+
+const vpName = vp ? titleCase(vp.name) : null;
+
+/** Verified figures, straight out of staffSummary. No arithmetic of our own. */
+const figure = (k: string) => staffSummary.find((r) => r.k === k)?.v ?? null;
+
+const teamFigures = [
+  { v: figure('Total no. of teachers'), k: 'Teachers on the staff' },
+  { v: figure('PGT'), k: 'Post Graduate Teachers' },
+  { v: figure('TGT'), k: 'Trained Graduate Teachers' },
+  { v: figure('PRT'), k: 'Primary Teachers' },
+].filter((f) => f.v);
+
+/* ⚠ VERBATIM, AND THE ONLY EDITORIAL ACT IS WHERE THE FIRST SENTENCE SITS.
+   See the header: the school sent the quoted line first, and it is set as the
+   pull quote rather than repeated in the body. */
+const pullQuote =
+  'Education should challenge the mind, strengthen character, and give every child the resilience to rise after every setback.';
+
+const paragraphs = [
+  'At Sunbeam School Ballia, my focus is to build a culture of academic excellence, active learning and continuous growth. I believe classrooms should be democratic spaces where students are heard, respected and encouraged to question, participate and think independently.',
+  'Our goal is simple: strong academics, confident learners and resilient young minds ready to face the future.',
+];
+
+/* ⚠ THE SCHOOL'S OWN SIGNATURE FORM, not the filing's bare surname. */
+const vpSigned = 'Mr. Pankaj Singh';
+
+/* The three leadership posts. All three now carry a published message; this
+   one is the page you are on, so it does not link to itself. */
+const leadership = [
+  {
+    role: 'Director',
+    name: 'Dr. Kunwar Arun Singh',
+    href: '/about/directors-message/',
+    state: 'Message published',
+  },
+  {
+    role: 'Principal',
+    name: school.principal,
+    href: '/about/principals-message/',
+    state: 'Message published',
+  },
+  {
+    role: 'Vice Principal',
+    name: vpSigned,
+    href: null,
+    state: 'Message published — you are reading it',
+  },
+];
+---
+
+<BaseLayout
+  title="Vice Principal's Message — Sunbeam School Ballia"
+  description={`A message from ${vpSigned}, Vice Principal of Sunbeam School Ballia, on academic excellence, active learning and building resilient young minds.`}
+>
+  <PageHero
+    title="Vice Principal's Message"
+    standfirst="On academic excellence, classrooms that listen, and the resilience to rise again."
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'About', href: '/about/' }]}
+    src={banner}
+    alt="The campus of Sunbeam School Ballia at Agarsanda."
+    position="50% 45%"
+  />
+
+  <div class="u-page-panel">
+    <LeaderMessage
+      eyebrow="Vice Principal Speak"
+      heading="A word from our Vice Principal"
+      name={vpSigned}
+      role="Vice Principal, Sunbeam School Ballia"
+      portrait={portrait}
+      portraitAlt={`${vpSigned}, Vice Principal of Sunbeam School Ballia.`}
+      portraitBrief="Vice Principal portrait"
+      pullQuote={pullQuote}
+      paragraphs={paragraphs}
+      credentials={vp?.qualification ? [vp.qualification] : []}
+    />
+  </div>
+
+  {/* ══ LEADERSHIP — VERIFIED CONTENT, NOT A PLACEHOLDER ═══════════════════ */}
+  <section class="vpl" aria-labelledby="vpl-t">
+    <div class="u-container">
+      <div class="vpl__head" data-reveal>
+        <p class="vpl__kicker">Leadership</p>
+        <h2 class="vpl__h" id="vpl-t">Who leads the school</h2>
+        <p class="vpl__d">
+          Sunbeam School Ballia is led by a Director, a Principal and a Vice Principal. Every
+          name and figure in this section is transcribed from the school&rsquo;s signed CBSE
+          mandatory public disclosure.
+        </p>
+      </div>
+
+      <ul class="vpl__grid">
+        {leadership.map((l, i) => (
+          <li class="vpl__card" data-reveal data-reveal-delay={i * 80}>
+            <p class="vpl__role">{l.role}</p>
+            <p class="vpl__name">{l.name ?? 'To be confirmed by the school'}</p>
+            <p class:list={['vpl__state', !l.href && 'vpl__state--pending']}>{l.state}</p>
+            {l.href && <a class="vpl__link" href={l.href}>Read the message</a>}
+          </li>
+        ))}
+      </ul>
+
+      {teamFigures.length > 0 && (
+        <ul class="vpl__figs" aria-label="Teaching staff, as filed with CBSE">
+          {teamFigures.map((f, i) => (
+            <li data-reveal data-reveal-delay={i * 60}>
+              <span class="vpl__fig-v t-tabular">{f.v}</span>
+              <span class="vpl__fig-k">{f.k}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p class="vpl__src">
+        Source: the school&rsquo;s
+        {' '}<a href="/mandatory-public-disclosure/">mandatory public disclosure</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .vpl {
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .vpl__head { max-width: 62ch; }
+
+  .vpl__kicker {
+    margin: 0 0 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .vpl__h {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(21px, 2.3vw, 31px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--sb-ink);
+  }
+
+  .vpl__d {
+    margin: var(--sb-4) 0 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-muted);
+  }
+
+  .vpl__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sb-5);
+    margin: var(--sb-7) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vpl__card {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--sb-6);
+    background: var(--sb-paper);
+    border: 1px solid rgba(18, 16, 15, 0.07);
+    border-radius: var(--sb-r-0);
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 10px 26px -14px rgba(28, 14, 8, 0.18);
+  }
+
+  .vpl__role {
+    margin: 0;
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .vpl__name {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(15px, 1.35vw, 19px);
+    line-height: 1.25;
+    color: var(--sb-ink);
+    text-wrap: balance;
+  }
+
+  .vpl__state {
+    margin: 2px 0 0;
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
+  }
+
+  .vpl__state--pending { font-style: italic; }
+
+  .vpl__link {
+    margin-top: auto;
+    padding-top: var(--sb-4);
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+
+  .vpl__link:hover { text-decoration: underline; }
+
+  .vpl__figs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sb-5);
+    margin: var(--sb-6) 0 0;
+    padding: var(--sb-6) 0 0;
+    border-top: 1px solid rgba(18, 16, 15, 0.09);
+    list-style: none;
+  }
+
+  .vpl__figs li { display: flex; flex-direction: column; gap: 3px; }
+
+  .vpl__fig-v {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1;
+    color: var(--sb-violet);
+  }
+
+  .vpl__fig-k {
+    font-size: var(--sb-caption);
+    line-height: 1.4;
+    color: var(--sb-text-muted);
+  }
+
+  .vpl__src {
+    margin: var(--sb-5) 0 0;
+    font-size: var(--sb-caption);
+    color: var(--sb-text-muted);
+  }
+
+  .vpl__src a { color: var(--sb-violet); border-bottom: 1px solid currentColor; }
+
+  @media (max-width: 899px) {
+    .vpl__grid { grid-template-columns: minmax(0, 1fr); }
+    .vpl__figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>

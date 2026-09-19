@@ -4,12 +4,23 @@
  *
  * Audit 1.10 keeps this as its own page rather than folding it into About.
  *
- * COPY — the passages below are the school's own published words, used verbatim.
- * Audit 1.12 requires the published page to be "thoroughly proofread to
- * eliminate grammatical and spelling errors": these particular passages read
- * cleanly, which is why they are the ones extracted for the homepage too. The
- * FULL message has not been supplied in a proofread form — asset request A5 —
- * so what is here is an accurate extract, not an invented expansion of it.
+ * COPY — the school's own words, VERBATIM AND COMPLETE. Asset request A5 (the
+ * full, proofread message) was supplied by the school on 17 September 2026 and
+ * is reproduced here in full; this page previously carried a two-paragraph
+ * extract while the rest was outstanding.
+ *
+ * ⚠ NOT ONE WORD OF THIS IS OURS. Do not tighten it, re-order it, split a
+ * paragraph or "fix" its punctuation — it is a message signed by a named person
+ * at a real school. That includes the Oxford commas and the em-dashed aside
+ * around the group motto, which are hers.
+ *
+ * ⚠ THE PULL QUOTE IS THE OPENING SENTENCE, LIFTED, NOT SUMMARISED. Its own
+ * paragraph continues at `paragraphs[0]` ("Guided by the ethos…") so that
+ * setting the first sentence large costs the page nothing. Read the quote and
+ * paragraphs[0] back to back and you have her first paragraph, whole.
+ *
+ * ⚠ THE HOMEPAGE BAND IS STILL A SHORT EXTRACT, deliberately — it is sized to
+ * the viewport and links through to this page. See components/home/PrincipalSpeak.astro.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
@@ -19,8 +30,11 @@ import banner from '../../assets/photos/sunbeem-1.jpg';
 import portrait from '../../assets/photos/sb-principal.jpg';
 
 const paragraphs = [
-  'The Sunbeam vision has always been to empower students with 21st-century skills while staying rooted in Indian culture and moral values. We are committed to holistic development — intellectual growth, physical well-being, emotional resilience and ethical strength.',
-  'As Principal, my role is to ensure that every child feels valued, safe, and inspired to achieve their full potential.',
+  'Guided by the ethos of the Sunbeam Group, our mission is to create an environment where academic excellence goes hand-in-hand with values, discipline, and a deep sense of social responsibility.',
+  'The Sunbeam vision has always been to empower students with 21st-century skills while staying rooted in Indian culture and moral values. We are committed to holistic development — focusing on intellectual growth, physical well-being, emotional resilience, and ethical strength. Our classrooms are places of curiosity and collaboration, where innovative teaching methods meet modern technology, ensuring our students are ready for a dynamic world.',
+  'At Sunbeam School Ballia, we celebrate diversity of talent and encourage participation in sports, cultural activities, performing arts, and community service. From fostering leadership qualities to instilling environmental awareness, every initiative is aimed at shaping responsible global citizens.',
+  'As Principal, my role is to ensure that every child feels valued, safe, and inspired to achieve their full potential. Together with our dedicated teachers, supportive parents, and the larger Sunbeam family, we strive to uphold the group’s proud legacy — Lighting the Lamp of Knowledge — and carrying forward the commitment to excellence in education.',
+  'Let us work together to nurture a generation that thinks critically, acts responsibly, and dreams fearlessly.',
 ];
 ---
 
@@ -48,7 +62,6 @@ const paragraphs = [
       pullQuote="At Sunbeam School Ballia, we believe that education is not merely about imparting knowledge, but about nurturing character, inspiring creativity, and preparing young minds to lead with empathy and vision."
       paragraphs={paragraphs}
       email={school.departments.principal}
-      pending="A5 — the full message, proofread (audit 1.12)"
     />
   </div>
 </BaseLayout>

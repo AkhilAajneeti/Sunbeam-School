@@ -251,18 +251,57 @@ export const quickAccess = [
 ] as const;
 
 /**
- * Content awaiting the client — mirrors docs/07-client-asset-requests.md.
- * Surfaced in code so nothing ships unnoticed.
+ * Content awaiting the client. Reconciled with docs/07-client-asset-requests.md
+ * on 19 Sep 2026 — every key here has a matching `### A…` heading there, and the
+ * only headings there without a key here are the three CLOSED records (A5, A6,
+ * A12), kept in the doc as history. Surfaced in code so nothing ships unnoticed.
+ *
+ * ⚠ THE TWO FILES DRIFTED ONCE AND IT COST US. This object said it "mirrors"
+ * that document while three of its entries asked the school for material we
+ * already held. If you change one, change the other in the same commit.
+ *
+ * ⚠⚠ AUDITED 17 SEP 2026, AND THREE ENTRIES WERE STALE — they asked for things
+ * the school had ALREADY given us, which is worse than asking for nothing: it
+ * kept pages rendering an absence next to data we held.
+ *
+ *   A1 claimed board results were missing. They are filed on the school's own
+ *      letterhead (BRS.pdf) and have been transcribed in data/disclosure.ts →
+ *      `boardResults` all along. Narrowed to the individual detail only.
+ *   A3 asked for the Vision and the motto. Both arrived — the Vision panels are
+ *      transcribed on /about/vision-mission/, and the motto is settled as
+ *      `motto` above. Narrowed to the Mission statement, which really is absent.
+ *   A5 asked for the homepage welcome copy and the full Principal's message.
+ *      The client supplied the homepage copy with the hero brief, and the full
+ *      Principal's message on 17 Sep 2026. REMOVED — it is all published.
+ *
+ * ⚠ AN ENTRY HERE MUST NAME SOMETHING WE DO NOT HAVE. Before adding one, grep
+ * for the data — that is how all three above went stale.
  */
 export const pending = {
-  A1: 'Board results — Class X and XII, three sessions',
+  /* ⚠ NARROWED, NOT CLOSED. The three-year table IS published (/general-info/
+     and /academics/board-results/). What is genuinely missing is below, and
+     note that "appeared" is NOT derivable: BRS.pdf gives Registered and Passed,
+     and registered ≠ appeared. */
+  A1: 'Board results — the individual detail only: toppers with marks and consent, rank holders, and a count of students who APPEARED as distinct from registered',
   A2: 'Professional campus photography — every image on this page',
-  A3: 'Vision and Mission statement text; confirm primary motto/tagline',
-  A4: 'Alumni video testimonials, names, batches, consent',
-  A5: "Rewritten homepage welcome copy, and the FULL Principal's message proofread (audit 1.12). The Director's message has been supplied and is live",
+  /* ⚠ VISION AND MOTTO ARE DONE. This is the Mission alone. */
+  A3: 'Mission statement text. The Vision is transcribed on /about/vision-mission/ and the motto is settled — neither is outstanding',
+  A4: 'Alumni: video testimonials, names, batches and written consent; more Placed/Working alumni than the three on record; AND the school’s sign-off before the eighteen names on the "Vision To Reality" board are republished as searchable text',
   A7: 'News, events and notices — content plus an update cadence owner',
   A8: 'Admission eligibility, age criteria, dates, fee data',
   A9: 'Decision on YouTube and X — maintain or remove (audit 14.3)',
+  /* ── Added 17 Sep 2026, from the client's seven-point list ──────────────── */
+  /* ⚠ A12 IS CLOSED AND REMOVED — the Vice Principal's message and portrait
+     arrived on 17 Sep 2026 and are live on /about/vice-principals-message/.
+     The signature form "Mr. Pankaj Singh" came with them, which also settles
+     the honorific the CBSE filing does not record. */
+  A13: 'NCC detail — cadet numbers, unit, camps, the two officers’ names, photographs; AND any record at all of Scouts & Guides, which is published nowhere',
+  A14: 'Class Corner — Examination In-charge details, and the Academic Excellence / achievements list',
+  A15: 'The inter-house fixture calendar. The three houses themselves are known (Red, Yellow, Green) from the school’s Student Council page',
+  /* Referenced by data/academics.ts → `awaiting`, which renders them on
+     /academics/student-success/ in build-notes mode. They were missing here. */
+  A11: 'University destinations as TEXT, year on year, with a cohort size beside them. The Session 2024-25 board is published as artwork and is shown on /academics/student-success/university-counselling/',
+  A16: 'Scholarships — whether the school offers any, and on what basis',
   B1: 'Affiliation and partner logos, with permission to use each mark',
   B2: 'Vector logo originals — only an 816px raster exists',
 } as const;

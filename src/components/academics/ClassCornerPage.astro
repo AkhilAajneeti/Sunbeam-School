@@ -1,0 +1,321 @@
+---
+/**
+ * CLASS CORNER — the body of /academics/class-corner/.
+ *
+ * ⚠⚠ READ data/classCorner.ts FIRST. Four of the six items the client asked
+ * for are published by the school and link to the school's own files; two are
+ * not published and render as a STATED GAP rather than being dropped. A parent
+ * looking for the exam in-charge needs to know none has been published — that
+ * is different from the page having forgotten to mention it.
+ *
+ * ⚠ THE PENDING CARDS ARE NOT LINKS AND DO NOT PRETEND TO BE. No button, no
+ * hover lift, no cursor change — a card that rises under the pointer promises a
+ * click it cannot honour. They carry the school office as the fallback instead.
+ *
+ * ⚠ THE LIVE ITEMS OPEN IN A NEW TAB. Every one of them is a file or page on
+ * the school's old WordPress site, so they leave this site entirely.
+ */
+import { cornerItems } from '../../data/classCorner';
+import { school } from '../../data/site';
+---
+
+<div class="ccn">
+  <span class="ccn__blob ccn__blob--a" aria-hidden="true"></span>
+  <span class="ccn__blob ccn__blob--b" aria-hidden="true"></span>
+
+  <div class="u-container ccn__wrap">
+    <ul class="ccn__grid">
+      {cornerItems.map((it, i) => {
+        const Tag = it.href ? 'a' : 'div';
+        return (
+          <li data-reveal data-reveal-delay={(i % 3) * 70}>
+            <Tag
+              class:list={['ccn__card', !it.href && 'ccn__card--pending']}
+              {...(it.href ? { href: it.href, target: '_blank', rel: 'noopener' } : {})}
+            >
+              <span class="ccn__icon" aria-hidden="true">
+                {it.icon === 'teacher' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="7.5" r="3.4" /><path d="M4.5 20c0-3.7 3.4-6 7.5-6s7.5 2.3 7.5 6" />
+                  </svg>
+                )}
+                {it.icon === 'clock' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="8.4" /><path d="M12 7.2V12l3.2 2" />
+                  </svg>
+                )}
+                {it.icon === 'badge' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="9" r="4.6" /><path d="m8.4 13.4-1.4 7 5-2.6 5 2.6-1.4-7" />
+                  </svg>
+                )}
+                {it.icon === 'exam' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3h9l3.5 3.5V21H6z" /><path d="M14.5 3v4H18M9 12h6M9 16h4" />
+                  </svg>
+                )}
+                {it.icon === 'person' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="3.4" /><path d="M5 20c0-3.5 3.1-5.8 7-5.8s7 2.3 7 5.8" />
+                  </svg>
+                )}
+                {it.icon === 'star' && (
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.6 9.7l5.8-.8Z" />
+                  </svg>
+                )}
+              </span>
+
+              <span class="ccn__body">
+                {/* ⚠ REAL TEXT, FIRST IN READING ORDER — a screen reader must
+                    learn the card is pending before it reads the title. */}
+                {!it.href && <span class="ccn__stamp">Content to be updated</span>}
+                <span class="ccn__title">
+                  {it.title}
+                  {it.kind && <span class="ccn__kind">{it.kind}</span>}
+                </span>
+                <span class="ccn__text">{it.body}</span>
+
+                {it.href ? (
+                  <span class="ccn__cta">
+                    Open
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M5 12h13M12.5 6l6 6-6 6" />
+                    </svg>
+                    <span class="u-visually-hidden">{it.title} — opens in a new tab</span>
+                  </span>
+                ) : (
+                  <>
+                    <span class="ccn__pending">{it.pending}</span>
+                    {it.needs && it.needs.length > 0 && (
+                      <span class="ccn__needs">
+                        <span class="ccn__needs-k">Awaiting from the school</span>
+                        <span class="ccn__needs-l">
+                          {it.needs.map((n) => <span class="ccn__chip">{n}</span>)}
+                        </span>
+                      </span>
+                    )}
+                  </>
+                )}
+              </span>
+            </Tag>
+          </li>
+        );
+      })}
+    </ul>
+
+    <p class="ccn__foot" data-reveal>
+      Class teachers, monitors, timetables and examination papers are issued by the school
+      office. For anything not published here, call
+      <a href={`tel:${school.phone.office}`}>{school.phone.officeDisplay}</a>
+      or write to <a href={`mailto:${school.email}`}>{school.email}</a>.
+    </p>
+  </div>
+</div>
+
+<style>
+  .ccn {
+    position: relative;
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .ccn__wrap { position: relative; }
+
+  .ccn__blob {
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(70px);
+    pointer-events: none;
+  }
+
+  .ccn__blob--a {
+    top: -140px; right: -170px;
+    width: 440px; height: 380px;
+    background: rgba(255, 138, 99, 0.18);
+  }
+
+  .ccn__blob--b {
+    bottom: -160px; left: -160px;
+    width: 420px; height: 380px;
+    background: rgba(255, 176, 120, 0.14);
+  }
+
+  .ccn__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sb-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ⚠ `start`, NOT THE DEFAULT `stretch`. The pending cards carry a stamp, a
+     sentence and a chip list, so they are much taller than a live card — and
+     under `stretch` the short live card beside them was pulled to the same
+     height and read as half-empty, which is the one impression this page must
+     avoid. Cards now size to their own content. */
+  .ccn__grid { align-items: start; }
+  .ccn__grid > li { display: flex; }
+
+  .ccn__card {
+    display: flex;
+    gap: var(--sb-5);
+    width: 100%;
+    padding: var(--sb-6);
+    background: var(--sb-paper);
+    border: 1px solid rgba(18, 16, 15, 0.07);
+    border-radius: var(--sb-r-0);
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 10px 26px -14px rgba(28, 14, 8, 0.18);
+    color: inherit;
+    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  }
+
+  /* Only the real links move. See the header. */
+  a.ccn__card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(201, 60, 10, 0.24);
+    box-shadow: 0 2px 6px rgba(28, 14, 8, 0.05), 0 18px 38px -16px rgba(28, 14, 8, 0.28);
+  }
+
+  a.ccn__card:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; }
+
+  /* ⚠ THE PENDING CARD READS AS UNFINISHED ON PURPOSE — flat, dashed edge, no
+     shadow. It must not look like a card whose link merely failed to render. */
+  .ccn__card--pending {
+    background: transparent;
+    border: 1px dashed rgba(18, 16, 15, 0.2);
+    box-shadow: none;
+  }
+
+  .ccn__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--sb-lime-wash);
+    color: var(--sb-violet);
+  }
+
+  .ccn__card--pending .ccn__icon {
+    background: rgba(18, 16, 15, 0.05);
+    color: var(--sb-text-muted);
+  }
+
+  .ccn__icon svg { width: 21px; height: 21px; }
+
+  .ccn__body { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+
+  .ccn__title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-weight: 700;
+    font-size: var(--sb-body-sm);
+    line-height: 1.3;
+    color: var(--sb-ink);
+  }
+
+  .ccn__kind {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--sb-lime-wash);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .ccn__text {
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
+  }
+
+  .ccn__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    color: var(--sb-violet);
+  }
+
+  .ccn__cta svg { width: 14px; height: 14px; }
+
+  .ccn__pending {
+    margin-top: 4px;
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--sb-text-muted);
+  }
+
+  /* --- The pending cards' stamp and chips ---------------------------------
+     Client instruction, 17 Sep 2026: a pending section must look finished but
+     obviously temporary. The stamp says so in words; the chips name what is
+     owed WITHOUT naming any value. */
+  .ccn__stamp {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .ccn__needs { display: block; margin-top: 10px; }
+
+  .ccn__needs-k {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+  }
+
+  .ccn__needs-l { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .ccn__chip {
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px dashed rgba(18, 16, 15, 0.22);
+    font-size: var(--sb-caption);
+    line-height: 1.4;
+    color: var(--sb-text-muted);
+  }
+
+  .ccn__foot {
+    max-width: 68ch;
+    margin: var(--sb-8) auto 0;
+    text-align: center;
+    font-size: var(--sb-body-sm);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  .ccn__foot a { color: var(--sb-violet); border-bottom: 1px solid currentColor; }
+
+  @media (max-width: 1023px) {
+    .ccn__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 639px) {
+    .ccn__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

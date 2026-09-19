@@ -50,7 +50,59 @@ export interface ParentTestimonial {
  * ⚠ EMPTY UNTIL THE SCHOOL SUPPLIES REAL ONES. See the header above before
  * adding anything.
  */
-export const testimonials: ParentTestimonial[] = [];
+/**
+ * ⚠⚠ PREVIEW-ONLY SAMPLES. NOT REAL. NEVER SHIPPED.
+ *
+ * These exist so the carousel can be seen rendering while the school collects
+ * real, consented feedback. They are gated on `import.meta.env.DEV`, so they
+ * appear in `astro dev` and are an EMPTY ARRAY in every production build — the
+ * check is in the build output, not in anyone remembering to delete them.
+ *
+ * ⚠ THE ATTRIBUTION SAYS SO ON THE CARD ITSELF. `relation` reads "PREVIEW — not
+ * a real testimonial" on every one, so a screenshot taken during review cannot
+ * be mistaken for live copy and pasted into a deck. A quote with no real name
+ * attached to it is not an endorsement; a quote with an invented parent's name
+ * is, which is why the names are obviously placeholders too.
+ *
+ * ⚠ THE THREE LENGTHS ARE THE POINT — short, medium and long. That is what a
+ * layout preview is actually for: seeing how the card handles a two-line quote
+ * against a six-line one, and whether the rail's heights stay even.
+ *
+ * TO GO LIVE: delete this block and fill `testimonials` directly with real
+ * entries. See the four-things rule in the header above.
+ */
+const PREVIEW_ONLY: ParentTestimonial[] = [
+  {
+    quote: 'Short sample quote, to check how the card looks when there is very little to say.',
+    parentName: 'Sample Parent A',
+    relation: 'PREVIEW — not a real testimonial',
+    className: 'Class IV',
+  },
+  {
+    quote:
+      'A medium-length sample. This is roughly the length most real parent comments run to, ' +
+      'which makes it the useful case for judging the card, the measure and the rail height.',
+    parentName: 'Sample Parent B',
+    relation: 'PREVIEW — not a real testimonial',
+    className: 'Class VIII',
+  },
+  {
+    quote:
+      'A deliberately long sample, to find the point where the card stops being comfortable. ' +
+      'If this one wraps past the fold, or forces the other two cards taller than they need ' +
+      'to be, that is the layout telling you a real testimonial of this length needs trimming ' +
+      'at the source rather than squeezing here. Nothing in this paragraph is a real opinion ' +
+      'about the school and it must never be published.',
+    parentName: 'Sample Parent C',
+    relation: 'PREVIEW — not a real testimonial',
+  },
+];
+
+/**
+ * ⚠ EMPTY IN PRODUCTION, BY CONSTRUCTION. See PREVIEW_ONLY above. Replace this
+ * line with a real array when consented testimonials exist.
+ */
+export const testimonials: ParentTestimonial[] = import.meta.env.DEV ? PREVIEW_ONLY : [];
 
 /**
  * ═══ DOCUMENTED PARTICIPATION ══════════════════════════════════════════════

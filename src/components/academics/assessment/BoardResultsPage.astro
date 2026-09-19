@@ -2,18 +2,26 @@
 /**
  * ACADEMICS · BOARD RESULTS — five sections.
  *
- * ⚠⚠ NO RESULT IS ESTIMATED, INFERRED OR ILLUSTRATED. The site audit records
- * board results as "no pass %, no toppers, no year-on-year data". The original
- * client brief asked for a "98% Board Results" counter. It is not here and must
- * never be: a school's results are the one number a family will act on, and an
- * invented one would be indistinguishable from a measured one.
+ * ⚠⚠ THIS PAGE ONCE SAID THE RESULTS WERE NOT PUBLISHED. THEY ARE, AND THEY
+ * ALWAYS WERE. The school files "Last Three Years Board Result" (BRS.pdf) on its
+ * own letterhead as part of the CBSE mandatory public disclosure, and those
+ * figures have been transcribed in data/disclosure.ts → `boardResults` since
+ * that file was written. /general-info/ has been rendering them the whole time
+ * while THIS page — the one a parent searching for results actually lands on —
+ * told them no results existed. The site contradicted itself in public.
  *
- * ⚠ THE CARDS IN SECTION 01 CARRY THE ABSENCE, NOT A STATISTIC. The design
- * brief asks for a floating "Results not published" panel listing "no pass
- * percentage, no toppers list, no rank holders, no year-on-year data". Every one
- * of those four lines is a true statement about the record — which is what makes
- * the panel safe. Nothing in the composition holds a number the school has not
- * printed.
+ * ⚠⚠ NO RESULT IS ESTIMATED, INFERRED OR ILLUSTRATED. Every figure below comes
+ * from `boardResults`, which comes from the school's letterhead. The original
+ * client brief asked for a "98% Board Results" counter; what is here instead is
+ * the school's own 98.90% for Class XII 2025, with the registered and passed
+ * counts beside it so it can be read rather than trusted.
+ *
+ * ⚠ THE ABSENCE PANEL NOW CARRIES ONLY WHAT IS STILL ABSENT. It used to list
+ * four absences; two of them — "no pass percentage" and "no year-on-year data" —
+ * were false the day they were written. What remains genuinely unpublished is
+ * the individual detail: toppers, rank holders, and the number who APPEARED
+ * (BRS.pdf gives Registered and Passed only, which are not the same thing).
+ * Do not add an "appeared" figure by subtraction or assumption.
  *
  * ═══ WHAT THE SCHOOL DOES PUBLISH ABOUT OUTCOMES ═══════════════════════════
  *   CUET (UG) 2025 — result cards per student, with NTA scores and subject
@@ -36,6 +44,8 @@ import { Picture } from 'astro:assets';
 import '../../../styles/assessment.css';
 import { MARK } from './marks';
 import AsClose from './AsClose.astro';
+import PendingBlock from '../../ui/PendingBlock.astro';
+import { boardResults, disclosureSource } from '../../../data/disclosure';
 
 import pExam from '../../../assets/photos/sunbeem-students.jpg';
 import pCampus from '../../../assets/photos/sunbeem-1.jpg';
@@ -51,19 +61,26 @@ const ASSESSMENT = '/academics/assessment/';
 
 /* ── SECTION 01 — the four absences. Every line is a true statement about the
    record, checked one at a time. ────────────────────────────────────────── */
+/* ⚠ WAS FOUR LINES, TWO OF THEM UNTRUE. "No pass percentage" and "No
+   year-on-year data" were both contradicted by the school's own BRS.pdf. These
+   three are what is genuinely still unpublished — checked one at a time. */
 const absent = [
-  { mark: 'chart', k: 'No pass percentage' },
   { mark: 'medal', k: 'No toppers list' },
   { mark: 'ribbon', k: 'No rank holders' },
-  { mark: 'clock', k: 'No year-on-year data' },
+  { mark: 'person', k: 'No appeared count' },
 ] as const;
 
+/* The newest year, for the headline pair. The table below shows all three. */
+const latest = boardResults[0];
+
 /* ── SECTION 03 — the information strip ─────────────────────────────────── */
+/* ⚠ ALL FOUR OF THESE USED TO ANNOUNCE AN ABSENCE, AND THREE OF THE FOUR WERE
+   WRONG. They now say what the record holds and where it came from. */
 const strip = [
-  { n: '01', mark: 'calendar', k: 'No annual table', v: 'The school does not publish an annual results table for Class X or Class XII.' },
-  { n: '02', mark: 'person', k: 'No individual ranks', v: 'No toppers, no merit list, no rank holders.' },
-  { n: '03', mark: 'chart', k: 'No pass percentage', v: 'No overall pass percentage, no stream-wise percentage, no year-on-year trend.' },
-  { n: '04', mark: 'doc', k: 'Results when supplied', v: 'When the school supplies its data, it will be shown here with the year, cohort size and board.' },
+  { n: '01', mark: 'calendar', k: 'Three years, on letterhead', v: 'Class X and Class XII for ' + boardResults.map((r) => r.year).join(', ') + ', as filed by the school with CBSE.' },
+  { n: '02', mark: 'chart', k: 'Registered and passed', v: 'Each year gives the number registered, the number passed and the pass percentage.' },
+  { n: '03', mark: 'person', k: 'No individual ranks', v: 'No toppers, no merit list, no rank holders — the filing carries none.' },
+  { n: '04', mark: 'doc', k: 'The source document', v: 'BRS.pdf, "Last Three Years Board Result", published with the mandatory public disclosure.' },
 ] as const;
 ---
 
@@ -85,25 +102,91 @@ const strip = [
 
       <p class="as-kicker" data-reveal>What is published</p>
       <h2 class="as-h as-h--xl br-open__h" id="br-open-t">
-        <span data-clip data-clip-delay="0">No pass rate.</span>
-        <span data-clip data-clip-delay="150"><em>No toppers.</em></span>
+        <span data-clip data-clip-delay="0">Three years,</span>
+        <span data-clip data-clip-delay="150"><em>on letterhead.</em></span>
       </h2>
 
       <p class="as-body" data-reveal data-reveal-delay="200">
-        Sunbeam School Ballia does not currently publish its <strong>CBSE Class X and Class XII
-        results</strong> — no pass percentage, no toppers, and no year-on-year data. That is the
-        whole of the position, and it is stated here rather than worked around.
+        Sunbeam School Ballia files <strong>“Last Three Years Board Result”</strong> with CBSE as part
+        of its mandatory public disclosure, on its own letterhead. Class X and Class XII, for
+        {' '}{boardResults.map((r) => r.year).join(', ')}. Every figure on this page is read off that
+        document — none is estimated, rounded or illustrated.
       </p>
       <p class="as-body" data-reveal data-reveal-delay="260">
-        It would be easy to fill this page. A pass percentage is the most expected number on a school
-        website, and almost nobody checks one. That is exactly why it is not here: a figure invented
-        on this page would be indistinguishable from a figure the school had measured, and a family
-        would choose a school on it.
+        It would be easy to improve these numbers. A pass percentage is the most expected figure on a
+        school website and almost nobody checks one. That is exactly why each one here is printed
+        beside the counts it comes from: <strong>registered</strong> and <strong>passed</strong>, so
+        the percentage can be read rather than trusted.
       </p>
       <p class="as-body" data-reveal data-reveal-delay="320">
-        When the school supplies its results, they belong here — with the year, the cohort size and
-        the board attached, so they can be read rather than trusted.
+        What the filing does not carry is individual detail — no toppers, no merit list, no rank
+        holders, and no count of how many <em>appeared</em> as distinct from how many registered.
+        Those are not inferred here.
       </p>
+
+      {/* ⚠ THE THREE-YEAR TABLE. Static markup, no tabs — /general-info/ already
+          carries the tabbed version of the same array, and a second interactive
+          copy of one dataset is two things to keep in step. */}
+      <div class="br-table" data-reveal data-reveal-delay="380">
+        <table>
+          <caption class="u-visually-hidden">
+            CBSE Class X and Class XII board results for {boardResults.map((r) => r.year).join(', ')},
+            showing students registered, students passed and the pass percentage.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Year</th>
+              <th scope="col">Class</th>
+              <th scope="col" class="br-table__num">Registered</th>
+              <th scope="col" class="br-table__num">Passed</th>
+              <th scope="col" class="br-table__num">Pass&nbsp;%</th>
+            </tr>
+          </thead>
+          <tbody>
+            {boardResults.map((r) => (
+              <>
+                <tr>
+                  <th scope="rowgroup" rowspan="2" class="br-table__yr t-tabular">{r.year}</th>
+                  <th scope="row">Class X</th>
+                  <td class="br-table__num t-tabular">{r.x.registered}</td>
+                  <td class="br-table__num t-tabular">{r.x.passed}</td>
+                  <td class="br-table__num t-tabular"><strong>{r.x.percentage}%</strong></td>
+                </tr>
+                <tr>
+                  <th scope="row">Class XII</th>
+                  <td class="br-table__num t-tabular">{r.xii.registered}</td>
+                  <td class="br-table__num t-tabular">{r.xii.passed}</td>
+                  <td class="br-table__num t-tabular"><strong>{r.xii.percentage}%</strong></td>
+                </tr>
+              </>
+            ))}
+          </tbody>
+        </table>
+        <p class="br-table__src">
+          Source: BRS.pdf, filed with the
+          {' '}<a class="as-link" href="/mandatory-public-disclosure/">mandatory public disclosure</a>.
+          {' '}{disclosureSource.covers}.
+        </p>
+      </div>
+
+      {/* ⚠ THE INDIVIDUAL DETAIL, AS A PLACEHOLDER — NOT AS A NUMBER. The filing
+          gives Registered and Passed only. "Appeared" is NOT derivable from
+          those two and must never be computed here; a student can register and
+          not appear. Client instruction, 17 Sep 2026. */}
+      <div class="br-pending" data-reveal data-reveal-delay="430">
+        <PendingBlock
+          icon="star"
+          title="Topper and rank-holder information"
+          body="Topper details, rank holders and the number of students who appeared will be published when officially provided by the school. The filing behind the table above carries registered and passed figures only, so none of this is calculated or estimated here."
+          needs={[
+            'toppers, with marks',
+            'written consent to publish named students',
+            'rank holders / merit list',
+            'students appeared, per class per year',
+          ]}
+          ref="A1"
+        />
+      </div>
     </div>
 
     {/* ⚠ EVERY LAYER IS DECORATION OR A TRUE STATEMENT. No element in this
@@ -151,7 +234,7 @@ const strip = [
 
       {/* The absence panel. Four lines, each of them checkable. */}
       <div class="br-panel" data-pop data-pop-delay="240">
-        <p class="br-panel__k">Results not published</p>
+        <p class="br-panel__k">Not published</p>
         <ul class="br-panel__list">
           {absent.map((a) => (
             <li>
@@ -173,9 +256,9 @@ const strip = [
           </svg>
         </span>
         <span class="br-board__t">
-          <span class="br-board__lab">Boards</span>
-          <span class="br-board__k">CBSE</span>
-          <span class="br-board__v">Class X &amp; XII</span>
+          <span class="br-board__lab">CBSE {latest.year}</span>
+          <span class="br-board__k t-tabular">{latest.x.percentage}% · {latest.xii.percentage}%</span>
+          <span class="br-board__v">Class X &amp; XII pass rate</span>
         </span>
       </div>
     </div>
@@ -265,10 +348,10 @@ const strip = [
 
 <AsClose
   id="br-close-t"
-  kicker="Held, not printed"
-  lead="Unpublished,"
-  accent="not unmeasured."
-  body="The school holds its board results; it has simply not published them. Until it does, this site will not print a figure — the office can answer for a particular year, and the outcome data that is published sits on University Counselling."
+  kicker="Filed, and printed here"
+  lead="Measured,"
+  accent="not estimated."
+  body="Every figure on this page is read off the school's own filing — registered, passed, and the percentage that follows from the two. What the filing does not carry is individual detail: no toppers, no rank holders, and no count of who appeared as distinct from who registered. None of that is inferred here, and the office can answer for a particular year."
   photo={pCohort}
   position="50% 38%"
 />
@@ -481,6 +564,57 @@ const strip = [
     line-height: 1.66;
     color: var(--sb-text-muted);
   }
+  .br-pending { margin-top: clamp(18px, 2.2vw, 28px); }
+
+  /* --- The three-year table -------------------------------------------------
+     Plain rules and tabular figures; the numbers are the design. Scrolls on its
+     own at narrow widths so the page body never scrolls sideways. */
+  .br-table {
+    margin-top: clamp(20px, 2.4vw, 30px);
+    overflow-x: auto;
+  }
+
+  .br-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(12.5px, 1vw, 14px);
+  }
+
+  .br-table th,
+  .br-table td {
+    padding: clamp(7px, 0.8vw, 10px) clamp(8px, 1vw, 14px);
+    text-align: left;
+    border-bottom: 1px solid color-mix(in srgb, var(--sb-charcoal) 12%, transparent);
+  }
+
+  .br-table thead th {
+    font-size: clamp(9.5px, 0.74vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+    border-bottom-width: 2px;
+  }
+
+  .br-table__num { text-align: right; }
+
+  .br-table__yr {
+    vertical-align: top;
+    font-weight: 700;
+    font-size: clamp(14px, 1.2vw, 17px);
+    color: var(--sb-violet);
+  }
+
+  .br-table tbody tr:last-child th,
+  .br-table tbody tr:last-child td { border-bottom: none; }
+
+  .br-table__src {
+    margin: clamp(8px, 1vw, 12px) 0 0;
+    font-size: clamp(10.5px, 0.8vw, 12px);
+    line-height: 1.55;
+    color: var(--sb-text-muted);
+  }
+
   .br-strip__foot { max-width: none; margin-top: clamp(20px, 2.4vw, 30px); padding-top: clamp(14px, 1.6vw, 20px); border-top: 1px solid color-mix(in srgb, var(--sb-charcoal) 12%, transparent); }
 
   /* ═══ RESPONSIVE ══════════════════════════════════════════════════════════ */

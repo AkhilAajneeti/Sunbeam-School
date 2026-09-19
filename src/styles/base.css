@@ -63,11 +63,17 @@
    axis and the whole display voice. */
 /* Caveat, SIL Open Font License 1.1, self-hosted like every other face here —
    nothing in this project loads a font off a third-party CDN.
-   ⚠ ONE CONSUMER ONLY: the "Real stories, real impact" flourish in the Google
-   review band (.grv__flourish). It is a display script with no business near
-   running text — if a second component ever wants it, that is the moment to ask
-   whether the component is right, not to widen the token. 75 KB, and it is
-   deliberately NOT preloaded: the section reads completely without it. */
+   ⚠ TWO CONSUMERS, BOTH ORNAMENTAL: the "Real stories, real impact" flourish in
+   the Google review band (.grv__flourish), and the "Learners Today / Leaders
+   Tomorrow" couplet in the homepage hero panel (.hero__deco-script), added
+   17 Sep 2026 because the client's own hero comp draws it in a handwritten
+   hand. Both are aria-hidden decoration at a section's edge.
+
+   ⚠ THE RULE STILL STANDS FOR RUNNING TEXT. It is a display script with no
+   business near anything a reader has to read; if a third component wants it,
+   that is still the moment to ask whether the component is right rather than to
+   widen the token. 75 KB, and deliberately NOT preloaded: both sections read
+   completely without it, and a late swap moves ornament only. */
 @font-face {
   font-family: 'Caveat Variable';
   font-style: normal;

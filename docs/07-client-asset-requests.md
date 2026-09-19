@@ -6,10 +6,52 @@ Ordered by **whether they block the build.** Items A1–A9 are blocking or near-
 
 ---
 
+> ### ⚠ Audited 19 September 2026 — several items here were asking for things we already had
+>
+> `data/site.ts` exports a `pending` registry and says it mirrors this file. It
+> had drifted. Three entries were asking the school for material that was
+> already in the repository or already on their own website, which is worse than
+> asking for nothing: it left pages rendering an absence next to the data that
+> filled it.
+>
+> | Item | Was | Now |
+> |---|---|---|
+> | **A1** Board results | "no pass %, no toppers, no year-on-year data" | **Three years published.** They were in `BRS.pdf`, filed with the school's own CBSE disclosure, and transcribed in `data/disclosure.ts` the whole time. Narrowed to the individual detail |
+> | **A3** Vision & Mission | Both requested | **Vision delivered** and transcribed on `/about/vision-mission/`; **motto settled**. Narrowed to the Mission alone |
+> | **A5** Rewritten copy | Homepage copy + Principal's message | **CLOSED.** Both supplied; the Principal's full message went live 17 Sep 2026 |
+> | **A12** VP's message | *(new 16 Sep)* | **CLOSED** 17 Sep — message and portrait supplied |
+> | **A13** NCC detail | *(new 16 Sep)* | **Mostly closed.** The battalions, both officers, the camp and the enrolments are on the school's own site; only cadet numbers remain |
+>
+> **Before adding an entry here, grep for the data.** That is how all of the
+> above went stale. And before recording something as unpublished, search the
+> school's site rather than its navigation — the Student Monitors list
+> (`data/classCorner.ts`) and the whole NCC record (`data/uniformedGroups.ts`)
+> were both found that way, on pages with no menu entry pointing at them.
+
+---
+
 ## A. Blocking — the build cannot be completed correctly without these
 
-### A1 · Board Results — **highest priority content gap**
-`[NEEDED]` Class X and Class XII results, last three sessions minimum.
+### A1 · Board Results — **largely CLOSED, 19 Sep 2026**
+
+`[PARTLY SUPPLIED]` The results themselves were never missing. The school files
+`BRS.pdf` — "Last Three Years Board Result" — on its own letterhead with its CBSE
+mandatory public disclosure, and those figures are transcribed in
+`data/disclosure.ts → boardResults`. `/general-info/` had been rendering them all
+along while `/academics/board-results/` told readers no results existed.
+
+**Published now:** Class X 2025 — 194 registered, 194 passed, 100%. Class XII 2025
+— 181 registered, 179 passed, 98.90%. Three years deep.
+
+`[STILL NEEDED]` The individual detail only:
+
+- Toppers, with marks — **and written consent to publish named students**
+- Rank holders / merit list
+- Students **appeared**, per class per year. ⚠ This is **not derivable**: the
+  filing gives *registered* and *passed*, and a student can register without
+  appearing. Do not compute it.
+
+The original request read:
 
 - Overall pass percentage per year
 - Number of students appearing / passing
@@ -58,8 +100,18 @@ One warm, aspirational 21:9 image — a child arriving, an assembly. **Not a bui
 
 **Grade for all:** warm, natural, lifted shadows, no heavy saturation, no filters, no vignettes.
 
-### A3 · Vision and Mission statements
-`[NEEDED]` The actual text of both.
+### A3 · Vision and Mission statements — **narrowed to the Mission**
+
+`[PARTLY SUPPLIED]` The **Vision** arrived and is transcribed verbatim on
+`/about/vision-mission/`, from the three identity panels the client sent. The
+**motto** question is settled — `site.ts → school.motto`.
+
+`[STILL NEEDED]` **The Mission statement.** The supplied panels carry a Vision, a
+greeting and an identity story, and no Mission. The page is titled "Vision and
+Mission" at the client's request, so the heading currently names something the
+page does not yet contain — and nothing has been invented to fill it.
+
+The original request read:
 
 **Why blocking:** audit 1.7 requires Vision and Mission in the homepage About section. `/mission-vision/` returns no extractable statement text. **We will not write a school's mission for it.** Also needed: confirmation of the primary motto — "Educating the FUTURE!" (used by Ballia) or "Lighting the Lamp of Knowledge" (the Sunbeam Group phrase). Both are currently in circulation.
 
@@ -73,16 +125,32 @@ One warm, aspirational 21:9 image — a child arriving, an assembly. **Not a bui
 
 **Why blocking:** audit §12 and §13 are both substantial requirements and **no alumni page exists on the current site.** The homepage §12 section will be built regardless, with a documented text-quote and then registration-only fallback — but it ships weakened without this.
 
-### A5 · Rewritten body copy
-`[NEEDED]` Approval and/or authorship of rewritten text.
+### A5 · Rewritten body copy — **CLOSED**
+
+`[SUPPLIED]` Both halves arrived. The homepage welcome copy came with the client's
+hero brief; the **full Principal's message** was supplied on 17 September 2026 and
+is live on `/about/principals-message/` — five paragraphs, verbatim, replacing the
+two-paragraph extract that stood while the rest was outstanding. The Director's
+message was already live.
+
+The original request read:
 
 - **Homepage welcome copy** — the current text is machine-spun and near-unreadable ("understudies can exceed expectations", "guzzling more up to date"). This is the first paragraph a prospective parent reads. Finding X4
 - **Principal's Message** — audit 1.12 requires thorough proofreading for grammatical and spelling errors
 - **Director's Message** — audit 1.9
 - Confirmation of who authors and signs off school voice
 
-### A6 · Academic content — audit §2, all six groups
-`[NEEDED]` The audit names 48 topics across groups A–F. Substantial writing is required. Highest priority:
+### A6 · Academic content — **BUILT**, with named exceptions
+
+`[DELIVERED]` All six groups are written and live: **58 pages under `/academics/`**,
+covering philosophy, structure, teaching & learning, assessment, student success
+and parent partnership. This entry is kept as a record of the original scope, not
+as an outstanding ask — which is why it is not in `data/site.ts → pending`.
+
+The exceptions are tracked separately and are still open: **scholarships (A16)**,
+**university destinations as text (A11)**, and **board-result detail (A1)**.
+
+The original request read — the audit names 48 topics across groups A–F:
 
 - **A.** Teaching philosophy · student-centred learning · experiential and inquiry-based learning · critical thinking and creativity · curriculum narrative
 - **B.** Stage-wise descriptions for all five stages · subject combinations per stream
@@ -119,6 +187,75 @@ One warm, aspirational 21:9 image — a child arriving, an assembly. **Not a bui
 The audit asks the school to review its YouTube and X profiles and, if they are not updated regularly, either maintain them consistently or remove the links "to avoid reflecting an inactive digital presence."
 
 **We will not ship links to dormant channels.** Please confirm, for each of Facebook, Instagram, LinkedIn, X and YouTube: keep and maintain, or remove.
+
+---
+
+## A10–A16 · Raised by the client's review of 16 September 2026
+
+These came out of the Director / Principal / Vice-Principal review and the work
+that followed it. They are numbered to match `data/site.ts → pending`.
+
+### A11 · University destinations, as text
+`[NEEDED]` The "Vision To Reality" board, year on year, **as data rather than
+artwork** — and a cohort size beside it.
+
+The Session 2024-25 board names eighteen leavers with course and institution, and
+is published whole on `/academics/student-success/university-counselling/`. What
+is missing is the same record as text, for more than one session.
+
+⚠ **This is also a consent question, not only a content one.** Those eighteen
+names are already published by the school on its own board. Retyping them as HTML
+is a different act: it makes eighteen named recent school-leavers searchable under
+their own names. **The school's sign-off is required before that happens** — and
+until it does, the alumni page shows the board and says so.
+
+### A12 · Vice Principal's message — **CLOSED, 17 Sep 2026**
+`[SUPPLIED]` Message and portrait received and live on
+`/about/vice-principals-message/`. The signature form "Mr. Pankaj Singh" came with
+them, which also settles the honorific the CBSE filing does not record.
+
+### A13 · NCC and Scouts & Guides — **NCC mostly closed**
+
+`[PARTLY SUPPLIED]` Most of the NCC record was already on the school's own site
+and is now published: both battalions (90 UP BN and 93 UP BN), the "first school
+in the district" claim, both Associate NCC Officers by name, their training at the
+NCC Officer Training Academy, Kamptee, the CATC-283 camp of 20–29 May 2025, and
+both certificate enrolments.
+
+`[STILL NEEDED]`
+
+- **Cadet strength**, per certificate level. Searched every page of the school's
+  site: there is no cadet count anywhere.
+- **Confirmation of one identity.** The school names "ANO Lt. Pankaj Singh" as an
+  NCC officer and its Vice Principal is Pankaj Singh. Probably the same person —
+  but no published source says so, and the site does not assert it.
+- **Scouts & Guides: everything, starting with whether a unit exists at all.** All
+  67 pages of the school's site were fetched and searched for *scout*, *Bharat
+  Scouts*, *rover*, *ranger*, *bulbul* and *cub*: **zero matches.** Nothing in the
+  CBSE filing, nothing in any asset drop. We do not know the unit exists, so the
+  page does not say it does.
+
+### A14 · Class Corner — two of five items
+`[NEEDED]`
+
+- **Examination In-charge** — name, designation, contact.
+- **Academic Excellence** — the school's own achievements list, the sessions it
+  covers, and consent for any named student.
+
+The other three (class teachers, timetable, student monitors) are live and link to
+the school's own files.
+
+### A15 · Inter-house fixture calendar
+`[NEEDED]` The fixture list, the dates for the session, and which year groups take
+part.
+
+The **houses themselves are known** — Red (Love), Yellow (Joy) and Green (Hope),
+from the school's own `/school-clubs/` page, which also states the house system
+"starts from class – III onwords". Only the calendar is missing.
+
+### A16 · Scholarships
+`[NEEDED]` Whether the school offers any, and on what basis. The audit records
+scholarships as "not mentioned"; parents search for this.
 
 ---
 

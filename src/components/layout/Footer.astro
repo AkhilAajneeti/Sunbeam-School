@@ -47,6 +47,11 @@ const columns = [
       },
       { label: "Director's Message", href: "/about/directors-message/" },
       { label: "Principal's Message", href: "/about/principals-message/" },
+      /* ⚠ THE THIRD LEADERSHIP MESSAGE. Client item 1. It sits beside the other
+         two here for the same reason it does in the menu — a reader looking for
+         "the leadership" should find all three in one list, even though this
+         one's text is still awaiting the school. */
+      { label: "Vice Principal's Message", href: "/about/vice-principals-message/" },
       // { label: 'Achievements & Recognition', href: '/about/achievements/' },
     ],
   },
@@ -195,7 +200,14 @@ const socials = [
                   {col.heading}
                 </a>
               ) : (
-                <h3 class="foot__col-head foot__col-head--plain">{col.heading}</h3>
+                /* ⚠ <h2>, NOT <h3>, AND THE LEVEL IS THE WHOLE POINT. This is
+                   the only heading element in the footer — the other three
+                   column heads are links — so on any page whose body has no
+                   <h2> of its own the document outline jumped h1 → h3. That was
+                   93 of 203 built pages. Nothing visual depends on the level:
+                   .foot__col-head sets font-family, size, weight and margins,
+                   and --plain zeroes the UA margin-top. */
+                <h2 class="foot__col-head foot__col-head--plain">{col.heading}</h2>
               )}
               <ul>
                 {col.links.map((l) => (
@@ -426,9 +438,10 @@ const socials = [
     color: var(--sb-lime);
   }
 
-  /* ⚠ THE ONE COLUMN HEAD THAT IS NOT A LINK. An <h3> brings UA margins and a
-     bolder default weight an <a> does not, and it must not react to hover —
-     looking clickable is exactly what was wrong with it before. */
+  /* ⚠ THE ONE COLUMN HEAD THAT IS NOT A LINK. A heading brings UA margins and
+     a bolder default weight an <a> does not, and it must not react to hover —
+     looking clickable is exactly what was wrong with it before. (It is an <h2>;
+     see the note beside the markup for why the level matters.) */
   .foot__col-head--plain {
     margin-top: 0;
     cursor: default;

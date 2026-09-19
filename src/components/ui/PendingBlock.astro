@@ -1,0 +1,229 @@
+---
+/**
+ * PENDING CONTENT BLOCK — the text counterpart of ui/AssetPlaceholder.astro.
+ *
+ * ═══ WHAT THIS IS FOR ══════════════════════════════════════════════════════
+ *
+ * The client's instruction (17 Sep 2026): where the school has not supplied
+ * content, the page must still be structurally complete and professionally
+ * designed — never blank, never broken — while making the temporary nature
+ * obvious and never presenting anything unverified as a fact about the school.
+ *
+ * This is the single component that does that. ONE treatment, used everywhere,
+ * so that:
+ *   · every pending block on the site looks the same and reads the same;
+ *   · a reader can tell verified content from awaiting content at a glance;
+ *   · `grep -rn "PendingBlock" src` lists every outstanding piece of content on
+ *     the site — which is how you find them all when the school answers.
+ *
+ * ⚠⚠ NOTHING PASSED TO THIS COMPONENT MAY BE A FACT ABOUT THE SCHOOL. Not a
+ * name, a date, a number, an award, an affiliation, a phone number or an event.
+ * The `body` says what WILL go here and who it has to come from — future tense,
+ * about the section, never a claim about the school. If you find yourself
+ * writing "the school has 120 cadets" in a `body`, stop: that is the thing this
+ * component exists to prevent.
+ *
+ * ⚠ IT IS DELIBERATELY OBVIOUS, and that is the design, not a shortcoming.
+ * Dashed edge, a stamped label, muted ground. Matching the surrounding cards
+ * exactly would be worse: it would read as finished content that happens to be
+ * thin, which is precisely the impression that gets a placeholder shipped.
+ *
+ * ⚠ NEVER LOREM IPSUM. Every word here is real English about the real gap.
+ *
+ * ═══ ACCESSIBILITY ═════════════════════════════════════════════════════════
+ * The stamp is real text, not a pseudo-element, so it reaches a screen reader
+ * in reading order before the body — a non-sighted reader learns the section is
+ * pending at the same point a sighted one does.
+ */
+interface Props {
+  /** The section's name — what this block WOULD be if it were filled. */
+  title: string;
+  /** What will appear here and who must supply it. Future tense. Never a claim. */
+  body: string;
+  /** The stamp. Defaults to the client's own preferred wording. */
+  label?: string;
+  /** Optional: the specific items owed, rendered as chips. Never facts. */
+  needs?: string[];
+  /** docs/07 asset-request id, e.g. 'A12'. Shown small, for our own tracking. */
+  ref?: string;
+  /** `card` sits inside a grid; `band` spans a section on its own. */
+  variant?: 'card' | 'band';
+  /** Matches the icon vocabulary already used across the site. */
+  icon?: 'doc' | 'person' | 'star' | 'calendar' | 'compass';
+  class?: string;
+}
+
+const {
+  title,
+  body,
+  label = 'Content to be updated',
+  needs = [],
+  ref,
+  variant = 'card',
+  icon = 'doc',
+  class: className = '',
+} = Astro.props;
+---
+
+<div class:list={['pb', `pb--${variant}`, className]} data-pending-content={ref ?? true}>
+  <div class="pb__top">
+    <span class="pb__icon" aria-hidden="true">
+      {icon === 'doc' && (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h9l3.5 3.5V21H6z" /><path d="M14.5 3v4H18M9 12h6M9 16h4" />
+        </svg>
+      )}
+      {icon === 'person' && (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3.4" /><path d="M5 20c0-3.5 3.1-5.8 7-5.8s7 2.3 7 5.8" />
+        </svg>
+      )}
+      {icon === 'star' && (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.6 9.7l5.8-.8Z" />
+        </svg>
+      )}
+      {icon === 'calendar' && (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3.6" y="5" width="16.8" height="15" rx="2.4" />
+          <path d="M3.6 10h16.8M8 3v4M16 3v4" />
+        </svg>
+      )}
+      {icon === 'compass' && (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8.6" /><path d="m15 9-2.2 4.8L8 16l2.2-4.8Z" />
+        </svg>
+      )}
+    </span>
+
+    <div class="pb__head">
+      {/* ⚠ REAL TEXT, NOT A ::before — a screen reader must meet this first. */}
+      <p class="pb__stamp">{label}</p>
+      <h3 class="pb__title">{title}</h3>
+    </div>
+  </div>
+
+  <p class="pb__body">{body}</p>
+
+  {needs.length > 0 && (
+    <div class="pb__needs">
+      <p class="pb__needs-k">Awaiting from the school</p>
+      <ul>
+        {needs.map((n) => <li>{n}</li>)}
+      </ul>
+    </div>
+  )}
+
+  {ref && <p class="pb__ref">Asset request {ref}</p>}
+</div>
+
+<style>
+  /* ⚠ DASHED, MUTED, STAMPED. See the header: looking finished is the failure
+     mode here, not looking unfinished. */
+  .pb {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sb-4, 12px);
+    padding: clamp(18px, 2.2vw, 28px);
+    border: 1px dashed rgba(18, 16, 15, 0.22);
+    border-radius: var(--sb-r-0, 16px);
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--sb-lime-wash, #fff1ea) 45%, transparent),
+        transparent 70%);
+  }
+
+  .pb--band { padding: clamp(22px, 2.8vw, 36px); }
+
+  .pb__top { display: flex; align-items: flex-start; gap: var(--sb-5, 16px); }
+
+  .pb__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px dashed rgba(18, 16, 15, 0.2);
+    color: var(--sb-text-muted, #6b6259);
+  }
+
+  .pb__icon svg { width: 20px; height: 20px; }
+
+  .pb__head { min-width: 0; }
+
+  .pb__stamp {
+    margin: 0 0 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-violet, #c93c0a);
+  }
+
+  .pb__title {
+    margin: 0;
+    font-family: var(--sb-font-display, inherit);
+    font-weight: 700;
+    font-size: clamp(15px, 1.4vw, 19px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--sb-ink, #16100c);
+  }
+
+  .pb__body {
+    max-width: 68ch;
+    margin: 0;
+    font-size: var(--sb-body-sm, 0.9375rem);
+    line-height: 1.65;
+    color: var(--sb-text-muted, #6b6259);
+  }
+
+  .pb__needs { margin-top: 2px; }
+
+  .pb__needs-k {
+    margin: 0 0 7px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted, #6b6259);
+  }
+
+  .pb__needs ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pb__needs li {
+    padding: 4px 11px;
+    border-radius: 999px;
+    border: 1px dashed rgba(18, 16, 15, 0.22);
+    font-size: var(--sb-caption, 0.8125rem);
+    line-height: 1.4;
+    color: var(--sb-text-muted, #6b6259);
+  }
+
+  .pb__ref {
+    margin: 0;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--sb-text-muted, #6b6259) 72%, transparent);
+  }
+
+  @media (max-width: 559px) {
+    .pb__top { gap: var(--sb-4, 12px); }
+    .pb__icon { width: 36px; height: 36px; }
+    .pb__icon svg { width: 17px; height: 17px; }
+  }
+</style>

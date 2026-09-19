@@ -29,34 +29,11 @@
  * <section class="pfb__part"> block to match the reference literally.
  */
 import { Image } from 'astro:assets';
-import Photo from '../../ui/Photo.astro';
 import FeedbackForm from './FeedbackForm.astro';
 import { testimonials, participation, closing } from '../../../data/parentsFeedback';
 
 import leaf from '../../../assets/icons/leaf-remove.png';
-import forumSeated from '../../../assets/parents forum/parents forum (2).jpg';
-import forumHall from '../../../assets/parents forum/parents forum (6).jpg';
-import orientation from '../../../assets/school-event/Parent-Orientation/pop1-2024-a.jpg';
 
-/* Three equal frames, as the reference has them: a working group, the hall
-   full, and an orientation session under the projected programme. */
-const strip = [
-  {
-    src: forumSeated,
-    alt: 'Parents and staff of Sunbeam School Ballia seated around a table during a Parents’ Forum working session.',
-    position: '50% 44%',
-  },
-  {
-    src: forumHall,
-    alt: 'Parents of Sunbeam School Ballia filling the hall for a sitting of the Parents’ Forum.',
-    position: '50% 46%',
-  },
-  {
-    src: orientation,
-    alt: 'A Parent Orientation Programme session at Sunbeam School Ballia, the programme projected above the speaker.',
-    position: '50% 42%',
-  },
-];
 ---
 
 <div class="pfb">
@@ -104,6 +81,7 @@ const strip = [
           <ul class="pfb__rail" data-pfb-rail>
             {testimonials.map((t) => (
               <li class="pfb__card">
+                <span class="pfb__cshape" aria-hidden="true"></span>
                 <span class="pfb__quote" aria-hidden="true">&rdquo;</span>
                 <blockquote class="pfb__text"><p>{t.quote}</p></blockquote>
                 <div class="pfb__by">
@@ -201,20 +179,6 @@ const strip = [
               stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
-      </div>
-    </div>
-  </section>
-
-  {/* ── Three photographs ────────────────────────────────────────────────── */}
-  <section class="pfb__shots" aria-label="Parents at Sunbeam School Ballia">
-    <div class="u-container">
-      <div class="pfb__strip">
-        {strip.map((g, i) => (
-          <figure class="pfb__shot" data-reveal data-reveal-delay={i * 70}>
-            <Photo src={g.src} alt={g.alt} brief={g.alt} position={g.position}
-              ref="A2" quiet sizes="(max-width: 767px) 92vw, 30vw" />
-          </figure>
-        ))}
       </div>
     </div>
   </section>
@@ -365,7 +329,12 @@ const strip = [
   .pfb__rail {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: calc((100% - (3 * var(--sb-5))) / 4);
+    /* ⚠ TWO AT A TIME, THE SAME MEASURE AS .pfb__grid BELOW. At four up a real
+       testimonial had about 240px to live in and every quote broke into a
+       narrow column of five-word lines. Two up gives the text a readable
+       measure and matches the participation rail directly underneath, so the
+       page reads as one pattern rather than two. */
+    grid-auto-columns: calc((100% - var(--sb-5)) / 2);
     gap: var(--sb-5);
     margin: 0;
     padding: 4px 4px var(--sb-4);
@@ -377,16 +346,29 @@ const strip = [
   }
   .pfb__rail::-webkit-scrollbar { display: none; }
 
+  /* ⚠ THE SAME SHELL AS .pfb__item, DELIBERATELY — ivory ground, hairline rule,
+     --sb-r-0 corner, no shadow, and the shape-2 flourish clipped to the corner.
+     The two rails sit one above the other on this page; a white shadowed card
+     over an ivory flat one read as two different components. What differs is
+     only what is INSIDE: a quote and an attribution rather than a numeral and
+     a heading. */
   .pfb__card {
+    position: relative;
+    overflow: hidden;
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     padding: var(--sb-6);
-    background: var(--sb-paper);
+    background: var(--sb-ivory);
     border: var(--sb-rule);
     border-radius: var(--sb-r-0);
-    box-shadow: var(--sb-shadow-card);
   }
+
+  /* Everything in the card rides above the flourish. */
+  .pfb__quote,
+  .pfb__text,
+  .pfb__by { position: relative; z-index: 1; }
 
   /* A closing quote glyph, which is what the reference draws — it sits above
      the text rather than wrapping it. */
@@ -621,33 +603,6 @@ const strip = [
   }
   .pfb__ib:last-of-type { margin-bottom: 0; }
 
-  /* ── Photographs ──────────────────────────────────────────────────────── */
-
-  .pfb__shots { padding-block: 0 var(--pfb-band); }
-
-  .pfb__strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--sb-5);
-  }
-
-  .pfb__shot {
-    margin: 0;
-    aspect-ratio: 4 / 3;
-    border-radius: var(--sb-r-0);
-    overflow: hidden;
-  }
-  .pfb__shot :global(.photo) { border-radius: 0; height: 100%; }
-  .pfb__shot :global(img) {
-    height: 100%;
-    transition: transform var(--sb-dur-image) var(--sb-ease);
-  }
-  .pfb__shot:hover :global(img) { transform: scale(1.03); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .pfb__shot:hover :global(img) { transform: none; }
-  }
-
   /* ── Closing ──────────────────────────────────────────────────────────── */
 
   .pfb__close { padding-block: 0 var(--pfb-band); }
@@ -711,7 +666,9 @@ const strip = [
   /* ── Tablet ───────────────────────────────────────────────────────────── */
 
   @media (max-width: 1023px) {
-    .pfb__rail { grid-auto-columns: calc((100% - var(--sb-5)) / 2); }
+    /* ⚠ THE grid-auto-columns OVERRIDE THAT WAS HERE IS GONE — it set the rail
+       to two up, which is now what the base rule does at every width. A rule
+       that restates its own default is how a stylesheet stops being readable. */
     .pfb__nav--prev { inset-inline-start: 2px; }
     .pfb__nav--next { inset-inline-end: 2px; }
   }
@@ -734,9 +691,6 @@ const strip = [
     .pfb__nav { display: none; }
 
     .pfb__grid { grid-auto-columns: 88%; }
-
-    .pfb__strip { grid-template-columns: 1fr; gap: var(--sb-4); }
-    .pfb__shot { aspect-ratio: 16 / 10; }
 
     /* The reference breaks these two lines for rhythm on a wide screen; on a
        phone the forced break leaves a short orphan line. */

@@ -49,16 +49,22 @@
  * and their indoor/outdoor split, all seven competition records, the four
  * facilities, the NCC 'A' and 'B' affiliations.
  *
+ * ⚠⚠ THE HOUSES ARE NOW KNOWN, AND THIS NOTE USED TO SAY THEY WERE NOT. The
+ * school's own Student Council page names THREE — RED, YELLOW and GREEN — each
+ * with a Captain, a Vice Captain and a Junior Captain, which is both the names
+ * and the count. Transcribed in data/studentCouncil.ts; see `houses` below.
+ * docs/08 §29 recorded the houses as unpublished, and that was true of the
+ * pages then read — it was the Student Council page that answered it.
+ *
  * NOT published anywhere, and therefore never asserted below:
- *   · how many houses the school runs, or what they are called (docs/08 §29
- *     records this explicitly — the live site confirms houses exist and never
- *     states a number)
+ *   · the inter-house FIXTURE CALENDAR — which houses play what, and when.
+ *     Knowing the houses exist and are named is not knowing the fixture list.
  *   · any coach, timetable, or programme detail
  *   · any participation headcount
  *
  * §4 and §5 are therefore built out of things that ARE evidenced — the ladder
  * the school's own results climb, and what those results imply about coaching —
- * rather than out of invented house names and invented coach biographies.
+ * rather than out of invented fixtures and invented coach biographies.
  */
 
 /* Explicit imports, not a glob: which frame goes where is a content decision on
@@ -320,13 +326,36 @@ export const figures = [
 
 /* ═══ §4 · INTER-HOUSE, AND WHERE IT LEADS ══════════════════════════════════
    The client asks for house competitions on a timeline with photographs. The
-   school publishes no house names, no house count and no fixture list — so the
-   timeline is built from the rungs the school's OWN RESULTS climb, starting at
-   the house match. Every rung above the first carries a published record.
+   school names its three houses on the Student Council page but publishes no
+   fixture list — so the timeline is built from the rungs the school's OWN
+   RESULTS climb, starting at the house match. Every rung above the first
+   carries a published record.
 
-   Rung one is the client's own statement that inter-house competition happens.
-   `pending` marks it: the fact is theirs, the detail is still missing, and the
-   chip shows in build-notes mode without disfiguring the page in production. */
+   Rung one now names the three houses, which is the school's own fact. What is
+   still missing is the CALENDAR — who plays whom, and when. `pending` marks
+   that remainder: the chip shows in build-notes mode without disfiguring the
+   page in production. */
+
+/**
+ * ⚠ THE SCHOOL'S THREE HOUSES, from its own Student Council page — the same
+ * source as data/studentCouncil.ts, where each house carries a Captain, a Vice
+ * Captain and a Junior Captain. The colour values are the dots used on that
+ * page; keep the two in step if either changes.
+ */
+export const houses = [
+  { name: 'Red', colour: '#c5221f', stands: 'Love' },
+  { name: 'Yellow', colour: '#d9a406', stands: 'Joy' },
+  { name: 'Green', colour: '#0b8043', stands: 'Hope' },
+] as const;
+
+/**
+ * ⚠ THE SCHOOL'S OWN WORDS, from https://sunbeamballia.edu.in/school-clubs/
+ * read 17 September 2026: each house "depicts" a quality, and the system
+ * "starts from class – III onwords" (their spelling). The house system is
+ * therefore not school-wide — Nursery to Class II are outside it, which is a
+ * fact worth keeping rather than rounding off.
+ */
+export const houseSystemFrom = 'Class III';
 
 /**
  * SHAPED LIKE `stages` IN data/academics.ts, ON PURPOSE. The client asked for
@@ -356,12 +385,21 @@ export const ladder: Rung[] = [
     step: 'In school',
     title: 'House against house',
     body: 'The inter-house calendar is where nearly every child gets a first competitive fixture — before any trial, any squad and any travel.',
-    /* ⚠ THESE THREE RESTATE THE CLIENT'S OWN CLAIM AND ADD NOTHING TO IT. The
-       school publishes no house names, no house count and no fixture list, so
-       the milestone says so rather than a fourth invented fact filling the slot
-       the other three rungs fill with published records. */
-    items: ['Inter-house fixtures', 'Open to every year group', 'A first competitive game'],
-    milestone: 'House names and fixture calendar to be supplied by the school',
+    /* ⚠ THE FIRST ITEM IS NOW THE SCHOOL'S OWN — its three houses, named on its
+       Student Council page. The other two restate the client's claim and add
+       nothing to it. The milestone names the ONE thing still missing; it used
+       to ask for the house names too, which the school had already published. */
+    /* ⚠ "Open to every year group" WAS WRONG AND IS GONE. The school's own
+       school-clubs page says the house system starts from Class III, so the
+       lower years are not in it — that line claimed something the source
+       contradicts. The houses now carry what each one stands for, which is
+       also the school's wording ("depicts"). */
+    items: [
+      houses.map((h) => `${h.name} — ${h.stands}`).join(' · '),
+      `House system from ${houseSystemFrom}`,
+      'A first competitive game',
+    ],
+    milestone: 'Inter-house fixture calendar to be supplied by the school',
     glyph: 'field',
     accent: 'teal',
     pending: true,

@@ -492,23 +492,38 @@ export const streamOptional = [
   'Physical Education',
   'Applied Maths',
   'Geography',
+  /* ⚠ ADDED 16 Sep 2026, client instruction from the Director / Principal /
+     Vice-Principal review. Geography STAYS in this list: the same review moved
+     Geography out of the Humanities CORE, which is a different thing from
+     withdrawing it as an option. Do not remove it without being told to. */
+  'Sanskrit',
 ] as const;
 
 export const streamAdditional = [
   'Artificial Intelligence',
   'Kathak',
-  'Fine Arts',
+  /* ⚠ 'Painting' REPLACED 'Fine Arts' — 16 Sep 2026, same client review. Their
+     wording is "Painting"; it is not a rename of convenience, so do not widen
+     it back to the broader CBSE subject name. */
+  'Painting',
   'Legal Studies',
   'Agriculture',
   'Entrepreneurship',
+  /* ⚠ ADDED in the same review. */
+  'Yoga',
 ] as const;
 /**
- * ⚠ `coreUnverified` IS SET ON HUMANITIES AND NOWHERE ELSE, ON PURPOSE.
- * PCM and PCB are definitional — the stream name IS the subject list. Commerce
- * is the standard CBSE trio almost everywhere it is taught. Humanities is the
- * one whose core genuinely varies between schools, and the one the school has
- * not confirmed. An absent flag on the other three is a decision; see the three
- * confidence levels documented above.
+ * ⚠ `coreUnverified` IS NOW SET ON NOTHING, AND THE FLAG IS KEPT ANYWAY.
+ *
+ * It was on Humanities alone — the one stream whose core genuinely varies
+ * between schools and the one the school had not stated. The 16 Sep 2026
+ * review answered it (Economics for Geography), so the flag came off and
+ * Combinations.astro stops stamping "To be confirmed" on that card.
+ *
+ * The flag, its renderer and `coreOwed` all stay in place. They cost nothing
+ * while no stream carries it, and the next time the school revises a core
+ * before confirming it — which is how this one arrived — setting one property
+ * is the whole job. Deleting the mechanism and rebuilding it later is not.
  */
 export const streamDetail = [
   {
@@ -548,18 +563,23 @@ export const streamDetail = [
     name: 'Humanities',
     accent: 'violet',
     glyph: 'language',
-    full: 'History · Political Science · Geography',
+    full: 'History · Political Science · Economics',
     body: 'Law, civil services, design, media and the social sciences.',
-    core: ['History', 'Political Science', 'Geography', 'English'],
+    core: ['History', 'Political Science', 'Economics', 'English'],
     optional: streamOptional,
     additional: streamAdditional,
     unverified: false,
-    /* ⚠ THE ONE UNCONFIRMED LINE LEFT IN THIS BLOCK. The elective lists came
-       from the school; this core did not. English is safe (compulsory in CBSE
-       XI–XII); History, Political Science and Geography are a plausible shape
-       for a Humanities stream, not this school's stated one. Clearing this flag
-       needs the school's confirmation, not a judgement that it looks right. */
-    coreUnverified: true,
+    /* ⚠⚠ `coreUnverified` IS GONE, AND THAT IS THE POINT OF THIS EDIT. It sat
+       here because the Humanities core was this project's plausible guess and
+       not the school's stated one — the note said clearing it "needs the
+       school's confirmation, not a judgement that it looks right."
+
+       That confirmation arrived: the Director, Principal and Vice-Principal
+       reviewed the site on 16 Sep 2026 and instructed that Economics replaces
+       Geography in Humanities. Naming the subject IS the school stating its
+       core, so the caveat no longer applies and the card stops rendering a
+       hedge the school has now answered. History, Political Science and English
+       stand as before. */
   },
 ] as const;
 
@@ -1012,16 +1032,22 @@ export const guidance = [
   { label: 'Olympiads', body: 'Entry to the national science and mathematics programmes above.' },
 ] as const;
 
-/** The three unpublished items, as designed awaiting states rather than numbers. */
+/**
+ * The unpublished items, as designed awaiting states rather than numbers.
+ *
+ * ⚠⚠ THE BOARD-RESULTS ENTRY THAT USED TO HEAD THIS LIST HAS BEEN REMOVED, AND
+ * IT WAS WRONG FROM THE DAY IT WAS WRITTEN. It said "Board results are not
+ * published yet". They are: the school files BRS.pdf, "Last Three Years Board
+ * Result", on its own letterhead with the CBSE mandatory public disclosure, and
+ * those figures are in data/disclosure.ts → `boardResults`. /general-info/ has
+ * rendered them the whole time. Two pages claimed the opposite in public.
+ *
+ * What is genuinely still missing about results is the INDIVIDUAL detail —
+ * toppers, rank holders, and a count of who APPEARED as distinct from who
+ * registered. That is now stated on the Board Results page itself, where a
+ * reader looking for it will be, rather than as a whole-page absence here.
+ */
 export const awaiting = [
-  {
-    id: 'A1',
-    title: 'Board results are not published yet',
-    body:
-      'The single most-searched fact about any CBSE school, and Sunbeam does not currently state ' +
-      'it. This page will not estimate it. When the school supplies Class X and XII results, they ' +
-      'belong here.',
-  },
   {
     id: 'A11',
     title: 'University destinations are published — but only as artwork',
@@ -1031,7 +1057,10 @@ export const awaiting = [
       'still missing is the same record as text, year on year, with a cohort size beside it.',
   },
   {
-    id: 'A11',
+    /* ⚠ THIS USED TO BE A SECOND ENTRY WITH id 'A11' — the same id as the
+       university-destinations item above it, so the build-notes chip labelled
+       two different gaps as one asset request. Scholarships are their own ask. */
+    id: 'A16',
     title: 'Scholarships are not published yet',
     body:
       'The audit records scholarships as "not mentioned". If the school offers any, they are worth ' +

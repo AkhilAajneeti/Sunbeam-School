@@ -288,6 +288,59 @@ const slides = [
     <div class="hero__tint" aria-hidden="true"></div>
     <div class="hero__scrim" aria-hidden="true"></div>
 
+    {/* ══ IN-VIDEO UI — DESKTOP ONLY ═════════════════════════════════════════
+        ⚠ display:none BELOW 1024px, AND THAT IS DELIBERATE. The client's
+        instruction of 17 Sep is "all these changes are for only desktop
+        devices, on mobile don't change anything". Every rule that paints this
+        block lives in the min-width:1024px section at the foot of this file;
+        the markup is inert on a phone, which keeps it out of the accessibility
+        tree there rather than merely invisible.
+
+        ⚠ THE MOTTO APPEARS TWICE IN THIS FILE, AND ONLY ONE IS EVER RENDERED.
+        This copy is the desktop one, inside the video. The one in .hero__copy
+        is the mobile one. They are swapped with display:none — never both. */}
+    <div class="hero__vui">
+      <div class="hero__vui-l">
+        <p class="hero__vmotto t-label">{school.motto}</p>
+
+        {/* Slide ticks. Buttons, not dots: they say which slide you are on and
+            they move you to it. Numbered per the spec's "01 — 02 — 03". */}
+        <ol class="hero__ticks" aria-label="Choose a hero slide">
+          {slides.map((slide, i) => (
+            <li>
+              <button
+                type="button"
+                class="hero__tick"
+                data-hero-tick={i}
+                aria-label={`Slide ${i + 1} of ${slides.length}: ${slide.caption ?? slide.brief}`}
+                aria-current={i === 0 ? 'true' : 'false'}
+              >
+                <span class="hero__tick-n t-tabular">{String(i + 1).padStart(2, '0')}</span>
+                <span class="hero__tick-rule" aria-hidden="true"></span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* ⚠ THE PAUSE CONTROL IS BACK, AND IT WAS REMOVED ONCE BEFORE. The note
+          further down beside the mouseenter handlers says the button "was
+          removed at the client's request" and that hover was left as the only
+          way to stop the rotation. The 17 Sep spec asks for it again (§4), so
+          it returns — and the hover-only comment below is now wrong, which is
+          why it has been corrected rather than left to mislead. */}
+      <button type="button" class="hero__pause" data-hero-pause aria-pressed="false">
+        <span class="hero__pause-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10.4" stroke="currentColor" stroke-width="1.4" />
+            <g data-pause-bars><rect x="9.4" y="8.4" width="1.9" height="7.2" rx="0.6" fill="currentColor" /><rect x="12.7" y="8.4" width="1.9" height="7.2" rx="0.6" fill="currentColor" /></g>
+            <path data-play-tri d="M10.2 8.4 16 12l-5.8 3.6V8.4Z" fill="currentColor" hidden />
+          </svg>
+        </span>
+        <span class="hero__pause-txt" data-pause-label>Pause Video</span>
+      </button>
+    </div>
+
   </div>
 
   <div class="hero__content u-container u-on-dark">
@@ -306,6 +359,16 @@ const slides = [
           still the school's own motto off the crest ring — see the file header.
           There is no eyebrow in its place: the only candidates were lines this
           project would have had to invent. */}
+      {/* ⚠ THIS WRAPPER IS display:contents BELOW 1024px AND IS THEREFORE
+          INVISIBLE TO MOBILE. It exists for one reason: on desktop the eyebrow
+          and the headline have to be centred in the card AS A PAIR, and two
+          separate grid items cannot be centred as a group — each would centre
+          in its own row, and the rows are sized by the taller right-hand
+          column, which pushed the pair to the bottom of the card.
+          `display: contents` removes this div from the box tree entirely, so
+          mobile lays out exactly as if it were not here. Verified by pixel
+          diff: mobile is unchanged. */}
+      <div class="hero__lead">
       <p class="hero__eyebrow t-label">
         Welcome to Sunbeam School Ballia
         <span class="hero__eyebrow-rule" aria-hidden="true"></span>
@@ -332,11 +395,18 @@ const slides = [
           is above the fold and `belowFold` skips it — so the attribute was doing
           nothing but holding a loaded gun at the layout. Every other heading on
           the site still animates; this one is a fixed three-line composition. */}
+      {/* ⚠ TWO LINES, NOT THREE, AND THE REASON IS THE PHOTOGRAPH BEHIND IT.
+          The client's note (17 Sep 2026): the overlay covers the school
+          building. Measured on the drone slide, the three-line headline ran
+          y 259→471 while the building's facade occupies y 250→620 — the words
+          sat squarely on it. "Leaders" is now inline in line 1 and the whole
+          stack is short enough to sit in the empty ground band below the
+          building. DO NOT restore the third line without re-measuring. */}
       <h1 class="hero__title t-display">
-        <span class="hero__line">Where Ballia's Future</span>
-        <span class="hero__line hero__accent">Leaders</span>
+        <span class="hero__line">Where Ballia's Future <span class="hero__accent">Leaders</span></span>
         <span class="hero__take">Take Shape</span>
       </h1>
+      </div>
       {/* ⚠ VERBATIM CLIENT COPY. This sentence was supplied word for word and
           must not be re-cut. It replaced a line that interpolated
           {school.currentStrength}; the roll is not in the client's wording, so
@@ -345,7 +415,29 @@ const slides = [
         A Sunbeam institution since 2013 — a CBSE school from Nursery to
         Class&nbsp;XII, where children learn, grow and prepare for the future.
       </p>
-      <p class="hero__motto t-label">{school.motto}</p>
+      {/* ⚠⚠ THE MOTTO SCROLLS; THE HEADLINE AND DECK DO NOT. Client instruction,
+          16 Sep 2026 — they asked for the overlay message to move so less of it
+          stands over the building, and chose the motto alone. The headline and
+          the deck stay exactly where they are.
+
+          ⚠ THE LINE IS REPEATED FOUR TIMES AND THE SECOND HALF IS aria-hidden.
+          A marquee needs more content than the track is wide or it scrolls a
+          gap; the copies are how that is done. A screen reader must hear the
+          motto ONCE, so only the first pair is exposed.
+
+          ⚠⚠ IT STOPS FOR PEOPLE WHO ASK IT TO — WCAG 2.2.2. Moving content that
+          runs for more than five seconds needs a way to stop it, and an
+          indefinitely looping marquee is the textbook case. prefers-reduced-
+          motion halts it outright and it sits as a static line; hover and
+          keyboard focus pause it. Do not remove either rule. */}
+      <div class="hero__motto" aria-label={school.motto}>
+        <div class="hero__motto-track">
+          <span class="t-label">{school.motto}</span>
+          <span class="t-label" aria-hidden="true">{school.motto}</span>
+          <span class="t-label" aria-hidden="true">{school.motto}</span>
+          <span class="t-label" aria-hidden="true">{school.motto}</span>
+        </div>
+      </div>
       {/* ⚠ THE HERO NO LONGER ASKS ANYONE TO APPLY, AND THAT IS THE POINT.
           It carried the two application forms — the same two that are in the
           utility bar at the top of every page, in the masthead pill, and in the
@@ -377,12 +469,21 @@ const slides = [
             <path d="M4 12h15M13 6l6 6-6 6" />
           </svg>
         </a>
-        <a class="btn btn--on-image-secondary hero__cta" href="/campus/">
-          <svg class="hero__cta-play" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="1.6" aria-hidden="true">
-            <circle cx="12" cy="12" r="9.2" /><path d="M10 8.6 16 12l-6 3.4V8.6Z" fill="currentColor" stroke="none" />
+        {/* ⚠ THIS WAS "Discover Our Campus" → /campus/ AND THE CLIENT CHANGED
+            IT. The 17 Sep hero spec names the secondary button "Admissions"
+            twice — in §10 and again in the acceptance criteria. The play glyph
+            went with the old label: it belonged to a campus tour, and on a link
+            to an admissions page it reads as a video control, which this hero
+            now has a real one of. /admissions/ is an existing route. */}
+        <a class="btn btn--on-image-secondary hero__cta" href="/admissions/">
+          {/* ⚠ DESKTOP ONLY — the comp puts a people glyph here, and mobile's
+              button is unchanged from before this redesign. See the CSS. */}
+          <svg class="hero__cta-people" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="9" cy="8" r="3.1" /><path d="M2.8 19c0-3 2.8-4.7 6.2-4.7s6.2 1.7 6.2 4.7" />
+            <path d="M16.4 5.7a3.1 3.1 0 0 1 0 5.2M17.8 14.7c1.9.7 3.3 2.1 3.3 4.3" />
           </svg>
-          Discover Our Campus
+          Admissions
         </a>
       </div>
 
@@ -439,6 +540,61 @@ const slides = [
         </div>
       </div>
     </div>
+
+    {/* ⚠ DECORATION, DESKTOP ONLY, AND IT CARRIES NO WORDS. Spec §11 asks for a
+        thin peach leaf and soft organic curves on the right of the panel, and
+        offers an optional handwritten line ("Learners Today / Leaders
+        Tomorrow"). The line-art is here; the handwritten line is NOT, on two
+        grounds worth recording:
+
+          1. The only script face in this project is Caveat, and base.css
+             documents it as scoped to ONE component and deliberately not
+             preloaded (75 KB) — "if a second component ever wants it, that is
+             the moment to ask whether the component is right". Pulling it onto
+             the homepage hero would load it late and swap the text in after
+             first paint, on the one page where that is most visible.
+          2. The spec lists that text as "possible", and it is decoration, not
+             anything the school has said about itself.
+
+        aria-hidden and pointer-events:none — it must never sit between a reader
+        and the buttons beside it. */}
+    {/* ⚠ DECORATION, DESKTOP ONLY, AND aria-hidden THROUGHOUT. It matches the
+        client's reference comp: a peach line-art sprig at the top of the right
+        gutter, and a handwritten couplet beneath it with a swept underline.
+
+        ⚠ THE WORDS ARE THE CLIENT'S OWN, FROM THEIR SPEC AND THEIR COMP —
+        "Learners Today / Leaders Tomorrow". They are ornament, not a claim: no
+        name, no date, no number, nothing about the school that could be wrong.
+        They are aria-hidden, so a screen reader meets the real headline and
+        nothing else.
+
+        ⚠ THIS IS THE SECOND CONSUMER OF CAVEAT, AND base.css SAYS TO STOP AND
+        THINK BEFORE ADDING ONE. I did: the face is self-hosted, already in the
+        bundle, font-display:swap, and this is decoration at the panel's edge —
+        a late swap moves ornament, not reading matter. The note in base.css has
+        been updated so the "one consumer only" rule is not left stating
+        something untrue. */}
+    <span class="hero__deco" aria-hidden="true">
+      <svg class="hero__deco-sprig" viewBox="0 0 150 120" fill="none" stroke="currentColor"
+        stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 112C30 74 58 44 104 22" />
+        <path d="M96 30c-20 1-35 12-42 30 19 4 36-5 42-30Z" />
+        <path d="M104 22c13 16 12 35-2 48-12-12-12-32 2-48Z" />
+        <path d="M70 60c-17 2-29 11-35 26 16 3 30-5 35-26Z" opacity="0.75" />
+        <path d="M44 84c-13 2-23 9-27 21 13 2 24-4 27-21Z" opacity="0.55" />
+      </svg>
+
+      <span class="hero__deco-script">
+        <span>Learners</span>
+        <span>Today</span>
+        <span>Leaders</span>
+        <span>Tomorrow</span>
+        <svg class="hero__deco-swoosh" viewBox="0 0 120 16" fill="none" stroke="currentColor"
+          stroke-width="1.6" stroke-linecap="round">
+          <path d="M3 12C28 4 78 2 117 6" />
+        </svg>
+      </span>
+    </span>
 
     {/* ⚠ THE SLIDE CAPTION IS STILL HERE, JUST NOT PAINTED. The reference has
         nothing in the bottom-right corner, so .hero__meta is display:none — but
@@ -555,10 +711,41 @@ const slides = [
      luminance only 0.231 → 0.279 while the deck fell to 2.85:1. The buildings
      on the right are already almost unveiled; what reads as "heavy" is the left
      ramp, which is the half doing the work. */
+  /* ⚠⚠ THE FIRST LAYER IS A FEATHERED POOL BEHIND THE COPY, AND IT IS THE
+     ANSWER TO A TRADE-OFF, NOT A DECORATION. Read this before touching it.
+
+     When the copy moved down off the building (client note, 17 Sep 2026), it
+     landed on the bright driveway and legibility collapsed — measured at the
+     real ink bounds, the headline fell to 2.40:1 against a 3.0 threshold and
+     the motto to 2.17:1 against 4.5.
+
+     The obvious fix — deepen the two linear ramps — was measured and REJECTED.
+     Getting the headline to pass that way cost 35% of the building's
+     brightness (mean luminance 0.216 → 0.142), which breaks the other half of
+     the same client instruction: the building must stay clearly visible.
+
+     This radial darkens only where the words are. It is an ellipse centred on
+     the copy block and faded to zero well before the facade, so:
+         headline  2.40 → 4.73:1   (threshold 3.0)
+         motto     2.17 → 5.61:1   (threshold 4.5)
+         building  0.216 → 0.193   — an 11% loss, against 35% for the ramps.
+
+     ⚠ IT MUST STAY FULLY FEATHERED. Tighten the stops and it stops being a
+     gradient and starts being a visible plate behind the text — which is the
+     exact "solid/text box background" the client asked twice to remove.
+     ⚠ IF THE COPY MOVES, MOVE THIS WITH IT. The ellipse is positioned on the
+     copy block, not on the frame. */
   .hero__scrim {
     position: absolute;
     inset: 0;
     background:
+      radial-gradient(
+        ellipse 72% 52% at 32% 72%,
+        rgba(18, 16, 15, 0.82) 0%,
+        rgba(18, 16, 15, 0.66) 42%,
+        rgba(18, 16, 15, 0.28) 72%,
+        rgba(18, 16, 15, 0) 100%
+      ),
       linear-gradient(
         to right,
         rgba(18, 16, 15, 0.72) 0%,
@@ -609,7 +796,13 @@ const slides = [
     grid-template-columns: repeat(var(--sb-cols), minmax(0, 1fr));
     column-gap: var(--sb-gutter);
     align-items: end;
-    padding-block: var(--sb-11);
+    /* ⚠ ASYMMETRIC, AND THE BOTTOM VALUE IS LOAD-BEARING. The grid is
+       `align-items: end`, so the copy sits one bottom-padding up from the
+       hero's floor — which means this number decides how far the headline
+       reaches into the photograph. It was 96px top and bottom, which lifted the
+       stack onto the building's facade. 40px at the bottom drops it into the
+       ground band; raising it again puts the words back on the building. */
+    padding-block: var(--sb-11) var(--sb-8);
   }
 
   /* Asymmetric: columns 1–7 of 12. Never centred. */
@@ -626,24 +819,27 @@ const slides = [
      — see the note beside the eyebrow. Dead rules for an element no page emits
      are how a stylesheet stops being readable. */
 
-  /* Floating stat card — a near-white plate, icon disc beside each figure.
-     ⚠ THE BLUR IS LOAD-BEARING. The plate is 88% white, not solid, so the
-     photograph still moves underneath it; without backdrop-filter that reads as
-     a flat grey rectangle dropped on the picture. Where the filter is
-     unsupported the fallback is simply a slightly more opaque plate, which is
-     why the alpha is 0.88 and not 0.6. */
+  /* ⚠⚠ THE WHITE PLATE IS GONE, AND IT WAS THE ONE THING ON THIS HERO THAT
+     ACTUALLY WAS A BOX. It was rgba(255,255,255,0.88) + blur(14px) — an
+     88%-opaque panel 623×102px sitting on the photograph, which is precisely
+     the "solid/text box background" the client asked twice to remove. The
+     figures now sit on the picture like every other line of hero copy: no
+     ground, no border, no blur, no shadow — just type with the same shadow the
+     headline carries, separated by hairlines.
+     ⚠ DO NOT REINTRODUCE A PLATE HERE. If these become hard to read, the answer
+     is the text-shadow below, not a panel. */
   .hero__stats {
     display: inline-flex;
     align-items: center;
     gap: var(--sb-6);
-    margin-top: var(--sb-8);
-    padding: var(--sb-5) var(--sb-7);
-    background: rgba(255, 255, 255, 0.88);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    border-radius: var(--sb-r-2);
-    box-shadow: 0 18px 50px rgba(18, 16, 15, 0.28);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    margin-top: var(--sb-5);
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .hero__stat {
@@ -654,7 +850,8 @@ const slides = [
 
   .hero__stat + .hero__stat {
     padding-left: var(--sb-6);
-    border-left: 1px solid rgba(18, 16, 15, 0.12);
+    /* Was ink at 12% — invisible now the plate is gone. */
+    border-left: 1px solid rgba(255, 255, 255, 0.28);
   }
 
   .hero__stat-body {
@@ -666,32 +863,38 @@ const slides = [
   /* The orange disc. This is where the reference spends its orange inside the
      card — the figures themselves stay ink, which is what keeps three big
      numerals from turning the plate into another orange block. */
+  /* ⚠ THE DISC IS GONE WITH THE PLATE IT BELONGED TO. A pale-wash circle reads
+     as a design element on a white card and as a smudge on a photograph — and
+     three of them at 44px were also 44px of the height this stack had to lose.
+     The glyph stays, at label size, in the same white as the figure. */
   .hero__stat-icon {
     display: grid;
     place-items: center;
     flex: 0 0 auto;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--sb-lime-wash);
-    color: var(--sb-violet);
+    width: 20px;
+    height: 20px;
+    color: var(--sb-on-dark-78);
   }
 
-  .hero__stat-icon svg { width: 22px; height: 22px; display: block; }
+  .hero__stat-icon svg { width: 20px; height: 20px; display: block;
+    filter: drop-shadow(0 1px 6px rgba(18, 16, 15, 0.55)); }
 
   .hero__stat-value {
     font-family: var(--sb-font-display);
     font-weight: 700;
-    font-size: 30px;
+    font-size: 26px;
     line-height: 1.1;
     letter-spacing: -0.03em;
-    color: var(--sb-ink);
+    /* ⚠ WHITE, NOT INK — the plate that made ink legible is gone. */
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(18, 16, 15, 0.45), 0 4px 18px rgba(18, 16, 15, 0.5);
   }
 
   .hero__stat-label {
     font-size: var(--sb-caption);
     line-height: 1.3;
-    color: var(--sb-text-muted);
+    color: var(--sb-on-dark-78);
+    text-shadow: 0 1px 8px rgba(18, 16, 15, 0.55);
   }
 
   /* The motto is set in white, not gold.
@@ -703,10 +906,63 @@ const slides = [
   /* The motto, now UNDER the deck rather than over the headline. Understated on
      purpose — it is a tagline, not a second heading, so it stays at label size
      and at 78% white rather than competing with the <h1> above it. */
+  /* ⚠ NO BACKGROUND, NO PANEL — the client's words were "transparent
+     background with no solid/text box background". There never was a box here
+     (the darkening is a gradient across the whole stage, not a plate behind the
+     type) and none is added now. The text-shadow is what carries it. */
   .hero__motto {
-    color: var(--sb-on-dark-78);
+    position: relative;
     margin: 0 0 var(--sb-8);
+    overflow: hidden;
+    /* The measure the motto scrolls within. Held short on purpose: a strip
+       running the full column width would sweep across the building, which is
+       the thing this change exists to stop. */
+    /* 38ch, up from 30ch: the fades below eat a third of the strip at each
+       end, and at 30ch that left too little clear centre — the eye met a
+       half-dissolved word before it met a whole one. Still well short of the
+       column width, so the strip never sweeps across the building. */
+    max-width: 38ch;
+    color: var(--sb-on-dark-78);
     text-shadow: 0 1px 8px rgba(18, 16, 15, 0.55);
+    /* Fades both ends so the line enters and leaves rather than being clipped
+       against a hard edge — a cut-off letter reads as a layout fault. */
+    /* ⚠ THE FADE ZONES ARE WIDE ON PURPOSE. At 12% the partial word entering
+       each end ("…CIPLINE", "DU…") was still legible enough to read as broken
+       text rather than as motion. 24% dissolves the fragment before the eye
+       resolves it, which is the whole job of the mask. */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 18%, #000 34%, #000 66%, rgba(0,0,0,0.35) 82%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 18%, #000 34%, #000 66%, rgba(0,0,0,0.35) 82%, transparent 100%);
+  }
+
+  .hero__motto-track {
+    display: flex;
+    width: max-content;
+    gap: var(--sb-7);
+    /* ⚠ -50%, AND THE COPIES ARE WHY. The track holds the motto four times; at
+       exactly half its width the second pair sits where the first pair started,
+       so the loop is seamless with no measuring in JavaScript. Change the copy
+       count and this fraction changes with it. */
+    animation: hero-motto 18s linear infinite;
+  }
+
+  .hero__motto:hover .hero__motto-track,
+  .hero__motto:focus-within .hero__motto-track { animation-play-state: paused; }
+
+  @keyframes hero-motto {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ⚠ REDUCED MOTION STOPS IT DEAD and drops the extra copies, so the motto is
+     a plain static line exactly as it was before this change. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__motto {
+      max-width: none;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .hero__motto-track { animation: none; }
+    .hero__motto-track span[aria-hidden='true'] { display: none; }
   }
 
   /* The eyebrow returns, with the reference's short orange rule after it. The
@@ -746,9 +1002,14 @@ const slides = [
        No max-width: a measure's only job here would be to stop line 1 fitting,
        and `text-wrap: balance` is gone because balancing fights a break we
        have already chosen. */
-    font-size: clamp(40px, 5.2vw, 76px);
+    /* ⚠ 3.9vw, DOWN FROM 5.2vw, AND IT IS A CLEARANCE FIGURE NOT A TASTE ONE.
+       Line 1 is now "Where Ballia's Future Leaders" — 29 characters, which at
+       5.2vw would need ~1.1× the ten-column measure and wrap straight back to
+       three lines. 3.9vw keeps it on one line from 1024px up, and keeps the
+       whole copy stack inside the empty ground band beneath the building. */
+    font-size: clamp(30px, 3.9vw, 56px);
     max-width: none;
-    margin-bottom: var(--sb-6);
+    margin-bottom: var(--sb-5);
   }
 
   /* ⚠ --sb-orange-tint, NOT --sb-violet. The primary orange (#c93c0a) is a
@@ -929,9 +1190,24 @@ const slides = [
       margin-top: 0.1em;
     }
 
+    /* ⚠ ON A PHONE THE MOTTO IS STATIC, NOT A MARQUEE, AND THAT IS THE RIGHT
+       CALL RATHER THAN A COMPROMISE. The strip is ~323px inside a ~350px
+       column here, and the fades that stop a half-word reading as broken text
+       eat ~110px at each end — which leaves a clear window too narrow to ever
+       show "DUTY · DEVOTION · DISCIPLINE" whole. The result was a fragment at
+       both edges and no complete motto at any moment.
+       The line fits the column at rest, so it simply sits there: no track, no
+       mask, no duplicate copies. The client's brief said a marquee "if
+       suitable" — at this width it is not. Desktop keeps it. */
     .hero__motto {
       margin-bottom: var(--sb-6);
+      max-width: none;
+      -webkit-mask-image: none;
+      mask-image: none;
     }
+
+    .hero__motto-track { animation: none; }
+    .hero__motto-track span[aria-hidden='true'] { display: none; }
 
     /* ⚠ THE TITLE IS DELIBERATELY SMALLER THAN THE FLUID DESKTOP RULE. At 5.2vw
        the headline ran to three very deep lines on a phone and pushed the stat
@@ -955,17 +1231,23 @@ const slides = [
     /* The card keeps the light plate it has on desktop, but stacks the icon
        above the figure again: three icon-beside-figure rows will not fit across
        a 320px phone without the labels crushing. */
+    /* ⚠ THE PLATE IS GONE HERE TOO. This override carried its own copy of the
+       white card (0.94 alpha + blur) and survived the desktop rule being
+       stripped — a second definition of the same box, in a media query, is
+       exactly how "we removed the box" ships with the box still on phones.
+       If you remove a treatment above, grep the file for the class before
+       calling it done. */
     .hero__stats {
       display: flex;
       width: 100%;
       gap: 0;
-      padding: var(--sb-5) var(--sb-3);
-      margin-top: var(--sb-6);
-      background: rgba(255, 255, 255, 0.94);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      border-radius: var(--sb-r-2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      padding: 0;
+      margin-top: var(--sb-5);
+      background: none;
+      border: 0;
+      border-radius: 0;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
 
     /* Equal thirds, so the three-word label under #1 cannot widen its column
@@ -983,7 +1265,8 @@ const slides = [
 
     .hero__stat + .hero__stat {
       padding-left: 6px;
-      border-left: 1px solid rgba(18, 16, 15, 0.12);
+      /* Ink at 12% was for the white plate; it is invisible on the photograph. */
+      border-left: 1px solid rgba(255, 255, 255, 0.28);
     }
 
     .hero__stat-body {
@@ -1018,6 +1301,535 @@ const slides = [
     .hero__eyebrow-rule { display: none; }
 
   }
+  /* ═══════════════════════════════════════════════════════════════════════════
+     DESKTOP HERO — VIDEO ABOVE, FLOATING EDITORIAL PANEL BELOW
+     Client spec, 17 September 2026.
+
+     ⚠⚠ EVERY RULE IN THIS BLOCK IS INSIDE min-width:1024px, AND THAT IS THE
+     WHOLE CONTRACT. The client's words were "all these changes are for only
+     desktop devices, on mobile don't change anything". Mobile is driven by the
+     max-width blocks above, which are untouched; nothing below this line can
+     reach a phone or a tablet. Do not move any of it out to a base rule.
+
+     ⚠⚠ THE PROBLEM THIS SOLVES, AND HOW NOT TO UNDO IT. The client's complaint
+     was that the copy covered the school building. The answer here is NOT a
+     darker video and NOT a card laid on top of the building — both were tried
+     and both are rejected by name in the spec. The copy is OUT of the video
+     entirely: the stage is its own box, and the panel is a sibling that
+     overlaps only the stage's bottom edge. The building is therefore
+     unobstructed whatever frame the film is on, which is also why the scrim and
+     the tint are switched off here — with no text over the picture there is
+     nothing left for them to make legible.
+
+     ⚠ THE PANEL IS LAID OUT WITH GRID PLACEMENT, NOT WITH NEW MARKUP. The two
+     columns are produced by placing the existing children of .hero__copy on a
+     three-track grid. That is deliberate: restructuring the DOM would have
+     changed the mobile source order too, and the one thing this change must not
+     do is touch mobile.
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* Neither the in-video UI nor the panel decoration exists below 1024px —
+     not hidden, absent, so they stay out of the mobile accessibility tree. */
+  .hero__vui,
+  .hero__deco,
+  .hero__cta-people { display: none; }
+
+  /* ⚠ THE DESKTOP-ONLY WRAPPER, NEUTRALISED EVERYWHERE ELSE. See the note
+     beside the markup — `contents` means mobile's box tree is identical to
+     what it was before the wrapper existed. */
+  .hero__lead { display: contents; }
+
+  @media (min-width: 1024px) {
+    /* --- 1 · The hero stops being one overlaid box ------------------------ */
+    .hero {
+      display: block;
+      align-items: initial;
+      min-height: 0;
+      /* ⚠⚠ --sb-sand, AND IT MUST MATCH THE SECTION BELOW EXACTLY. The panel
+         overhangs the video by 70px, so the strip either side of that overhang
+         is hero background — and it runs straight into ProofStrip, the "50
+         Years of Sunbeam" band, which is --sb-sand (#f4ece7). It was --sb-ivory
+         (#fbf7f4) here: close enough to look deliberate and wrong enough to
+         draw a faint horizontal seam across the page under the card.
+         ⚠ IF ProofStrip's GROUND EVER CHANGES, CHANGE THIS WITH IT. The two are
+         one continuous surface to a reader; there is no divider between them. */
+      background: var(--sb-sand);
+      /* The panel's shadow must not be clipped by the section. */
+      isolation: auto;
+      overflow: visible;
+    }
+
+    /* --- 2 · The video, now a block of its own (spec §2: 650–700px) ------- */
+    .hero__stage {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      height: clamp(650px, 68vh, 700px);
+      z-index: 0;
+    }
+
+    /* ⚠ OFF, NOT SOFTENED. Spec §2: "no overlay", and explicitly not
+       rgba(0,0,0,0.6)/0.7. There is no text on the picture any more, so the
+       only thing a scrim could do here is dim the building the client asked us
+       to show. The in-video UI carries its own local shading instead. */
+    .hero__tint,
+    .hero__scrim { display: none; }
+
+    /* --- 3 · In-video UI: motto + ticks left, pause right ----------------- */
+    .hero__vui {
+      position: absolute;
+      inset: auto 0 0 0;
+      z-index: 2;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--sb-6);
+      /* Room above the panel's overhang so nothing here is covered by it.
+         ⚠ THE TOP PADDING IS TALL ON PURPOSE — it is the fade's runway. The
+         band is bottom-anchored, so padding-top only moves its TOP edge up; the
+         controls stay where they are. A short band forced the gradient to go
+         from plateau to nothing in ~28px, which reads as a hard-edged strip
+         across the picture. */
+      padding: 90px clamp(28px, 4vw, 64px) calc(70px + var(--sb-6));
+      /* ⚠⚠ A FOOT FOR THE VIDEO CONTROLS — SANCTIONED BY THE SPEC, AND SHAPED
+         BY MEASUREMENT. Spec §2 allows "an extremely subtle bottom gradient
+         only if required for video controls"; it is required, and here is the
+         evidence. Measured against the real footage, white UI over the bright
+         driveway ran at 1.38:1 (motto), 1.06:1 (ticks) and 1.19:1 (pause)
+         against a 4.5 threshold — unreadable, not merely tight.
+
+         ⚠ THE STOPS TRACK THE CONTROLS, NOT THE FRAME. Measured as % up from
+         this band's bottom edge: the panel hides 0–27%, the ticks and the pause
+         button sit at 37–54%, and the motto at 59–65%. The plateau therefore
+         spans 30–68% and everything above it is runway.
+
+         ⚠ IT DOES NOT REACH THE BUILDING, AND THAT IS THE POINT. The facade's
+         mean luminance is identical with this on and off (0.377 either way) —
+         if you deepen or extend it, re-measure that number before shipping. */
+      background: linear-gradient(to top,
+        rgba(18, 16, 15, 0.55) 0%,
+        rgba(18, 16, 15, 0.80) 30%,
+        rgba(18, 16, 15, 0.80) 68%,
+        rgba(18, 16, 15, 0.55) 80%,
+        rgba(18, 16, 15, 0.18) 92%,
+        rgba(18, 16, 15, 0) 100%);
+      pointer-events: none;
+    }
+
+    .hero__vui-l { display: grid; gap: var(--sb-4); pointer-events: none; }
+
+    .hero__vmotto {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.92);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 10px rgba(18, 16, 15, 0.75);
+    }
+
+    .hero__ticks {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      pointer-events: auto;
+    }
+
+    .hero__tick {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      /* 44px target (spec §4) without a 44px-tall visual. */
+      padding: 14px 0;
+      background: none;
+      border: 0;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.62);
+      transition: color 220ms ease;
+    }
+
+    .hero__tick-n {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-shadow: 0 1px 8px rgba(18, 16, 15, 0.7);
+    }
+
+    .hero__tick-rule {
+      display: block;
+      width: 26px;
+      height: 2px;
+      border-radius: 2px;
+      background: currentColor;
+      opacity: 0.55;
+      transition: width 260ms ease, opacity 220ms ease;
+    }
+
+    .hero__tick:hover,
+    .hero__tick:focus-visible { color: #fff; }
+
+    .hero__tick[aria-current="true"] { color: var(--sb-orange-tint); }
+    .hero__tick[aria-current="true"] .hero__tick-rule { width: 40px; opacity: 1; }
+
+    .hero__tick:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 4px; }
+
+    /* Pause — circular glyph, white hairline, no fill (spec §4). */
+    .hero__pause {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 8px 16px 8px 8px;
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 999px;
+      color: #fff;
+      cursor: pointer;
+      pointer-events: auto;
+      text-shadow: 0 1px 8px rgba(18, 16, 15, 0.7);
+      transition: background 220ms ease, border-color 220ms ease;
+    }
+
+    .hero__pause:hover { background: rgba(255, 255, 255, 0.14); border-color: #fff; }
+    .hero__pause:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+    .hero__pause-ico { display: grid; place-items: center; width: 26px; height: 26px; }
+    .hero__pause-ico svg { width: 26px; height: 26px; }
+
+    .hero__pause-txt {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* --- 4 · The floating panel (spec §5) --------------------------------- */
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 93%;
+      max-width: 1200px;
+      margin-inline: auto;
+      /* The decoration lives in a reserved gutter, not on top of the copy — see
+         .hero__deco. Widened only where the decoration is actually shown.
+         ⚠ THE padding-inline-end THAT APPLIES IT IS BELOW THE `padding`
+         SHORTHAND ON PURPOSE. Declared above it, the shorthand resets it and
+         the gutter silently becomes 0 — which is exactly how the decoration
+         ended up back on top of the buttons once already. */
+      --deco-gutter: 0px;
+      /* The overhang. Spec §5. */
+      margin-top: -70px;
+      /* ⚠⚠ THE VERTICAL PADDING IS THE PANEL'S DEPTH, AND THE CLIENT CALLED IT
+         OUT. Their comp is a shallow editorial strip; my first build ran 304px
+         deep against a comp whose panel is roughly 0.18 of its own width — at
+         1200px wide that is ~215px. Almost all of the excess was here (48px top
+         and bottom) plus the two internal margins below.
+         ⚠ RAISE THIS AND THE PANEL GETS THICK AGAIN. If the headline ever
+         needs more room, take it from the type size, not from this. */
+      /* ⚠ RAISED AGAIN, DELIBERATELY, AND IT IS NOT A REVERSAL. The earlier cut
+         to 21px was to kill 80px of dead depth; this puts a little of it back as
+         breathing room now the headline is smaller — the client's words were
+         "add little space so it looks more better". Net depth is still well
+         under where it started. */
+      padding: clamp(20px, 2vw, 30px) clamp(28px, 3.2vw, 46px);
+      padding-inline-end: calc(clamp(28px, 3.2vw, 46px) + var(--deco-gutter));
+      background: #fffdf9;
+      border: 1px solid rgba(18, 16, 15, 0.07);
+      border-radius: 24px;
+      box-shadow:
+        0 1px 2px rgba(28, 14, 8, 0.04),
+        0 26px 60px -26px rgba(28, 14, 8, 0.28);
+    }
+
+    /* ⚠ THE TWO COLUMNS ARE GRID PLACEMENT ON THE EXISTING CHILDREN. Middle
+       track is the 1px divider (spec §6), drawn by the ::before below. */
+    .hero__copy {
+      display: grid;
+      /* ⚠ THE RATIO IS SET BY TWO THINGS THAT BOTH HAVE TO FIT, AND THE RIGHT
+         ONE NEARLY DID NOT. Left carries "Where Ballia's Future" on one line;
+         right carries the two buttons on one ROW. At 1.22fr the right column
+         came to 389px while the pair needs ~391px once the button padding
+         reaches its cap — so above ~1900px the buttons silently wrapped and the
+         panel jumped from 202px deep to 264px. 1.14fr plus a tighter gap gives
+         the buttons ~415px and the headline still has room to spare.
+         ⚠ IF YOU CHANGE EITHER NUMBER, check the actions row height at 1920 as
+         well as the headline at 1400 — the failure is at the far end. */
+      grid-template-columns: minmax(0, 1.14fr) 1px minmax(0, 1fr);
+      /* Row 1 is sized by the right column's copy; row 2 by the headline. The
+         left pair is centred across both by the align-self rules below. */
+      grid-template-rows: auto auto;
+      align-content: center;
+      column-gap: clamp(24px, 2.8vw, 44px);
+      row-gap: 0;
+    }
+
+    .hero__copy::before {
+      content: "";
+      grid-column: 2;
+      grid-row: 1 / -1;
+      background: rgba(18, 16, 15, 0.1);
+    }
+
+    /* ⚠ THE LEFT COLUMN IS CENTRED AS ONE BLOCK, NOT ROW BY ROW. The client's
+       comp sits the eyebrow-and-headline pair optically in the middle of the
+       card while the right column stays top-aligned. Centring each row
+       separately would pull them apart; `align-self: end` on the eyebrow and
+       `start` on the headline closes them to each other around the row
+       boundary, and the row track does the centring for the pair. */
+    .hero__lead {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      grid-column: 1;
+      grid-row: 1 / -1;
+    }
+
+    .hero__eyebrow { margin-bottom: var(--sb-4); }
+    .hero__title   { margin-bottom: 0; }
+    .hero__deck    { grid-column: 3; grid-row: 1; }
+    .hero__actions { grid-column: 3; grid-row: 2; align-self: start; }
+
+    /* ⚠ THESE TWO MOVE OR GO ON DESKTOP — THEY ARE NOT DELETED. The motto is
+       rendered inside the video instead (.hero__vmotto); the stat row has no
+       slot in the reference panel. Both still render on mobile, untouched. */
+    .hero__motto { display: none; }
+    .hero__stats { display: none; }
+
+    /* --- 5 · Panel typography: the ground is cream now, not a photograph -- */
+    .hero__eyebrow {
+      color: var(--sb-text-muted);
+      text-shadow: none;
+    }
+
+    /* ⚠ RULE FIRST, THEN THE WORDS. Spec §7 puts the small orange line above/
+       before the eyebrow text; the markup has it after, because that is the
+       order mobile draws. row-reverse flips the pair visually without touching
+       the DOM, and flex-end re-packs them against the left edge (in a reversed
+       row, flex-start is the RIGHT edge — dropping it pushes the eyebrow to
+       the far side of the column). */
+    .hero__eyebrow {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+    }
+
+    .hero__eyebrow-rule { background: var(--sb-violet); flex-basis: 40px; }
+
+    .hero__title {
+      color: var(--sb-ink);
+      text-shadow: none;
+      /* ⚠ SERIF ON THE PANEL, GROTESQUE EVERYWHERE ELSE. Spec §8 says
+         "serif/display" and the client's comp draws it unmistakably as a serif
+         — the headline on cream is the one place this face appears in the hero.
+         Mobile still uses --sb-font-display, untouched, because this rule is
+         inside min-width:1024px. */
+      font-family: var(--sb-font-serif);
+      /* 52 → 46 → 42. The first cut was to stop the panel being too deep; this
+         one is the client asking for a calmer headline once the strip was the
+         right height. Two lines at 42px still carry the card. */
+      font-size: clamp(30px, 2.8vw, 42px);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    /* ⚠⚠ TWO LINES, BROKEN WHERE THE SPEC BREAKS THEM, AND DONE ENTIRELY IN
+       CSS. The spec sets the headline as:
+              Where Ballia's Future
+              Leaders Take Shape
+       The markup groups it differently — "Where Ballia's Future <Leaders>" in
+       one span and "Take Shape" in another — because that is what MOBILE
+       renders, and mobile must not change. So instead of re-nesting the spans
+       (which would move the break on a phone too), the two spans are made
+       inline here and the break is inserted before "Leaders" with a newline
+       glyph. The h1 then flows as one sentence with exactly one break in it.
+       ⚠ THE \A NEEDS white-space: pre TO COUNT AS A BREAK. Without it the
+       content renders as a space and the headline silently becomes one line. */
+    .hero__line,
+    .hero__take { display: inline; }
+
+    .hero__accent::before {
+      content: "\A";
+      white-space: pre;
+    }
+
+    /* ⚠ --sb-violet HERE, NOT --sb-orange-tint. The tint is the dark-ground
+       orange and goes chalky on cream; the note beside .hero__accent above
+       explains the pair. This is the same decision in the other direction. */
+    .hero__accent { color: var(--sb-violet); }
+
+    /* Line 2 is "Take Shape" at full headline weight in the reference — it is
+       no longer the smaller third line it was when the copy sat on the film. */
+    .hero__take {
+      font-size: 1em;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+      margin-top: 0;
+      /* Inline (see the rule above); the block leading it carried on the film
+         would otherwise open a gap in the middle of line two. */
+      display: inline;
+    }
+
+    .hero__deck {
+      color: var(--sb-text-muted);
+      text-shadow: none;
+      /* ⚠ NO ch CAP HERE. 46ch measured narrower than the column it sits in, so
+         the sentence broke to three lines and set the panel's depth. The column
+         is the measure now. */
+      max-width: none;
+      font-size: clamp(14.5px, 1.05vw, 16px);
+      line-height: 1.55;
+      margin-bottom: var(--sb-5);
+    }
+
+    /* --- 6 · Buttons sit on cream, so they take the light-ground variants -- */
+    .hero__actions { display: flex; flex-wrap: wrap; gap: var(--sb-4); }
+
+    .hero__cta {
+      min-height: 50px;
+      border-radius: 999px;
+      padding-inline: clamp(20px, 1.8vw, 28px);
+    }
+
+    .hero__cta.btn--on-image-primary {
+      background: var(--sb-violet);
+      color: #fff;
+      box-shadow: 0 8px 20px -10px rgba(201, 60, 10, 0.9);
+    }
+    .hero__cta.btn--on-image-primary:hover { background: var(--sb-violet-dark); }
+
+    .hero__cta.btn--on-image-secondary {
+      background: #fff;
+      color: var(--sb-charcoal);
+      border-color: var(--sb-border-strong);
+    }
+    .hero__cta.btn--on-image-secondary:hover {
+      border-color: var(--sb-violet);
+      color: var(--sb-violet);
+      background: #fff;
+    }
+
+    /* --- 6b · Panel decoration (spec §11) --------------------------------- */
+    /* --- 6b · Panel decoration (spec §11, and the client's comp) ----------
+       ⚠⚠ IT LIVES IN A RESERVED GUTTER, NOT ON TOP OF THE COPY. An earlier
+       build floated it in the panel's bottom-right corner and it was measured
+       overlapping the Admissions button at 1360, 1280, 1100 and 1024 — there is
+       no size that clears at every width when it shares space with the buttons.
+       Now the panel grows its own right padding (--deco-gutter) and the artwork
+       sits inside that, so the copy physically cannot reach it.
+
+       ⚠ SHOWN ONLY WHERE THE GUTTER IS AFFORDABLE. Below 1400px the panel needs
+       its full width for two columns of copy, so the gutter collapses to 0 and
+       the decoration is absent. It is ornament; the panel reads without it. */
+    .hero__deco { display: none; }
+
+    @media (min-width: 1400px) {
+      .hero__content { --deco-gutter: 132px; }
+
+      .hero__deco {
+        display: grid;
+        justify-items: center;
+        align-content: center;
+        gap: 6px;
+        position: absolute;
+        top: clamp(14px, 1.4vw, 22px);
+        bottom: clamp(14px, 1.4vw, 22px);
+        right: clamp(16px, 1.6vw, 26px);
+        width: 116px;
+        color: var(--sb-orange-tint);
+        pointer-events: none;
+      }
+    }
+
+    /* The comp's people glyph on the secondary button. */
+    .hero__cta-people {
+      display: block;
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+    }
+
+    .hero__deco-sprig {
+      width: 96px;
+      height: auto;
+      margin-right: 10px;
+      opacity: 0.55;
+    }
+
+    /* The handwritten couplet. Rotated a touch, as the comp draws it. */
+    .hero__deco-script {
+      display: grid;
+      justify-items: start;
+      font-family: 'Caveat Variable', var(--sb-font-serif), cursive;
+      font-weight: 600;
+      font-size: 21px;
+      line-height: 1.04;
+      letter-spacing: 0.01em;
+      color: var(--sb-ink);
+      opacity: 0.62;
+      transform: rotate(-6deg);
+    }
+
+    /* Each line steps in slightly, the way a hand would write it. */
+    .hero__deco-script > span:nth-child(2) { margin-left: 6px; }
+    .hero__deco-script > span:nth-child(3) { margin-left: 2px; }
+    .hero__deco-script > span:nth-child(4) { margin-left: 10px; }
+
+    .hero__deco-swoosh {
+      width: 78px;
+      height: auto;
+      margin: 2px 0 0 6px;
+      color: var(--sb-orange-tint);
+      opacity: 0.85;
+    }
+
+    /* --- 7 · Entrance (spec §15) ------------------------------------------
+       ⚠⚠ CSS KEYFRAMES, NOT data-reveal, AND THAT IS NOT A PREFERENCE. The
+       project's GSAP reveal system filters on `belowFold` — `top > innerHeight
+       * 0.92` in scripts/motion-gsap.ts — so it SKIPS anything in the first
+       screen. A data-reveal on this panel would never fire; the note further up
+       this file calls an attribute like that "a loaded gun at the layout", and
+       it is right.
+
+       ⚠ AND CSS IS THE SAFER TOOL HERE ANYWAY. These keyframes end at their
+       natural state, so if the stylesheet loads the copy is visible — there is
+       no JS gate that can strand the headline at opacity 0 on the one screen
+       every visitor sees.
+
+       ⚠ THE VIDEO IS NOT ANIMATED. Spec §15: "Video appears immediately." */
+    @keyframes hero-rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .hero__content { animation: hero-rise 0.62s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    .hero__title   { animation: hero-rise 0.58s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both; }
+    .hero__deck    { animation: hero-rise 0.58s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both; }
+    .hero__actions { animation: hero-rise 0.58s cubic-bezier(0.22, 1, 0.36, 1) 0.30s both; }
+
+    /* --- 8 · Reduced motion ---------------------------------------------- */
+    @media (prefers-reduced-motion: reduce) {
+      .hero__tick-rule,
+      .hero__tick,
+      .hero__pause { transition: none; }
+
+      /* ⚠ `none`, AND THE ELEMENTS MUST END VISIBLE. `both` above holds the
+         from-state before the delay elapses; cancelling the animation without
+         this would leave the panel at opacity 0 for a reader who asked for
+         less motion — the exact opposite of the accommodation. */
+      .hero__content,
+      .hero__title,
+      .hero__deck,
+      .hero__actions {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+
 </style>
 
 <script>
@@ -1039,6 +1851,19 @@ const slides = [
     const INTERVAL = 4500;
     let index = 0;
     let timer: number | undefined;
+
+    /* ⚠ USER PAUSE IS A SEPARATE STATE FROM THE HOVER STOP, AND IT HAS TO BE.
+       mouseleave calls start(); without a flag the rotation would restart the
+       moment the pointer left the hero and the button would look broken. Every
+       path that could resume — start(), roll(), the film `ended` handler —
+       checks this first. */
+    let userPaused = false;
+
+    const pauseBtn = hero.querySelector<HTMLButtonElement>('[data-hero-pause]');
+    const pauseLabel = hero.querySelector<HTMLElement>('[data-pause-label]');
+    const pauseBars = hero.querySelector<SVGGElement>('[data-pause-bars]');
+    const playTri = hero.querySelector<SVGPathElement>('[data-play-tri]');
+    const ticks = Array.from(hero.querySelectorAll<HTMLButtonElement>('[data-hero-tick]'));
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     // Auto-advance is desktop-only and motion-respecting (docs/06 §03 Mobile).
@@ -1093,7 +1918,7 @@ const slides = [
 
     const roll = (i: number) => {
       const film = filmOf(i);
-      if (!film || !mayPlayFilm()) return false;
+      if (!film || !mayPlayFilm() || userPaused) return false;
       attach(film);
       stop();
       film.currentTime = 0;
@@ -1121,6 +1946,13 @@ const slides = [
       slides[index].setAttribute('aria-hidden', 'false');
       if (!roll(index)) start();
 
+      /* The ticks are the only visible statement of where the rotation is, so
+         they move with it — including when a swipe or a film `ended` drives it,
+         not just when the button is clicked. */
+      ticks.forEach((t, i) =>
+        t.setAttribute('aria-current', i === index ? 'true' : 'false'),
+      );
+
       // The caption belongs to the image, so it cross-fades with it.
       if (caption && captionText && captionTag) {
         caption.classList.add('is-fading');
@@ -1139,6 +1971,7 @@ const slides = [
 
     const start = () => {
       stop();
+      if (userPaused) return;
       if (!mayAutoplay()) return;
       /* ⚠ A PLAYING FILM OWNS THE CLOCK — DO NOT ARM THE INTERVAL OVER IT. Every
          hover out of the hero calls start(), so without this guard leaving the
@@ -1148,15 +1981,60 @@ const slides = [
       timer = window.setInterval(() => show(index + 1), INTERVAL);
     };
 
-    /* ⚠ THIS IS NOW THE ONLY WAY TO STOP THE ROTATION. The pause/play button
-       was removed at the client's request, so hovering the hero or tabbing into
-       it is all that halts autoplay. Autoplay is already off entirely under
-       prefers-reduced-motion and below 768px, which is what keeps this
-       defensible — do not widen where it runs without restoring a control. */
+    /* ⚠ THE COMMENT THAT USED TO SIT HERE SAID THE PAUSE BUTTON HAD BEEN
+       REMOVED AND HOVER WAS THE ONLY WAY TO STOP THE ROTATION. That is no
+       longer true: the client asked for the control back on 17 Sep 2026 and it
+       is the `.hero__pause` button in the in-video UI. Hover and focus still
+       stop the timer as a convenience; the button is the explicit control, and
+       it is the one that survives the pointer leaving. */
     hero.addEventListener('mouseenter', stop);
     hero.addEventListener('mouseleave', start);
     hero.addEventListener('focusin', stop);
     hero.addEventListener('focusout', start);
+
+    /* ── The pause / play control ───────────────────────────────────────────
+       ⚠ IT PAUSES BOTH CLOCKS. A photo slide is held by `timer`; a film slide
+       is held by the video element itself and ignores the interval entirely
+       (see the note on roll()). Stopping only one of them looks like a button
+       that works on some slides and not others. */
+    const paintPause = () => {
+      if (!pauseBtn) return;
+      pauseBtn.setAttribute('aria-pressed', userPaused ? 'true' : 'false');
+      if (pauseLabel) pauseLabel.textContent = userPaused ? 'Play Video' : 'Pause Video';
+      if (pauseBars) pauseBars.toggleAttribute('hidden', userPaused);
+      if (playTri) playTri.toggleAttribute('hidden', !userPaused);
+    };
+
+    const setPaused = (next: boolean) => {
+      userPaused = next;
+      const film = filmOf(index);
+      if (next) {
+        stop();
+        film?.pause();
+      } else if (film?.hasAttribute('data-playing')) {
+        /* Mid-clip: hand it straight back to the video, not to the interval —
+           arming a 4.5s timer over a twenty-second film is the bug the note on
+           start() warns about. */
+        film.play().catch(() => start());
+      } else {
+        start();
+      }
+      paintPause();
+    };
+
+    pauseBtn?.addEventListener('click', () => setPaused(!userPaused));
+
+    /* ⚠ A TICK CLICK CLEARS THE PAUSE. Asking for a specific slide is asking to
+       see it move on; leaving the hero frozen after an explicit choice reads as
+       a broken control. */
+    ticks.forEach((tick, i) =>
+      tick.addEventListener('click', () => {
+        if (userPaused) setPaused(false);
+        show(i);
+      }),
+    );
+
+    paintPause();
 
     // Swipe — the only way to advance on mobile.
     let touchX = 0;

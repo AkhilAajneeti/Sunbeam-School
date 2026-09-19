@@ -101,11 +101,17 @@ const hasBody = paragraphs.length > 0;
       </div>
     ) : (
       <div class="lead__awaiting">
-        <p class="lead__awaiting-title">This message is awaiting the school's own words.</p>
+        {/* ⚠ THE STAMP IS REAL TEXT AND COMES FIRST, so a screen reader learns
+            this section is pending at the same point a sighted reader does.
+            Same rule as ui/PendingBlock.astro. */}
+        <p class="lead__awaiting-stamp">Content to be updated</p>
+        <p class="lead__awaiting-title">
+          This message will be published here following confirmation and approval from the school.
+        </p>
         <p>
-          The page, its layout and its type are finished and ready. The text has to
-          come from the school — a message signed by a named person is not ours to
-          write. Send it over and it drops straight in.
+          The page, its layout and its type are finished and ready. The words have to come from
+          the school — a message signed by a named person is not ours to write, and nothing has
+          been drafted on their behalf. It drops straight in when it arrives.
         </p>
         {pendingNote && <p class="lead__awaiting-note">{pendingNote}</p>}
       </div>
@@ -275,6 +281,15 @@ const hasBody = paragraphs.length > 0;
     border-radius: var(--sb-r-2);
     background: #fff;
     max-width: 58ch;
+  }
+
+  .lead__awaiting-stamp {
+    margin: 0 0 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
   }
 
   .lead__awaiting-title {

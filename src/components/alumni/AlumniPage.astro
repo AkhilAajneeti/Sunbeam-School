@@ -42,6 +42,9 @@ import AlRail from './AlRail.astro';
 import Lightbox from '../ui/Lightbox.astro';
 import { publishedMeets, featuredMeet, publishedStories, alumniGallery } from '../../data/alumniMeets';
 import { alumni } from '../../data/alumni';
+/* ⚠ THE SCHOOL'S OWN PLACEMENT BOARD, the same file the University Counselling
+   page shows. Imported, not copied — one asset, two pages. */
+import gBoard from '../../assets/placement/WhatsApp Image 2025-12-02 at 11.49.42 AM.jpeg';
 import { school } from '../../data/site';
 
 import pCampus from '../../assets/photos/sunbeem-1.jpg';
@@ -276,8 +279,24 @@ const hasStories = publishedStories.length > 0;
         <span class="al-rule" aria-hidden="true"></span>
       </div>
       <p class="al-people__n" data-reveal data-reveal-delay="180">
-        The school issues a card for an alumnus it is following — the degree, the institution and
-        the employer. These are those cards, reproduced whole.
+        The client asked for these in two groups, and they are: former students who have finished
+        studying and are <strong>working</strong>, and those who have gone on to
+        {' '}<strong>higher education</strong>. Both groups below are the school’s own records.
+      </p>
+    </div>
+
+    {/* ── CATEGORY 1 of 2 · PLACED / WORKING ───────────────────────────────
+        Client item 2, first category. These are the three the school issues an
+        "OUR ALUMNI" card for, each naming an employer. Three is all there are;
+        the count is printed so nobody has to guess whether more were dropped. */}
+    <div class="al-cat" id="al-working">
+      <h3 class="al-cat__h">
+        <span class="al-cat__n t-tabular">{alumni.length}</span>
+        Students placed &amp; working
+      </h3>
+      <p class="al-cat__d">
+        Former students who have completed their studies and are working. Each card below is the
+        school’s own, naming the degree, the institution and the employer.
       </p>
     </div>
 
@@ -315,6 +334,20 @@ const hasStories = publishedStories.length > 0;
           </div>
         </li>
       ))}
+
+      {/* ⚠ A TILE, NOT A PERSON. The grid expects more cards than the school has
+          given us names for. This fills the row WITHOUT inventing an alumnus —
+          no face, no name, no employer. Client instruction, 17 Sep 2026. */}
+      <li class="al-person al-person--soon" data-pop data-pop-delay={110 + alumni.length * 90}>
+        <div class="al-soon">
+          <span class="al-soon__stamp">Content to be updated</span>
+          <p class="al-soon__h">More alumni stories coming soon</p>
+          <p class="al-soon__b">
+            Additional alumni profiles will be added as verified information is received from
+            the school.
+          </p>
+        </div>
+      </li>
     </ul>
 
     {/* ⚠ THE GAP NAMED, NOT FILLED. A testimonial needs the alumnus's own words
@@ -323,6 +356,62 @@ const hasStories = publishedStories.length > 0;
       {hasStories
         ? 'Further alumni accounts are published below as the school records them.'
         : 'What these cards do not carry is the alumnus speaking — their own account of their years here. Those are published as the school records them, with consent.'}
+    </p>
+
+    {/* ── CATEGORY 2 of 2 · PURSUING HIGHER EDUCATION ──────────────────────
+        Client item 2, second category.
+
+        ⚠⚠ THE EIGHTEEN NAMES ARE DELIBERATELY NOT TRANSCRIBED INTO TEXT HERE,
+        AND THAT IS AN INSTRUCTION, NOT AN OVERSIGHT. The school publishes them
+        itself on this board, so showing the board reproduces nothing the school
+        has not already put up. Retyping them as HTML is a different act: it
+        makes eighteen named recent school-leavers searchable and indexable
+        under their own names. The client's instruction is that school sign-off
+        is required before that happens. Until it lands, the board stands — the
+        same artefact, shown whole, at full size, openable in the viewer.
+
+        ⚠ DO NOT "FINISH THIS OFF" by typing the names out of the image. Get the
+        approval first; then add them to data/alumni.ts beside the existing
+        three and this block becomes a card list like the one above. */}
+    <div class="al-cat al-cat--second" id="al-higher-ed">
+      <h3 class="al-cat__h">
+        <span class="al-cat__n t-tabular">18</span>
+        Students pursuing higher education
+      </h3>
+      <p class="al-cat__d">
+        Former students who finished school here and went on to college or university. The school
+        prints this record itself and hangs it up — <strong>“Vision To Reality”</strong>, Session
+        2024-25 — naming each student with their course and institution. Ten went to a University of
+        Delhi college and three to Banaras Hindu University.
+      </p>
+    </div>
+
+    <a
+      class="al-board"
+      data-lb-open
+      href={gBoard.src}
+      data-lb-alt={`${S}'s printed placement board, "Vision To Reality — Session 2024-25", listing eighteen students with their course and institution`}
+      data-lb-cap="Vision To Reality · Session 2024-25 · eighteen students, with course and institution"
+    >
+      <Picture
+        src={gBoard}
+        alt={`${S}’s printed placement board, “Vision To Reality — Session 2024-25, Students Placed In Prestigious Colleges/Universities”, listing eighteen students with their course and institution above a strip of individual placement cards`}
+        formats={['avif', 'webp']}
+        widths={[760, 1200, 1800]}
+        sizes="(max-width: 767px) 92vw, 80vw"
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+
+    <p class="al-people__gap">
+      <span class="al-soon__stamp al-soon__stamp--inline">Content to be updated</span>
+      Detailed searchable alumni profiles will be added after school confirmation. These eighteen
+      are shown as the school’s own board rather than retyped as a list: publishing recent
+      leavers’ names as searchable text is the school’s decision to make, not ours. The full
+      record, with the destinations counted off it, is on
+      {' '}<a class="al-plain" href="/academics/student-success/university-counselling/">University
+      Counselling</a>.
     </p>
   </div>
 </section>
@@ -741,6 +830,111 @@ const hasStories = publishedStories.length > 0;
     letter-spacing: -0.03em;
     color: var(--sb-charcoal);
   }
+  /* --- "More coming" tile ---------------------------------------------------
+     Deliberately not a card: dashed, no portrait frame, no name line. It must
+     never be mistaken at a glance for a fourth alumnus. */
+  .al-person--soon { display: flex; }
+
+  .al-soon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    padding: clamp(16px, 2vw, 26px);
+    border: 1px dashed rgba(18, 16, 15, 0.22);
+    border-radius: var(--sb-r-0, 16px);
+    background: linear-gradient(180deg,
+      color-mix(in srgb, var(--sb-lime-wash, #fff1ea) 45%, transparent), transparent 70%);
+  }
+
+  .al-soon__stamp {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .al-soon__stamp--inline { display: block; margin-bottom: 6px; }
+
+  .al-soon__h {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(14px, 1.2vw, 17px);
+    line-height: 1.3;
+    color: var(--sb-ink);
+  }
+
+  .al-soon__b {
+    margin: 0;
+    font-size: clamp(11px, 0.85vw, 13px);
+    line-height: 1.55;
+    color: var(--sb-text-muted);
+  }
+
+  /* --- The two client categories -------------------------------------------
+     A heading pair, not a redesign: the cards and the board below them keep the
+     treatments they already had. The number sits in a pill so the count reads
+     at a glance and cannot be confused with the heading. */
+  .al-cat { margin: clamp(26px, 3vw, 40px) 0 clamp(14px, 1.6vw, 20px); }
+  .al-cat--second { margin-top: clamp(38px, 4.4vw, 62px); padding-top: clamp(26px, 3vw, 40px);
+    border-top: 1px solid color-mix(in srgb, var(--sb-charcoal) 14%, transparent); }
+
+  .al-cat__h {
+    display: flex;
+    align-items: center;
+    gap: clamp(9px, 1vw, 13px);
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(17px, 1.7vw, 23px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--sb-ink);
+  }
+
+  .al-cat__n {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    min-width: clamp(28px, 2.6vw, 36px);
+    height: clamp(28px, 2.6vw, 36px);
+    padding: 0 8px;
+    border-radius: 999px;
+    background: var(--sb-lime-wash);
+    color: var(--sb-violet);
+    font-family: var(--sb-font-sans, inherit);
+    font-size: clamp(12px, 1.05vw, 14px);
+    font-weight: 700;
+  }
+
+  .al-cat__d {
+    max-width: 68ch;
+    margin: clamp(7px, 0.9vw, 11px) 0 0;
+    font-size: clamp(12px, 0.95vw, 14px);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  /* The board, shown whole. `contain` on a frame that follows the artwork's own
+     ratio — a cover crop would cut the table rows off, which ARE the evidence. */
+  .al-board {
+    display: block;
+    margin-top: clamp(14px, 1.8vw, 22px);
+    border-radius: var(--sb-r-0);
+    overflow: hidden;
+    background: var(--sb-paper);
+    border: 1px solid color-mix(in srgb, var(--sb-charcoal) 12%, transparent);
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 14px 34px -18px rgba(28, 14, 8, 0.22);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .al-board:hover { transform: translateY(-3px); box-shadow: 0 2px 6px rgba(28, 14, 8, 0.05), 0 22px 46px -20px rgba(28, 14, 8, 0.3); }
+  .al-board:focus-visible { outline: 2px solid var(--sb-violet); outline-offset: 3px; }
+  .al-board img { display: block; width: 100%; height: auto; }
+
   .al-person__study { margin: 5px 0 0; font-size: clamp(9.5px, 0.72vw, 11.4px); line-height: 1.55; color: var(--sb-text-muted); }
   .al-person__placed {
     display: flex;

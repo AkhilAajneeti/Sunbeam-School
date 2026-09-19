@@ -35,7 +35,8 @@
  * the client's own claim and puts the gap in its milestone line, where the other
  * three rungs put a published record.
  */
-import { ladder } from '../../../data/sports';
+import { ladder, houses } from '../../../data/sports';
+import PendingBlock from '../../ui/PendingBlock.astro';
 import { showBuildNotes } from '../../../data/site';
 import SectionHead from '../../academics/SectionHead.astro';
 import SportIcon from './SportIcon.astro';
@@ -146,6 +147,22 @@ const inks: Record<string, string> = {
         </li>
       ))}
     </ol>
+
+    {/* ⚠ THE HOUSES ARE KNOWN; THE CALENDAR IS NOT. The school names its three
+        houses on its own Student Council page (see data/sports.ts `houses`), so
+        the rung above names them as fact. What no source gives is WHO PLAYS
+        WHOM AND WHEN — so this block asks for it and invents no date, no
+        fixture and no event. Client instruction, 17 Sep 2026. */}
+    <div class="lad__pending">
+      <PendingBlock
+        variant="band"
+        icon="calendar"
+        title="Inter-House Fixture Calendar"
+        body={`The inter-house fixture calendar will be updated here once the official schedule is released by the school. The ${houses.length} houses themselves are confirmed — ${houses.map((h) => h.name).join(', ')} — but no fixture list, date or result has been published, and none is estimated here.`}
+        needs={['the fixture list', 'dates for the session', 'which year groups take part']}
+        ref="A15"
+      />
+    </div>
   </div>
 </section>
 
@@ -156,6 +173,8 @@ const inks: Record<string, string> = {
      within: every card silently stops pinning. It is also not needed here, since
      the dot layer is `position: absolute; inset: 0` against this relatively
      positioned box and already cannot paint outside it. */
+  .lad__pending { margin-top: clamp(26px, 3vw, 44px); }
+
   .lad {
     position: relative;
     isolation: isolate;

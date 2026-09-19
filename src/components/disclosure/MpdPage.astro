@@ -133,10 +133,10 @@ const sections = [
     <div class="mp-main">
       {/* 01 · GENERAL INFORMATION */}
       <section class="mp-sec" id="mp-general" aria-labelledby="mp-general-t">
-        <p class="mp-sec__h" data-reveal>
+        <h2 class="mp-sec__h" data-reveal>
           <span class="mp-sec__n t-tabular">01</span>
           <span class="mp-sec__t" id="mp-general-t">General Information</span>
-        </p>
+        </h2>
 
         <div class="mp-card">
           <dl class="mp-facts">
@@ -157,10 +157,10 @@ const sections = [
 
       {/* 02 · DOCUMENTS & CERTIFICATES */}
       <section class="mp-sec" id="mp-docs" aria-labelledby="mp-docs-t">
-        <p class="mp-sec__h" data-reveal>
+        <h2 class="mp-sec__h" data-reveal>
           <span class="mp-sec__n t-tabular">02</span>
           <span class="mp-sec__t" id="mp-docs-t">Documents &amp; Certificates</span>
-        </p>
+        </h2>
 
         <ul class="mp-docs">
           {certificates.map((c, i) => (
@@ -194,10 +194,10 @@ const sections = [
           ⚠ THE TABS READ THE ARRAY. Three years today; a fourth is one entry in
           disclosure.ts and nothing here changes. */}
       <section class="mp-sec" id="mp-results" aria-labelledby="mp-results-t">
-        <p class="mp-sec__h" data-reveal>
+        <h2 class="mp-sec__h" data-reveal>
           <span class="mp-sec__n t-tabular">03</span>
           <span class="mp-sec__t" id="mp-results-t">Results &amp; Academics</span>
-        </p>
+        </h2>
 
         <div class="mp-card mp-res" data-res>
           <div class="mp-res__tabs" role="tablist" aria-label="Board examination year">
@@ -278,10 +278,10 @@ const sections = [
 
       {/* 04 · STAFF & TEACHING */}
       <section class="mp-sec" id="mp-staff" aria-labelledby="mp-staff-t">
-        <p class="mp-sec__h" data-reveal>
+        <h2 class="mp-sec__h" data-reveal>
           <span class="mp-sec__n t-tabular">04</span>
           <span class="mp-sec__t" id="mp-staff-t">Staff &amp; Teaching</span>
-        </p>
+        </h2>
 
         <ul class="mp-sum">
           {staffSummary.map((r, i) => (
@@ -304,10 +304,10 @@ const sections = [
 
       {/* 05 · SCHOOL INFRASTRUCTURE */}
       <section class="mp-sec" id="mp-infra" aria-labelledby="mp-infra-t">
-        <p class="mp-sec__h" data-reveal>
+        <h2 class="mp-sec__h" data-reveal>
           <span class="mp-sec__n t-tabular">05</span>
           <span class="mp-sec__t" id="mp-infra-t">School Infrastructure</span>
-        </p>
+        </h2>
 
         <ul class="mp-infra">
           {infrastructure.map((f, i) => (
@@ -596,7 +596,23 @@ const sections = [
   .mp-main { display: grid; gap: clamp(28px, 3.4vw, 52px); }
   /* Anchors must clear the fixed header when the rail jumps to them. */
   .mp-sec { scroll-margin-top: clamp(84px, 8vw, 110px); }
-  .mp-sec__h { display: flex; align-items: center; gap: clamp(8px, 1vw, 13px); margin: 0 0 clamp(12px, 1.5vw, 19px); }
+  /* ⚠ THESE ARE <h2>, AND THEY USED TO BE <p>. Each section already carried
+     aria-labelledby pointing at its own label, so the label was doing a
+     heading's job without being one — this page went h1 → h3 (the document
+     cards) with nothing between. Visually inert: mp-sec__n and mp-sec__t carry
+     all the type, and the rule below zeroes the UA margin. */
+  .mp-sec__h {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1vw, 13px);
+    margin: 0 0 clamp(12px, 1.5vw, 19px);
+    /* ⚠ PINNED BECAUSE THIS IS NOW AN <h2>. Both children size themselves in
+       px/vw so nothing moved when the tag changed — but the element was
+       inheriting the UA h2 size (1.5em), which would silently enlarge any
+       em-based child added later. Pin it to body size so it cannot. */
+    font-size: var(--sb-body);
+    font-weight: 400;
+  }
   .mp-sec__n {
     font-size: clamp(11px, 0.86vw, 13.6px);
     font-weight: 700;

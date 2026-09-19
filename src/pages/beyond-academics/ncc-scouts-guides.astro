@@ -1,0 +1,37 @@
+---
+/**
+ * NCC, SCOUTS & GUIDES — /beyond-academics/ncc-scouts-guides/
+ *
+ * ⚠⚠ Client item 5. See data/uniformedGroups.ts before changing anything: NCC
+ * has three verified facts and Scouts & Guides has none at all. Nothing on this
+ * page is invented, and the page says out loud what is missing.
+ *
+ * ⚠ THE BANNER IS A GENERAL CAMPUS PHOTOGRAPH, NOT A PARADE. The school has
+ * sent no NCC or Scouts photography, and captioning any assembly or line-up as
+ * a cadet contingent would be a false claim about who is in the frame.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import UniformedGroupsPage from '../../components/beyond/groups/UniformedGroupsPage.astro';
+
+import banner from '../../assets/photos/sunbeem-4.jpg';
+---
+
+<BaseLayout
+  title="NCC, Scouts & Guides — Sunbeam School Ballia"
+  description="The National Cadet Corps at Sunbeam School Ballia — ‘A’ and ‘B’ certificate affiliations and two officer-rank staff — and what the school has yet to publish about Scouts and Guides."
+>
+  <PageHero
+    title="NCC, Scouts & Guides"
+    standfirst="The uniformed groups, and exactly what the school has published about them."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Beyond Academics', href: '/beyond-academics/sports/' },
+    ]}
+    src={banner}
+    alt="The campus of Sunbeam School Ballia at Agarsanda."
+    position="50% 45%"
+  />
+
+  <UniformedGroupsPage />
+</BaseLayout>

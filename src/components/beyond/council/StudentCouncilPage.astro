@@ -1,0 +1,274 @@
+---
+/**
+ * STUDENT COUNCIL — the body of /beyond-academics/student-council/.
+ *
+ * ⚠⚠ READ data/studentCouncil.ts BEFORE EDITING. Thirty-four named children,
+ * every one transcribed from the school's own page. Nothing may be added
+ * beside a real child's name — not a class, not a photograph, not an
+ * achievement. The count is the check: 24 senior + 10 junior.
+ *
+ * ⚠ THE LEADERSHIP FOUR ARE SET APART IN EACH SECTION, and that is the only
+ * editorial judgement on this page. Head Boy, Head Girl and their two deputies
+ * are the posts a reader is looking for; the school's own page runs all
+ * twenty-four in one flat table where they are no easier to find than the
+ * Health & Hygiene Sub-Inspector. Everything else keeps the school's order.
+ *
+ * ⚠ HOUSE POSTS CARRY A COLOUR DOT, drawn from `house` in the data. It is
+ * decorative and aria-hidden — the post name already says which house, so a
+ * screen reader would otherwise hear it twice.
+ *
+ * ⚠ ANIMATION REUSES THE SITE'S CONTRACT — `data-reveal` / `data-reveal-delay`
+ * from scripts/motion-gsap.ts. No new animation code.
+ */
+import { intro, session, senior, junior } from '../../../data/studentCouncil';
+
+const leadSenior = senior.filter((p) => p.lead);
+const restSenior = senior.filter((p) => !p.lead);
+const leadJunior = junior.filter((p) => p.lead);
+const restJunior = junior.filter((p) => !p.lead);
+---
+
+<div class="cnl">
+  <span class="cnl__blob cnl__blob--a" aria-hidden="true"></span>
+  <span class="cnl__blob cnl__blob--b" aria-hidden="true"></span>
+
+  <div class="u-container cnl__wrap">
+    {/* ── The school's own introductory line ─────────────────────────────── */}
+    <p class="cnl__intro" data-reveal>{intro}</p>
+    {session && <p class="cnl__session" data-reveal>Session {session}</p>}
+
+    {/* ── Senior council ─────────────────────────────────────────────────── */}
+    <section class="cnl__sec" id="senior" aria-labelledby="senior-t">
+      <h2 class="cnl__h" id="senior-t" data-reveal>
+        <span class="cnl__h-rule" aria-hidden="true"></span>
+        Senior Student Council
+      </h2>
+
+      <ul class="cnl__leads">
+        {leadSenior.map((p, i) => (
+          <li class="cnl__lead" data-reveal data-reveal-delay={i * 70}>
+            <span class="cnl__lead-post">{p.post}</span>
+            <span class="cnl__lead-name">{p.name}</span>
+          </li>
+        ))}
+      </ul>
+
+      <ul class="cnl__grid">
+        {restSenior.map((p, i) => (
+          <li class="cnl__post" data-reveal data-reveal-delay={(i % 4) * 50}>
+            <span class="cnl__post-label">
+              {p.house && <span class:list={['cnl__dot', `cnl__dot--${p.house}`]} aria-hidden="true"></span>}
+              {p.post}
+            </span>
+            <span class="cnl__post-name">{p.name}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* ── Junior council ─────────────────────────────────────────────────── */}
+    <section class="cnl__sec" id="junior" aria-labelledby="junior-t">
+      <h2 class="cnl__h" id="junior-t" data-reveal>
+        <span class="cnl__h-rule" aria-hidden="true"></span>
+        Junior Student Council
+      </h2>
+
+      <ul class="cnl__leads">
+        {leadJunior.map((p, i) => (
+          <li class="cnl__lead" data-reveal data-reveal-delay={i * 70}>
+            <span class="cnl__lead-post">{p.post}</span>
+            <span class="cnl__lead-name">{p.name}</span>
+          </li>
+        ))}
+      </ul>
+
+      <ul class="cnl__grid">
+        {restJunior.map((p, i) => (
+          <li class="cnl__post" data-reveal data-reveal-delay={(i % 4) * 50}>
+            <span class="cnl__post-label">
+              {p.house && <span class:list={['cnl__dot', `cnl__dot--${p.house}`]} aria-hidden="true"></span>}
+              {p.post}
+            </span>
+            <span class="cnl__post-name">{p.name}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</div>
+
+<style>
+  .cnl {
+    position: relative;
+    padding-block: var(--sb-section-y);
+    background: var(--sb-ivory);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .cnl__wrap { position: relative; }
+
+  .cnl__blob {
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(70px);
+    pointer-events: none;
+  }
+
+  .cnl__blob--a {
+    top: -130px; left: -170px;
+    width: 440px; height: 360px;
+    background: rgba(255, 138, 99, 0.18);
+  }
+
+  .cnl__blob--b {
+    bottom: -160px; right: -180px;
+    width: 460px; height: 400px;
+    background: rgba(255, 176, 120, 0.14);
+  }
+
+  .cnl__intro {
+    max-width: 62ch;
+    margin: 0 auto;
+    font-size: var(--sb-body-lg, 1.0625rem);
+    line-height: 1.6;
+    text-align: center;
+    color: var(--sb-text-muted);
+  }
+
+  .cnl__session {
+    margin: var(--sb-4) 0 0;
+    text-align: center;
+    font-size: var(--sb-caption);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .cnl__sec { margin-top: clamp(40px, 5vw, 72px); }
+
+  .cnl__h {
+    display: flex;
+    align-items: center;
+    gap: var(--sb-4);
+    margin: 0 0 var(--sb-6);
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 2.1vw, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--sb-ink);
+  }
+
+  .cnl__h-rule {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--sb-violet);
+  }
+
+  /* --- The four leadership posts -------------------------------------------
+     Bigger, on paper rather than ivory, so the posts a reader actually came
+     for are found at a glance rather than hunted out of a flat list. */
+
+  .cnl__leads {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sb-5);
+    margin: 0 0 var(--sb-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  .cnl__lead {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: var(--sb-6);
+    background: var(--sb-paper);
+    border: 1px solid rgba(201, 60, 10, 0.16);
+    border-radius: var(--sb-r-0);
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 10px 26px -14px rgba(28, 14, 8, 0.18);
+  }
+
+  .cnl__lead-post {
+    font-size: var(--sb-caption);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .cnl__lead-name {
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1.25;
+    color: var(--sb-ink);
+    text-wrap: balance;
+  }
+
+  /* --- Everything else ------------------------------------------------------ */
+
+  .cnl__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sb-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cnl__post {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--sb-5);
+    background: var(--sb-paper);
+    border: 1px solid rgba(18, 16, 15, 0.07);
+    border-radius: var(--sb-r-0);
+  }
+
+  .cnl__post-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: var(--sb-caption);
+    line-height: 1.35;
+    color: var(--sb-text-muted);
+  }
+
+  .cnl__post-name {
+    font-weight: 700;
+    font-size: var(--sb-body-sm);
+    line-height: 1.3;
+    color: var(--sb-ink);
+    text-wrap: balance;
+  }
+
+  /* House colours. Decorative — the post name already names the house. */
+  .cnl__dot {
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .cnl__dot--red { background: #c5221f; }
+  .cnl__dot--yellow { background: #d9a406; }
+  .cnl__dot--green { background: #0b8043; }
+
+  /* --- Responsive ----------------------------------------------------------- */
+
+  @media (max-width: 1023px) {
+    .cnl__leads,
+    .cnl__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 599px) {
+    .cnl__leads,
+    .cnl__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

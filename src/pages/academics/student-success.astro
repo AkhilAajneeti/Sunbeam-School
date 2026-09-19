@@ -32,6 +32,12 @@ import CounterStrip from '../../components/academics/CounterStrip.astro';
 import { showBuildNotes } from '../../data/site';
 import { wins, guidance, awaiting } from '../../data/academics';
 
+/* ⚠ SPELLED FROM THE ARRAY, NOT TYPED. This heading read "Three things" while
+   the list below it rendered two, because an item was removed and the word was
+   not. Deriving it means the two can never disagree again. */
+const WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'];
+const GAP_COUNT = WORDS[awaiting.length] ?? String(awaiting.length);
+
 /* The student council and NCC cadets with the school's dignitaries — the page is
    about what students have been recognised for. */
 import banner from '../../assets/photos/sunbeem-5.jpg';
@@ -136,7 +142,7 @@ import banner from '../../assets/photos/sunbeem-5.jpg';
       <div class="gap__head" data-reveal>
         <p class="gap__pill"><span class="pill pill--violet">Not yet published</span></p>
         <h2 class="gap__title t-h2-sans" id="gap-title" data-split>
-          Three things this page <span class="t-squiggle">will not</span> estimate
+          {GAP_COUNT} things this page <span class="t-squiggle">will not</span> estimate
         </h2>
         <p class="gap__lede">
           These are the facts parents search for most. The school has not stated them, and this page

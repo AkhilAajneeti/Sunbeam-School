@@ -2,10 +2,16 @@
 /**
  * ACADEMICS · BOARD RESULTS.
  *
- * The school publishes no board percentages, and this page does not estimate
- * one. What it sets out instead — the outcome data the school does publish, and
- * why a guessed pass rate is the single worst number to invent on a school site
- * — is in the component header.
+ * ⚠⚠ THIS PAGE USED TO SAY THE RESULTS WERE NOT PUBLISHED. They are, and they
+ * always were — BRS.pdf, on the school's own letterhead, transcribed in
+ * data/disclosure.ts → `boardResults`. The title, standfirst, meta description
+ * and closing section ALL carried the false claim, and each one is corrected
+ * here. See the component header for the full account.
+ *
+ * ⚠ IF YOU ARE CHANGING THE COPY ON THIS PAGE, CHANGE IT IN FOUR PLACES. The
+ * standfirst and description live here; the body and the close live in the
+ * component. That split is how two of them stayed wrong after the other two
+ * were fixed.
  *
  * The banner, navbar and footer are untouched.
  * The panel's padding-block is an inline style — a scoped rule can skew against
@@ -20,11 +26,11 @@ import banner from '../../assets/library/DSC_1226 copy.jpg';
 
 <BaseLayout
   title="Board Results — Sunbeam School Ballia"
-  description="Sunbeam School Ballia does not publish its CBSE Class X and XII board results. This page says so plainly, and sets out the outcome data the school does publish — CUET (UG) 2025 scores and named university placements."
+  description="CBSE Class X and Class XII board results for Sunbeam School Ballia — three years, as filed by the school on its own letterhead. Class X 100% in 2025; Class XII 98.90%. With CUET (UG) 2025 scores and named university placements."
 >
   <PageHero
     title="Board Results"
-    standfirst="The school has not published them. This page says that rather than estimating a number you would plan around."
+    standfirst="Class X and Class XII, three years, as the school files them with CBSE on its own letterhead."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Academics', href: '/academics/' },
