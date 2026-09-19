@@ -31,7 +31,15 @@ import { school } from '../../data/site';
           <li data-reveal data-reveal-delay={(i % 3) * 70}>
             <Tag
               class:list={['ccn__card', !it.href && 'ccn__card--pending']}
-              {...(it.href ? { href: it.href, target: '_blank', rel: 'noopener' } : {})}
+              {...(it.href
+                ? it.href.startsWith('#')
+                  /* ⚠ AN IN-PAGE ANCHOR MUST NOT OPEN A NEW TAB. Academic
+                     Excellence points at a section further down this page; the
+                     four document links above go to the school's old site and
+                     genuinely do leave. Same card, two behaviours. */
+                  ? { href: it.href }
+                  : { href: it.href, target: '_blank', rel: 'noopener' }
+                : {})}
             >
               <span class="ccn__icon" aria-hidden="true">
                 {it.icon === 'teacher' && (
@@ -88,7 +96,9 @@ import { school } from '../../data/site';
                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <path d="M5 12h13M12.5 6l6 6-6 6" />
                     </svg>
-                    <span class="u-visually-hidden">{it.title} — opens in a new tab</span>
+                    <span class="u-visually-hidden">
+                      {it.title}{it.href?.startsWith('#') ? ' — jumps to that section on this page' : ' — opens in a new tab'}
+                    </span>
                   </span>
                 ) : (
                   <>

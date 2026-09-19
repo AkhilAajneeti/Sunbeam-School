@@ -471,10 +471,14 @@ export const mainNav: NavItem[] = [
            promise something the school has not got. One page carries both, and
            says which is which. */
         {
-          label: "NCC, Scouts & Guides",
+          /* ⚠ LABEL NARROWED TO NCC, 19 Sep 2026 — the Scouts & Guides section
+             came off the page until the school has content for it. The href is
+             unchanged on purpose; see the note in the page file. Restore this
+             label when that section returns. */
+          label: "NCC",
           href: "/beyond-academics/ncc-scouts-guides/",
           icon: "shield",
-          desc: "NCC ‘A’ and ‘B’ affiliations, and what is still unpublished.",
+          desc: "‘A’ and ‘B’ affiliation, two officers, camps and enrolments.",
           img: imgJosh,
         },
         /* ⚠ PUBLICATIONS SITS HERE BECAUSE THE SCHOOL'S OWN SITE PUTS IT HERE —

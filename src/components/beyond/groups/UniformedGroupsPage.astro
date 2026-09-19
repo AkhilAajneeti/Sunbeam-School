@@ -1,6 +1,11 @@
 ---
 /**
- * NCC, SCOUTS & GUIDES — the body of /beyond-academics/ncc-scouts-guides/.
+ * NATIONAL CADET CORPS — the body of /beyond-academics/ncc-scouts-guides/.
+ *
+ * ⚠ THIS COMPONENT STILL RENDERS A LIST OF GROUPS, and that is on purpose: the
+ * Scouts & Guides group was removed from data/uniformedGroups.ts on 19 Sep 2026
+ * at the client's request, not from here. Nothing about the markup assumes one
+ * group, so restoring that entry is the only step needed to bring it back.
  *
  * ⚠⚠ READ data/uniformedGroups.ts FIRST. Three verified facts exist for NCC and
  * ZERO for Scouts & Guides. Nothing on this page may be added that is not in
@@ -135,19 +140,27 @@ import { Picture } from 'astro:assets';
           </div>
         )}
 
-        {/* ⚠ PRINTED FOR BOTH GROUPS, including the one that has facts. */}
-        <div class="ung__missing">
-          <p class="ung__missing-k">What the school has not published</p>
-          <ul>
-            {g.missing.map((m) => <li>{m}</li>)}
-          </ul>
-        </div>
+        {/* ⚠ GUARDED ON LENGTH. This block used to print unconditionally, so
+            emptying `missing` left the heading "What the school has not
+            published" standing over nothing. An empty list is not a gap worth
+            announcing — if there is nothing to name, say nothing. */}
+        {g.missing.length > 0 && (
+          <div class="ung__missing">
+            <p class="ung__missing-k">What the school has not published</p>
+            <ul>
+              {g.missing.map((m) => <li>{m}</li>)}
+            </ul>
+          </div>
+        )}
       </section>
     ))}
 
     <p class="ung__foot" data-reveal>
-      Anything not stated here has not been published by the school. For NCC enrolment or a
-      Scouts and Guides enquiry, call
+      {/* ⚠ NARROWED TO NCC, 19 Sep 2026, with the rest of the page. Put the
+          Scouts wording back when that section returns — see the note in
+          data/uniformedGroups.ts. */}
+      Anything not stated here has not been published by the school. For NCC enrolment or any
+      other enquiry, call
       <a href={`tel:${school.phone.office}`}>{school.phone.officeDisplay}</a>
       or write to <a href={`mailto:${school.email}`}>{school.email}</a>.
     </p>

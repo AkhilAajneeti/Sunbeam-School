@@ -1,6 +1,17 @@
 ---
 /**
- * NCC, SCOUTS & GUIDES — /beyond-academics/ncc-scouts-guides/
+ * NATIONAL CADET CORPS — /beyond-academics/ncc-scouts-guides/
+ *
+ * ⚠⚠ THE URL STILL SAYS "scouts-guides" AND THAT IS DELIBERATE. On 19 Sep 2026
+ * the client asked for the Scouts & Guides section to come off the page until
+ * they have content for it — their word was "now". The route is unchanged so
+ * that nothing breaks and so it is correct again the moment that section
+ * returns; only the things a reader SEES were narrowed to NCC: this page's
+ * title, its standfirst, its meta description, and the nav label.
+ *
+ * ⚠ WHEN SCOUTS CONTENT ARRIVES, FOUR THINGS GO BACK TOGETHER: the group in
+ * data/uniformedGroups.ts, the two titles here, the meta description, and the
+ * label in data/navigation.ts. Each carries a note pointing at the others.
  *
  * ⚠⚠ Client item 5. See data/uniformedGroups.ts before changing anything: NCC
  * has three verified facts and Scouts & Guides has none at all. Nothing on this
@@ -18,12 +29,12 @@ import banner from '../../assets/photos/sunbeem-4.jpg';
 ---
 
 <BaseLayout
-  title="NCC, Scouts & Guides — Sunbeam School Ballia"
-  description="The National Cadet Corps at Sunbeam School Ballia — ‘A’ and ‘B’ certificate affiliations and two officer-rank staff — and what the school has yet to publish about Scouts and Guides."
+  title="National Cadet Corps — Sunbeam School Ballia"
+  description="The National Cadet Corps at Sunbeam School Ballia — ‘A’ and ‘B’ certificate affiliation through 90 and 93 UP Battalions, two Associate NCC Officers, and the camps and enrolments the school has published."
 >
   <PageHero
-    title="NCC, Scouts & Guides"
-    standfirst="The uniformed groups, and exactly what the school has published about them."
+    title="National Cadet Corps"
+    standfirst="Affiliation at both certificate levels, two officers, and the record the school has published."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Beyond Academics', href: '/beyond-academics/sports/' },

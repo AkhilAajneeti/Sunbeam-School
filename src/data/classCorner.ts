@@ -88,38 +88,27 @@ export const cornerItems: CornerItem[] = [
     kind: 'Image',
   },
 
-  /* ── The two the school has not published ──────────────────────────────── */
-  {
-    id: 'exam-incharge',
-    title: 'Examination In-charge',
-    body: 'Who to contact about examination entries, dates and results.',
-    icon: 'person',
-    href: null,
-    /* ⚠ VERBATIM ON THE CARD, AND FUTURE TENSE ON PURPOSE. It says what WILL go
-       here and who it is owed by. No name, no designation, no phone number is
-       invented — that is the whole reason this card exists in this form. */
-    pending: 'Examination In-charge details will be updated here after confirmation from the school. For examination queries in the meantime, contact the school office.',
-    needs: ['name', 'designation', 'contact details'],
-  },
-  {
-    id: 'academic-excellence',
-    title: 'Academic Excellence',
-    body: 'Class-level achievements and academic honours.',
-    icon: 'star',
-    href: null,
-    /* ⚠ THIS USED TO ADD "Board results are not published by the school
-       either", WHICH WAS FALSE. The school files three years of Class X and XII
-       results on its own letterhead; they are on /academics/board-results/.
-       Academic Excellence is a separate, genuinely unpublished thing — a
-       class-level achievements list — and the card now says only that. */
-    /* ⚠ DESCRIBES THE SECTION'S PURPOSE, CLAIMS NO ACHIEVEMENT. Not one ranking,
-       mark, topper or percentage appears here or may be added without the
-       school's own list. */
-    pending: 'This section will highlight the school’s academic achievements, student accomplishments and notable academic milestones. Official details will be added after confirmation from the school. Board examination results are published separately, on the Board Results page.',
-    needs: ['the achievements list', 'the sessions it covers', 'consent for any named student'],
-  },
+  /* ⚠⚠ TWO CARDS WERE REMOVED HERE ON 19 SEP 2026, FOR TWO DIFFERENT REASONS.
+     Neither is an oversight and neither should be re-added without asking.
+
+     'academic-excellence' — NOT missing, MOVED. The school's two toppers boards
+     are transcribed in data/toppers.ts and rendered in full by
+     components/academics/Toppers.astro further down this same page. A card that
+     only scrolled the reader to a section already below it was duplicating its
+     own page.
+
+     'exam-incharge' — removed at the client's request. The school has still not
+     published who the Examination In-charge is; that gap is tracked in
+     data/site.ts → pending A14 and in docs/07, it is simply no longer stated on
+     the page. The footer below the cards already points anyone with an
+     examination query at the school office.
+
+     ⚠ EVERY REMAINING ITEM IS A LIVE DOCUMENT LINK. `pending` and `needs` on
+     CornerItem are now unused, and the pending branch in ClassCornerPage.astro
+     renders for nothing — both are kept deliberately, because the next item the
+     school owes us will need them again. */
 ];
 
-/** The count check. Four live, two stated as pending. */
+/** The count check. All four remaining items are live document links. */
 export const liveCount = cornerItems.filter((i) => i.href).length;
 export const pendingCount = cornerItems.filter((i) => !i.href).length;

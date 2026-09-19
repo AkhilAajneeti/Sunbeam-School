@@ -1,0 +1,283 @@
+---
+/**
+ * ACADEMIC EXCELLENCE — the toppers boards, on /academics/class-corner/.
+ *
+ * ⚠⚠ READ data/toppers.ts FIRST. Seventeen named children and their marks,
+ * transcribed from the school's own mounted boards. Nothing on this page may be
+ * rounded, reordered or filled in, and no comparative claim ("district topper",
+ * "best in Ballia") appears anywhere — none has been confirmed in writing.
+ *
+ * ⚠ IT IS A TABLE BECAUSE IT IS A TABLE. The source is a ruled board with three
+ * columns and a row per session; a reader wants to scan down a year or across a
+ * name. Cards would break the column alignment that makes it readable, and a
+ * screen reader would lose the session/name/mark relationship entirely.
+ *
+ * ⚠ THE HIGHEST MARK IN EACH LIST IS HIGHLIGHTED, and that is arithmetic on the
+ * board's own numbers — not a ranking, not an award. `bestX` / `bestXII` in the
+ * data file do the comparison so this component states nothing of its own.
+ *
+ * ⚠ NEWEST FIRST ON SCREEN, OLDEST FIRST IN THE DATA. The board reads top-down
+ * from 2017-18 because that is the order the rows were engraved; a visitor wants
+ * this year first. The data keeps the board's order so the transcription can be
+ * checked against the photograph line by line — the reversal happens here.
+ */
+import { classX, classXII, bestX, bestXII, spanX, spanXII } from '../../data/toppers';
+
+/** Title case for display; data/toppers.ts keeps the board's capitals. */
+const nice = (n: string) =>
+  n.replace(/[A-Za-z]+/g, (w) => w[0].toUpperCase() + w.slice(1).toLowerCase());
+
+const boards = [
+  { label: 'Class X', rows: [...classX].reverse(), best: bestX, span: spanX, id: 'toppers-x' },
+  { label: 'Class XII', rows: [...classXII].reverse(), best: bestXII, span: spanXII, id: 'toppers-xii' },
+];
+---
+
+<section class="tpr" id="academic-excellence" aria-labelledby="tpr-t">
+  <div class="u-container">
+    <div class="tpr__head" data-reveal>
+      <p class="tpr__kicker">Academic Excellence</p>
+      <h2 class="tpr__h" id="tpr-t">The names on the board</h2>
+      <p class="tpr__d">
+        The school mounts two boards at the entrance — one for Class X, one for Class XII —
+        carrying the session topper and their percentage. These are those boards, transcribed
+        row for row.
+      </p>
+    </div>
+
+    <div class="tpr__grid">
+      {boards.map((b, bi) => (
+        <div class="tpr__board" data-reveal data-reveal-delay={bi * 90}>
+          <div class="tpr__board-head">
+            <h3 class="tpr__board-k" id={b.id}>{b.label} toppers</h3>
+            <p class="tpr__span t-tabular">{b.span}</p>
+          </div>
+
+          <div class="tpr__scroll">
+            <table aria-labelledby={b.id}>
+              <caption class="u-visually-hidden">
+                {b.label} session toppers at Sunbeam School Ballia, {b.span}, with each
+                student’s name and percentage as recorded on the school’s board.
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Session</th>
+                  <th scope="col">Student</th>
+                  <th scope="col" class="tpr__num">%</th>
+                </tr>
+              </thead>
+              <tbody>
+                {b.rows.map((r) => (
+                  <tr class:list={[r.session === b.best.session && 'tpr__row--best']}>
+                    <th scope="row" class="tpr__sess t-tabular">{r.session}</th>
+                    <td class="tpr__name">
+                      {nice(r.name)}
+                      {r.session === b.best.session && (
+                        <span class="tpr__flag">
+                          Highest on this board
+                          <span class="u-visually-hidden"> — {b.label}</span>
+                        </span>
+                      )}
+                    </td>
+                    <td class="tpr__num t-tabular">
+                      {r.percent}
+                      {/* ⚠ The board itself is not legible here — see data/toppers.ts. */}
+                      {r.check && <abbr class="tpr__check" title="Decimal not legible on the board; to be confirmed with the school">*</abbr>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="tpr__foot" data-reveal>
+      Transcribed from the school’s own boards. A figure marked
+      <abbr title="Decimal not legible on the board; to be confirmed with the school">*</abbr>
+      is one the photograph does not render clearly and is awaiting confirmation.
+    </p>
+  </div>
+</section>
+
+<style>
+  .tpr {
+    /* ⚠⚠ position + isolation ARE LOAD-BEARING, NOT TIDINESS. PageHero is
+       `position: sticky; z-index: 0` — it pins and the content scrolls over it.
+       A positioned element with z-index 0 paints ABOVE the background of any
+       STATIC element that follows, so a section left static here does not cover
+       the pinned banner: the hero shows through it partway down the page.
+       `position: relative` + `isolation: isolate` gives this section its own
+       stacking context and an opaque ground, which is the contract PageHero's
+       own header describes. Every other section on this site does the same.
+       ⚠ DO NOT REMOVE EITHER LINE. There is nothing visible to suggest they
+       matter until you scroll. */
+    position: relative;
+    /* ⚠⚠ AN EXPLICIT z-index, NOT `auto`. PageHero is `position: sticky;
+       z-index: 0`. A following sibling at `z-index: auto` is only painted above
+       it by tree order, which is fragile the moment anything between them
+       creates a stacking context — and it left the pinned banner showing
+       through the top of this section three times running.
+       `z-index: 1` is the same value u-page-panel uses for exactly this job on
+       every other banner page in the project; it is the proven pattern here.
+       ⚠ DO NOT LOWER IT and do not rely on `isolation` alone. */
+    z-index: 1;
+    isolation: isolate;
+    padding-block: var(--sb-section-y);
+    background: var(--sb-sand);
+  }
+
+  .tpr__head { max-width: 64ch; }
+
+  .tpr__kicker {
+    margin: 0 0 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sb-violet);
+  }
+
+  .tpr__h {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(21px, 2.3vw, 31px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--sb-ink);
+  }
+
+  .tpr__d {
+    margin: var(--sb-4) 0 0;
+    font-size: var(--sb-body-sm);
+    line-height: 1.65;
+    color: var(--sb-text-muted);
+  }
+
+  .tpr__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sb-6);
+    margin-top: var(--sb-7);
+  }
+
+  .tpr__board {
+    padding: clamp(18px, 2.2vw, 28px);
+    background: var(--sb-paper);
+    border: 1px solid rgba(18, 16, 15, 0.07);
+    border-radius: var(--sb-r-0);
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 10px 26px -16px rgba(28, 14, 8, 0.18);
+  }
+
+  .tpr__board-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sb-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--sb-5);
+  }
+
+  .tpr__board-k {
+    margin: 0;
+    font-family: var(--sb-font-display);
+    font-weight: 700;
+    font-size: clamp(16px, 1.5vw, 20px);
+    line-height: 1.2;
+    color: var(--sb-ink);
+  }
+
+  .tpr__span {
+    margin: 0;
+    font-size: var(--sb-caption);
+    letter-spacing: 0.04em;
+    color: var(--sb-text-muted);
+  }
+
+  /* ⚠ THE TABLE SCROLLS, THE PAGE DOES NOT. Three columns of names and figures
+     cannot compress below a certain width without the marks wrapping away from
+     their session. Its own scroller keeps that contained. */
+  .tpr__scroll { overflow-x: auto; }
+
+  .tpr table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(12.5px, 1vw, 14px);
+  }
+
+  .tpr th,
+  .tpr td {
+    padding: clamp(7px, 0.8vw, 10px) clamp(6px, 0.8vw, 12px);
+    text-align: left;
+    border-bottom: 1px solid rgba(18, 16, 15, 0.08);
+    vertical-align: baseline;
+  }
+
+  .tpr thead th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sb-text-muted);
+    border-bottom-width: 2px;
+  }
+
+  .tpr tbody tr:last-child th,
+  .tpr tbody tr:last-child td { border-bottom: none; }
+
+  .tpr__sess {
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--sb-text-muted);
+  }
+
+  .tpr__name {
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--sb-ink);
+  }
+
+  .tpr__num {
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 700;
+    color: var(--sb-ink);
+  }
+
+  /* The highest mark on each board. A tint and a label, not a trophy. */
+  .tpr__row--best { background: var(--sb-lime-wash); }
+  .tpr__row--best .tpr__num { color: var(--sb-violet-dark); }
+
+  .tpr__flag {
+    display: block;
+    margin-top: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--sb-violet-dark);
+  }
+
+  .tpr__check {
+    margin-left: 2px;
+    text-decoration: none;
+    color: var(--sb-text-muted);
+    cursor: help;
+  }
+
+  .tpr__foot {
+    max-width: 68ch;
+    margin: var(--sb-6) 0 0;
+    font-size: var(--sb-caption);
+    line-height: 1.6;
+    color: var(--sb-text-muted);
+  }
+
+  .tpr__foot abbr { text-decoration: none; }
+
+  @media (max-width: 899px) {
+    .tpr__grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

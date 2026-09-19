@@ -193,44 +193,30 @@ export const groups: UniformedGroup[] = [
         caption: 'Kargil Vijay Diwas — cadets address the school',
       },
     ],
-    /* ⚠ ONE ITEM, DOWN FROM FIVE, AND THE OTHER FOUR WERE NEVER MISSING. See
-       the file header. Do not re-add "photographs" or "the unit" here. */
-    missing: ['the number of cadets enrolled'],
-    placeholders: [
-      {
-        title: 'Cadet strength',
-        icon: 'person',
-        body:
-          'The number of cadets enrolled at each certificate level will be updated here once the school provides it. It is the one part of the NCC record the school has not published anywhere, and it is not estimated in the meantime.',
-        needs: ['cadets enrolled, ‘A’ certificate', 'cadets enrolled, ‘B’ certificate'],
-      },
-    ],
+    /* ⚠ EMPTY, AND THAT IS A PRESENTATION CHOICE RATHER THAN A CLAIM. Cadet
+       strength is still the one part of the NCC record the school has not
+       published; the client asked on 19 Sep 2026 for the "what is missing"
+       chips and the cadet-strength block to come off the page. The gap lives in
+       data/site.ts → pending A13.
+       ⚠ NOTHING HERE ASSERTS A CADET NUMBER, and nothing may. An empty
+       `missing` means "we are not printing the gap", not "there is no gap". */
+    missing: [],
   },
-  {
-    id: 'scouts-guides',
-    title: 'Scouts & Guides',
-    standfirst:
-      'The school has not published any record of a Scouts and Guides programme.',
-    icon: 'compass',
-    /* ⚠⚠ EMPTY ON PURPOSE AND NOT TO BE FILLED FROM ELSEWHERE. See the header:
-       all 67 pages of the school's site were searched and none mentions a
-       Scouts or Guides unit. We do not know that one exists. */
-    facts: [],
-    missing: [
-      'whether the school runs a Scouts and Guides unit at all',
-      'the troop or company, and who leads it',
-      'enrolment, and the classes it is open to',
-      'rallies, camps and awards',
-      'photographs',
-    ],
-    /* ⚠⚠ READ THIS SENTENCE CAREFULLY BEFORE CHANGING IT. It says information is
-       being collected and will be added ONCE OFFICIALLY CONFIRMED. It does NOT
-       say the school has a Scouts and Guides unit, because we do not know that
-       it does — the very first thing `missing` asks for is whether one exists.
-       Any edit that implies the unit exists is a false claim about the school. */
-    pending:
-      'Information regarding Scout & Guide activities is currently being collected from the school and will be updated here once officially confirmed. A search of every page on the school’s website found no mention of a Scouts or Guides unit, and none appears in its CBSE filing or in any material it has sent us, so this section is held open rather than filled in.',
-  },
+  /* ⚠⚠ THE SCOUTS & GUIDES GROUP WAS REMOVED FROM THIS ARRAY ON 19 SEP 2026,
+     AT THE CLIENT'S REQUEST, AND NOTHING ABOUT THE FACTS HAS CHANGED. The
+     school still publishes no record of a Scouts or Guides unit anywhere — all
+     67 pages of its site were searched for "scout", "Bharat Scouts", "rover",
+     "ranger", "bulbul" and "cub" and none matched. The client's words were
+     "we don't have content for this NOW", so the section is off the page rather
+     than standing there saying so.
+
+     ⚠ THE GAP IS STILL TRACKED, in data/site.ts → pending A13 and in docs/07.
+     It is not forgotten, it is just not stated to visitors.
+
+     ⚠ WHEN THE CONTENT ARRIVES, three things come back together: this group,
+     the page's Scouts wording, and the nav label. See the notes in
+     pages/beyond-academics/ncc-scouts-guides.astro and data/navigation.ts —
+     they were all narrowed to NCC on the same day. */
 ];
 
 /** Count checks used by the page and by anyone auditing it. */

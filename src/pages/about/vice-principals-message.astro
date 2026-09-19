@@ -168,6 +168,21 @@ const leadership = [
 
 <style>
   .vpl {
+    /* ⚠⚠ position + isolation ARE LOAD-BEARING, NOT TIDINESS. PageHero is
+       `position: sticky; z-index: 0` — it pins and the content scrolls over it.
+       A positioned element with z-index 0 paints ABOVE the background of any
+       STATIC element that follows, so a section left static here does not cover
+       the pinned banner: the hero shows through it partway down the page.
+       `position: relative` + `isolation: isolate` gives this section its own
+       stacking context and an opaque ground, which is the contract PageHero's
+       own header describes. Every other section on this site does the same.
+       ⚠ DO NOT REMOVE EITHER LINE. There is nothing visible to suggest they
+       matter until you scroll. */
+    position: relative;
+    /* ⚠ Same reason as the note in components/academics/Toppers.astro — an
+       explicit z-index above PageHero's sticky 0, not `auto`. */
+    z-index: 1;
+    isolation: isolate;
     padding-block: var(--sb-section-y);
     background: var(--sb-ivory);
   }
