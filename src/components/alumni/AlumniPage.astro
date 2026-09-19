@@ -335,19 +335,12 @@ const hasStories = publishedStories.length > 0;
         </li>
       ))}
 
-      {/* ⚠ A TILE, NOT A PERSON. The grid expects more cards than the school has
-          given us names for. This fills the row WITHOUT inventing an alumnus —
-          no face, no name, no employer. Client instruction, 17 Sep 2026. */}
-      <li class="al-person al-person--soon" data-pop data-pop-delay={110 + alumni.length * 90}>
-        <div class="al-soon">
-          <span class="al-soon__stamp">Content to be updated</span>
-          <p class="al-soon__h">More alumni stories coming soon</p>
-          <p class="al-soon__b">
-            Additional alumni profiles will be added as verified information is received from
-            the school.
-          </p>
-        </div>
-      </li>
+      {/* ⚠ NO "MORE COMING" TILE HERE ANY MORE — removed 19 Sep 2026 at the
+          client's request. The row now ends at the last real alumnus.
+          ⚠ THE UNDERLYING FACT HAS NOT CHANGED: the school has supplied three
+          Placed/Working alumni and no more. That gap is tracked in
+          data/site.ts → pending A4; it is simply not stated on the page.
+          Do not replace this with an invented fourth person. */}
     </ul>
 
     {/* ⚠ THE GAP NAMED, NOT FILLED. A testimonial needs the alumnus's own words
@@ -830,24 +823,11 @@ const hasStories = publishedStories.length > 0;
     letter-spacing: -0.03em;
     color: var(--sb-charcoal);
   }
-  /* --- "More coming" tile ---------------------------------------------------
-     Deliberately not a card: dashed, no portrait frame, no name line. It must
-     never be mistaken at a glance for a fourth alumnus. */
-  .al-person--soon { display: flex; }
-
-  .al-soon {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 7px;
-    width: 100%;
-    padding: clamp(16px, 2vw, 26px);
-    border: 1px dashed rgba(18, 16, 15, 0.22);
-    border-radius: var(--sb-r-0, 16px);
-    background: linear-gradient(180deg,
-      color-mix(in srgb, var(--sb-lime-wash, #fff1ea) 45%, transparent), transparent 70%);
-  }
-
+  /* ⚠ THE "More coming" TILE'S OWN RULES ARE GONE WITH IT (.al-person--soon,
+     .al-soon, .al-soon__h, .al-soon__b). What remains below is the STAMP, which
+     is still used — by the inline note under the Higher Education board, where
+     it marks that the eighteen names await the school's sign-off before being
+     republished as text. Do not delete it with the rest. */
   .al-soon__stamp {
     font-size: 10px;
     font-weight: 700;
@@ -857,22 +837,6 @@ const hasStories = publishedStories.length > 0;
   }
 
   .al-soon__stamp--inline { display: block; margin-bottom: 6px; }
-
-  .al-soon__h {
-    margin: 0;
-    font-family: var(--sb-font-display);
-    font-weight: 700;
-    font-size: clamp(14px, 1.2vw, 17px);
-    line-height: 1.3;
-    color: var(--sb-ink);
-  }
-
-  .al-soon__b {
-    margin: 0;
-    font-size: clamp(11px, 0.85vw, 13px);
-    line-height: 1.55;
-    color: var(--sb-text-muted);
-  }
 
   /* --- The two client categories -------------------------------------------
      A heading pair, not a redesign: the cards and the board below them keep the

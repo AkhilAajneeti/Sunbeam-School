@@ -492,12 +492,37 @@ export const streamOptional = [
   'Physical Education',
   'Applied Maths',
   'Geography',
-  /* ⚠ ADDED 16 Sep 2026, client instruction from the Director / Principal /
-     Vice-Principal review. Geography STAYS in this list: the same review moved
-     Geography out of the Humanities CORE, which is a different thing from
-     withdrawing it as an option. Do not remove it without being told to. */
+  /* ⚠ GEOGRAPHY STAYS IN THIS LIST, AND IT IS STILL OFFERED TO PCM, PCB AND
+     COMMERCE. It is HUMANITIES that no longer shows it — that stream uses
+     `humanitiesOptional` below, on the client's instruction of 19 Sep 2026.
+     Do not delete it from here: that would withdraw it from the other three
+     streams, which nobody has asked for.
+     ⚠ Sanskrit was added 16 Sep 2026 in the same client review. */
   'Sanskrit',
 ] as const;
+
+/**
+ * ⚠⚠ HUMANITIES IS THE ONE STREAM THAT DOES NOT TAKE THE SHARED OPTIONAL LIST,
+ * and this is a deliberate exception on the client's instruction (19 Sep 2026).
+ *
+ * The client's item 7 reads "Humanities — Replace Geography with Economics."
+ * Economics replaced Geography in the Humanities CORE on 16 Sep. Geography then
+ * remained visible on the Humanities card because it is also in the shared
+ * OPTIONAL list, and the client has since confirmed they want it off Humanities
+ * entirely — "as instruction only remove from humanities".
+ *
+ * ⚠ THIS RE-INTRODUCES A PER-STREAM DIFFERENCE THE SCHOOL ITSELF WITHDREW. The
+ * note above records that the school first sent lists that differed per stream
+ * and then replaced them with one shared pair. No source says Geography is
+ * unavailable to a Humanities student; the client asked for it, and that is the
+ * only reason it is gone. If the school ever queries why their own shared list
+ * is not what the site shows, this is the answer.
+ *
+ * ⚠ DERIVED, NOT RETYPED. It is `streamOptional` minus Geography, so anything
+ * added to that list still reaches Humanities. Writing the five names out again
+ * is exactly how the next revision gets applied to one list and not the other.
+ */
+export const humanitiesOptional = streamOptional.filter((s) => s !== 'Geography');
 
 export const streamAdditional = [
   'Artificial Intelligence',
@@ -566,7 +591,9 @@ export const streamDetail = [
     full: 'History · Political Science · Economics',
     body: 'Law, civil services, design, media and the social sciences.',
     core: ['History', 'Political Science', 'Economics', 'English'],
-    optional: streamOptional,
+    /* ⚠ NOT streamOptional — see humanitiesOptional above. Geography is removed
+       for this stream only, on the client's instruction. */
+    optional: humanitiesOptional,
     additional: streamAdditional,
     unverified: false,
     /* ⚠⚠ `coreUnverified` IS GONE, AND THAT IS THE POINT OF THIS EDIT. It sat
