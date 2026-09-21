@@ -466,19 +466,21 @@ export const mainNav: NavItem[] = [
           img: imgJosh,
         },
         /* ⚠ CLIENT ITEM 5 — "a Beyond Academics section covering NCC and Scout
-           & Guide". It is one entry, not two, because Scouts & Guides has no
-           published record at all: a menu row leading to an empty page would
-           promise something the school has not got. One page carries both, and
-           says which is which. */
+           & Guide". It is ONE entry, not two, and that is a judgement rather
+           than a shortcut: both are uniformed groups, a parent comparing them
+           wants them side by side, and splitting a page this size into two
+           would leave each half thin. The page names both groups in its own
+           heading, so nobody arrives expecting only one. */
         {
-          /* ⚠ LABEL NARROWED TO NCC, 19 Sep 2026 — the Scouts & Guides section
-             came off the page until the school has content for it. The href is
-             unchanged on purpose; see the note in the page file. Restore this
-             label when that section returns. */
-          label: "NCC",
+          /* ⚠ THE LABEL HAS NARROWED AND WIDENED ONCE ALREADY. It was cut to
+             "NCC" on 19 Sep 2026 when the Scouts & Guides section came off the
+             page, and restored on 21 Sep when the school supplied the scouting
+             press note and photographs. The href never changed, which is why
+             neither move needed a redirect. Keep it that way. */
+          label: "NCC, Scouts & Guides",
           href: "/beyond-academics/ncc-scouts-guides/",
           icon: "shield",
-          desc: "‘A’ and ‘B’ affiliation, two officers, camps and enrolments.",
+          desc: "Certificate affiliation, officers, camps and the district meeting.",
           img: imgJosh,
         },
         /* ⚠ PUBLICATIONS SITS HERE BECAUSE THE SCHOOL'S OWN SITE PUTS IT HERE —

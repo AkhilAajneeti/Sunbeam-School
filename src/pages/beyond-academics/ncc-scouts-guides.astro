@@ -1,25 +1,30 @@
 ---
 /**
- * NATIONAL CADET CORPS — /beyond-academics/ncc-scouts-guides/
+ * NCC, SCOUTS & GUIDES — /beyond-academics/ncc-scouts-guides/
  *
- * ⚠⚠ THE URL STILL SAYS "scouts-guides" AND THAT IS DELIBERATE. On 19 Sep 2026
- * the client asked for the Scouts & Guides section to come off the page until
- * they have content for it — their word was "now". The route is unchanged so
- * that nothing breaks and so it is correct again the moment that section
- * returns; only the things a reader SEES were narrowed to NCC: this page's
- * title, its standfirst, its meta description, and the nav label.
+ * ⚠⚠ THE URL MATCHES THE PAGE AGAIN. Between 19 and 21 Sep 2026 this page was
+ * NCC only — the client asked for the Scouts & Guides section to come off until
+ * they had content for it, and their word was "now". The route was deliberately
+ * left alone through that, which is why nothing had to be redirected when the
+ * school supplied the scouting press note and photographs on 21 Sep.
  *
- * ⚠ WHEN SCOUTS CONTENT ARRIVES, FOUR THINGS GO BACK TOGETHER: the group in
- * data/uniformedGroups.ts, the two titles here, the meta description, and the
- * label in data/navigation.ts. Each carries a note pointing at the others.
+ * ⚠ FOUR THINGS MOVE TOGETHER, and they have now moved together twice: the
+ * group in data/uniformedGroups.ts, this page's two titles, its meta
+ * description, and the label in data/navigation.ts. Each carries a note
+ * pointing at the others. If you narrow or widen one, do all four.
  *
- * ⚠⚠ Client item 5. See data/uniformedGroups.ts before changing anything: NCC
- * has three verified facts and Scouts & Guides has none at all. Nothing on this
- * page is invented, and the page says out loud what is missing.
+ * ⚠⚠ Client item 5. READ data/uniformedGroups.ts BEFORE CHANGING ANYTHING. It
+ * records, fact by fact, which source each line came from — the school's own
+ * site for NCC, and for scouting a banner photographed inside the frame plus a
+ * press note whose adjectives were deliberately left out. Nothing on this page
+ * is invented.
  *
- * ⚠ THE BANNER IS A GENERAL CAMPUS PHOTOGRAPH, NOT A PARADE. The school has
- * sent no NCC or Scouts photography, and captioning any assembly or line-up as
- * a cadet contingent would be a false claim about who is in the frame.
+ * ⚠ THE BANNER IS A GENERAL CAMPUS PHOTOGRAPH BY CHOICE, NOT BY SHORTAGE. That
+ * was not true until 21 Sep — it used to be here because the school had sent no
+ * uniformed-group photography at all. There are now ten real photographs on the
+ * page, and the header stays neutral precisely because the page carries two
+ * different groups: promoting one group's parade to the top would read as the
+ * page being about that group.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
@@ -29,12 +34,12 @@ import banner from '../../assets/photos/sunbeem-4.jpg';
 ---
 
 <BaseLayout
-  title="National Cadet Corps — Sunbeam School Ballia"
-  description="The National Cadet Corps at Sunbeam School Ballia — ‘A’ and ‘B’ certificate affiliation through 90 and 93 UP Battalions, two Associate NCC Officers, and the camps and enrolments the school has published."
+  title="NCC, Scouts & Guides — Sunbeam School Ballia"
+  description="The uniformed groups at Sunbeam School Ballia — NCC ‘A’ and ‘B’ certificate affiliation through 90 and 93 UP Battalions with two Associate NCC Officers, and Bharat Scouts & Guides, whose district meeting for CBSE schools was hosted on the campus in October 2022."
 >
   <PageHero
-    title="National Cadet Corps"
-    standfirst="Affiliation at both certificate levels, two officers, and the record the school has published."
+    title="NCC, Scouts & Guides"
+    standfirst="Two uniformed groups, the affiliations behind them, and the record the school has published."
     crumbs={[
       { label: 'Home', href: '/' },
       { label: 'Beyond Academics', href: '/beyond-academics/sports/' },

@@ -16,11 +16,15 @@
  * quote and does NOT repeat in the body. Read the quote and the paragraphs in
  * order and you have exactly what was supplied, once.
  *
- * ⚠ "Mr." IS NOW THE SCHOOL'S OWN FORM. Until today this page printed the bare
+ * ⚠ "Mr." IS NOW THE SCHOOL'S OWN FORM. Until 17 Sep this page printed the bare
  * surname from the CBSE filing, because that document records no honorific for
  * any of its 131 staff and inventing one was not ours to do. The supplied copy
- * signs "Mr. Pankaj Singh", so that is what it prints. The M.Sc. still comes
- * from the filing.
+ * signs "Mr. Pankaj Singh", so that is what it prints.
+ *
+ * ⚠ THE QUALIFICATIONS ARE THE SCHOOL'S OWN LIST TOO, supplied 21 Sep 2026 and
+ * printed in place of the filing's bare "M.Sc.". See `vpCredentials` below —
+ * that list expands the filed degree rather than disagreeing with it, and a
+ * build-time guard there keeps it that way.
  *
  * ⚠ THE LEADERSHIP SECTION BELOW IS SEPARATE, VERIFIED CONTENT — names, roles
  * and staff counts from the signed CBSE mandatory public disclosure. It is not
@@ -71,6 +75,48 @@ const paragraphs = [
 /* ⚠ THE SCHOOL'S OWN SIGNATURE FORM, not the filing's bare surname. */
 const vpSigned = 'Mr. Pankaj Singh';
 
+/**
+ * ⚠⚠ SUPPLIED BY THE SCHOOL, 21 Sep 2026 — AND THEY REPLACE THE FILING, THEY DO
+ * NOT CONTRADICT IT. The CBSE mandatory public disclosure records this post
+ * holder's qualification as the bare string "M.Sc." (data/disclosure.ts, row
+ * 19). The school has now sent the full list, which names the subject and adds
+ * three more. "M.Sc. (Chemistry)" is the same degree the filing records, spelt
+ * out — so this is an EXPANSION of a verified fact, not a second version of it.
+ * That is the only reason it is safe to print instead of the filing's string.
+ *
+ * ⚠ IF THE FILING EVER DISAGREES WITH THIS LIST, THE FILING WINS. It is a
+ * signed statutory document; this is an email. The check is: does the first
+ * entry still start with the filing's `vp.qualification`? If a new MPD lands
+ * saying something else, this array has to be re-confirmed with the school
+ * rather than quietly kept.
+ *
+ * ⚠ THE ONLY EDIT IS ONE SPACE AND ONE REMOVED SPACE. The school sent
+ * "M.Sc.(Chemistry)" and "BCS , Career Counsellor". A space after the full stop
+ * and no space before the comma are typesetting, not content. Nothing else —
+ * no expansion of "BCS" or "PGDYO", no re-ordering, no invented full forms.
+ * We do not know what those abbreviations stand for and are not going to guess
+ * in print next to a named person's name.
+ */
+const vpCredentials = [
+  'M.Sc. (Chemistry)',
+  'BCS, Career Counsellor',
+  'B.Ed & PGDYO',
+];
+
+/* ⚠ THE CHECK ABOVE, WRITTEN AS CODE RATHER THAN LEFT AS A PROMISE IN A
+   COMMENT. If a future CBSE filing records a different degree for this post,
+   the build stops here instead of quietly publishing an email's version of a
+   named person's qualifications over a signed statutory document. Fix it by
+   re-confirming with the school, not by deleting this. */
+const filedQual = vp?.qualification?.trim();
+if (filedQual && !vpCredentials[0].startsWith(filedQual)) {
+  throw new Error(
+    `Vice Principal's credentials no longer match the CBSE filing. The filing ` +
+      `(data/disclosure.ts) records "${filedQual}"; this page prints ` +
+      `"${vpCredentials[0]}". Re-confirm the list with the school before building.`,
+  );
+}
+
 /* The three leadership posts. All three now carry a published message; this
    one is the page you are on, so it does not link to itself. */
 const leadership = [
@@ -119,7 +165,7 @@ const leadership = [
       portraitBrief="Vice Principal portrait"
       pullQuote={pullQuote}
       paragraphs={paragraphs}
-      credentials={vp?.qualification ? [vp.qualification] : []}
+      credentials={vpCredentials}
     />
   </div>
 

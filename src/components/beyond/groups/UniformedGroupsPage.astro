@@ -1,29 +1,68 @@
 ---
 /**
- * NATIONAL CADET CORPS — the body of /beyond-academics/ncc-scouts-guides/.
+ * NCC, SCOUTS & GUIDES — the body of /beyond-academics/ncc-scouts-guides/.
  *
- * ⚠ THIS COMPONENT STILL RENDERS A LIST OF GROUPS, and that is on purpose: the
- * Scouts & Guides group was removed from data/uniformedGroups.ts on 19 Sep 2026
- * at the client's request, not from here. Nothing about the markup assumes one
- * group, so restoring that entry is the only step needed to bring it back.
+ * ⚠ THIS COMPONENT RENDERS A LIST OF GROUPS AND ASSUMES NOTHING ABOUT HOW MANY.
+ * That has already paid for itself twice: the Scouts & Guides group was removed
+ * from data/uniformedGroups.ts on 19 Sep 2026 and restored on 21 Sep, and
+ * neither move needed a line changed in here. Keep it that way — if you find
+ * yourself writing `groups[0]`, stop.
  *
- * ⚠⚠ READ data/uniformedGroups.ts FIRST. Three verified facts exist for NCC and
- * ZERO for Scouts & Guides. Nothing on this page may be added that is not in
- * that file, and nothing may be added to that file that the school has not
- * published. See the long note at the top of it.
+ * ⚠⚠ READ data/uniformedGroups.ts FIRST. Both groups are now fully sourced —
+ * NCC from the school's own site, scouting from a banner photographed inside
+ * the frame plus a press note. That file records which source every single line
+ * came from. Nothing may be added to this page that is not in that file, and
+ * nothing may be added to that file that the school has not published.
  *
- * ⚠ THE TWO GROUPS DELIBERATELY LOOK DIFFERENT. NCC is a real affiliation and
- * reads as one — solid card, facts listed. Scouts & Guides has no record at all
- * and reads as unfinished — flat, dashed edge, no facts. A parent should be able
- * to tell which is which without reading a word.
+ * ⚠ THE UNFINISHED TREATMENT IS STILL HERE AND STILL NEEDED. A group with an
+ * empty `facts` array renders flat, dashed and stamped instead of as a solid
+ * card, so a parent can tell a real affiliation from an open gap without
+ * reading a word. NEITHER group is in that state today. Do not delete the
+ * branch because nothing currently uses it — it is what stops the next empty
+ * group from quietly looking finished.
  *
  * ⚠ "What the school has not published" IS A FEATURE OF THIS PAGE, NOT AN
- * APOLOGY. It appears under BOTH groups, including the one that has facts.
+ * APOLOGY — but it is currently printing for neither group, because the client
+ * asked on 19 Sep for those chips to come off. The gaps are still real and
+ * still tracked in docs/07 → A13. See the note on `missing` in the data file.
  */
-import { groups } from '../../../data/uniformedGroups';
+import { groups, type UniformedGroup } from '../../../data/uniformedGroups';
 import { school } from '../../../data/site';
 import PendingBlock from '../../ui/PendingBlock.astro';
 import { Picture } from 'astro:assets';
+
+/**
+ * ⚠ THE PHOTO GRID PICKS ITS COLUMN COUNT FROM THE PHOTO COUNT, so neither
+ * group ends on a stranded row. NCC has four frames and sits in four columns as
+ * one clean row; scouting has six and sits in three columns as two. Hard-coding
+ * four gave the six-frame group a row of four and an orphaned pair.
+ *
+ * ⚠ IT ONLY EVER RETURNS 3 OR 4. Three is chosen when the count divides by it,
+ * otherwise four — anything cleverer (5 columns, 2 columns) breaks either the
+ * `sizes` attribute below or the phone layout. If a group ever gets 5 or 7
+ * photographs it falls to four columns and has a short last row, which is fine.
+ */
+const photoCols = (n: number) => (n % 3 === 0 ? 3 : 4);
+
+/**
+ * ⚠ BOTH HELPERS TAKE THE GROUP, NOT THE COUNT, AND THAT IS NOT FUSSINESS.
+ * `photos` is optional on UniformedGroup. TypeScript narrows `g.photos` at the
+ * `g.photos && g.photos.length > 0` guard, but that narrowing is LOST inside
+ * the `.map()` callback underneath it — the compiler cannot know the callback
+ * runs immediately. Reading the length in here, off the group, keeps the
+ * template free of a non-null assertion that would silently survive `photos`
+ * becoming genuinely absent.
+ */
+const shotCols = (g: UniformedGroup) => photoCols(g.photos?.length ?? 4);
+
+/**
+ * ⚠ `sizes` HAS TO TRACK photoCols, OR THE SRCSET PICKS THE WRONG FILE. A
+ * three-column row is a wider frame than a four-column one; leaving the desktop
+ * entry at 23vw would hand the browser a 360px source for a box nearer 380px
+ * and the photographs would go soft on a retina screen.
+ */
+const shotSizes = (g: UniformedGroup) =>
+  `(max-width: 599px) 90vw, (max-width: 1023px) 44vw, ${shotCols(g) === 3 ? '31vw' : '23vw'}`;
 ---
 
 <div class="ung">
@@ -107,10 +146,12 @@ import { Picture } from 'astro:assets';
           </div>
         )}
 
-        {/* ⚠ REAL PHOTOGRAPHS OF THIS SCHOOL'S OWN CADETS. Every caption
-            describes what is in the frame and stops — see the data file. */}
+        {/* ⚠ REAL PHOTOGRAPHS OF THIS SCHOOL'S OWN CADETS, SCOUTS AND GUIDES.
+            Every caption describes what is in the frame and stops — it does not
+            name the event unless the banner naming it is inside the frame. See
+            the caption rule in the data file. */}
         {g.photos && g.photos.length > 0 && (
-          <ul class="ung__shots">
+          <ul class="ung__shots" style={`--ung-shot-cols:${shotCols(g)}`}>
             {g.photos.map((ph, pi) => (
               <li data-reveal data-reveal-delay={pi * 70}>
                 <figure>
@@ -119,7 +160,7 @@ import { Picture } from 'astro:assets';
                     alt={ph.alt}
                     formats={['avif', 'webp']}
                     widths={[360, 640, 960]}
-                    sizes="(max-width: 599px) 90vw, (max-width: 1023px) 44vw, 23vw"
+                    sizes={shotSizes(g)}
                     loading="lazy"
                     decoding="async"
                   />
@@ -156,11 +197,10 @@ import { Picture } from 'astro:assets';
     ))}
 
     <p class="ung__foot" data-reveal>
-      {/* ⚠ NARROWED TO NCC, 19 Sep 2026, with the rest of the page. Put the
-          Scouts wording back when that section returns — see the note in
-          data/uniformedGroups.ts. */}
-      Anything not stated here has not been published by the school. For NCC enrolment or any
-      other enquiry, call
+      {/* ⚠ WIDENED BACK TO BOTH GROUPS, 21 Sep 2026, with the rest of the page.
+          It was cut to NCC alone for two days — see data/uniformedGroups.ts. */}
+      Anything not stated here has not been published by the school. For NCC or Scouts &amp;
+      Guides enrolment, or any other enquiry, call
       <a href={`tel:${school.phone.office}`}>{school.phone.officeDisplay}</a>
       or write to <a href={`mailto:${school.email}`}>{school.email}</a>.
     </p>
@@ -170,6 +210,19 @@ import { Picture } from 'astro:assets';
 <style>
   .ung {
     position: relative;
+    /* ⚠⚠ AN EXPLICIT z-index, NOT `auto`. PageHero above is `position: sticky;
+       z-index: 0` — it pins and the page scrolls over it. A positioned sibling
+       left at `auto` only wins by tree order, and that is exactly the
+       configuration that left the pinned banner showing through the top of the
+       Academic Excellence section three times running (see the long note in
+       components/academics/Toppers.astro). It was measured as SAFE on this page
+       before this line was added — 25 scroll positions, banner on top at none
+       of them — so this is hardening, not a fix. It is here because the page
+       just doubled in length and tree order is not a guarantee.
+       ⚠ It changes nothing visually: `isolation: isolate` already gives this
+       element its own stacking context, so the decorative blobs at z-index -1
+       stay contained either way. */
+    z-index: 1;
     padding-block: var(--sb-section-y);
     background: var(--sb-ivory);
     overflow: hidden;
@@ -199,7 +252,9 @@ import { Picture } from 'astro:assets';
 
   .ung__grp + .ung__grp { margin-top: var(--sb-6); }
 
-  /* ⚠ THE GROUP WITH NO RECORD READS AS UNFINISHED ON PURPOSE. */
+  /* ⚠ A GROUP WITH NO RECORD READS AS UNFINISHED ON PURPOSE. No group is in
+     that state today — both are sourced — but this is the rule that stops the
+     next empty one looking finished. Do not delete it as dead CSS. */
   .ung__grp--pending {
     background: transparent;
     border: 1px dashed rgba(18, 16, 15, 0.2);
@@ -338,7 +393,10 @@ import { Picture } from 'astro:assets';
   /* --- Photographs ---------------------------------------------------------- */
   .ung__shots {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    /* ⚠ THE COUNT COMES FROM THE TEMPLATE, per group — see photoCols() in the
+       frontmatter. The 4 here is only the fallback for a grid rendered without
+       the inline property; it is not the layout. */
+    grid-template-columns: repeat(var(--ung-shot-cols, 4), minmax(0, 1fr));
     gap: var(--sb-5);
     margin: var(--sb-6) 0 0;
     padding: 0;

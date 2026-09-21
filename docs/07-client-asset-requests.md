@@ -21,6 +21,7 @@ Ordered by **whether they block the build.** Items A1–A9 are blocking or near-
 > | **A5** Rewritten copy | Homepage copy + Principal's message | **CLOSED.** Both supplied; the Principal's full message went live 17 Sep 2026 |
 > | **A12** VP's message | *(new 16 Sep)* | **CLOSED** 17 Sep — message and portrait supplied |
 > | **A13** NCC detail | *(new 16 Sep)* | **Mostly closed.** The battalions, both officers, the camp and the enrolments are on the school's own site; only cadet numbers remain |
+> | **A13** Scouts & Guides | *(was a total blank)* | **Mostly closed 21 Sep** — press note and six photographs supplied; the event banner inside two of them is the primary source. Camp dates and leaders' names still open |
 >
 > **Before adding an entry here, grep for the data.** That is how all of the
 > above went stale. And before recording something as unpublished, search the
@@ -214,13 +215,27 @@ until it does, the alumni page shows the board and says so.
 `/about/vice-principals-message/`. The signature form "Mr. Pankaj Singh" came with
 them, which also settles the honorific the CBSE filing does not record.
 
-### A13 · NCC and Scouts & Guides — **NCC mostly closed**
+### A13 · NCC and Scouts & Guides — **both mostly closed**
 
 `[PARTLY SUPPLIED]` Most of the NCC record was already on the school's own site
 and is now published: both battalions (90 UP BN and 93 UP BN), the "first school
 in the district" claim, both Associate NCC Officers by name, their training at the
 NCC Officer Training Academy, Kamptee, the CATC-283 camp of 20–29 May 2025, and
 both certificate enrolments.
+
+`[SUPPLIED 21 Sep 2026]` **Scouts & Guides, which had been a total blank.** The
+school sent a press note and six photographs. Two of those photographs contain
+the event banner, which was cropped and read at 4× and is the source for the
+date, the organisation, the venue and the chief guest — those four are
+photographed, not reported:
+
+> भारत स्काउट और गाइड, उत्तर प्रदेश · जनपद- बलिया — केन्द्रीय माध्यमिक शिक्षा
+> बोर्ड से मान्यता प्राप्त विद्यालयों की बैठक · मुख्य अतिथि- मा0 नौशाद अली सिद्दीकी
+> (सहायक प्रादेशिक संगठन आयुक्त, मण्डल- आजमगढ़) · दिनांक- 14 अक्टूबर 2022 ·
+> स्थान- सनबीम स्कूल, अगरसण्डा- बलिया
+
+The section is back on `/beyond-academics/ncc-scouts-guides/`, and the page
+title, meta description and nav label were widened with it.
 
 `[STILL NEEDED]`
 
@@ -229,11 +244,14 @@ both certificate enrolments.
 - **Confirmation of one identity.** The school names "ANO Lt. Pankaj Singh" as an
   NCC officer and its Vice Principal is Pankaj Singh. Probably the same person —
   but no published source says so, and the site does not assert it.
-- **Scouts & Guides: everything, starting with whether a unit exists at all.** All
-  67 pages of the school's site were fetched and searched for *scout*, *Bharat
-  Scouts*, *rover*, *ranger*, *bulbul* and *cub*: **zero matches.** Nothing in the
-  CBSE filing, nothing in any asset drop. We do not know the unit exists, so the
-  page does not say it does.
+- **The Scouts & Guides camp's dates.** The press note says "6-Day" and says the
+  camp concluded; it gives no start date, no month and no year. The page says
+  "six-day" and stops.
+- **The Scout leaders' names.** Leaders appear in five of the six photographs and
+  not one is identified. The only person named in that section is the chief
+  guest, because his name is on the banner.
+- **Confirmation of the "first of its kind" claim**, which is the press note's
+  and is attributed to the school on the page rather than stated as fact.
 
 ### A14 · Class Corner — two of five items
 `[NEEDED]`

@@ -239,6 +239,39 @@ const socials = [
             </div>
           </div>
 
+          {/* ⚠⚠ THE MESSAGE FIELD. It was missing entirely until 21 Sep 2026 —
+              this page offered "a message form that reaches the office" and then
+              gave a parent nowhere to write the message. The client's reference
+              layout was a 2×2 grid of short fields and it was built exactly to
+              that, which is how a contact form shipped with no contact in it.
+
+              ⚠ IT IS ALSO WHAT FILLS THE COLUMN. The address panel beside this
+              one runs to eight departments and is ~1000px tall; the grid
+              stretches both columns to match, so the form used to show ~530px
+              of blank card between the Class row and the consent line. That
+              void was the symptom. This is the cause, and fixing the cause
+              fixes both — see `.ct__row--grow` in the stylesheet.
+
+              ⚠ DO NOT "FIX" A FUTURE GAP WITH SPACER MARGINS. If the panel
+              grows again, this field absorbs it. If the panel shrinks below the
+              form's natural height, `min-height` holds the textarea at a usable
+              size and the panel stretches instead. Both directions are covered
+              without a magic number. */}
+          <div class="ct__row ct__row--grow">
+            <div class="fld fld--grow">
+              <textarea
+                class="fld__in fld__in--area"
+                id="cf-message"
+                name="message"
+                rows="5"
+                required
+                placeholder=" "
+              ></textarea>
+              <label class="fld__lb" for="cf-message">Message <span aria-hidden="true">*</span></label>
+              <p class="fld__err" id="cf-message-err" hidden></p>
+            </div>
+          </div>
+
           <div class="ct__consent">
             <input class="ct__box" id="cf-terms" name="terms" type="checkbox" required />
             <label class="ct__terms" for="cf-terms">I accept the privacy and terms.</label>
@@ -594,6 +627,7 @@ const socials = [
     transition: top 170ms ease, font-size 170ms ease, color 170ms ease;
   }
 
+
   .fld__in:focus + .fld__lb,
   .fld__in:not(:placeholder-shown) + .fld__lb {
     top: 0;
@@ -621,6 +655,78 @@ const socials = [
   }
 
   .fld__in[aria-invalid='true'] { border-bottom-color: #dc2626; }
+
+  /* ═══ THE MESSAGE FIELD ═══════════════════════════════════════════════════
+     ⚠ THIS IS WHAT STOPS THE FORM COLUMN SHOWING A VOID. `.ct__form` is a flex
+     column and the grid stretches it to the address panel's height, which is
+     set by eight department rows. Before this field existed there was nothing
+     between the Class row and the consent line that could take up the slack, so
+     ~530px of empty card sat there and read as a broken layout.
+
+     `flex: 1 1 auto` on the row and on the control is the whole mechanism: the
+     textarea takes exactly the height the column has spare, whatever that turns
+     out to be. Nothing here is tuned to the panel's current content, so adding
+     or removing a department does not reopen the gap.
+
+     ⚠ min-height IS THE FLOOR, NOT THE SIZE. Below ~1000px the columns stack
+     and there is no slack to absorb; the textarea then sits at five rows or so,
+     which is a usable message box in its own right. Do not replace it with a
+     fixed height — that brings the void straight back on a wide screen. */
+  /* ⚠⚠ DOUBLED CLASS FOR SPECIFICITY, AND IT IS NOT STYLE — IT IS THE FIX.
+     `.ct__row` is given two columns inside `@media (min-width: 700px)` down in
+     the LAYOUT section, which is LATER in this stylesheet. A single
+     `.ct__row--grow` ties that rule on specificity (0,1,0) and loses on source
+     order, so the message box rendered at half the card's width with dead space
+     beside it — measured, not guessed. `.ct__row.ct__row--grow` is (0,2,0) and
+     wins wherever it sits in the file.
+     ⚠ DO NOT "TIDY" THIS BACK TO ONE CLASS. */
+  .ct__row.ct__row--grow {
+    flex: 1 1 auto;
+    /* One full-width column, never the 2-up of its siblings. */
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fld--grow {
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* lets the control actually shrink inside the flex column */
+  }
+
+  .fld__in--area {
+    flex: 1 1 auto;
+    min-height: 118px;
+    /* ⚠ VERTICAL ONLY. A horizontal drag pulls the textarea out past the card's
+       rounded edge, and there is nothing to gain from it — the field is already
+       the full width of the column. */
+    resize: vertical;
+    line-height: 1.6;
+    /* The single-line fields sit on one rule; a five-line box on one rule alone
+       reads as unbounded text, so this one gets a light frame instead. The
+       bottom border stays as it is, which keeps the focus behaviour identical. */
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+  }
+
+  /* ⚠ THE LABEL STARTS INSIDE THE BOX, so it needs its own resting position —
+     the shared `.fld__lb` top of 24px is measured against a bare underline
+     field, and on a framed box it lands on the frame rather than on the first
+     text line. */
+  .fld--grow .fld__lb { top: 28px; left: 14px; }
+
+  .fld__in--area:focus + .fld__lb,
+  .fld__in--area:not(:placeholder-shown) + .fld__lb { top: 0; left: 2px; }
+
+  /* Keep the framed field's focus treatment consistent with its neighbours:
+     the whole frame colours, not just its foot. */
+  .fld__in--area:focus {
+    border-color: var(--sb-violet);
+    border-width: 2px;
+    /* hold the box in place as the frame thickens */
+    padding: 9px 11px;
+  }
+
+  .fld__in--area[aria-invalid='true'] { border-color: #dc2626; }
 
   /* ═══ THE SELECT ══════════════════════════════════════════════════════════
      `appearance: none` strips the platform control so it can carry the same
@@ -1118,6 +1224,13 @@ const socials = [
         else delete status.dataset.tone;
       };
 
+      /* ⚠ THE LOOKUPS BELOW ARE TYPED `HTMLInputElement | HTMLTextAreaElement`.
+         Since the message field arrived, RULES no longer describes inputs alone,
+         and a bare <HTMLInputElement> here is a cast that happens to work —
+         `.value`, `.focus()` and the attribute methods exist on both, so nothing
+         breaks at runtime and nothing warns at build time either. The union is
+         what keeps that honest. #cf-terms is left as HTMLInputElement because a
+         checkbox genuinely is one and `.checked` is read off it. */
       /** Field id → the message shown when it fails, and the test it must pass. */
       const RULES: { id: string; msg: string; ok: (v: string) => boolean }[] = [
         { id: 'cf-name', msg: 'Please tell us your name.', ok: (v) => v.trim().length > 0 },
@@ -1129,10 +1242,19 @@ const socials = [
              of an address is sending to it. */
           ok: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
         },
+        /* ⚠ ADDED WITH THE FIELD ITSELF, 21 Sep 2026. Everything here keys off
+           an element id, so a rule and its markup have to arrive together — a
+           field with no rule submits blank, a rule with no field silently never
+           matches and `setError` returns early forever. */
+        {
+          id: 'cf-message',
+          msg: 'Please write your message.',
+          ok: (v) => v.trim().length > 0,
+        },
       ];
 
       const setError = (id: string, msg: string | null) => {
-        const input = document.querySelector<HTMLInputElement>(`#${id}`);
+        const input = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`);
         const err = document.querySelector<HTMLElement>(`#${id}-err`);
         if (!input || !err) return;
         if (msg) {
@@ -1150,7 +1272,7 @@ const socials = [
       /* Clear a field's error as soon as it is fixed — leaving red text under a
          field the reader has already corrected is its own small insult. */
       for (const r of RULES) {
-        const el = document.querySelector<HTMLInputElement>(`#${r.id}`);
+        const el = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${r.id}`);
         el?.addEventListener('input', () => {
           if (el.getAttribute('aria-invalid') === 'true' && r.ok(el.value)) setError(r.id, null);
         });
@@ -1178,7 +1300,7 @@ const socials = [
         let firstBad: HTMLElement | null = null;
 
         for (const r of RULES) {
-          const el = document.querySelector<HTMLInputElement>(`#${r.id}`);
+          const el = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${r.id}`);
           if (!el) continue;
           const good = r.ok(el.value);
           setError(r.id, good ? null : r.msg);

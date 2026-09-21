@@ -295,7 +295,11 @@ export const pending = {
      arrived on 17 Sep 2026 and are live on /about/vice-principals-message/.
      The signature form "Mr. Pankaj Singh" came with them, which also settles
      the honorific the CBSE filing does not record. */
-  A13: 'NCC detail — cadet numbers, unit, camps, the two officers’ names, photographs; AND any record at all of Scouts & Guides, which is published nowhere',
+  /* ⚠ NARROWED 21 SEP 2026. This used to end "AND any record at all of Scouts &
+     Guides, which is published nowhere" — the school supplied a press note and
+     six photographs and that half is now largely closed. What is left of it is
+     the camp's dates and the leaders' names. See docs/07 → A13. */
+  A13: 'NCC cadet numbers; and for Scouts & Guides, the dates of the six-day camp and the names of the Scout leaders who ran it',
   A14: 'Class Corner — Examination In-charge details, and the Academic Excellence / achievements list',
   A15: 'The inter-house fixture calendar. The three houses themselves are known (Red, Yellow, Green) from the school’s Student Council page',
   /* Referenced by data/academics.ts → `awaiting`, which renders them on
