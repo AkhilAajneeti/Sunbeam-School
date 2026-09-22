@@ -58,6 +58,11 @@ const S = 'Sunbeam School Ballia';
 const UNIVERSITY = '/academics/student-success/university-counselling/';
 const CONTACT = '/contact-us/';
 const ASSESSMENT = '/academics/assessment/';
+/* ⚠ ADDED 21 Sep 2026 WITH THE TOPPERS BOARDS. This page says the CBSE filing
+   carries no toppers, which is true; the school publishes them elsewhere, on
+   two boards at the entrance. Saying the first without pointing at the second
+   left a parent believing there are none. */
+const CLASS_CORNER = '/academics/class-corner/';
 
 /* ── SECTION 01 — the four absences. Every line is a true statement about the
    record, checked one at a time. ────────────────────────────────────────── */
@@ -122,6 +127,16 @@ const strip = [
         What the filing does not carry is individual detail — no toppers, no merit list, no rank
         holders, and no count of how many <em>appeared</em> as distinct from how many registered.
         Those are not inferred here.
+      </p>
+      {/* ⚠ THIS SENTENCE EXISTS TO STOP A CONTRADICTION, not to fill space. The
+          paragraph above is scoped to the filing and is accurate; without this
+          one, a parent still left the page believing the school publishes no
+          toppers, and then found nine Class X sessions on Class Corner. */}
+      <p class="as-body" data-reveal data-reveal-delay="340">
+        The school does record its session toppers — on two boards at the entrance, one for
+        Class X and one for Class XII. Those are transcribed in full under
+        {' '}<a href={CLASS_CORNER}>Class Corner</a>. They are a different record from this
+        filing, and neither is derived from the other.
       </p>
 
       {/* ⚠ THE THREE-YEAR TABLE. Static markup, no tabs — /general-info/ already
@@ -232,9 +247,21 @@ const strip = [
         />
       </div>
 
-      {/* The absence panel. Four lines, each of them checkable. */}
+      {/* The absence panel. Three lines, each of them checkable.
+
+          ⚠⚠ THE HEADING NAMES ITS SUBJECT, AND IT HAS TO. It read "Not
+          published" — a bare claim with no subject, sitting over "No toppers
+          list". The school DOES publish toppers: two boards at the entrance,
+          nine Class X sessions and eight Class XII, now transcribed on
+          /academics/class-corner/. A parent who read both pages met a flat
+          contradiction, even though every sentence in the body below is
+          correctly scoped to the CBSE filing.
+
+          The three lines are true OF THE FILING and of nothing wider. Say which
+          document, or do not say it at all.
+          ⚠ DO NOT SHORTEN THIS BACK TO "Not published". */}
       <div class="br-panel" data-pop data-pop-delay="240">
-        <p class="br-panel__k">Not published</p>
+        <p class="br-panel__k">Not in the CBSE filing</p>
         <ul class="br-panel__list">
           {absent.map((a) => (
             <li>

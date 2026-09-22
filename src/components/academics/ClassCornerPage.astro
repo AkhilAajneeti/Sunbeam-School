@@ -132,6 +132,24 @@ import { school } from '../../data/site';
 <style>
   .ccn {
     position: relative;
+    /* ⚠⚠ AN EXPLICIT z-index, NOT `auto` — the same rule Toppers.astro carries
+       a few hundred pixels below this section, and for the same reason.
+       PageHero above is `position: sticky; z-index: 0`. A positioned sibling
+       left at `auto` is painted above it by TREE ORDER alone, which holds until
+       anything between the two creates a stacking context — and on THIS PAGE
+       that failure was reported by the client three times running before the
+       cause was found.
+
+       It was measured as SAFE before this line was added: 30 scroll positions
+       at 1440px with motion enabled, banner on top inside a section at none of
+       them. So this is hardening, not a fix. It is here because `.tpr`, `.vpl`,
+       `.ung` and `u-page-panel` all carry it and this section was the one
+       exception, which is exactly how the next regression gets in.
+
+       ⚠ It changes nothing visually: `isolation: isolate` below already gives
+       this element its own stacking context, so the decorative blobs at
+       z-index -1 stay contained either way. */
+    z-index: 1;
     padding-block: var(--sb-section-y);
     background: var(--sb-ivory);
     overflow: hidden;

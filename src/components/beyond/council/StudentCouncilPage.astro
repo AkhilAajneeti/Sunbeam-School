@@ -2,10 +2,16 @@
 /**
  * STUDENT COUNCIL — the body of /beyond-academics/student-council/.
  *
- * ⚠⚠ READ data/studentCouncil.ts BEFORE EDITING. Thirty-four named children,
- * every one transcribed from the school's own page. Nothing may be added
- * beside a real child's name — not a class, not a photograph, not an
- * achievement. The count is the check: 24 senior + 10 junior.
+ * ⚠⚠ READ data/studentCouncil.ts BEFORE EDITING. Forty-five named children,
+ * every one transcribed from the school's own printed COUNCIL MEMBERS 2026-27
+ * board. Nothing may be added beside a real child's name — not a class, not an
+ * achievement. The count is the check: 29 senior + 16 junior.
+ *
+ * ⚠⚠ THE BOARD IS SHOWN WHOLE AND ITS FACES ARE NOT CROPPED OUT. It carries a
+ * headshot of every holder; the plate is displayed as the school designed it
+ * rather than sliced into forty-five individual portraits. Showing what the
+ * school printed is not the same act as building a gallery of children's faces
+ * out of it, and only the first is ours to do.
  *
  * ⚠ THE LEADERSHIP FOUR ARE SET APART IN EACH SECTION, and that is the only
  * editorial judgement on this page. Head Boy, Head Girl and their two deputies
@@ -20,7 +26,12 @@
  * ⚠ ANIMATION REUSES THE SITE'S CONTRACT — `data-reveal` / `data-reveal-delay`
  * from scripts/motion-gsap.ts. No new animation code.
  */
-import { intro, session, senior, junior } from '../../../data/studentCouncil';
+import { Picture } from 'astro:assets';
+import { intro, session, senior, junior, seniorCount, juniorCount } from '../../../data/studentCouncil';
+
+/* ⚠ THE SCHOOL'S OWN BOARD. The list below is its transcription — the two must
+   always agree, so if you edit one, re-read the other. */
+import councilBoard from '../../../assets/council/StudentCouncil.jpeg';
 
 const leadSenior = senior.filter((p) => p.lead);
 const restSenior = senior.filter((p) => !p.lead);
@@ -37,11 +48,36 @@ const restJunior = junior.filter((p) => !p.lead);
     <p class="cnl__intro" data-reveal>{intro}</p>
     {session && <p class="cnl__session" data-reveal>Session {session}</p>}
 
+    {/* ── The school's own board ───────────────────────────────────────────
+        ⚠ IT SITS ABOVE THE LISTS, NOT INSTEAD OF THEM. The plate is the
+        source and shows every holder's face as the school published it; the
+        lists below are what makes those names selectable, searchable and
+        readable by a screen reader, which a JPEG never is.
+        ⚠ THE ALT TEXT NAMES NO CHILD. Forty-five names in an alt attribute is
+        a wall of text to anyone using a screen reader, and the lists beneath
+        carry every one of them properly marked up. */}
+    <figure class="cnl__board" data-reveal data-reveal-delay="60">
+      <Picture
+        src={councilBoard}
+        alt="The Student Council board of Sunbeam School Ballia for 2026-27, printed with a photograph, name and post for every member of the Senior and Junior councils."
+        formats={['avif', 'webp']}
+        widths={[760, 1200, 1800, 2400]}
+        sizes="(max-width: 767px) 92vw, 88vw"
+        loading="eager"
+        decoding="async"
+      />
+      <figcaption>
+        The school&rsquo;s own board — Council Members {session}.
+        Every name below is transcribed from it.
+      </figcaption>
+    </figure>
+
     {/* ── Senior council ─────────────────────────────────────────────────── */}
     <section class="cnl__sec" id="senior" aria-labelledby="senior-t">
       <h2 class="cnl__h" id="senior-t" data-reveal>
         <span class="cnl__h-rule" aria-hidden="true"></span>
         Senior Student Council
+        <span class="cnl__h-n t-tabular">{seniorCount}</span>
       </h2>
 
       <ul class="cnl__leads">
@@ -71,6 +107,7 @@ const restJunior = junior.filter((p) => !p.lead);
       <h2 class="cnl__h" id="junior-t" data-reveal>
         <span class="cnl__h-rule" aria-hidden="true"></span>
         Junior Student Council
+        <span class="cnl__h-n t-tabular">{juniorCount}</span>
       </h2>
 
       <ul class="cnl__leads">
@@ -100,10 +137,57 @@ const restJunior = junior.filter((p) => !p.lead);
 <style>
   .cnl {
     position: relative;
+    /* ⚠⚠ AN EXPLICIT z-index, NOT `auto`. PageHero above is
+       `position: sticky; z-index: 0`; a positioned sibling left at `auto` wins
+       only by tree order, which is the exact configuration that let the pinned
+       banner show through a section three times on this project. Same value
+       u-page-panel uses. It changes nothing visually — `isolation` below
+       already contains the blobs at z-index -1. */
+    z-index: 1;
     padding-block: var(--sb-section-y);
     background: var(--sb-ivory);
     overflow: hidden;
     isolation: isolate;
+  }
+
+  /* ── The board ──────────────────────────────────────────────────────────
+     ⚠ IT IS WIDE AND DENSE — forty-five faces across. Capping it at the text
+     measure would shrink the posts past reading; it gets the full container
+     and its own caption instead. */
+  .cnl__board {
+    margin: var(--sb-7) 0 0;
+    text-align: center;
+  }
+
+  /* ⚠⚠ :global(img) — the <img> is rendered by <Picture>, a CHILD component,
+     so it never receives this component's data-astro-cid and a plain
+     `.cnl__board img` selector matches nothing at all. Anchored on
+     .cnl__board, which this component does render. */
+  .cnl__board :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--sb-r-0);
+    border: 1px solid rgba(18, 16, 15, 0.08);
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 18px 40px -20px rgba(28, 14, 8, 0.28);
+  }
+
+  .cnl__board figcaption {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
+  }
+
+  .cnl__h-n {
+    margin-left: 10px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--sb-lime-wash);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sb-violet);
+    vertical-align: middle;
   }
 
   .cnl__wrap { position: relative; }

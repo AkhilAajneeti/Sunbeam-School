@@ -40,6 +40,13 @@
    header of LegacyTimeline for why this is a second component and not a
    `picture?` prop on the first. */
 import LegacyTimeline from '../../components/about/LegacyTimeline.astro';
+/* ⚠ THE ADVISORY COUNCIL BOARD, supplied by the school 22 Sep 2026. It sits on
+   THIS page rather than getting one of its own for the same reason the
+   Chairman's and Secretary's messages do — audit 1.11: "the contributions of
+   the Chairman, Secretary and other dignitaries can be incorporated within the
+   History section instead of creating separate menu links." An advisory council
+   is precisely "other dignitaries". */
+import advisoryBoard from '../../assets/council/advisoryCouncil.jpeg';
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/ui/PageHero.astro";
 /* ⚠ VideoFeature IS STILL IMPORTED FOR THE COMMENTED-OUT BLOCK BELOW. The film
@@ -381,7 +388,54 @@ const onward = [
       </div>
     </section>
 
-    
+    {/* --- Advisory Council. Audit 1.11 — "other dignitaries", on this page
+         rather than a menu link of its own. -------------------------------- */}
+    <section class="hist-adv" id="advisory-council" aria-labelledby="adv-heading">
+      <div class="u-container">
+        <div class="hist-adv__head" data-reveal>
+          <p class="hist__pill">
+            <span class="pill pill--violet">Advisory Council</span>
+          </p>
+          <h2 class="hist-adv__heading t-h2-sans" id="adv-heading" data-split>
+            The people who <span class="t-squiggle">advise</span>
+          </h2>
+          {/* ⚠⚠ THIS PARAGRAPH DESCRIBES THE BOARD AND NOTHING ELSE. It does
+              NOT say what the council does, how often it meets, what it
+              decides or when it was formed — the school has published none of
+              that, and an advisory body's remit is exactly the sort of thing
+              that reads plausibly and turns out to be wrong. Fifteen names,
+              their roles and their institutions are what the board carries,
+              so fifteen names is what this says. */}
+          <p class="hist-adv__lead">
+            Sunbeam School Ballia publishes an Advisory Council of fifteen members, drawn from the
+            Sunbeam Group, from universities in India and abroad, and from public life. The
+            school&rsquo;s own board names each member with their role and institution.
+          </p>
+        </div>
+
+        {/* ⚠ THE BOARD IS SHOWN WHOLE, NOT SLICED INTO CARDS. It is a designed
+            plate: cropping the portraits out of it separates each face from the
+            role printed under it, and re-typing fifteen names, titles and
+            institutions is fifteen more chances to misspell a real person's
+            affiliation than showing what the school printed. If the school
+            sends the list as text, it becomes a card grid and this becomes its
+            source image. */}
+        <figure class="hist-adv__board" data-reveal data-reveal-delay="120">
+          <Image
+            src={advisoryBoard}
+            alt="The Advisory Council board of Sunbeam School Ballia, printed with a photograph of each of its fifteen members beside their name, role and institution."
+            formats={['avif', 'webp']}
+            widths={[760, 1200, 1800, 2400]}
+            sizes="(max-width: 767px) 92vw, 88vw"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            The school&rsquo;s own Advisory Council board, shown as published.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
@@ -709,5 +763,58 @@ const onward = [
       margin-top: var(--sb-9);
       padding-top: var(--sb-9);
     }
+  }
+
+  /* --- Advisory Council ------------------------------------------------------
+     Added 22 Sep 2026 with the school's board. */
+  .hist-adv {
+    /* ⚠ AN EXPLICIT z-index, NOT `auto`. PageHero is `position: sticky;
+       z-index: 0`; a positioned sibling at `auto` wins only by tree order,
+       which is what let the pinned banner show through a section three times
+       on this project. The opaque ground is the other half of the contract. */
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    padding-block: 0 var(--sb-section-y);
+    background: var(--sb-ivory);
+  }
+
+  .hist-adv__head {
+    max-width: 62ch;
+    margin: 0 auto var(--sb-7);
+    text-align: center;
+  }
+
+  .hist-adv__lead {
+    margin: var(--sb-5) 0 0;
+    font-size: var(--sb-body-lg);
+    line-height: 1.65;
+    color: var(--sb-text-muted);
+  }
+
+  .hist-adv__board {
+    margin: 0;
+    text-align: center;
+  }
+
+  /* ⚠⚠ :global(img) — the <img> comes from <Image>, a CHILD component, so it
+     never carries this page's data-astro-cid and a plain `.hist-adv__board img`
+     rule compiles to a selector that matches nothing. Anchored on a class this
+     page does render. height:auto releases <Image>'s width/height attributes,
+     which are presentational hints that would otherwise fix the box. */
+  .hist-adv__board :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--sb-r-0);
+    border: 1px solid rgba(18, 16, 15, 0.08);
+    box-shadow: 0 1px 3px rgba(28, 14, 8, 0.04), 0 18px 40px -20px rgba(28, 14, 8, 0.28);
+  }
+
+  .hist-adv__board figcaption {
+    margin-top: var(--sb-4);
+    font-size: var(--sb-caption);
+    line-height: 1.5;
+    color: var(--sb-text-muted);
   }
 </style>
