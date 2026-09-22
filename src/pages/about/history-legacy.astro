@@ -390,15 +390,18 @@ const onward = [
 
     {/* --- Advisory Council. Audit 1.11 — "other dignitaries", on this page
          rather than a menu link of its own. -------------------------------- */}
-    <section class="hist-adv" id="advisory-council" aria-labelledby="adv-heading">
+    {/* ⚠ aria-label, NOT aria-labelledby — THIS SECTION HAS NO HEADING.
+         The client removed the "The people who advise" h2 on 22 Sep 2026; the
+         pill below is styling, not a heading, so there is no element left to
+         point aria-labelledby at. Without this attribute the section would be
+         an unnamed landmark. If a heading ever comes back, switch this to
+         aria-labelledby and give the heading the id. */}
+    <section class="hist-adv" id="advisory-council" aria-label="Advisory Council">
       <div class="u-container">
         <div class="hist-adv__head" data-reveal>
           <p class="hist__pill">
             <span class="pill pill--violet">Advisory Council</span>
           </p>
-          <h2 class="hist-adv__heading t-h2-sans" id="adv-heading" data-split>
-            The people who <span class="t-squiggle">advise</span>
-          </h2>
           {/* ⚠⚠ THIS PARAGRAPH DESCRIBES THE BOARD AND NOTHING ELSE. It does
               NOT say what the council does, how often it meets, what it
               decides or when it was formed — the school has published none of
@@ -775,18 +778,31 @@ const onward = [
     position: relative;
     z-index: 1;
     isolation: isolate;
-    padding-block: 0 var(--sb-section-y);
+    /* ⚠⚠ ZERO BOTTOM PADDING, AND THAT IS NOT AN OVERSIGHT. This is the LAST
+       section inside .u-page-panel, which already closes the page with
+       `padding-block: … var(--sb-section-y)`. Giving this section the same
+       value stacked two of them: measured at 1440, 120px of section padding
+       plus 120px of panel padding left 240px of empty cream between the
+       caption and the footer.
+       It is the same trap .hist-film guards against at the TOP of this page —
+       see its note about 208px of empty ground under the banner. A section at
+       either end of the panel takes its padding from the panel, not twice.
+       ⚠ The TOP is zero too: .hist-voices above already ends with a full
+       section's padding, and two of those stack exactly the same way. */
+    padding-block: 0;
     background: var(--sb-ivory);
   }
 
   .hist-adv__head {
     max-width: 62ch;
-    margin: 0 auto var(--sb-7);
+    margin: 0 auto var(--sb-6);
     text-align: center;
   }
 
+  /* ⚠ The pill is the only thing above this paragraph now that the heading is
+     gone, so the gap is the pill's, not a heading's. */
   .hist-adv__lead {
-    margin: var(--sb-5) 0 0;
+    margin: var(--sb-4) 0 0;
     font-size: var(--sb-body-lg);
     line-height: 1.65;
     color: var(--sb-text-muted);
